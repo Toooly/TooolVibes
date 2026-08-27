@@ -18,7 +18,7 @@ import {
   withBattleScores,
 } from "./tool-battle-shared";
 import { CompareObjectiveSelector } from "./compare-objective-selector";
-import { CompareDecisionPanel } from "./compare-decision-panel";
+import { CompareDecisionPanel, useCompareDecisionDoor } from "./compare-decision-panel";
 import { CompareBattleStage } from "./compare-battle-stage";
 import { CompareVerdictCard } from "./compare-verdict-card";
 import { CompareRanking } from "./compare-ranking";
@@ -89,6 +89,7 @@ export function MobileCompareView({
   );
   const tools = ranking.orderedTools;
   const canonicalVerdict = ranking.objectiveVerdict;
+  const decideDoor = useCompareDecisionDoor(tools, activeObjective);
 
   const verdict = useMemo(
     () =>
@@ -165,6 +166,7 @@ export function MobileCompareView({
         onClear={clearCompare}
         decisionEnabled={decisionEnabled}
         layoutMode="mobile"
+        onDecidi={() => decideDoor.openDecide()}
       />
 
       {objectiveEnabled && onObjectiveChange ? (
@@ -214,7 +216,10 @@ export function MobileCompareView({
         objective={activeObjective}
         enabled={decisionEnabled}
         idPrefix="mobile"
+        onDecidi={() => decideDoor.openDecide()}
       />
+
+      {decideDoor.sheet}
 
       <div className="mobile-compare-arena__trend">
         <CompareTrendList />

@@ -19,7 +19,6 @@ import {
 import {
   compactPersonalStatus,
   formatRevisitLine,
-  revisitAtFromPreset,
   USAGE_STATE_LABELS,
   usageActionLabel,
 } from "@/lib/account/workspace-lifecycle";
@@ -33,8 +32,9 @@ import {
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
-import type { WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
+import type { WorkspaceDecisionOutcome, WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
 
+import { DecisionSheet } from "./decision-sheet";
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
 import { WorkspaceCatalogMark } from "./workspace-tool-mark";
@@ -89,11 +89,13 @@ function applyPipelineColumn(slug: string, next: PipelineColumn) {
     setWorkspaceDecision(slug, null);
     setWorkspaceStage(slug, "top");
   }
-  if (next === "scelto") setWorkspaceDecision(slug, "selected");
-  if (next === "scartato") setWorkspaceDecision(slug, "rejected");
-  if (next === "rimandato") {
-    deferWorkspaceTool(slug, revisitAtFromPreset("1w"));
-  }
+}
+
+function outcomeFromColumn(column: PipelineColumn): WorkspaceDecisionOutcome | null {
+  if (column === "scelto") return "selected";
+  if (column === "scartato") return "rejected";
+  if (column === "rimandato") return "deferred";
+  return null;
 }
 
 function compareLibraryItems(
@@ -143,6 +145,11 @@ export function WorkspaceBiblioteca({
   const [category, setCategory] = useState("tutte");
   const [sort, setSort] = useState<LibrarySort>("recent");
   const [openNote, setOpenNote] = useState<string | null>(null);
+  const [decide, setDecide] = useState<{
+    slug: string;
+    name: string;
+    defaultOutcome: WorkspaceDecisionOutcome;
+  } | null>(null);
   const items = listPipelineItems(state);
   const stacks = activePersonalStacks(state);
   const columnCounts = useMemo(() => {
@@ -357,10 +364,31 @@ export function WorkspaceBiblioteca({
               onToggleNote={() =>
                 setOpenNote((current) => (current === item.slug ? null : item.slug))
               }
+              onDecidi={(defaultOutcome) =>
+                setDecide({
+                  slug: item.slug,
+                  name: toolName(catalog, item.slug),
+                  defaultOutcome,
+                })
+              }
             />
           ))}
         </ul>
       )}
+
+      {decide ? (
+        <DecisionSheet
+          open
+          onOpenChange={(open) => {
+            if (!open) setDecide(null);
+          }}
+          slug={decide.slug}
+          toolName={decide.name}
+          alternatives={[]}
+          source="salvati"
+          defaultOutcome={decide.defaultOutcome}
+        />
+      ) : null}
     </div>
   );
 }
@@ -374,6 +402,7 @@ function LibraryRow({
   focused,
   noteOpen,
   onToggleNote,
+  onDecidi,
 }: {
   item: PipelineItem;
   state: WorkspaceStateV1;
@@ -383,6 +412,7 @@ function LibraryRow({
   focused: boolean;
   noteOpen: boolean;
   onToggleNote: () => void;
+  onDecidi: (outcome: WorkspaceDecisionOutcome) => void;
 }) {
   const name = toolName(catalog, item.slug);
   const catalogItem = catalog.find((tool) => tool.slug === item.slug);
@@ -475,13 +505,26 @@ function LibraryRow({
           <Link className="tv-lib-action" href={`/toools/${item.slug}`}>
             Apri
           </Link>
+          <button
+            type="button"
+            className="tv-lib-action"
+            onClick={() => onDecidi(item.outcome ?? "selected")}
+          >
+            Decidi
+          </button>
           <label className="tv-lib-action tv-lib-action--field">
             <span>Sposta</span>
             <select
               value={item.column}
-              onChange={(event) =>
-                applyPipelineColumn(item.slug, event.target.value as PipelineColumn)
-              }
+              onChange={(event) => {
+                const next = event.target.value as PipelineColumn;
+                const outcome = outcomeFromColumn(next);
+                if (outcome) {
+                  onDecidi(outcome);
+                  return;
+                }
+                applyPipelineColumn(item.slug, next);
+              }}
             >
               {STATUS_FILTERS.filter((entry) => entry.id !== "tutti").map((entry) => (
                 <option key={entry.id} value={entry.id}>

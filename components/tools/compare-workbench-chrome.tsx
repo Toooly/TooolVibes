@@ -161,12 +161,14 @@ export function CompareWorkbenchIdentity({
   onClear,
   decisionEnabled = true,
   layoutMode,
+  onDecidi,
 }: {
   tools: readonly CompareWorkbenchTool[];
   onRemove: (slug: string) => void;
   onClear: () => void;
   decisionEnabled?: boolean;
   layoutMode: "mobile" | "desktop";
+  onDecidi?: () => void;
 }) {
   const compareKey = tools.map((tool) => tool.slug).join("|");
   useEffect(() => {
@@ -192,12 +194,13 @@ export function CompareWorkbenchIdentity({
               <p className="compare-workbench-identity__cap">5 su 5</p>
             ) : null}
             {decisionEnabled ? (
-              <a
-                href="#compare-decide"
+              <button
+                type="button"
                 className="compare-workbench-identity__decide"
+                onClick={onDecidi}
               >
                 Decidi
-              </a>
+              </button>
             ) : null}
             <ChiudiConfronto onClear={onClear} />
           </div>
@@ -226,12 +229,13 @@ export function CompareWorkbenchIdentity({
         </ul>
       </header>
       {decisionEnabled && layoutMode === "mobile" ? (
-        <a
-          href="#compare-decide"
+        <button
+          type="button"
           className="compare-workbench-decide-jump"
+          onClick={onDecidi}
         >
           Decidi
-        </a>
+        </button>
       ) : null}
     </>
   );

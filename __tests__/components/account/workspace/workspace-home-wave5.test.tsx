@@ -40,6 +40,8 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 vi.mock("@/lib/account/workspace-actions", () => ({
   markWorkspaceToolUsing: actions.markWorkspaceToolUsing,
   setWorkspaceRevisit: actions.setWorkspaceRevisit,
+  commitWorkspaceDecision: vi.fn(),
+  reopenWorkspaceDecision: vi.fn(),
 }));
 
 vi.mock("@/components/account/account-provider", () => ({
@@ -187,7 +189,7 @@ describe("Workspace Home — Wave 5", () => {
     expect(screen.getByText("Conferma se lo usi")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Lo sto usando" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Apri" }).getAttribute("href")).toBe(
-      "/account?view=decisioni&focus=cursor",
+      "/account?view=salvati&focus=cursor",
     );
   });
 

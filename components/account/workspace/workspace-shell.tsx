@@ -17,7 +17,6 @@ import { AccountWorkspaceFrame } from "./account-workspace-frame";
 import { useCanonicalWorkspace } from "./use-canonical-workspace";
 import { WorkspaceActivity } from "./workspace-activity";
 import { WorkspaceBiblioteca } from "./workspace-biblioteca";
-import { WorkspaceDecisions } from "./workspace-decisions";
 import { parseWorkspaceView, type WorkspaceView } from "./workspace-model";
 import { WorkspaceRiprendi } from "./workspace-riprendi";
 import { WorkspaceSignal } from "./workspace-signal";
@@ -42,7 +41,8 @@ function WorkspaceShellView({
   const account = useAccount();
   const state = useCanonicalWorkspace();
   const searchParams = useSearchParams();
-  const view = resolveViewFromSearch(searchParams, initialView);
+  const requestedView = resolveViewFromSearch(searchParams, initialView);
+  const view = requestedView === "decisioni" ? "riprendi" : requestedView;
   const focusSlug = searchParams?.get("focus") ?? null;
   const stackId = searchParams?.get("stack") ?? null;
   const isOnline = useAccountOnlineStatus();
@@ -64,14 +64,13 @@ function WorkspaceShellView({
       {showStateBanner ? <AccountStateBanner cell={stateCell} /> : null}
       <AccountRecoverySection account={account} suppressAuthMessage={showStateBanner} />
       <div className="tv-space-main">
-        {view === "riprendi" ? <WorkspaceRiprendi state={state} /> : null}
+        {view === "riprendi" ? (
+          <WorkspaceRiprendi state={state} focusSlug={focusSlug} />
+        ) : null}
         {view === "salvati" ? (
           <WorkspaceBiblioteca state={state} focusSlug={focusSlug} />
         ) : null}
         {view === "stack" ? <WorkspaceStacks state={state} stackId={stackId} /> : null}
-        {view === "decisioni" ? (
-          <WorkspaceDecisions state={state} focusSlug={focusSlug} />
-        ) : null}
         {view === "segnale" ? <WorkspaceSignal /> : null}
         {view === "recenti" ? <WorkspaceActivity state={state} /> : null}
       </div>

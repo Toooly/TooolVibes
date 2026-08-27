@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  commitWorkspaceDecision,
   createPersonalStackId,
   deferWorkspaceTool,
   markWorkspaceToolReplaced,
@@ -107,5 +108,52 @@ describe("workspace action helpers", () => {
     expect(getCanonicalToolWorkspaceState().personalStacks[0]?.archivedAt).toBeTruthy();
     restorePersonalStack(id as string);
     expect(getCanonicalToolWorkspaceState().personalStacks[0]?.archivedAt).toBeNull();
+  });
+});
+
+describe("commitWorkspaceDecision", () => {
+  it("writes reason and useCase on the same workspace/decide event", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.withSaved);
+    commitWorkspaceDecision({
+      slug: "cursor",
+      outcome: "selected",
+      reason: "Per il daily coding",
+      useCase: "pair programming",
+      alternatives: ["v0"],
+    });
+    const state = getCanonicalToolWorkspaceState();
+    expect(state.toolStates.cursor?.decision?.outcome).toBe("selected");
+    expect(state.toolStates.cursor?.note).toBe("Per il daily coding");
+    expect(state.toolStates.cursor?.useCase).toBe("pair programming");
+    expect(state.events).toHaveLength(1);
+    expect(state.events[0]).toMatchObject({
+      type: "decided",
+      reason: "Per il daily coding",
+      useCase: "pair programming",
+      alternatives: ["v0"],
+    });
+  });
+
+  it("reuses eventId on retry and defaults deferred revisit to 90 days", () => {
+    activateToolWorkspaceOwner({ kind: "guest" }, workspaceTestFixtures.withSaved);
+    const eventId = "decide-retry-1";
+    commitWorkspaceDecision({
+      slug: "cursor",
+      outcome: "deferred",
+      eventId,
+    });
+    commitWorkspaceDecision({
+      slug: "cursor",
+      outcome: "deferred",
+      eventId,
+    });
+    const state = getCanonicalToolWorkspaceState();
+    expect(state.events.filter((event) => event.type === "decided")).toHaveLength(1);
+    expect(state.events[0]?.id).toBe(eventId);
+    const revisit = state.toolStates.cursor?.revisitAt;
+    expect(revisit).toBeTruthy();
+    const delta = new Date(revisit as string).getTime() - Date.now();
+    expect(delta).toBeGreaterThan(80 * 24 * 60 * 60 * 1000);
+    expect(delta).toBeLessThan(100 * 24 * 60 * 60 * 1000);
   });
 });

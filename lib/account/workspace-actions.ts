@@ -21,6 +21,8 @@ import {
   emitUsefulStack,
 } from "@/lib/signal-progression/client";
 
+import { revisitAtFromPreset } from "./workspace-lifecycle";
+
 import { activePersonalStacks } from "./workspace-pipeline";
 import {
   reduceAddToWorkingPersonalStack,
@@ -137,14 +139,60 @@ function newRelationshipEventId() {
   return crypto.randomUUID();
 }
 
+export type CommitWorkspaceDecisionInput = {
+  slug: string;
+  outcome: WorkspaceDecisionOutcome;
+  alternatives?: string[];
+  compareObjective?: CompareObjective | null;
+  reason?: string | null;
+  useCase?: string | null;
+  revisitAt?: string | null;
+  eventId?: string;
+};
+
+export function commitWorkspaceDecision(input: CommitWorkspaceDecisionInput) {
+  const previous =
+    getCanonicalToolWorkspaceState().toolStates[input.slug]?.decision?.outcome ?? null;
+  const at = nowIso();
+  const eventId = input.eventId ?? newRelationshipEventId();
+  const revisitAt =
+    input.outcome === "deferred"
+      ? (input.revisitAt ?? revisitAtFromPreset("3m"))
+      : (input.revisitAt === undefined ? null : input.revisitAt);
+
+  const next = applyWorkspaceAction({
+    type: "workspace/decide",
+    slug: input.slug,
+    outcome: input.outcome,
+    at,
+    eventId,
+    revisitAt,
+    ...(input.alternatives !== undefined ? { alternatives: input.alternatives } : {}),
+    ...(input.compareObjective !== undefined
+      ? { compareObjective: input.compareObjective }
+      : {}),
+    ...(input.reason !== undefined ? { reason: input.reason } : {}),
+    ...(input.useCase !== undefined ? { useCase: input.useCase } : {}),
+  });
+
+  if (input.outcome === "selected" || input.outcome === "rejected") {
+    emitDecisionRecorded(input.slug);
+    if (previous === "deferred") {
+      emitDecisionRevisited(input.slug);
+    }
+  }
+  if (input.outcome === "deferred") {
+    emitDeferWithRevisit(input.slug);
+  }
+  return next;
+}
+
 export function setWorkspaceDecision(
   slug: string,
   outcome: WorkspaceDecisionOutcome | null,
   alternatives?: string[],
   compareObjective?: CompareObjective | null,
 ) {
-  const previous =
-    getCanonicalToolWorkspaceState().toolStates[slug]?.decision?.outcome ?? null;
   const at = nowIso();
 
   if (outcome === null) {
@@ -159,23 +207,12 @@ export function setWorkspaceDecision(
     return applyWorkspaceAction({ type: "tool/revisit", slug, revisitAt: null, at });
   }
 
-  const next = applyWorkspaceAction({
-    type: "workspace/decide",
+  return commitWorkspaceDecision({
     slug,
     outcome,
-    at,
-    eventId: newRelationshipEventId(),
-    ...(alternatives !== undefined ? { alternatives } : {}),
-    ...(compareObjective !== undefined ? { compareObjective } : {}),
-    ...(outcome !== "deferred" ? { revisitAt: null } : {}),
+    alternatives,
+    compareObjective,
   });
-  if (outcome === "selected" || outcome === "rejected") {
-    emitDecisionRecorded(slug);
-    if (previous === "deferred") {
-      emitDecisionRevisited(slug);
-    }
-  }
-  return next;
 }
 
 export function deferWorkspaceTool(
@@ -183,17 +220,12 @@ export function deferWorkspaceTool(
   revisitAt: string,
   alternatives?: string[],
 ) {
-  const next = applyWorkspaceAction({
-    type: "workspace/decide",
+  return commitWorkspaceDecision({
     slug,
     outcome: "deferred",
-    at: nowIso(),
-    eventId: newRelationshipEventId(),
     revisitAt,
-    ...(alternatives !== undefined ? { alternatives } : {}),
+    alternatives,
   });
-  emitDeferWithRevisit(slug);
-  return next;
 }
 
 export function reopenWorkspaceDecision(slug: string) {

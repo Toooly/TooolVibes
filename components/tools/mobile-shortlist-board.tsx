@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { RevisitWhenChips } from "@/components/account/workspace/revisit-when-chips";
+import { DecisionSheet } from "@/components/account/workspace/decision-sheet";
 import {
   formatRevisitLine,
   OUTCOME_ACTION_LABELS,
@@ -37,12 +37,10 @@ import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { ShortlistStageToggle } from "@/components/tools/shortlist-stage-toggle";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import {
-  deferWorkspaceTool,
   markWorkspaceToolReplaced,
   markWorkspaceToolStopped,
   markWorkspaceToolUsing,
   reopenWorkspaceDecision,
-  setWorkspaceDecision,
   setWorkspaceNote,
   setWorkspacePinned,
   setWorkspaceSaveReason,
@@ -104,12 +102,6 @@ function formatUsageLine(
   const label = usageStateLabel(usage);
   return usage === "replaced" && replacedByName ? `${label} → ${replacedByName}` : label;
 }
-
-const decisionOutcomeOptions: WorkspaceDecisionOutcome[] = [
-  "selected",
-  "rejected",
-  "deferred",
-];
 
 const decisionOutcomeMeta: Record<
   WorkspaceDecisionOutcome,
@@ -688,8 +680,8 @@ function MobileNoteSheet({
 }) {
   const preferReducedMotion = useReducedMotion();
   const [noteDraft, setNoteDraft] = useState(memory.note ?? "");
-  const [pendingDefer, setPendingDefer] = useState(false);
   const [pendingReplace, setPendingReplace] = useState(false);
+  const [decideOpen, setDecideOpen] = useState(false);
 
   useEffect(() => {
     setNoteDraft(memory.note ?? "");
@@ -699,6 +691,7 @@ function MobileNoteSheet({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        if (decideOpen) return;
         event.preventDefault();
         onClose();
       }
@@ -706,7 +699,7 @@ function MobileNoteSheet({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  }, [decideOpen, onClose]);
 
   const noteIsDirty = noteDraft.trim() !== (memory.note ?? "");
   const noteId = `shortlist-sheet-note-${slug}`;
@@ -798,61 +791,21 @@ function MobileNoteSheet({
 
             <div className="mt-4">
               <p className="editorial-label">Decisione</p>
-              <div
-                className="tool-rail mt-3 -mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1"
-                role="group"
-                aria-label="Esito della decisione"
-              >
-                {decisionOutcomeOptions.map((option) => {
-                  const meta = decisionOutcomeMeta[option];
-                  const active = decisionOutcome === option;
-
-                  return (
-                    <button
-                      key={option}
-                      type="button"
-                      disabled={active}
-                      aria-pressed={active}
-                      onClick={() => {
-                        if (active) return;
-                        if (option === "deferred") {
-                          setPendingDefer(true);
-                          return;
-                        }
-                        setPendingDefer(false);
-                        setWorkspaceDecision(slug, option);
-                      }}
-                      data-sonic-action="tab"
-                      className={`${sheetChipClassName} ${
-                        active ? "quick-filter-chip is-active" : ""
-                      }`}
-                      style={
-                        active
-                          ? {
-                              borderColor: "rgba(112,82,255,0.24)",
-                              background: meta.background,
-                              color: meta.tone,
-                            }
-                          : sheetChipIdleStyle
-                      }
-                    >
-                      {meta.actionLabel}
-                    </button>
-                  );
-                })}
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDecideOpen(true)}
+                  data-sonic-action="tab"
+                  className={sheetChipClassName}
+                  style={{
+                    borderColor: "rgba(112,82,255,0.24)",
+                    background: "rgba(106,60,255,0.22)",
+                    color: "var(--accent-strong)",
+                  }}
+                >
+                  Decidi
+                </button>
               </div>
-              {pendingDefer || decisionOutcome === "deferred" ? (
-                <div className="mt-3">
-                  <p className="editorial-label">Quando rivedere</p>
-                  <RevisitWhenChips
-                    tone="light"
-                    onSelect={(revisitAt) => {
-                      setPendingDefer(false);
-                      deferWorkspaceTool(slug, revisitAt);
-                    }}
-                  />
-                </div>
-              ) : null}
               {decisionOutcome ? (
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <p
@@ -872,7 +825,6 @@ function MobileNoteSheet({
                   <button
                     type="button"
                     onClick={() => {
-                      setPendingDefer(false);
                       setPendingReplace(false);
                       reopenWorkspaceDecision(slug);
                     }}
@@ -1071,6 +1023,15 @@ function MobileNoteSheet({
           </>
         )}
       </div>
+      <DecisionSheet
+        open={decideOpen}
+        onOpenChange={setDecideOpen}
+        slug={slug}
+        toolName={toolName}
+        alternatives={[]}
+        source="shortlist"
+        defaultOutcome={decisionOutcome ?? "selected"}
+      />
     </motion.div>
   );
 }

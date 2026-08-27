@@ -24,6 +24,8 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
 vi.mock("@/lib/account/workspace-actions", () => ({
   markWorkspaceToolUsing: actions.markWorkspaceToolUsing,
   setWorkspaceRevisit: actions.setWorkspaceRevisit,
+  commitWorkspaceDecision: vi.fn(),
+  reopenWorkspaceDecision: vi.fn(),
 }));
 
 vi.mock("@/components/account/account-provider", () => ({
@@ -78,7 +80,7 @@ describe("WorkspaceRiprendi", () => {
     expect(actions.markWorkspaceToolUsing).toHaveBeenCalledWith("cursor");
 
     const open = screen.getByRole("link", { name: "Apri" });
-    expect(open.getAttribute("href")).toBe("/account?view=decisioni&focus=cursor");
+    expect(open.getAttribute("href")).toBe("/account?view=salvati&focus=cursor");
   });
 
   it("hides In uso and Stack attivi when they are empty", () => {

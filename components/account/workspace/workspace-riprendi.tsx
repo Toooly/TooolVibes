@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { markWorkspaceToolUsing, setWorkspaceRevisit } from "@/lib/account/workspace-actions";
 import { USAGE_ACTION_LABELS, formatRevisitLine } from "@/lib/account/workspace-lifecycle";
 import {
@@ -16,12 +17,9 @@ import {
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 
+import { DecisionSheet } from "./decision-sheet";
 import { RevisitWhenChips } from "./revisit-when-chips";
-import {
-  PIPELINE_LABELS,
-  workspaceFocusHref,
-  workspaceViewHref,
-} from "./workspace-model";
+import { PIPELINE_LABELS, workspaceViewHref } from "./workspace-model";
 import { WorkspaceCatalogMark, WorkspaceMarkStrip } from "./workspace-tool-mark";
 import { toolName } from "./workspace-tool-name";
 import { WorkspaceChip, pipelineTone } from "./workspace-visual";
@@ -38,7 +36,7 @@ const RESUME_COPY: Record<
   review_decision: {
     title: "Rivedi questa decisione",
     body: "L’avevi rimandata. È il momento di riprenderla.",
-    action: "Apri in Decisioni",
+    action: "Decidi",
   },
   close_decision: {
     title: "Chiudi la decisione",
@@ -60,18 +58,18 @@ const RESUME_COPY: Record<
 function resumeHref(kind: Exclude<ResumeKind, "empty">, slug: string | null) {
   const focus = slug ? { focus: slug } : undefined;
   if (kind === "continue_compare") return "/compare";
-  if (kind === "review_decision" || kind === "confirm_usage") {
-    return workspaceViewHref("decisioni", focus);
-  }
   return workspaceViewHref("salvati", focus);
 }
 
 export function WorkspaceRiprendi({
   state,
+  focusSlug = null,
 }: {
   state: WorkspaceStateV1;
+  focusSlug?: string | null;
 }) {
   const catalog = usePublicToolCatalog();
+  const [decideSlug, setDecideSlug] = useState<string | null>(focusSlug);
   const resume = chooseResumeAction(state);
   const reviewCap = resume.kind === "review_decision" ? HOME_REVIEW_CAP - 1 : HOME_REVIEW_CAP;
   const reviewQueue = listHomeReviewQueue(state, {
@@ -87,6 +85,12 @@ export function WorkspaceRiprendi({
       : null;
   const copy = resume.kind !== "empty" ? RESUME_COPY[resume.kind] : null;
   const href = resume.kind !== "empty" ? resumeHref(resume.kind, resume.slug) : null;
+
+  useEffect(() => {
+    setDecideSlug(focusSlug);
+  }, [focusSlug]);
+
+  const decideName = decideSlug ? toolName(catalog, decideSlug) : "";
   const resumeColumn = resume.slug
     ? pipelineColumnForTool({
         stage: resumeTool?.stage ?? "saved",
@@ -165,6 +169,14 @@ export function WorkspaceRiprendi({
                   Apri
                 </Link>
               </>
+            ) : resume.kind === "review_decision" && resume.slug ? (
+              <button
+                type="button"
+                className="account-btn-primary"
+                onClick={() => setDecideSlug(resume.slug)}
+              >
+                {copy.action}
+              </button>
             ) : (
               <Link className="account-btn-primary" href={href}>
                 {copy.action}
@@ -189,12 +201,24 @@ export function WorkspaceRiprendi({
               const revisit = formatRevisitLine(state.toolStates[item.slug]?.revisitAt ?? null);
               return (
                 <li key={item.slug}>
-                  <Link className="tv-home-row" href={workspaceFocusHref("decisioni", item.slug)}>
+                  <button
+                    type="button"
+                    className="tv-home-row"
+                    style={{
+                      width: "100%",
+                      border: 0,
+                      background: "transparent",
+                      font: "inherit",
+                      textAlign: "left",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setDecideSlug(item.slug)}
+                  >
                     <span className="tv-home-row__text">{toolName(catalog, item.slug)}</span>
                     <span className="tv-home-row__meta">
                       {revisit ?? "Rimandata, da riprendere"}
                     </span>
-                  </Link>
+                  </button>
                 </li>
               );
             })}
@@ -217,6 +241,19 @@ export function WorkspaceRiprendi({
             </Link>
           ) : null}
         </>
+      ) : null}
+      {decideSlug ? (
+        <DecisionSheet
+          open
+          onOpenChange={(open) => {
+            if (!open) setDecideSlug(null);
+          }}
+          slug={decideSlug}
+          toolName={decideName}
+          alternatives={[]}
+          source="home"
+          defaultOutcome="selected"
+        />
       ) : null}
     </div>
   );

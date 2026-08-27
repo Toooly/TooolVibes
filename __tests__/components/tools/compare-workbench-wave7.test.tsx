@@ -11,6 +11,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -474,8 +475,11 @@ describe("Wave 7 — Compare workbench", () => {
       </>,
     );
     expect(document.querySelector("[data-compare-live-chip]")).toBeTruthy();
+    fireEvent.click(screen.getAllByRole("button", { name: "Decidi" })[0]);
+    const sheet = document.querySelector("[data-decision-sheet]");
+    expect(sheet).toBeInstanceOf(HTMLElement);
     fireEvent.click(
-      screen.getAllByRole("button", { name: "Scegli" })[0],
+      within(sheet as HTMLElement).getByRole("button", { name: "Conferma" }),
     );
     expect(getCanonicalToolWorkspaceState().compare.slugs).toEqual([]);
     expect(document.querySelector("[data-compare-live-chip]")).toBeNull();

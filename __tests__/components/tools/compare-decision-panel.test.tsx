@@ -184,10 +184,19 @@ function decisionRegion() {
   return screen.getByRole("region", { name: "Registra decisione" });
 }
 
-function decisionGroupFor(name: string) {
-  return within(decisionRegion()).getByRole("group", {
-    name: `Decisione per ${name}`,
-  });
+function openDecisionSheet() {
+  fireEvent.click(screen.getAllByRole("button", { name: "Decidi" })[0]);
+  const node = document.querySelector("[data-decision-sheet]");
+  expect(node).toBeInstanceOf(HTMLElement);
+  return node as HTMLElement;
+}
+
+function confirmDecision(outcome?: "Scelto" | "Scartato" | "Rimandato") {
+  const sheet = openDecisionSheet();
+  if (outcome) {
+    fireEvent.click(within(sheet).getByRole("radio", { name: outcome }));
+  }
+  fireEvent.click(within(sheet).getByRole("button", { name: "Conferma" }));
 }
 
 let desktopViewport = false;
@@ -220,6 +229,18 @@ async function expectNoAxeViolations(container: HTMLElement) {
 }
 
 beforeAll(() => {
+  vi.stubGlobal(
+    "ResizeObserver",
+    class ResizeObserver {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  );
+  HTMLElement.prototype.scrollIntoView = vi.fn();
+  HTMLElement.prototype.hasPointerCapture = () => false;
+  HTMLElement.prototype.setPointerCapture = () => undefined;
+  HTMLElement.prototype.releasePointerCapture = () => undefined;
   vi.stubGlobal(
     "matchMedia",
     (query: string) => ({
@@ -273,9 +294,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(seeLink.getAttribute("href")).toMatch(/^\/toools\//);
     expect(seeLink.getAttribute("href")).not.toContain("shortlist");
 
-    // Choose: azione esplicita "Scegli" sul candidato.
-    const group = decisionGroupFor("Atlas AI");
-    fireEvent.click(within(group).getByRole("button", { name: "Scegli" }));
+    confirmDecision("Scelto");
 
     const persisted = readPersistedWorkspace();
     expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe(
@@ -302,9 +321,8 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    const group = decisionGroupFor("Gamma");
-    fireEvent.click(within(group).getByRole("button", { name: "Scegli" }));
-    expect(readPersistedWorkspace().toolStates["gamma-app"].decision?.outcome).toBe(
+    confirmDecision("Scelto");
+    expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
     expect(readPersistedWorkspace().compare.slugs).toEqual([]);
@@ -318,11 +336,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", {
-        name: "Scegli",
-      }),
-    );
+    confirmDecision("Scelto");
     expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
@@ -344,11 +358,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", {
-        name: "Scegli",
-      }),
-    );
+    confirmDecision("Scelto");
     expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
@@ -362,26 +372,16 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     });
     revealMobileResult();
 
-    expect(
-      within(decisionGroupFor("Atlas AI"))
-        .getByRole("button", { name: "Scegli" })
-        .getAttribute("aria-pressed"),
-    ).toBe("false");
-
-    fireEvent.click(
-      within(decisionGroupFor("Gamma")).getByRole("button", {
-        name: "Scarta",
-      }),
-    );
+    confirmDecision("Scartato");
     const accountState = readPersistedWorkspace(
       workspaceStorageKeyForOwner(account),
     );
-    expect(accountState.toolStates["gamma-app"].decision?.outcome).toBe(
+    expect(accountState.toolStates["atlas-ai"].decision?.outcome).toBe(
       "rejected",
     );
     expect(accountState.compare.slugs).toEqual([]);
     expect(
-      accountState.toolStates["atlas-ai"]?.decision ?? null,
+      accountState.toolStates["gamma-app"]?.decision ?? null,
     ).toBeNull();
 
     // Logout: guest decision remains; guest battle stays dead.
@@ -408,15 +408,12 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(region.textContent).toContain("Confronto orientato a Risparmiare tempo");
 
     // La decisione registrata dal deep link persiste come qualsiasi altra.
-    const group = within(region).getByRole("group", {
-      name: "Decisione per Gamma",
-    });
-    fireEvent.click(within(group).getByRole("button", { name: "Scegli" }));
+    confirmDecision("Scelto");
     const persisted = readPersistedWorkspace();
-    expect(persisted.toolStates["gamma-app"].decision?.outcome).toBe(
+    expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe(
       "selected",
     );
-    expect(persisted.toolStates["gamma-app"].compareObjective).toBe("save-time");
+    expect(persisted.toolStates["atlas-ai"].compareObjective).toBe("save-time");
   });
 
   it("flag OFF: nessun pannello decisione, il flow termina al verdetto (contratto B34)", () => {
@@ -438,9 +435,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     expect(container.querySelectorAll(".desktop-compare")).toHaveLength(0);
 
     revealMobileResult();
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", { name: "Scegli" }),
-    );
+    confirmDecision("Scelto");
     expect(readPersistedWorkspace().compare.slugs).toEqual([]);
 
     setDesktopViewport(true);
@@ -456,11 +451,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
   it("nessuna violazione axe sul confronto con pannello decisione", async () => {
     const { container } = render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", {
-        name: "Scegli",
-      }),
-    );
+    confirmDecision("Scelto");
 
     vi.useRealTimers();
     await expectNoAxeViolations(container);
@@ -470,9 +461,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     render(<MobileCompareView tools={VIEWS} />);
     revealMobileResult();
 
-    const group = decisionGroupFor("Atlas AI");
-    fireEvent.click(within(group).getByRole("button", { name: "Rimanda" }));
-    fireEvent.click(screen.getByRole("button", { name: "1 settimana" }));
+    confirmDecision("Rimandato");
 
     const persisted = readPersistedWorkspace();
     expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("deferred");
@@ -491,9 +480,7 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     render(<ToolBattleView tools={VIEWS} />);
     revealMobileResult();
 
-    fireEvent.click(
-      within(decisionGroupFor("Atlas AI")).getByRole("button", { name: "Scegli" }),
-    );
+    confirmDecision("Scelto");
 
     const persisted = readPersistedWorkspace();
     expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("selected");

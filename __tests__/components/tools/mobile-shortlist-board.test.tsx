@@ -2,7 +2,7 @@
 
 import { createElement, Fragment, type ReactNode } from "react";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
 import { dispatchWorkspaceChange } from "@/lib/discovery/workspace-events";
@@ -130,6 +130,20 @@ function openSheetFor(name: string) {
   });
 }
 
+beforeAll(() => {
+  vi.stubGlobal(
+    "ResizeObserver",
+    class ResizeObserver {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  );
+  HTMLElement.prototype.hasPointerCapture = () => false;
+  HTMLElement.prototype.setPointerCapture = () => undefined;
+  HTMLElement.prototype.releasePointerCapture = () => undefined;
+});
+
 beforeEach(() => {
   seedWorkspace(savedState("alpha", "beta"));
 });
@@ -172,7 +186,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
       screen.getByRole("textbox", { name: "Nota personale" }),
     ).toBeTruthy();
     expect(
-      screen.getByRole("group", { name: "Esito della decisione" }),
+      screen.getByRole("button", { name: "Decidi" }),
     ).toBeTruthy();
     expect(
       screen.getByRole("group", { name: "Motivo del salvataggio" }),
@@ -290,16 +304,16 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     render(<MobileShortlistBoard tools={TOOLS} />);
     openSheetFor("Alpha");
 
-    fireEvent.click(screen.getByRole("button", { name: "Scegli" }));
+    fireEvent.click(screen.getByRole("button", { name: "Decidi" }));
+    const decision = document.querySelector("[data-decision-sheet]");
+    expect(decision).toBeInstanceOf(HTMLElement);
+    fireEvent.click(
+      within(decision as HTMLElement).getByRole("button", { name: "Conferma" }),
+    );
 
     expect(readPersistedWorkspace().toolStates.alpha.decision?.outcome).toBe(
       "selected",
     );
-    expect(
-      screen.getByRole("button", { name: "Scegli" }).getAttribute(
-        "aria-pressed",
-      ),
-    ).toBe("true");
 
     fireEvent.click(
       screen.getByRole("button", { name: "Riapri decisione" }),
@@ -311,11 +325,6 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     expect(
       screen.queryByRole("button", { name: "Riapri decisione" }),
     ).toBeNull();
-    expect(
-      screen.getByRole("button", { name: "Scegli" }).getAttribute(
-        "aria-pressed",
-      ),
-    ).toBe("false");
   });
 
   it("toggles save reason and pin from the sheet", () => {
@@ -468,11 +477,8 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
     // "Nessun aggiornamento locale", che resta legittimo per la nota mai salvata).
     expect(dialog.textContent).toMatch(/Registrata \d/);
     expect(dialog.textContent).toContain("Scartato");
-    expect(
-      within(dialog)
-        .getByRole("button", { name: "Scarta" })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
+    expect(dialog.textContent).toContain("Scartato");
+    expect(within(dialog).getByRole("button", { name: "Decidi" })).toBeTruthy();
   });
 
   it("nasconde la decision view quando il flag decision memory è OFF", () => {

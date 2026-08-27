@@ -22,6 +22,8 @@ vi.mock("@/lib/account/workspace-actions", () => ({
   markWorkspaceToolReplaced: vi.fn(),
   markWorkspaceToolStopped: vi.fn(),
   markWorkspaceToolUsing: vi.fn(),
+  commitWorkspaceDecision: vi.fn(),
+  reopenWorkspaceDecision: vi.fn(),
   setWorkspaceDecision: vi.fn(),
   setWorkspaceNote: vi.fn(),
   setWorkspacePinned: vi.fn(),
