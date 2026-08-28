@@ -3745,6 +3745,13 @@ html[data-tv-reduce-motion="true"] .tv-journal-entry:hover .tv-tool-mark {
   line-height: 1.45;
   color: var(--tv-ink-secondary);
   overflow-wrap: anywhere;
+  /* Mobile density: cap the tool-name line at two lines; the full text
+     stays in the accessibility tree, the jewels carry identity. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .tv-home-stack .tv-home-actions {
