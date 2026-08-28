@@ -125,6 +125,29 @@ export const workspaceTestFixtures = {
     { type: "tool/decision", slug: "meku", outcome: "deferred", at: T0 },
     { type: "tool/revisit", slug: "meku", revisitAt: "2020-01-01T00:00:00.000Z", at: T0 },
   ]),
+  fewSaved: apply(createEmptyWorkspaceState(), [
+    { type: "saved/set", slug: "cursor", saved: true, at: T0 },
+    { type: "saved/set", slug: "v0", saved: true, at: T0 },
+    { type: "saved/set", slug: "blink", saved: true, at: T1 },
+  ]),
+  multiStack: apply(createEmptyWorkspaceState(), [
+    { type: "saved/set", slug: "cursor", saved: true, at: T0 },
+    { type: "saved/set", slug: "v0", saved: true, at: T0 },
+    {
+      type: "stacks/create",
+      id: "ai-coding",
+      name: "AI Coding",
+      at: T1,
+    },
+    { type: "stacks/add", id: "ai-coding", slug: "cursor", at: T1 },
+    {
+      type: "stacks/create",
+      id: "marketing",
+      name: "Marketing",
+      at: T2,
+    },
+    { type: "stacks/add", id: "marketing", slug: "cursor", at: T2 },
+  ]),
   reviewFuture: apply(createEmptyWorkspaceState(), [
     { type: "saved/set", slug: "meku", saved: true, at: T0 },
     { type: "tool/decision", slug: "meku", outcome: "deferred", at: T0 },

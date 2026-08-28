@@ -4210,3 +4210,307 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
     padding: 1.45rem 1.5rem 1.5rem;
   }
 }
+
+
+/* ==========================================================================
+   SALVATI 2.0 — relationship library
+   Dense, scan-first. Reuses Home glass values without .tv-home classes,
+   Home composition, or nested blur. Rows stay hairline — not glass tiles.
+   ========================================================================== */
+.tv-lib {
+  --tv-lib-g1-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.01)
+  );
+  --tv-lib-g1-edge: rgba(255, 255, 255, 0.06);
+  --tv-lib-g1-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --tv-lib-g1-shadow: 0 10px 30px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.18);
+  --tv-lib-g1-filter: blur(12px) saturate(1.3);
+  --tv-lib-radius: 1.15rem;
+  --tv-lib-radius-sm: 0.85rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: none;
+  background:
+    radial-gradient(42rem 18rem at 18% -8rem, rgba(106, 60, 255, 0.06), transparent 68%),
+    radial-gradient(28rem 14rem at 88% -4rem, rgba(67, 198, 255, 0.025), transparent 72%);
+  background-repeat: no-repeat;
+}
+
+.tv-lib--empty {
+  max-width: 34rem;
+  padding: 1.15rem 1.1rem 1.25rem;
+  border: 1px solid var(--tv-lib-g1-edge);
+  border-radius: var(--tv-lib-radius);
+  background: var(--tv-lib-g1-veil);
+  -webkit-backdrop-filter: var(--tv-lib-g1-filter);
+  backdrop-filter: var(--tv-lib-g1-filter);
+  box-shadow: var(--tv-lib-g1-light), var(--tv-lib-g1-shadow);
+}
+
+.tv-lib-toolbar {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 0.15rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--tv-lib-g1-edge);
+  border-radius: var(--tv-lib-radius);
+  background: var(--tv-lib-g1-veil);
+  -webkit-backdrop-filter: var(--tv-lib-g1-filter);
+  backdrop-filter: var(--tv-lib-g1-filter);
+  box-shadow: var(--tv-lib-g1-light), var(--tv-lib-g1-shadow);
+}
+
+.tv-lib-search input,
+.tv-lib-select select {
+  min-height: 2.75rem;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(8, 8, 12, 0.35);
+}
+
+.tv-lib-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  overflow: visible;
+  padding-bottom: 0.1rem;
+  grid-column: 1 / -1;
+}
+
+.tv-lib-filters button {
+  min-height: 2.75rem;
+  padding: 0 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tv-ink-secondary);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.tv-lib-filters button.is-active,
+.tv-lib-filters button[aria-pressed="true"] {
+  border-color: rgba(185, 164, 255, 0.35);
+  background: color-mix(in srgb, rgba(154, 109, 255, 0.18) 70%, transparent);
+  color: var(--tv-ink-primary);
+}
+
+.tv-lib-clear {
+  justify-self: start;
+  min-height: 2.75rem;
+  padding: 0 0.2rem;
+}
+
+.tv-lib-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tv-lib-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.7rem 0.8rem;
+  align-items: start;
+  min-height: 0;
+  margin: 0;
+  padding: 0.85rem 0.15rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  background: transparent;
+}
+
+.tv-lib-row:hover,
+.tv-lib-row:nth-child(odd) {
+  background: transparent;
+}
+
+.tv-lib-row[data-focus="true"] {
+  margin: 0;
+  padding-left: 0.55rem;
+  padding-right: 0.55rem;
+  border-radius: var(--tv-lib-radius-sm);
+  background: color-mix(in srgb, rgba(154, 109, 255, 0.12) 80%, transparent);
+}
+
+.tv-lib-row__main {
+  min-width: 0;
+}
+
+.tv-lib-name {
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
+.tv-lib-desc {
+  margin: 0.15rem 0 0;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tv-lib-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.45rem;
+  align-items: center;
+  margin: 0.35rem 0 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.tv-lib-quick {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tv-lib-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 119, 255, 0.38);
+  color: rgba(255, 255, 255, 0.98);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+  background:
+    linear-gradient(
+      160deg,
+      rgba(154, 109, 255, 0.92),
+      rgba(106, 60, 255, 0.94) 46%,
+      rgba(74, 35, 191, 0.96)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 8px 24px rgba(47, 30, 108, 0.28);
+  cursor: pointer;
+}
+
+.tv-lib-cta--row {
+  padding: 0.4rem 0.95rem;
+  font-size: 0.8rem;
+}
+
+.tv-lib-textbtn {
+  min-height: 2.75rem;
+  opacity: 1;
+}
+
+.tv-lib-menu > summary {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.tv-lib-menu__panel {
+  position: absolute;
+  top: auto;
+  bottom: calc(100% + 0.3rem);
+  right: 0;
+  z-index: 8;
+  min-width: min(18rem, calc(100vw - 2rem));
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(16, 16, 22, 0.98);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.tv-lib-menu .tv-lib-action {
+  min-height: 2.75rem;
+}
+
+@media (min-width: 768px) {
+  .tv-lib-toolbar {
+    grid-template-columns: minmax(0, 1.6fr) minmax(11rem, 0.7fr);
+    align-items: center;
+  }
+
+  .tv-lib-filters,
+  .tv-lib-clear {
+    grid-column: 1 / -1;
+  }
+
+  .tv-lib-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 0.7rem 0.2rem;
+  }
+
+  .tv-lib-quick {
+    grid-column: auto;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .tv-lib-desc {
+    -webkit-line-clamp: 1;
+  }
+
+  .tv-lib-menu__panel {
+    top: calc(100% + 0.3rem);
+    bottom: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tv-lib-row .tv-lib-quick > .tv-lib-textbtn,
+  .tv-lib-row .tv-lib-quick > .tv-lib-cta {
+    opacity: 1;
+  }
+
+  .tv-lib-row {
+    min-height: 3.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .tv-lib {
+    max-width: 76rem;
+  }
+
+  .tv-lib-toolbar {
+    grid-template-columns: minmax(0, 1.8fr) minmax(12rem, 0.55fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  .tv-lib {
+    max-width: 82rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-lib,
+  .tv-lib-toolbar,
+  .tv-lib--empty {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+html[data-tv-reduce-motion="true"] .tv-lib,
+html[data-tv-reduce-motion="true"] .tv-lib-toolbar,
+html[data-tv-reduce-motion="true"] .tv-lib--empty {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

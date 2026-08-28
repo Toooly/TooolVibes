@@ -8,128 +8,71 @@ import {
   markWorkspaceToolReplaced,
   markWorkspaceToolStopped,
   markWorkspaceToolUsing,
-  setWorkspaceDecision,
   setWorkspaceNote,
   setWorkspacePinned,
-  setWorkspaceStage,
   toggleWorkspaceCompare,
   toggleWorkspaceSaved,
 } from "@/lib/account/workspace-actions";
 import {
-  compactPersonalStatus,
   formatRevisitLine,
-  USAGE_STATE_LABELS,
   usageActionLabel,
 } from "@/lib/account/workspace-lifecycle";
 import {
-  PIPELINE_COLUMNS,
-  listPipelineItems,
-  type PipelineColumn,
-  type PipelineItem,
-} from "@/lib/account/workspace-pipeline";
+  SALVATI_LIBRARY_FILTER_LABELS,
+  SALVATI_SORT_LABELS,
+  SALVATI_SORTS,
+  composeSalvatiLibrary,
+  compareSalvatiRelationships,
+  formatStackContext,
+  matchesSalvatiFilter,
+  matchesSalvatiSearch,
+  visibleSalvatiFilters,
+  type SalvatiLibraryFilter,
+  type SalvatiRelationship,
+  type SalvatiSort,
+} from "@/lib/account/salvati-relationship";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
-import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
-import type { WorkspaceDecisionOutcome, WorkspaceStateV1, WorkspaceUsage } from "@/lib/discovery/types";
+import type { WorkspaceDecisionOutcome, WorkspaceStateV1 } from "@/lib/discovery/types";
 import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 
 import { DecisionSheet } from "./decision-sheet";
 import { WorkspaceFilo } from "./filo";
 import { RevisitWhenChips } from "./revisit-when-chips";
-import { PIPELINE_LABELS, formatWorkspaceDate } from "./workspace-model";
+import { formatWorkspaceDate } from "./workspace-model";
 import { WorkspaceCatalogMark } from "./workspace-tool-mark";
 import { toolName } from "./workspace-tool-name";
-import { WorkspaceChip, WorkspaceEmptyMotif, WorkspaceReplacement, pipelineTone } from "./workspace-visual";
+import {
+  WorkspaceChip,
+  WorkspaceEmptyMotif,
+  WorkspaceReplacement,
+  pipelineTone,
+  type StatusTone,
+} from "./workspace-visual";
 
-const STATUS_FILTERS: Array<{ id: "tutti" | PipelineColumn; label: string }> = [
-  { id: "tutti", label: "Tutti" },
-  { id: "salvato", label: PIPELINE_LABELS.salvato },
-  { id: "da_valutare", label: PIPELINE_LABELS.da_valutare },
-  { id: "candidato", label: PIPELINE_LABELS.candidato },
-  { id: "scelto", label: PIPELINE_LABELS.scelto },
-  { id: "scartato", label: PIPELINE_LABELS.scartato },
-  { id: "rimandato", label: PIPELINE_LABELS.rimandato },
-];
-
-type UsageFilter = "tutti" | WorkspaceUsage;
-
-const USAGE_FILTERS: Array<{ id: UsageFilter; label: string }> = [
-  { id: "tutti", label: "Tutti gli usi" },
-  { id: "using", label: USAGE_STATE_LABELS.using },
-  { id: "stopped", label: USAGE_STATE_LABELS.stopped },
-  { id: "replaced", label: USAGE_STATE_LABELS.replaced },
-];
-
-type LibrarySort = "recent" | "oldest" | "alpha" | "status";
-
-const SORT_OPTIONS: Array<{ id: LibrarySort; label: string }> = [
-  { id: "recent", label: "Aggiornati di recente" },
-  { id: "oldest", label: "Più vecchi" },
-  { id: "alpha", label: "A–Z" },
-  { id: "status", label: "Stato" },
-];
-
-function categoryOf(
-  catalogBySlug: Map<string, PublicToolCatalogItem>,
-  slug: string,
-) {
-  return catalogBySlug.get(slug)?.categoryLabel ?? "";
+function catalogMap(catalog: readonly PublicToolCatalogItem[]) {
+  return new Map(catalog.map((tool) => [tool.slug, tool]));
 }
 
-function applyPipelineColumn(slug: string, next: PipelineColumn) {
-  if (next === "salvato") {
-    setWorkspaceDecision(slug, null);
-    setWorkspaceStage(slug, "saved");
-  }
-  if (next === "da_valutare") {
-    setWorkspaceDecision(slug, null);
-    setWorkspaceStage(slug, "review");
-  }
-  if (next === "candidato") {
-    setWorkspaceDecision(slug, null);
-    setWorkspaceStage(slug, "top");
-  }
+function relationshipTone(item: SalvatiRelationship): StatusTone {
+  if (item.usage === "using") return "using";
+  if (item.usage === "stopped") return "stopped";
+  if (item.usage === "replaced") return "replaced";
+  return pipelineTone(item.column);
 }
 
-function outcomeFromColumn(column: PipelineColumn): WorkspaceDecisionOutcome | null {
-  if (column === "scelto") return "selected";
-  if (column === "scartato") return "rejected";
-  if (column === "rimandato") return "deferred";
-  return null;
-}
-
-function compareLibraryItems(
-  left: PipelineItem,
-  right: PipelineItem,
-  sort: LibrarySort,
-  catalogBySlug: Map<string, PublicToolCatalogItem>,
-) {
-  const leftName = catalogBySlug.get(left.slug)?.name ?? left.slug;
-  const rightName = catalogBySlug.get(right.slug)?.name ?? right.slug;
-  const byName = leftName.localeCompare(rightName, "it");
-  if (sort === "alpha") return byName;
-  if (sort === "status") {
-    const delta =
-      PIPELINE_COLUMNS.indexOf(left.column) - PIPELINE_COLUMNS.indexOf(right.column);
-    return delta !== 0 ? delta : byName;
-  }
-  const leftAt = left.updatedAt ?? "";
-  const rightAt = right.updatedAt ?? "";
-  const byDate = leftAt.localeCompare(rightAt);
-  if (sort === "oldest") return byDate !== 0 ? byDate : byName;
-  return byDate !== 0 ? -byDate : byName;
-}
-
-function personalStatusLabel(item: PipelineItem) {
-  if (item.usage) {
-    return compactPersonalStatus({
-      usage: item.usage,
-      outcome: item.outcome,
-      stage: item.stage,
-    }).label;
-  }
-  return PIPELINE_LABELS[item.column];
+function emptyCatalogItem(slug: string): PublicToolCatalogItem {
+  return {
+    slug,
+    name: slug,
+    categoryLabel: "",
+    shortDescription: "",
+    featured: false,
+    toolOfWeek: false,
+    tags: [],
+    levelLabel: null,
+  };
 }
 
 export function WorkspaceBiblioteca({
@@ -141,76 +84,53 @@ export function WorkspaceBiblioteca({
 }) {
   const catalog = usePublicToolCatalog();
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<(typeof STATUS_FILTERS)[number]["id"]>("tutti");
-  const [usageFilter, setUsageFilter] = useState<UsageFilter>("tutti");
-  const [category, setCategory] = useState("tutte");
-  const [sort, setSort] = useState<LibrarySort>("recent");
+  const [filter, setFilter] = useState<SalvatiLibraryFilter>("tutti");
+  const [sort, setSort] = useState<SalvatiSort>("recent");
   const [openNote, setOpenNote] = useState<string | null>(null);
   const [decide, setDecide] = useState<{
     slug: string;
     name: string;
     defaultOutcome: WorkspaceDecisionOutcome;
+    alternatives: string[];
   } | null>(null);
-  const items = listPipelineItems(state);
-  const columnCounts = useMemo(() => {
-    const counts = Object.fromEntries(PIPELINE_COLUMNS.map((column) => [column, 0])) as Record<
-      (typeof PIPELINE_COLUMNS)[number],
-      number
-    >;
-    for (const item of items) counts[item.column] += 1;
-    return counts;
-  }, [items]);
-  const catalogBySlug = useMemo(
-    () => new Map(catalog.map((tool) => [tool.slug, tool])),
-    [catalog],
-  );
-  const hasUsageData = items.some((item) => item.usage != null);
-
-  const categories = useMemo(() => {
-    const labels = new Set<string>();
-    for (const item of items) {
-      const label = categoryOf(catalogBySlug, item.slug);
-      if (label) labels.add(label);
-    }
-    return [...labels].sort((left, right) => left.localeCompare(right, "it"));
-  }, [catalogBySlug, items]);
-
+  const nowIso = useMemo(() => new Date().toISOString(), []);
+  const library = useMemo(() => composeSalvatiLibrary(state, nowIso), [nowIso, state]);
+  const bySlug = useMemo(() => catalogMap(catalog), [catalog]);
+  const filterIds = visibleSalvatiFilters(library.filterCounts, library.showFilters);
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    const filtered = items.filter((item) => {
-      if (filter !== "tutti" && item.column !== filter) return false;
-      if (usageFilter !== "tutti" && item.usage !== usageFilter) return false;
-      const label = categoryOf(catalogBySlug, item.slug);
-      if (category !== "tutte" && label !== category) return false;
-      if (!needle) return true;
-      const name = toolName(catalog, item.slug).toLowerCase();
-      return (
-        name.includes(needle) ||
-        item.slug.toLowerCase().includes(needle) ||
-        label.toLowerCase().includes(needle)
+    const filtered = library.items.filter((item) => {
+      if (!matchesSalvatiFilter(item, filter)) return false;
+      const tool = bySlug.get(item.slug);
+      return matchesSalvatiSearch(
+        item,
+        needle,
+        {
+          name: tool?.name ?? item.slug,
+          categoryLabel: tool?.categoryLabel ?? "",
+        },
       );
     });
     return [...filtered].sort((left, right) =>
-      compareLibraryItems(left, right, sort, catalogBySlug),
+      compareSalvatiRelationships(
+        left,
+        right,
+        sort,
+        (slug) => bySlug.get(slug)?.name ?? slug,
+      ),
     );
-  }, [catalog, catalogBySlug, category, filter, items, query, sort, usageFilter]);
+  }, [bySlug, filter, library.items, query, sort]);
 
-  const filtersActive =
-    query.trim() !== "" ||
-    filter !== "tutti" ||
-    category !== "tutte" ||
-    usageFilter !== "tutti";
+  const filtersActive = query.trim() !== "" || filter !== "tutti";
 
   useEffect(() => {
     if (!focusSlug) return;
-    document
-      .querySelector(`[data-slug="${focusSlug}"]`)
-      ?.scrollIntoView({
-        block: "center",
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-      });
+    document.querySelector(`[data-slug="${focusSlug}"]`)?.scrollIntoView({
+      block: "center",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+    });
   }, [focusSlug, visible]);
 
   if (state.saved.slugs.length === 0) {
@@ -220,9 +140,9 @@ export function WorkspaceBiblioteca({
         <p className="tv-lib-kicker">Salvati</p>
         <h2 className="tv-lib-title">Nessun tool salvato ancora</h2>
         <p className="tv-lib-copy">
-          I Salvati vivono qui: stesso inventario, con stati e verdetti. Salva dal catalogo, poi valuta.
+          Qui vive la tua libreria software: un solo inventario, con relazione e prossimo passo.
         </p>
-        <Link className="account-btn-primary" href="/archivio">
+        <Link className="tv-lib-cta" href="/archivio">
           Inizia dal catalogo
         </Link>
       </section>
@@ -245,119 +165,59 @@ export function WorkspaceBiblioteca({
           <select
             aria-label="Ordina"
             value={sort}
-            onChange={(event) => setSort(event.target.value as LibrarySort)}
+            onChange={(event) => setSort(event.target.value as SalvatiSort)}
           >
-            {SORT_OPTIONS.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.label}
+            {SALVATI_SORTS.map((id) => (
+              <option key={id} value={id}>
+                {SALVATI_SORT_LABELS[id]}
               </option>
             ))}
           </select>
         </label>
-        <label className="tv-lib-select tv-lib-select--status-mobile">
-          <span className="sr-only">Stato decisione</span>
-          <select
-            aria-label="Stato decisione"
-            value={filter}
-            onChange={(event) =>
-              setFilter(event.target.value as (typeof STATUS_FILTERS)[number]["id"])
-            }
+        {filterIds.length > 0 ? (
+          <div className="tv-lib-filters" role="group" aria-label="Relazione">
+            {filterIds.map((id) => {
+              const count = library.filterCounts[id];
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={filter === id}
+                  className={filter === id ? "is-active" : undefined}
+                  onClick={() => setFilter(id)}
+                >
+                  {SALVATI_LIBRARY_FILTER_LABELS[id]}
+                  <span className="tv-lib-filter-n">{count}</span>
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+        {filtersActive ? (
+          <button
+            type="button"
+            className="tv-lib-clear"
+            onClick={() => {
+              setQuery("");
+              setFilter("tutti");
+            }}
           >
-            {STATUS_FILTERS.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.id === "tutti"
-                  ? `${item.label} (${items.length})`
-                  : `${item.label} (${columnCounts[item.id]})`}
-              </option>
-            ))}
-          </select>
-        </label>
-        {categories.length > 0 ? (
-          <label className="tv-lib-select">
-            <span className="sr-only">Categoria</span>
-            <select
-              aria-label="Categoria"
-              value={category}
-              onChange={(event) => setCategory(event.target.value)}
-            >
-              <option value="tutte">Tutte le categorie</option>
-              {categories.map((label) => (
-                <option key={label} value={label}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
+            Azzera filtri
+          </button>
         ) : null}
-        <div className="tv-lib-filters" role="group" aria-label="Stato decisione">
-          {STATUS_FILTERS.map((item) => {
-            const count = item.id === "tutti" ? items.length : columnCounts[item.id];
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-pressed={filter === item.id}
-                className={filter === item.id ? "is-active" : undefined}
-                onClick={() => setFilter(item.id)}
-              >
-                {item.label}
-                <span className="tv-lib-filter-n">{count}</span>
-              </button>
-            );
-          })}
-        </div>
-        {hasUsageData ? (
-          <label className="tv-lib-select">
-            <span className="sr-only">Uso</span>
-            <select
-              aria-label="Uso"
-              value={usageFilter}
-              onChange={(event) =>
-                setUsageFilter(event.target.value as UsageFilter)
-              }
-            >
-              {USAGE_FILTERS.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
-        <div className="tv-lib-count">
-          <span>
-            {visible.length === items.length
-              ? `${items.length} salvati`
-              : `${visible.length} di ${items.length}`}
-          </span>
-          {filtersActive ? (
-            <button
-              type="button"
-              className="tv-lib-clear"
-              onClick={() => {
-                setQuery("");
-                setFilter("tutti");
-                setCategory("tutte");
-                setUsageFilter("tutti");
-              }}
-            >
-              Azzera filtri
-            </button>
-          ) : null}
-        </div>
       </div>
 
       {visible.length === 0 ? (
         <p className="tv-lib-copy">Nessun tool corrisponde ai filtri.</p>
       ) : (
-        <ul className="tv-lib-list">
+        <ul className="tv-lib-list" aria-label="Libreria software">
           {visible.map((item) => (
             <LibraryRow
               key={item.slug}
               item={item}
               state={state}
               catalog={catalog}
-              category={categoryOf(catalogBySlug, item.slug)}
+              catalogItem={bySlug.get(item.slug) ?? emptyCatalogItem(item.slug)}
               focused={focusSlug === item.slug}
               noteOpen={openNote === item.slug}
               onToggleNote={() =>
@@ -368,6 +228,7 @@ export function WorkspaceBiblioteca({
                   slug: item.slug,
                   name: toolName(catalog, item.slug),
                   defaultOutcome,
+                  alternatives: item.alternatives,
                 })
               }
             />
@@ -383,7 +244,7 @@ export function WorkspaceBiblioteca({
           }}
           slug={decide.slug}
           toolName={decide.name}
-          alternatives={[]}
+          alternatives={decide.alternatives}
           source="salvati"
           defaultOutcome={decide.defaultOutcome}
         />
@@ -396,29 +257,23 @@ function LibraryRow({
   item,
   state,
   catalog,
-  category,
+  catalogItem,
   focused,
   noteOpen,
   onToggleNote,
   onDecidi,
 }: {
-  item: PipelineItem;
+  item: SalvatiRelationship;
   state: WorkspaceStateV1;
   catalog: readonly PublicToolCatalogItem[];
-  category: string;
+  catalogItem: PublicToolCatalogItem;
   focused: boolean;
   noteOpen: boolean;
   onToggleNote: () => void;
   onDecidi: (outcome: WorkspaceDecisionOutcome) => void;
 }) {
-  const name = toolName(catalog, item.slug);
-  const catalogItem = catalog.find((tool) => tool.slug === item.slug);
-  const inCompare = state.compare.slugs.includes(item.slug);
-  const compareFull = !inCompare && state.compare.slugs.length >= MAX_COMPARE_TOOLS;
+  const name = catalogItem.name || item.slug;
   const [draft, setDraft] = useState(item.note ?? "");
-  const rejected = item.outcome === "rejected";
-  const showMarkUsing =
-    !rejected && item.usage !== "using" && item.outcome === "selected";
   const showMarkStopped = item.usage === "using";
   const showMarkReplaced =
     item.outcome === "selected" || item.usage === "using" || item.usage === "stopped";
@@ -426,169 +281,157 @@ function LibraryRow({
   const replacedName = item.replacedBy ? toolName(catalog, item.replacedBy) : null;
   const revisitLine =
     item.column === "rimandato" ? formatRevisitLine(item.revisitAt) : null;
+  const stackLine = formatStackContext(item.stackNames);
+  const descriptor = catalogItem.shortDescription?.trim() || catalogItem.categoryLabel;
+  const primary = item.primaryAction;
+
+  function handlePrimary() {
+    if (primary.kind === "rivedi" || primary.kind === "valuta") {
+      onDecidi(item.outcome ?? "selected");
+      return;
+    }
+    if (primary.kind === "conferma_uso") {
+      markWorkspaceToolUsing(item.slug);
+    }
+  }
 
   return (
     <li
       className="tv-lib-row"
       data-slug={item.slug}
       data-focus={focused ? "true" : undefined}
+      data-relationship={item.compact.key}
+      data-primary-action={primary.kind}
     >
       <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="lg" />
       <div className="tv-lib-row__main">
         <Link className="tv-lib-name" href={`/toools/${item.slug}`}>
           {name}
         </Link>
-        {catalogItem?.shortDescription ? (
-          <p className="tv-lib-desc">{catalogItem.shortDescription}</p>
-        ) : null}
+        {descriptor ? <p className="tv-lib-desc">{descriptor}</p> : null}
         <p className="tv-lib-meta">
-          <WorkspaceChip tone={pipelineTone(item.column)}>
-            {personalStatusLabel(item)}
-          </WorkspaceChip>
-          <span>{category || "Senza categoria"}</span>
-          {item.stackNames.length > 0 ? <span>{item.stackNames.join(", ")}</span> : null}
+          <WorkspaceChip tone={relationshipTone(item)}>{item.compact.label}</WorkspaceChip>
+          {item.reviewDue ? <WorkspaceChip tone="revisit">Da rivedere</WorkspaceChip> : null}
+          {item.inCompare ? <WorkspaceChip tone="top">Nel confronto</WorkspaceChip> : null}
+          {stackLine ? <WorkspaceChip tone="stack">{stackLine}</WorkspaceChip> : null}
           {revisitLine ? <span>{revisitLine}</span> : null}
           {formatWorkspaceDate(item.updatedAt) ? (
             <span>{formatWorkspaceDate(item.updatedAt)}</span>
           ) : null}
+          {item.pinned ? <WorkspaceChip tone="pin">Fisso</WorkspaceChip> : null}
+          {item.note ? <WorkspaceChip tone="note">Nota</WorkspaceChip> : null}
         </p>
         <WorkspaceFilo
           state={state}
           slug={item.slug}
           catalog={catalog}
           defaultOpen={focused}
+          events={item.events}
         />
         {replacedName && item.replacedBy ? (
           <WorkspaceReplacement catalog={catalog} fromSlug={item.slug} toSlug={item.replacedBy} />
         ) : null}
-        {item.pinned || item.note ? (
-          <p className="tv-lib-marks">
-            {item.pinned ? <WorkspaceChip tone="pin">Fisso</WorkspaceChip> : null}
-            {item.note ? <WorkspaceChip tone="note">Nota</WorkspaceChip> : null}
-          </p>
-        ) : null}
       </div>
 
       <div className="tv-lib-quick">
-        {compareFull ? (
-          <WorkspaceChip tone="review">Confronto pieno</WorkspaceChip>
+        {primary.href ? (
+          <Link className="tv-lib-cta tv-lib-cta--row" href={primary.href}>
+            {primary.label}
+          </Link>
         ) : (
-          <button
-            type="button"
-            className="tv-lib-textbtn"
-            onClick={() => toggleWorkspaceCompare(item.slug)}
-          >
-            {inCompare ? "In confronto" : "Confronta"}
+          <button type="button" className="tv-lib-cta tv-lib-cta--row" onClick={handlePrimary}>
+            {primary.label}
           </button>
         )}
-        {showMarkUsing ? (
-          <button
-            type="button"
-            className="tv-lib-textbtn"
-            onClick={() => markWorkspaceToolUsing(item.slug)}
-          >
-            {usageActionLabel("using")}
-          </button>
-        ) : null}
-        {showMarkStopped ? (
-          <button
-            type="button"
-            className="tv-lib-textbtn"
-            onClick={() => markWorkspaceToolStopped(item.slug)}
-          >
-            {usageActionLabel("stopped")}
-          </button>
-        ) : null}
-      <details className="tv-lib-menu">
-        <summary aria-label={`Azioni per ${name}`}>
-          Azioni
-        </summary>
-        <div className="tv-lib-menu__panel">
-          <Link className="tv-lib-action" href={`/toools/${item.slug}`}>
-            Apri
-          </Link>
-          <button
-            type="button"
-            className="tv-lib-action"
-            onClick={() => onDecidi(item.outcome ?? "selected")}
-          >
-            Decidi
-          </button>
-          <label className="tv-lib-action tv-lib-action--field">
-            <span>Sposta</span>
-            <select
-              value={item.column}
-              onChange={(event) => {
-                const next = event.target.value as PipelineColumn;
-                const outcome = outcomeFromColumn(next);
-                if (outcome) {
-                  onDecidi(outcome);
-                  return;
-                }
-                applyPipelineColumn(item.slug, next);
-              }}
-            >
-              {STATUS_FILTERS.filter((entry) => entry.id !== "tutti").map((entry) => (
-                <option key={entry.id} value={entry.id}>
-                  {entry.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          {showMarkReplaced && otherSaved.length > 0 ? (
-            <label className="tv-lib-action tv-lib-action--field">
-              <span>{usageActionLabel("replaced")}</span>
-              <select
-                aria-label={usageActionLabel("replaced")}
-                defaultValue=""
-                onChange={(event) => {
-                  if (event.target.value) {
-                    markWorkspaceToolReplaced(item.slug, event.target.value);
-                  }
-                  event.target.value = "";
-                }}
+        <details className="tv-lib-menu">
+          <summary aria-label={`Azioni per ${name}`}>⋯</summary>
+          <div className="tv-lib-menu__panel">
+            <Link className="tv-lib-action" href={`/toools/${item.slug}`}>
+              Apri
+            </Link>
+            {item.compareFull ? (
+              <span className="tv-lib-action tv-lib-action--status">Confronto pieno</span>
+            ) : (
+              <button
+                type="button"
+                className="tv-lib-action"
+                onClick={() => toggleWorkspaceCompare(item.slug)}
               >
-                <option value="">Sostituisci con</option>
-                {otherSaved.map((slug) => (
-                  <option key={slug} value={slug}>
-                    {toolName(catalog, slug)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
-          {item.column === "rimandato" ? (
-            <div className="tv-lib-action tv-lib-action--field">
-              <span>Quando rivedere</span>
-              <RevisitWhenChips
-                onSelect={(revisitAt) => deferWorkspaceTool(item.slug, revisitAt)}
-              />
-            </div>
-          ) : null}
-          <StackPickOrCreate
-            slug={item.slug}
-            allowCreate={getActiveWorkspaceOwner().kind === "account"}
-            compact
-          />
-          <button type="button" className="tv-lib-action" onClick={onToggleNote}>
-            {noteOpen ? "Chiudi nota" : item.note ? "Modifica nota" : "Aggiungi nota"}
-          </button>
-          <button
-            type="button"
-            className="tv-lib-action"
-            onClick={() => setWorkspacePinned(item.slug, !item.pinned)}
-          >
-            {item.pinned ? "Togli fisso" : "Fissa"}
-          </button>
-          <button
-            type="button"
-            className="tv-lib-action tv-lib-action--danger"
-            onClick={() => toggleWorkspaceSaved(item.slug)}
-          >
-            Rimuovi dai salvati
-          </button>
-        </div>
-      </details>
+                {item.inCompare ? "Togli dal confronto" : "Confronta"}
+              </button>
+            )}
+            {primary.kind === "valuta" || primary.kind === "rivedi" ? null : (
+              <button
+                type="button"
+                className="tv-lib-action"
+                onClick={() => onDecidi(item.outcome ?? "selected")}
+              >
+                {item.reviewDue ? "Rivedi" : "Valuta"}
+              </button>
+            )}
+            {showMarkStopped ? (
+              <button
+                type="button"
+                className="tv-lib-action"
+                onClick={() => markWorkspaceToolStopped(item.slug)}
+              >
+                {usageActionLabel("stopped")}
+              </button>
+            ) : null}
+            {showMarkReplaced && otherSaved.length > 0 ? (
+              <label className="tv-lib-action tv-lib-action--field">
+                <span>{usageActionLabel("replaced")}</span>
+                <select
+                  aria-label={usageActionLabel("replaced")}
+                  defaultValue=""
+                  onChange={(event) => {
+                    if (event.target.value) {
+                      markWorkspaceToolReplaced(item.slug, event.target.value);
+                    }
+                    event.target.value = "";
+                  }}
+                >
+                  <option value="">Sostituisci con</option>
+                  {otherSaved.map((slug) => (
+                    <option key={slug} value={slug}>
+                      {toolName(catalog, slug)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
+            {item.column === "rimandato" ? (
+              <div className="tv-lib-action tv-lib-action--field">
+                <span>Quando rivedere</span>
+                <RevisitWhenChips
+                  onSelect={(revisitAt) => deferWorkspaceTool(item.slug, revisitAt)}
+                />
+              </div>
+            ) : null}
+            <StackPickOrCreate
+              slug={item.slug}
+              allowCreate={getActiveWorkspaceOwner().kind === "account"}
+              compact
+            />
+            <button type="button" className="tv-lib-action" onClick={onToggleNote}>
+              {noteOpen ? "Chiudi nota" : item.note ? "Modifica nota" : "Aggiungi nota"}
+            </button>
+            <button
+              type="button"
+              className="tv-lib-action"
+              onClick={() => setWorkspacePinned(item.slug, !item.pinned)}
+            >
+              {item.pinned ? "Togli fisso" : "Fissa"}
+            </button>
+            <button
+              type="button"
+              className="tv-lib-action tv-lib-action--danger"
+              onClick={() => toggleWorkspaceSaved(item.slug)}
+            >
+              Rimuovi dai salvati
+            </button>
+          </div>
+        </details>
       </div>
 
       {noteOpen ? (

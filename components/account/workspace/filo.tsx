@@ -9,7 +9,10 @@ import {
   summarizeFilo,
 } from "@/lib/account/workspace-filo";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
-import type { WorkspaceStateV1 } from "@/lib/discovery/types";
+import type {
+  WorkspaceRelationshipEvent,
+  WorkspaceStateV1,
+} from "@/lib/discovery/types";
 
 import { toolName } from "./workspace-tool-name";
 
@@ -18,13 +21,15 @@ export function WorkspaceFilo({
   slug,
   catalog,
   defaultOpen = false,
+  events: eventsProp,
 }: {
   state: WorkspaceStateV1;
   slug: string;
   catalog: readonly PublicToolCatalogItem[];
   defaultOpen?: boolean;
+  events?: WorkspaceRelationshipEvent[];
 }) {
-  const events = listFiloEvents(state, slug);
+  const events = eventsProp ?? listFiloEvents(state, slug);
   const summary = summarizeFilo(state, slug);
   const label = formatFiloSummary(summary, events.length > 0);
   const [open, setOpen] = useState(defaultOpen);
