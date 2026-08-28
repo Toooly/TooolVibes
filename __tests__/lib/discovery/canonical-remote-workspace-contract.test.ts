@@ -20,7 +20,7 @@ describe("canonical remote workspace ownership contract", () => {
     expect(assignViewer).toContain("return viewerForUser(userId)");
   });
 
-  it("preserves an unconsumed legacy remote guest when the account already exists", () => {
+  it("H2-SYNC-6 preserves an unconsumed legacy remote guest when the account already exists", () => {
     const start = source.indexOf("export async function attachCanonicalWorkspace");
     const end = source.indexOf("export async function releaseCanonicalWorkspace", start);
     const attach = source.slice(start, end);

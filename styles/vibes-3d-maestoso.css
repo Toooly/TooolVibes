@@ -2101,6 +2101,11 @@ canvas {
   border: 1px solid color-mix(in srgb, var(--danger) 28%, transparent);
   color: var(--danger);
 }
+.v-auth-message--info {
+  background: rgba(124, 77, 255, 0.08);
+  border: 1px solid rgba(124, 77, 255, 0.18);
+  color: var(--v-text-muted, #9E99B8);
+}
 
 /* Footer */
 .v-auth-footer {
