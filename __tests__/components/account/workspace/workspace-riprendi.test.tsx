@@ -26,6 +26,15 @@ vi.mock("@/lib/account/workspace-actions", () => ({
   setWorkspaceRevisit: actions.setWorkspaceRevisit,
   commitWorkspaceDecision: vi.fn(),
   reopenWorkspaceDecision: vi.fn(),
+  toggleWorkspaceCompare: vi.fn(),
+}));
+
+vi.mock("@/lib/radar/use-product-hunt-radar", () => ({
+  useProductHuntRadar: () => ({
+    payload: undefined,
+    isLoading: false,
+    isFetching: false,
+  }),
 }));
 
 vi.mock("@/components/account/account-provider", () => ({
@@ -100,7 +109,7 @@ describe("WorkspaceRiprendi", () => {
     expect(compare.getAttribute("href")).toBe("/compare");
     expect(screen.getByText(/In uso:/)).toBeTruthy();
     expect(screen.getByText(/In uso:/).textContent).toMatch(/Cursor/);
-    expect(screen.queryByRole("heading", { name: "Stack attivi" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Stack attivi" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Memoria software" })).toBeNull();
     expect(screen.queryByText("Segnale")).toBeNull();
   });

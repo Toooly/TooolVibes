@@ -4,11 +4,19 @@ import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
 import { recommendWorkspaceTools } from "@/lib/account/personalization";
 import {
   chooseResumeAction,
+  composeHomeWorkspace,
   derivePersonalRecords,
   deriveResurfaceSignals,
+  HOME_RADAR_CAP,
   HOME_REVIEW_CAP,
+  HOME_STACKS_CAP,
+  HOME_UNFILED_CAP,
+  HOME_UNFINISHED_CAP,
+  listHomeActiveStacks,
   listHomeReviewQueue,
+  listHomeUnfinishedQueue,
   listPipelineItems,
+  listUnfiledSaved,
   pipelineColumnForTool,
 } from "@/lib/account/workspace-pipeline";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
@@ -418,5 +426,222 @@ describe("listHomeReviewQueue", () => {
     expect(
       listHomeReviewQueue(workspaceTestFixtures.reviewManyDue, { nowIso: NOW, cap: HOME_REVIEW_CAP }),
     ).toHaveLength(3);
+  });
+});
+
+describe("listHomeUnfinishedQueue", () => {
+  it("excludes the resume slug and does not duplicate the primary relationship", () => {
+    const resume = chooseResumeAction(workspaceTestFixtures.withCompare, NOW);
+    const queue = listHomeUnfinishedQueue(workspaceTestFixtures.withCompare, {
+      nowIso: NOW,
+      resume,
+    });
+    expect(resume).toEqual({ kind: "continue_compare", slug: "cursor" });
+    expect(queue.every((item) => item.slug !== "cursor")).toBe(true);
+    expect(queue.every((item) => item.slug !== "v0")).toBe(true);
+  });
+
+  it("when resume is continue_compare, excludes every compare slug", () => {
+    const resume = chooseResumeAction(workspaceTestFixtures.mature, NOW);
+    expect(resume.kind).toBe("continue_compare");
+    const queue = listHomeUnfinishedQueue(workspaceTestFixtures.mature, {
+      nowIso: NOW,
+      resume,
+    });
+    for (const slug of workspaceTestFixtures.mature.compare.slugs) {
+      expect(queue.some((item) => item.slug === slug)).toBe(false);
+    }
+  });
+
+  it("does not take deferred_due items (owned by Da rivedere)", () => {
+    const resume = chooseResumeAction(workspaceTestFixtures.reviewDue, NOW);
+    const queue = listHomeUnfinishedQueue(workspaceTestFixtures.reviewDue, {
+      nowIso: NOW,
+      resume,
+    });
+    expect(queue.some((item) => item.slug === "meku")).toBe(false);
+  });
+
+  it("follows kind priority then leftover saved without verdict, capped at 3", () => {
+    let state = createEmptyWorkspaceState();
+    const slugs = ["top-a", "top-b", "follow", "review-a", "stale", "open-a", "open-b"];
+    for (const slug of slugs) {
+      state = reduceWorkspaceState(state, {
+        type: "saved/set",
+        slug,
+        saved: true,
+        at: slug === "stale" ? "2026-05-01T00:00:00.000Z" : NOW,
+      });
+    }
+    state = reduceWorkspaceState(state, { type: "tool/stage", slug: "top-a", stage: "top", at: NOW });
+    state = reduceWorkspaceState(state, { type: "tool/stage", slug: "top-b", stage: "top", at: NOW });
+    state = reduceWorkspaceState(state, {
+      type: "tool/decision",
+      slug: "follow",
+      outcome: "selected",
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, {
+      type: "tool/stage",
+      slug: "review-a",
+      stage: "review",
+      at: NOW,
+    });
+
+    const resume = chooseResumeAction(state, NOW);
+    expect(resume).toEqual({ kind: "close_decision", slug: "top-a" });
+    const queue = listHomeUnfinishedQueue(state, { nowIso: NOW, resume, cap: HOME_UNFINISHED_CAP });
+    expect(queue).toHaveLength(3);
+    expect(queue.map((item) => item.kind)).toEqual([
+      "top_without_verdict",
+      "selected_follow_up",
+      "review_without_verdict",
+    ]);
+    expect(queue.map((item) => item.slug)).toEqual(["top-b", "follow", "review-a"]);
+  });
+
+  it("fills leftover saved with outcome null after resurface kinds", () => {
+    let state = createEmptyWorkspaceState();
+    state = reduceWorkspaceState(state, { type: "saved/set", slug: "first", saved: true, at: NOW });
+    state = reduceWorkspaceState(state, { type: "saved/set", slug: "second", saved: true, at: NOW });
+    state = reduceWorkspaceState(state, { type: "saved/set", slug: "third", saved: true, at: NOW });
+    const resume = chooseResumeAction(state, NOW);
+    expect(resume).toEqual({ kind: "evaluate_saved", slug: "first" });
+    const queue = listHomeUnfinishedQueue(state, { nowIso: NOW, resume });
+    expect(queue.map((item) => item.slug)).toEqual(["second", "third"]);
+    expect(queue.every((item) => item.kind === "saved_open")).toBe(true);
+  });
+
+  it("returns an empty list when nothing remains", () => {
+    const resume = chooseResumeAction(workspaceTestFixtures.quietReturning, NOW);
+    expect(resume.kind).toBe("empty");
+    expect(
+      listHomeUnfinishedQueue(workspaceTestFixtures.quietReturning, { nowIso: NOW, resume }),
+    ).toEqual([]);
+  });
+});
+
+describe("listHomeActiveStacks", () => {
+  it("returns active personal stacks sorted by updatedAt desc", () => {
+    const stacks = listHomeActiveStacks(workspaceTestFixtures.mature);
+    expect(stacks.map((stack) => stack.id)).toEqual(["free-stack", "client-stack", "ai-coding"]);
+  });
+
+  it("caps at HOME_STACKS_CAP", () => {
+    expect(HOME_STACKS_CAP).toBe(4);
+    let state = createEmptyWorkspaceState();
+    for (let index = 0; index < 6; index += 1) {
+      const id = `stack-${index}`;
+      state = reduceWorkspaceState(state, {
+        type: "stacks/create",
+        id,
+        name: `Stack ${index}`,
+        at: `2026-06-0${index + 1}T10:00:00.000Z`,
+      });
+    }
+    expect(listHomeActiveStacks(state)).toHaveLength(4);
+    expect(listHomeActiveStacks(state)[0]?.id).toBe("stack-5");
+  });
+
+  it("returns empty when there are no active stacks", () => {
+    expect(listHomeActiveStacks(workspaceTestFixtures.withSaved)).toEqual([]);
+  });
+});
+
+describe("listUnfiledSaved", () => {
+  it("keeps only saved, undecided, unstacked tools at stage saved", () => {
+    const items = listUnfiledSaved(workspaceTestFixtures.withStacks);
+    expect(items.map((item) => item.slug)).toEqual([]);
+  });
+
+  it("excludes stacked, decided, and excludeSlugs", () => {
+    let state = createEmptyWorkspaceState();
+    for (const slug of ["alpha", "beta", "gamma", "delta", "epsilon"]) {
+      state = reduceWorkspaceState(state, { type: "saved/set", slug, saved: true, at: NOW });
+    }
+    state = reduceWorkspaceState(state, {
+      type: "stacks/create",
+      id: "pack",
+      name: "Pack",
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, { type: "stacks/add", id: "pack", slug: "beta", at: NOW });
+    state = reduceWorkspaceState(state, {
+      type: "tool/decision",
+      slug: "gamma",
+      outcome: "selected",
+      at: NOW,
+    });
+    state = reduceWorkspaceState(state, { type: "tool/stage", slug: "delta", stage: "top", at: NOW });
+
+    const items = listUnfiledSaved(state, { excludeSlugs: ["alpha"], cap: HOME_UNFILED_CAP });
+    expect(items.map((item) => item.slug)).toEqual(["epsilon"]);
+  });
+
+  it("caps at HOME_UNFILED_CAP", () => {
+    expect(HOME_UNFILED_CAP).toBe(3);
+    let state = createEmptyWorkspaceState();
+    for (const slug of ["a", "b", "c", "d", "e"]) {
+      state = reduceWorkspaceState(state, { type: "saved/set", slug, saved: true, at: NOW });
+    }
+    expect(listUnfiledSaved(state, { cap: HOME_UNFILED_CAP })).toHaveLength(3);
+  });
+});
+
+describe("composeHomeWorkspace", () => {
+  it("composes one derived model without duplicating resume/unfinished/review/unfiled", () => {
+    const composition = composeHomeWorkspace(workspaceTestFixtures.mature, NOW);
+    expect(composition.nowIso).toBe(NOW);
+    expect(composition.blank).toBe(false);
+    expect(composition.resume).toEqual(chooseResumeAction(workspaceTestFixtures.mature, NOW));
+    expect(composition.unfinished.length).toBeLessThanOrEqual(HOME_UNFINISHED_CAP);
+    expect(composition.stacks.length).toBeLessThanOrEqual(HOME_STACKS_CAP);
+    expect(composition.review.length).toBeLessThanOrEqual(HOME_REVIEW_CAP);
+    expect(composition.unfiled.length).toBeLessThanOrEqual(HOME_UNFILED_CAP);
+
+    const seen = new Set<string>();
+    if (composition.resume.slug) seen.add(composition.resume.slug);
+    if (composition.resume.kind === "continue_compare") {
+      for (const slug of workspaceTestFixtures.mature.compare.slugs) seen.add(slug);
+    }
+    for (const item of composition.unfinished) {
+      expect(seen.has(item.slug)).toBe(false);
+      seen.add(item.slug);
+    }
+    for (const item of composition.review) {
+      expect(seen.has(item.slug)).toBe(false);
+      seen.add(item.slug);
+    }
+    for (const item of composition.unfiled) {
+      expect(seen.has(item.slug)).toBe(false);
+    }
+  });
+
+  it("shrinks review cap when resume is a due decision", () => {
+    const composition = composeHomeWorkspace(workspaceTestFixtures.reviewManyDue, NOW);
+    expect(composition.resume.kind).toBe("review_decision");
+    expect(composition.review).toHaveLength(HOME_REVIEW_CAP - 1);
+    expect(composition.review.every((item) => item.slug !== composition.resume.slug)).toBe(true);
+  });
+
+  it("is pure and does not write schemaVersion or mutate state", () => {
+    const state = workspaceTestFixtures.withDecisions;
+    const before = JSON.stringify(state);
+    const first = composeHomeWorkspace(state, NOW);
+    const second = composeHomeWorkspace(state, NOW);
+    expect(first).toEqual(second);
+    expect(JSON.stringify(state)).toBe(before);
+    expect(state.schemaVersion).toBe(1);
+    expect(HOME_RADAR_CAP).toBe(4);
+  });
+
+  it("returns a blank composition for an empty workspace", () => {
+    const composition = composeHomeWorkspace(createEmptyWorkspaceState(), NOW);
+    expect(composition.blank).toBe(true);
+    expect(composition.resume.kind).toBe("empty");
+    expect(composition.unfinished).toEqual([]);
+    expect(composition.stacks).toEqual([]);
+    expect(composition.review).toEqual([]);
+    expect(composition.unfiled).toEqual([]);
   });
 });

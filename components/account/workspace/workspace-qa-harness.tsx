@@ -57,7 +57,7 @@ export function WorkspaceQaHarness({
   view = "riprendi",
   surface = "workspace",
 }: {
-  fixture?: "new" | "mature" | "quiet" | "review" | "compare";
+  fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume";
   view?: WorkspaceView;
   surface?: "workspace" | "settings";
 }) {
@@ -66,6 +66,8 @@ export function WorkspaceQaHarness({
     if (fixture === "quiet") return workspaceTestFixtures.quietReturning;
     if (fixture === "review") return workspaceTestFixtures.reviewDue;
     if (fixture === "compare") return workspaceTestFixtures.withCompare;
+    if (fixture === "stacks") return workspaceTestFixtures.withStacks;
+    if (fixture === "resume") return workspaceTestFixtures.withDecisions;
     return workspaceTestFixtures.mature;
   }, [fixture]);
   const initialView = WORKSPACE_VIEWS.includes(view) ? view : "riprendi";

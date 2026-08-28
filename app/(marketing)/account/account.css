@@ -3291,29 +3291,7 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
   background: var(--tv-surface-raised);
 }
 
-/* Wave 5 — Home subtraction. Do not restyle Banco. */
-.tv-home {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-@media (min-width: 1024px) {
-  .tv-home {
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: none;
-  }
-  .tv-home-hello,
-  .tv-mod--resume,
-  .tv-mod--compare,
-  .tv-mod--pending,
-  .tv-mod--using,
-  .tv-mod--stacks,
-  .tv-mod--memory,
-  .tv-mod--signal {
-    grid-column: auto;
-  }
-}
+/* Wave 5 lock replaced by Home 2.0 — see block at end of this file. */
 .tv-home .tv-mod--resume {
   background: var(--tv-surface-raised);
   border: 1px solid var(--tv-border-subtle);
@@ -3487,4 +3465,231 @@ html[data-tv-reduce-motion="true"] .tv-journal-entry:hover .tv-tool-mark {
 
 .tv-lib-row[data-focus="true"] {
   background: var(--tv-surface-selected);
+}
+
+/* ==========================================================================
+   Home 2.0 — Personal Software Workspace
+   Derived composition only. Banco grammar: resume well, hairlines, jewels.
+   Do not revive the 1280 3-column carnival. Do not restyle Banco/Salvati/Stack.
+   768 stays one column. 1024 is the LoopShell composition breakpoint.
+   ========================================================================== */
+
+.tv-home {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.tv-home .tv-mod--resume {
+  background: var(--tv-surface-raised);
+  border: 1px solid var(--tv-border-subtle);
+}
+
+.tv-home__unfinished,
+.tv-home__review,
+.tv-home__unfiled,
+.tv-home__radar {
+  min-width: 0;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tv-home__stacks {
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.tv-home__quiet {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.tv-home-crumb {
+  margin: 0.45rem 0 0;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.tv-home-queue-item {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tv-home-queue-item .tv-home-kicker {
+  margin: 0;
+}
+
+.tv-home-queue-item .tv-home-row {
+  padding: 0;
+  min-height: 2.5rem;
+  border-bottom: 0;
+}
+
+.tv-home-stacks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.15rem;
+}
+
+.tv-home-stack {
+  flex: 1 1 13.5rem;
+  min-width: 0;
+  max-width: 22rem;
+  padding: 0.55rem 0 0.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tv-home-stack__name {
+  margin: 0;
+  color: var(--tv-ink-primary);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.tv-home-stack__tools {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+  margin: 0.45rem 0 0;
+  padding: 0;
+}
+
+.tv-home-stack__tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  color: var(--tv-ink-primary);
+  font-size: 0.88rem;
+}
+
+.tv-home__unfinished .tv-home-title,
+.tv-home__review .tv-home-title,
+.tv-home__stacks .tv-home-title,
+.tv-home__unfiled .tv-home-title,
+.tv-home__radar .tv-home-title {
+  font-size: 1.05rem;
+}
+
+.tv-home__radar .tv-home-kicker {
+  margin-bottom: 0.15rem;
+}
+
+@media (min-width: 1024px) {
+  .tv-home {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    column-gap: 1.35rem;
+    row-gap: 0;
+    align-items: start;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "resume unfinished"
+      "quiet quiet"
+      "stacks stacks"
+      "unfiled review"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home > * {
+    margin-bottom: 1.45rem;
+  }
+
+  .tv-home > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .tv-home__resume { grid-area: resume; }
+  .tv-home__unfinished { grid-area: unfinished; }
+  .tv-home__quiet { grid-area: quiet; }
+  .tv-home__stacks { grid-area: stacks; }
+  .tv-home__unfiled { grid-area: unfiled; }
+  .tv-home__review { grid-area: review; }
+  .tv-home__using { grid-area: using; }
+  .tv-home__radar { grid-area: radar; }
+
+  .tv-home:not(:has(.tv-home__unfinished)) {
+    grid-template-areas:
+      "resume resume"
+      "quiet quiet"
+      "stacks stacks"
+      "unfiled review"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home:not(:has(.tv-home__unfiled)) {
+    grid-template-areas:
+      "resume unfinished"
+      "quiet quiet"
+      "stacks stacks"
+      "review review"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home:not(:has(.tv-home__review)) {
+    grid-template-areas:
+      "resume unfinished"
+      "quiet quiet"
+      "stacks stacks"
+      "unfiled unfiled"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home:not(:has(.tv-home__unfinished)):not(:has(.tv-home__unfiled)) {
+    grid-template-areas:
+      "resume resume"
+      "quiet quiet"
+      "stacks stacks"
+      "review review"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home:not(:has(.tv-home__unfinished)):not(:has(.tv-home__review)) {
+    grid-template-areas:
+      "resume resume"
+      "quiet quiet"
+      "stacks stacks"
+      "unfiled unfiled"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home:not(:has(.tv-home__unfiled)):not(:has(.tv-home__review)) {
+    grid-template-areas:
+      "resume unfinished"
+      "quiet quiet"
+      "stacks stacks"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home:not(:has(.tv-home__unfinished)):not(:has(.tv-home__unfiled)):not(:has(.tv-home__review)) {
+    grid-template-areas:
+      "resume resume"
+      "quiet quiet"
+      "stacks stacks"
+      "using using"
+      "radar radar";
+  }
+
+  .tv-home .tv-mod--resume {
+    padding: 1.15rem 1.2rem 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .tv-home {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    grid-auto-flow: row;
+    align-items: start;
+  }
 }

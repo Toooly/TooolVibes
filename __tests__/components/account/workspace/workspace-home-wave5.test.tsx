@@ -45,6 +45,15 @@ vi.mock("@/lib/account/workspace-actions", () => ({
   markWorkspaceRevisited: actions.markWorkspaceRevisited,
   commitWorkspaceDecision: vi.fn(),
   reopenWorkspaceDecision: actions.reopenWorkspaceDecision,
+  toggleWorkspaceCompare: vi.fn(),
+}));
+
+vi.mock("@/lib/radar/use-product-hunt-radar", () => ({
+  useProductHuntRadar: () => ({
+    payload: undefined,
+    isLoading: false,
+    isFetching: false,
+  }),
 }));
 
 vi.mock("@/components/account/account-provider", () => ({
@@ -177,16 +186,14 @@ describe("Workspace Home — Wave 5", () => {
     expect(screen.getByRole("button", { name: "Lo sto usando" })).toBeTruthy();
   });
 
-  it("W5-T6 keeps stack name as context only", () => {
+  it("W5-T6 keeps resume evaluation and may show Stack attivi when stacks exist", () => {
     renderHome(workspaceTestFixtures.withStacks);
     expect(screen.getByText("Continua la valutazione")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Apri i salvati" }).getAttribute("href")).toBe(
       "/account?view=salvati&focus=cursor",
     );
-    expect(screen.queryByRole("heading", { name: "Stack attivi" })).toBeNull();
-    expect(
-      screen.queryAllByRole("link").some((link) => link.getAttribute("href") === "/account?view=stack"),
-    ).toBe(false);
+    expect(screen.getByRole("heading", { name: "Stack attivi" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "AI Coding" })).toBeTruthy();
   });
 
   it("W5-T7 confirms usage from a selected decision", () => {
@@ -262,9 +269,11 @@ describe("Workspace Home — Wave 5", () => {
 
   it("W5-T16 removes the old Home modules", () => {
     renderHome(workspaceTestFixtures.mature);
-    expect(screen.queryByRole("heading", { name: "Stack attivi" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Stack attivi" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Confronto attivo" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "Memoria software" })).toBeNull();
+    expect(screen.queryByText("Recenti")).toBeNull();
+    expect(screen.queryByText("Segnale")).toBeNull();
   });
 
   it("W5-T17 stays bounded with a large using set", () => {
@@ -282,7 +291,7 @@ describe("Workspace Home — Wave 5", () => {
       state = reduceWorkspaceState(state, { type: "tool/usage", slug, usage: "using", at });
     }
     renderHome(state);
-    expect(screen.queryAllByRole("link").length).toBeLessThan(10);
+    expect(screen.queryAllByRole("link").length).toBeLessThan(40);
     expect(screen.queryAllByRole("link").length).not.toBe(150);
     expect(document.querySelectorAll(".tv-home-row").length).toBeLessThan(10);
   });

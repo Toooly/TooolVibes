@@ -28,7 +28,9 @@ export default async function WorkspaceQaPage({
     params.state === "new" ||
     params.state === "quiet" ||
     params.state === "review" ||
-    params.state === "compare"
+    params.state === "compare" ||
+    params.state === "stacks" ||
+    params.state === "resume"
       ? params.state
       : "mature";
   const view = parseWorkspaceView(params.view);
