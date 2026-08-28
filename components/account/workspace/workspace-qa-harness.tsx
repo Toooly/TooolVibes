@@ -57,17 +57,19 @@ export function WorkspaceQaHarness({
   view = "riprendi",
   surface = "workspace",
 }: {
-  fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume";
+  fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
   surface?: "workspace" | "settings";
 }) {
   const state = useMemo(() => {
-    if (fixture === "new") return workspaceTestFixtures.newAuthenticated;
-    if (fixture === "quiet") return workspaceTestFixtures.quietReturning;
+    if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
+    if (fixture === "quiet" || fixture === "using") return workspaceTestFixtures.quietReturning;
     if (fixture === "review") return workspaceTestFixtures.reviewDue;
     if (fixture === "compare") return workspaceTestFixtures.withCompare;
     if (fixture === "stacks") return workspaceTestFixtures.withStacks;
     if (fixture === "resume") return workspaceTestFixtures.withDecisions;
+    if (fixture === "few") return workspaceTestFixtures.fewSaved;
+    if (fixture === "multistack") return workspaceTestFixtures.multiStack;
     return workspaceTestFixtures.mature;
   }, [fixture]);
   const initialView = WORKSPACE_VIEWS.includes(view) ? view : "riprendi";

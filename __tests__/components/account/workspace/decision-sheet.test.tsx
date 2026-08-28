@@ -214,7 +214,7 @@ describe("DecisionSheet — Wave 8", () => {
   it("W8-T2 Salvati opens the same DecisionSheet", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(WorkspaceBiblioteca, { state: getCanonicalToolWorkspaceState() }));
-    fireEvent.click(screen.getAllByRole("button", { name: "Decidi" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Valuta" })[0]);
     expect(sheetNode()?.getAttribute("data-decision-sheet")).toBe("");
     expect(sheetNode()?.getAttribute("data-decision-source")).toBe("salvati");
   });

@@ -7,6 +7,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
+import { reduceWorkspaceState } from "@/lib/discovery/workspace-contract";
+import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 
 const catalogRuntime = vi.hoisted(() => ({
   value: [] as PublicToolCatalogItem[],
@@ -70,10 +72,30 @@ function rowSlugs() {
   return screen.getAllByRole("listitem").map((row) => row.getAttribute("data-slug"));
 }
 
+function selectedOnly(): WorkspaceStateV1 {
+  return [
+    { type: "saved/set" as const, slug: "cursor", saved: true, at: "2026-06-01T10:00:00.000Z" },
+    { type: "tool/decision" as const, slug: "cursor", outcome: "selected" as const, at: "2026-06-03T10:00:00.000Z" },
+  ].reduce((state, action) => reduceWorkspaceState(state, action), createEmptyWorkspaceState());
+}
+
 describe("WorkspaceBiblioteca", () => {
   beforeEach(() => {
     catalogRuntime.value = catalogFor(workspaceTestFixtures.mature);
     vi.mocked(markWorkspaceToolUsing).mockClear();
+    vi.stubGlobal(
+      "matchMedia",
+      (query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }),
+    );
   });
 
   afterEach(() => {
@@ -88,6 +110,7 @@ describe("WorkspaceBiblioteca", () => {
     expect(screen.queryByText(/Mostra tutti/)).toBeNull();
     expect(screen.queryByRole("tablist")).toBeNull();
     expect(screen.queryByRole("tab")).toBeNull();
+    expect(screen.getByRole("list", { name: "Libreria software" })).toBeTruthy();
   });
 
   it("filters rows by name, slug, or category", () => {
@@ -136,27 +159,63 @@ describe("WorkspaceBiblioteca", () => {
       "href",
       expect.stringContaining("/archivio"),
     );
+    expect(screen.queryByRole("group", { name: "Relazione" })).toBeNull();
+    expect(screen.queryByText(/12 Salvati|KPI|Scelti 3/i)).toBeNull();
   });
 
-  it("hides tools that are not in use when the usage filter is In uso", () => {
+  it("hides relationship filters on a few-item library", () => {
+    catalogRuntime.value = catalogFor(workspaceTestFixtures.fewSaved);
+    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.fewSaved }));
+    expect(rowSlugs()).toHaveLength(3);
+    expect(screen.queryByRole("group", { name: "Relazione" })).toBeNull();
+  });
+
+  it("filters In uso from the relationship chips", () => {
     render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
 
-    fireEvent.change(screen.getByLabelText("Uso"), {
-      target: { value: "using" },
-    });
-
+    fireEvent.click(screen.getByRole("button", { name: /In uso/ }));
     expect(rowSlugs()).toEqual(["cursor"]);
   });
 
-  it("calls markWorkspaceToolUsing from Lo sto usando", () => {
-    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.withDecisions }));
+  it("shows compare membership and opens DecisionSheet from Valuta", () => {
+    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
+    const blink = document.querySelector('[data-slug="blink"]');
+    expect(blink).toBeInstanceOf(HTMLElement);
+    expect(within(blink as HTMLElement).getByText("Nel confronto")).toBeTruthy();
+
+    const blank = document.querySelector('[data-slug="qa-tool-12"]');
+    expect(blank).toBeInstanceOf(HTMLElement);
+    fireEvent.click(within(blank as HTMLElement).getByRole("button", { name: "Valuta" }));
+    expect(document.querySelector("[data-decision-sheet]")).toBeTruthy();
+    expect(document.querySelector("[data-decision-source='salvati']")).toBeTruthy();
+  });
+
+  it("surfaces a restrained Review signal and Rivedi action", () => {
+    catalogRuntime.value = catalogFor(workspaceTestFixtures.reviewDue);
+    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.reviewDue }));
+    expect(screen.getByText("Da rivedere")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Rivedi" })).toBeTruthy();
+  });
+
+  it("calls markWorkspaceToolUsing from Conferma uso", () => {
+    const state = selectedOnly();
+    catalogRuntime.value = catalogFor(state);
+    render(createElement(WorkspaceBiblioteca, { state }));
 
     const row = document.querySelector('[data-slug="cursor"]');
     expect(row).toBeInstanceOf(HTMLElement);
     fireEvent.click(
-      within(row as HTMLElement).getByRole("button", { name: "Lo sto usando" }),
+      within(row as HTMLElement).getByRole("button", { name: "Conferma uso" }),
     );
 
     expect(markWorkspaceToolUsing).toHaveBeenCalledWith("cursor");
+  });
+
+  it("does not render a KPI HUD or a second library", () => {
+    render(createElement(WorkspaceBiblioteca, { state: workspaceTestFixtures.mature }));
+    expect(screen.queryByText("Biblioteca")).toBeNull();
+    expect(screen.queryByText(/12 Salvati/)).toBeNull();
+    expect(document.querySelector(".tv-home")).toBeNull();
+    expect(document.querySelector("[data-kpi]")).toBeNull();
   });
 });
