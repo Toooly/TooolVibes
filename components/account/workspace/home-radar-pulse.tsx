@@ -10,6 +10,8 @@ import {
 } from "@/lib/radar/radar-ui-model";
 import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
 
+import { WorkspaceToolMark } from "./workspace-tool-mark";
+
 export function HomeRadarPulse() {
   const { payload, isLoading } = useProductHuntRadar("day");
   const model = useMemo(() => resolveRadarUiModel(payload, "day"), [payload]);
@@ -26,14 +28,25 @@ export function HomeRadarPulse() {
       <h2 id="tv-home-radar-title" className="tv-home-title">
         Dal Radar
       </h2>
-      <ul className="tv-home-list">
+      <ul className="tv-home-radar__tiles">
         {items.map((item) => {
-          const context = (item.tagline ?? "").trim() || formatRadarSignal(item);
+          const tagline = (item.tagline ?? "").trim();
           return (
             <li key={item.id}>
-              <Link className="tv-home-row" href="/radar">
-                <span className="tv-home-row__text">{item.name}</span>
-                <span className="tv-home-row__meta">{context}</span>
+              <Link className="tv-home-tile" href="/radar">
+                <WorkspaceToolMark slug={item.id} name={item.name} size="sm" />
+                <span className="tv-home-tile__body">
+                  <span className="tv-home-tile__name">{item.name}</span>
+                  <span className="tv-home-tile__meta">
+                    {formatRadarSignal(item)}
+                  </span>
+                  {tagline ? (
+                    <span className="tv-home-tile__tag">{tagline}</span>
+                  ) : null}
+                </span>
+                <span className="tv-home-tile__arrow" aria-hidden="true">
+                  →
+                </span>
               </Link>
             </li>
           );

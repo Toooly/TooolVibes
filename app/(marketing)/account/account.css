@@ -3291,11 +3291,7 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
   background: var(--tv-surface-raised);
 }
 
-/* Wave 5 lock replaced by Home 2.0 — see block at end of this file. */
-.tv-home .tv-mod--resume {
-  background: var(--tv-surface-raised);
-  border: 1px solid var(--tv-border-subtle);
-}
+/* Wave 5 flat lock retired by Home 2.0 Liquid Glass block at end of file. */
 .tv-home-whisper {
   margin: 0;
   color: var(--tv-ink-secondary);
@@ -3468,78 +3464,253 @@ html[data-tv-reduce-motion="true"] .tv-journal-entry:hover .tv-tool-mark {
 }
 
 /* ==========================================================================
-   Home 2.0 — Personal Software Workspace
-   Derived composition only. Banco grammar: resume well, hairlines, jewels.
-   Do not revive the 1280 3-column carnival. Do not restyle Banco/Salvati/Stack.
-   768 stays one column. 1024 is the LoopShell composition breakpoint.
+   HOME 2.0 — AERO / LIQUID GLASS
+   Presentation pass. Zero product semantics: composition, selectors and
+   persistence are unchanged. Scoped to .tv-home + the workspace sync strip.
+   Material ladder (3 levels), one backdrop-filter per surface, never nested.
+   Do not restyle Banco/Salvati/Stack/Catalogo/LoopShell/auth from here.
    ========================================================================== */
 
+/* — Glass token ladder (scoped to Home; no global token ownership) — */
 .tv-home {
+  /* Level 1 — ambient panel */
+  --tv-home-g1-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.01)
+  );
+  --tv-home-g1-edge: rgba(255, 255, 255, 0.06);
+  --tv-home-g1-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --tv-home-g1-shadow: 0 10px 30px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.18);
+  --tv-home-g1-filter: blur(12px) saturate(1.3);
+
+  /* Level 2 — interactive widget */
+  --tv-home-g2-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.015) 58%,
+    rgba(255, 255, 255, 0.02)
+  );
+  --tv-home-g2-edge: rgba(255, 255, 255, 0.08);
+  --tv-home-g2-light: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --tv-home-g2-shadow: 0 14px 34px rgba(0, 0, 0, 0.3), 0 3px 10px rgba(0, 0, 0, 0.2);
+  --tv-home-g2-filter: blur(18px) saturate(1.4);
+
+  /* Level 3 — hero */
+  --tv-home-g3-veil: linear-gradient(
+    180deg,
+    rgba(154, 109, 255, 0.09),
+    rgba(255, 255, 255, 0.03) 38%,
+    rgba(255, 255, 255, 0.02)
+  );
+  --tv-home-g3-edge: rgba(255, 255, 255, 0.1);
+  --tv-home-g3-light: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --tv-home-g3-shadow:
+    0 26px 64px rgba(0, 0, 0, 0.44),
+    0 8px 22px rgba(0, 0, 0, 0.3),
+    0 0 44px rgba(106, 60, 255, 0.1);
+  --tv-home-g3-filter: blur(24px) saturate(1.5);
+
+  --tv-home-radius: 1.15rem;
+  --tv-home-radius-sm: 0.85rem;
+
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: 1.25rem;
+  /* Background field: black cloth + one restrained violet illumination.
+     Depth, not "gradient": both stops stay ≤ 0.08 alpha. */
+  background:
+    radial-gradient(46rem 22rem at 22% -9rem, rgba(106, 60, 255, 0.07), transparent 68%),
+    radial-gradient(30rem 16rem at 84% -5rem, rgba(67, 198, 255, 0.03), transparent 72%);
+  background-repeat: no-repeat;
 }
 
-.tv-home .tv-mod--resume {
-  background: var(--tv-surface-raised);
-  border: 1px solid var(--tv-border-subtle);
+/* Decorative light fields never intercept input. */
+.tv-home [data-tv-decor] {
+  pointer-events: none;
 }
 
-.tv-home__unfinished,
-.tv-home__review,
-.tv-home__unfiled,
-.tv-home__radar {
-  min-width: 0;
-  padding-top: 0.35rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.tv-home__stacks {
-  min-width: 0;
-  padding-top: 0.15rem;
-}
-
-.tv-home__quiet {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.tv-home-crumb {
-  margin: 0.45rem 0 0;
-  color: var(--tv-ink-muted-aa);
-  font-size: 0.8rem;
-  line-height: 1.4;
-}
-
-.tv-home-queue-item {
-  display: grid;
-  gap: 0.15rem;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.tv-home-queue-item .tv-home-kicker {
+/* — Typography — widget headings are neutral UI; display font is hero-only. */
+.tv-home__unfinished .tv-home-title,
+.tv-home__review .tv-home-title,
+.tv-home__stacks .tv-home-title,
+.tv-home__unfiled .tv-home-title,
+.tv-home__radar .tv-home-title {
   margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
 }
 
-.tv-home-queue-item .tv-home-row {
+/* True kickers only: resume kicker + item micro-labels. */
+.tv-home .tv-home-kicker {
+  margin: 0 0 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
+}
+
+/* — Resume hero — Level 3 material — */
+.tv-home .tv-mod--resume {
+  min-width: 0;
+  padding: 1rem 1.05rem 1.15rem;
+  border: 1px solid var(--tv-home-g3-edge);
+  border-radius: var(--tv-home-radius);
+  background: var(--tv-home-g3-veil);
+  -webkit-backdrop-filter: var(--tv-home-g3-filter);
+  backdrop-filter: var(--tv-home-g3-filter);
+  box-shadow:
+    var(--tv-home-g3-light),
+    0 0 0 1px rgba(154, 109, 255, 0.12),
+    var(--tv-home-g3-shadow);
+}
+
+.tv-home-hero {
+  position: relative;
+}
+
+/* Soft local light field behind the jewel. The jewel is the colour source;
+   the rest of the widget stays neutral. */
+.tv-home-hero__light {
+  position: absolute;
+  top: 50%;
+  left: 2.9rem;
+  width: 12rem;
+  height: 12rem;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(154, 109, 255, 0.16), transparent 66%);
+}
+
+/* — Home CTA system (Home-scoped; account-btn-primary stays app-wide) — */
+.tv-home-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Primary: layered violet glass. Solid material on purpose — it lives on the
+   blurred hero, so no backdrop-filter here (no nested blur). */
+.tv-home-cta--primary {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(139, 119, 255, 0.38);
+  color: rgba(255, 255, 255, 0.98);
+  background:
+    radial-gradient(circle at 82% 8%, rgba(57, 210, 246, 0.16), transparent 32%),
+    linear-gradient(
+      160deg,
+      rgba(154, 109, 255, 0.92),
+      rgba(106, 60, 255, 0.94) 46%,
+      rgba(74, 35, 191, 0.96)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 8px 24px rgba(47, 30, 108, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.tv-home-cta--primary:active {
+  transform: none;
+  filter: brightness(0.97);
+}
+
+.tv-home-cta--primary:disabled,
+.tv-home-cta--primary[aria-disabled="true"] {
+  cursor: not-allowed;
+  filter: saturate(0.5) brightness(0.75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* — Da riprendere — Level 1 ambient shell — */
+.tv-home__unfinished {
+  min-width: 0;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--tv-home-g1-edge);
+  border-radius: var(--tv-home-radius);
+  background: var(--tv-home-g1-veil);
+  -webkit-backdrop-filter: var(--tv-home-g1-filter);
+  backdrop-filter: var(--tv-home-g1-filter);
+  box-shadow: var(--tv-home-g1-light), var(--tv-home-g1-shadow);
+}
+
+.tv-home__unfinished .tv-home-list {
+  gap: 0.55rem;
+}
+
+/* — Mini workspace cards (Da riprendere + Salvati da organizzare) — */
+.tv-home-mini {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.3rem 0.65rem;
+  align-items: start;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--tv-home-radius-sm);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Inside the Level 1 shell the minis stay solid — no nested backdrop-filter. */
+.tv-home__unfinished .tv-home-mini {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.tv-home-mini__mark {
+  padding-top: 0.1rem;
+}
+
+.tv-home-mini__kicker {
+  margin: 0 0 0.1rem;
+}
+
+.tv-home-mini .tv-home-row {
+  min-height: 2.4rem;
   padding: 0;
-  min-height: 2.5rem;
   border-bottom: 0;
 }
 
-.tv-home-stacks {
-  display: flex;
+.tv-home .tv-home-row {
+  row-gap: 0.1rem;
   flex-wrap: wrap;
-  gap: 0.85rem 1.15rem;
+}
+
+/* — Stack attivi — software shelf tiles (Level 2) — */
+.tv-home__stacks {
+  min-width: 0;
+}
+
+.tv-home-stacks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14.5rem, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.75rem;
 }
 
 .tv-home-stack {
-  flex: 1 1 13.5rem;
   min-width: 0;
-  max-width: 22rem;
-  padding: 0.55rem 0 0.35rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.95rem 1rem 0.9rem;
+  border: 1px solid var(--tv-home-g2-edge);
+  border-radius: var(--tv-home-radius);
+  background: var(--tv-home-g2-veil);
+  -webkit-backdrop-filter: var(--tv-home-g2-filter);
+  backdrop-filter: var(--tv-home-g2-filter);
+  box-shadow: var(--tv-home-g2-light), var(--tv-home-g2-shadow);
 }
 
 .tv-home-stack__name {
@@ -3549,41 +3720,364 @@ html[data-tv-reduce-motion="true"] .tv-journal-entry:hover .tv-tool-mark {
   font-weight: 650;
 }
 
-.tv-home-stack__tools {
-  list-style: none;
+/* Overlapping jewels: controlled depth, names stay text below. */
+.tv-home-stack__jewels {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.75rem;
-  margin: 0.45rem 0 0;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.tv-home-stack__jewels .tv-tool-mark + .tv-tool-mark {
+  margin-left: -0.6rem;
+  box-shadow:
+    0 0 0 2px rgba(8, 8, 10, 0.85),
+    0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+.tv-home-stack__count {
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.tv-home-stack__tools {
+  margin: 0.1rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--tv-ink-secondary);
+  overflow-wrap: anywhere;
+}
+
+.tv-home-stack .tv-home-actions {
+  margin-top: 0.6rem;
+}
+
+/* — Da rivedere — compact Level 2 widget — */
+.tv-home__review {
+  min-width: 0;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--tv-home-g2-edge);
+  border-radius: var(--tv-home-radius);
+  background: var(--tv-home-g2-veil);
+  -webkit-backdrop-filter: var(--tv-home-g2-filter);
+  backdrop-filter: var(--tv-home-g2-filter);
+  box-shadow: var(--tv-home-g2-light), var(--tv-home-g2-shadow);
+}
+
+.tv-home__review .tv-home-list {
+  gap: 0.55rem;
+}
+
+.tv-home-review {
+  display: block;
+}
+
+/* Review rows: solid material inside the Level 2 widget (no nested blur). */
+.tv-home-review-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.3rem 0.65rem;
+  align-items: start;
+  padding: 0.65rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--tv-home-radius-sm);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
+}
+
+.tv-home-review__mark {
+  padding-top: 0.1rem;
+}
+
+.tv-home-review-item .tv-home-row {
+  min-height: 0;
+  padding: 0;
+  border-bottom: 0;
+}
+
+/* Due marker: a quiet dot, not a warning colour. Time text carries meaning. */
+.tv-home-review__dot {
+  display: inline-block;
+  width: 0.32rem;
+  height: 0.32rem;
+  margin-right: 0.4rem;
+  border-radius: 999px;
+  background: var(--tv-accent-violet-on-dark);
+  opacity: 0.85;
+  vertical-align: middle;
+}
+
+/* — Salvati da organizzare — small Level 2 cards on the cloth — */
+.tv-home__unfiled {
+  min-width: 0;
+}
+
+.tv-home__unfiled .tv-home-list {
+  gap: 0.6rem;
+}
+
+.tv-home__unfiled .tv-home-mini {
+  border-color: var(--tv-home-g2-edge);
+  background: var(--tv-home-g2-veil);
+  -webkit-backdrop-filter: var(--tv-home-g2-filter);
+  backdrop-filter: var(--tv-home-g2-filter);
+  box-shadow: var(--tv-home-g2-light), var(--tv-home-g2-shadow);
+}
+
+.tv-home__unfiled .tv-home-actions {
+  margin-top: 0.15rem;
+}
+
+/* — Radar Pulse — Level 1 shell + solid discovery tiles — */
+.tv-home__radar {
+  min-width: 0;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--tv-home-g1-edge);
+  border-radius: var(--tv-home-radius);
+  background: var(--tv-home-g1-veil);
+  -webkit-backdrop-filter: var(--tv-home-g1-filter);
+  backdrop-filter: var(--tv-home-g1-filter);
+  box-shadow: var(--tv-home-g1-light), var(--tv-home-g1-shadow);
+}
+
+.tv-home-radar__tiles {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+  margin: 0.75rem 0 0;
   padding: 0;
 }
 
-.tv-home-stack__tool {
-  display: inline-flex;
+.tv-home-radar__tiles li {
+  min-width: 0;
+}
+
+/* Solid tile material inside the Level 1 shell: quiet, never nested blur. */
+.tv-home-tile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.4rem;
-  min-height: 2.25rem;
+  gap: 0.65rem;
+  min-height: 3.25rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   color: var(--tv-ink-primary);
-  font-size: 0.88rem;
+  text-decoration: none;
 }
 
-.tv-home__unfinished .tv-home-title,
-.tv-home__review .tv-home-title,
-.tv-home__stacks .tv-home-title,
-.tv-home__unfiled .tv-home-title,
-.tv-home__radar .tv-home-title {
-  font-size: 1.05rem;
+.tv-home-tile:hover {
+  border-color: rgba(185, 164, 255, 0.22);
+  color: var(--tv-ink-primary);
 }
 
-.tv-home__radar .tv-home-kicker {
-  margin-bottom: 0.15rem;
+.tv-home-tile__body {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
 }
 
+.tv-home-tile__name {
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.tv-home-tile__meta {
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.75rem;
+}
+
+.tv-home-tile__tag {
+  color: var(--tv-ink-secondary);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tv-home-tile__arrow {
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.tv-home__radar .tv-home-actions {
+  margin-top: 0.75rem;
+}
+
+/* — Quiet + using line — */
+.tv-home__quiet {
+  display: grid;
+  gap: 0.45rem;
+}
+
+/* — Workspace sync strip: compact glass for the info tone only.
+   Warning tones keep their prominence. Auth variant untouched. — */
+.tv-workspace-sync .account-message--info {
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--tv-home-radius-sm, 0.85rem);
+  border-color: rgba(124, 77, 255, 0.14);
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.08), rgba(124, 77, 255, 0.03));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.tv-workspace-sync .account-message--info svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.2rem;
+}
+
+.tv-workspace-sync .account-message--info p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.tv-workspace-sync .account-message--info p + p {
+  margin-top: 0.1rem;
+  color: var(--tv-ink-secondary);
+}
+
+.tv-workspace-sync .account-message--info button {
+  min-height: 2.25rem;
+  margin-top: 0.45rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+/* — Motion: subtle lift + light response only. Wrapped in
+   prefers-reduced-motion: no-preference AND gated by the app-level
+   data-tv-reduce-motion override. — */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-tv-reduce-motion="true"]) .tv-home .tv-mod--resume {
+    transition:
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 240ms ease,
+      border-color 240ms ease;
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home .tv-mod--resume:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      var(--tv-home-g3-light),
+      0 0 0 1px rgba(154, 109, 255, 0.2),
+      0 32px 72px rgba(0, 0, 0, 0.5),
+      0 0 56px rgba(106, 60, 255, 0.14);
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-mini {
+    transition: transform 200ms ease, border-color 200ms ease, background 200ms ease;
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-mini:hover {
+    transform: translateY(-1px);
+    border-color: rgba(185, 164, 255, 0.18);
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-stack {
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-stack:hover {
+    transform: translateY(-2px);
+    border-color: rgba(185, 164, 255, 0.22);
+    box-shadow:
+      var(--tv-home-g2-light),
+      0 18px 42px rgba(0, 0, 0, 0.36),
+      0 0 24px rgba(106, 60, 255, 0.07);
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-review-item {
+    transition: border-color 200ms ease, background 200ms ease;
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-review-item:hover {
+    border-color: rgba(185, 164, 255, 0.16);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-tile {
+    transition: transform 200ms ease, border-color 200ms ease, background 200ms ease;
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-tile:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02));
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-tile:hover .tv-home-tile__arrow {
+    transform: translateX(2px);
+    color: var(--tv-accent-violet-on-dark);
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-tile__arrow {
+    transition: transform 200ms ease, color 200ms ease;
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-cta--primary {
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 220ms ease,
+      filter 220ms ease;
+  }
+
+  html:not([data-tv-reduce-motion="true"]) .tv-home-cta--primary:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.32),
+      0 12px 30px rgba(47, 30, 108, 0.42),
+      0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Hard guards — mirrors the account.css reduce-motion pattern. */
+@media (prefers-reduced-motion: reduce) {
+  .tv-home .tv-mod--resume,
+  .tv-home-mini,
+  .tv-home-stack,
+  .tv-home-review-item,
+  .tv-home-tile,
+  .tv-home-tile__arrow,
+  .tv-home-cta--primary {
+    transition: none;
+    transform: none;
+  }
+}
+
+html[data-tv-reduce-motion="true"] .tv-home .tv-mod--resume,
+html[data-tv-reduce-motion="true"] .tv-home-mini,
+html[data-tv-reduce-motion="true"] .tv-home-stack,
+html[data-tv-reduce-motion="true"] .tv-home-review-item,
+html[data-tv-reduce-motion="true"] .tv-home-tile,
+html[data-tv-reduce-motion="true"] .tv-home-tile__arrow,
+html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
+  transition: none;
+  transform: none;
+}
+
+/* — 768: intentional pairing, no single-column monotony — */
+@media (min-width: 768px) {
+  .tv-home-radar__tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tv-home .tv-mod--resume {
+    padding: 1.15rem 1.2rem 1.25rem;
+  }
+}
+
+/* — 1024: composition grid (kept from Home 2.0: it works) — */
 @media (min-width: 1024px) {
   .tv-home {
     display: grid;
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-    column-gap: 1.35rem;
+    column-gap: 1.25rem;
     row-gap: 0;
     align-items: start;
     grid-auto-flow: row;
@@ -3597,7 +4091,7 @@ html[data-tv-reduce-motion="true"] .tv-journal-entry:hover .tv-tool-mark {
   }
 
   .tv-home > * {
-    margin-bottom: 1.45rem;
+    margin-bottom: 1.25rem;
   }
 
   .tv-home > *:last-child {
@@ -3682,14 +4176,30 @@ html[data-tv-reduce-motion="true"] .tv-journal-entry:hover .tv-tool-mark {
   }
 
   .tv-home .tv-mod--resume {
-    padding: 1.15rem 1.2rem 1.25rem;
+    padding: 1.3rem 1.35rem 1.4rem;
+  }
+
+  .tv-home-radar__tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
+/* — 1280/1440: controlled fill, no giant empty oceans — */
 @media (min-width: 1280px) {
   .tv-home {
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
     grid-auto-flow: row;
     align-items: start;
+    max-width: 76rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .tv-home {
+    max-width: 78rem;
+  }
+
+  .tv-home .tv-mod--resume {
+    padding: 1.45rem 1.5rem 1.5rem;
   }
 }

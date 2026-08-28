@@ -139,7 +139,7 @@ function WorkspaceReviewActions({
     <div className="tv-review-actions">
       <button
         type="button"
-        className={primary ? "account-btn-primary" : "tv-home-textbtn"}
+        className={primary ? "tv-home-cta tv-home-cta--primary" : "tv-home-textbtn"}
         onClick={onStillTrue}
       >
         Ancora vero
@@ -237,7 +237,7 @@ export function WorkspaceRiprendi({
             Salva un tool dal catalogo. Da lì parti a confrontare e decidere.
           </p>
           <div className="tv-home-actions">
-            <Link className="account-btn-primary" href="/archivio">
+            <Link className="tv-home-cta tv-home-cta--primary" href="/archivio">
               Apri il catalogo
             </Link>
           </div>
@@ -251,7 +251,12 @@ export function WorkspaceRiprendi({
           aria-labelledby="tv-home-resume-title"
         >
           <p className="tv-home-kicker">Continua da qui</p>
-          <div className="tv-resume__hero">
+          <div className="tv-resume__hero tv-home-hero">
+            <span
+              className="tv-home-hero__light"
+              data-tv-decor
+              aria-hidden="true"
+            />
             {resume.kind === "continue_compare" ? (
               <WorkspaceMarkStrip catalog={catalog} slugs={state.compare.slugs} size="lg" />
             ) : resume.slug ? (
@@ -316,7 +321,7 @@ export function WorkspaceRiprendi({
                 <>
                   <button
                     type="button"
-                    className="account-btn-primary"
+                    className="tv-home-cta tv-home-cta--primary"
                     onClick={() => markWorkspaceToolUsing(resume.slug as string)}
                   >
                     {USAGE_ACTION_LABELS.using}
@@ -326,7 +331,7 @@ export function WorkspaceRiprendi({
                   </Link>
                 </>
               ) : (
-                <Link className="account-btn-primary" href={href}>
+                <Link className="tv-home-cta tv-home-cta--primary" href={href}>
                   {copy.action}
                 </Link>
               )}
@@ -355,23 +360,28 @@ export function WorkspaceRiprendi({
             {unfinished.map((item) => {
               const copyItem = UNFINISHED_COPY[item.kind];
               return (
-                <li key={item.slug} className="tv-home-queue-item">
-                  <p className="tv-home-kicker">{copyItem.kicker}</p>
-                  <div className="tv-home-row">
-                    <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
-                    {item.kind === "selected_follow_up" ? (
-                      <button
-                        type="button"
-                        className="tv-home-textbtn"
-                        onClick={() => markWorkspaceToolUsing(item.slug)}
-                      >
-                        {copyItem.action}
-                      </button>
-                    ) : (
-                      <Link className="tv-home-textbtn" href={salvatiFocusHref(item.slug)}>
-                        {copyItem.action}
-                      </Link>
-                    )}
+                <li key={item.slug} className="tv-home-queue-item tv-home-mini">
+                  <span className="tv-home-mini__mark">
+                    <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="sm" />
+                  </span>
+                  <div className="tv-home-mini__body">
+                    <p className="tv-home-kicker tv-home-mini__kicker">{copyItem.kicker}</p>
+                    <div className="tv-home-row">
+                      <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
+                      {item.kind === "selected_follow_up" ? (
+                        <button
+                          type="button"
+                          className="tv-home-textbtn"
+                          onClick={() => markWorkspaceToolUsing(item.slug)}
+                        >
+                          {copyItem.action}
+                        </button>
+                      ) : (
+                        <Link className="tv-home-textbtn" href={salvatiFocusHref(item.slug)}>
+                          {copyItem.action}
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </li>
               );
@@ -393,9 +403,14 @@ export function WorkspaceRiprendi({
               const decidedAt = formatWorkspaceDate(tool?.decision?.updatedAt ?? null);
               return (
                 <li key={item.slug} className="tv-home-review-item">
+                  <span className="tv-home-review__mark">
+                    <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="sm" />
+                  </span>
+                  <div className="tv-home-review__body">
                   <div className="tv-home-row">
                     <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
                     <span className="tv-home-row__meta">
+                      <span className="tv-home-review__dot" aria-hidden="true" />
                       {revisit ?? decidedAt ?? "Rimandata, da riprendere"}
                     </span>
                   </div>
@@ -419,6 +434,7 @@ export function WorkspaceRiprendi({
                       setSnoozeSlug(null);
                     }}
                   />
+                  </div>
                 </li>
               );
             })}
@@ -439,18 +455,20 @@ export function WorkspaceRiprendi({
                 <article key={stack.id} className="tv-home-stack">
                   <h3 className="tv-home-stack__name">{stack.name}</h3>
                   {shown.length > 0 ? (
-                    <ul className="tv-home-stack__tools">
+                    <div className="tv-home-stack__jewels" aria-hidden="true">
                       {shown.map((slug) => (
-                        <li key={slug} className="tv-home-stack__tool">
-                          <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
-                          <span>{nameOf(names, slug)}</span>
-                        </li>
+                        <WorkspaceCatalogMark key={slug} catalog={catalog} slug={slug} size="sm" />
                       ))}
-                    </ul>
+                    </div>
                   ) : null}
                   {count > 0 ? (
-                    <p className="tv-home-whisper">
+                    <p className="tv-home-whisper tv-home-stack__count">
                       {count === 1 ? "1 tool" : `${count} tool`}
+                    </p>
+                  ) : null}
+                  {shown.length > 0 ? (
+                    <p className="tv-home-whisper tv-home-stack__tools">
+                      {shown.map((slug) => nameOf(names, slug)).join(" · ")}
                     </p>
                   ) : null}
                   <div className="tv-home-actions">
@@ -484,7 +502,12 @@ export function WorkspaceRiprendi({
           </h2>
           <ul className="tv-home-list">
             {unfiled.map((item) => (
-              <li key={item.slug} className="tv-home-queue-item">
+              <li key={item.slug} className="tv-home-queue-item tv-home-mini">
+                <span className="tv-home-mini__mark">
+                  <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="sm" />
+                </span>
+                <div className="tv-home-mini__body">
+                <p className="tv-home-kicker tv-home-mini__kicker">Solo salvato</p>
                 <div className="tv-home-row">
                   <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
                 </div>
@@ -514,14 +537,15 @@ export function WorkspaceRiprendi({
                     Apri
                   </Link>
                 </div>
-                {filingSlug === item.slug ? (
-                  <StackPickOrCreate
-                    slug={item.slug}
-                    compact
-                    allowCreate={canCreateStack}
-                    onDone={() => setFilingSlug(null)}
-                  />
-                ) : null}
+                  {filingSlug === item.slug ? (
+                    <StackPickOrCreate
+                      slug={item.slug}
+                      compact
+                      allowCreate={canCreateStack}
+                      onDone={() => setFilingSlug(null)}
+                    />
+                  ) : null}
+                </div>
               </li>
             ))}
           </ul>
