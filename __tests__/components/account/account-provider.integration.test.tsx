@@ -262,7 +262,7 @@ describe("AccountProvider workspace orchestration", () => {
     ]);
   });
 
-  it("keeps a mutation made during attach in the final account workspace", async () => {
+  it("H2-SYNC-6 guest→auth attach remains intact", async () => {
     const currentSession = session();
     authRuntime.getSession.mockResolvedValue({
       data: { session: currentSession },
@@ -359,7 +359,7 @@ describe("AccountProvider workspace orchestration", () => {
     expect(getCanonicalToolWorkspaceState()).toEqual(createEmptyWorkspaceState());
   });
 
-  it("keeps the staged selection visible when canonical sync returns 202", async () => {
+  it("H2-SYNC-2 remote failure retains safe local fallback", async () => {
     const currentSession = session();
     authRuntime.getSession.mockResolvedValue({
       data: { session: currentSession },
@@ -385,6 +385,49 @@ describe("AccountProvider workspace orchestration", () => {
     expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([
       "guest-offline",
     ]);
+    expect(accountValue?.authMessage).toContain("non è disponibile");
+  });
+
+  it("H2-SYNC-1 authenticated workspace remote save succeeds", async () => {
+    const currentSession = session();
+    authRuntime.getSession.mockResolvedValue({
+      data: { session: currentSession },
+    });
+    authRuntime.signOut.mockResolvedValue({ error: null });
+    persistWorkspaceStateToStorage(localStorage, saved("account-remote"), {
+      now: T0,
+    });
+    workspaceRuntime.requestWorkspaceMutation.mockResolvedValue(
+      mutationResult(saved("account-remote")),
+    );
+
+    renderProvider();
+
+    await waitFor(() => {
+      expect(workspaceRuntime.requestWorkspaceMutation).toHaveBeenCalledTimes(1);
+      expect(accountValue?.isAttaching).toBe(false);
+      expect(accountValue?.workspaceAttachPending).toBe(false);
+    });
+    expect(accountValue?.status).toBe("authenticated");
+    expect(accountValue?.authMessage).toBeNull();
+    expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([
+      "account-remote",
+    ]);
+  });
+
+  it("H2-SYNC-5 guest local storage unaffected", async () => {
+    authRuntime.getSession.mockResolvedValue({ data: { session: null } });
+    persistWorkspaceStateToStorage(localStorage, saved("guest-local"), {
+      now: T0,
+    });
+
+    renderProvider();
+
+    await waitFor(() => {
+      expect(accountValue?.status).toBe("guest");
+    });
+    expect(workspaceRuntime.requestWorkspaceMutation).not.toHaveBeenCalled();
+    expect(accountValue?.authMessage).toBeNull();
   });
 
   it("retries a capacity-blocked attach after the workspace changes", async () => {

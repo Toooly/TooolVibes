@@ -146,14 +146,15 @@ describe("B59 resolveAccountStateCell — matrice stati account", () => {
     expect(shouldRenderAccountStateBanner(cell)).toBe(false);
   });
 
-  it("attach-retry: messaggio degrado del provider, warning, nessuna sync promessa", () => {
+  it("attach-retry: messaggio degrado del provider, info locale, nessuna sync promessa", () => {
     const message =
       "Account collegato, ma il salvataggio online non è disponibile: la selezione resta al sicuro su questo browser.";
     const cell = resolveAccountStateCell(
       matrixInput({ status: "authenticated", authMessage: message }),
     );
     expect(cell.kind).toBe("attach-retry");
-    expect(cell.tone).toBe("warning");
+    expect(cell.tone).toBe("info");
+    expect(cell.title).toBe("Solo su questo dispositivo");
     expect(cell.body).toBe(message);
     expect(cell.syncClaim).toBe("local-only");
     expect(shouldRenderAccountStateBanner(cell)).toBe(true);
@@ -200,11 +201,35 @@ describe("B59 resolveAccountStateCell — matrice stati account", () => {
     expect(shouldRenderAccountStateBanner(cell)).toBe(true);
   });
 
-  it("authenticated senza esiti: cella neutra non resa come banner", () => {
+  it("H2-SYNC-3 successful sync does not show offline banner", () => {
     const cell = resolveAccountStateCell(matrixInput({ status: "authenticated" }));
     expect(cell.kind).toBe("authenticated");
     expect(cell.syncClaim).toBe("none");
+    expect(cell.title).not.toContain("Sei offline");
+    expect(cell.title).not.toContain("Solo su questo dispositivo");
     expect(shouldRenderAccountStateBanner(cell)).toBe(false);
+  });
+
+  it("H2-SYNC-4 real failure shows appropriate status", () => {
+    const offline = resolveAccountStateCell(
+      matrixInput({ isOnline: false, status: "authenticated" }),
+    );
+    expect(offline.kind).toBe("offline");
+    expect(offline.tone).toBe("warning");
+    expect(shouldRenderAccountStateBanner(offline)).toBe(true);
+
+    const retry = resolveAccountStateCell(
+      matrixInput({
+        status: "authenticated",
+        authMessage:
+          "Il salvataggio online non è disponibile. Le modifiche restano su questo dispositivo.",
+      }),
+    );
+    expect(retry.kind).toBe("attach-retry");
+    expect(retry.tone).toBe("info");
+    expect(retry.title).toBe("Solo su questo dispositivo");
+    expect(retry.body).toContain("non è disponibile");
+    expect(shouldRenderAccountStateBanner(retry)).toBe(true);
   });
 
   it("keyword helper: degrado e successo non si sovrappongono", () => {
@@ -419,7 +444,7 @@ describe("B59 AccountStateBanner", () => {
     await expectNoAxeViolations(container);
   });
 
-  it("toni warning/success su tutte le celle rese, axe pulito", async () => {
+  it("toni warning/success/info su tutte le celle rese, axe pulito", async () => {
     const cells = [
       resolveAccountStateCell(matrixInput({ isOnline: false })),
       resolveAccountStateCell(matrixInput({ pendingLinkEmail: "a@b.c" })),
@@ -446,6 +471,15 @@ describe("B59 AccountStateBanner", () => {
       ),
     );
     expect(container.querySelectorAll("[role='status']").length).toBe(cells.length);
+    expect(
+      container.querySelector("[data-account-state='attach-retry']")?.className,
+    ).toContain("account-message--info");
+    expect(
+      container.querySelector("[data-account-state='attach-retry']")?.className,
+    ).not.toContain("account-message--warning");
+    expect(
+      container.querySelector("[data-account-state='offline']")?.className,
+    ).toContain("account-message--warning");
     await expectNoAxeViolations(container);
   });
 });
@@ -503,6 +537,15 @@ vi.mock("@/lib/discovery/client-store", () => ({
 vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => catalogRuntime.value,
 }));
+
+vi.mock("@/lib/radar/use-product-hunt-radar", () => ({
+  useProductHuntRadar: () => ({
+    payload: undefined,
+    isLoading: false,
+    isFetching: false,
+  }),
+}));
+
 
 vi.mock("@/lib/gamification/release-context", () => ({
   useGamificationReleaseSummary: () => gamificationRuntime.summary,
@@ -617,7 +660,9 @@ describe("B59 AccountPanel — state matrix integration", () => {
     const banner = container.querySelector("[data-account-state='attach-retry']");
     expect(banner).not.toBeNull();
     expect(banner?.getAttribute("data-sync-claim")).toBe("local-only");
-    expect(banner?.textContent).toContain("Salvataggio online non disponibile");
+    expect(banner?.textContent).toContain("Solo su questo dispositivo");
+    expect(banner?.className).toContain("account-message--info");
+    expect(banner?.className).not.toContain("account-message--warning");
     // Il messaggio compare una sola volta (banner), non duplicato nella recovery.
     const occurrences = screen.getAllByText(message);
     expect(occurrences).toHaveLength(1);

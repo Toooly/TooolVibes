@@ -31,6 +31,15 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => catalogRuntime.value,
 }));
 
+vi.mock("@/lib/radar/use-product-hunt-radar", () => ({
+  useProductHuntRadar: () => ({
+    payload: undefined,
+    isLoading: false,
+    isFetching: false,
+  }),
+}));
+
+
 vi.mock("@/components/account/account-provider", () => ({
   useAccount: () => ({
     authEnabled: true,

@@ -251,6 +251,10 @@ export function chooseResumeAction(
 
 export const HOME_REVIEW_CAP = 3;
 export const HOME_USING_CAP = 6;
+export const HOME_UNFINISHED_CAP = 3;
+export const HOME_STACKS_CAP = 4;
+export const HOME_UNFILED_CAP = 3;
+export const HOME_RADAR_CAP = 4;
 
 export function isBlankWorkspace(state: WorkspaceStateV1) {
   const hasDecision = Object.values(state.toolStates).some((tool) =>
@@ -379,4 +383,148 @@ export function derivePersonalRecords(state: WorkspaceStateV1): PersonalRecord[]
     { id: "compare", label: "In confronto ora", value: compares },
   ];
   return records.filter((record) => record.value > 0);
+}
+
+export type HomeUnfinishedKind =
+  | "top_without_verdict"
+  | "selected_follow_up"
+  | "review_without_verdict"
+  | "stale_saved"
+  | "saved_open";
+
+export type HomeUnfinishedItem = {
+  kind: HomeUnfinishedKind;
+  slug: string;
+  at: string | null;
+};
+
+export type HomeUnfiledItem = {
+  slug: string;
+};
+
+export type HomeComposition = {
+  nowIso: string;
+  blank: boolean;
+  resume: ResumeAction;
+  unfinished: HomeUnfinishedItem[];
+  stacks: PersonalStack[];
+  review: ReturnType<typeof listHomeReviewQueue>;
+  unfiled: HomeUnfiledItem[];
+};
+
+const UNFINISHED_KIND_PRIORITY: readonly HomeUnfinishedKind[] = [
+  "top_without_verdict",
+  "selected_follow_up",
+  "review_without_verdict",
+  "stale_saved",
+];
+
+function resumeRelationshipSlugs(state: WorkspaceStateV1, resume: ResumeAction) {
+  const slugs = new Set<string>();
+  if (resume.slug) slugs.add(resume.slug);
+  if (resume.kind === "continue_compare") {
+    for (const slug of state.compare.slugs) slugs.add(slug);
+  }
+  return slugs;
+}
+
+export function listHomeUnfinishedQueue(
+  state: WorkspaceStateV1,
+  {
+    nowIso,
+    resume,
+    cap = HOME_UNFINISHED_CAP,
+  }: {
+    nowIso?: string;
+    resume: ResumeAction;
+    cap?: number;
+  },
+): HomeUnfinishedItem[] {
+  const excluded = resumeRelationshipSlugs(state, resume);
+  const signals = deriveResurfaceSignals(state, nowIso);
+  const seen = new Set<string>();
+  const items: HomeUnfinishedItem[] = [];
+
+  for (const kind of UNFINISHED_KIND_PRIORITY) {
+    for (const signal of signals) {
+      if (signal.kind !== kind || !signal.slug) continue;
+      if (excluded.has(signal.slug) || seen.has(signal.slug)) continue;
+      seen.add(signal.slug);
+      items.push({ kind, slug: signal.slug, at: signal.at });
+      if (items.length >= cap) return items;
+    }
+  }
+
+  for (const slug of state.saved.slugs) {
+    if (items.length >= cap) break;
+    if (excluded.has(slug) || seen.has(slug)) continue;
+    if (outcomeOf(state.toolStates[slug]) !== null) continue;
+    seen.add(slug);
+    const tool = state.toolStates[slug];
+    items.push({
+      kind: "saved_open",
+      slug,
+      at: tool?.updatedAt ?? state.saved.updatedAt,
+    });
+  }
+
+  return items;
+}
+
+export function listHomeActiveStacks(state: WorkspaceStateV1, cap = HOME_STACKS_CAP) {
+  return [...activePersonalStacks(state)]
+    .sort((left, right) => (right.updatedAt ?? "").localeCompare(left.updatedAt ?? ""))
+    .slice(0, cap);
+}
+
+export function listUnfiledSaved(
+  state: WorkspaceStateV1,
+  {
+    cap = HOME_UNFILED_CAP,
+    excludeSlugs,
+  }: {
+    cap?: number;
+    excludeSlugs?: Iterable<string>;
+  } = {},
+): HomeUnfiledItem[] {
+  const excluded = new Set(excludeSlugs);
+  const stacked = new Set<string>();
+  for (const stack of activePersonalStacks(state)) {
+    for (const slug of stack.slugs) stacked.add(slug);
+  }
+
+  const items: HomeUnfiledItem[] = [];
+  for (const slug of state.saved.slugs) {
+    if (items.length >= cap) break;
+    if (excluded.has(slug) || stacked.has(slug)) continue;
+    const tool = state.toolStates[slug];
+    if (outcomeOf(tool) !== null) continue;
+    if ((tool?.stage ?? "saved") !== "saved") continue;
+    items.push({ slug });
+  }
+  return items;
+}
+
+export function composeHomeWorkspace(
+  state: WorkspaceStateV1,
+  nowIso: string,
+): HomeComposition {
+  const blank = isBlankWorkspace(state);
+  const resume = chooseResumeAction(state, nowIso);
+  const unfinished = listHomeUnfinishedQueue(state, { nowIso, resume });
+  const stacks = listHomeActiveStacks(state);
+  const reviewCap =
+    resume.kind === "review_decision" ? HOME_REVIEW_CAP - 1 : HOME_REVIEW_CAP;
+  const review = listHomeReviewQueue(state, {
+    nowIso,
+    excludeSlug: resume.slug,
+    cap: reviewCap,
+  });
+  const excludeSlugs = resumeRelationshipSlugs(state, resume);
+  for (const item of unfinished) excludeSlugs.add(item.slug);
+  for (const item of review) {
+    if (item.slug) excludeSlugs.add(item.slug);
+  }
+  const unfiled = listUnfiledSaved(state, { excludeSlugs });
+  return { nowIso, blank, resume, unfinished, stacks, review, unfiled };
 }

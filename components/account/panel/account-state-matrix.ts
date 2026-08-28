@@ -129,8 +129,8 @@ export function resolveAccountStateCell(
     if (message && isAttachDegradedMessage(message)) {
       return {
         kind: "attach-retry",
-        tone: "warning",
-        title: "Salvataggio online non disponibile",
+        tone: "info",
+        title: "Solo su questo dispositivo",
         body: message,
         syncClaim: "local-only",
         action: null,

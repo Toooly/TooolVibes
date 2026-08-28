@@ -572,6 +572,12 @@
   color: #FF5252;
 }
 
+.account-message--info {
+  border-color: rgba(124, 77, 255, 0.16);
+  background: rgba(124, 77, 255, 0.06);
+  color: var(--account-muted, #9E99B8);
+}
+
 /* Selection card */
 .account-selection-card {
   position: relative;

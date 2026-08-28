@@ -1,36 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 import {
   markWorkspaceRevisited,
   markWorkspaceToolUsing,
   reopenWorkspaceDecision,
   setWorkspaceRevisit,
+  toggleWorkspaceCompare,
 } from "@/lib/account/workspace-actions";
 import {
   USAGE_ACTION_LABELS,
   formatRevisitLine,
   revisitAtFromPreset,
 } from "@/lib/account/workspace-lifecycle";
+import { queueStackCompare } from "@/lib/account/workspace-stack-compare";
 import {
-  HOME_REVIEW_CAP,
-  chooseResumeAction,
-  isBlankWorkspace,
-  listHomeReviewQueue,
+  composeHomeWorkspace,
   listHomeUsingSlugs,
   pipelineColumnForTool,
   stackNameForSlug,
+  type HomeUnfinishedKind,
   type ResumeKind,
 } from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
+import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
+import { MIN_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import type { WorkspaceStateV1, WorkspaceToolState } from "@/lib/discovery/types";
 
+import { HomeRadarPulse } from "./home-radar-pulse";
 import { DecisionSheet } from "./decision-sheet";
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { PIPELINE_LABELS, formatWorkspaceDate, workspaceViewHref } from "./workspace-model";
 import { WorkspaceCatalogMark, WorkspaceMarkStrip } from "./workspace-tool-mark";
-import { toolName } from "./workspace-tool-name";
 import { WorkspaceChip, pipelineTone } from "./workspace-visual";
 
 const RESUME_COPY: Record<
@@ -64,10 +69,35 @@ const RESUME_COPY: Record<
   },
 };
 
+const UNFINISHED_COPY: Record<
+  HomeUnfinishedKind,
+  { kicker: string; action: string }
+> = {
+  top_without_verdict: { kicker: "Candidato", action: "Apri" },
+  selected_follow_up: { kicker: "Scelto", action: USAGE_ACTION_LABELS.using },
+  review_without_verdict: { kicker: "Da valutare", action: "Apri" },
+  stale_saved: { kicker: "Salvato", action: "Organizza" },
+  saved_open: { kicker: "Salvato", action: "Organizza" },
+};
+
+function catalogNameMap(catalog: readonly PublicToolCatalogItem[]) {
+  const map = new Map<string, string>();
+  for (const item of catalog) map.set(item.slug, item.name);
+  return map;
+}
+
+function nameOf(names: Map<string, string>, slug: string) {
+  return names.get(slug) ?? slug;
+}
+
 function resumeHref(kind: Exclude<ResumeKind, "empty">, slug: string | null) {
   const focus = slug ? { focus: slug } : undefined;
   if (kind === "continue_compare") return "/compare";
   return workspaceViewHref("salvati", focus);
+}
+
+function salvatiFocusHref(slug: string) {
+  return workspaceViewHref("salvati", { focus: slug });
 }
 
 function reviewWhy(tool: WorkspaceToolState | undefined) {
@@ -77,6 +107,17 @@ function reviewWhy(tool: WorkspaceToolState | undefined) {
   if (!note) return null;
   if (note.length <= 140) return note;
   return `${note.slice(0, 137).trimEnd()}…`;
+}
+
+function relationshipBreadcrumb(state: WorkspaceStateV1, kind: ResumeKind, slug: string | null) {
+  if (kind === "continue_compare" || !slug) return [];
+  const tool = state.toolStates[slug];
+  const stages: string[] = [];
+  if (state.saved.slugs.includes(slug)) stages.push("Salvato");
+  if (state.compare.slugs.includes(slug)) stages.push("Confrontato");
+  if (tool?.decision?.outcome === "selected") stages.push("Scelto");
+  if (tool?.usage === "using") stages.push("In uso");
+  return stages.length >= 2 ? stages : [];
 }
 
 function WorkspaceReviewActions({
@@ -129,18 +170,18 @@ export function WorkspaceRiprendi({
   autoOpenDecide?: boolean;
 }) {
   const catalog = usePublicToolCatalog();
+  const names = useMemo(() => catalogNameMap(catalog), [catalog]);
+  const nowIso = useMemo(() => new Date().toISOString(), []);
+  const composition = composeHomeWorkspace(state, nowIso);
+  const { blank, resume, unfinished, stacks, review, unfiled } = composition;
+  const usingSlugs = listHomeUsingSlugs(state);
+
   const [decideSlug, setDecideSlug] = useState<string | null>(
     autoOpenDecide ? focusSlug : null,
   );
   const [snoozeSlug, setSnoozeSlug] = useState<string | null>(null);
-  const resume = chooseResumeAction(state);
-  const reviewCap = resume.kind === "review_decision" ? HOME_REVIEW_CAP - 1 : HOME_REVIEW_CAP;
-  const reviewQueue = listHomeReviewQueue(state, {
-    excludeSlug: resume.slug,
-    cap: reviewCap,
-  });
-  const usingSlugs = listHomeUsingSlugs(state);
-  const blank = isBlankWorkspace(state);
+  const [filingSlug, setFilingSlug] = useState<string | null>(null);
+
   const resumeTool = resume.slug ? state.toolStates[resume.slug] : undefined;
   const resumeRevisit =
     resume.kind === "review_decision" && resume.slug
@@ -153,12 +194,18 @@ export function WorkspaceRiprendi({
       : null;
   const copy = resume.kind !== "empty" ? RESUME_COPY[resume.kind] : null;
   const href = resume.kind !== "empty" ? resumeHref(resume.kind, resume.slug) : null;
+  const crumbs = relationshipBreadcrumb(state, resume.kind, resume.slug);
+  const quiet =
+    !blank &&
+    resume.kind === "empty" &&
+    unfinished.length === 0 &&
+    review.length === 0;
 
   useEffect(() => {
     if (autoOpenDecide) setDecideSlug(focusSlug);
   }, [autoOpenDecide, focusSlug]);
 
-  const decideName = decideSlug ? toolName(catalog, decideSlug) : "";
+  const decideName = decideSlug ? nameOf(names, decideSlug) : "";
   const resumeColumn = resume.slug
     ? pipelineColumnForTool({
         stage: resumeTool?.stage ?? "saved",
@@ -166,6 +213,7 @@ export function WorkspaceRiprendi({
       })
     : null;
   const stackName = stackNameForSlug(state, resume.slug);
+  const canCreateStack = getActiveWorkspaceOwner().kind === "account";
 
   function stillTrue(slug: string) {
     setSnoozeSlug(null);
@@ -181,7 +229,7 @@ export function WorkspaceRiprendi({
   return (
     <div className="tv-home">
       {blank ? (
-        <section className="tv-mod tv-mod--resume" aria-labelledby="tv-home-empty-title">
+        <section className="tv-mod tv-mod--resume tv-home__resume" aria-labelledby="tv-home-empty-title">
           <h2 id="tv-home-empty-title" className="tv-home-title">
             Ancora niente da riprendere
           </h2>
@@ -198,7 +246,7 @@ export function WorkspaceRiprendi({
 
       {!blank && copy && href && resume.kind !== "empty" ? (
         <section
-          className="tv-mod tv-mod--resume"
+          className="tv-mod tv-mod--resume tv-home__resume"
           id="tv-home-resume"
           aria-labelledby="tv-home-resume-title"
         >
@@ -215,10 +263,10 @@ export function WorkspaceRiprendi({
               </h2>
               {resume.kind === "continue_compare" ? (
                 <p className="tv-resume__tool">
-                  {state.compare.slugs.map((slug) => toolName(catalog, slug)).join(" vs ")}
+                  {state.compare.slugs.map((slug) => nameOf(names, slug)).join(" vs ")}
                 </p>
               ) : resume.slug ? (
-                <p className="tv-resume__tool">{toolName(catalog, resume.slug)}</p>
+                <p className="tv-resume__tool">{nameOf(names, resume.slug)}</p>
               ) : null}
               <p className="tv-home-copy">
                 {copy.body}
@@ -228,6 +276,16 @@ export function WorkspaceRiprendi({
                 <p className="tv-home-whisper">{resumeDecidedAt}</p>
               ) : null}
               {resumeWhy ? <p className="tv-home-whisper">{resumeWhy}</p> : null}
+              {crumbs.length > 0 ? (
+                <p className="tv-home-crumb">
+                  {crumbs.map((stage, index) => (
+                    <span key={stage}>
+                      {index > 0 ? " → " : null}
+                      {stage}
+                    </span>
+                  ))}
+                </p>
+              ) : null}
               {resumeColumn ? (
                 <div className="tv-resume__meta">
                   <WorkspaceChip tone={pipelineTone(resumeColumn)}>
@@ -277,13 +335,58 @@ export function WorkspaceRiprendi({
         </section>
       ) : null}
 
-      {!blank && reviewQueue.length > 0 ? (
-        <section className="tv-home-review" aria-labelledby="tv-home-review-title">
-          <h2 id="tv-home-review-title" className="tv-home-kicker">
+      {quiet ? (
+        <div className="tv-home__quiet">
+          <p className="tv-home-whisper">Niente da riprendere.</p>
+          {state.saved.slugs.length > 0 ? (
+            <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
+              Apri i Salvati
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
+
+      {!blank && unfinished.length > 0 ? (
+        <section className="tv-home__unfinished" aria-labelledby="tv-home-unfinished-title">
+          <h2 id="tv-home-unfinished-title" className="tv-home-title">
             Da riprendere
           </h2>
           <ul className="tv-home-list">
-            {reviewQueue.map((item) => {
+            {unfinished.map((item) => {
+              const copyItem = UNFINISHED_COPY[item.kind];
+              return (
+                <li key={item.slug} className="tv-home-queue-item">
+                  <p className="tv-home-kicker">{copyItem.kicker}</p>
+                  <div className="tv-home-row">
+                    <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
+                    {item.kind === "selected_follow_up" ? (
+                      <button
+                        type="button"
+                        className="tv-home-textbtn"
+                        onClick={() => markWorkspaceToolUsing(item.slug)}
+                      >
+                        {copyItem.action}
+                      </button>
+                    ) : (
+                      <Link className="tv-home-textbtn" href={salvatiFocusHref(item.slug)}>
+                        {copyItem.action}
+                      </Link>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : null}
+
+      {!blank && review.length > 0 ? (
+        <section className="tv-home__review tv-home-review" aria-labelledby="tv-home-review-title">
+          <h2 id="tv-home-review-title" className="tv-home-title">
+            Da rivedere
+          </h2>
+          <ul className="tv-home-list">
+            {review.map((item) => {
               const tool = state.toolStates[item.slug];
               const revisit = formatRevisitLine(tool?.revisitAt ?? null);
               const why = reviewWhy(tool);
@@ -291,11 +394,18 @@ export function WorkspaceRiprendi({
               return (
                 <li key={item.slug} className="tv-home-review-item">
                   <div className="tv-home-row">
-                    <span className="tv-home-row__text">{toolName(catalog, item.slug)}</span>
+                    <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
                     <span className="tv-home-row__meta">
                       {revisit ?? decidedAt ?? "Rimandata, da riprendere"}
                     </span>
                   </div>
+                  {decidedAt ? (
+                    <p className="tv-home-whisper">
+                      {decidedAt}. Lo stai ancora preferendo?
+                    </p>
+                  ) : (
+                    <p className="tv-home-whisper">Lo stai ancora preferendo?</p>
+                  )}
                   {why ? <p className="tv-home-whisper">{why}</p> : null}
                   <WorkspaceReviewActions
                     snoozeOpen={snoozeSlug === item.slug}
@@ -316,22 +426,115 @@ export function WorkspaceRiprendi({
         </section>
       ) : null}
 
+      {!blank && stacks.length > 0 ? (
+        <section className="tv-home__stacks" aria-labelledby="tv-home-stacks-title">
+          <h2 id="tv-home-stacks-title" className="tv-home-title">
+            Stack attivi
+          </h2>
+          <div className="tv-home-stacks">
+            {stacks.map((stack) => {
+              const shown = stack.slugs.slice(0, 4);
+              const count = stack.slugs.length;
+              return (
+                <article key={stack.id} className="tv-home-stack">
+                  <h3 className="tv-home-stack__name">{stack.name}</h3>
+                  {shown.length > 0 ? (
+                    <ul className="tv-home-stack__tools">
+                      {shown.map((slug) => (
+                        <li key={slug} className="tv-home-stack__tool">
+                          <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
+                          <span>{nameOf(names, slug)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                  {count > 0 ? (
+                    <p className="tv-home-whisper">
+                      {count === 1 ? "1 tool" : `${count} tool`}
+                    </p>
+                  ) : null}
+                  <div className="tv-home-actions">
+                    <Link
+                      className="tv-home-textbtn"
+                      href={workspaceViewHref("stack", { stack: stack.id })}
+                    >
+                      Apri
+                    </Link>
+                    {stack.slugs.length >= MIN_COMPARE_TOOLS ? (
+                      <Link
+                        className="tv-home-textbtn"
+                        href="/compare"
+                        onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
+                      >
+                        Confronta
+                      </Link>
+                    ) : null}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {!blank && unfiled.length > 0 ? (
+        <section className="tv-home__unfiled" aria-labelledby="tv-home-unfiled-title">
+          <h2 id="tv-home-unfiled-title" className="tv-home-title">
+            Salvati da organizzare
+          </h2>
+          <ul className="tv-home-list">
+            {unfiled.map((item) => (
+              <li key={item.slug} className="tv-home-queue-item">
+                <div className="tv-home-row">
+                  <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
+                </div>
+                <div className="tv-home-actions">
+                  <button
+                    type="button"
+                    className="tv-home-textbtn"
+                    aria-expanded={filingSlug === item.slug}
+                    onClick={() =>
+                      setFilingSlug((current) => (current === item.slug ? null : item.slug))
+                    }
+                  >
+                    Aggiungi a Stack
+                  </button>
+                  <Link
+                    className="tv-home-textbtn"
+                    href="/compare"
+                    onClick={() => {
+                      if (!state.compare.slugs.includes(item.slug)) {
+                        toggleWorkspaceCompare(item.slug);
+                      }
+                    }}
+                  >
+                    Confronta
+                  </Link>
+                  <Link className="tv-home-textbtn" href={salvatiFocusHref(item.slug)}>
+                    Apri
+                  </Link>
+                </div>
+                {filingSlug === item.slug ? (
+                  <StackPickOrCreate
+                    slug={item.slug}
+                    compact
+                    allowCreate={canCreateStack}
+                    onDone={() => setFilingSlug(null)}
+                  />
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {!blank && usingSlugs.length > 0 ? (
-        <p className="tv-home-using-line">
-          In uso: {usingSlugs.map((slug) => toolName(catalog, slug)).join(" · ")}
+        <p className="tv-home-using-line tv-home__using">
+          In uso: {usingSlugs.map((slug) => nameOf(names, slug)).join(" · ")}
         </p>
       ) : null}
 
-      {!blank && resume.kind === "empty" && reviewQueue.length === 0 ? (
-        <>
-          <p className="tv-home-whisper">Niente da riprendere.</p>
-          {state.saved.slugs.length > 0 ? (
-            <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
-              Apri i Salvati
-            </Link>
-          ) : null}
-        </>
-      ) : null}
+      <HomeRadarPulse />
       {decideSlug ? (
         <DecisionSheet
           open

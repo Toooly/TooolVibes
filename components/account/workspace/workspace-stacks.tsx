@@ -12,10 +12,10 @@ import {
   removeToolFromPersonalStack,
   renamePersonalStack,
   restorePersonalStack,
-  toggleWorkspaceCompare,
 } from "@/lib/account/workspace-actions";
 import { compactPersonalStatus } from "@/lib/account/workspace-lifecycle";
 import { leftoverLegacyStackSlugs } from "@/lib/account/workspace-stack-target";
+import { queueStackCompare } from "@/lib/account/workspace-stack-compare";
 import { activePersonalStacks } from "@/lib/account/workspace-pipeline";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
@@ -91,21 +91,6 @@ function formatStackMemberCounts(counts: {
   }
   if (counts.using > 0) parts.push(`${counts.using} in uso`);
   return parts.join(" · ");
-}
-
-function queueStackCompare(
-  memberSlugs: readonly string[],
-  compareSlugs: readonly string[],
-) {
-  const room = Math.max(0, MAX_COMPARE_TOOLS - compareSlugs.length);
-  if (room === 0) return;
-  const toAdd: string[] = [];
-  for (const slug of memberSlugs) {
-    if (toAdd.length >= room) break;
-    if (compareSlugs.includes(slug)) continue;
-    toAdd.push(slug);
-  }
-  for (const slug of toAdd) toggleWorkspaceCompare(slug);
 }
 
 export function WorkspaceStacks({

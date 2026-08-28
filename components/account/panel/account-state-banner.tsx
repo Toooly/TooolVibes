@@ -9,12 +9,15 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-import type { AccountStateCell } from "./account-state-matrix";
+import type {
+  AccountStateCell,
+  AccountStateCellTone,
+} from "./account-state-matrix";
 
 /* ═══════════════════════════════════════════════════════════════
    AccountStateBanner (B59) — cella visibile della state matrix.
    Presentazionale: riusa le classi messaggio esistenti
-   (account-message / v-auth-message) senza nuovo CSS. Espone
+   (account-message / v-auth-message), incluso --info per attach-retry. Espone
    data-account-state e data-sync-claim per contract test: il
    claim "synced" è possibile solo sull'esito attach riuscito.
    ═══════════════════════════════════════════════════════════════ */
@@ -29,11 +32,24 @@ function iconFor(cell: AccountStateCell) {
       return CheckCircle2;
     case "unavailable":
     case "attach-local-pending":
-    case "attach-retry":
       return AlertTriangle;
     default:
       return Info;
   }
+}
+
+function bannerClassName(
+  variant: "panel" | "auth",
+  tone: AccountStateCellTone,
+) {
+  if (variant === "auth") {
+    if (tone === "warning") return "v-auth-message v-auth-message--error";
+    if (tone === "success") return "v-auth-message v-auth-message--success";
+    return "v-auth-message v-auth-message--info";
+  }
+  if (tone === "warning") return "account-message account-message--warning";
+  if (tone === "success") return "account-message account-message--success";
+  return "account-message account-message--info";
 }
 
 export function AccountStateBanner({
@@ -46,14 +62,7 @@ export function AccountStateBanner({
   onAction?: (actionId: string) => void;
 }) {
   const Icon = iconFor(cell);
-  const className =
-    variant === "auth"
-      ? `v-auth-message ${
-          cell.tone === "warning" ? "v-auth-message--error" : "v-auth-message--success"
-        }`
-      : `account-message ${
-          cell.tone === "warning" ? "account-message--warning" : "account-message--success"
-        }`;
+  const className = bannerClassName(variant, cell.tone);
 
   return (
     <div

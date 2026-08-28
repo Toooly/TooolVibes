@@ -198,7 +198,7 @@ describe("GET /api/workspace-state", () => {
     });
   });
 
-  it("keeps anonymous GET local-only without allocating a remote guest", async () => {
+  it("H2-SYNC-5 guest local storage unaffected", async () => {
     const response = await getWorkspaceState(getRequest(false));
 
     expect(response.status).toBe(200);
@@ -269,7 +269,7 @@ describe.each(mutationRoutes)("$label", (route) => {
     });
   });
 
-  it("returns 202 when canonical persistence is temporarily unavailable", async () => {
+  it("H2-SYNC-2 returns 202 when canonical persistence is temporarily unavailable", async () => {
     route.dependency.mockResolvedValue({
       remoteAvailable: false,
       state: createEmptyWorkspaceState(),
@@ -292,7 +292,7 @@ describe.each(mutationRoutes)("$label", (route) => {
     });
   });
 
-  it("returns 200 after a successful canonical mutation", async () => {
+  it("H2-SYNC-1 returns 200 after a successful canonical mutation", async () => {
     route.dependency.mockResolvedValue({
       remoteAvailable: true,
       viewerKind: route.viewerKind,
@@ -362,7 +362,7 @@ describe.each(mutationRoutes)("$label", (route) => {
     });
   });
 
-  it("returns 503 without leaking an unexpected persistence failure", async () => {
+  it("H2-SYNC-2 returns 503 without leaking an unexpected persistence failure", async () => {
     route.dependency.mockRejectedValue(new Error("sensitive database failure"));
 
     const response = await route.handler(requestFor(route.path, route.method));

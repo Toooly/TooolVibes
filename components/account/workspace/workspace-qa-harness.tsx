@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   AccountPreviewProvider,
@@ -57,7 +57,7 @@ export function WorkspaceQaHarness({
   view = "riprendi",
   surface = "workspace",
 }: {
-  fixture?: "new" | "mature" | "quiet" | "review" | "compare";
+  fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume";
   view?: WorkspaceView;
   surface?: "workspace" | "settings";
 }) {
@@ -66,23 +66,23 @@ export function WorkspaceQaHarness({
     if (fixture === "quiet") return workspaceTestFixtures.quietReturning;
     if (fixture === "review") return workspaceTestFixtures.reviewDue;
     if (fixture === "compare") return workspaceTestFixtures.withCompare;
+    if (fixture === "stacks") return workspaceTestFixtures.withStacks;
+    if (fixture === "resume") return workspaceTestFixtures.withDecisions;
     return workspaceTestFixtures.mature;
   }, [fixture]);
   const initialView = WORKSPACE_VIEWS.includes(view) ? view : "riprendi";
 
+  const [ready, setReady] = useState(false);
   const previousOwner = useRef<ReturnType<typeof getActiveWorkspaceOwner> | null>(null);
-  if (typeof window !== "undefined") {
-    if (!previousOwner.current) {
-      previousOwner.current = getActiveWorkspaceOwner();
-    }
-    activateVolatileToolWorkspaceOwnerWithoutStorage(QA_OWNER, state);
-  }
   useEffect(() => {
-    const previous = previousOwner.current;
+    const previous = getActiveWorkspaceOwner();
+    previousOwner.current = previous;
+    activateVolatileToolWorkspaceOwnerWithoutStorage(QA_OWNER, state);
+    setReady(true);
     return () => {
       if (previous) activateToolWorkspaceOwner(previous);
     };
-  }, []);
+  }, [state]);
 
   return (
     <SignalProgressUiProvider enabled>
@@ -97,10 +97,12 @@ export function WorkspaceQaHarness({
           <AccountPreviewProvider value={previewAccount}>
             {surface === "settings" ? (
               <AccountSettingsPage />
-            ) : (
+            ) : ready ? (
               <LoopShellProvider>
                 <WorkspaceShell initialView={initialView} />
               </LoopShellProvider>
+            ) : (
+              <p>Apertura spazio…</p>
             )}
           </AccountPreviewProvider>
         </DiscoveryPersistenceProvider>

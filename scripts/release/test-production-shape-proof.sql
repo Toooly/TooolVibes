@@ -750,6 +750,8 @@ begin
   -- SIMULATE the real product save path: client calls sync_viewer_workspace_v1
   -- with a WorkspaceStateV1 JSONB payload that includes 5 saved tool slugs.
   -- This is EXACTLY what /api/workspace-state does server-side.
+  -- 6-key payloads remain valid after 20260828 events loosening.
+  -- Optional personalStacks / events keys are not required here.
   select sync_status from public.sync_viewer_workspace_v1(
     p_viewer_id := v_viewer_id,
     p_state := '{

@@ -30,6 +30,14 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => catalogRuntime.value,
 }));
 
+vi.mock("@/lib/radar/use-product-hunt-radar", () => ({
+  useProductHuntRadar: () => ({
+    payload: undefined,
+    isLoading: false,
+    isFetching: false,
+  }),
+}));
+
 vi.mock("@/lib/account/workspace-actions", () => ({
   markWorkspaceRevisited: (...args: unknown[]) => actions.markWorkspaceRevisited(...args),
   reopenWorkspaceDecision: (...args: unknown[]) => actions.reopenWorkspaceDecision(...args),
