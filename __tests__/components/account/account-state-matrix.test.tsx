@@ -538,6 +538,15 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => catalogRuntime.value,
 }));
 
+vi.mock("@/lib/radar/use-product-hunt-radar", () => ({
+  useProductHuntRadar: () => ({
+    payload: undefined,
+    isLoading: false,
+    isFetching: false,
+  }),
+}));
+
+
 vi.mock("@/lib/gamification/release-context", () => ({
   useGamificationReleaseSummary: () => gamificationRuntime.summary,
   useGamificationSurface: (key: "missions" | "vibeRush") =>

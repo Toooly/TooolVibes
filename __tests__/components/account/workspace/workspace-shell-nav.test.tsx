@@ -57,6 +57,15 @@ vi.mock("@/lib/data/public-tool-catalog-context", () => ({
   usePublicToolCatalog: () => [],
 }));
 
+vi.mock("@/lib/radar/use-product-hunt-radar", () => ({
+  useProductHuntRadar: () => ({
+    payload: undefined,
+    isLoading: false,
+    isFetching: false,
+  }),
+}));
+
+
 import { LoopShellProvider } from "@/components/layout/loop-shell-context";
 import { WorkspaceShell } from "@/components/account/workspace/workspace-shell";
 
