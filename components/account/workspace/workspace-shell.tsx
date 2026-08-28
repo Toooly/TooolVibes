@@ -64,7 +64,11 @@ function WorkspaceShellView({
 
   return (
     <AccountWorkspaceFrame surface="workspace" view={view}>
-      {showStateBanner ? <AccountStateBanner cell={stateCell} /> : null}
+      {showStateBanner ? (
+        <div className="tv-workspace-sync">
+          <AccountStateBanner cell={stateCell} />
+        </div>
+      ) : null}
       <AccountRecoverySection account={account} suppressAuthMessage={showStateBanner} />
       <div className="tv-space-main">
         {view === "riprendi" ? (
