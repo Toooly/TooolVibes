@@ -22,8 +22,8 @@ Claims below are what later waves must prove. This documentation pass is accepte
 | `canUse("compare.basic", "guest")` is true | unit test |
 | AuthSheet renders headline from capability | component test |
 | Dismiss does not leave a pending intent (write-on-CTA) | component test |
-| CTA writes valid PendingAuthIntent to sessionStorage | unit + component |
-| Malformed sessionStorage is ignored | unit |
+| CTA writes valid PendingAuthIntent to localStorage | unit + component |
+| Malformed localStorage is ignored | unit |
 | `returnTo` with `//evil` or `javascript:` rejected | unit |
 | Expired intent rejected | unit |
 | Telemetry events named only (hooks may be no-op if ingest not wired) | unit of emit shape |

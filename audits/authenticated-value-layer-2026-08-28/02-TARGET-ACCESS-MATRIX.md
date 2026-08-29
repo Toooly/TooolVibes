@@ -47,7 +47,7 @@ Wave IDs: see `13-IMPLEMENTATION-WAVES.md`. Infra (`capability.registry`, `auth.
 | `community.write` | no | one Experience per tool (later) | Identity + moderation | public read FUTURE | write CTA | not in V1 workspace | new tables + RLS + rate limit | new DB | **H** design; implement only after approval |
 | `export.workspace` | no | settings export | Ownership of the vault | none | settings | — | session | V1 snapshot | exists CURRENT |
 | `capability.registry` | n/a | `canUse(id)` | Stop ad-hoc `if (user)` | n/a | n/a | n/a | document `serverEnforced` per id | viewer kind | **A** |
-| `auth.sheet` | sees sheet on gated action | never | Conversion without padlocks | n/a | gated capability | PendingAuthIntent | magic-link existing API | sessionStorage | **A** |
+| `auth.sheet` | sees sheet on gated action | never | Conversion without padlocks | n/a | gated capability | PendingAuthIntent | magic-link existing API | localStorage | **A** |
 
 ---
 

@@ -9,7 +9,7 @@
 
 | Wave | Scope | Complexity | Code risk | Schema risk | Security risk | UX risk | Test burden |
 |---|---|---|---|---|---|---|---|
-| **A** | Capability registry; AuthSheet; PendingAuthIntent; `auth_gate_*` telemetry hooks | **M** | M (new UI + sessionStorage) | none | M (intent validation) | M (glass sheet) | M |
+| **A** | Capability registry; AuthSheet; PendingAuthIntent; `auth_gate_*` telemetry hooks | **M** | M (new UI + localStorage) | none | M (intent validation) | M (glass sheet) | M |
 | **B** | Stack natural gating; continuation replay; field-level merge; leftover guest stacks preserved | **M** | M (merge is easy to get wrong) | none | H if merge wrong | M (first conversion) | **H** |
 | **C** | Productized private notes (Tool Page + Filo snapshot + Salvati keep) | **M** | M | none for snapshot; `noted` FUTURE | M (SSR leak) | M | M |
 | **D** | Personal search DSL + palette; guest alias dead-end fix | **M/L** | M–L (parser + index) | none | M (don’t log notes) | M | M/L |
@@ -36,7 +36,7 @@ Do not ship an AuthSheet with nothing meaningful behind it. Stack create is the 
 
 - `lib/capabilities/` registry + `canUse`
 - AuthSheet (one component)
-- PendingAuthIntent sessionStorage helpers + validation
+- PendingAuthIntent localStorage helpers + validation
 - Telemetry events (first-party, no new vendor)
 - Wire **no** product writer except through the sheet’s continue path
 - Keep AuthPage for direct `/account`

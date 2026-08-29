@@ -78,7 +78,7 @@ Those last items are TARGET (or Wave H DESIGN-ONLY).
 
 ## Doctrine in one paragraph
 
-Guest save, basic compare, and Fast Decide remain public. Login is for cross-device continuation, named stacks, export, Filo, review, productized private notes, and later intelligence. Do not cripple discovery to manufacture signup. Do not scatter padlocks. When a guest hits an identity-dependent **action**, show one contextual Liquid Glass AuthSheet with benefit copy, store a `PendingAuthIntent` in `sessionStorage`, and after magic-link + workspace attach replay **one** safe intent.
+Guest save, basic compare, and Fast Decide remain public. Login is for cross-device continuation, named stacks, export, Filo, review, productized private notes, and later intelligence. Do not cripple discovery to manufacture signup. Do not scatter padlocks. When a guest hits an identity-dependent **action**, show one contextual Liquid Glass AuthSheet with benefit copy, store a `PendingAuthIntent` in `localStorage`, and after magic-link + workspace attach replay **one** safe intent.
 
 ---
 
@@ -146,7 +146,7 @@ Related prior work (do not treat as this package): `audits/my-tooolvibes-authent
 6. **Guest scratch notes stay.** Auth private notes productize the same `toolStates.note` field — no second notes database.
 7. **Personal Search V1 is deterministic.** No LLM, no embeddings, no server FTS required.
 8. **Personal Insights V1 is deterministic and explainable.** No 87/100 scores. Extend `lib/account/personalization.ts`; that helper is CURRENT code, not a shipped insights UI.
-9. **PendingAuthIntent lives in `sessionStorage`.** Never in `WorkspaceStateV1`.
+9. **PendingAuthIntent lives in `localStorage`.** Magic-link email opens a new tab; `sessionStorage` would not survive. Never in `WorkspaceStateV1`.
 10. **Guest to auth merge becomes field-level.** CURRENT bug: account `toolStates` win wholesale on overlapping slugs.
 11. **Community is Wave H design.** No implementation in A–G.
 12. **No Home 2.1, no Salvati redesign, no Stack destination redesign, no Premium.**
@@ -171,6 +171,8 @@ Settled questions are not reopened here. Only these remain:
 
 1. Does Wave C need a `noted` Filo event, or is snapshot `toolStates.note` sufficient? **Recommendation in 08: snapshot is Wave C V1; `noted` is FUTURE.**
 2. Exact AuthSheet visual composition inside the existing Liquid Glass grammar (Home/Salvati tokens, not the current solid `AuthPage` card).
+
+**Resolved:** pending-intent storage is `localStorage` (not `sessionStorage`). Evidence: magic-link href is `{origin}/auth/callback?token_hash=…` opened from the email client, typically a new tab. Callback is outside `AccountProvider`. Supabase session already uses `localStorage`.
 3. Exact field-level conflict policy when guest and account edit the same field at the same `updatedAt`.
 4. Whether Personal Search V1 lives only in the command palette or also exposes Salvati search syntax.
 

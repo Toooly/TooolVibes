@@ -88,15 +88,19 @@ type PendingAuthIntent = {
 
 ### Storage
 
-**`sessionStorage`** key recommendation: `tooolvibes:pending-auth-intent:v1`
+**CURRENT architecture draft said `sessionStorage`.** Runtime evidence **rejects** that.
 
-Why sessionStorage: survives magic-link round trip in the **same tab** if the callback returns to the same origin; does not leak into V1 or remote workspace; clears when the tab session ends.
+Magic-link email is `{AUTH_REDIRECT_ORIGIN}/auth/callback?token_hash=…&type=email`. Email clients open a **new tab**. `sessionStorage` is tab-scoped and would be empty on the callback document. `/auth/callback` is outside `AccountProvider`. The session already persists in **`localStorage`** (supabase-js default). Guest workspace already persists in **`localStorage`**.
+
+**TARGET storage: `localStorage`** key `tooolvibes:pending-auth-intent:v1`
+
+Same-origin, TTL, one-shot consume after attach on `/account` (or any marketing route with `AccountProvider`).
 
 Do **not** persist into `WorkspaceStateV1`.  
-Do **not** put the intent in a query string that can be forwarded (except a short opaque `returnTo` path).  
-Do **not** store email or workspace JSON in the intent.
+Do **not** put secrets, email, JWT, workspace JSON, or notes in the intent.  
+Do **not** use `sessionStorage` for this round trip.
 
-If magic-link opens a **new** browser (email client on another device), sessionStorage will be empty. Then: authenticate → attach/merge → navigate to `returnTo` if present in callback URL **or** to Home. **Do not invent stack/note state.** Document this as an accepted limitation of magic-link + sessionStorage. Optional FUTURE: signed cookie for intent (not Wave A).
+Cross-device (email opened on another device): localStorage of the requesting browser is invisible. Then: authenticate → attach/merge → **do not invent stack state**. Land on Home/Stack. Accepted limitation of magic-link + device-local intent.
 
 ### Lifecycle
 
