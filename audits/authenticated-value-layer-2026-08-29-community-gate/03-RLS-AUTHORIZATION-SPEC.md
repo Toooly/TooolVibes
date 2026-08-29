@@ -32,68 +32,60 @@ Admin cookie identity is **not** an Experience author. Admins moderate; they do 
 
 ---
 
-## 3. Grants (target SQL)
+## 3. Grants (H1 correction)
 
-`ALTER TABLE … ENABLE ROW LEVEL SECURITY;`  
-`FORCE ROW LEVEL SECURITY;` (so table owners cannot skip)
+`ENABLE` + `FORCE ROW LEVEL SECURITY`.
+
+**H0 draft granted SELECT to anon/authenticated. H1 retracts that.**
+
+Postgres RLS filters **rows**, not **columns**. A published-row SELECT policy plus `GRANT SELECT` would let anon read `author_id` (auth uid). That violates “no auth uid public”.
+
+**Locked H1:**
 
 ```
 REVOKE ALL ON community_experiences FROM PUBLIC, anon, authenticated;
-GRANT SELECT ON community_experiences TO anon, authenticated;
-GRANT ALL ON community_experiences TO service_role;
-
 REVOKE ALL ON community_experience_reports FROM PUBLIC, anon, authenticated;
--- no GRANT SELECT to anon/authenticated
-GRANT ALL ON community_experience_reports TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON both tables TO service_role;
 ```
 
-No `GRANT INSERT/UPDATE/DELETE` to `anon` or `authenticated`.
+No client SELECT. Public content is still public **through H2/H4 server projection** of safe columns only.
+
+Defense-in-depth: owner `FOR SELECT TO authenticated USING (author_id = auth.uid())` exists but is inert without GRANT. If SELECT is ever granted later, authenticated users would see **own** rows only — not others’ published `author_id`. There is **no** public published SELECT policy on the base table.
 
 ---
 
 ## 4. Policies — `community_experiences`
 
-### SELECT published (anon + authenticated)
+### No public published SELECT on the base table
+
+A `status = 'published'` policy plus table SELECT would leak `author_id`. H1 does **not** create that policy.
+
+### SELECT own (authenticated) — defense in depth, no GRANT
 
 ```
-USING (status = 'published')
-```
-
-Name: `community_experiences_select_published`
-
-### SELECT own (authenticated)
-
-```
+FOR SELECT TO authenticated
 USING (author_id = auth.uid())
 ```
 
-Name: `community_experiences_select_own`
+Quoted name: `"Users can read own community experiences"`.
 
-Defense in depth if a future client uses the anon key. Production client **must not** query this table directly; it uses Next API.
+Inert until someone GRANTs SELECT. Then users see **own** rows only.
 
 ### No INSERT/UPDATE/DELETE policies for anon/authenticated
 
-Absence + REVOKE is the control. Do not add `WITH CHECK (author_id = auth.uid() AND status = 'pending')` as the write path — column-level update restrictions are too weak in RLS (owner could set `status = 'published'`). **Server forces status.**
+Absence + REVOKE is the write control. Server forces `status`.
 
 ### service_role
 
-Bypasses RLS. Every service-role call still runs in a Next route/action that has already authorized.
+`"Service role can manage community experiences"` FOR ALL. `service_role` also typically BYPASSRLS. H2 still authorizes in Next before using the admin client.
 
 ---
 
 ## 5. Policies — `community_experience_reports`
 
-No public SELECT.
+No client policies except service_role FOR ALL.
 
-Optional authenticated SELECT own:
-
-```
-USING (reporter_id = auth.uid())
-```
-
-Still **no INSERT policy** for authenticated — inserts go through API so rate limit + unique + Turnstile can run first.
-
-Admin reads via service_role only.
+No anon/authenticated SELECT or INSERT. H2 writes reports after auth + rate limit. Admin reads via service_role.
 
 ---
 

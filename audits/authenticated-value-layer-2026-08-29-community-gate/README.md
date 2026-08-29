@@ -67,7 +67,7 @@ Not a social network. No stars. No comments. Not WorkspaceStateV1.
 16. Tables: `community_experiences`, `community_experience_reports` only.
 17. Indexes: published-by-tool, author ownership, pending queue, open reports.
 18. Unique: `UNIQUE (author_id, tool_slug)`.
-19. RLS: published SELECT public; own SELECT; **no client INSERT/UPDATE/DELETE**. Writes via server + service role.
+19. RLS FORCE + **no client GRANTs** (no anon/authenticated SELECT/INSERT/UPDATE/DELETE). Owner SELECT policy is defense-in-depth only. Writes and public reads via server + service role (H2/H4). Prevents `author_id` column leak.
 20. Server API (Bearer JWT), not browser Supabase mutations. Admin = existing cookie + server actions.
 21. Rate limits: create 5/h/user + 10/h/IP; update 20/h/user; report 10/h/user + 20/h/IP. Fail-closed.
 22. Moderation role = existing founder admin cookie. No new RBAC.

@@ -24,8 +24,8 @@ Not a review score. Not a comment. Not a private note.
 | display name | `display_name` | text | no | Public snapshot |
 | use case | `use_case` | text | no | How they use it |
 | body | `body` | text | no | Main narrative (`experience` in product copy) |
-| pros | `pros` | jsonb | no | `string[]` |
-| limits | `limits` | jsonb | no | `string[]` |
+| pros | `pros` | text[] | no | 1–5 strings |
+| limits | `limits` | text[] | no | 1–5 strings |
 | duration | `duration_bucket` | text | no | Enum below |
 | switched from (catalog) | `switched_from_slug` | text | yes | Other catalog slug |
 | switched from (other) | `switched_from_label` | text | yes | Off-catalog name |
@@ -129,7 +129,7 @@ See field table. Constraints:
 - `CHECK (duration_bucket IN (...))`
 - `CHECK (char_length(btrim(display_name)) BETWEEN 2 AND 80)`
 - same for use_case 4–80, body 80–2000
-- `CHECK (jsonb_typeof(pros) = 'array')` + length 1–5 (SQL helper or app+check)
+- `CHECK (cardinality(pros) between 1 and 5)` (per-item length in H2 Zod; CHECK cannot subquery `unnest`)
 - `CHECK (switched_from_slug IS NULL OR switched_from_slug <> tool_slug)`
 - `CHECK (NOT (switched_from_slug IS NOT NULL AND switched_from_label IS NOT NULL))` — slug XOR label, both null OK
 - `UNIQUE (author_id, tool_slug)` — **one row per user per tool including pending/rejected/hidden**
