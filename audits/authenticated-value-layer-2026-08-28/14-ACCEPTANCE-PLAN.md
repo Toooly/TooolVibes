@@ -128,14 +128,19 @@ Status: IMPLEMENTED / ACCEPTED (not RELEASED).
 | Guest teaser opens AuthSheet copy | INSIGHT-AUTH-01/03 |
 | Intent `{ toolSlug }` only | INTENT-F-01/02 |
 | Replay opens layer, no write | INSIGHT-CONT-03 |
-| Radar unchanged | Wave G |
+| Radar public default | Wave G |
 
-## Wave G
+## Wave G — IMPLEMENTED / ACCEPTED (not RELEASED until deploy)
 
 | Claim | Evidence |
 |---|---|
-| Radar public identical for guest | radar tests |
-| Auth radar chip only when join rule matches | unit (not this wave) |
+| Radar public identical for guest | `__tests__/components/radar/radar-experience.test.tsx`, RADAR-AUTH-01 |
+| Guest Per te opens AuthSheet | RADAR-AUTH-03/04 |
+| Auth Per te only grounded matches | RADAR-LENS-02, RADAR-PERSONAL-13 |
+| Category-only insufficient | RADAR-PERSONAL-12 |
+| Unmatched PH excluded | radar-catalog-match tests |
+| Intent `{}` only | RADAR-CONT-02 |
+| Replay opens lens, no write | RADAR-CONT-03 |
 
 ---
 

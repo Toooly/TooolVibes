@@ -19,6 +19,7 @@ import {
 import { getOpenPrivateNoteSlug } from "@/lib/auth/private-note-editor-state";
 import { getOpenPersonalInsightSlug, resetPersonalInsightLayerForTests } from "@/lib/auth/personal-insight-layer-state";
 import { peekDeepCompareOpen, resetDeepCompareOpenForTests } from "@/lib/compare/deep-compare-resume";
+import { peekRadarPersonalOpen, resetRadarPersonalOpenForTests } from "@/lib/radar/radar-personal-resume";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   activateToolWorkspaceOwner,
@@ -55,6 +56,7 @@ describe("auth continuation replay order", () => {
   beforeEach(() => {
     window.localStorage.clear();
     resetDeepCompareOpenForTests();
+    resetRadarPersonalOpenForTests();
     resetPersonalInsightLayerForTests();
     activateToolWorkspaceOwner(
       { kind: "account", userId: "u1" },
@@ -203,6 +205,29 @@ describe("auth continuation replay order", () => {
     });
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
     expect(getCanonicalToolWorkspaceState().compare.slugs).toEqual(before);
+  });
+
+  it("RADAR-CONT-03 radar.personal replay opens lens without mutating workspace", async () => {
+    writePendingAuthIntent({
+      capability: "radar.personal",
+      returnTo: "/radar",
+      origin: "radar.personal",
+    });
+    const before = JSON.stringify(getCanonicalToolWorkspaceState());
+    render(
+      <OverlayProvider>
+        <AccountPreviewProvider value={accountValue(true)}>
+          <AuthContinuationProvider>
+            <p>radar-ready</p>
+          </AuthContinuationProvider>
+        </AccountPreviewProvider>
+      </OverlayProvider>,
+    );
+    await waitFor(() => {
+      expect(peekRadarPersonalOpen()).toBe(true);
+    });
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+    expect(JSON.stringify(getCanonicalToolWorkspaceState())).toBe(before);
   });
 
   it("INSIGHT-CONT-03 insight.personal replay opens layer without writing", async () => {

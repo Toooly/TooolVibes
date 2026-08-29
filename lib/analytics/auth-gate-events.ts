@@ -8,7 +8,7 @@ export type AuthGateEvent = {
   name: AuthGateEventName;
   capability: string;
   origin?: string;
-  returnContext?: "tool" | "catalog" | "account" | "other";
+  returnContext?: "tool" | "catalog" | "account" | "radar" | "other";
 };
 
 function classifyReturnTo(returnTo: string | undefined): AuthGateEvent["returnContext"] {
@@ -16,6 +16,7 @@ function classifyReturnTo(returnTo: string | undefined): AuthGateEvent["returnCo
   if (returnTo.startsWith("/toools/")) return "tool";
   if (returnTo.startsWith("/archivio")) return "catalog";
   if (returnTo.startsWith("/account")) return "account";
+  if (returnTo.startsWith("/radar")) return "radar";
   return "other";
 }
 

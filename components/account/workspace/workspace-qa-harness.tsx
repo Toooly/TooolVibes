@@ -72,7 +72,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "auth-sheet-insight" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest" | "deep-compare" | "deep-compare-guest" | "personal-insights" | "personal-insights-guest";
+  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "auth-sheet-insight" | "auth-sheet-radar" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest" | "deep-compare" | "deep-compare-guest" | "personal-insights" | "personal-insights-guest" | "radar-personal" | "radar-personal-guest";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -117,7 +117,7 @@ export function WorkspaceQaHarness({
       >
         <DiscoveryPersistenceProvider>
           <AccountPreviewProvider
-            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "auth-sheet-insight" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" || surface === "deep-compare-guest" || surface === "personal-insights-guest" ? guestPreviewAccount : previewAccount}
+            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "auth-sheet-insight" || surface === "auth-sheet-radar" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" || surface === "deep-compare-guest" || surface === "personal-insights-guest" || surface === "radar-personal-guest" ? guestPreviewAccount : previewAccount}
           >
             {surface === "personal-search" || surface === "personal-search-guest" ? (
               <PersonalSearchQa
@@ -125,9 +125,11 @@ export function WorkspaceQaHarness({
               />
             ) : surface === "deep-compare" || surface === "deep-compare-guest" ? (
               <DeepCompareQa guest={surface === "deep-compare-guest"} />
+            ) : surface === "radar-personal" || surface === "radar-personal-guest" ? (
+              <RadarPersonalQa guest={surface === "radar-personal-guest"} />
             ) : surface === "settings" ? (
               <AccountSettingsPage />
-            ) : surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "auth-sheet-insight" ? (
+            ) : surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "auth-sheet-insight" || surface === "auth-sheet-radar" ? (
               <div
                 data-auth-sheet-qa=""
                 className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
@@ -148,6 +150,12 @@ export function WorkspaceQaHarness({
                             toolSlug: "cursor",
                             returnTo: "/toools/cursor",
                             origin: "insight.tool",
+                          }
+                      : surface === "auth-sheet-radar"
+                        ? {
+                            capability: "radar.personal",
+                            returnTo: "/radar",
+                            origin: "radar.personal",
                           }
                       : {
                           toolSlug: "cursor",
@@ -259,6 +267,38 @@ function PersonalSearchQa({ guest }: { guest: boolean }) {
   );
 }
 
+
+
+function RadarPersonalQa({ guest }: { guest: boolean }) {
+  return (
+    <div
+      data-radar-personal-qa=""
+      className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
+    >
+      <AuthContinuationProvider>
+        <AuthSheet
+          open={guest}
+          draft={
+            guest
+              ? {
+                  capability: "radar.personal",
+                  returnTo: "/radar",
+                  origin: "radar.personal",
+                }
+              : null
+          }
+          onOpenChange={() => {}}
+        />
+        {!guest ? (
+          <div>
+            <p className="tv-radar-personal-reason__eyebrow">Per te</p>
+            <p className="tv-radar-personal-reason">È tornato nel Radar e lo stai già usando.</p>
+          </div>
+        ) : null}
+      </AuthContinuationProvider>
+    </div>
+  );
+}
 
 function DeepCompareQa({ guest }: { guest: boolean }) {
   return (

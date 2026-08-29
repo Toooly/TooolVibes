@@ -80,6 +80,7 @@ const PRIORITY = {
   DECISION_CONTEXT: 35,
   FIT: 40,
   STACK_FIT: 50,
+  RECENT_SIGNAL: 55,
   ALREADY_KNOW: 60,
 } as const;
 
@@ -149,6 +150,7 @@ function collectCandidates(input: {
   workspace: WorkspaceStateV1;
   index: WorkspaceSearchIndex;
   catalogBySlug: Map<string, InsightCatalogHint>;
+  radarActive?: boolean;
 }): PersonalInsight[] {
   const slug = input.toolSlug;
   const { index, workspace, catalogBySlug } = input;
@@ -485,10 +487,37 @@ function collectCandidates(input: {
     );
   }
 
+  const known =
+    saved ||
+    Boolean(usage) ||
+    Boolean(outcome) ||
+    stacks.length > 0 ||
+    Boolean(note);
+  if (input.radarActive && known) {
+    const explanation =
+      usage === "using"
+        ? "È tornato nel Radar e lo stai già usando."
+        : outcome === "deferred"
+          ? "È nel Radar mentre lo avevi rimandato."
+          : "È nel Radar e lo conosci già.";
+    candidates.push(
+      insight({
+        type: "RECENT_SIGNAL",
+        toolSlug: slug,
+        title: "Nel Radar",
+        explanation,
+        source: { kind: "workspace", fields: ["events"] },
+        evidence: [{ kind: "PUBLIC_METADATA", field: "radar" }],
+        priority: PRIORITY.RECENT_SIGNAL,
+        evidenceKey: "radar",
+      }),
+    );
+  }
+
   return candidates;
 }
 
-function suppress(candidates: PersonalInsight[]) {
+function suppress(candidates: PersonalInsight[], includeRecentSignal = false) {
   const types = new Set(candidates.map((item) => item.type));
   const fit = candidates.find((item) => item.type === "FIT");
   const replacement = candidates.find((item) => item.type === "REPLACEMENT");
@@ -496,7 +525,7 @@ function suppress(candidates: PersonalInsight[]) {
   const whyNot = candidates.find((item) => item.type === "WHY_NOT");
 
   return candidates.filter((item) => {
-    if (item.type === "RECENT_SIGNAL") return false;
+    if (item.type === "RECENT_SIGNAL") return includeRecentSignal;
     if (item.type === "ALREADY_KNOW") {
       return !(
         types.has("FIT") ||
@@ -550,6 +579,7 @@ export function derivePersonalInsights(input: {
   catalog?: readonly InsightCatalogHint[];
   nowIso?: string;
   limit?: number;
+  radarActiveSlugs?: ReadonlySet<string>;
 }): PersonalInsight[] {
   return (
     derivePersonalInsightsForSlugs({
@@ -558,6 +588,7 @@ export function derivePersonalInsights(input: {
       catalog: input.catalog,
       nowIso: input.nowIso,
       limit: input.limit,
+      radarActiveSlugs: input.radarActiveSlugs,
     }).get(input.toolSlug) ?? []
   );
 }
@@ -568,6 +599,7 @@ export function derivePersonalInsightsForSlugs(input: {
   catalog?: readonly InsightCatalogHint[];
   nowIso?: string;
   limit?: number;
+  radarActiveSlugs?: ReadonlySet<string>;
 }): Map<string, PersonalInsight[]> {
   const index = buildWorkspaceSearchIndex(
     input.workspace,
@@ -575,6 +607,8 @@ export function derivePersonalInsightsForSlugs(input: {
   );
   const catalogBySlug = new Map((input.catalog ?? []).map((tool) => [tool.slug, tool]));
   const limit = input.limit ?? MAX_TOOL_PAGE_INSIGHTS;
+  const radarActiveSlugs = input.radarActiveSlugs;
+  const includeRecentSignal = Boolean(radarActiveSlugs && radarActiveSlugs.size > 0);
   const result = new Map<string, PersonalInsight[]>();
   for (const slug of input.slugs) {
     result.set(
@@ -586,7 +620,9 @@ export function derivePersonalInsightsForSlugs(input: {
             workspace: input.workspace,
             index,
             catalogBySlug,
+            radarActive: radarActiveSlugs?.has(slug) ?? false,
           }),
+          includeRecentSignal,
         ),
         limit,
       ),

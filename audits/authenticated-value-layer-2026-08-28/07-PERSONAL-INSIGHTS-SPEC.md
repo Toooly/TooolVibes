@@ -1,7 +1,7 @@
 # 07 — Personal Insights Spec
 
-**Status:** Wave F IMPLEMENTED / ACCEPTED (not RELEASED). Radar personalization TARGET Wave G.  
-**CURRENT:** editorial `/10` scores; compare objective-fit ranking; Home/Salvati resurface heuristics remain. Wave F adds `lib/account/personal-insights.ts` (`derivePersonalInsights`) on Tool Page + one Compare line. `recommendWorkspaceTools()` stays unused and is not the product. RECENT_SIGNAL inactive (Wave G). No relationship-aware Radar.
+**Status:** Wave F RELEASED. Wave G IMPLEMENTED / ACCEPTED (not RELEASED).  
+**CURRENT:** editorial `/10` scores; compare objective-fit ranking; Home/Salvati resurface heuristics remain. Wave F adds `lib/account/personal-insights.ts` (`derivePersonalInsights`) on Tool Page + one Compare line. `recommendWorkspaceTools()` stays unused and is not the product. RECENT_SIGNAL emits only when a Radar join is passed into the engine. `/radar` has a Per te lens.
 
 ---
 

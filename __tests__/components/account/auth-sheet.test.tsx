@@ -99,6 +99,34 @@ function renderInsightGate() {
   );
 }
 
+function RadarTrigger() {
+  const continuation = useAuthContinuation();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        continuation.requestRadarPersonal({
+          origin: "radar.personal",
+        });
+      }}
+    >
+      open-radar-gate
+    </button>
+  );
+}
+
+function renderRadarGate() {
+  return render(
+    <OverlayProvider>
+      <AccountPreviewProvider value={guestValue()}>
+        <AuthContinuationProvider>
+          <RadarTrigger />
+        </AuthContinuationProvider>
+      </AccountPreviewProvider>
+    </OverlayProvider>,
+  );
+}
+
 function CompareTrigger() {
   const continuation = useAuthContinuation();
   return (
@@ -403,6 +431,28 @@ describe("AuthSheet — insight.personal", () => {
   it("INSIGHT-AUTH-05 dismiss does not write intent", async () => {
     renderInsightGate();
     fireEvent.click(screen.getByRole("button", { name: "Apri insight" }));
+    await screen.findByRole("dialog");
+    fireEvent.click(screen.getByRole("button", { name: "Non ora" }));
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+  });
+});
+
+describe("AuthSheet — radar.personal", () => {
+  it("RADAR-AUTH-04 uses Scopri cosa conta per te copy", async () => {
+    renderRadarGate();
+    fireEvent.click(screen.getByRole("button", { name: "open-radar-gate" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.getByText("Scopri cosa conta per te")).toBeTruthy();
+    expect(
+      screen.getByText(
+        "Collega le novità del Radar ai tool che hai salvato, usato e valutato.",
+      ),
+    ).toBeTruthy();
+  });
+
+  it("RADAR-AUTH-05 dismiss does not write intent", async () => {
+    renderRadarGate();
+    fireEvent.click(screen.getByRole("button", { name: "open-radar-gate" }));
     await screen.findByRole("dialog");
     fireEvent.click(screen.getByRole("button", { name: "Non ora" }));
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();

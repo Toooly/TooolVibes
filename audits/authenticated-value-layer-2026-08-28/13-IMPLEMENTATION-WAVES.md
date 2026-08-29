@@ -3,7 +3,7 @@
 **Status:** Wave A = IMPLEMENTED / ACCEPTED. Wave B = IMPLEMENTED / ACCEPTED.  
 Not RELEASED (feature branch only; not merged, not deployed).  
 Wave C–D = IMPLEMENTED / ACCEPTED / RELEASED.
-Wave E = RELEASED. Wave F = IMPLEMENTED / ACCEPTED (not RELEASED).
+Wave E–F = RELEASED. Wave G = IMPLEMENTED / ACCEPTED (not RELEASED).
 
 ---
 
@@ -83,13 +83,17 @@ Exit: sheet can open from a stub trigger in tests; production trigger is Wave B 
 - `recommendWorkspaceTools` remains unused
 - Tool Page `Per te` layer; guest → AuthSheet `insight.personal`
 - Compare: max 1 insight line per tool; no winner
-- RECENT_SIGNAL inactive (Wave G)
+- RECENT_SIGNAL inactive on Tool Page unless a Radar join is passed
 - Do not redesign Home, Salvati, or Radar
 
-## Wave G — TARGET, not built
+## Wave G — IMPLEMENTED / ACCEPTED (not RELEASED until deploy)
 
-- Radar personal chips (PH ∩ workspace)
-- Public radar remains default lens
+- `/radar` lens Tendenze | Per te; public ranking unchanged
+- Fail-closed PH→catalog match (`lib/radar/radar-catalog-match.ts`)
+- Personal signals from Wave F engine (`lib/radar/radar-personal-signals.ts`)
+- Guest Per te → AuthSheet `radar.personal` payload `{}` returnTo `/radar`
+- RECENT_SIGNAL only when `radarActiveSlugs` is provided
+- Home / Tool Page / Compare / Search unchanged
 
 ## Wave H — DESIGN ONLY
 

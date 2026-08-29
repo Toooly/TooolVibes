@@ -12,7 +12,7 @@ const MAX_RETURN_TO_LENGTH = 500;
 const MAX_ORIGIN_LENGTH = 80;
 const MAX_JSON_BYTES = 2048;
 
-export type PendingAuthCapability = "stack.create" | "note.private" | "search.personal" | "compare.deep" | "insight.personal";
+export type PendingAuthCapability = "stack.create" | "note.private" | "search.personal" | "compare.deep" | "insight.personal" | "radar.personal";
 export type PendingStackCreateCapability = PendingAuthCapability;
 
 export type PendingStackCreatePayload = {
@@ -32,6 +32,8 @@ export type PendingSearchPersonalPayload = {
 
 export type PendingCompareDeepPayload = Record<string, never>;
 
+export type PendingRadarPersonalPayload = Record<string, never>;
+
 export type PendingInsightPersonalPayload = {
   toolSlug: string;
 };
@@ -41,7 +43,8 @@ export type PendingAuthIntentPayload =
   | PendingNotePrivatePayload
   | PendingSearchPersonalPayload
   | PendingCompareDeepPayload
-  | PendingInsightPersonalPayload;
+  | PendingInsightPersonalPayload
+  | PendingRadarPersonalPayload;
 
 export type PendingAuthIntent = {
   version: typeof PENDING_AUTH_INTENT_VERSION;
@@ -130,7 +133,8 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     input.capability !== "note.private" &&
     input.capability !== "search.personal" &&
     input.capability !== "compare.deep" &&
-    input.capability !== "insight.personal"
+    input.capability !== "insight.personal" &&
+    input.capability !== "radar.personal"
   ) {
     return { status: "invalid", reason: "unknown-capability" };
   }
@@ -139,7 +143,7 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   }
   const capability = input.capability;
   const allowedPayloadKeys =
-    capability === "compare.deep"
+    capability === "compare.deep" || capability === "radar.personal"
       ? []
       : capability === "search.personal"
         ? ["query"]
@@ -168,10 +172,10 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     searchQuery = query;
   }
   const toolSlug =
-    capability === "search.personal" || capability === "compare.deep"
+    capability === "search.personal" || capability === "compare.deep" || capability === "radar.personal"
       ? "search"
       : parseToolSlug(input.payload.toolSlug);
-  if (capability !== "search.personal" && capability !== "compare.deep" && !toolSlug) {
+  if (capability !== "search.personal" && capability !== "compare.deep" && capability !== "radar.personal" && !toolSlug) {
     return { status: "invalid", reason: "invalid-slug" };
   }
   let desiredStackName: string | undefined;
@@ -214,7 +218,7 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     id: input.id.trim(),
     capability,
     payload:
-      capability === "compare.deep"
+      capability === "compare.deep" || capability === "radar.personal"
         ? {}
         : capability === "search.personal"
           ? { query: searchQuery ?? "" }
@@ -324,7 +328,7 @@ export function writePendingAuthIntent(input: {
     id: createIntentId(),
     capability,
     payload:
-      capability === "compare.deep"
+      capability === "compare.deep" || capability === "radar.personal"
         ? {}
         : capability === "search.personal"
           ? { query: input.query ?? "" }

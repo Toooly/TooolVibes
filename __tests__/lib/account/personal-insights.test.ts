@@ -383,7 +383,7 @@ describe("personal insight engine", () => {
     expect(result.some((item) => item.type === "WHY_NOT")).toBe(false);
   });
 
-  it("RECENT_SIGNAL stays inactive", () => {
+  it("RECENT_SIGNAL stays inactive without a Radar join", () => {
     const state = apply([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       {
@@ -397,6 +397,34 @@ describe("personal insight engine", () => {
     expect(insights("cursor", state).some((item) => item.type === "RECENT_SIGNAL")).toBe(
       false,
     );
+  });
+
+  it("RECENT-01 Radar join on a known tool emits RECENT_SIGNAL", () => {
+    const state = apply([
+      { type: "saved/set", slug: "cursor", saved: true, at: T0 },
+    ]);
+    const result = derivePersonalInsights({
+      toolSlug: "cursor",
+      workspace: state,
+      catalog,
+      nowIso: NOW,
+      radarActiveSlugs: new Set(["cursor"]),
+    });
+    expect(result.some((item) => item.type === "RECENT_SIGNAL")).toBe(true);
+  });
+
+  it("RECENT-04 unmatched Radar slug does not emit RECENT_SIGNAL", () => {
+    const state = apply([
+      { type: "saved/set", slug: "cursor", saved: true, at: T0 },
+    ]);
+    const result = derivePersonalInsights({
+      toolSlug: "cursor",
+      workspace: state,
+      catalog,
+      nowIso: NOW,
+      radarActiveSlugs: new Set(["unmatched-launch"]),
+    });
+    expect(result.some((item) => item.type === "RECENT_SIGNAL")).toBe(false);
   });
 
   it("compare limit is one insight", () => {

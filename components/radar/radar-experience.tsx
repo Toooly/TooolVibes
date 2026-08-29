@@ -45,10 +45,17 @@ import {
 } from "lucide-react";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { CatalogoFacetHead } from "@/components/archive/catalogo-facet-head";
+import {
+  RadarLensControl,
+  RadarPersonalEmpty,
+  RadarPersonalReason,
+  useRadarPersonalLayer,
+} from "@/components/radar/radar-personal-layer";
 import type {
   ProductHuntItem,
   ProductHuntRange,
 } from "@/lib/radar/product-hunt-contract";
+import type { RadarPersonalSignal } from "@/lib/radar/radar-personal-signals";
 import {
   formatRadarSignal,
   RADAR_RANGE_OPTIONS,
@@ -119,9 +126,11 @@ function SignalIdentity({
 function RadarInstrument({
   model,
   compact = false,
+  personalById,
 }: {
   model: RadarUiModel;
   compact?: boolean;
+  personalById?: Map<string, RadarPersonalSignal>;
 }) {
   const nodes = model.items.slice(0, 5);
 
@@ -175,6 +184,7 @@ function RadarInstrument({
                   ? `${item.votesCount} ${item.votesCount === 1 ? "voto" : "voti"}`
                   : "Dato non disponibile"}
               </small>
+              <RadarPersonalReason signal={personalById?.get(item.id)} />
             </span>
           </a>
         );
@@ -270,7 +280,13 @@ function RadarStatePanel({
   );
 }
 
-function RadarSignalIndex({ model }: { model: RadarUiModel }) {
+function RadarSignalIndex({
+  model,
+  personalById,
+}: {
+  model: RadarUiModel;
+  personalById?: Map<string, RadarPersonalSignal>;
+}) {
   const signals = model.items.slice(0, 5);
 
   return (
@@ -301,6 +317,7 @@ function RadarSignalIndex({ model }: { model: RadarUiModel }) {
                   <span className="tv-radar-index__copy">
                     <strong>{item.name}</strong>
                     <small>{item.tagline || "Descrizione non disponibile."}</small>
+                    <RadarPersonalReason signal={personalById?.get(item.id)} />
                   </span>
                   <span className="tv-radar-index__metric">
                     {formatRadarSignal(item)}
@@ -322,7 +339,13 @@ function RadarSignalIndex({ model }: { model: RadarUiModel }) {
   );
 }
 
-function RadarTable({ model }: { model: RadarUiModel }) {
+function RadarTable({
+  model,
+  personalById,
+}: {
+  model: RadarUiModel;
+  personalById?: Map<string, RadarPersonalSignal>;
+}) {
   const signals = model.items.slice(0, 12);
 
   return (
@@ -364,6 +387,7 @@ function RadarTable({ model }: { model: RadarUiModel }) {
                         <small>
                           {item.tagline || "Descrizione non disponibile."}
                         </small>
+                        <RadarPersonalReason signal={personalById?.get(item.id)} />
                       </span>
                     </span>
                     <span className="tv-radar-table__metric">
@@ -532,7 +556,13 @@ function discussionRatio(votes: number, comments: number): number | null {
  * Signal overview strip — makes /radar feel like an intelligence surface
  * without inventing trends or AI conclusions.
  */
-function RadarSignalOverview({ model }: { model: RadarUiModel }) {
+function RadarSignalOverview({
+  model,
+  personalById,
+}: {
+  model: RadarUiModel;
+  personalById?: Map<string, RadarPersonalSignal>;
+}) {
   const items = model.items;
   if (items.length === 0) return null;
   const maxVotes = items.reduce((m, i) => Math.max(m, i.votesCount), 0);
@@ -590,6 +620,7 @@ function RadarSignalOverview({ model }: { model: RadarUiModel }) {
                 <span className="tv-radar-overview__identity">
                   <strong>{item.name}</strong>
                   <em>{item.tagline || "Lancio Product Hunt"}</em>
+                  <RadarPersonalReason signal={personalById?.get(item.id)} />
                 </span>
                 <span className="tv-radar-overview__meta">
                   <span>{item.votesCount} voti</span>
@@ -631,6 +662,23 @@ export function RadarExperience({
     () => resolveRadarUiModel(payload, activeRange),
     [activeRange, payload],
   );
+  const personal = useRadarPersonalLayer(model.items);
+  const displayModel = useMemo(() => {
+    if (personal.lens !== "personal") return model;
+    const items = model.items.filter((item) => personal.byId.has(item.id));
+    return {
+      ...model,
+      items,
+      signalCount: items.length,
+    };
+  }, [model, personal.byId, personal.lens]);
+  const personalEmpty =
+    personal.lens === "personal" &&
+    displayModel.items.length === 0 &&
+    !isLoading &&
+    model.state !== "error" &&
+    model.state !== "missing-token" &&
+    model.state !== "empty";
 
   const isInteractive = !isLoading && !isFetching;
 
@@ -754,6 +802,11 @@ export function RadarExperience({
               ))}
             </div>
           </div>
+          <RadarLensControl
+            lens={personal.lens}
+            onSelect={personal.selectLens}
+            visible={personal.showLens}
+          />
           <RadarRetryButton
             show={model.canRetry}
             isFetching={isFetching}
@@ -762,7 +815,9 @@ export function RadarExperience({
         </section>
 
         {/* ═══ 4b. SIGNAL OVERVIEW ═══ */}
-        {!hasErrorState ? <RadarSignalOverview model={model} /> : null}
+        {!hasErrorState && !personalEmpty ? (
+          <RadarSignalOverview model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
+        ) : null}
 
         {/* ═══ 5. RISULTATI: MAPPA O ELENCO ═══ */}
         <div
@@ -788,21 +843,23 @@ export function RadarExperience({
               isFetching={isFetching}
               variant={statePanelVariant}
             />
+          ) : personalEmpty ? (
+            <RadarPersonalEmpty />
           ) : activeVisual === "nodes" ? (
             <div className="tv-radar__visual">
               <div>
-                <RadarInstrument model={model} />
-                {model.state === "live" ? (
+                <RadarInstrument model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
+                {displayModel.state === "live" ? (
                   <p className="tv-radar__stage-note" role="status">
-                    <strong>{model.stageTitle}</strong>
-                    <span>{model.stageBody}</span>
+                    <strong>{displayModel.stageTitle}</strong>
+                    <span>{displayModel.stageBody}</span>
                   </p>
                 ) : null}
               </div>
-              <RadarSignalIndex model={model} />
+              <RadarSignalIndex model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
             </div>
           ) : (
-            <RadarTable model={model} />
+            <RadarTable model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
           )}
         </div>
 

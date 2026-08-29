@@ -1841,3 +1841,38 @@ h1.tv-radar__title,
     grid-column: 1 / -1;
   }
 }
+
+
+.tv-radar-personal-reason {
+  margin: 0.2rem 0 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.tv-radar-personal-reason__eyebrow {
+  display: inline-block;
+  margin-right: 0.4rem;
+  color: var(--tv-accent);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tv-radar-node .tv-radar-personal-reason,
+.tv-radar-index__copy .tv-radar-personal-reason,
+.tv-radar-table__tool .tv-radar-personal-reason,
+.tv-radar-overview__identity .tv-radar-personal-reason {
+  max-width: 18rem;
+}
+
+@media (max-width: 47.99rem) {
+  .tv-radar-node .tv-radar-personal-reason,
+  .tv-radar-index__copy .tv-radar-personal-reason,
+  .tv-radar-table__tool .tv-radar-personal-reason,
+  .tv-radar-overview__identity .tv-radar-personal-reason {
+    max-width: none;
+  }
+}

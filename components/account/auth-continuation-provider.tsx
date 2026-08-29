@@ -41,6 +41,10 @@ import {
   replayInsightPersonalIntent,
 } from "@/lib/auth/replay-insight-intent";
 import {
+  maybeOpenRadarPersonalAfterReplay,
+  replayRadarPersonalIntent,
+} from "@/lib/auth/replay-radar-intent";
+import {
   subscribeSearchPersonalGate,
   takeSearchPersonalGate,
 } from "@/lib/search/personal-search-gate";
@@ -73,6 +77,10 @@ type AuthContinuationContextValue = {
     toolSlug: string;
     origin?: string;
   }) => RequestResult;
+  requestRadarPersonal: (input?: {
+    origin?: string;
+    returnTo?: string;
+  }) => RequestResult;
 };
 
 const AuthContinuationContext = createContext<AuthContinuationContextValue>({
@@ -82,6 +90,7 @@ const AuthContinuationContext = createContext<AuthContinuationContextValue>({
   requestSearchPersonal: () => "unavailable",
   requestCompareDeep: () => "unavailable",
   requestInsightPersonal: () => "unavailable",
+  requestRadarPersonal: () => "unavailable",
 });
 
 export function useAuthContinuation() {
@@ -211,6 +220,25 @@ export function AuthContinuationProvider({
     [account.status],
   );
 
+  const requestRadarPersonal = useCallback(
+    (input?: { origin?: string; returnTo?: string }): RequestResult => {
+      if (account.status === "loading") return "loading";
+      if (account.status === "unavailable") return "unavailable";
+      const viewer = account.status === "authenticated" ? "authenticated" : "guest";
+      if (canUse("radar.personal", viewer)) {
+        return "allowed";
+      }
+      setDraft({
+        capability: "radar.personal",
+        returnTo: input?.returnTo ?? "/radar",
+        origin: input?.origin ?? "radar.personal",
+      });
+      setOpen(true);
+      return "gated";
+    },
+    [account.status],
+  );
+
   useEffect(() => {
     const pending = takeSearchPersonalGate();
     if (pending) requestSearchPersonal(pending);
@@ -316,6 +344,30 @@ export function AuthContinuationProvider({
       finishInsight();
       return;
     }
+    if (intent.capability === "radar.personal") {
+      const result = replayRadarPersonalIntent(intent);
+      if (result.status === "skipped" && result.reason === "not-authenticated") {
+        restorePendingAuthIntent(intent);
+        replayedRef.current = false;
+        return;
+      }
+      replayedRef.current = true;
+      if (result.status !== "ok") return;
+      trackAuthGateFromIntent({
+        name: "auth_success_from_gate",
+        capability: intent.capability,
+        origin: intent.origin,
+        returnTo: result.returnTo,
+      });
+      if (result.returnTo) {
+        router.replace(result.returnTo);
+      }
+      window.setTimeout(() => {
+        maybeOpenRadarPersonalAfterReplay(result.openPersonal);
+      }, 50);
+      return;
+    }
+
     if (intent.capability === "compare.deep") {
       const result = replayCompareDeepIntent(intent);
       if (result.status === "skipped" && result.reason === "not-authenticated") {
@@ -382,8 +434,9 @@ export function AuthContinuationProvider({
       requestSearchPersonal,
       requestCompareDeep,
       requestInsightPersonal,
+      requestRadarPersonal,
     }),
-    [requestStackCreate, requestNotePrivate, requestSearchPersonal, requestCompareDeep, requestInsightPersonal],
+    [requestStackCreate, requestNotePrivate, requestSearchPersonal, requestCompareDeep, requestInsightPersonal, requestRadarPersonal],
   );
 
   return (

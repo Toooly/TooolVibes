@@ -1,6 +1,6 @@
 # Authenticated Value Layer 1.0
 
-**Status:** ARCHITECTURE LOCKED. Waves A–E RELEASED on `main`. Wave F IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-f-personal-insights`. Not RELEASED.  
+**Status:** ARCHITECTURE LOCKED. Waves A–F RELEASED on `main`. Wave G IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-g-personal-radar`. Not RELEASED.  
 **Date:** 2026-08-28  
 **Baseline:** `main` @ `1e4c7a2ac725e8c2b95751b4048cfcd200f73a19`  
 **Branch:** `feature/authenticated-value-layer-a-b`  
@@ -128,7 +128,7 @@ Related prior work (do not treat as this package): `audits/my-tooolvibes-authent
 | **D** | Personal search DSL | IMPLEMENTED / ACCEPTED |
 | **E** | Deep Compare layer | RELEASED |
 | **F** | Personal Insights | IMPLEMENTED / ACCEPTED |
-| **G** | Relationship-aware Radar | TARGET, not built |
+| **G** | Relationship-aware Radar | IMPLEMENTED / ACCEPTED |
 | **H** | Community Experiences | DESIGN ONLY — do not implement in A–G |
 
 **Release recommendation:** develop A and B separately if useful; **ship A+B as one first user-facing slice**. Do not ship an AuthSheet with nothing meaningful behind it.

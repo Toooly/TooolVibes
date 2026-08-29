@@ -66,6 +66,12 @@ export default async function WorkspaceQaPage({
                         ? "auth-sheet-insight"
                       : params.surface === "personal-insights"
                         ? "personal-insights"
+                      : params.surface === "auth-sheet-radar"
+                        ? "auth-sheet-radar"
+                      : params.surface === "radar-personal"
+                        ? "radar-personal"
+                      : params.surface === "radar-personal-guest"
+                        ? "radar-personal-guest"
                       : params.surface === "personal-insights-guest"
                         ? "personal-insights-guest"
                     : "workspace";

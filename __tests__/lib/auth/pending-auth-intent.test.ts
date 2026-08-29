@@ -111,7 +111,7 @@ describe("pending auth intent", () => {
     const parsed = parsePendingAuthIntent({
       version: 1,
       id: "intent-capability-01",
-      capability: "radar.personal",
+      capability: "community.write",
       payload: { toolSlug: "blink" },
       returnTo: "/toools/blink",
       createdAt: new Date().toISOString(),
@@ -159,6 +159,32 @@ describe("pending auth intent", () => {
     expect(written.intent.capability).toBe("search.personal");
     expect(written.intent.payload).toEqual({ query: "usage:using" });
     expect(JSON.stringify(written.intent)).not.toContain("toolSlug");
+  });
+
+  it("RADAR-CONT-02 radar.personal stores empty payload", () => {
+    const written = writePendingAuthIntent({
+      capability: "radar.personal",
+      returnTo: "/radar",
+      origin: "radar.personal",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    expect(written.intent.capability).toBe("radar.personal");
+    expect(written.intent.payload).toEqual({});
+    expect(JSON.stringify(written.intent)).not.toMatch(/nota|reason|stack|usage/i);
+  });
+
+  it("RADAR-CONT-07 radar.personal rejects extra payload keys", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-radar-extra-01",
+      capability: "radar.personal",
+      payload: { toolSlug: "blink" },
+      returnTo: "/radar",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
   });
 
   it("DEEP-CONT-01 compare.deep stores empty payload", () => {
