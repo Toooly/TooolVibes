@@ -2,6 +2,8 @@ import { workspaceSlugSchema } from "@/lib/discovery/schema";
 import { MAX_STACK_NAME_LENGTH } from "@/lib/discovery/workspace-constants";
 
 export const PENDING_AUTH_INTENT_STORAGE_KEY = "tooolvibes:pending-auth-intent:v1";
+export const PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY =
+  "tooolvibes:pending-auth-intent:consumed:v1";
 export const PENDING_AUTH_INTENT_TTL_MS = 30 * 60 * 1000;
 export const PENDING_AUTH_INTENT_VERSION = 1 as const;
 
@@ -46,16 +48,27 @@ function createIntentId() {
   return `intent-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function isUnsafePath(value: string): boolean {
+  if (!value.startsWith("/")) return true;
+  if (value.startsWith("//")) return true;
+  if (value.includes("://")) return true;
+  if (value.includes("\\")) return true;
+  if (/^[a-zA-Z][a-zA-Z+.-]*:/.test(value)) return true;
+  if (value.length > MAX_RETURN_TO_LENGTH) return true;
+  if (/[\u0000-\u001F]/.test(value)) return true;
+  return false;
+}
+
 export function isSafeReturnTo(value: string): boolean {
   if (typeof value !== "string") return false;
   const trimmed = value.trim();
-  if (!trimmed.startsWith("/")) return false;
-  if (trimmed.startsWith("//")) return false;
-  if (trimmed.includes("://")) return false;
-  if (trimmed.includes("\\")) return false;
-  if (/^[a-zA-Z][a-zA-Z+.-]*:/.test(trimmed)) return false;
-  if (trimmed.length > MAX_RETURN_TO_LENGTH) return false;
-  if (/[\u0000-\u001F]/.test(trimmed)) return false;
+  if (isUnsafePath(trimmed)) return false;
+  try {
+    const decoded = decodeURIComponent(trimmed);
+    if (decoded !== trimmed && isUnsafePath(decoded)) return false;
+  } catch {
+    return false;
+  }
   return true;
 }
 
@@ -152,6 +165,63 @@ function getStorage(): Storage | null {
   }
 }
 
+function readConsumedLedger(): Record<string, number> {
+  const storage = getStorage();
+  if (!storage) return {};
+  try {
+    const raw = storage.getItem(PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as unknown;
+    if (!isRecord(parsed) || !isRecord(parsed.ids)) return {};
+    const now = Date.now();
+    const ids: Record<string, number> = {};
+    for (const [id, expiresAt] of Object.entries(parsed.ids)) {
+      if (typeof expiresAt === "number" && expiresAt > now) {
+        ids[id] = expiresAt;
+      }
+    }
+    return ids;
+  } catch {
+    return {};
+  }
+}
+
+function writeConsumedLedger(ids: Record<string, number>) {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    if (Object.keys(ids).length === 0) {
+      storage.removeItem(PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY);
+      return;
+    }
+    storage.setItem(
+      PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY,
+      JSON.stringify({ ids }),
+    );
+  } catch {
+    // non-fatal
+  }
+}
+
+function isIntentConsumed(id: string): boolean {
+  if (consumedIds.has(id)) return true;
+  return Object.prototype.hasOwnProperty.call(readConsumedLedger(), id);
+}
+
+function markIntentConsumed(id: string, expiresAtMs: number) {
+  consumedIds.add(id);
+  const ids = readConsumedLedger();
+  ids[id] = expiresAtMs;
+  writeConsumedLedger(ids);
+}
+
+function unmarkIntentConsumed(id: string) {
+  consumedIds.delete(id);
+  const ids = readConsumedLedger();
+  delete ids[id];
+  writeConsumedLedger(ids);
+}
+
 export function writePendingAuthIntent(input: {
   toolSlug: string;
   desiredStackName?: string;
@@ -242,15 +312,40 @@ export function consumePendingAuthIntent(): PendingAuthIntentRead {
   if (read.status === "invalid" || read.status === "expired") {
     return read;
   }
-  if (consumedIds.has(read.intent.id)) {
+  if (isIntentConsumed(read.intent.id)) {
     clearPendingAuthIntent();
     return { status: "empty" };
   }
-  consumedIds.add(read.intent.id);
+  markIntentConsumed(read.intent.id, Date.parse(read.intent.expiresAt));
   clearPendingAuthIntent();
   return read;
 }
 
+export function restorePendingAuthIntent(intent: PendingAuthIntent): PendingAuthIntentRead {
+  const parsed = parsePendingAuthIntent(intent);
+  if (parsed.status !== "ready") {
+    return parsed;
+  }
+  unmarkIntentConsumed(parsed.intent.id);
+  const storage = getStorage();
+  if (!storage) {
+    return { status: "invalid", reason: "storage-unavailable" };
+  }
+  try {
+    storage.setItem(PENDING_AUTH_INTENT_STORAGE_KEY, JSON.stringify(parsed.intent));
+    return parsed;
+  } catch {
+    return { status: "invalid", reason: "storage-failure" };
+  }
+}
+
 export function resetPendingAuthIntentConsumptionsForTests() {
   consumedIds.clear();
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    storage.removeItem(PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY);
+  } catch {
+    // non-fatal
+  }
 }

@@ -1,6 +1,6 @@
 # 10 — Stack Auth Policy and Guest→Auth Merge
 
-**Status:** TARGET Wave B. Not implemented.  
+**Status:** Wave B IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-a-b`. Not RELEASED.  
 This document covers **Stacks** and the **whole guest→auth merge**, because merge bugs will destroy notes, decisions, and stack membership — not only stacks.
 
 ---
@@ -32,7 +32,7 @@ Stack creation is AUTH-ONLY because a persistent working set needs identity. Thi
 Guest clicks Nuovo stack / create from overflow:
 
 1. AuthSheet “Crea il tuo spazio di lavoro”
-2. PendingAuthIntent `{ capability: "stack.create", payload: { slug, name? }, returnTo }`
+2. PendingAuthIntent `{ capability: "stack.create", payload: { toolSlug, desiredStackName? }, returnTo }` in `localStorage` key `tooolvibes:pending-auth-intent:v1` (TTL 30 minutes)
 3. Magic-link → attach/merge
 4. Replay: ensure saved; create+add if name; else open pick/create with slug
 5. Idempotent if already a member

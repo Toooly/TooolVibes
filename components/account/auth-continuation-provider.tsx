@@ -17,6 +17,7 @@ import { canUse } from "@/lib/capabilities";
 import { trackAuthGateFromIntent } from "@/lib/analytics/auth-gate-events";
 import {
   consumePendingAuthIntent,
+  restorePendingAuthIntent,
   type PendingAuthIntent,
 } from "@/lib/auth/pending-auth-intent";
 import {
@@ -93,9 +94,13 @@ export function AuthContinuationProvider({
       replayedRef.current = true;
       return;
     }
-    replayedRef.current = true;
     const intent: PendingAuthIntent = consumed.intent;
     const result = replayStackCreateIntent(intent);
+    if (result.status === "skipped" && result.reason === "not-authenticated") {
+      restorePendingAuthIntent(intent);
+      return;
+    }
+    replayedRef.current = true;
     if (result.status !== "ok") {
       return;
     }

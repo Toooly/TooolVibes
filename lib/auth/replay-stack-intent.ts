@@ -39,9 +39,9 @@ export function replayStackCreateIntent(
 
   const slug = intent.payload.toolSlug;
   const name = intent.payload.desiredStackName?.trim();
-  ensureSaved(slug);
 
   if (!name) {
+    ensureSaved(slug);
     return {
       status: "ok",
       returnTo: intent.returnTo,
@@ -54,6 +54,7 @@ export function replayStackCreateIntent(
     (stack) => stack.name.toLowerCase() === name.toLowerCase(),
   );
   if (existing) {
+    ensureSaved(slug);
     if (!existing.slugs.includes(slug)) {
       addToolToPersonalStack(existing.id, slug);
     }
@@ -64,6 +65,7 @@ export function replayStackCreateIntent(
     return { status: "failed", reason: "stack-cap" };
   }
 
+  ensureSaved(slug);
   const ids = getCanonicalToolWorkspaceState().personalStacks.map((stack) => stack.id);
   const id = createPersonalStackId(name, ids);
   createPersonalStack(name);

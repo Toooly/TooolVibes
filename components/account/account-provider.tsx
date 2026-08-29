@@ -409,6 +409,7 @@ export function AccountProvider({
         setStatus(nextSession?.user ? "authenticated" : "guest");
 
         if (!nextSession?.user) {
+          setWorkspaceReadyForIntentReplay(false);
           if (event === "SIGNED_OUT" && previousSession?.user.id) {
             const failClosedIsolation = isolateWorkspaceAfterLogout(
               previousSession.user.id,

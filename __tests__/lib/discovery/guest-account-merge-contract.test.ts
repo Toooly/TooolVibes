@@ -397,4 +397,59 @@ describe("guest → account merge contract", () => {
     );
     expect(workspaceSyncStateV1Schema.safeParse(merged).success).toBe(true);
   });
+
+  it("MERGE-14 equal decision timestamps keep the account outcome", () => {
+    const merged = mergeGuestWorkspaceContribution(
+      withTool("blink", {
+        decision: { outcome: "selected", updatedAt: T_MID },
+        updatedAt: T_MID,
+      }),
+      withTool("blink", {
+        decision: { outcome: "rejected", updatedAt: T_MID },
+        updatedAt: T_MID,
+      }),
+    );
+    expect(merged.toolStates.blink?.decision?.outcome).toBe("selected");
+  });
+
+  it("MERGE-15 pinned is OR and guest cannot unpin", () => {
+    const merged = mergeGuestWorkspaceContribution(
+      withTool("blink", { pinned: true, updatedAt: T_OLD }),
+      withTool("blink", { pinned: false, updatedAt: T_NEW }),
+    );
+    expect(merged.toolStates.blink?.pinned).toBe(true);
+  });
+
+  it("MERGE-16 guest clearedAt cannot wipe account", () => {
+    const account = {
+      ...createEmptyWorkspaceState(),
+      clearedAt: T_OLD,
+      saved: { slugs: ["blink"], updatedAt: T_MID },
+    };
+    const guest = {
+      ...createEmptyWorkspaceState(),
+      clearedAt: T_NEW,
+      saved: { slugs: [], updatedAt: T_NEW },
+    };
+    const merged = mergeGuestWorkspaceContribution(account, guest);
+    expect(merged.clearedAt).toBe(T_OLD);
+    expect(merged.saved.slugs).toContain("blink");
+  });
+
+  it("MERGE-17 later revisitAt wins when both sides have one", () => {
+    const merged = mergeGuestWorkspaceContribution(
+      withTool("blink", { revisitAt: T_OLD, updatedAt: T_MID }),
+      withTool("blink", { revisitAt: T_NEW, updatedAt: T_MID }),
+    );
+    expect(merged.toolStates.blink?.revisitAt).toBe(T_NEW);
+  });
+
+  it("MERGE-18 replacedBy is null unless merged usage is replaced", () => {
+    const merged = mergeGuestWorkspaceContribution(
+      withTool("blink", { usage: "using", replacedBy: null, updatedAt: T_NEW }),
+      withTool("blink", { usage: "replaced", replacedBy: "meku", updatedAt: T_OLD }),
+    );
+    expect(merged.toolStates.blink?.usage).toBe("using");
+    expect(merged.toolStates.blink?.replacedBy).toBeNull();
+  });
 });

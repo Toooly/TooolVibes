@@ -169,4 +169,55 @@ describe("AuthSheet", () => {
     expect(await screen.findByRole("status")).toBeTruthy();
     expect(screen.getByText(/Controlla la tua email/)).toBeTruthy();
   });
+
+  it("AUTH-09 Escape dismisses without writing intent", async () => {
+    renderGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri stack" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.keyDown(dialog, { key: "Escape" });
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+  });
+
+  it("AUTH-10 dialog is labelled and described", async () => {
+    renderGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri stack" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog.getAttribute("aria-labelledby")).toBeTruthy();
+    expect(dialog.getAttribute("aria-describedby")).toBeTruthy();
+    const labelId = dialog.getAttribute("aria-labelledby") ?? "";
+    expect(document.getElementById(labelId)?.textContent).toMatch(/Crea il tuo spazio di lavoro/);
+  });
+
+  it("AUTH-11 stored intent never contains the email", async () => {
+    renderGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri stack" }));
+    await screen.findByRole("dialog");
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "user@example.com" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Continua con il tuo account" }));
+    await waitFor(() => {
+      expect(sendMagicLink).toHaveBeenCalled();
+    });
+    const raw = window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY) ?? "";
+    expect(raw).not.toContain("user@example.com");
+    expect(raw).not.toContain("email");
+  });
+
+  it("AUTH-12 loading status does not open the sheet", () => {
+    render(
+      <OverlayProvider>
+        <AccountPreviewProvider value={{ ...guestValue(), status: "loading" }}>
+          <AuthContinuationProvider>
+            <Trigger />
+          </AuthContinuationProvider>
+        </AccountPreviewProvider>
+      </OverlayProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Apri stack" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
 });

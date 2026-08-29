@@ -1,7 +1,8 @@
 # 13 — Implementation Waves
 
-**Status:** TARGET plan. Nothing in this folder is implemented.  
-**Do not start Wave A in this documentation commit.**
+**Status:** Wave A = IMPLEMENTED / ACCEPTED. Wave B = IMPLEMENTED / ACCEPTED.  
+Not RELEASED (feature branch only; not merged, not deployed).  
+Wave C = NOT STARTED.
 
 ---
 
@@ -32,7 +33,7 @@ Do not ship an AuthSheet with nothing meaningful behind it. Stack create is the 
 
 ---
 
-## Wave A — TARGET, not built
+## Wave A — IMPLEMENTED / ACCEPTED (not released)
 
 - `lib/capabilities/` registry + `canUse`
 - AuthSheet (one component)
@@ -43,7 +44,7 @@ Do not ship an AuthSheet with nothing meaningful behind it. Stack create is the 
 
 Exit: sheet can open from a stub trigger in tests; production trigger is Wave B `stack.create`.
 
-## Wave B — TARGET, not built
+## Wave B — IMPLEMENTED / ACCEPTED (not released)
 
 - `stack.create` uses AuthSheet + intent
 - Replay after attach

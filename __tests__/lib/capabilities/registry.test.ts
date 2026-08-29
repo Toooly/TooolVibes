@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  CAPABILITY_IDS,
   canUse,
   getCapability,
   listCapabilities,
@@ -40,5 +41,21 @@ describe("capability registry", () => {
   it("CAP-06 client registry is eligibility not server authorization", () => {
     const stack = getCapability("stack.create");
     expect(stack?.serverEnforced).toMatch(/CAS|blob/i);
+  });
+
+  it("CAP-07 every registered capability has a closed unknown fail and guest/auth matrix", () => {
+    expect(listCapabilities()).toHaveLength(CAPABILITY_IDS.length);
+    for (const id of CAPABILITY_IDS) {
+      const definition = getCapability(id);
+      expect(definition).not.toBeNull();
+      if (!definition) continue;
+      if (definition.access === "authenticated") {
+        expect(canUse(id, "guest")).toBe(false);
+        expect(canUse(id, "authenticated")).toBe(true);
+      } else {
+        expect(canUse(id, "guest")).toBe(true);
+        expect(canUse(id, "authenticated")).toBe(true);
+      }
+    }
   });
 });

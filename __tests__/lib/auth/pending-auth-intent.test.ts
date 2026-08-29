@@ -4,6 +4,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
+  PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY,
   PENDING_AUTH_INTENT_STORAGE_KEY,
   PENDING_AUTH_INTENT_TTL_MS,
   clearPendingAuthIntent,
@@ -12,6 +13,7 @@ import {
   parsePendingAuthIntent,
   readPendingAuthIntent,
   resetPendingAuthIntentConsumptionsForTests,
+  restorePendingAuthIntent,
   writePendingAuthIntent,
 } from "@/lib/auth/pending-auth-intent";
 
@@ -179,4 +181,94 @@ describe("pending auth intent", () => {
     expect(parsed.status).toBe("empty");
     clearPendingAuthIntent();
   });
+
+  it("INTENT-15 never writes email, jwt, notes, or workspace", () => {
+    const written = writePendingAuthIntent({
+      toolSlug: "blink",
+      desiredStackName: "Podcast",
+      returnTo: "/toools/blink",
+      origin: "save-overflow",
+    });
+    expect(written.status).toBe("ready");
+    const raw = window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY) ?? "";
+    expect(raw).not.toMatch(/email|jwt|access_token|note|decision|workspace/i);
+    expect(window.sessionStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    expect(Object.keys(parsed).sort()).toEqual([
+      "capability",
+      "createdAt",
+      "expiresAt",
+      "id",
+      "origin",
+      "payload",
+      "returnTo",
+      "version",
+    ]);
+  });
+
+  it("INTENT-16 extra payload keys fail closed", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-extra-01",
+      capability: "stack.create",
+      payload: { toolSlug: "blink", note: "secret" },
+      returnTo: "/toools/blink",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
+  });
+
+  it("INTENT-17 encoded and exotic returnTo values fail closed", () => {
+    expect(isSafeReturnTo("data:text/html,hi")).toBe(false);
+    expect(isSafeReturnTo("/\\evil.example")).toBe(false);
+    expect(isSafeReturnTo("/%2f%2fevil.example")).toBe(false);
+    expect(isSafeReturnTo("/%2F%2Fevil.example")).toBe(false);
+  });
+
+  it("INTENT-18 a new JS realm still honors consume via durable ledger", () => {
+    const written = writePendingAuthIntent({
+      toolSlug: "blink",
+      returnTo: "/toools/blink",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    expect(consumePendingAuthIntent().status).toBe("ready");
+    consumedIdsResetOnlyInMemory();
+    window.localStorage.setItem(
+      PENDING_AUTH_INTENT_STORAGE_KEY,
+      JSON.stringify(written.intent),
+    );
+    expect(consumePendingAuthIntent().status).toBe("empty");
+  });
+
+  it("INTENT-19 restore after skipped replay puts the same intent back", () => {
+    const written = writePendingAuthIntent({
+      toolSlug: "blink",
+      desiredStackName: "Podcast",
+      returnTo: "/toools/blink",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    const consumed = consumePendingAuthIntent();
+    expect(consumed.status).toBe("ready");
+    if (consumed.status !== "ready") return;
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+    const restored = restorePendingAuthIntent(consumed.intent);
+    expect(restored.status).toBe("ready");
+    const read = readPendingAuthIntent();
+    expect(read.status).toBe("ready");
+    if (read.status !== "ready") return;
+    expect(read.intent.id).toBe(consumed.intent.id);
+    expect(read.intent.payload.desiredStackName).toBe("Podcast");
+  });
 });
+
+function consumedIdsResetOnlyInMemory() {
+  // Durable ledger stays; only the in-memory Set is cleared to mimic a new tab.
+  const ledger = window.localStorage.getItem(PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY);
+  resetPendingAuthIntentConsumptionsForTests();
+  if (ledger) {
+    window.localStorage.setItem(PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY, ledger);
+  }
+}

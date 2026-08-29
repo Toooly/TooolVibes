@@ -4,6 +4,8 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { replayStackCreateIntent } from "@/lib/auth/replay-stack-intent";
+import { MAX_PERSONAL_STACKS } from "@/lib/discovery/workspace-constants";
+import { reduceWorkspaceState } from "@/lib/discovery/workspace-contract";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   activateToolWorkspaceOwner,
@@ -64,5 +66,23 @@ describe("replay stack create intent", () => {
     const result = replayStackCreateIntent(intent({ desiredStackName: "Podcast" }));
     expect(result.status).toBe("skipped");
     expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
+  });
+
+  it("does not save on stack-cap failure", () => {
+    let state = createEmptyWorkspaceState();
+    for (let index = 0; index < MAX_PERSONAL_STACKS; index += 1) {
+      state = reduceWorkspaceState(state, {
+        type: "stacks/create",
+        id: `stack-${index}`,
+        name: `Stack ${index}`,
+        at: "2026-08-29T10:00:00.000Z",
+      });
+    }
+    activateToolWorkspaceOwner({ kind: "account", userId: "u1" }, state);
+    const result = replayStackCreateIntent(intent({ desiredStackName: "Overflow" }));
+    expect(result.status).toBe("failed");
+    const next = getCanonicalToolWorkspaceState();
+    expect(next.saved.slugs).not.toContain("blink");
+    expect(next.personalStacks).toHaveLength(MAX_PERSONAL_STACKS);
   });
 });
