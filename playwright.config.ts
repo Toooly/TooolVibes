@@ -160,6 +160,16 @@ export default defineConfig({
           testMatch: /gate\.setup\.ts/,
         },
         ...smokeProjects,
+        {
+          name: "shell-390",
+          testMatch: /global-shell\.spec\.ts/,
+          use: {
+            ...devices["Desktop Chrome"],
+            viewport: { width: 390, height: 844 },
+            storageState: gateStorageState,
+          },
+          dependencies: ["gate-setup"],
+        },
         ...visualProjects,
         typographyProject,
       ],
