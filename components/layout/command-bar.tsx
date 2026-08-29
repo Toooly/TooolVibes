@@ -21,11 +21,11 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition } from "@/lib/motion/transitions";
-import { Search, User, UserPlus } from "lucide-react";
+import { Search } from "lucide-react";
 import { MusicToggleButton } from "@/components/app/music-toggle-button";
 import { SoundToggleButton } from "@/components/app/sound-toggle-button";
 import { BrandLogo } from "./brand-logo";
-import { useHeaderAccountCta } from "./workspace-nav-selectors";
+import { HeaderAccountControl } from "./header-account-control";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { isNavRouteActive } from "@/lib/navigation/selectors";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -55,12 +55,7 @@ export function CommandBar() {
   const pathname = usePathname() ?? "/";
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
   const items = useNavItems("header-v2-desktop");
-  const accountCta = useHeaderAccountCta();
   const preferReducedMotion = useReducedMotion();
-  const accountIcon =
-    accountCta.state === "guest" || accountCta.state === "legacy"
-      ? UserPlus
-      : User;
 
   return (
     <header
@@ -126,22 +121,11 @@ export function CommandBar() {
             <MusicToggleButton className="command-bar__util" />
           </div>
 
-          {accountCta.visible ? (
-            <Link
-              href={accountCta.href}
-              prefetch={false}
-              className="command-bar__account"
-              aria-label={accountCta.label || "Account"}
-              aria-busy={accountCta.ariaBusy || undefined}
-            >
-              {accountIcon === UserPlus ? (
-                <UserPlus size={14} aria-hidden="true" />
-              ) : (
-                <User size={14} aria-hidden="true" />
-              )}
-              <span className="command-bar__account-label">{accountCta.label || "Account"}</span>
-            </Link>
-          ) : null}
+          <HeaderAccountControl
+            linkClassName="command-bar__account"
+            menuClassName="command-bar__account-menu"
+            panelClassName="command-bar__account-panel"
+          />
         </div>
       </div>
 

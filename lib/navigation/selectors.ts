@@ -116,6 +116,9 @@ export function isNavRouteActive(
     return false;
   }
   const path = href.split("#")[0]?.split("?")[0] || "/";
+  if (path === "/archivio" && pathname.startsWith("/toools/")) {
+    return true;
+  }
   return pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
 }
 

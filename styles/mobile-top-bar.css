@@ -168,3 +168,43 @@
 
 /* Scan line removed in calibration */
 .mobile-top-bar__scanline { display: none; }
+
+
+.mobile-top-bar__account-menu {
+  position: relative;
+}
+
+.mobile-top-bar__account-menu > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.mobile-top-bar__account-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-top-bar__account-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: var(--tv-z-nav);
+  min-width: 11rem;
+  padding: 8px;
+  display: grid;
+  gap: 2px;
+  background: var(--tv-bg-base);
+  border: 1px solid var(--tv-border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+.mobile-top-bar__account-panel a,
+.mobile-top-bar__account-panel button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}

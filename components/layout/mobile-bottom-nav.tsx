@@ -67,9 +67,7 @@ export function MobileBottomNav() {
     const isDesktop =
       typeof window.matchMedia === "function" &&
       window.matchMedia("(min-width: 1280px)").matches;
-    const navHidden =
-      (pathname ?? "").startsWith("/admin") ||
-      (pathname ?? "").startsWith("/account");
+    const navHidden = (pathname ?? "").startsWith("/admin");
     if (isDesktop || navHidden) {
       root.style.setProperty("--tv-bottom-nav-total", "0px");
       root.dataset.tvBottomNav = "off";
@@ -193,11 +191,7 @@ export function MobileBottomNav() {
     }
   }, [isOverlayOpen, isCommandOpen]);
 
-  if (
-    !mounted ||
-    (pathname ?? "").startsWith("/admin") ||
-    (pathname ?? "").startsWith("/account")
-  ) {
+  if (!mounted || (pathname ?? "").startsWith("/admin")) {
     return null;
   }
 
