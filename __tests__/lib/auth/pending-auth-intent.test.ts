@@ -111,8 +111,35 @@ describe("pending auth intent", () => {
     const parsed = parsePendingAuthIntent({
       version: 1,
       id: "intent-capability-01",
-      capability: "community.write",
+      capability: "not.a.capability",
       payload: { toolSlug: "blink" },
+      returnTo: "/toools/blink",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
+  });
+
+  it("H5-CONT-03 community.write stores toolSlug only", () => {
+    const written = writePendingAuthIntent({
+      capability: "community.write",
+      toolSlug: "blink",
+      returnTo: "/toools/blink",
+      origin: "community.tool",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    expect(written.intent.capability).toBe("community.write");
+    expect(written.intent.payload).toEqual({ toolSlug: "blink" });
+    expect(JSON.stringify(written.intent)).not.toMatch(/body|displayName|pros|note/);
+  });
+
+  it("H5-CONT-05 community.write rejects extra payload keys", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-community-01",
+      capability: "community.write",
+      payload: { toolSlug: "blink", body: "secret draft" },
       returnTo: "/toools/blink",
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 60_000).toISOString(),

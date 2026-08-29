@@ -45,6 +45,10 @@ import {
   replayRadarPersonalIntent,
 } from "@/lib/auth/replay-radar-intent";
 import {
+  maybeOpenExperienceFormAfterReplay,
+  replayCommunityWriteIntent,
+} from "@/lib/auth/replay-community-intent";
+import {
   subscribeSearchPersonalGate,
   takeSearchPersonalGate,
 } from "@/lib/search/personal-search-gate";
@@ -81,6 +85,10 @@ type AuthContinuationContextValue = {
     origin?: string;
     returnTo?: string;
   }) => RequestResult;
+  requestCommunityWrite: (input: {
+    toolSlug: string;
+    origin?: string;
+  }) => RequestResult;
 };
 
 const AuthContinuationContext = createContext<AuthContinuationContextValue>({
@@ -91,6 +99,7 @@ const AuthContinuationContext = createContext<AuthContinuationContextValue>({
   requestCompareDeep: () => "unavailable",
   requestInsightPersonal: () => "unavailable",
   requestRadarPersonal: () => "unavailable",
+  requestCommunityWrite: () => "unavailable",
 });
 
 export function useAuthContinuation() {
@@ -239,6 +248,26 @@ export function AuthContinuationProvider({
     [account.status],
   );
 
+  const requestCommunityWrite = useCallback(
+    (input: { toolSlug: string; origin?: string }): RequestResult => {
+      if (account.status === "loading") return "loading";
+      if (account.status === "unavailable") return "unavailable";
+      const viewer = account.status === "authenticated" ? "authenticated" : "guest";
+      if (canUse("community.write", viewer)) {
+        return "allowed";
+      }
+      setDraft({
+        capability: "community.write",
+        toolSlug: input.toolSlug,
+        returnTo: `/toools/${input.toolSlug}`,
+        origin: input.origin ?? "community.write",
+      });
+      setOpen(true);
+      return "gated";
+    },
+    [account.status],
+  );
+
   useEffect(() => {
     const pending = takeSearchPersonalGate();
     if (pending) requestSearchPersonal(pending);
@@ -344,6 +373,33 @@ export function AuthContinuationProvider({
       finishInsight();
       return;
     }
+    if (intent.capability === "community.write") {
+      const result = replayCommunityWriteIntent(intent);
+      if (result.status === "skipped" && result.reason === "not-authenticated") {
+        restorePendingAuthIntent(intent);
+        return;
+      }
+      replayedRef.current = true;
+      if (result.status !== "ok") {
+        return;
+      }
+      trackAuthGateFromIntent({
+        name: "auth_success_from_gate",
+        capability: intent.capability,
+        origin: intent.origin,
+        returnTo: intent.returnTo,
+      });
+      const finishCommunity = () => {
+        maybeOpenExperienceFormAfterReplay(result.openForm, payloadToolSlug(intent));
+      };
+      if (result.returnTo && result.returnTo !== pathname) {
+        router.replace(result.returnTo);
+        window.setTimeout(finishCommunity, 50);
+        return;
+      }
+      finishCommunity();
+      return;
+    }
     if (intent.capability === "radar.personal") {
       const result = replayRadarPersonalIntent(intent);
       if (result.status === "skipped" && result.reason === "not-authenticated") {
@@ -435,8 +491,9 @@ export function AuthContinuationProvider({
       requestCompareDeep,
       requestInsightPersonal,
       requestRadarPersonal,
+      requestCommunityWrite,
     }),
-    [requestStackCreate, requestNotePrivate, requestSearchPersonal, requestCompareDeep, requestInsightPersonal, requestRadarPersonal],
+    [requestStackCreate, requestNotePrivate, requestSearchPersonal, requestCompareDeep, requestInsightPersonal, requestRadarPersonal, requestCommunityWrite],
   );
 
   return (

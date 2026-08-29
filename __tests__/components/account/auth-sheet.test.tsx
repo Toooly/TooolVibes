@@ -458,3 +458,41 @@ describe("AuthSheet — radar.personal", () => {
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
   });
 });
+
+
+function CommunityTrigger() {
+  const continuation = useAuthContinuation();
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        continuation.requestCommunityWrite({
+          toolSlug: "blink",
+          origin: "community.tool",
+        })
+      }
+    >
+      Apri esperienza
+    </button>
+  );
+}
+
+describe("AuthSheet — community.write", () => {
+  it("H5-CONT-02 uses Condividi la tua esperienza copy", async () => {
+    render(
+      <OverlayProvider>
+        <AccountPreviewProvider value={guestValue()}>
+          <AuthContinuationProvider>
+            <CommunityTrigger />
+          </AuthContinuationProvider>
+        </AccountPreviewProvider>
+      </OverlayProvider>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Apri esperienza" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.getByText("Condividi la tua esperienza")).toBeTruthy();
+    expect(
+      screen.getByText("Racconta come usi davvero questo tool e aiuta altri a valutarlo meglio."),
+    ).toBeTruthy();
+  });
+});

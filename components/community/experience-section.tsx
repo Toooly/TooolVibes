@@ -1,6 +1,8 @@
 import { ExperienceCard } from "@/components/community/experience-card";
 import { ExperienceLoadMore } from "@/components/community/experience-load-more";
+import { ExperienceOwnerPanel } from "@/components/community/experience-owner-panel";
 import { loadPublishedExperiencesForTool } from "@/lib/community/public-read";
+import { isCommunityWriteUiEnabled } from "@/lib/community/write-flag";
 
 export async function ExperienceSection({
   toolSlug,
@@ -11,6 +13,7 @@ export async function ExperienceSection({
 }) {
   const result = await loadPublishedExperiencesForTool(toolSlug);
   if (result.skipped || !result.ok) return null;
+  const writeEnabled = isCommunityWriteUiEnabled();
 
   return (
     <section
@@ -28,6 +31,9 @@ export async function ExperienceSection({
       <p className="td-final-experiences__note">
         Le Esperienze raccontano l&apos;uso personale dei membri di TooolVibes.
       </p>
+      {writeEnabled ? (
+        <ExperienceOwnerPanel toolSlug={toolSlug} catalogNames={catalogNames} />
+      ) : null}
       {result.experiences.length === 0 ? (
         <p className="td-final-experiences__empty">
           Nessuna esperienza pubblicata ancora.

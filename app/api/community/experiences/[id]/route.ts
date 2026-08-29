@@ -13,6 +13,7 @@ import {
   deleteOwnerExperience,
   updateOwnerExperience,
 } from "@/lib/community/repository";
+import { revalidateExperienceToolPage } from "@/lib/community/revalidate";
 import { updateExperienceSchema } from "@/lib/community/schema";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -65,6 +66,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (updated.reason === "check") return communityError("INVALID_INPUT");
     return communityError("SERVER_ERROR");
   }
+  revalidateExperienceToolPage(updated.experience.toolSlug);
   return NextResponse.json({ experience: updated.experience });
 }
 
@@ -93,5 +95,6 @@ export async function DELETE(request: Request, context: RouteContext) {
     if (deleted.reason === "not_found") return communityError("EXPERIENCE_NOT_FOUND");
     return communityError("SERVER_ERROR");
   }
+  revalidateExperienceToolPage(deleted.toolSlug);
   return new NextResponse(null, { status: 204 });
 }

@@ -172,7 +172,7 @@ export async function deleteOwnerExperience(input: { id: string; userId: string 
   const admin = createAdminSupabaseClient();
   const existing = await admin
     .from("community_experiences")
-    .select("id, author_id")
+    .select("id, author_id, tool_slug")
     .eq("id", input.id)
     .maybeSingle();
   if (existing.error) return { ok: false as const, reason: "unknown" as const };
@@ -185,7 +185,7 @@ export async function deleteOwnerExperience(input: { id: string; userId: string 
     .eq("id", input.id)
     .eq("author_id", input.userId);
   if (error) return { ok: false as const, reason: "unknown" as const };
-  return { ok: true as const };
+  return { ok: true as const, toolSlug: existing.data.tool_slug as string };
 }
 
 export async function listExperiencesForModeration(input: {

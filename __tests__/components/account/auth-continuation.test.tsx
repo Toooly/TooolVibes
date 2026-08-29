@@ -20,6 +20,7 @@ import { getOpenPrivateNoteSlug } from "@/lib/auth/private-note-editor-state";
 import { getOpenPersonalInsightSlug, resetPersonalInsightLayerForTests } from "@/lib/auth/personal-insight-layer-state";
 import { peekDeepCompareOpen, resetDeepCompareOpenForTests } from "@/lib/compare/deep-compare-resume";
 import { peekRadarPersonalOpen, resetRadarPersonalOpenForTests } from "@/lib/radar/radar-personal-resume";
+import { getOpenExperienceFormSlug, resetExperienceFormForTests } from "@/lib/community/owner-form-state";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   activateToolWorkspaceOwner,
@@ -58,6 +59,7 @@ describe("auth continuation replay order", () => {
     resetDeepCompareOpenForTests();
     resetRadarPersonalOpenForTests();
     resetPersonalInsightLayerForTests();
+    resetExperienceFormForTests();
     activateToolWorkspaceOwner(
       { kind: "account", userId: "u1" },
       createEmptyWorkspaceState(),
@@ -251,5 +253,27 @@ describe("auth continuation replay order", () => {
     });
     expect(getCanonicalToolWorkspaceState().toolStates.blink).toBeUndefined();
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+  });
+
+  it("H5-CONT-08 community.write replay opens blank form", async () => {
+    writePendingAuthIntent({
+      capability: "community.write",
+      toolSlug: "blink",
+      returnTo: "/toools/blink",
+      origin: "community.tool",
+    });
+    render(
+      <OverlayProvider>
+        <AccountPreviewProvider value={accountValue(true)}>
+          <AuthContinuationProvider>
+            <div />
+          </AuthContinuationProvider>
+        </AccountPreviewProvider>
+      </OverlayProvider>,
+    );
+    await waitFor(() => {
+      expect(getOpenExperienceFormSlug()).toBe("blink");
+    });
+    expect(JSON.stringify(getCanonicalToolWorkspaceState())).not.toMatch(/experience|blink note/);
   });
 });

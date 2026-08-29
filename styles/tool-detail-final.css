@@ -1395,3 +1395,106 @@
 .td-final-save-overflow-sheet[data-compare-live="true"] {
   padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + 2.75rem + env(safe-area-inset-bottom));
 }
+
+.td-final-experience-owner {
+  margin: 0 0 var(--tv-space-6);
+  padding: var(--tv-space-4);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-elevated);
+}
+
+.td-final-experience-owner__kicker {
+  margin: 0 0 var(--tv-space-2);
+  color: var(--tv-ink-muted-aa);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.td-final-experience-form {
+  display: grid;
+  gap: var(--tv-space-4);
+}
+
+.td-final-experience-form__label,
+.td-final-experience-form__fieldset {
+  display: grid;
+  gap: var(--tv-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--tv-ink-primary);
+  font-size: 0.875rem;
+  font-weight: var(--tv-weight-semibold);
+}
+
+.td-final-experience-form__hint,
+.td-final-experience-form__count {
+  display: block;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.75rem;
+  font-weight: var(--tv-weight-regular);
+}
+
+.td-final-experience-form__input,
+.td-final-experience-form__textarea {
+  width: 100%;
+  max-width: 40rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--tv-border-default);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  font: inherit;
+}
+
+.td-final-experience-form__textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+.td-final-experience-form__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-space-2);
+}
+
+.td-final-experience-form__chips,
+.td-final-experience-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-space-2);
+}
+
+.td-final-experience-form__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  font-weight: var(--tv-weight-regular);
+}
+
+.td-final-experience-form__ghost {
+  min-height: 44px;
+  padding: 0 var(--tv-space-3);
+  border: 0;
+  background: transparent;
+  color: var(--tv-ink-secondary);
+  font: inherit;
+}
+
+.td-final-experience-form__error,
+.td-final-experience-form__warning {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.875rem;
+}
+
+.td-final-experience-form__warning {
+  padding: var(--tv-space-3);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+}
+

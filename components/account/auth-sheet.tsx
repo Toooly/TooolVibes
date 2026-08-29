@@ -68,6 +68,12 @@ function authSheetCopy(capability: PendingAuthCapability) {
       body: "Collega le novità del Radar ai tool che hai salvato, usato e valutato.",
     };
   }
+  if (capability === "community.write") {
+    return {
+      title: "Condividi la tua esperienza",
+      body: "Racconta come usi davvero questo tool e aiuta altri a valutarlo meglio.",
+    };
+  }
   return {
     title: "Crea il tuo spazio di lavoro",
     body: "Gli Stack restano sincronizzati con il tuo account e raccolgono i tool che usi insieme.",
@@ -141,6 +147,8 @@ function AuthSheetForm({
                 ? "Controlla la tua email. Apri il link per continuare con gli insight."
                 : draft.capability === "radar.personal"
                   ? "Controlla la tua email. Apri il link per continuare sul Radar."
+                : draft.capability === "community.write"
+                  ? "Controlla la tua email. Apri il link per continuare con la tua esperienza."
             : `Controlla la tua email. Apri il link per continuare con ${draft.toolSlug}.`}
         </p>
       ) : (
