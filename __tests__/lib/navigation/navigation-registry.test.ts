@@ -202,6 +202,7 @@ describe("V1 active navigation matcher", () => {
     ["/", "/", true],
     ["/archivio", "/archivio", true],
     ["/archivio/vibe", "/archivio", true],
+    ["/toools/blink", "/archivio", true],
     ["/archiv", "/archivio", false],
     ["/shortlist", "/shortlist", true],
     ["/contributi", "/contributi", true],
@@ -225,6 +226,7 @@ describe("V1 active navigation matcher", () => {
     expect(getNavDestinationForPathname("/posts/guida")?.label).toBe("Guide");
     expect(getNavDestinationForPathname("/contributi")?.label).toBe("Contributi");
     expect(getNavDestinationForPathname("/sponsorizza")?.label).toBe("Sponsorizza");
+    expect(getNavDestinationForPathname("/toools/blink")?.label).toBe("Catalogo");
     expect(getNavDestinationForPathname("/unknown")).toBeNull();
   });
 });

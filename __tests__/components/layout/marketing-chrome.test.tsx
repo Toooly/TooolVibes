@@ -61,8 +61,20 @@ describe("MarketingChrome — public vs account app", () => {
     cleanup();
   });
 
-  it.each(["/", "/posts", "/collections", "/chi-siamo"])(
-    "magazine pathname %s keeps marketing chrome",
+  it.each([
+    "/",
+    "/posts",
+    "/collections",
+    "/chi-siamo",
+    "/archivio",
+    "/radar",
+    "/compare",
+    "/shortlist",
+    "/toools/linear",
+    "/account",
+    "/account/settings",
+  ])(
+    "SHELL pathname %s keeps canonical public chrome",
     (pathname) => {
       pathnameState.current = pathname;
       renderChrome();
@@ -79,22 +91,4 @@ describe("MarketingChrome — public vs account app", () => {
     },
   );
 
-  it.each([
-    "/archivio",
-    "/radar",
-    "/compare",
-    "/shortlist",
-    "/toools/linear",
-    "/account",
-    "/account/settings",
-  ])("loop pathname %s uses LoopShell instead of marketing chrome", (pathname) => {
-    pathnameState.current = pathname;
-    renderChrome();
-
-    expect(screen.getByTestId("loop-shell")).toBeTruthy();
-    expect(screen.getByText("page-body")).toBeTruthy();
-    expect(screen.queryByTestId("command-bar")).toBeNull();
-    expect(screen.queryByTestId("mobile-top-bar")).toBeNull();
-    expect(screen.queryByTestId("mobile-bottom-nav")).toBeNull();
-  });
 });

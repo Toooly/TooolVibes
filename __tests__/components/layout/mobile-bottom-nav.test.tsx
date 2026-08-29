@@ -173,6 +173,19 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     expect(container.firstChild).toBeNull();
     expect(screen.queryByRole("navigation")).toBeNull();
   });
+
+  it("SHELL-07 account keeps the same 5-destination mobile nav", () => {
+    pathnameState.current = "/account";
+    renderBottomNav();
+    const links = within(getBottomNav()).getAllByRole("link");
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/",
+      "/archivio",
+      "/radar",
+      "/shortlist",
+      "/compare",
+    ]);
+  });
 });
 
 describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
