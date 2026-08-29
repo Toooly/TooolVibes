@@ -6,6 +6,7 @@ import type {
 } from "@/lib/discovery/types";
 import { reduceWorkspaceState } from "@/lib/discovery/workspace-contract";
 import { dispatchWorkspaceChange } from "@/lib/discovery/workspace-events";
+import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import {
   commitCanonicalToolWorkspaceState,
   getCanonicalToolWorkspaceState,
@@ -62,6 +63,9 @@ export function createPersonalStackId(name: string, existingIds: string[]) {
 }
 
 export function createPersonalStack(name: string, description?: string | null) {
+  if (getActiveWorkspaceOwner().kind !== "account") {
+    return getCanonicalToolWorkspaceState();
+  }
   const current = getCanonicalToolWorkspaceState();
   return applyWorkspaceAction({
     type: "stacks/create",

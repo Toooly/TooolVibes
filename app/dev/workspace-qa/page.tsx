@@ -41,7 +41,12 @@ export default async function WorkspaceQaPage({
     ? (params.state as (typeof allowed)[number])
     : "mature";
   const view = parseWorkspaceView(params.view);
-  const surface = params.surface === "settings" ? "settings" : "workspace";
+  const surface =
+    params.surface === "settings"
+      ? "settings"
+      : params.surface === "auth-sheet"
+        ? "auth-sheet"
+        : "workspace";
 
   return (
     <WorkspaceQaHarness fixture={fixture} view={view} surface={surface} />

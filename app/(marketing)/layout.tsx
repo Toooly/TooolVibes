@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 import { AccountProvider } from "@/components/account/account-provider";
+import { AuthContinuationProvider } from "@/components/account/auth-continuation-provider";
 import { RewardAuthBridge } from "@/components/rewards/reward-auth-bridge";
 import { SignalDeliveryBridge } from "@/components/rewards/signal-delivery-bridge";
 import { SignalProductBridge } from "@/components/rewards/signal-product-bridge";
@@ -65,6 +66,7 @@ export default async function MarketingLayout({
       <AdvertisingConsentProvider>
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
+          <AuthContinuationProvider>
           <SignalProgressUiProvider enabled={signalProgressUiEnabled}>
           <SignalAchievementFlagsProvider flags={signalClientFlags}>
           <RewardAuthBridge />
@@ -78,6 +80,7 @@ export default async function MarketingLayout({
           <ConsentSettingsDialog />
           </SignalAchievementFlagsProvider>
           </SignalProgressUiProvider>
+          </AuthContinuationProvider>
         </AccountProvider>
       </OrbitalProvider>
       </AdvertisingConsentProvider>

@@ -6,6 +6,13 @@ import { createElement, useEffect, useState } from "react";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn(), push: vi.fn() }),
+  usePathname: () => "/archivio",
+}));
+
+import { AccountPreviewProvider } from "@/components/account/account-provider";
+import { AuthContinuationProvider } from "@/components/account/auth-continuation-provider";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
 import { WorkspaceBiblioteca } from "@/components/account/workspace/workspace-biblioteca";
 import { WorkspaceStacks } from "@/components/account/workspace/workspace-stacks";
@@ -97,12 +104,45 @@ function collectKeys(value: unknown, acc = new Set<string>()): Set<string> {
   return acc;
 }
 
+function guestAccountValue() {
+  return {
+    authEnabled: true,
+    status: "guest" as const,
+    user: null,
+    session: null,
+    isSendingLink: false,
+    isAttaching: false,
+    workspaceAttachPending: false,
+    hasQuarantinedWorkspace: false,
+    isRestoringQuarantinedWorkspace: false,
+    authMessage: null,
+    sendMagicLink: vi.fn().mockResolvedValue({ ok: true, message: "ok" }),
+    restoreQuarantinedWorkspace: vi.fn().mockResolvedValue({ ok: true, message: "ok" }),
+    signOut: vi.fn().mockResolvedValue(undefined),
+    workspaceReadyForIntentReplay: false,
+  };
+}
+
 function renderCard(
   overrides: Parameters<typeof makeCatalogTool>[0] = { slug: "cursor", name: "Cursor" },
 ) {
   return render(
     <OverlayProvider>
       <ArchiveV4ToolCard tool={makeCatalogTool(overrides)} />
+    </OverlayProvider>,
+  );
+}
+
+function renderCardWithGuestGate(
+  overrides: Parameters<typeof makeCatalogTool>[0] = { slug: "cursor", name: "Cursor" },
+) {
+  return render(
+    <OverlayProvider>
+      <AccountPreviewProvider value={guestAccountValue()}>
+        <AuthContinuationProvider>
+          <ArchiveV4ToolCard tool={makeCatalogTool(overrides)} />
+        </AuthContinuationProvider>
+      </AccountPreviewProvider>
     </OverlayProvider>,
   );
 }
@@ -524,14 +564,19 @@ describe("Wave 9 stack from Save", () => {
     expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
   });
 
-  it("W9-T19 guest overflow has NO Nuovo stack / NO Accedi", async () => {
-    renderCard();
+  it("W9-T19 guest overflow opens AuthSheet instead of creating a stack", async () => {
+    renderCardWithGuestGate();
     await openOverflow();
     expect(screen.getByRole("button", { name: "Confronta" })).toBeTruthy();
-    expect(screen.queryByText(/Nuovo stack/i)).toBeNull();
     expect(screen.queryByText(/Accedi/i)).toBeNull();
-    expect(document.querySelector("[data-stack-pick]")).toBeNull();
-    expect(document.querySelector("[data-stack-pick-create]")).toBeNull();
+    expect(document.querySelector("[data-stack-pick-create]")).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("Nuovo stack"), {
+      target: { value: "AI Coding" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Crea" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.getByText("Crea il tuo spazio di lavoro")).toBeTruthy();
+    expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
   });
 
   it("guest with existing stacks can add but cannot create", async () => {
@@ -548,9 +593,7 @@ describe("Wave 9 stack from Save", () => {
     renderCard();
     await openOverflow();
     expect(screen.getByRole("button", { name: "Aggiungi a AI Coding" })).toBeTruthy();
-    expect(screen.queryByText(/Nuovo stack/i)).toBeNull();
     expect(screen.queryByText(/Accedi/i)).toBeNull();
-    expect(document.querySelector("[data-stack-pick-create]")).toBeNull();
   });
 
   it("W9-T24 draft name not in persisted workspace JSON", async () => {

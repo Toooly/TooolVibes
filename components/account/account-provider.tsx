@@ -57,6 +57,7 @@ export type AccountContextValue = {
   ) => Promise<{ ok: boolean; message: string }>;
   restoreQuarantinedWorkspace: () => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
+  workspaceReadyForIntentReplay: boolean;
 };
 
 const AccountContext = createContext<AccountContextValue>({
@@ -76,6 +77,7 @@ const AccountContext = createContext<AccountContextValue>({
     message: "Nessuna selezione locale da ripristinare.",
   }),
   signOut: async () => {},
+  workspaceReadyForIntentReplay: false,
 });
 
 export function AccountProvider({
@@ -100,6 +102,8 @@ export function AccountProvider({
   const [isRestoringQuarantinedWorkspace, setIsRestoringQuarantinedWorkspace] =
     useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [workspaceReadyForIntentReplay, setWorkspaceReadyForIntentReplay] =
+    useState(false);
   const sessionRef = useRef<Session | null>(null);
   const localSignOutRef = useRef(false);
   const signOutInProgressRef = useRef(false);
@@ -157,6 +161,7 @@ export function AccountProvider({
     const lifecycleVersion = lifecycleVersionRef.current;
     attachInFlightUserIdRef.current = accountUserId;
     setIsAttaching(true);
+    setWorkspaceReadyForIntentReplay(false);
 
     try {
       const staged = await withWorkspaceGuestClaimLock(
@@ -224,6 +229,7 @@ export function AccountProvider({
         workspaceChangeRetryQueuedRef.current = false;
         setWorkspaceAttachPending(false);
         setAuthMessage(null);
+        setWorkspaceReadyForIntentReplay(true);
         return;
       }
 
@@ -648,6 +654,7 @@ export function AccountProvider({
           setUser(null);
           setSession(null);
           setWorkspaceAttachPending(false);
+          setWorkspaceReadyForIntentReplay(false);
           workspaceChangeRetryQueuedRef.current = false;
         } else if (currentSession?.user) {
           sessionRef.current = currentSession;
@@ -677,8 +684,9 @@ export function AccountProvider({
       sendMagicLink,
       restoreQuarantinedWorkspace,
       signOut,
+      workspaceReadyForIntentReplay,
     }),
-    [authEnabled, authMessage, hasQuarantinedWorkspace, isAttaching, isRestoringQuarantinedWorkspace, isSendingLink, restoreQuarantinedWorkspace, sendMagicLink, session, signOut, status, user, workspaceAttachPending],
+    [authEnabled, authMessage, hasQuarantinedWorkspace, isAttaching, isRestoringQuarantinedWorkspace, isSendingLink, restoreQuarantinedWorkspace, sendMagicLink, session, signOut, status, user, workspaceAttachPending, workspaceReadyForIntentReplay],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

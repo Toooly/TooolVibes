@@ -10,6 +10,8 @@
 import { useEffect, useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 
+import { useAccount } from "@/components/account/account-provider";
+import { useAuthContinuation } from "@/components/account/auth-continuation-provider";
 import { toggleWorkspaceSaved } from "@/lib/account/workspace-actions";
 import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 import { DISCOVERY_SYNC_EVENT } from "@/lib/discovery/workspace-events";
@@ -87,7 +89,21 @@ function SaveOverflowPanel({
   const inCompare = compareSlugs.includes(slug);
   const compareCount = compareSlugs.length;
   const compareFull = !inCompare && compareCount >= MAX_COMPARE_TOOLS;
-  const isAccount = getActiveWorkspaceOwner().kind === "account";
+  const account = useAccount();
+  const continuation = useAuthContinuation();
+  const isAccount =
+    account.status === "authenticated" ||
+    getActiveWorkspaceOwner().kind === "account";
+  const requestGuestCreate =
+    !isAccount && account.status === "guest" && continuation.enabled
+      ? (draftName: string) => {
+          continuation.requestStackCreate({
+            toolSlug: slug,
+            desiredStackName: draftName,
+            origin: "save-overflow",
+          });
+        }
+      : undefined;
 
   const handleConfronta = () => {
     if (inCompare || compareFull) return;
@@ -144,6 +160,7 @@ function SaveOverflowPanel({
         slug={slug}
         onDone={onClose}
         allowCreate={isAccount}
+        onRequestAuthCreate={requestGuestCreate}
       />
     </div>
   );

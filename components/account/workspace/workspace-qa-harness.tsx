@@ -6,6 +6,7 @@ import {
   AccountPreviewProvider,
   type AccountContextValue,
 } from "@/components/account/account-provider";
+import { AuthSheet } from "@/components/account/auth-sheet";
 import { AccountSettingsPage } from "@/components/account/account-settings-page";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
@@ -50,6 +51,14 @@ const previewAccount: AccountContextValue = {
     message: "QA locale: nessun backup.",
   }),
   signOut: async () => {},
+  workspaceReadyForIntentReplay: true,
+};
+
+const guestPreviewAccount: AccountContextValue = {
+  ...previewAccount,
+  status: "guest",
+  user: null,
+  workspaceReadyForIntentReplay: false,
 };
 
 export function WorkspaceQaHarness({
@@ -59,7 +68,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings";
+  surface?: "workspace" | "settings" | "auth-sheet";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -96,9 +105,27 @@ export function WorkspaceQaHarness({
         }}
       >
         <DiscoveryPersistenceProvider>
-          <AccountPreviewProvider value={previewAccount}>
+          <AccountPreviewProvider
+            value={surface === "auth-sheet" ? guestPreviewAccount : previewAccount}
+          >
             {surface === "settings" ? (
               <AccountSettingsPage />
+            ) : surface === "auth-sheet" ? (
+              <div
+                data-auth-sheet-qa=""
+                className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
+              >
+                <AuthSheet
+                  open
+                  draft={{
+                    toolSlug: "cursor",
+                    desiredStackName: "AI Coding",
+                    returnTo: "/toools/cursor",
+                    origin: "save-overflow",
+                  }}
+                  onOpenChange={() => {}}
+                />
+              </div>
             ) : ready ? (
               <LoopShellProvider>
                 <WorkspaceShell initialView={initialView} />

@@ -99,8 +99,17 @@ describe("workspace action helpers", () => {
     expect(getCanonicalToolWorkspaceState()).toEqual(before);
   });
 
-  it("restores an archived personal stack", () => {
+  it("does not create a personal stack for a guest owner", () => {
     activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
+    createPersonalStack("AI Coding");
+    expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
+  });
+
+  it("restores an archived personal stack", () => {
+    activateToolWorkspaceOwner(
+      { kind: "account", userId: "user-stack-actions" },
+      createEmptyWorkspaceState(),
+    );
     createPersonalStack("AI Coding");
     const id = getCanonicalToolWorkspaceState().personalStacks[0]?.id;
     expect(id).toBeTruthy();

@@ -3,7 +3,7 @@
 /**
  * Shared Speed 2 stack membership panel.
  * Catalogo overflow and Salvati use the same create/add writers.
- * S22 (Accedi-to-create) is not built: guests never see Nuovo stack.
+ * Guest create opens AuthSheet via onRequestAuthCreate.
  */
 
 import { useEffect, useId, useMemo, useState } from "react";
@@ -99,11 +99,13 @@ export function StackPickOrCreate({
   slug,
   onDone,
   allowCreate,
+  onRequestAuthCreate,
   compact = false,
 }: {
   slug: string;
   onDone?: () => void;
   allowCreate: boolean;
+  onRequestAuthCreate?: (draftName: string) => void;
   compact?: boolean;
 }) {
   useWorkspaceRevision();
@@ -113,6 +115,9 @@ export function StackPickOrCreate({
   const workspace = getCanonicalToolWorkspaceState();
   const activeStacks = workspace.personalStacks.filter((stack) => !stack.archivedAt);
   const canCreate = allowCreate && activeStacks.length < MAX_PERSONAL_STACKS;
+  const showCreate =
+    (canCreate || Boolean(onRequestAuthCreate)) &&
+    activeStacks.length < MAX_PERSONAL_STACKS;
   const manyStacks = activeStacks.length > MANY_STACKS_THRESHOLD;
 
   const visibleStacks = useMemo(() => {
@@ -121,16 +126,20 @@ export function StackPickOrCreate({
     return activeStacks.filter((stack) => stack.name.toLowerCase().includes(needle));
   }, [activeStacks, filter]);
 
-  if (activeStacks.length === 0 && !canCreate) {
-    // Soft login (S22) is not built: guests with 0 stacks omit this section
-    // instead of prompting Accedi. Named-stack create is auth-only.
+  if (activeStacks.length === 0 && !showCreate) {
     return null;
   }
 
   const handleCreate = () => {
     const trimmed = draftName.trim();
-    if (!trimmed || !canCreate) return;
-    createNamedStackAndAdd(trimmed, slug);
+    if (!trimmed) return;
+    if (canCreate) {
+      createNamedStackAndAdd(trimmed, slug);
+      setDraftName("");
+      onDone?.();
+      return;
+    }
+    onRequestAuthCreate?.(trimmed);
     setDraftName("");
     onDone?.();
   };
@@ -193,7 +202,7 @@ export function StackPickOrCreate({
         </div>
       ) : null}
 
-      {canCreate ? (
+      {showCreate ? (
         <form
           data-stack-pick-create=""
           className="flex flex-col gap-1.5 px-1"
