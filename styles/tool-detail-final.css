@@ -11,6 +11,7 @@
  *   D. Decision Navigation                      .td-final-decision-nav
  *   E. Product Information                      .td-final-information
  *   F. Trend / Signal Module                    .td-final-signal
+ *   F2. Esperienze                              .td-final-experiences
  *   G. Alternatives Decision Desk               .td-final-alternatives
  *                                                  .td-final-alt-* (cards)
  *
@@ -873,6 +874,136 @@
   font-size: 0.875rem;
   font-style: italic;
   line-height: var(--tv-leading-relaxed);
+}
+
+
+/* ============================================================
+   F2. ESPERIENZE (public published UGC)
+   ============================================================ */
+.td-final-experiences {
+  margin-top: var(--tv-space-10);
+  padding: clamp(var(--tv-space-6), 4vw, var(--tv-space-8));
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-surface-raised);
+}
+
+.td-final-experiences__lede,
+.td-final-experiences__note,
+.td-final-experiences__empty {
+  max-width: 40rem;
+  margin: 0 0 var(--tv-space-4);
+  color: var(--tv-ink-secondary);
+  font-size: 0.95rem;
+  line-height: var(--tv-leading-relaxed);
+}
+
+.td-final-experiences__note,
+.td-final-experiences__empty {
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.875rem;
+}
+
+.td-final-experiences__empty {
+  padding: var(--tv-space-4);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-elevated);
+  font-style: italic;
+}
+
+.td-final-experiences__list {
+  display: grid;
+  gap: 0;
+}
+
+.td-final-experience {
+  padding: var(--tv-space-5) 0;
+  border-bottom: 1px solid var(--tv-border-subtle);
+}
+
+.td-final-experience:last-of-type {
+  border-bottom: none;
+}
+
+.td-final-experience__byline {
+  margin: 0 0 var(--tv-space-2);
+  color: var(--tv-ink-primary);
+  font-size: 0.95rem;
+  font-weight: var(--tv-weight-semibold);
+}
+
+.td-final-experience__use {
+  margin: 0 0 var(--tv-space-3);
+  color: var(--tv-ink-secondary);
+  font-size: 0.875rem;
+}
+
+.td-final-experience__body {
+  max-width: 40rem;
+  margin: 0 0 var(--tv-space-4);
+  color: var(--tv-ink-primary);
+  font-size: 1rem;
+  line-height: var(--tv-leading-relaxed);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.td-final-experience__kicker {
+  margin: 0 0 var(--tv-space-2);
+  color: var(--tv-ink-muted-aa);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.td-final-experience__list {
+  margin: 0 0 var(--tv-space-4);
+  padding-left: 1.1rem;
+  max-width: 40rem;
+  color: var(--tv-ink-secondary);
+  font-size: 0.875rem;
+  line-height: var(--tv-leading-relaxed);
+}
+
+.td-final-experience__list li {
+  overflow-wrap: anywhere;
+}
+
+.td-final-experience__switched,
+.td-final-experience__date,
+.td-final-experience__status {
+  margin: 0 0 var(--tv-space-2);
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.8125rem;
+}
+
+.td-final-experience__more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  width: 100%;
+  margin-top: var(--tv-space-4);
+  padding: 0 var(--tv-space-4);
+  border: 1px solid var(--tv-border-default);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+  font-size: 0.875rem;
+  font-weight: var(--tv-weight-semibold);
+}
+
+.td-final-experience__more:disabled {
+  opacity: 0.7;
+}
+
+@media (min-width: 1024px) {
+  .td-final-experience__more {
+    width: auto;
+    min-width: 16rem;
+  }
 }
 
 /* ============================================================

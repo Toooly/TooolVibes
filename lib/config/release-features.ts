@@ -49,6 +49,7 @@ export type ReleaseFeatureEnvironment = Readonly<{
   TOOOLVIBES_SIGNAL_ACHIEVEMENTS_ENABLED?: string;
   TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED?: string;
   TOOOLVIBES_REWARD_MILESTONES_ENABLED?: string;
+  TOOOLVIBES_COMMUNITY_READ_ENABLED?: string;
   TOOOLVIBES_GAME_MISSIONS_MODE?: string;
   TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE?: string;
   TOOOLVIBES_GAME_ARENA_MODE?: string;
@@ -145,6 +146,11 @@ export const releaseFeatureRegistry = {
     envKey: "TOOOLVIBES_REWARD_MILESTONES_ENABLED",
     defaultEnabled: false,
   },
+  communityRead: {
+    owner: "product-community",
+    envKey: "TOOOLVIBES_COMMUNITY_READ_ENABLED",
+    defaultEnabled: false,
+  },
 } as const satisfies Record<string, BooleanFeatureDefinition>;
 
 const ALL_GAMIFICATION_MODES = GAMIFICATION_MODES;
@@ -223,6 +229,7 @@ export type ReleaseFeatureConfig = Readonly<{
   signalAchievements: ResolvedBooleanFeature;
   signalBadgeCabinet: ResolvedBooleanFeature;
   rewardMilestones: ResolvedBooleanFeature;
+  communityRead: ResolvedBooleanFeature;
   gamification: Readonly<{
     owner: string;
     enabled: boolean;
@@ -394,6 +401,10 @@ export function createReleaseFeatureConfig(
     environment,
     releaseFeatureRegistry.rewardMilestones,
   );
+  const communityRead = resolveBooleanFeature(
+    environment,
+    releaseFeatureRegistry.communityRead,
+  );
   const gamificationEnabled = parseBooleanFlag(
     environment[releaseFeatureRegistry.gamification.envKey],
     releaseFeatureRegistry.gamification,
@@ -475,6 +486,7 @@ export function createReleaseFeatureConfig(
     signalAchievements,
     signalBadgeCabinet,
     rewardMilestones,
+    communityRead,
     gamification: Object.freeze({
       owner: releaseFeatureRegistry.gamification.owner,
       enabled: gamificationEnabled,
@@ -571,6 +583,8 @@ export function readReleaseFeatureEnvironment(): ReleaseFeatureEnvironment {
       process.env.TOOOLVIBES_SIGNAL_BADGE_CABINET_ENABLED,
     TOOOLVIBES_REWARD_MILESTONES_ENABLED:
       process.env.TOOOLVIBES_REWARD_MILESTONES_ENABLED,
+    TOOOLVIBES_COMMUNITY_READ_ENABLED:
+      process.env.TOOOLVIBES_COMMUNITY_READ_ENABLED,
     TOOOLVIBES_GAME_MISSIONS_MODE:
       process.env.TOOOLVIBES_GAME_MISSIONS_MODE,
     TOOOLVIBES_GAME_HIDDEN_SIGNAL_MODE:

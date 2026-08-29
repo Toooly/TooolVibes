@@ -2,6 +2,7 @@ import {
   Compass,
   FileText,
   MessageSquare,
+  MessagesSquare,
   TrendingUp,
   Wrench,
 } from "lucide-react";
@@ -15,8 +16,10 @@ import {
 
 export function ToolDetailDecisionNav({
   showAlternatives,
+  showExperiences = false,
 }: {
   showAlternatives: boolean;
+  showExperiences?: boolean;
 }) {
   return (
     <nav
@@ -39,6 +42,12 @@ export function ToolDetailDecisionNav({
         <TrendingUp size={13} aria-hidden="true" style={{ marginRight: 4 }} />
         Segnale
       </a>
+      {showExperiences ? (
+        <a className="td-final-decision-nav__link" href="#td-final-experiences">
+          <MessagesSquare size={13} aria-hidden="true" style={{ marginRight: 4 }} />
+          Esperienze
+        </a>
+      ) : null}
       {showAlternatives ? (
         <a className="td-final-decision-nav__link" href="#td-final-alternatives">
           <Wrench size={13} aria-hidden="true" style={{ marginRight: 4 }} />

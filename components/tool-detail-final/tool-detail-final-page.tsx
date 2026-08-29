@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/lib/config/site";
 import { getPublicToolViews, getRelatedToolViewsBySlug, getToolViewBySlug } from "@/lib/data/public-tools";
+import { isCommunityReadEnabled } from "@/lib/community/read-flag";
 import {
   createPublicPageMetadata,
   defaultSocialImage,
@@ -16,6 +17,7 @@ import { ToolDetailExtendedContent } from "./tool-detail-extended-content";
 import { ToolDetailDecisionNav } from "./tool-detail-decision-nav";
 import { ToolDetailInformation } from "./tool-detail-information";
 import { ToolDetailSignal } from "./tool-detail-signal";
+import { ExperienceSection } from "@/components/community/experience-section";
 import { ToolDetailAlternatives } from "./tool-detail-alternatives";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { ToolDetailFooter } from "./tool-detail-footer";
@@ -91,6 +93,10 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
   }
 
   const relatedTools = await getRelatedToolViewsBySlug(tool.slug, 3);
+  const showExperiences = isCommunityReadEnabled();
+  const catalogNames = showExperiences
+    ? Object.fromEntries((await getPublicToolViews()).map((item) => [item.slug, item.name]))
+    : {};
   const isAffiliateLink = Boolean(tool.affiliateUrl) || hasAffiliateSignal(tool.url);
   const canonicalUrl = `${siteConfig.url}/toools/${tool.slug}`;
   const toolStructuredData = {
@@ -148,7 +154,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           </div>
         </section>
 
-        <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
+        <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} showExperiences={showExperiences} />
         <ToolDetailEditorial tool={tool} />
         <ToolDetailExtendedContent
           content={tool.extendedContent}
@@ -157,6 +163,9 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         <TinyAdzInlineSlot placement="tool-detail" />
         <ToolDetailInformation tool={tool} />
         <ToolDetailSignal tool={tool} />
+        {showExperiences ? (
+          <ExperienceSection toolSlug={tool.slug} catalogNames={catalogNames} />
+        ) : null}
         <ToolDetailAlternatives current={tool} related={relatedTools} />
         {slug !== "taylora" ? (
           <div className="td-final-page__partner">

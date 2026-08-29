@@ -74,6 +74,8 @@ export default async function WorkspaceQaPage({
                         ? "radar-personal-guest"
                       : params.surface === "personal-insights-guest"
                         ? "personal-insights-guest"
+                      : params.surface === "community-experiences"
+                        ? "community-experiences"
                     : "workspace";
 
   return (

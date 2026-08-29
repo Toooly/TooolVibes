@@ -8,6 +8,7 @@ import {
 } from "@/components/account/account-provider";
 import { AuthContinuationProvider, useAuthContinuation } from "@/components/account/auth-continuation-provider";
 import { AuthSheet } from "@/components/account/auth-sheet";
+import { ExperienceQa } from "@/components/community/experience-qa";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
 import { PrivateNoteEditor } from "@/components/account/workspace/private-note-editor";
 import { PersonalInsightsLayer } from "@/components/account/workspace/personal-insights-layer";
@@ -72,7 +73,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "auth-sheet-insight" | "auth-sheet-radar" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest" | "deep-compare" | "deep-compare-guest" | "personal-insights" | "personal-insights-guest" | "radar-personal" | "radar-personal-guest";
+  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "auth-sheet-insight" | "auth-sheet-radar" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest" | "deep-compare" | "deep-compare-guest" | "personal-insights" | "personal-insights-guest" | "radar-personal" | "radar-personal-guest" | "community-experiences";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -119,7 +120,23 @@ export function WorkspaceQaHarness({
           <AccountPreviewProvider
             value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "auth-sheet-insight" || surface === "auth-sheet-radar" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" || surface === "deep-compare-guest" || surface === "personal-insights-guest" || surface === "radar-personal-guest" ? guestPreviewAccount : previewAccount}
           >
-            {surface === "personal-search" || surface === "personal-search-guest" ? (
+            {surface === "community-experiences" ? (
+              <ExperienceQa
+                fixture={
+                  fixture === "empty"
+                    ? "empty"
+                    : fixture === "few"
+                      ? "eight"
+                      : fixture === "resume"
+                        ? "long"
+                        : fixture === "stacks"
+                          ? "switched"
+                          : fixture === "compare"
+                            ? "offcatalog"
+                            : "one"
+                }
+              />
+            ) : surface === "personal-search" || surface === "personal-search-guest" ? (
               <PersonalSearchQa
                 guest={surface === "personal-search-guest"}
               />

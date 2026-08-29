@@ -146,6 +146,7 @@ describe("Tool Detail clean baseline — owner tree", () => {
       "ToolDetailEditorial",
       "ToolDetailInformation",
       "ToolDetailSignal",
+      "ExperienceSection",
       "ToolDetailAlternatives",
       "ToolDetailFooter",
     ];
@@ -172,6 +173,21 @@ describe("Tool Detail clean baseline — owner tree", () => {
     expect(src).not.toMatch(/AlternativeDecisionCard/);
     expect(src).not.toMatch(/ArchiveV4ToolCard/);
     expect(src).toMatch(/td-final-alt-row/);
+  });
+
+  it("H4-UI-01 places Esperienze after Signal and before Alternatives", () => {
+    const src = read(path.join(TOOL_DETAIL_DIR, "tool-detail-final-page.tsx"));
+    const signal = src.indexOf("<ToolDetailSignal");
+    const experiences = src.indexOf("<ExperienceSection");
+    const alternatives = src.indexOf("<ToolDetailAlternatives");
+    expect(signal).toBeGreaterThan(-1);
+    expect(experiences).toBeGreaterThan(signal);
+    expect(alternatives).toBeGreaterThan(experiences);
+  });
+
+  it("H4-SEO-03 does not add Review structured data", () => {
+    const src = read(path.join(TOOL_DETAIL_DIR, "tool-detail-final-page.tsx"));
+    expect(src).not.toMatch(/AggregateRating|ReviewRating|ratingValue|"Review"/);
   });
 
   it("the decision nav links only to unique, rendered section targets", () => {
