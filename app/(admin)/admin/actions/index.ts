@@ -33,3 +33,4 @@ export {
   setCollectionTransitionReviewAction,
   applyCollectionSafeAlignAction,
 } from "./collections";
+export { moderateExperienceAction } from "./experiences";

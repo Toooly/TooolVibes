@@ -2,16 +2,26 @@ import "server-only";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 import {
+  ADMIN_COLUMNS,
   OWNER_COLUMNS,
   PUBLIC_COLUMNS,
   type CreateExperienceInput,
+  type ExperienceStatus,
   type UpdateExperienceInput,
 } from "@/lib/community/schema";
 import { ownerEditPatch } from "@/lib/community/transitions";
 import {
+  toAdminExperience,
   toOwnerExperience,
   toPublicExperience,
 } from "@/lib/community/projections";
+import {
+  ADMIN_EXPERIENCE_PAGE_SIZE,
+  COMMUNITY_MODERATOR_ACTOR,
+  moderationChangesPublicVisibility,
+  planExperienceModeration,
+  type ModerationAction,
+} from "@/lib/community/moderation";
 
 type DbError = { code?: string; message?: string } | null;
 
@@ -176,4 +186,122 @@ export async function deleteOwnerExperience(input: { id: string; userId: string 
     .eq("author_id", input.userId);
   if (error) return { ok: false as const, reason: "unknown" as const };
   return { ok: true as const };
+}
+
+export async function listExperiencesForModeration(input: {
+  status: ExperienceStatus;
+  page: number;
+}) {
+  const admin = createAdminSupabaseClient();
+  const page = Math.max(1, Math.floor(input.page) || 1);
+  const from = (page - 1) * ADMIN_EXPERIENCE_PAGE_SIZE;
+  const to = from + ADMIN_EXPERIENCE_PAGE_SIZE - 1;
+
+  let query = admin
+    .from("community_experiences")
+    .select(ADMIN_COLUMNS, { count: "exact" })
+    .eq("status", input.status);
+
+  if (input.status === "pending") {
+    query = query
+      .order("submitted_at", { ascending: true })
+      .order("id", { ascending: true });
+  } else {
+    query = query
+      .order("moderated_at", { ascending: false, nullsFirst: false })
+      .order("updated_at", { ascending: false })
+      .order("id", { ascending: false });
+  }
+
+  const { data, error, count } = await query.range(from, to);
+  if (error) return { ok: false as const, reason: "unknown" as const };
+  const pageRows = (data ?? []).map((row) => toAdminExperience(row as never));
+  const total = count ?? pageRows.length;
+  return {
+    ok: true as const,
+    page: pageRows,
+    pageNumber: page,
+    pageSize: ADMIN_EXPERIENCE_PAGE_SIZE,
+    total,
+    hasMore: from + pageRows.length < total,
+  };
+}
+
+export async function getExperienceForModeration(id: string) {
+  const admin = createAdminSupabaseClient();
+  const { data, error } = await admin
+    .from("community_experiences")
+    .select(ADMIN_COLUMNS)
+    .eq("id", id)
+    .maybeSingle();
+  if (error) return { ok: false as const, reason: "unknown" as const };
+  if (!data) return { ok: true as const, experience: null };
+  return { ok: true as const, experience: toAdminExperience(data as never) };
+}
+
+export async function moderateExperience(input: {
+  id: string;
+  action: ModerationAction;
+  expectedUpdatedAt: string;
+  reason: unknown;
+  nowIso?: string;
+}) {
+  const admin = createAdminSupabaseClient();
+  const existing = await admin
+    .from("community_experiences")
+    .select(`${ADMIN_COLUMNS}`)
+    .eq("id", input.id)
+    .maybeSingle();
+  if (existing.error) return { ok: false as const, reason: "unknown" as const };
+  if (!existing.data) return { ok: false as const, reason: "not_found" as const };
+  const current = toAdminExperience(existing.data as never);
+  if (current.updatedAt !== input.expectedUpdatedAt) {
+    return { ok: false as const, reason: "conflict" as const, experience: current };
+  }
+
+  const plan = planExperienceModeration({
+    currentStatus: current.status,
+    action: input.action,
+    reason: input.reason,
+    nowIso: input.nowIso ?? new Date().toISOString(),
+    actor: COMMUNITY_MODERATOR_ACTOR,
+    currentPublishedAt: current.publishedAt,
+  });
+  if (!plan.ok) {
+    return {
+      ok: false as const,
+      reason: plan.code === "INVALID_INPUT" ? ("invalid" as const) : ("state" as const),
+      experience: current,
+    };
+  }
+  if (plan.kind === "noop") {
+    return {
+      ok: true as const,
+      kind: "noop" as const,
+      experience: current,
+      visibilityChanged: false,
+    };
+  }
+
+  const { data, error } = await admin
+    .from("community_experiences")
+    .update(plan.patch)
+    .eq("id", input.id)
+    .eq("updated_at", input.expectedUpdatedAt)
+    .select(ADMIN_COLUMNS)
+    .maybeSingle();
+  if (error) {
+    const mapped = mapDbError(error);
+    return { ok: false as const, reason: mapped ?? "unknown" };
+  }
+  if (!data) {
+    return { ok: false as const, reason: "conflict" as const, experience: current };
+  }
+  const experience = toAdminExperience(data as never);
+  return {
+    ok: true as const,
+    kind: "applied" as const,
+    experience,
+    visibilityChanged: moderationChangesPublicVisibility(input.action, "applied"),
+  };
 }

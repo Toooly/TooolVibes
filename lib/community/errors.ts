@@ -12,6 +12,7 @@ export type CommunityErrorCode =
   | "EXPERIENCE_ALREADY_EXISTS"
   | "EXPERIENCE_NOT_FOUND"
   | "EXPERIENCE_VERSION_CONFLICT"
+  | "EXPERIENCE_STATE_CONFLICT"
   | "PAYLOAD_TOO_LARGE"
   | "SERVER_ERROR";
 
@@ -26,6 +27,7 @@ const STATUS: Record<CommunityErrorCode, number> = {
   EXPERIENCE_ALREADY_EXISTS: 409,
   EXPERIENCE_NOT_FOUND: 404,
   EXPERIENCE_VERSION_CONFLICT: 409,
+  EXPERIENCE_STATE_CONFLICT: 409,
   PAYLOAD_TOO_LARGE: 413,
   SERVER_ERROR: 500,
 };
@@ -41,6 +43,7 @@ const MESSAGE: Record<CommunityErrorCode, string> = {
   EXPERIENCE_ALREADY_EXISTS: "You already have an experience for this tool.",
   EXPERIENCE_NOT_FOUND: "Experience not found.",
   EXPERIENCE_VERSION_CONFLICT: "Experience was updated elsewhere.",
+  EXPERIENCE_STATE_CONFLICT: "This moderation action is not allowed.",
   PAYLOAD_TOO_LARGE: "Payload too large.",
   SERVER_ERROR: "Server error.",
 };

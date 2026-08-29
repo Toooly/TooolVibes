@@ -19,6 +19,7 @@ import {
   Sparkles,
   AlertCircle,
   Gauge,
+  MessageSquare,
   Wrench,
 } from "lucide-react";
 import type { AdminArticlesRuntime } from "@/lib/admin/article-queries";
@@ -49,6 +50,7 @@ const navItems = [
   { href: "/admin/affiliates", label: "Affiliati", icon: Sparkles, group: "Commerciale" },
   { href: "/admin/affiliate-links", label: "Link affiliati", icon: LayoutGrid, group: "Commerciale" },
   { href: "/admin/suggestions", label: "Suggerimenti", icon: AlertCircle, group: "Community" },
+  { href: "/admin/experiences", label: "Esperienze", icon: MessageSquare, group: "Community" },
   { href: "/", label: "Sito", icon: Globe, group: "System" },
 ];
 
@@ -62,6 +64,7 @@ const desktopNavItems = navItems.filter((item) =>
     "/admin/composer",
     "/admin/commercial/partners",
     "/admin/media",
+    "/admin/experiences",
     "/",
   ].includes(item.href),
 );

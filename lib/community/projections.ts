@@ -1,4 +1,5 @@
 import type {
+  CommunityExperienceAdmin,
   CommunityExperienceOwner,
   CommunityExperiencePublic,
   DurationBucket,
@@ -28,6 +29,10 @@ type OwnerRow = PublicRow & {
   moderation_reason: string | null;
 };
 
+type AdminRow = OwnerRow & {
+  moderated_by: string | null;
+};
+
 export function toPublicExperience(row: PublicRow): CommunityExperiencePublic {
   return {
     id: row.id,
@@ -53,5 +58,12 @@ export function toOwnerExperience(row: OwnerRow): CommunityExperienceOwner {
     submittedAt: row.submitted_at,
     moderatedAt: row.moderated_at,
     moderationReason: row.moderation_reason,
+  };
+}
+
+export function toAdminExperience(row: AdminRow): CommunityExperienceAdmin {
+  return {
+    ...toOwnerExperience(row),
+    moderatedBy: row.moderated_by,
   };
 }

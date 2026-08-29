@@ -158,8 +158,14 @@ export type CommunityExperienceOwner = CommunityExperiencePublic & {
   moderationReason: string | null;
 };
 
+export type CommunityExperienceAdmin = CommunityExperienceOwner & {
+  moderatedBy: string | null;
+};
+
 export const PUBLIC_COLUMNS =
   "id, tool_slug, display_name, use_case, body, pros, limits, duration_bucket, switched_from_slug, switched_from_label, published_at, updated_at" as const;
 
 export const OWNER_COLUMNS =
   `${PUBLIC_COLUMNS}, status, created_at, submitted_at, moderated_at, moderation_reason` as const;
+
+export const ADMIN_COLUMNS = `${OWNER_COLUMNS}, moderated_by` as const;
