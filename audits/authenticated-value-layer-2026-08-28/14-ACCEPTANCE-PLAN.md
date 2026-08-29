@@ -104,15 +104,16 @@ Status: IMPLEMENTED / ACCEPTED (not RELEASED).
 
 ---
 
-## Wave E
+## Wave E — IMPLEMENTED / ACCEPTED (not RELEASED until deploy)
 
 | Claim | Evidence |
 |---|---|
 | `/compare` still public basic | existing compare tests |
-| Auth L1 chips from workspace maps | component |
-| Guest deep disclosure → AuthSheet | component |
-| DecisionSheet still the only commit | no second form |
-| ≤5 slugs, no N+1 | no extra fetch in test |
+| Auth L1 chips from workspace maps | `__tests__/lib/compare/compare-personal-context.test.ts` |
+| Guest deep disclosure → AuthSheet | auth-sheet DEEP-AUTH-04 |
+| DecisionSheet still the only commit | no second form; decide panel unchanged |
+| ≤5 slugs, no N+1 | derive uses one workspace index |
+| No private note in guest HTML | DEEP-PRIV-01 |
 
 ---
 

@@ -134,6 +134,34 @@ describe("pending auth intent", () => {
     expect(JSON.stringify(written.intent)).not.toContain("toolSlug");
   });
 
+  it("DEEP-CONT-01 compare.deep stores empty payload", () => {
+    const written = writePendingAuthIntent({
+      capability: "compare.deep",
+      returnTo: "/compare",
+      origin: "compare.deep",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    expect(written.intent.capability).toBe("compare.deep");
+    expect(written.intent.payload).toEqual({});
+    expect(written.intent.returnTo).toBe("/compare");
+    expect(JSON.stringify(written.intent)).not.toContain("note");
+    expect(JSON.stringify(written.intent)).not.toContain("toolSlug");
+  });
+
+  it("DEEP-CONT-07 compare.deep rejects extra payload keys", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-compare-extra-01",
+      capability: "compare.deep",
+      payload: { toolSlug: "blink" },
+      returnTo: "/compare",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
+  });
+
   it("INTENT-D-02 search.personal rejects extra payload keys", () => {
     const parsed = parsePendingAuthIntent({
       version: 1,

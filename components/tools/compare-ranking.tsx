@@ -1,8 +1,18 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAccount } from "@/components/account/account-provider";
 import type { NormalisedTool } from "./tool-battle-shared";
+import {
+  ComparePersonalStrip,
+  useComparePersonalContexts,
+} from "./compare-personal-context";
+import {
+  subscribeDeepCompareOpen,
+  takeDeepCompareOpen,
+} from "@/lib/compare/deep-compare-resume";
 
 type CompareRankingProps = {
   tools: NormalisedTool[];
@@ -23,7 +33,26 @@ export function CompareRanking({
   onRemove,
   layoutMode,
 }: CompareRankingProps) {
+  const account = useAccount();
+  const slugs = useMemo(() => tools.map((tool) => tool.slug), [tools]);
+  const names = useMemo(
+    () => Object.fromEntries(tools.map((tool) => [tool.slug, tool.name])),
+    [tools],
+  );
+  const contexts = useComparePersonalContexts(slugs, names);
+  const [forceOpen, setForceOpen] = useState(false);
+
+  useEffect(() => {
+    if (takeDeepCompareOpen()) setForceOpen(true);
+    return subscribeDeepCompareOpen(() => {
+      if (takeDeepCompareOpen()) setForceOpen(true);
+    });
+  }, []);
+
   if (tools.length === 0) return null;
+
+  const contextBySlug = new Map(contexts.map((context) => [context.toolSlug, context]));
+  const showPersonal = account.status === "authenticated";
 
   return (
     <ol
@@ -36,6 +65,7 @@ export function CompareRanking({
         const rank = getRank(tool);
         const summary = tool.objectiveSummary || tool.tldr;
         const score = tool.battleScore;
+        const personal = showPersonal ? contextBySlug.get(tool.slug) : undefined;
         return (
           <li
             key={tool.slug}
@@ -68,6 +98,9 @@ export function CompareRanking({
               >
                 <X className="size-4" aria-hidden="true" />
               </button>
+            ) : null}
+            {personal ? (
+              <ComparePersonalStrip context={personal} defaultOpen={forceOpen} />
             ) : null}
           </li>
         );

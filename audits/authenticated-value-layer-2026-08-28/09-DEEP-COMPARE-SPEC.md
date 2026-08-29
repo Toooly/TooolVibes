@@ -1,7 +1,7 @@
 # 09 — Deep Compare Spec
 
-**Status:** TARGET Wave E. Not built.  
-**CURRENT:** one route `/compare` → `ToolBattleView`. Guest and auth share the **same** basic workbench: 2–5 tools, objective, ranking, matrix, Fast Decide via DecisionSheet. No personal overlay. Compare objective lives in a separate localStorage key (not synced). No second Compare.
+**Status:** Wave E IMPLEMENTED / ACCEPTED (not RELEASED until production deploy).  
+**CURRENT:** one route `/compare` → `ToolBattleView`. Guest Basic Compare unchanged. Auth adds derived L1/L2 personal context on ranking. Guest “Il tuo contesto” → AuthSheet `compare.deep`. Compare objective lives in a separate localStorage key (not synced). No second Compare.
 
 ---
 

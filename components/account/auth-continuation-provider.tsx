@@ -33,6 +33,10 @@ import {
   replaySearchPersonalIntent,
 } from "@/lib/auth/replay-search-intent";
 import {
+  maybeOpenDeepCompareAfterReplay,
+  replayCompareDeepIntent,
+} from "@/lib/auth/replay-compare-intent";
+import {
   subscribeSearchPersonalGate,
   takeSearchPersonalGate,
 } from "@/lib/search/personal-search-gate";
@@ -57,6 +61,10 @@ type AuthContinuationContextValue = {
     origin?: string;
     returnTo?: string;
   }) => RequestResult;
+  requestCompareDeep: (input?: {
+    origin?: string;
+    returnTo?: string;
+  }) => RequestResult;
 };
 
 const AuthContinuationContext = createContext<AuthContinuationContextValue>({
@@ -64,6 +72,7 @@ const AuthContinuationContext = createContext<AuthContinuationContextValue>({
   requestStackCreate: () => "unavailable",
   requestNotePrivate: () => "unavailable",
   requestSearchPersonal: () => "unavailable",
+  requestCompareDeep: () => "unavailable",
 });
 
 export function useAuthContinuation() {
@@ -154,6 +163,25 @@ export function AuthContinuationProvider({
     [account.status],
   );
 
+  const requestCompareDeep = useCallback(
+    (input?: { origin?: string; returnTo?: string }): RequestResult => {
+      if (account.status === "loading") return "loading";
+      if (account.status === "unavailable") return "unavailable";
+      const viewer = account.status === "authenticated" ? "authenticated" : "guest";
+      if (canUse("compare.deep", viewer)) {
+        return "allowed";
+      }
+      setDraft({
+        capability: "compare.deep",
+        returnTo: input?.returnTo ?? "/compare",
+        origin: input?.origin ?? "compare.deep",
+      });
+      setOpen(true);
+      return "gated";
+    },
+    [account.status],
+  );
+
   useEffect(() => {
     const pending = takeSearchPersonalGate();
     if (pending) requestSearchPersonal(pending);
@@ -232,6 +260,33 @@ export function AuthContinuationProvider({
       finishSearch();
       return;
     }
+    if (intent.capability === "compare.deep") {
+      const result = replayCompareDeepIntent(intent);
+      if (result.status === "skipped" && result.reason === "not-authenticated") {
+        restorePendingAuthIntent(intent);
+        return;
+      }
+      replayedRef.current = true;
+      if (result.status !== "ok") {
+        return;
+      }
+      trackAuthGateFromIntent({
+        name: "auth_success_from_gate",
+        capability: intent.capability,
+        origin: intent.origin,
+        returnTo: intent.returnTo,
+      });
+      const finishCompare = () => {
+        maybeOpenDeepCompareAfterReplay(result.openDeep);
+      };
+      if (result.returnTo && result.returnTo !== pathname) {
+        router.replace(result.returnTo);
+        window.setTimeout(finishCompare, 50);
+        return;
+      }
+      finishCompare();
+      return;
+    }
     const result = replayStackCreateIntent(intent);
     if (result.status === "skipped" && result.reason === "not-authenticated") {
       restorePendingAuthIntent(intent);
@@ -269,8 +324,9 @@ export function AuthContinuationProvider({
       requestStackCreate,
       requestNotePrivate,
       requestSearchPersonal,
+      requestCompareDeep,
     }),
-    [requestStackCreate, requestNotePrivate, requestSearchPersonal],
+    [requestStackCreate, requestNotePrivate, requestSearchPersonal, requestCompareDeep],
   );
 
   return (

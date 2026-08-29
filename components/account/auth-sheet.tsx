@@ -50,6 +50,12 @@ function authSheetCopy(capability: PendingAuthCapability) {
       body: "Cerca tra salvati, Stack, decisioni e note personali.",
     };
   }
+  if (capability === "compare.deep") {
+    return {
+      title: "Confrontalo con ciò che già usi",
+      body: "Aggiungi al confronto note, Stack, decisioni e utilizzo dal tuo spazio personale.",
+    };
+  }
   return {
     title: "Crea il tuo spazio di lavoro",
     body: "Gli Stack restano sincronizzati con il tuo account e raccolgono i tool che usi insieme.",
@@ -117,6 +123,8 @@ function AuthSheetForm({
         <p className="tv-auth-sheet__status" id={statusId} role="status">
           {draft.capability === "search.personal"
             ? "Controlla la tua email. Apri il link per continuare la ricerca."
+            : draft.capability === "compare.deep"
+              ? "Controlla la tua email. Apri il link per continuare il confronto."
             : `Controlla la tua email. Apri il link per continuare con ${draft.toolSlug}.`}
         </p>
       ) : (

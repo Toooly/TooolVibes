@@ -58,6 +58,10 @@ export default async function WorkspaceQaPage({
                   ? "personal-search"
                   : params.surface === "personal-search-guest"
                     ? "personal-search-guest"
+                    : params.surface === "deep-compare"
+                      ? "deep-compare"
+                      : params.surface === "deep-compare-guest"
+                        ? "deep-compare-guest"
                     : "workspace";
 
   return (

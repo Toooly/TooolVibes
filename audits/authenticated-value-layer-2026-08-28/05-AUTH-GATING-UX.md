@@ -43,7 +43,7 @@ Magic-link remains the only auth method (CURRENT). Do not add passwords.
 | `note.private` | Ricordalo nel tempo | Le note entrano nella tua Software Memory e restano collegate al tool. |
 | `search.personal` | Cerca nel tuo spazio | Cerca tra catalogo, salvati, stack, decisioni e note. |
 | `insight.personal` | Vedi cosa significa per te | Accedi agli insight basati sui tool che hai salvato, confrontato e usato. |
-| `compare.deep` | Confrontalo con ciò che già usi | Relazioni, note e decisioni restano sul confronto. |
+| `compare.deep` | Confrontalo con ciò che già usi | Aggiungi al confronto note, Stack, decisioni e utilizzo dal tuo spazio personale. |
 | `review.remember` | Ricordati di rivalutarlo | La data di revisione resta nel tuo spazio. |
 
 Primary CTA always: **Continua con il tuo account**  

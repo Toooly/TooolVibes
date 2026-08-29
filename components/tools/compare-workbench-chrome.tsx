@@ -7,6 +7,7 @@ import { useAccount } from "@/components/account/account-provider";
 import { salvatiHref } from "@/components/account/workspace/workspace-model";
 import { WorkspaceToolMark } from "@/components/account/workspace/workspace-tool-mark";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+import { CompareDeepEntry } from "./compare-personal-context";
 import {
   consumeCompareDecision,
   peekCompareDecision,
@@ -202,6 +203,7 @@ export function CompareWorkbenchIdentity({
                 Decidi
               </button>
             ) : null}
+            <CompareDeepEntry />
             <ChiudiConfronto onClear={onClear} />
           </div>
         </div>

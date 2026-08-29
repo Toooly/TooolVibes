@@ -12,7 +12,7 @@ const MAX_RETURN_TO_LENGTH = 500;
 const MAX_ORIGIN_LENGTH = 80;
 const MAX_JSON_BYTES = 2048;
 
-export type PendingAuthCapability = "stack.create" | "note.private" | "search.personal";
+export type PendingAuthCapability = "stack.create" | "note.private" | "search.personal" | "compare.deep";
 export type PendingStackCreateCapability = PendingAuthCapability;
 
 export type PendingStackCreatePayload = {
@@ -30,10 +30,13 @@ export type PendingSearchPersonalPayload = {
   query: string;
 };
 
+export type PendingCompareDeepPayload = Record<string, never>;
+
 export type PendingAuthIntentPayload =
   | PendingStackCreatePayload
   | PendingNotePrivatePayload
-  | PendingSearchPersonalPayload;
+  | PendingSearchPersonalPayload
+  | PendingCompareDeepPayload;
 
 export type PendingAuthIntent = {
   version: typeof PENDING_AUTH_INTENT_VERSION;
@@ -120,7 +123,8 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   if (
     input.capability !== "stack.create" &&
     input.capability !== "note.private" &&
-    input.capability !== "search.personal"
+    input.capability !== "search.personal" &&
+    input.capability !== "compare.deep"
   ) {
     return { status: "invalid", reason: "unknown-capability" };
   }
@@ -129,11 +133,13 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   }
   const capability = input.capability;
   const allowedPayloadKeys =
-    capability === "search.personal"
-      ? ["query"]
-      : capability === "note.private"
-        ? ["toolSlug"]
-        : ["toolSlug", "desiredStackName", "targetStackId", "targetStackName"];
+    capability === "compare.deep"
+      ? []
+      : capability === "search.personal"
+        ? ["query"]
+        : capability === "note.private"
+          ? ["toolSlug"]
+          : ["toolSlug", "desiredStackName", "targetStackId", "targetStackName"];
   const extraPayloadKeys = Object.keys(input.payload).filter(
     (key) => !allowedPayloadKeys.includes(key),
   );
@@ -156,8 +162,10 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     searchQuery = query;
   }
   const toolSlug =
-    capability === "search.personal" ? "search" : parseToolSlug(input.payload.toolSlug);
-  if (capability !== "search.personal" && !toolSlug) {
+    capability === "search.personal" || capability === "compare.deep"
+      ? "search"
+      : parseToolSlug(input.payload.toolSlug);
+  if (capability !== "search.personal" && capability !== "compare.deep" && !toolSlug) {
     return { status: "invalid", reason: "invalid-slug" };
   }
   let desiredStackName: string | undefined;
@@ -200,16 +208,18 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     id: input.id.trim(),
     capability,
     payload:
-      capability === "search.personal"
-        ? { query: searchQuery ?? "" }
-        : capability === "note.private"
-          ? { toolSlug: toolSlug as string }
-          : {
-              toolSlug: toolSlug as string,
-              ...(desiredStackName ? { desiredStackName } : {}),
-              ...(targetStackId ? { targetStackId } : {}),
-              ...(targetStackName ? { targetStackName } : {}),
-            },
+      capability === "compare.deep"
+        ? {}
+        : capability === "search.personal"
+          ? { query: searchQuery ?? "" }
+          : capability === "note.private"
+            ? { toolSlug: toolSlug as string }
+            : {
+                toolSlug: toolSlug as string,
+                ...(desiredStackName ? { desiredStackName } : {}),
+                ...(targetStackId ? { targetStackId } : {}),
+                ...(targetStackName ? { targetStackName } : {}),
+              },
     returnTo: input.returnTo.trim(),
     origin,
     createdAt: input.createdAt,
@@ -308,16 +318,18 @@ export function writePendingAuthIntent(input: {
     id: createIntentId(),
     capability,
     payload:
-      capability === "search.personal"
-        ? { query: input.query ?? "" }
-        : capability === "note.private"
-          ? { toolSlug: input.toolSlug }
-          : {
-              toolSlug: input.toolSlug,
-              desiredStackName: input.desiredStackName,
-              targetStackId: input.targetStackId,
-              targetStackName: input.targetStackName,
-            },
+      capability === "compare.deep"
+        ? {}
+        : capability === "search.personal"
+          ? { query: input.query ?? "" }
+          : capability === "note.private"
+            ? { toolSlug: input.toolSlug }
+            : {
+                toolSlug: input.toolSlug,
+                desiredStackName: input.desiredStackName,
+                targetStackId: input.targetStackId,
+                targetStackName: input.targetStackName,
+              },
     returnTo: input.returnTo,
     origin: input.origin,
     createdAt,

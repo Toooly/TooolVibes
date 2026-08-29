@@ -2,7 +2,8 @@
 
 **Status:** Wave A = IMPLEMENTED / ACCEPTED. Wave B = IMPLEMENTED / ACCEPTED.  
 Not RELEASED (feature branch only; not merged, not deployed).  
-Wave C = IMPLEMENTED / ACCEPTED (not RELEASED).
+Wave C–D = IMPLEMENTED / ACCEPTED / RELEASED.
+Wave E = IMPLEMENTED / ACCEPTED (not RELEASED).
 
 ---
 
@@ -69,11 +70,12 @@ Exit: sheet can open from a stub trigger in tests; production trigger is Wave B 
 - Fix guest alias → `/account` dead-end
 - Salvati DSL = OPEN QUESTION 4 (not a blocker)
 
-## Wave E — TARGET, not built
+## Wave E — IMPLEMENTED / ACCEPTED (not RELEASED until deploy)
 
-- L1/L2 personal layer on `/compare`
+- L1/L2 personal layer on `/compare` ranking
 - DecisionSheet unchanged
-- AuthSheet on deep disclosure for guests
+- AuthSheet `compare.deep` for guests (“Il tuo contesto”)
+- Derived from WorkspaceStateV1 + Wave D index; no new persistence
 
 ## Wave F — TARGET, not built
 

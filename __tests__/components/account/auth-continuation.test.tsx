@@ -17,6 +17,7 @@ import {
   writePendingAuthIntent,
 } from "@/lib/auth/pending-auth-intent";
 import { getOpenPrivateNoteSlug } from "@/lib/auth/private-note-editor-state";
+import { peekDeepCompareOpen, resetDeepCompareOpenForTests } from "@/lib/compare/deep-compare-resume";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   activateToolWorkspaceOwner,
@@ -52,6 +53,7 @@ function accountValue(ready: boolean) {
 describe("auth continuation replay order", () => {
   beforeEach(() => {
     window.localStorage.clear();
+    resetDeepCompareOpenForTests();
     activateToolWorkspaceOwner(
       { kind: "account", userId: "u1" },
       createEmptyWorkspaceState(),
@@ -176,5 +178,28 @@ describe("auth continuation replay order", () => {
     });
     expect(getCanonicalToolWorkspaceState().toolStates.blink).toBeUndefined();
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+  });
+
+  it("DEEP-CONT-03 compare.deep replay opens layer without mutating compare", async () => {
+    writePendingAuthIntent({
+      capability: "compare.deep",
+      returnTo: "/compare",
+      origin: "compare.deep",
+    });
+    const before = getCanonicalToolWorkspaceState().compare.slugs.slice();
+    render(
+      <OverlayProvider>
+        <AccountPreviewProvider value={accountValue(true)}>
+          <AuthContinuationProvider>
+            <p>compare-ready</p>
+          </AuthContinuationProvider>
+        </AccountPreviewProvider>
+      </OverlayProvider>,
+    );
+    await waitFor(() => {
+      expect(peekDeepCompareOpen()).toBe(true);
+    });
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+    expect(getCanonicalToolWorkspaceState().compare.slugs).toEqual(before);
   });
 });

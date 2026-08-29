@@ -71,7 +71,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest";
+  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest" | "deep-compare" | "deep-compare-guest";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -116,12 +116,14 @@ export function WorkspaceQaHarness({
       >
         <DiscoveryPersistenceProvider>
           <AccountPreviewProvider
-            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" ? guestPreviewAccount : previewAccount}
+            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" || surface === "deep-compare-guest" ? guestPreviewAccount : previewAccount}
           >
             {surface === "personal-search" || surface === "personal-search-guest" ? (
               <PersonalSearchQa
                 guest={surface === "personal-search-guest"}
               />
+            ) : surface === "deep-compare" || surface === "deep-compare-guest" ? (
+              <DeepCompareQa guest={surface === "deep-compare-guest"} />
             ) : surface === "settings" ? (
               <AccountSettingsPage />
             ) : surface === "auth-sheet" || surface === "auth-sheet-note" ? (
@@ -234,6 +236,40 @@ function PersonalSearchQa({ guest }: { guest: boolean }) {
       {!guest ? (
         <p className="tv-auth-sheet__title">usage:using · note:yes · stack:AI Coding</p>
       ) : null}
+    </div>
+  );
+}
+
+
+function DeepCompareQa({ guest }: { guest: boolean }) {
+  return (
+    <div
+      data-deep-compare-qa=""
+      className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
+    >
+      <AuthContinuationProvider>
+        <AuthSheet
+          open={guest}
+          draft={
+            guest
+              ? {
+                  capability: "compare.deep",
+                  returnTo: "/compare",
+                  origin: "compare.deep",
+                }
+              : null
+          }
+          onOpenChange={() => {}}
+        />
+        {!guest ? (
+          <div>
+            <p className="compare-personal__eyebrow">Il tuo contesto</p>
+            <p className="compare-personal__chip">In uso</p>
+            <p className="compare-personal__chip">Stack: AI Coding</p>
+            <p className="compare-personal__chip">Nota presente</p>
+          </div>
+        ) : null}
+      </AuthContinuationProvider>
     </div>
   );
 }

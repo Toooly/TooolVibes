@@ -1,6 +1,6 @@
 # Authenticated Value Layer 1.0
 
-**Status:** ARCHITECTURE LOCKED. Waves A–C RELEASED on `main`. Wave D IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-d-personal-search`. Not RELEASED.  
+**Status:** ARCHITECTURE LOCKED. Waves A–D RELEASED on `main`. Wave E IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-e-deep-compare`. Not RELEASED.  
 **Date:** 2026-08-28  
 **Baseline:** `main` @ `1e4c7a2ac725e8c2b95751b4048cfcd200f73a19`  
 **Branch:** `feature/authenticated-value-layer-a-b`  

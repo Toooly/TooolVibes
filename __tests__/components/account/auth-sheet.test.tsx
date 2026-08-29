@@ -70,6 +70,34 @@ function NoteTrigger() {
   );
 }
 
+function CompareTrigger() {
+  const continuation = useAuthContinuation();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        continuation.requestCompareDeep({
+          origin: "compare.deep",
+        });
+      }}
+    >
+      open-compare-gate
+    </button>
+  );
+}
+
+function renderCompareGate() {
+  return render(
+    <OverlayProvider>
+      <AccountPreviewProvider value={guestValue()}>
+        <AuthContinuationProvider>
+          <CompareTrigger />
+        </AuthContinuationProvider>
+      </AccountPreviewProvider>
+    </OverlayProvider>,
+  );
+}
+
 function SearchTrigger() {
   const continuation = useAuthContinuation();
   return (
@@ -304,6 +332,28 @@ describe("AuthSheet — search.personal", () => {
   it("SEARCH-AUTH-04 dismiss does not write intent", async () => {
     renderSearchGate();
     fireEvent.click(screen.getByRole("button", { name: "Apri ricerca" }));
+    await screen.findByRole("dialog");
+    fireEvent.click(screen.getByRole("button", { name: "Non ora" }));
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+  });
+});
+
+describe("AuthSheet — compare.deep", () => {
+  it("DEEP-AUTH-04 uses Confrontalo con ciò che già usi copy", async () => {
+    renderCompareGate();
+    fireEvent.click(screen.getByRole("button", { name: "open-compare-gate" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.getByText("Confrontalo con ciò che già usi")).toBeTruthy();
+    expect(
+      screen.getByText(
+        "Aggiungi al confronto note, Stack, decisioni e utilizzo dal tuo spazio personale.",
+      ),
+    ).toBeTruthy();
+  });
+
+  it("DEEP-AUTH-05 dismiss does not write intent", async () => {
+    renderCompareGate();
+    fireEvent.click(screen.getByRole("button", { name: "open-compare-gate" }));
     await screen.findByRole("dialog");
     fireEvent.click(screen.getByRole("button", { name: "Non ora" }));
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
