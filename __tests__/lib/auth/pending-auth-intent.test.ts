@@ -39,7 +39,7 @@ describe("pending auth intent", () => {
     const read = readPendingAuthIntent();
     expect(read.status).toBe("ready");
     if (read.status !== "ready") return;
-    expect(read.intent.payload.toolSlug).toBe("blink");
+    expect("toolSlug" in read.intent.payload && read.intent.payload.toolSlug).toBe("blink");
     expect((read.intent.payload as { desiredStackName?: string }).desiredStackName).toBe("AI Coding");
   });
 
@@ -111,9 +111,36 @@ describe("pending auth intent", () => {
     const parsed = parsePendingAuthIntent({
       version: 1,
       id: "intent-capability-01",
-      capability: "search.personal",
+      capability: "insight.personal",
       payload: { toolSlug: "blink" },
       returnTo: "/toools/blink",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
+  });
+
+  it("INTENT-D-01 search.personal stores query only", () => {
+    const written = writePendingAuthIntent({
+      capability: "search.personal",
+      query: "usage:using",
+      returnTo: "/archivio",
+      origin: "command-palette",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    expect(written.intent.capability).toBe("search.personal");
+    expect(written.intent.payload).toEqual({ query: "usage:using" });
+    expect(JSON.stringify(written.intent)).not.toContain("toolSlug");
+  });
+
+  it("INTENT-D-02 search.personal rejects extra payload keys", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-search-extra-01",
+      capability: "search.personal",
+      payload: { query: "usage:using", toolSlug: "blink" },
+      returnTo: "/archivio",
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
     });

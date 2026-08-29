@@ -449,3 +449,71 @@ describe("GlobalCommandPalette — WAVE 12 Trova / Vai / Fai", () => {
     expect(screen.queryByText("Fai")).toBeNull();
   });
 });
+
+
+describe("GlobalCommandPalette — Wave D personal search", () => {
+  it("PALETTE-D-01 basic guest search unchanged", () => {
+    renderPalette();
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "blink" } });
+    expect(screen.getByText("Blink")).toBeTruthy();
+    expect(screen.queryByText("Cerca nel tuo spazio")).toBeNull();
+  });
+
+  it("PALETTE-D-02 auth alias in uso", () => {
+    renderWorkspacePalette(workspaceTestFixtures.quietReturning);
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "in uso" } });
+    expect(screen.getAllByText("In uso").length).toBeGreaterThan(0);
+    expect(screen.getByText("Cursor")).toBeTruthy();
+  });
+
+  it("PALETTE-D-03 auth alias rimandati", () => {
+    renderWorkspacePalette(workspaceTestFixtures.mature);
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "rimandati" } });
+    expect(screen.getByText("Rimandati")).toBeTruthy();
+    expect(screen.getByText("Meku")).toBeTruthy();
+  });
+
+  it("PALETTE-D-04 auth alias da rivedere", () => {
+    renderWorkspacePalette(workspaceTestFixtures.reviewDue);
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "da rivedere" } });
+    expect(screen.getByText("Da rivedere")).toBeTruthy();
+    expect(screen.getByText("Meku")).toBeTruthy();
+  });
+
+  it("PALETTE-D-05 auth alias con note", () => {
+    renderWorkspacePalette(workspaceTestFixtures.mature);
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "con note" } });
+    expect(screen.getByText("Nota presente")).toBeTruthy();
+    expect(screen.getByText("Cursor")).toBeTruthy();
+  });
+
+  it("PALETTE-D-06 guest personal alias does not dead-end to /account", () => {
+    renderPalette();
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "rimandati" } });
+    expect(screen.getByText("Cerca nel tuo spazio")).toBeTruthy();
+    expect(screen.queryByText("Meku")).toBeNull();
+    fireEvent.click(screen.getByText("Cerca nel tuo spazio"));
+    expect(pushMock).not.toHaveBeenCalledWith(expect.stringContaining("/account"));
+  });
+
+  it("PALETTE-D-07 personal result navigates to the tool page", () => {
+    renderWorkspacePalette(workspaceTestFixtures.quietReturning);
+    openPalette();
+    const input = screen.getByPlaceholderText("Cerca tool, azioni o sezioni...");
+    fireEvent.change(input, { target: { value: "usage:using" } });
+    fireEvent.click(screen.getByText("Cursor"));
+    expect(pushMock).toHaveBeenCalledWith("/toools/cursor");
+  });
+});

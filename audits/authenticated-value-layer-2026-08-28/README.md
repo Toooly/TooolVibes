@@ -1,6 +1,6 @@
 # Authenticated Value Layer 1.0
 
-**Status:** ARCHITECTURE LOCKED. Wave A + Wave B RELEASED on `main`. Wave C IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-c-private-notes`. Not RELEASED. Wave D NOT STARTED.  
+**Status:** ARCHITECTURE LOCKED. Waves A–C RELEASED on `main`. Wave D IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-d-personal-search`. Not RELEASED.  
 **Date:** 2026-08-28  
 **Baseline:** `main` @ `1e4c7a2ac725e8c2b95751b4048cfcd200f73a19`  
 **Branch:** `feature/authenticated-value-layer-a-b`  
@@ -124,8 +124,8 @@ Related prior work (do not treat as this package): `audits/my-tooolvibes-authent
 |---|---|---|
 | **A** | Capability registry + AuthSheet + pending intent + telemetry hooks | TARGET, not built |
 | **B** | Stack natural gating + continuation + field-level merge | TARGET, not built |
-| **C** | Private notes (Tool Page + searchable product layer) | TARGET, not built |
-| **D** | Personal search DSL | TARGET, not built |
+| **C** | Private notes (Tool Page + searchable product layer) | RELEASED |
+| **D** | Personal search DSL | IMPLEMENTED / ACCEPTED |
 | **E** | Deep Compare layer | TARGET, not built |
 | **F** | Personal Insights | TARGET, not built |
 | **G** | Relationship-aware Radar | TARGET, not built |

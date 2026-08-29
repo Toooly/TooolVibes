@@ -54,7 +54,11 @@ export default async function WorkspaceQaPage({
               ? "private-note"
               : params.surface === "private-note-guest"
                 ? "private-note-guest"
-                : "workspace";
+                : params.surface === "personal-search"
+                  ? "personal-search"
+                  : params.surface === "personal-search-guest"
+                    ? "personal-search-guest"
+                    : "workspace";
 
   return (
     <WorkspaceQaHarness fixture={fixture} view={view} surface={surface} />

@@ -1,6 +1,8 @@
 # 06 — Advanced Search Spec (Personal Search V1)
 
-**Status:** TARGET Wave D. Not built.  
+**Status:** Wave D IMPLEMENTED / ACCEPTED. Not released until deploy.
+
+**Shipped:** `lib/search/personal-search-query.ts` parser, `workspace-search-index.ts`, `personal-search.ts` engine. Palette consumes the engine. Salvati typed query uses the same filters. Guest personal DSL/aliases → AuthSheet `search.personal` (`Cerca nel tuo spazio`); catalog words stay public. Pending intent payload is `{ query }` only, localStorage TTL 30min, never in URL, never in telemetry. `q_note` may sit in that local intent until consume. `alternative-to:<slug>` = same `categoryLabel` plus `toolStates.alternatives`, minus self. Unknown `key:value` tokens become free text. Salvati chips stay; they AND with the typed query.  
 **CURRENT:** in-memory catalog engine `lib/search/tool-search.ts` (accent-insensitive, AND tokens, Damerau-1). Command palette adds keyword aliases (`rimandati`, `in uso`, …) and saved/stack name matches. Salvati has substring `matchesSalvatiSearch` (name/slug/category/useCase). **No FTS, no embeddings, no LLM, no personal DSL.**
 
 Guest palette aliases currently deep-link `/account?view=salvati` (dead-end). That is a CURRENT bug to fix when palette routing is touched (Wave D, or a tiny A/B fix if aliases are hit earlier — prefer Wave D unless A+B already edits palette).

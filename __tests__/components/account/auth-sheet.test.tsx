@@ -70,6 +70,36 @@ function NoteTrigger() {
   );
 }
 
+function SearchTrigger() {
+  const continuation = useAuthContinuation();
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        continuation.requestSearchPersonal({
+          query: "usage:using",
+          origin: "command-palette",
+          returnTo: "/archivio",
+        })
+      }
+    >
+      Apri ricerca
+    </button>
+  );
+}
+
+function renderSearchGate() {
+  return render(
+    <OverlayProvider>
+      <AccountPreviewProvider value={guestValue()}>
+        <AuthContinuationProvider>
+          <SearchTrigger />
+        </AuthContinuationProvider>
+      </AccountPreviewProvider>
+    </OverlayProvider>,
+  );
+}
+
 function renderNoteGate() {
   return render(
     <OverlayProvider>
@@ -256,5 +286,26 @@ describe("AuthSheet", () => {
     expect(await screen.findByRole("dialog")).toBeTruthy();
     expect(screen.getByText("Ricordalo nel tempo")).toBeTruthy();
     expect(screen.getByText(/Le note restano collegate al tool/)).toBeTruthy();
+  });
+});
+
+
+describe("AuthSheet — search.personal", () => {
+  it("SEARCH-AUTH-03 uses Cerca nel tuo spazio copy", async () => {
+    renderSearchGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri ricerca" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.getByText("Cerca nel tuo spazio")).toBeTruthy();
+    expect(
+      screen.getByText("Cerca tra salvati, Stack, decisioni e note personali."),
+    ).toBeTruthy();
+  });
+
+  it("SEARCH-AUTH-04 dismiss does not write intent", async () => {
+    renderSearchGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri ricerca" }));
+    await screen.findByRole("dialog");
+    fireEvent.click(screen.getByRole("button", { name: "Non ora" }));
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
   });
 });

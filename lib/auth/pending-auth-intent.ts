@@ -1,5 +1,6 @@
 import { workspaceSlugSchema } from "@/lib/discovery/schema";
 import { MAX_STACK_NAME_LENGTH } from "@/lib/discovery/workspace-constants";
+import { MAX_PERSONAL_SEARCH_QUERY_LENGTH } from "@/lib/search/personal-search-query";
 
 export const PENDING_AUTH_INTENT_STORAGE_KEY = "tooolvibes:pending-auth-intent:v1";
 export const PENDING_AUTH_INTENT_CONSUMED_STORAGE_KEY =
@@ -11,7 +12,7 @@ const MAX_RETURN_TO_LENGTH = 500;
 const MAX_ORIGIN_LENGTH = 80;
 const MAX_JSON_BYTES = 2048;
 
-export type PendingAuthCapability = "stack.create" | "note.private";
+export type PendingAuthCapability = "stack.create" | "note.private" | "search.personal";
 export type PendingStackCreateCapability = PendingAuthCapability;
 
 export type PendingStackCreatePayload = {
@@ -25,9 +26,14 @@ export type PendingNotePrivatePayload = {
   toolSlug: string;
 };
 
+export type PendingSearchPersonalPayload = {
+  query: string;
+};
+
 export type PendingAuthIntentPayload =
   | PendingStackCreatePayload
-  | PendingNotePrivatePayload;
+  | PendingNotePrivatePayload
+  | PendingSearchPersonalPayload;
 
 export type PendingAuthIntent = {
   version: typeof PENDING_AUTH_INTENT_VERSION;
@@ -111,7 +117,11 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   if (typeof input.id !== "string" || input.id.trim().length < 8 || input.id.length > 80) {
     return { status: "invalid", reason: "malformed-id" };
   }
-  if (input.capability !== "stack.create" && input.capability !== "note.private") {
+  if (
+    input.capability !== "stack.create" &&
+    input.capability !== "note.private" &&
+    input.capability !== "search.personal"
+  ) {
     return { status: "invalid", reason: "unknown-capability" };
   }
   if (!isRecord(input.payload)) {
@@ -119,17 +129,35 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   }
   const capability = input.capability;
   const allowedPayloadKeys =
-    capability === "note.private"
-      ? ["toolSlug"]
-      : ["toolSlug", "desiredStackName", "targetStackId", "targetStackName"];
+    capability === "search.personal"
+      ? ["query"]
+      : capability === "note.private"
+        ? ["toolSlug"]
+        : ["toolSlug", "desiredStackName", "targetStackId", "targetStackName"];
   const extraPayloadKeys = Object.keys(input.payload).filter(
     (key) => !allowedPayloadKeys.includes(key),
   );
   if (extraPayloadKeys.length > 0) {
     return { status: "invalid", reason: "unknown-payload-keys" };
   }
-  const toolSlug = parseToolSlug(input.payload.toolSlug);
-  if (!toolSlug) {
+  let searchQuery: string | undefined;
+  if (capability === "search.personal") {
+    if (typeof input.payload.query !== "string") {
+      return { status: "invalid", reason: "invalid-query" };
+    }
+    const query = input.payload.query.trim();
+    if (
+      !query ||
+      query.length > MAX_PERSONAL_SEARCH_QUERY_LENGTH ||
+      /[\u0000-\u001F]/.test(query)
+    ) {
+      return { status: "invalid", reason: "invalid-query" };
+    }
+    searchQuery = query;
+  }
+  const toolSlug =
+    capability === "search.personal" ? "search" : parseToolSlug(input.payload.toolSlug);
+  if (capability !== "search.personal" && !toolSlug) {
     return { status: "invalid", reason: "invalid-slug" };
   }
   let desiredStackName: string | undefined;
@@ -172,14 +200,16 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     id: input.id.trim(),
     capability,
     payload:
-      capability === "note.private"
-        ? { toolSlug }
-        : {
-            toolSlug,
-            ...(desiredStackName ? { desiredStackName } : {}),
-            ...(targetStackId ? { targetStackId } : {}),
-            ...(targetStackName ? { targetStackName } : {}),
-          },
+      capability === "search.personal"
+        ? { query: searchQuery ?? "" }
+        : capability === "note.private"
+          ? { toolSlug: toolSlug as string }
+          : {
+              toolSlug: toolSlug as string,
+              ...(desiredStackName ? { desiredStackName } : {}),
+              ...(targetStackId ? { targetStackId } : {}),
+              ...(targetStackName ? { targetStackName } : {}),
+            },
     returnTo: input.returnTo.trim(),
     origin,
     createdAt: input.createdAt,
@@ -260,7 +290,8 @@ function unmarkIntentConsumed(id: string) {
 
 export function writePendingAuthIntent(input: {
   capability?: PendingAuthCapability;
-  toolSlug: string;
+  toolSlug?: string;
+  query?: string;
   desiredStackName?: string;
   targetStackId?: string;
   targetStackName?: string;
@@ -277,14 +308,16 @@ export function writePendingAuthIntent(input: {
     id: createIntentId(),
     capability,
     payload:
-      capability === "note.private"
-        ? { toolSlug: input.toolSlug }
-        : {
-            toolSlug: input.toolSlug,
-            desiredStackName: input.desiredStackName,
-            targetStackId: input.targetStackId,
-            targetStackName: input.targetStackName,
-          },
+      capability === "search.personal"
+        ? { query: input.query ?? "" }
+        : capability === "note.private"
+          ? { toolSlug: input.toolSlug }
+          : {
+              toolSlug: input.toolSlug,
+              desiredStackName: input.desiredStackName,
+              targetStackId: input.targetStackId,
+              targetStackName: input.targetStackName,
+            },
     returnTo: input.returnTo,
     origin: input.origin,
     createdAt,

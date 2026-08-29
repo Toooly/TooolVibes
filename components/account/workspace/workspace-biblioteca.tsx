@@ -25,13 +25,21 @@ import {
   compareSalvatiRelationships,
   formatStackContext,
   matchesSalvatiFilter,
-  matchesSalvatiSearch,
   visibleSalvatiFilters,
   type SalvatiLibraryFilter,
   type SalvatiRelationship,
   type SalvatiSort,
 } from "@/lib/account/salvati-relationship";
 import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
+import { buildWorkspaceSearchIndex } from "@/lib/search/workspace-search-index";
+import {
+  matchesSalvatiPersonalQuery,
+} from "@/lib/search/personal-search";
+import {
+  parsePersonalSearchQuery,
+  personalSearchEmptyMessage,
+} from "@/lib/search/personal-search-query";
+
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import type { WorkspaceDecisionOutcome, WorkspaceStateV1 } from "@/lib/discovery/types";
 import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
@@ -99,18 +107,26 @@ export function WorkspaceBiblioteca({
   const library = useMemo(() => composeSalvatiLibrary(state, nowIso), [nowIso, state]);
   const bySlug = useMemo(() => catalogMap(catalog), [catalog]);
   const filterIds = visibleSalvatiFilters(library.filterCounts, library.showFilters);
+  const searchIndex = useMemo(
+    () => buildWorkspaceSearchIndex(state),
+    [state],
+  );
+  const parsedQuery = useMemo(
+    () => parsePersonalSearchQuery(query),
+    [query],
+  );
   const visible = useMemo(() => {
-    const needle = query.trim().toLowerCase();
     const filtered = library.items.filter((item) => {
       if (!matchesSalvatiFilter(item, filter)) return false;
       const tool = bySlug.get(item.slug);
-      return matchesSalvatiSearch(
+      return matchesSalvatiPersonalQuery(
         item,
-        needle,
+        query,
         {
           name: tool?.name ?? item.slug,
           categoryLabel: tool?.categoryLabel ?? "",
         },
+        searchIndex,
       );
     });
     return [...filtered].sort((left, right) =>
@@ -121,7 +137,7 @@ export function WorkspaceBiblioteca({
         (slug) => bySlug.get(slug)?.name ?? slug,
       ),
     );
-  }, [bySlug, filter, library.items, query, sort]);
+  }, [bySlug, filter, library.items, query, searchIndex, sort]);
 
   const filtersActive = query.trim() !== "" || filter !== "tutti";
 
@@ -210,7 +226,7 @@ export function WorkspaceBiblioteca({
       </div>
 
       {visible.length === 0 ? (
-        <p className="tv-lib-copy">Nessun tool corrisponde ai filtri.</p>
+        <p className="tv-lib-copy">{personalSearchEmptyMessage(parsedQuery)}</p>
       ) : (
         <ul className="tv-lib-list" aria-label="Libreria software">
           {visible.map((item) => (

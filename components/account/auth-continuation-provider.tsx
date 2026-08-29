@@ -28,6 +28,14 @@ import {
   maybeOpenNoteEditorAfterReplay,
   replayNotePrivateIntent,
 } from "@/lib/auth/replay-note-intent";
+import {
+  maybeResumePersonalSearchAfterReplay,
+  replaySearchPersonalIntent,
+} from "@/lib/auth/replay-search-intent";
+import {
+  subscribeSearchPersonalGate,
+  takeSearchPersonalGate,
+} from "@/lib/search/personal-search-gate";
 
 type RequestResult = "allowed" | "gated" | "loading" | "unavailable";
 
@@ -44,16 +52,26 @@ type AuthContinuationContextValue = {
     toolSlug: string;
     origin?: string;
   }) => RequestResult;
+  requestSearchPersonal: (input: {
+    query: string;
+    origin?: string;
+    returnTo?: string;
+  }) => RequestResult;
 };
 
 const AuthContinuationContext = createContext<AuthContinuationContextValue>({
   enabled: false,
   requestStackCreate: () => "unavailable",
   requestNotePrivate: () => "unavailable",
+  requestSearchPersonal: () => "unavailable",
 });
 
 export function useAuthContinuation() {
   return useContext(AuthContinuationContext);
+}
+
+function payloadToolSlug(intent: PendingAuthIntent) {
+  return "toolSlug" in intent.payload ? intent.payload.toolSlug : "";
 }
 
 export function AuthContinuationProvider({
@@ -116,6 +134,36 @@ export function AuthContinuationProvider({
     [account.status],
   );
 
+  const requestSearchPersonal = useCallback(
+    (input: { query: string; origin?: string; returnTo?: string }): RequestResult => {
+      if (account.status === "loading") return "loading";
+      if (account.status === "unavailable") return "unavailable";
+      const viewer = account.status === "authenticated" ? "authenticated" : "guest";
+      if (canUse("search.personal", viewer)) {
+        return "allowed";
+      }
+      setDraft({
+        capability: "search.personal",
+        query: input.query,
+        returnTo: input.returnTo ?? "/",
+        origin: input.origin ?? "search.personal",
+      });
+      setOpen(true);
+      return "gated";
+    },
+    [account.status],
+  );
+
+  useEffect(() => {
+    const pending = takeSearchPersonalGate();
+    if (pending) requestSearchPersonal(pending);
+    return subscribeSearchPersonalGate(() => {
+      const next = takeSearchPersonalGate();
+      if (!next) return;
+      requestSearchPersonal(next);
+    });
+  }, [requestSearchPersonal]);
+
   useEffect(() => {
     if (account.status !== "authenticated") {
       replayedRef.current = false;
@@ -147,7 +195,7 @@ export function AuthContinuationProvider({
         returnTo: intent.returnTo,
       });
       const finishNote = () => {
-        maybeOpenNoteEditorAfterReplay(result.openEditor, intent.payload.toolSlug);
+        maybeOpenNoteEditorAfterReplay(result.openEditor, payloadToolSlug(intent));
       };
       if (result.returnTo && result.returnTo !== pathname) {
         router.replace(result.returnTo);
@@ -155,6 +203,33 @@ export function AuthContinuationProvider({
         return;
       }
       finishNote();
+      return;
+    }
+    if (intent.capability === "search.personal") {
+      const result = replaySearchPersonalIntent(intent);
+      if (result.status === "skipped" && result.reason === "not-authenticated") {
+        restorePendingAuthIntent(intent);
+        return;
+      }
+      replayedRef.current = true;
+      if (result.status !== "ok") {
+        return;
+      }
+      trackAuthGateFromIntent({
+        name: "auth_success_from_gate",
+        capability: intent.capability,
+        origin: intent.origin,
+        returnTo: intent.returnTo,
+      });
+      const finishSearch = () => {
+        maybeResumePersonalSearchAfterReplay(result.query);
+      };
+      if (result.returnTo && result.returnTo !== pathname) {
+        router.replace(result.returnTo);
+        window.setTimeout(finishSearch, 50);
+        return;
+      }
+      finishSearch();
       return;
     }
     const result = replayStackCreateIntent(intent);
@@ -173,7 +248,7 @@ export function AuthContinuationProvider({
       returnTo: intent.returnTo,
     });
     const finishOverflow = () => {
-      maybeOpenOverflowAfterReplay(result.openOverflow, intent.payload.toolSlug);
+      maybeOpenOverflowAfterReplay(result.openOverflow, payloadToolSlug(intent));
     };
     if (result.returnTo && result.returnTo !== pathname) {
       router.replace(result.returnTo);
@@ -193,8 +268,9 @@ export function AuthContinuationProvider({
       enabled: true,
       requestStackCreate,
       requestNotePrivate,
+      requestSearchPersonal,
     }),
-    [requestStackCreate, requestNotePrivate],
+    [requestStackCreate, requestNotePrivate, requestSearchPersonal],
   );
 
   return (

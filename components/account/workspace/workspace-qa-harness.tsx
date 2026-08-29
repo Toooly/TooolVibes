@@ -71,7 +71,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "legacy-stack" | "private-note" | "private-note-guest";
+  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -116,9 +116,13 @@ export function WorkspaceQaHarness({
       >
         <DiscoveryPersistenceProvider>
           <AccountPreviewProvider
-            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "legacy-stack" || surface === "private-note-guest" ? guestPreviewAccount : previewAccount}
+            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" ? guestPreviewAccount : previewAccount}
           >
-            {surface === "settings" ? (
+            {surface === "personal-search" || surface === "personal-search-guest" ? (
+              <PersonalSearchQa
+                guest={surface === "personal-search-guest"}
+              />
+            ) : surface === "settings" ? (
               <AccountSettingsPage />
             ) : surface === "auth-sheet" || surface === "auth-sheet-note" ? (
               <div
@@ -203,6 +207,33 @@ function LegacyStackQa() {
       >
         Aggiungi Windsurf
       </button>
+    </div>
+  );
+}
+
+function PersonalSearchQa({ guest }: { guest: boolean }) {
+  return (
+    <div
+      data-personal-search-qa=""
+      className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
+    >
+      <AuthSheet
+        open={guest}
+        draft={
+          guest
+            ? {
+                capability: "search.personal",
+                query: "usage:using",
+                returnTo: "/archivio",
+                origin: "command-palette",
+              }
+            : null
+        }
+        onOpenChange={() => {}}
+      />
+      {!guest ? (
+        <p className="tv-auth-sheet__title">usage:using · note:yes · stack:AI Coding</p>
+      ) : null}
     </div>
   );
 }

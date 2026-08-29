@@ -91,7 +91,7 @@ Status: IMPLEMENTED / ACCEPTED (not RELEASED).
 
 ---
 
-## Wave D
+## Wave D — ACCEPTED (gates in this branch)
 
 | Claim | Evidence |
 |---|---|

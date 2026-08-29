@@ -61,7 +61,7 @@ Exit: sheet can open from a stub trigger in tests; production trigger is Wave B 
 - Snapshot-only Filo; **no `noted` event in C V1**
 - Depends on B merge so guest scratch can survive login
 
-## Wave D — TARGET, not built
+## Wave D — IMPLEMENTED / ACCEPTED (not released until deploy)
 
 - Parser + workspace index
 - Palette personal filters

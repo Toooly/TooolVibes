@@ -28,7 +28,8 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 
 export type AuthSheetDraft = {
   capability?: PendingAuthCapability;
-  toolSlug: string;
+  toolSlug?: string;
+  query?: string;
   desiredStackName?: string;
   targetStackId?: string;
   targetStackName?: string;
@@ -41,6 +42,12 @@ function authSheetCopy(capability: PendingAuthCapability) {
     return {
       title: "Ricordalo nel tempo",
       body: "Le note restano collegate al tool e diventano parte della tua Software Memory.",
+    };
+  }
+  if (capability === "search.personal") {
+    return {
+      title: "Cerca nel tuo spazio",
+      body: "Cerca tra salvati, Stack, decisioni e note personali.",
     };
   }
   return {
@@ -108,7 +115,9 @@ function AuthSheetForm({
       {description}
       {sent ? (
         <p className="tv-auth-sheet__status" id={statusId} role="status">
-          Controlla la tua email. Apri il link per continuare con {draft.toolSlug}.
+          {draft.capability === "search.personal"
+            ? "Controlla la tua email. Apri il link per continuare la ricerca."
+            : `Controlla la tua email. Apri il link per continuare con ${draft.toolSlug}.`}
         </p>
       ) : (
         <form className="tv-auth-sheet__form" onSubmit={onSubmit} noValidate>
@@ -236,6 +245,7 @@ export function AuthSheet({
     const written = writePendingAuthIntent({
       capability: draft.capability ?? "stack.create",
       toolSlug: draft.toolSlug,
+      query: draft.query,
       desiredStackName: draft.desiredStackName,
       targetStackId: draft.targetStackId,
       targetStackName: draft.targetStackName,
