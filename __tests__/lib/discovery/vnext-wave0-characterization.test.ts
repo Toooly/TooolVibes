@@ -241,7 +241,7 @@ describe("REDUCER CONTRACT — usage / revisit", () => {
 });
 
 describe("MERGE CONTRACT", () => {
-  it("guest attach unions saved and keeps account toolStates on collision", () => {
+  it("guest attach unions saved and keeps the newer note on collision", () => {
     const account = apply([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       { type: "tool/note", slug: "cursor", note: "account why", at: T0 },
@@ -254,7 +254,7 @@ describe("MERGE CONTRACT", () => {
 
     const merged = mergeGuestWorkspaceContribution(account, guest);
     expect(merged.saved.slugs.sort()).toEqual(["cursor", "v0"]);
-    expect(merged.toolStates.cursor?.note).toBe("account why");
+    expect(merged.toolStates.cursor?.note).toBe("guest why");
   });
 
   it("sync merge is last-write-wins on tool metadata", () => {
