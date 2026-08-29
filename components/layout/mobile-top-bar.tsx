@@ -14,9 +14,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, User } from "lucide-react";
+import { Search } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
-import { useHeaderAccountCta } from "./workspace-nav-selectors";
+import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
@@ -33,7 +33,6 @@ function getRouteLabel(pathname: string): string {
 export function MobileTopBar() {
   const pathname = usePathname() ?? "/";
   const routeLabel = getRouteLabel(pathname);
-  const accountCta = useHeaderAccountCta();
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
 
   return (
@@ -65,17 +64,12 @@ export function MobileTopBar() {
           <span className="mobile-top-bar__search-text">Cerca tool…</span>
         </button>
 
-        {accountCta.visible ? (
-          <Link
-            href={accountCta.href}
-            prefetch={false}
-            className="mobile-top-bar__account"
-            aria-label={accountCta.label || "Account"}
-            aria-busy={accountCta.ariaBusy || undefined}
-          >
-            <User size={18} aria-hidden="true" />
-          </Link>
-        ) : null}
+        <HeaderAccountControl
+          linkClassName="mobile-top-bar__account"
+          menuClassName="mobile-top-bar__account-menu"
+          panelClassName="mobile-top-bar__account-panel"
+          showLabel={false}
+        />
       </div>
 
       <div className="mobile-top-bar__route">
