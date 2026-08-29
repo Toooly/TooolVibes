@@ -8,6 +8,8 @@ import {
 } from "@/components/account/account-provider";
 import { AuthContinuationProvider, useAuthContinuation } from "@/components/account/auth-continuation-provider";
 import { AuthSheet } from "@/components/account/auth-sheet";
+import { OverlayProvider } from "@/components/ui/overlay-provider";
+import { PrivateNoteEditor } from "@/components/account/workspace/private-note-editor";
 import { AccountSettingsPage } from "@/components/account/account-settings-page";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
@@ -69,7 +71,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings" | "auth-sheet" | "legacy-stack";
+  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "legacy-stack" | "private-note" | "private-note-guest";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -114,26 +116,46 @@ export function WorkspaceQaHarness({
       >
         <DiscoveryPersistenceProvider>
           <AccountPreviewProvider
-            value={surface === "auth-sheet" || surface === "legacy-stack" ? guestPreviewAccount : previewAccount}
+            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "legacy-stack" || surface === "private-note-guest" ? guestPreviewAccount : previewAccount}
           >
             {surface === "settings" ? (
               <AccountSettingsPage />
-            ) : surface === "auth-sheet" ? (
+            ) : surface === "auth-sheet" || surface === "auth-sheet-note" ? (
               <div
                 data-auth-sheet-qa=""
                 className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
               >
                 <AuthSheet
                   open
-                  draft={{
-                    toolSlug: "cursor",
-                    desiredStackName: "AI Coding",
-                    returnTo: "/toools/cursor",
-                    origin: "save-overflow",
-                  }}
+                  draft={
+                    surface === "auth-sheet-note"
+                      ? {
+                          capability: "note.private",
+                          toolSlug: "cursor",
+                          returnTo: "/toools/cursor",
+                          origin: "note.tool",
+                        }
+                      : {
+                          toolSlug: "cursor",
+                          desiredStackName: "AI Coding",
+                          returnTo: "/toools/cursor",
+                          origin: "save-overflow",
+                        }
+                  }
                   onOpenChange={() => {}}
                 />
               </div>
+            ) : surface === "private-note" || surface === "private-note-guest" ? (
+              <OverlayProvider>
+                <AuthContinuationProvider>
+                  <div
+                    data-private-note-qa=""
+                    className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
+                  >
+                    <PrivateNoteEditor slug="cursor" origin="tool" />
+                  </div>
+                </AuthContinuationProvider>
+              </OverlayProvider>
             ) : surface === "legacy-stack" ? (
               <AuthContinuationProvider>
                 <LegacyStackQa />

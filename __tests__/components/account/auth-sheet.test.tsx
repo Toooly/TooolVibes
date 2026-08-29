@@ -53,6 +53,35 @@ function Trigger() {
   );
 }
 
+function NoteTrigger() {
+  const continuation = useAuthContinuation();
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        continuation.requestNotePrivate({
+          toolSlug: "blink",
+          origin: "note.tool",
+        })
+      }
+    >
+      Apri nota
+    </button>
+  );
+}
+
+function renderNoteGate() {
+  return render(
+    <OverlayProvider>
+      <AccountPreviewProvider value={guestValue()}>
+        <AuthContinuationProvider>
+          <NoteTrigger />
+        </AuthContinuationProvider>
+      </AccountPreviewProvider>
+    </OverlayProvider>,
+  );
+}
+
 function renderGate() {
   return render(
     <OverlayProvider>
@@ -219,5 +248,13 @@ describe("AuthSheet", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Apri stack" }));
     expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("AUTH-NOTE-01 guest note.private opens Ricordalo nel tempo", async () => {
+    renderNoteGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri nota" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.getByText("Ricordalo nel tempo")).toBeTruthy();
+    expect(screen.getByText(/Le note restano collegate al tool/)).toBeTruthy();
   });
 });

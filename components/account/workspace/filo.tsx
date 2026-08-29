@@ -14,6 +14,7 @@ import type {
   WorkspaceStateV1,
 } from "@/lib/discovery/types";
 
+import { excerptPrivateNote } from "@/lib/account/private-note";
 import { toolName } from "./workspace-tool-name";
 
 export function WorkspaceFilo({
@@ -33,11 +34,21 @@ export function WorkspaceFilo({
   const summary = summarizeFilo(state, slug);
   const label = formatFiloSummary(summary, events.length > 0);
   const [open, setOpen] = useState(defaultOpen);
+  const noteExcerpt = excerptPrivateNote(state.toolStates[slug]?.note);
 
-  if (!label) return null;
+  if (!label && !noteExcerpt) return null;
+
+  const noteLine = noteExcerpt ? (
+    <p className="tv-filo-note">Nota: {noteExcerpt}</p>
+  ) : null;
 
   if (events.length === 0) {
-    return <p className="tv-filo-l2">{label}</p>;
+    return (
+      <div className="tv-filo-snapshot">
+        {label ? <p className="tv-filo-l2">{label}</p> : null}
+        {noteLine}
+      </div>
+    );
   }
 
   return (
@@ -48,6 +59,7 @@ export function WorkspaceFilo({
     >
       <summary className="tv-filo__summary">{label}</summary>
       <div className="tv-filo-events">
+        {noteLine}
         {events.map((event) => {
           const human = humanizeFiloEvent(event, (item) => toolName(catalog, item));
           return (

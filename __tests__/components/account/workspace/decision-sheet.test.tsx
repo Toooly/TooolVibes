@@ -276,7 +276,7 @@ describe("DecisionSheet — Wave 8", () => {
     });
     confirm();
     const state = getCanonicalToolWorkspaceState();
-    expect(state.toolStates.cursor?.note).toBe("Per il daily coding");
+    expect(state.toolStates.cursor?.note).toBeNull();
     expect(state.toolStates.cursor?.useCase).toBe("pair programming");
     expect(state.events[0]).toMatchObject({
       reason: "Per il daily coding",

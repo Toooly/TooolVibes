@@ -116,6 +116,16 @@ describe("WorkspaceFilo", () => {
     cleanup();
   });
 
+  it("NOTE-FILO snapshot shows current note without a noted event", () => {
+    const state = apply([
+      { type: "saved/set", slug: "cursor", saved: true, at: T0 },
+      { type: "tool/note", slug: "cursor", note: "Scelto per il daily coding.", at: T0 },
+    ]);
+    render(createElement(WorkspaceFilo, { state, slug: "cursor", catalog }));
+    expect(screen.getByText("Nota: Scelto per il daily coding.")).toBeTruthy();
+    expect(state.events).toEqual([]);
+  });
+
   it("W10-T1 legacy snapshot shows L2 fallback and no empty timeline", () => {
     const state = normalizeWorkspaceState({
       schemaVersion: 1,

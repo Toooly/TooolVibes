@@ -40,7 +40,7 @@ describe("pending auth intent", () => {
     expect(read.status).toBe("ready");
     if (read.status !== "ready") return;
     expect(read.intent.payload.toolSlug).toBe("blink");
-    expect(read.intent.payload.desiredStackName).toBe("AI Coding");
+    expect((read.intent.payload as { desiredStackName?: string }).desiredStackName).toBe("AI Coding");
   });
 
   it("INTENT-02 localStorage survives a second browsing context simulation", () => {
@@ -111,7 +111,7 @@ describe("pending auth intent", () => {
     const parsed = parsePendingAuthIntent({
       version: 1,
       id: "intent-capability-01",
-      capability: "note.private",
+      capability: "search.personal",
       payload: { toolSlug: "blink" },
       returnTo: "/toools/blink",
       createdAt: new Date().toISOString(),
@@ -260,7 +260,45 @@ describe("pending auth intent", () => {
     expect(read.status).toBe("ready");
     if (read.status !== "ready") return;
     expect(read.intent.id).toBe(consumed.intent.id);
-    expect(read.intent.payload.desiredStackName).toBe("Podcast");
+    expect((read.intent.payload as { desiredStackName?: string }).desiredStackName).toBe("Podcast");
+  });
+  it("NOTE-CONT-01 note.private intent is accepted", () => {
+    const written = writePendingAuthIntent({
+      capability: "note.private",
+      toolSlug: "blink",
+      returnTo: "/toools/blink",
+      origin: "note.tool",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    expect(written.intent.capability).toBe("note.private");
+    expect(written.intent.payload).toEqual({ toolSlug: "blink" });
+  });
+
+  it("NOTE-CONT-02 note.private payload cannot include note text", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-note-text-01",
+      capability: "note.private",
+      payload: { toolSlug: "blink", note: "secret" },
+      returnTo: "/toools/blink",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
+  });
+
+  it("NOTE-CONT-06 unsafe note.private payload is rejected", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-note-stack-01",
+      capability: "note.private",
+      payload: { toolSlug: "blink", desiredStackName: "AI Coding" },
+      returnTo: "/toools/blink",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
   });
 });
 

@@ -21,6 +21,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+import { PrivateNoteEditor } from "./private-note-editor";
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { useCanonicalWorkspace } from "./use-canonical-workspace";
 import { WorkspaceToolMark } from "./workspace-tool-mark";
@@ -327,6 +328,13 @@ export function DecisionSheet({
                 </div>
               </div>
             ) : null}
+
+            <PrivateNoteEditor
+              slug={slug}
+              origin="decision"
+              compact
+              guestMode="hide"
+            />
 
             {currentOutcome ? (
               <button

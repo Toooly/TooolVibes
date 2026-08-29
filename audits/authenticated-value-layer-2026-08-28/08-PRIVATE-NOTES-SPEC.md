@@ -1,6 +1,6 @@
 # 08 — Private Notes Spec
 
-**Status:** TARGET Wave C for productized auth notes. Guest scratch is CURRENT and must remain.  
+**Status:** Wave C IMPLEMENTED / ACCEPTED (not RELEASED). Guest scratch on `/shortlist` remains. Auth private notes reuse `toolStates.note`.  
 **CURRENT field:** `WorkspaceToolState.note: string | null` max **2000** (`lib/discovery/workspace-constants.ts`). Writers: `setWorkspaceNote`. Surfaces today: guest `/shortlist` board sheet; auth Salvati 2.0 inline form. **Not** on Tool Page. **Not** in Speed-2 overflow. **Not** searchable as `q_note`. **No** Filo event type `noted` (SQL enum has decided/reopened/started_using/stopped_using/replaced/revisit_set/revisited).
 
 Do **not** create a second notes database.
@@ -29,7 +29,7 @@ Related but distinct CURRENT fields — do not merge in Wave C:
 
 - `saveReason` (enum, guest-board leaning)
 - `useCase` (decision/use-case chips)
-- DecisionSheet “Perché” currently maps to event `reason` **and** can write `note`
+- DecisionSheet “Perché” maps to event `reason` only. It does **not** write `toolStates.note`.
 
 Wave C must **not** reopen the 08-26 “merge saveReason/useCase/note” decision as a schema project. Notes stay `note`. Perché stays decision reason. Use case stays `useCase`.
 
@@ -84,7 +84,7 @@ Migration cost of `noted`: **schema validator migration**, not a new table. Stil
 
 Guest clicks Tool Page “Aggiungi nota” → AuthSheet `note.private` → intent `{ slug }` → after attach open composer **without writing empty note**.
 
-Merge: field-level `note` (see `10-STACK-AUTH-MIGRATION.md`). CURRENT wholesale account win can **drop a guest note** on overlapping slugs — Wave B must fix before Wave C can promise memory.
+Merge: field-level `note` (Wave B RELEASED). Guest-only note fills account; conflict uses newer `updatedAt`; equal timestamp → account.
 
 ---
 

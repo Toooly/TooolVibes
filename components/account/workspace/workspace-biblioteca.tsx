@@ -35,6 +35,8 @@ import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import type { WorkspaceDecisionOutcome, WorkspaceStateV1 } from "@/lib/discovery/types";
 import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
+import { MAX_NOTE_LENGTH } from "@/lib/discovery/workspace-constants";
+import { excerptPrivateNote } from "@/lib/account/private-note";
 import { StackPickOrCreate } from "@/components/tools/stack-pick-or-create";
 
 import { DecisionSheet } from "./decision-sheet";
@@ -319,7 +321,11 @@ function LibraryRow({
             <span>{formatWorkspaceDate(item.updatedAt)}</span>
           ) : null}
           {item.pinned ? <WorkspaceChip tone="pin">Fisso</WorkspaceChip> : null}
-          {item.note ? <WorkspaceChip tone="note">Nota</WorkspaceChip> : null}
+          {item.note ? (
+            <span title={excerptPrivateNote(item.note, 80) ?? undefined}>
+              <WorkspaceChip tone="note">Nota</WorkspaceChip>
+            </span>
+          ) : null}
         </p>
         <WorkspaceFilo
           state={state}
@@ -448,7 +454,7 @@ function LibraryRow({
             <textarea
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              maxLength={2000}
+              maxLength={MAX_NOTE_LENGTH}
               rows={3}
             />
           </label>
@@ -459,6 +465,18 @@ function LibraryRow({
             <button type="button" className="tv-lib-action" onClick={onToggleNote}>
               Annulla
             </button>
+            {item.note ? (
+              <button
+                type="button"
+                className="tv-lib-action tv-lib-action--danger"
+                onClick={() => {
+                  setWorkspaceNote(item.slug, null);
+                  onToggleNote();
+                }}
+              >
+                Elimina
+              </button>
+            ) : null}
           </div>
         </form>
       ) : null}

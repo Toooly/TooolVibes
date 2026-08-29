@@ -17,13 +17,17 @@ import {
 } from "@/components/ui/sheet";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { trackAuthGateFromIntent } from "@/lib/analytics/auth-gate-events";
-import { writePendingAuthIntent } from "@/lib/auth/pending-auth-intent";
+import {
+  writePendingAuthIntent,
+  type PendingAuthCapability,
+} from "@/lib/auth/pending-auth-intent";
 
 import "./auth-sheet.css";
 
 const DESKTOP_QUERY = "(min-width: 1024px)";
 
 export type AuthSheetDraft = {
+  capability?: PendingAuthCapability;
   toolSlug: string;
   desiredStackName?: string;
   targetStackId?: string;
@@ -31,6 +35,19 @@ export type AuthSheetDraft = {
   returnTo: string;
   origin: string;
 };
+
+function authSheetCopy(capability: PendingAuthCapability) {
+  if (capability === "note.private") {
+    return {
+      title: "Ricordalo nel tempo",
+      body: "Le note restano collegate al tool e diventano parte della tua Software Memory.",
+    };
+  }
+  return {
+    title: "Crea il tuo spazio di lavoro",
+    body: "Gli Stack restano sincronizzati con il tuo account e raccolgono i tool che usi insieme.",
+  };
+}
 
 type AuthSheetPhase = "email" | "submitting" | "sent" | "error";
 
@@ -183,7 +200,7 @@ export function AuthSheet({
     viewedRef.current = true;
     trackAuthGateFromIntent({
       name: "auth_gate_view",
-      capability: "stack.create",
+      capability: draft.capability ?? "stack.create",
       origin: draft.origin,
       returnTo: draft.returnTo,
     });
@@ -194,7 +211,7 @@ export function AuthSheet({
     if (draft && phase !== "sent") {
       trackAuthGateFromIntent({
         name: "auth_gate_dismiss",
-        capability: "stack.create",
+        capability: draft.capability ?? "stack.create",
         origin: draft.origin,
         returnTo: draft.returnTo,
       });
@@ -217,6 +234,7 @@ export function AuthSheet({
       return;
     }
     const written = writePendingAuthIntent({
+      capability: draft.capability ?? "stack.create",
       toolSlug: draft.toolSlug,
       desiredStackName: draft.desiredStackName,
       targetStackId: draft.targetStackId,
@@ -231,7 +249,7 @@ export function AuthSheet({
     }
     trackAuthGateFromIntent({
       name: "auth_gate_continue",
-      capability: "stack.create",
+      capability: draft.capability ?? "stack.create",
       origin: draft.origin,
       returnTo: draft.returnTo,
     });
@@ -273,13 +291,12 @@ export function AuthSheet({
             {...formProps}
             title={
               <DialogTitle className="tv-auth-sheet__title">
-                Crea il tuo spazio di lavoro
+                {authSheetCopy(draft.capability ?? "stack.create").title}
               </DialogTitle>
             }
             description={
               <DialogDescription className="tv-auth-sheet__body">
-                Gli Stack restano sincronizzati con il tuo account e raccolgono i
-                tool che usi insieme.
+                {authSheetCopy(draft.capability ?? "stack.create").body}
               </DialogDescription>
             }
           />
@@ -300,13 +317,12 @@ export function AuthSheet({
           {...formProps}
           title={
             <SheetTitle className="tv-auth-sheet__title">
-              Crea il tuo spazio di lavoro
+              {authSheetCopy(draft.capability ?? "stack.create").title}
             </SheetTitle>
           }
           description={
             <SheetDescription className="tv-auth-sheet__body">
-              Gli Stack restano sincronizzati con il tuo account e raccolgono i
-              tool che usi insieme.
+              {authSheetCopy(draft.capability ?? "stack.create").body}
             </SheetDescription>
           }
         />

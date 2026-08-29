@@ -147,7 +147,7 @@ describe("commitWorkspaceDecision", () => {
     });
     const state = getCanonicalToolWorkspaceState();
     expect(state.toolStates.cursor?.decision?.outcome).toBe("selected");
-    expect(state.toolStates.cursor?.note).toBe("Per il daily coding");
+    expect(state.toolStates.cursor?.note).toBeNull();
     expect(state.toolStates.cursor?.useCase).toBe("pair programming");
     expect(state.events).toHaveLength(1);
     expect(state.events[0]).toMatchObject({

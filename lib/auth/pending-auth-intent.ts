@@ -11,7 +11,8 @@ const MAX_RETURN_TO_LENGTH = 500;
 const MAX_ORIGIN_LENGTH = 80;
 const MAX_JSON_BYTES = 2048;
 
-export type PendingStackCreateCapability = "stack.create";
+export type PendingAuthCapability = "stack.create" | "note.private";
+export type PendingStackCreateCapability = PendingAuthCapability;
 
 export type PendingStackCreatePayload = {
   toolSlug: string;
@@ -20,11 +21,19 @@ export type PendingStackCreatePayload = {
   targetStackName?: string;
 };
 
+export type PendingNotePrivatePayload = {
+  toolSlug: string;
+};
+
+export type PendingAuthIntentPayload =
+  | PendingStackCreatePayload
+  | PendingNotePrivatePayload;
+
 export type PendingAuthIntent = {
   version: typeof PENDING_AUTH_INTENT_VERSION;
   id: string;
-  capability: PendingStackCreateCapability;
-  payload: PendingStackCreatePayload;
+  capability: PendingAuthCapability;
+  payload: PendingAuthIntentPayload;
   returnTo: string;
   origin?: string;
   createdAt: string;
@@ -102,18 +111,19 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   if (typeof input.id !== "string" || input.id.trim().length < 8 || input.id.length > 80) {
     return { status: "invalid", reason: "malformed-id" };
   }
-  if (input.capability !== "stack.create") {
+  if (input.capability !== "stack.create" && input.capability !== "note.private") {
     return { status: "invalid", reason: "unknown-capability" };
   }
   if (!isRecord(input.payload)) {
     return { status: "invalid", reason: "malformed-payload" };
   }
+  const capability = input.capability;
+  const allowedPayloadKeys =
+    capability === "note.private"
+      ? ["toolSlug"]
+      : ["toolSlug", "desiredStackName", "targetStackId", "targetStackName"];
   const extraPayloadKeys = Object.keys(input.payload).filter(
-    (key) =>
-      key !== "toolSlug" &&
-      key !== "desiredStackName" &&
-      key !== "targetStackId" &&
-      key !== "targetStackName",
+    (key) => !allowedPayloadKeys.includes(key),
   );
   if (extraPayloadKeys.length > 0) {
     return { status: "invalid", reason: "unknown-payload-keys" };
@@ -122,17 +132,23 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   if (!toolSlug) {
     return { status: "invalid", reason: "invalid-slug" };
   }
-  const desiredStackName = parseStackName(input.payload.desiredStackName);
-  if (input.payload.desiredStackName !== undefined && desiredStackName === undefined) {
-    return { status: "invalid", reason: "invalid-stack-name" };
-  }
-  const targetStackId = parseToolSlug(input.payload.targetStackId);
-  if (input.payload.targetStackId !== undefined && !targetStackId) {
-    return { status: "invalid", reason: "invalid-target-stack-id" };
-  }
-  const targetStackName = parseStackName(input.payload.targetStackName);
-  if (input.payload.targetStackName !== undefined && targetStackName === undefined) {
-    return { status: "invalid", reason: "invalid-target-stack-name" };
+  let desiredStackName: string | undefined;
+  let targetStackId: string | undefined;
+  let targetStackName: string | undefined;
+  if (capability === "stack.create") {
+    desiredStackName = parseStackName(input.payload.desiredStackName);
+    if (input.payload.desiredStackName !== undefined && desiredStackName === undefined) {
+      return { status: "invalid", reason: "invalid-stack-name" };
+    }
+    const parsedTargetId = parseToolSlug(input.payload.targetStackId);
+    if (input.payload.targetStackId !== undefined && !parsedTargetId) {
+      return { status: "invalid", reason: "invalid-target-stack-id" };
+    }
+    targetStackId = parsedTargetId ?? undefined;
+    targetStackName = parseStackName(input.payload.targetStackName);
+    if (input.payload.targetStackName !== undefined && targetStackName === undefined) {
+      return { status: "invalid", reason: "invalid-target-stack-name" };
+    }
   }
   if (typeof input.returnTo !== "string" || !isSafeReturnTo(input.returnTo)) {
     return { status: "invalid", reason: "unsafe-return-to" };
@@ -154,13 +170,16 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   const intent: PendingAuthIntent = {
     version: PENDING_AUTH_INTENT_VERSION,
     id: input.id.trim(),
-    capability: "stack.create",
-    payload: {
-      toolSlug,
-      ...(desiredStackName ? { desiredStackName } : {}),
-      ...(targetStackId ? { targetStackId } : {}),
-      ...(targetStackName ? { targetStackName } : {}),
-    },
+    capability,
+    payload:
+      capability === "note.private"
+        ? { toolSlug }
+        : {
+            toolSlug,
+            ...(desiredStackName ? { desiredStackName } : {}),
+            ...(targetStackId ? { targetStackId } : {}),
+            ...(targetStackName ? { targetStackName } : {}),
+          },
     returnTo: input.returnTo.trim(),
     origin,
     createdAt: input.createdAt,
@@ -240,6 +259,7 @@ function unmarkIntentConsumed(id: string) {
 }
 
 export function writePendingAuthIntent(input: {
+  capability?: PendingAuthCapability;
   toolSlug: string;
   desiredStackName?: string;
   targetStackId?: string;
@@ -251,16 +271,20 @@ export function writePendingAuthIntent(input: {
   const nowMs = input.nowMs ?? Date.now();
   const createdAt = new Date(nowMs).toISOString();
   const expiresAt = new Date(nowMs + PENDING_AUTH_INTENT_TTL_MS).toISOString();
+  const capability = input.capability ?? "stack.create";
   const parsed = parsePendingAuthIntent({
     version: PENDING_AUTH_INTENT_VERSION,
     id: createIntentId(),
-    capability: "stack.create",
-    payload: {
-      toolSlug: input.toolSlug,
-      desiredStackName: input.desiredStackName,
-      targetStackId: input.targetStackId,
-      targetStackName: input.targetStackName,
-    },
+    capability,
+    payload:
+      capability === "note.private"
+        ? { toolSlug: input.toolSlug }
+        : {
+            toolSlug: input.toolSlug,
+            desiredStackName: input.desiredStackName,
+            targetStackId: input.targetStackId,
+            targetStackName: input.targetStackName,
+          },
     returnTo: input.returnTo,
     origin: input.origin,
     createdAt,

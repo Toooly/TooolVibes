@@ -3329,11 +3329,16 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
   display: none;
 }
 
-.tv-filo-l2 {
+.tv-filo-l2,
+.tv-filo-note {
   margin: 0.35rem 0 0;
   color: var(--tv-ink-secondary);
   font-size: 0.8rem;
   line-height: 1.35;
+}
+
+.tv-filo-note {
+  overflow-wrap: anywhere;
 }
 
 .tv-filo-events {

@@ -24,6 +24,10 @@ import {
   maybeOpenOverflowAfterReplay,
   replayStackCreateIntent,
 } from "@/lib/auth/replay-stack-intent";
+import {
+  maybeOpenNoteEditorAfterReplay,
+  replayNotePrivateIntent,
+} from "@/lib/auth/replay-note-intent";
 
 type RequestResult = "allowed" | "gated" | "loading" | "unavailable";
 
@@ -36,11 +40,16 @@ type AuthContinuationContextValue = {
     targetStackName?: string;
     origin?: string;
   }) => RequestResult;
+  requestNotePrivate: (input: {
+    toolSlug: string;
+    origin?: string;
+  }) => RequestResult;
 };
 
 const AuthContinuationContext = createContext<AuthContinuationContextValue>({
   enabled: false,
   requestStackCreate: () => "unavailable",
+  requestNotePrivate: () => "unavailable",
 });
 
 export function useAuthContinuation() {
@@ -87,6 +96,26 @@ export function AuthContinuationProvider({
     [account.status],
   );
 
+  const requestNotePrivate = useCallback(
+    (input: { toolSlug: string; origin?: string }): RequestResult => {
+      if (account.status === "loading") return "loading";
+      if (account.status === "unavailable") return "unavailable";
+      const viewer = account.status === "authenticated" ? "authenticated" : "guest";
+      if (canUse("note.private", viewer)) {
+        return "allowed";
+      }
+      setDraft({
+        capability: "note.private",
+        toolSlug: input.toolSlug,
+        returnTo: `/toools/${input.toolSlug}`,
+        origin: input.origin ?? "note.private",
+      });
+      setOpen(true);
+      return "gated";
+    },
+    [account.status],
+  );
+
   useEffect(() => {
     if (account.status !== "authenticated") {
       replayedRef.current = false;
@@ -101,6 +130,33 @@ export function AuthContinuationProvider({
       return;
     }
     const intent: PendingAuthIntent = consumed.intent;
+    if (intent.capability === "note.private") {
+      const result = replayNotePrivateIntent(intent);
+      if (result.status === "skipped" && result.reason === "not-authenticated") {
+        restorePendingAuthIntent(intent);
+        return;
+      }
+      replayedRef.current = true;
+      if (result.status !== "ok") {
+        return;
+      }
+      trackAuthGateFromIntent({
+        name: "auth_success_from_gate",
+        capability: intent.capability,
+        origin: intent.origin,
+        returnTo: intent.returnTo,
+      });
+      const finishNote = () => {
+        maybeOpenNoteEditorAfterReplay(result.openEditor, intent.payload.toolSlug);
+      };
+      if (result.returnTo && result.returnTo !== pathname) {
+        router.replace(result.returnTo);
+        window.setTimeout(finishNote, 50);
+        return;
+      }
+      finishNote();
+      return;
+    }
     const result = replayStackCreateIntent(intent);
     if (result.status === "skipped" && result.reason === "not-authenticated") {
       restorePendingAuthIntent(intent);
@@ -136,8 +192,9 @@ export function AuthContinuationProvider({
     () => ({
       enabled: true,
       requestStackCreate,
+      requestNotePrivate,
     }),
-    [requestStackCreate],
+    [requestStackCreate, requestNotePrivate],
   );
 
   return (

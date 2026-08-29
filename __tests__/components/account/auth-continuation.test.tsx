@@ -16,6 +16,7 @@ import {
   PENDING_AUTH_INTENT_STORAGE_KEY,
   writePendingAuthIntent,
 } from "@/lib/auth/pending-auth-intent";
+import { getOpenPrivateNoteSlug } from "@/lib/auth/private-note-editor-state";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   activateToolWorkspaceOwner,
@@ -152,5 +153,28 @@ describe("auth continuation replay order", () => {
       expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeTruthy();
     });
     expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
+  });
+
+  it("NOTE-CONT-03 note.private replay opens editor without writing note", async () => {
+    writePendingAuthIntent({
+      capability: "note.private",
+      toolSlug: "blink",
+      returnTo: "/account",
+      origin: "note.tool",
+    });
+    render(
+      <OverlayProvider>
+        <AccountPreviewProvider value={accountValue(true)}>
+          <AuthContinuationProvider>
+            <p>note-ready</p>
+          </AuthContinuationProvider>
+        </AccountPreviewProvider>
+      </OverlayProvider>,
+    );
+    await waitFor(() => {
+      expect(getOpenPrivateNoteSlug()).toBe("blink");
+    });
+    expect(getCanonicalToolWorkspaceState().toolStates.blink).toBeUndefined();
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
   });
 });

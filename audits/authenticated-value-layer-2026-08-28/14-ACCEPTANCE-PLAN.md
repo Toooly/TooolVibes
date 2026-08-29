@@ -76,6 +76,9 @@ Do not regress `__tests__/components/tools/stack-from-save.test.tsx` W9-T18 (gue
 
 ## Wave C
 
+Status: IMPLEMENTED / ACCEPTED (not RELEASED).
+
+
 | Claim | Evidence |
 |---|---|
 | Guest `/shortlist` scratch note still works | existing board tests |

@@ -30,6 +30,7 @@ import {
 import { SaveOverflow } from "@/components/tools/save-overflow";
 import { useSaveHold } from "@/components/tools/save-hold";
 import { openSaveOverflow } from "@/components/tools/save-overflow-state";
+import { PrivateNoteEditor } from "@/components/account/workspace/private-note-editor";
 
 type ToolDetailActionSurfaceProps = {
   slug: string;
@@ -82,6 +83,7 @@ export function ToolDetailActionSurface({
   return (
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
       <WorkspacePersonalStatusBadge slug={slug} />
+      <PrivateNoteEditor slug={slug} origin="tool" />
 
       {status && (containingStacks.length > 0 || workspace.toolStates[slug]?.revisitAt) ? (
         <div className="td-final-personal">

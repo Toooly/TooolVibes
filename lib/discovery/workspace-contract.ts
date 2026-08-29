@@ -25,6 +25,7 @@ import {
   MAX_STACK_DESCRIPTION_LENGTH,
   MAX_STACK_NAME_LENGTH,
   MAX_USE_CASE_LENGTH,
+  MAX_NOTE_LENGTH,
   MAX_WORKSPACE_COLLECTION_TOOLS,
   WORKSPACE_SCHEMA_VERSION,
 } from "@/lib/discovery/workspace-constants";
@@ -113,7 +114,7 @@ function normalizeNote(value: unknown) {
   }
 
   const note = value.trim();
-  return note && note.length <= 2000 ? note : null;
+  return note && note.length <= MAX_NOTE_LENGTH ? note : null;
 }
 
 function normalizeBoundedText(value: unknown, maxLength: number) {
@@ -1059,7 +1060,6 @@ export function reduceWorkspaceState(
       },
       alternatives,
       ...(action.useCase !== undefined ? { useCase: useCase ?? null } : {}),
-      ...(action.reason !== undefined ? { note: reason ?? null } : {}),
       ...(action.revisitAt !== undefined ? { revisitAt: revisitAt ?? null } : {}),
       ...("compareObjective" in action
         ? {
@@ -1353,7 +1353,7 @@ export function reduceWorkspaceState(
       const trimmedNote =
         typeof action.note === "string" ? action.note.trim() : null;
 
-      if (trimmedNote && trimmedNote.length > 2000) {
+      if (trimmedNote && trimmedNote.length > MAX_NOTE_LENGTH) {
         return state;
       }
 

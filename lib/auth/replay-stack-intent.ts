@@ -58,12 +58,13 @@ export function replayStackCreateIntent(
     return { status: "skipped", reason: "unsupported-capability" };
   }
 
-  const slug = intent.payload.toolSlug;
+  const payload = intent.payload as PendingStackCreatePayload;
+  const slug = payload.toolSlug;
   const targetingExisting =
-    Boolean(intent.payload.targetStackId) || Boolean(intent.payload.targetStackName);
+    Boolean(payload.targetStackId) || Boolean(payload.targetStackName);
 
   if (targetingExisting) {
-    const target = resolveTargetStack(intent.payload);
+    const target = resolveTargetStack(payload);
     if (!target) {
       return { status: "failed", reason: "missing-target" };
     }
@@ -72,7 +73,7 @@ export function replayStackCreateIntent(
     return { status: "ok", returnTo: intent.returnTo, openOverflow: false };
   }
 
-  const name = intent.payload.desiredStackName?.trim();
+  const name = payload.desiredStackName?.trim();
   if (!name) {
     ensureSaved(slug);
     return {

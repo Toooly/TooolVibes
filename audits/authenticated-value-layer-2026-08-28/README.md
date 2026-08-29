@@ -1,6 +1,6 @@
 # Authenticated Value Layer 1.0
 
-**Status:** ARCHITECTURE LOCKED. Wave A + Wave B IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-a-b`. Not RELEASED. Wave C NOT STARTED.  
+**Status:** ARCHITECTURE LOCKED. Wave A + Wave B RELEASED on `main`. Wave C IMPLEMENTED / ACCEPTED on `feature/authenticated-value-layer-c-private-notes`. Not RELEASED. Wave D NOT STARTED.  
 **Date:** 2026-08-28  
 **Baseline:** `main` @ `1e4c7a2ac725e8c2b95751b4048cfcd200f73a19`  
 **Branch:** `feature/authenticated-value-layer-a-b`  

@@ -7,6 +7,7 @@ import {
   MAX_STACK_DESCRIPTION_LENGTH,
   MAX_STACK_NAME_LENGTH,
   MAX_USE_CASE_LENGTH,
+  MAX_NOTE_LENGTH,
   MAX_WORKSPACE_COLLECTION_TOOLS,
   MAX_WORKSPACE_TOOL_STATES,
   WORKSPACE_SCHEMA_VERSION,
@@ -31,7 +32,7 @@ const toolUserStateSchema = z
   .object({
     is_saved: z.boolean().optional(),
     shortlist_stage: z.enum(["saved", "review", "top"]).optional(),
-    note: z.string().max(2000).optional(),
+    note: z.string().max(MAX_NOTE_LENGTH).optional(),
     save_reason: saveReasonSchema.nullable().optional(),
     is_pinned: z.boolean().optional(),
     updated_at: z.string().datetime().nullable().optional(),
@@ -114,7 +115,7 @@ export const personalStackSchema = z
 export const workspaceToolStateSchema = z
   .object({
     stage: z.enum(["saved", "review", "top"]),
-    note: z.string().trim().min(1).max(2000).nullable(),
+    note: z.string().trim().min(1).max(MAX_NOTE_LENGTH).nullable(),
     saveReason: saveReasonSchema.nullable(),
     pinned: z.boolean(),
     decision: workspaceDecisionSchema.nullable(),
@@ -141,7 +142,7 @@ export const workspaceRelationshipEventSchema = z
     slug: workspaceSlugSchema,
     at: workspaceTimestampSchema,
     outcome: z.enum(workspaceDecisionOutcomeValues).nullable().optional(),
-    reason: z.string().trim().min(1).max(2000).nullable().optional(),
+    reason: z.string().trim().min(1).max(MAX_NOTE_LENGTH).nullable().optional(),
     useCase: z
       .string()
       .trim()

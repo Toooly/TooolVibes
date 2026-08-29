@@ -2,7 +2,7 @@
 
 **Status:** Wave A = IMPLEMENTED / ACCEPTED. Wave B = IMPLEMENTED / ACCEPTED.  
 Not RELEASED (feature branch only; not merged, not deployed).  
-Wave C = NOT STARTED.
+Wave C = IMPLEMENTED / ACCEPTED (not RELEASED).
 
 ---
 
@@ -53,7 +53,7 @@ Exit: sheet can open from a stub trigger in tests; production trigger is Wave B 
 - Tests listed in 14
 - Optional tiny: palette guest aliases should not 404 into AuthPage if touched; otherwise leave for D
 
-## Wave C — TARGET, not built
+## Wave C — IMPLEMENTED
 
 - Tool Page note composer behind `note.private`
 - Filo snapshot line for current note
