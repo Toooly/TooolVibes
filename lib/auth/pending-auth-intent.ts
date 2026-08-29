@@ -12,7 +12,7 @@ const MAX_RETURN_TO_LENGTH = 500;
 const MAX_ORIGIN_LENGTH = 80;
 const MAX_JSON_BYTES = 2048;
 
-export type PendingAuthCapability = "stack.create" | "note.private" | "search.personal" | "compare.deep";
+export type PendingAuthCapability = "stack.create" | "note.private" | "search.personal" | "compare.deep" | "insight.personal";
 export type PendingStackCreateCapability = PendingAuthCapability;
 
 export type PendingStackCreatePayload = {
@@ -32,11 +32,16 @@ export type PendingSearchPersonalPayload = {
 
 export type PendingCompareDeepPayload = Record<string, never>;
 
+export type PendingInsightPersonalPayload = {
+  toolSlug: string;
+};
+
 export type PendingAuthIntentPayload =
   | PendingStackCreatePayload
   | PendingNotePrivatePayload
   | PendingSearchPersonalPayload
-  | PendingCompareDeepPayload;
+  | PendingCompareDeepPayload
+  | PendingInsightPersonalPayload;
 
 export type PendingAuthIntent = {
   version: typeof PENDING_AUTH_INTENT_VERSION;
@@ -124,7 +129,8 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     input.capability !== "stack.create" &&
     input.capability !== "note.private" &&
     input.capability !== "search.personal" &&
-    input.capability !== "compare.deep"
+    input.capability !== "compare.deep" &&
+    input.capability !== "insight.personal"
   ) {
     return { status: "invalid", reason: "unknown-capability" };
   }
@@ -137,7 +143,7 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
       ? []
       : capability === "search.personal"
         ? ["query"]
-        : capability === "note.private"
+        : capability === "note.private" || capability === "insight.personal"
           ? ["toolSlug"]
           : ["toolSlug", "desiredStackName", "targetStackId", "targetStackName"];
   const extraPayloadKeys = Object.keys(input.payload).filter(
@@ -212,7 +218,7 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
         ? {}
         : capability === "search.personal"
           ? { query: searchQuery ?? "" }
-          : capability === "note.private"
+          : capability === "note.private" || capability === "insight.personal"
             ? { toolSlug: toolSlug as string }
             : {
                 toolSlug: toolSlug as string,
@@ -322,7 +328,7 @@ export function writePendingAuthIntent(input: {
         ? {}
         : capability === "search.personal"
           ? { query: input.query ?? "" }
-          : capability === "note.private"
+          : capability === "note.private" || capability === "insight.personal"
             ? { toolSlug: input.toolSlug }
             : {
                 toolSlug: input.toolSlug,

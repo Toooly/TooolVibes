@@ -3,7 +3,7 @@
 **Status:** Wave A = IMPLEMENTED / ACCEPTED. Wave B = IMPLEMENTED / ACCEPTED.  
 Not RELEASED (feature branch only; not merged, not deployed).  
 Wave C–D = IMPLEMENTED / ACCEPTED / RELEASED.
-Wave E = IMPLEMENTED / ACCEPTED (not RELEASED).
+Wave E = RELEASED. Wave F = IMPLEMENTED / ACCEPTED (not RELEASED).
 
 ---
 
@@ -70,19 +70,21 @@ Exit: sheet can open from a stub trigger in tests; production trigger is Wave B 
 - Fix guest alias → `/account` dead-end
 - Salvati DSL = OPEN QUESTION 4 (not a blocker)
 
-## Wave E — IMPLEMENTED / ACCEPTED (not RELEASED until deploy)
+## Wave E — RELEASED
 
 - L1/L2 personal layer on `/compare` ranking
 - DecisionSheet unchanged
 - AuthSheet `compare.deep` for guests (“Il tuo contesto”)
 - Derived from WorkspaceStateV1 + Wave D index; no new persistence
 
-## Wave F — TARGET, not built
+## Wave F — IMPLEMENTED / ACCEPTED (not RELEASED until deploy)
 
-- `PersonalInsight` objects; extend `personalization.ts`
-- Tool page personal layer
-- Max 3 insights; no scores
-- Do not redesign Home
+- `lib/account/personal-insights.ts` `derivePersonalInsights` — deterministic, explainable, no scores
+- `recommendWorkspaceTools` remains unused
+- Tool Page `Per te` layer; guest → AuthSheet `insight.personal`
+- Compare: max 1 insight line per tool; no winner
+- RECENT_SIGNAL inactive (Wave G)
+- Do not redesign Home, Salvati, or Radar
 
 ## Wave G — TARGET, not built
 

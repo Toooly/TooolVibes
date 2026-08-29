@@ -70,6 +70,35 @@ function NoteTrigger() {
   );
 }
 
+function InsightTrigger() {
+  const continuation = useAuthContinuation();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        continuation.requestInsightPersonal({
+          toolSlug: "blink",
+          origin: "insight.tool",
+        });
+      }}
+    >
+      Apri insight
+    </button>
+  );
+}
+
+function renderInsightGate() {
+  return render(
+    <OverlayProvider>
+      <AccountPreviewProvider value={guestValue()}>
+        <AuthContinuationProvider>
+          <InsightTrigger />
+        </AuthContinuationProvider>
+      </AccountPreviewProvider>
+    </OverlayProvider>,
+  );
+}
+
 function CompareTrigger() {
   const continuation = useAuthContinuation();
   return (
@@ -354,6 +383,26 @@ describe("AuthSheet — compare.deep", () => {
   it("DEEP-AUTH-05 dismiss does not write intent", async () => {
     renderCompareGate();
     fireEvent.click(screen.getByRole("button", { name: "open-compare-gate" }));
+    await screen.findByRole("dialog");
+    fireEvent.click(screen.getByRole("button", { name: "Non ora" }));
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
+  });
+});
+
+describe("AuthSheet — insight.personal", () => {
+  it("INSIGHT-AUTH-03 uses Vedi cosa significa per te copy", async () => {
+    renderInsightGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri insight" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(screen.getByText("Vedi cosa significa per te")).toBeTruthy();
+    expect(
+      screen.getByText("Insight basati sui tool che hai salvato, confrontato e usato."),
+    ).toBeTruthy();
+  });
+
+  it("INSIGHT-AUTH-05 dismiss does not write intent", async () => {
+    renderInsightGate();
+    fireEvent.click(screen.getByRole("button", { name: "Apri insight" }));
     await screen.findByRole("dialog");
     fireEvent.click(screen.getByRole("button", { name: "Non ora" }));
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();

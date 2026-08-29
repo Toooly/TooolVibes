@@ -10,6 +10,7 @@ import { AuthContinuationProvider, useAuthContinuation } from "@/components/acco
 import { AuthSheet } from "@/components/account/auth-sheet";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
 import { PrivateNoteEditor } from "@/components/account/workspace/private-note-editor";
+import { PersonalInsightsLayer } from "@/components/account/workspace/personal-insights-layer";
 import { AccountSettingsPage } from "@/components/account/account-settings-page";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { workspaceTestFixtures } from "@/lib/account/test-fixtures";
@@ -71,7 +72,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest" | "deep-compare" | "deep-compare-guest";
+  surface?: "workspace" | "settings" | "auth-sheet" | "auth-sheet-note" | "auth-sheet-insight" | "legacy-stack" | "private-note" | "private-note-guest" | "personal-search" | "personal-search-guest" | "deep-compare" | "deep-compare-guest" | "personal-insights" | "personal-insights-guest";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -116,7 +117,7 @@ export function WorkspaceQaHarness({
       >
         <DiscoveryPersistenceProvider>
           <AccountPreviewProvider
-            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" || surface === "deep-compare-guest" ? guestPreviewAccount : previewAccount}
+            value={surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "auth-sheet-insight" || surface === "legacy-stack" || surface === "private-note-guest" || surface === "personal-search-guest" || surface === "deep-compare-guest" || surface === "personal-insights-guest" ? guestPreviewAccount : previewAccount}
           >
             {surface === "personal-search" || surface === "personal-search-guest" ? (
               <PersonalSearchQa
@@ -126,7 +127,7 @@ export function WorkspaceQaHarness({
               <DeepCompareQa guest={surface === "deep-compare-guest"} />
             ) : surface === "settings" ? (
               <AccountSettingsPage />
-            ) : surface === "auth-sheet" || surface === "auth-sheet-note" ? (
+            ) : surface === "auth-sheet" || surface === "auth-sheet-note" || surface === "auth-sheet-insight" ? (
               <div
                 data-auth-sheet-qa=""
                 className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
@@ -141,6 +142,13 @@ export function WorkspaceQaHarness({
                           returnTo: "/toools/cursor",
                           origin: "note.tool",
                         }
+                      : surface === "auth-sheet-insight"
+                        ? {
+                            capability: "insight.personal",
+                            toolSlug: "cursor",
+                            returnTo: "/toools/cursor",
+                            origin: "insight.tool",
+                          }
                       : {
                           toolSlug: "cursor",
                           desiredStackName: "AI Coding",
@@ -151,6 +159,17 @@ export function WorkspaceQaHarness({
                   onOpenChange={() => {}}
                 />
               </div>
+            ) : surface === "personal-insights" || surface === "personal-insights-guest" ? (
+              <OverlayProvider>
+                <AuthContinuationProvider>
+                  <div
+                    data-personal-insights-qa=""
+                    className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
+                  >
+                    <PersonalInsightsLayer slug="cursor" origin="tool" />
+                  </div>
+                </AuthContinuationProvider>
+              </OverlayProvider>
             ) : surface === "private-note" || surface === "private-note-guest" ? (
               <OverlayProvider>
                 <AuthContinuationProvider>

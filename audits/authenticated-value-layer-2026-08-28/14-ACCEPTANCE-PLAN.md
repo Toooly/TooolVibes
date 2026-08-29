@@ -117,16 +117,25 @@ Status: IMPLEMENTED / ACCEPTED (not RELEASED).
 
 ---
 
-## Wave F / G
+## Wave F — IMPLEMENTED / ACCEPTED (not RELEASED until deploy)
 
 | Claim | Evidence |
 |---|---|
-| Insights have type + explanation + source | unit of derivation |
-| No numeric score UI | UI test / grep |
-| No match → render nothing | unit |
-| Tool static page has no personal insight HTML | SSR |
+| Insights have type + explanation + source | `__tests__/lib/account/personal-insights.test.ts` |
+| No numeric score UI | engine + layer tests |
+| No match → render nothing | INSIGHT-ENGINE-01 |
+| Guest Tool Page has no private insight copy | INSIGHT-AUTH-03 |
+| Guest teaser opens AuthSheet copy | INSIGHT-AUTH-01/03 |
+| Intent `{ toolSlug }` only | INTENT-F-01/02 |
+| Replay opens layer, no write | INSIGHT-CONT-03 |
+| Radar unchanged | Wave G |
+
+## Wave G
+
+| Claim | Evidence |
+|---|---|
 | Radar public identical for guest | radar tests |
-| Auth radar chip only when join rule matches | unit |
+| Auth radar chip only when join rule matches | unit (not this wave) |
 
 ---
 

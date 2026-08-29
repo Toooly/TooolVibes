@@ -17,6 +17,7 @@ import {
   writePendingAuthIntent,
 } from "@/lib/auth/pending-auth-intent";
 import { getOpenPrivateNoteSlug } from "@/lib/auth/private-note-editor-state";
+import { getOpenPersonalInsightSlug, resetPersonalInsightLayerForTests } from "@/lib/auth/personal-insight-layer-state";
 import { peekDeepCompareOpen, resetDeepCompareOpenForTests } from "@/lib/compare/deep-compare-resume";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
@@ -54,6 +55,7 @@ describe("auth continuation replay order", () => {
   beforeEach(() => {
     window.localStorage.clear();
     resetDeepCompareOpenForTests();
+    resetPersonalInsightLayerForTests();
     activateToolWorkspaceOwner(
       { kind: "account", userId: "u1" },
       createEmptyWorkspaceState(),
@@ -201,5 +203,28 @@ describe("auth continuation replay order", () => {
     });
     expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
     expect(getCanonicalToolWorkspaceState().compare.slugs).toEqual(before);
+  });
+
+  it("INSIGHT-CONT-03 insight.personal replay opens layer without writing", async () => {
+    writePendingAuthIntent({
+      capability: "insight.personal",
+      toolSlug: "blink",
+      returnTo: "/account",
+      origin: "insight.tool",
+    });
+    render(
+      <OverlayProvider>
+        <AccountPreviewProvider value={accountValue(true)}>
+          <AuthContinuationProvider>
+            <p>insight-ready</p>
+          </AuthContinuationProvider>
+        </AccountPreviewProvider>
+      </OverlayProvider>,
+    );
+    await waitFor(() => {
+      expect(getOpenPersonalInsightSlug()).toBe("blink");
+    });
+    expect(getCanonicalToolWorkspaceState().toolStates.blink).toBeUndefined();
+    expect(window.localStorage.getItem(PENDING_AUTH_INTENT_STORAGE_KEY)).toBeNull();
   });
 });

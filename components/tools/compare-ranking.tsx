@@ -9,6 +9,7 @@ import {
   ComparePersonalStrip,
   useComparePersonalContexts,
 } from "./compare-personal-context";
+import { CompareInsightLine } from "@/components/account/workspace/personal-insights-layer";
 import {
   subscribeDeepCompareOpen,
   takeDeepCompareOpen,
@@ -99,8 +100,13 @@ export function CompareRanking({
                 <X className="size-4" aria-hidden="true" />
               </button>
             ) : null}
-            {personal ? (
-              <ComparePersonalStrip context={personal} defaultOpen={forceOpen} />
+            {showPersonal ? (
+              <>
+                {personal ? (
+                  <ComparePersonalStrip context={personal} defaultOpen={forceOpen} />
+                ) : null}
+                <CompareInsightLine slug={tool.slug} names={names} />
+              </>
             ) : null}
           </li>
         );

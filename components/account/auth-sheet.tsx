@@ -56,6 +56,12 @@ function authSheetCopy(capability: PendingAuthCapability) {
       body: "Aggiungi al confronto note, Stack, decisioni e utilizzo dal tuo spazio personale.",
     };
   }
+  if (capability === "insight.personal") {
+    return {
+      title: "Vedi cosa significa per te",
+      body: "Insight basati sui tool che hai salvato, confrontato e usato.",
+    };
+  }
   return {
     title: "Crea il tuo spazio di lavoro",
     body: "Gli Stack restano sincronizzati con il tuo account e raccolgono i tool che usi insieme.",
@@ -125,6 +131,8 @@ function AuthSheetForm({
             ? "Controlla la tua email. Apri il link per continuare la ricerca."
             : draft.capability === "compare.deep"
               ? "Controlla la tua email. Apri il link per continuare il confronto."
+              : draft.capability === "insight.personal"
+                ? "Controlla la tua email. Apri il link per continuare con gli insight."
             : `Controlla la tua email. Apri il link per continuare con ${draft.toolSlug}.`}
         </p>
       ) : (

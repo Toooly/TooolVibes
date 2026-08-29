@@ -37,6 +37,10 @@ import {
   replayCompareDeepIntent,
 } from "@/lib/auth/replay-compare-intent";
 import {
+  maybeOpenInsightLayerAfterReplay,
+  replayInsightPersonalIntent,
+} from "@/lib/auth/replay-insight-intent";
+import {
   subscribeSearchPersonalGate,
   takeSearchPersonalGate,
 } from "@/lib/search/personal-search-gate";
@@ -65,6 +69,10 @@ type AuthContinuationContextValue = {
     origin?: string;
     returnTo?: string;
   }) => RequestResult;
+  requestInsightPersonal: (input: {
+    toolSlug: string;
+    origin?: string;
+  }) => RequestResult;
 };
 
 const AuthContinuationContext = createContext<AuthContinuationContextValue>({
@@ -73,6 +81,7 @@ const AuthContinuationContext = createContext<AuthContinuationContextValue>({
   requestNotePrivate: () => "unavailable",
   requestSearchPersonal: () => "unavailable",
   requestCompareDeep: () => "unavailable",
+  requestInsightPersonal: () => "unavailable",
 });
 
 export function useAuthContinuation() {
@@ -182,6 +191,26 @@ export function AuthContinuationProvider({
     [account.status],
   );
 
+  const requestInsightPersonal = useCallback(
+    (input: { toolSlug: string; origin?: string }): RequestResult => {
+      if (account.status === "loading") return "loading";
+      if (account.status === "unavailable") return "unavailable";
+      const viewer = account.status === "authenticated" ? "authenticated" : "guest";
+      if (canUse("insight.personal", viewer)) {
+        return "allowed";
+      }
+      setDraft({
+        capability: "insight.personal",
+        toolSlug: input.toolSlug,
+        returnTo: `/toools/${input.toolSlug}`,
+        origin: input.origin ?? "insight.personal",
+      });
+      setOpen(true);
+      return "gated";
+    },
+    [account.status],
+  );
+
   useEffect(() => {
     const pending = takeSearchPersonalGate();
     if (pending) requestSearchPersonal(pending);
@@ -260,6 +289,33 @@ export function AuthContinuationProvider({
       finishSearch();
       return;
     }
+    if (intent.capability === "insight.personal") {
+      const result = replayInsightPersonalIntent(intent);
+      if (result.status === "skipped" && result.reason === "not-authenticated") {
+        restorePendingAuthIntent(intent);
+        return;
+      }
+      replayedRef.current = true;
+      if (result.status !== "ok") {
+        return;
+      }
+      trackAuthGateFromIntent({
+        name: "auth_success_from_gate",
+        capability: intent.capability,
+        origin: intent.origin,
+        returnTo: intent.returnTo,
+      });
+      const finishInsight = () => {
+        maybeOpenInsightLayerAfterReplay(result.openLayer, payloadToolSlug(intent));
+      };
+      if (result.returnTo && result.returnTo !== pathname) {
+        router.replace(result.returnTo);
+        window.setTimeout(finishInsight, 50);
+        return;
+      }
+      finishInsight();
+      return;
+    }
     if (intent.capability === "compare.deep") {
       const result = replayCompareDeepIntent(intent);
       if (result.status === "skipped" && result.reason === "not-authenticated") {
@@ -325,8 +381,9 @@ export function AuthContinuationProvider({
       requestNotePrivate,
       requestSearchPersonal,
       requestCompareDeep,
+      requestInsightPersonal,
     }),
-    [requestStackCreate, requestNotePrivate, requestSearchPersonal, requestCompareDeep],
+    [requestStackCreate, requestNotePrivate, requestSearchPersonal, requestCompareDeep, requestInsightPersonal],
   );
 
   return (

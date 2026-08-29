@@ -62,6 +62,12 @@ export default async function WorkspaceQaPage({
                       ? "deep-compare"
                       : params.surface === "deep-compare-guest"
                         ? "deep-compare-guest"
+                      : params.surface === "auth-sheet-insight"
+                        ? "auth-sheet-insight"
+                      : params.surface === "personal-insights"
+                        ? "personal-insights"
+                      : params.surface === "personal-insights-guest"
+                        ? "personal-insights-guest"
                     : "workspace";
 
   return (

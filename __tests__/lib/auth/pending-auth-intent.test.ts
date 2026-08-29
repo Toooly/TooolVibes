@@ -111,8 +111,35 @@ describe("pending auth intent", () => {
     const parsed = parsePendingAuthIntent({
       version: 1,
       id: "intent-capability-01",
-      capability: "insight.personal",
+      capability: "radar.personal",
       payload: { toolSlug: "blink" },
+      returnTo: "/toools/blink",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+    });
+    expect(parsed.status).toBe("invalid");
+  });
+
+  it("INTENT-F-01 insight.personal stores toolSlug only", () => {
+    const written = writePendingAuthIntent({
+      capability: "insight.personal",
+      toolSlug: "blink",
+      returnTo: "/toools/blink",
+      origin: "insight.tool",
+    });
+    expect(written.status).toBe("ready");
+    if (written.status !== "ready") return;
+    expect(written.intent.capability).toBe("insight.personal");
+    expect(written.intent.payload).toEqual({ toolSlug: "blink" });
+    expect(JSON.stringify(written.intent)).not.toMatch(/nota|reason|decision/i);
+  });
+
+  it("INTENT-F-02 insight.personal rejects extra payload keys", () => {
+    const parsed = parsePendingAuthIntent({
+      version: 1,
+      id: "intent-insight-extra",
+      capability: "insight.personal",
+      payload: { toolSlug: "blink", note: "secret" },
       returnTo: "/toools/blink",
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
