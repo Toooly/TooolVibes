@@ -38,6 +38,11 @@ function seedWorkspace(actions: WorkspaceAction[] = []) {
   dispatchWorkspaceChange({ source: "local", scope: "workspace" });
 }
 
+function seedAccountWorkspace(actions: WorkspaceAction[] = []) {
+  activateToolWorkspaceOwner({ kind: "account", userId: "u1" }, apply(actions));
+  dispatchWorkspaceChange({ source: "local", scope: "workspace" });
+}
+
 function stubMatchMedia(desktop: boolean) {
   vi.stubGlobal("matchMedia", (query: string) => ({
     matches: desktop && query.includes("min-width: 1024px"),
@@ -352,7 +357,7 @@ describe("Wave 6 two-speed Save", () => {
   });
 
   it("filing to one of two stacks calls addToolToPersonalStack", async () => {
-    seedWorkspace([
+    seedAccountWorkspace([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       {
         type: "stacks/create",

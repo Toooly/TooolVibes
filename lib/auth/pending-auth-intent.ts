@@ -16,6 +16,8 @@ export type PendingStackCreateCapability = "stack.create";
 export type PendingStackCreatePayload = {
   toolSlug: string;
   desiredStackName?: string;
+  targetStackId?: string;
+  targetStackName?: string;
 };
 
 export type PendingAuthIntent = {
@@ -107,7 +109,11 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     return { status: "invalid", reason: "malformed-payload" };
   }
   const extraPayloadKeys = Object.keys(input.payload).filter(
-    (key) => key !== "toolSlug" && key !== "desiredStackName",
+    (key) =>
+      key !== "toolSlug" &&
+      key !== "desiredStackName" &&
+      key !== "targetStackId" &&
+      key !== "targetStackName",
   );
   if (extraPayloadKeys.length > 0) {
     return { status: "invalid", reason: "unknown-payload-keys" };
@@ -119,6 +125,14 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
   const desiredStackName = parseStackName(input.payload.desiredStackName);
   if (input.payload.desiredStackName !== undefined && desiredStackName === undefined) {
     return { status: "invalid", reason: "invalid-stack-name" };
+  }
+  const targetStackId = parseToolSlug(input.payload.targetStackId);
+  if (input.payload.targetStackId !== undefined && !targetStackId) {
+    return { status: "invalid", reason: "invalid-target-stack-id" };
+  }
+  const targetStackName = parseStackName(input.payload.targetStackName);
+  if (input.payload.targetStackName !== undefined && targetStackName === undefined) {
+    return { status: "invalid", reason: "invalid-target-stack-name" };
   }
   if (typeof input.returnTo !== "string" || !isSafeReturnTo(input.returnTo)) {
     return { status: "invalid", reason: "unsafe-return-to" };
@@ -141,9 +155,12 @@ export function parsePendingAuthIntent(input: unknown): PendingAuthIntentRead {
     version: PENDING_AUTH_INTENT_VERSION,
     id: input.id.trim(),
     capability: "stack.create",
-    payload: desiredStackName
-      ? { toolSlug, desiredStackName }
-      : { toolSlug },
+    payload: {
+      toolSlug,
+      ...(desiredStackName ? { desiredStackName } : {}),
+      ...(targetStackId ? { targetStackId } : {}),
+      ...(targetStackName ? { targetStackName } : {}),
+    },
     returnTo: input.returnTo.trim(),
     origin,
     createdAt: input.createdAt,
@@ -225,6 +242,8 @@ function unmarkIntentConsumed(id: string) {
 export function writePendingAuthIntent(input: {
   toolSlug: string;
   desiredStackName?: string;
+  targetStackId?: string;
+  targetStackName?: string;
   returnTo: string;
   origin?: string;
   nowMs?: number;
@@ -239,6 +258,8 @@ export function writePendingAuthIntent(input: {
     payload: {
       toolSlug: input.toolSlug,
       desiredStackName: input.desiredStackName,
+      targetStackId: input.targetStackId,
+      targetStackName: input.targetStackName,
     },
     returnTo: input.returnTo,
     origin: input.origin,

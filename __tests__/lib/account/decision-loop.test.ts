@@ -77,7 +77,10 @@ describe("decision loop 1.0", () => {
   });
 
   it("adds, archives and restores a personal stack without writing legacy stack", () => {
-    activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
+    activateToolWorkspaceOwner(
+      { kind: "account", userId: "decision-loop" },
+      createEmptyWorkspaceState(),
+    );
     toggleWorkspaceSaved("cursor");
     addToolToWorkingPersonalStack("cursor");
 

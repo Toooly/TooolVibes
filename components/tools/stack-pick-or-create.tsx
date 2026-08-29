@@ -3,7 +3,8 @@
 /**
  * Shared Speed 2 stack membership panel.
  * Catalogo overflow and Salvati use the same create/add writers.
- * Guest create opens AuthSheet via onRequestAuthCreate.
+ * Guest create/add opens AuthSheet via onRequestAuthCreate.
+ * Leftover guest stacks remain visible; new membership mutations require auth.
  */
 
 import { useEffect, useId, useMemo, useState } from "react";
@@ -105,7 +106,11 @@ export function StackPickOrCreate({
   slug: string;
   onDone?: () => void;
   allowCreate: boolean;
-  onRequestAuthCreate?: (draftName: string) => void;
+  onRequestAuthCreate?: (input: {
+    desiredStackName?: string;
+    targetStackId?: string;
+    targetStackName?: string;
+  }) => void;
   compact?: boolean;
 }) {
   useWorkspaceRevision();
@@ -139,7 +144,7 @@ export function StackPickOrCreate({
       onDone?.();
       return;
     }
-    onRequestAuthCreate?.(trimmed);
+    onRequestAuthCreate?.({ desiredStackName: trimmed });
     setDraftName("");
     onDone?.();
   };
@@ -187,6 +192,14 @@ export function StackPickOrCreate({
                 type="button"
                 disabled={member}
                 onClick={() => {
+                  if (!allowCreate) {
+                    onRequestAuthCreate?.({
+                      targetStackId: stack.id,
+                      targetStackName: stack.name,
+                    });
+                    onDone?.();
+                    return;
+                  }
                   fileToExistingStack(stack.id, stack.name, slug);
                   onDone?.();
                 }}

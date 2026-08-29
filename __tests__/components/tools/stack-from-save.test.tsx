@@ -579,7 +579,7 @@ describe("Wave 9 stack from Save", () => {
     expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
   });
 
-  it("guest with existing stacks can add but cannot create", async () => {
+  it("guest with existing stacks can see them but add opens AuthSheet", async () => {
     seedGuest([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       {
@@ -590,10 +590,15 @@ describe("Wave 9 stack from Save", () => {
         at: T0,
       },
     ]);
-    renderCard();
+    renderCardWithGuestGate();
     await openOverflow();
     expect(screen.getByRole("button", { name: "Aggiungi a AI Coding" })).toBeTruthy();
-    expect(screen.queryByText(/Accedi/i)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Aggiungi a AI Coding" }));
+    expect(await screen.findByRole("dialog")).toBeTruthy();
+    expect(
+      getCanonicalToolWorkspaceState().personalStacks.find((stack) => stack.id === "ai-coding")
+        ?.slugs,
+    ).toEqual([]);
   });
 
   it("W9-T24 draft name not in persisted workspace JSON", async () => {

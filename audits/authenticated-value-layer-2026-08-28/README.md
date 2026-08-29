@@ -139,7 +139,7 @@ Related prior work (do not treat as this package): `audits/my-tooolvibes-authent
 
 1. **Natural gating.** If a feature does not require identity, persistence, or personal context, do not gate it.
 2. **Guest remains strong.** Catalog, tool pages, basic search, public Radar, basic Compare, Fast Decide, local Save, local scratch notes, editorial collections stay public.
-3. **Personal Stack create/edit is auth-only** in TARGET. Editorial collections remain the public preview of the concept. Do not silently destroy leftover guest `personalStacks`.
+3. **Personal Stack create/edit/membership is auth-only** in TARGET. Editorial collections remain the public preview of the concept. Do not silently destroy leftover guest `personalStacks`. Historical data is preserved; new mutations require identity.
 4. **Basic Compare stays public.** Deep Compare is a personal overlay on the same `/compare` route.
 5. **Fast Decide stays public.** DecisionSheet remains the one commit surface.
 6. **Guest scratch notes stay.** Auth private notes productize the same `toolStates.note` field — no second notes database.

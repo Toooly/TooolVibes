@@ -34,6 +34,10 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function requireAccountOwner() {
+  return getActiveWorkspaceOwner().kind === "account";
+}
+
 export function applyWorkspaceAction(action: WorkspaceAction) {
   const current = getCanonicalToolWorkspaceState();
   const next = reduceWorkspaceState(current, action);
@@ -81,6 +85,9 @@ export function renamePersonalStack(
   name: string,
   description?: string | null,
 ) {
+  if (!requireAccountOwner()) {
+    return getCanonicalToolWorkspaceState();
+  }
   return applyWorkspaceAction({
     type: "stacks/rename",
     id,
@@ -91,14 +98,23 @@ export function renamePersonalStack(
 }
 
 export function archivePersonalStack(id: string) {
+  if (!requireAccountOwner()) {
+    return getCanonicalToolWorkspaceState();
+  }
   return applyWorkspaceAction({ type: "stacks/archive", id, at: nowIso() });
 }
 
 export function restorePersonalStack(id: string) {
+  if (!requireAccountOwner()) {
+    return getCanonicalToolWorkspaceState();
+  }
   return applyWorkspaceAction({ type: "stacks/unarchive", id, at: nowIso() });
 }
 
 export function adoptLegacyListaStack() {
+  if (!requireAccountOwner()) {
+    return getCanonicalToolWorkspaceState();
+  }
   const current = getCanonicalToolWorkspaceState();
   const next = reduceAdoptLegacyListaStack(current, nowIso());
   if (JSON.stringify(current) !== JSON.stringify(next)) {
@@ -115,6 +131,9 @@ function maybeEmitUsefulStack(state: ReturnType<typeof getCanonicalToolWorkspace
 }
 
 export function addToolToWorkingPersonalStack(slug: string) {
+  if (!requireAccountOwner()) {
+    return getCanonicalToolWorkspaceState();
+  }
   const current = getCanonicalToolWorkspaceState();
   const next = reduceAddToWorkingPersonalStack(current, slug, nowIso());
   if (JSON.stringify(current) !== JSON.stringify(next)) {
@@ -126,12 +145,18 @@ export function addToolToWorkingPersonalStack(slug: string) {
 }
 
 export function addToolToPersonalStack(id: string, slug: string) {
+  if (!requireAccountOwner()) {
+    return getCanonicalToolWorkspaceState();
+  }
   const next = applyWorkspaceAction({ type: "stacks/add", id, slug, at: nowIso() });
   maybeEmitUsefulStack(next);
   return next;
 }
 
 export function removeToolFromPersonalStack(id: string, slug: string) {
+  if (!requireAccountOwner()) {
+    return getCanonicalToolWorkspaceState();
+  }
   return applyWorkspaceAction({ type: "stacks/remove", id, slug, at: nowIso() });
 }
 

@@ -6,6 +6,7 @@ import {
   deferWorkspaceTool,
   markWorkspaceToolReplaced,
   markWorkspaceToolUsing,
+  addToolToPersonalStack,
   restorePersonalStack,
   setWorkspaceDecision,
   setWorkspacePinned,
@@ -103,6 +104,20 @@ describe("workspace action helpers", () => {
     activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
     createPersonalStack("AI Coding");
     expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
+  });
+
+  it("does not add to a leftover stack as a guest", () => {
+    activateToolWorkspaceOwner(
+      { kind: "guest" },
+      workspaceTestFixtures.withStacks ?? createEmptyWorkspaceState(),
+    );
+    const before = getCanonicalToolWorkspaceState();
+    const id = before.personalStacks[0]?.id;
+    if (!id) return;
+    addToolToPersonalStack(id, "cursor");
+    expect(getCanonicalToolWorkspaceState().personalStacks[0]?.slugs).toEqual(
+      before.personalStacks[0]?.slugs,
+    );
   });
 
   it("restores an archived personal stack", () => {

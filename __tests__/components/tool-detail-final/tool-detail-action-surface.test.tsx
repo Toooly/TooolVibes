@@ -162,7 +162,7 @@ describe("ToolDetailActionSurface personal workspace", () => {
     expect(screen.queryByLabelText("Aggiungi allo stack")).toBeNull();
     await openOverflow();
     fireEvent.click(screen.getByRole("button", { name: "Aggiungi a AI Coding" }));
-    expect(addToolToPersonalStack).toHaveBeenCalledWith("ai-coding", "cursor");
+    expect(addToolToPersonalStack).not.toHaveBeenCalled();
   });
 
   it("does not offer a stack select when the tool is already in every stack", async () => {

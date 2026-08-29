@@ -46,7 +46,9 @@ export default async function WorkspaceQaPage({
       ? "settings"
       : params.surface === "auth-sheet"
         ? "auth-sheet"
-        : "workspace";
+        : params.surface === "legacy-stack"
+          ? "legacy-stack"
+          : "workspace";
 
   return (
     <WorkspaceQaHarness fixture={fixture} view={view} surface={surface} />

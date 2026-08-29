@@ -11,7 +11,7 @@ This document covers **Stacks** and the **whole guest→auth merge**, because me
 
 - Named stack **create** is UI-gated: `allowCreate={owner.kind === "account"}` (`stack-pick-or-create.tsx`).
 - Guests with **zero** stacks: section omitted. **No Accedi CTA.** Source: “S22 Accedi-to-create is not built.”
-- Guests **can** add to stacks that already exist in local V1 (unusual).
+- Guests **could** add to leftover local stacks (pre-A+B). After Wave B this is gated.
 - Reducer `stacks/create` is **not** auth-checked.
 - Personal stacks live in V1 `personalStacks` (max 30). Remote if account + canonical sync.
 - Editorial collections (`/collections`) are a **separate** public system. Not `personalStacks`.
@@ -23,7 +23,7 @@ This document covers **Stacks** and the **whole guest→auth merge**, because me
 |---|---|
 | Guest | May **read** editorial collections (concept preview). May **not** create personal stacks. AuthSheet on create. |
 | Auth | Create, edit, archive, restore, membership, stack compare (CURRENT `queueStackCompare` stays). |
-| Leftover guest `personalStacks` | **Do not wipe.** On login, merge by stack `id` (see Part B). If a guest somehow has local stacks, add-to-existing remains until they log in. |
+| Leftover guest `personalStacks` | **Do not wipe.** READ may remain. **New mutations** (create, rename, add/remove membership) require AuthSheet + continuation. On login, merge by stack `id`, then replay the pending membership once. |
 
 Stack creation is AUTH-ONLY because a persistent working set needs identity. This is natural gating, not a fake lock.
 

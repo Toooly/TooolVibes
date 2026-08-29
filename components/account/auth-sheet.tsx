@@ -26,6 +26,8 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 export type AuthSheetDraft = {
   toolSlug: string;
   desiredStackName?: string;
+  targetStackId?: string;
+  targetStackName?: string;
   returnTo: string;
   origin: string;
 };
@@ -217,6 +219,8 @@ export function AuthSheet({
     const written = writePendingAuthIntent({
       toolSlug: draft.toolSlug,
       desiredStackName: draft.desiredStackName,
+      targetStackId: draft.targetStackId,
+      targetStackName: draft.targetStackName,
       returnTo: draft.returnTo,
       origin: draft.origin,
     });

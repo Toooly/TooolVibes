@@ -7,7 +7,7 @@ import {
 import { MAX_PERSONAL_STACKS } from "@/lib/discovery/workspace-constants";
 import { getActiveWorkspaceOwner } from "@/lib/discovery/workspace-owner-storage";
 import { getCanonicalToolWorkspaceState } from "@/lib/stores/tool-workspace-store";
-import type { PendingAuthIntent } from "@/lib/auth/pending-auth-intent";
+import type { PendingAuthIntent, PendingStackCreatePayload } from "@/lib/auth/pending-auth-intent";
 import { openSaveOverflow } from "@/components/tools/save-overflow-state";
 
 export type StackIntentReplayResult =
@@ -27,6 +27,27 @@ function ensureSaved(slug: string) {
   }
 }
 
+function resolveTargetStack(payload: PendingStackCreatePayload) {
+  const stacks = getCanonicalToolWorkspaceState().personalStacks;
+  if (payload.targetStackId) {
+    const byId = stacks.find((stack) => stack.id === payload.targetStackId);
+    if (byId) return byId;
+  }
+  const name = payload.targetStackName?.trim().toLowerCase();
+  if (!name) return null;
+  const matches = stacks.filter((stack) => stack.name.toLowerCase() === name);
+  if (matches.length === 1) return matches[0];
+  return null;
+}
+
+function addMembership(stackId: string, slug: string) {
+  const stack = getCanonicalToolWorkspaceState().personalStacks.find(
+    (item) => item.id === stackId,
+  );
+  if (stack?.slugs.includes(slug)) return;
+  addToolToPersonalStack(stackId, slug);
+}
+
 export function replayStackCreateIntent(
   intent: PendingAuthIntent,
 ): StackIntentReplayResult {
@@ -38,8 +59,20 @@ export function replayStackCreateIntent(
   }
 
   const slug = intent.payload.toolSlug;
-  const name = intent.payload.desiredStackName?.trim();
+  const targetingExisting =
+    Boolean(intent.payload.targetStackId) || Boolean(intent.payload.targetStackName);
 
+  if (targetingExisting) {
+    const target = resolveTargetStack(intent.payload);
+    if (!target) {
+      return { status: "failed", reason: "missing-target" };
+    }
+    ensureSaved(slug);
+    addMembership(target.id, slug);
+    return { status: "ok", returnTo: intent.returnTo, openOverflow: false };
+  }
+
+  const name = intent.payload.desiredStackName?.trim();
   if (!name) {
     ensureSaved(slug);
     return {
@@ -55,9 +88,7 @@ export function replayStackCreateIntent(
   );
   if (existing) {
     ensureSaved(slug);
-    if (!existing.slugs.includes(slug)) {
-      addToolToPersonalStack(existing.id, slug);
-    }
+    addMembership(existing.id, slug);
     return { status: "ok", returnTo: intent.returnTo, openOverflow: false };
   }
 
@@ -69,7 +100,7 @@ export function replayStackCreateIntent(
   const ids = getCanonicalToolWorkspaceState().personalStacks.map((stack) => stack.id);
   const id = createPersonalStackId(name, ids);
   createPersonalStack(name);
-  addToolToPersonalStack(id, slug);
+  addMembership(id, slug);
   return { status: "ok", returnTo: intent.returnTo, openOverflow: false };
 }
 

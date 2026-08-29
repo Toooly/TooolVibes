@@ -96,10 +96,16 @@ function SaveOverflowPanel({
     getActiveWorkspaceOwner().kind === "account";
   const requestGuestCreate =
     !isAccount && account.status === "guest" && continuation.enabled
-      ? (draftName: string) => {
+      ? (input: {
+          desiredStackName?: string;
+          targetStackId?: string;
+          targetStackName?: string;
+        }) => {
           continuation.requestStackCreate({
             toolSlug: slug,
-            desiredStackName: draftName,
+            desiredStackName: input.desiredStackName,
+            targetStackId: input.targetStackId,
+            targetStackName: input.targetStackName,
             origin: "save-overflow",
           });
         }

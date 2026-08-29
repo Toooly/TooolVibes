@@ -32,6 +32,8 @@ type AuthContinuationContextValue = {
   requestStackCreate: (input: {
     toolSlug: string;
     desiredStackName?: string;
+    targetStackId?: string;
+    targetStackName?: string;
     origin?: string;
   }) => RequestResult;
 };
@@ -61,6 +63,8 @@ export function AuthContinuationProvider({
     (input: {
       toolSlug: string;
       desiredStackName?: string;
+      targetStackId?: string;
+      targetStackName?: string;
       origin?: string;
     }): RequestResult => {
       if (account.status === "loading") return "loading";
@@ -72,6 +76,8 @@ export function AuthContinuationProvider({
       setDraft({
         toolSlug: input.toolSlug,
         desiredStackName: input.desiredStackName,
+        targetStackId: input.targetStackId,
+        targetStackName: input.targetStackName,
         returnTo: `/toools/${input.toolSlug}`,
         origin: input.origin ?? "stack.create",
       });

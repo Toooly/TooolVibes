@@ -6,6 +6,7 @@ import {
   AccountPreviewProvider,
   type AccountContextValue,
 } from "@/components/account/account-provider";
+import { AuthContinuationProvider, useAuthContinuation } from "@/components/account/auth-continuation-provider";
 import { AuthSheet } from "@/components/account/auth-sheet";
 import { AccountSettingsPage } from "@/components/account/account-settings-page";
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
@@ -68,7 +69,7 @@ export function WorkspaceQaHarness({
 }: {
   fixture?: "new" | "mature" | "quiet" | "review" | "compare" | "stacks" | "resume" | "few" | "using" | "empty" | "multistack";
   view?: WorkspaceView;
-  surface?: "workspace" | "settings" | "auth-sheet";
+  surface?: "workspace" | "settings" | "auth-sheet" | "legacy-stack";
 }) {
   const state = useMemo(() => {
     if (fixture === "new" || fixture === "empty") return workspaceTestFixtures.newAuthenticated;
@@ -88,12 +89,19 @@ export function WorkspaceQaHarness({
   useEffect(() => {
     const previous = getActiveWorkspaceOwner();
     previousOwner.current = previous;
-    activateVolatileToolWorkspaceOwnerWithoutStorage(QA_OWNER, state);
+    if (surface === "legacy-stack") {
+      activateVolatileToolWorkspaceOwnerWithoutStorage(
+        { kind: "guest" },
+        workspaceTestFixtures.withStacks,
+      );
+    } else {
+      activateVolatileToolWorkspaceOwnerWithoutStorage(QA_OWNER, state);
+    }
     setReady(true);
     return () => {
       if (previous) activateToolWorkspaceOwner(previous);
     };
-  }, [state]);
+  }, [state, surface]);
 
   return (
     <SignalProgressUiProvider enabled>
@@ -106,7 +114,7 @@ export function WorkspaceQaHarness({
       >
         <DiscoveryPersistenceProvider>
           <AccountPreviewProvider
-            value={surface === "auth-sheet" ? guestPreviewAccount : previewAccount}
+            value={surface === "auth-sheet" || surface === "legacy-stack" ? guestPreviewAccount : previewAccount}
           >
             {surface === "settings" ? (
               <AccountSettingsPage />
@@ -126,6 +134,10 @@ export function WorkspaceQaHarness({
                   onOpenChange={() => {}}
                 />
               </div>
+            ) : surface === "legacy-stack" ? (
+              <AuthContinuationProvider>
+                <LegacyStackQa />
+              </AuthContinuationProvider>
             ) : ready ? (
               <LoopShellProvider>
                 <WorkspaceShell initialView={initialView} />
@@ -137,5 +149,38 @@ export function WorkspaceQaHarness({
         </DiscoveryPersistenceProvider>
       </SignalAchievementFlagsProvider>
     </SignalProgressUiProvider>
+  );
+}
+
+function LegacyStackQa() {
+  const continuation = useAuthContinuation();
+  const leftover = workspaceTestFixtures.withStacks;
+  const name = leftover.personalStacks[0]?.name ?? "AI Coding";
+  const id = leftover.personalStacks[0]?.id ?? "ai-coding";
+  return (
+    <div
+      data-legacy-stack-qa=""
+      className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
+    >
+      <p className="tv-auth-sheet__eyebrow">Stack locale</p>
+      <h1 className="font-heading text-xl">{name}</h1>
+      <p className="text-sm text-[var(--tv-ink-secondary)]">
+        {leftover.personalStacks[0]?.slugs.join(", ") || "Cursor, Claude Code"}
+      </p>
+      <button
+        type="button"
+        className="mt-4 min-h-11 rounded-full bg-[var(--tv-accent-aa)] px-4 text-white"
+        onClick={() =>
+          continuation.requestStackCreate({
+            toolSlug: "windsurf",
+            targetStackId: id,
+            targetStackName: name,
+            origin: "save-overflow",
+          })
+        }
+      >
+        Aggiungi Windsurf
+      </button>
+    </div>
   );
 }
