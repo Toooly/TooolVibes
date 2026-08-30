@@ -1,6 +1,6 @@
 # Wave H0 — Community Experiences architecture gate
 
-**Status:** ARCHITECTURE LOCKED. **No implementation in this pass.**  
+**Status:** H0–H6 implemented on `feature/authenticated-value-layer-h-community`. H7 in progress (`17-H7-STATUS.md`).  
 **Date:** 2026-08-29  
 **Baseline:** `main` = `origin/main` = `a81035806f5512089f1b6ad1b4bf6f3c696185c9`  
 **Worker at gate:** `bbc591ff-d143-4816-87cd-40ee26c04361`  

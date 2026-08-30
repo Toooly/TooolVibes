@@ -75,13 +75,15 @@ Do not start H1 in the same pass as H0.
 
 ## H7 — Security QA + release
 
-- Full AUTHZ/XSS/spam/moderation/privacy
-- 390–1280 QA
-- Policy checklist
-- Enable read then write on prod
-- Canonical deploy stamp
-- Guest smoke: section empty or published-only; write CTA → AuthSheet
-- Auth persist smoke **required** for H (unlike A–G deferral): one real pending submit on staging
+See `17-H7-STATUS.md`.
+
+- Dismissed is first-class (`open|resolved|dismissed`); H1 SQL not rewritten
+- Server `FEATURE_DISABLED` gates on public APIs
+- Production schema landed **dark** (0 rows, flags off)
+- Do not `db push` the full local history (ledger drift)
+- Dark app deploy first (READ/WRITE/REPORT = 0)
+- Then activate read → write (Turnstile required) → report
+- No DROP rollback after public data
 
 ---
 
