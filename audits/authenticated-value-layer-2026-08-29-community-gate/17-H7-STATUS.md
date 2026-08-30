@@ -1,6 +1,24 @@
 # H7 STATUS — production landing + release hardening
 
-Status: **BLOCKED on Worker size**. Schema landed dark. Git is on `main` `1d46ac3`. App runtime not updated.
+Status: **H7.1 DARK RUNTIME LIVE**. Community flags still OFF. Not fully released.
+
+H7.1 deploy:
+- main = origin/main = `/api/release` = `8362442ea3c559ee6bdf5504d517c10750a36bd2`
+- Worker `d276a824-2411-4a2a-803d-3bb85a3e4cba`
+- builtAt `2026-08-30T13:57:41.326Z`
+- gzip **2897.32 KiB** (was 3228.44; limit 3072)
+- GET `/api/community/experiences?tool=blink` → 404 `{ error: { code: FEATURE_DISABLED } }`
+- Tool Page has no Esperienze section
+
+## H7.2 READ activation (in progress)
+
+Flag mechanic: `wrangler.jsonc` vars are the source of truth. `scripts/run-cloudflare-build.mjs` copies them into the Next/OpenNext build env so force-static Tool Pages and API bundles match.
+
+Target: READ=1 WRITE=0 REPORT=0.
+
+Do not mark READ successful until production `/api/release` matches the READ SHA and public GET no longer returns FEATURE_DISABLED.
+
+
 
 Do not mark H0–H6 RELEASED until the dark app deploy exists.
 

@@ -56,12 +56,27 @@ describe("loadPublishedExperiencesForTool", () => {
     }
   });
 
+
+  it("renders empty published list when admin client is unavailable at build", async () => {
+    mocks.enabled = true;
+    mocks.admin = false;
+    const result = await loadPublishedExperiencesForTool("blink");
+    expect(mocks.list).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      skipped: false,
+      ok: true,
+      experiences: [],
+      nextCursor: null,
+    });
+  });
   it("does not throw when repository fails", async () => {
     mocks.enabled = true;
     mocks.list.mockRejectedValue(new Error("db"));
     await expect(loadPublishedExperiencesForTool("blink")).resolves.toEqual({
       skipped: false,
-      ok: false,
+      ok: true,
+      experiences: [],
+      nextCursor: null,
     });
   });
 });

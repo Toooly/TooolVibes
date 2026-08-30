@@ -23,7 +23,12 @@ export async function loadPublishedExperiencesForTool(toolSlug: string) {
     };
   }
   if (!isSupabaseAdminEnabled()) {
-    return { skipped: false as const, ok: false as const };
+    return {
+      skipped: false as const,
+      ok: true as const,
+      experiences: [],
+      nextCursor: null,
+    };
   }
   try {
     const listed = await listPublishedExperiences({
@@ -31,7 +36,14 @@ export async function loadPublishedExperiencesForTool(toolSlug: string) {
       limit: MAX_PUBLIC_PAGE,
       cursor: null,
     });
-    if (!listed.ok) return { skipped: false as const, ok: false as const };
+    if (!listed.ok) {
+      return {
+        skipped: false as const,
+        ok: true as const,
+        experiences: [],
+        nextCursor: null,
+      };
+    }
     const last = listed.page[listed.page.length - 1];
     return {
       skipped: false as const,
@@ -44,6 +56,11 @@ export async function loadPublishedExperiencesForTool(toolSlug: string) {
     };
   } catch {
     console.info("[community:public-read]", { toolSlug, result: "error" });
-    return { skipped: false as const, ok: false as const };
+    return {
+      skipped: false as const,
+      ok: true as const,
+      experiences: [],
+      nextCursor: null,
+    };
   }
 }
