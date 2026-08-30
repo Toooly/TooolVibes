@@ -14,9 +14,19 @@ H7.1 deploy:
 
 Flag mechanic: `wrangler.jsonc` vars are the source of truth. `scripts/run-cloudflare-build.mjs` copies them into the Next/OpenNext build env so force-static Tool Pages and API bundles match.
 
-Target: READ=1 WRITE=0 REPORT=0.
+READ production:
 
-Do not mark READ successful until production `/api/release` matches the READ SHA and public GET no longer returns FEATURE_DISABLED.
+- SHA `/api/release` = `278f57af75bfbb87f5e3adc9ddb7ff7a3a642da4`
+- Worker `1645080c-adac-4a3e-9234-28c2c9c1cd4e`
+- gzip **2899.72 KiB**
+- GET experiences 200 `{experiences:[], nextCursor:null}`
+- POST/PATCH/DELETE/REPORT = FEATURE_DISABLED
+- Tool Page empty copy live. No write CTA.
+
+WRITE/REPORT remain OFF: no Turnstile secret/site key in Worker; no safe owner/second-account smoke in this pass.
+
+H7 verdict: **DEPLOYED WITH CONTROLLED GATES** (R1 W0 P0).
+
 
 
 
@@ -142,3 +152,19 @@ Production still has no `/api/community/*` (HTML 404). Tool Page has no Esperien
 - Controlled READ then WRITE (Turnstile) then REPORT
 - Real-auth smokes if safe sessions exist
 - Do **not** start Final Closure until the Worker is live
+
+## H7.3 Turnstile readiness (WRITE still OFF)
+
+- Widget `TooolVibes Community` created for hostname `tooolvibes.eu` (managed).
+- Server secret env `TOOOLVIBES_TURNSTILE_SECRET_KEY` stored via wrangler secret (not in git).
+- Site key env `NEXT_PUBLIC_TURNSTILE_SITE_KEY` not yet in wrangler.jsonc (deferred until WRITE activation).
+- Invalid/empty tokens fail siteverify.
+- Valid-token proof not run (no browser challenge).
+- Owner/admin/second-account sessions: not available in this pass.
+- WRITE and REPORT remain 0.
+
+## H7.3 Stage B — Turnstile site key in production build (WRITE still OFF)
+
+- Public env `NEXT_PUBLIC_TURNSTILE_SITE_KEY` added to wrangler vars and Cloudflare Next build env.
+- Secret remains Worker secret only.
+- Flags stay R1 W0 P0 until a later activation pass.

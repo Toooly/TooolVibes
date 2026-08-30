@@ -12,6 +12,7 @@
     "ALLOWED_AUTH_ORIGINS": "https://tooolvibes.eu",
     "NEXT_PUBLIC_SUPABASE_URL": "https://pjyasxaebxvvmcjxvnno.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_Ac8LC9KN9Yl9YjDC7KrCVA_9328FOc0",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAAEiFbs9UcBewdZxB",
     "TOOOLVIBES_EMAIL_FROM": "TooolVibes <noreply@tooolvibes.eu>",
     "TOOOLVIBES_COLLECTIONS_SOURCE": "content",
     "TOOOLVIBES_TOOLS_SOURCE": "directory",
