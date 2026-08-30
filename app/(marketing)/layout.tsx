@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 import { AccountProvider } from "@/components/account/account-provider";
 import { AuthContinuationProvider } from "@/components/account/auth-continuation-provider";
 import { RewardAuthBridge } from "@/components/rewards/reward-auth-bridge";
@@ -18,8 +16,7 @@ import { MarketingChrome } from "@/components/layout/marketing-chrome";
 import { OrbitalProvider } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { buildSignalClientFlagSnapshot } from "@/lib/signal-progression/client-flags";
-import { gateCookieName } from "@/lib/gate/constants";
-import { verifyGateToken } from "@/lib/gate/session";
+import { isPublicGateOpen } from "@/lib/gate/is-public-gate-open";
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
 
 export default async function MarketingLayout({
@@ -27,11 +24,7 @@ export default async function MarketingLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const gateCookie = cookieStore.get(gateCookieName);
-  const isGateOpen =
-    !releaseFeatures.publicGate.enabled ||
-    (gateCookie ? await verifyGateToken(gateCookie.value) : false);
+  const isGateOpen = await isPublicGateOpen();
   const { url: supabaseUrl, anonKey: supabaseAnonKey } =
     getSupabasePublicEnv();
   const initialAuthEnabled = Boolean(supabaseUrl && supabaseAnonKey);

@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Anton, Manrope } from "next/font/google";
 
 import "@/styles/release-entry";
-import { cookies } from "next/headers";
 import { RootProviders } from "@/components/app/root-providers";
 import { GamificationShell } from "@/components/gamification/gamification-shell";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -10,9 +9,8 @@ import { releaseFeatures } from "@/lib/config/release-features";
 import type { GamificationClientModes } from "@/lib/gamification/release-context";
 import { siteConfig } from "@/lib/config/site";
 import { defaultSocialImage, organizationLogoUrl } from "@/lib/seo/metadata";
-import { gateCookieName } from "@/lib/gate/constants";
 import { getPublicToolCatalogSnapshot } from "@/lib/data/public-tool-catalog";
-import { verifyGateToken } from "@/lib/gate/session";
+import { isPublicGateOpen } from "@/lib/gate/is-public-gate-open";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -109,11 +107,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const gateCookie = cookieStore.get(gateCookieName);
-  const isGateOpen =
-    !releaseFeatures.publicGate.enabled ||
-    (gateCookie ? await verifyGateToken(gateCookie.value) : false);
+  const isGateOpen = await isPublicGateOpen();
   const toolCatalog = isGateOpen ? getPublicToolCatalogSnapshot() : [];
   const missionsEnabled =
     releaseFeatures.gamification.surfaces.missions.persistentRewardsEnabled;

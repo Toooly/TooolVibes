@@ -6,6 +6,9 @@
   "compatibility_date": "2026-04-25",
   "compatibility_flags": ["nodejs_compat"],
   "minify": true,
+  "build": {
+    "command": "node scripts/patch-opennext-worker.mjs"
+  },
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://tooolvibes.eu",
     "NEXT_PUBLIC_AUTH_REDIRECT_ORIGIN": "https://tooolvibes.eu",

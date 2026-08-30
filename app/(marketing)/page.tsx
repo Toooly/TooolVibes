@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { DefinitiveHome } from "@/components/home/definitive-home";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
 import { releaseFeatures } from "@/lib/config/release-features";
@@ -6,17 +5,12 @@ import {
   getPublicToolViews,
   getToolSpotlightView,
 } from "@/lib/data/public-tools";
-import { gateCookieName } from "@/lib/gate/constants";
-import { verifyGateToken } from "@/lib/gate/session";
+import { isPublicGateOpen } from "@/lib/gate/is-public-gate-open";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import { getHomepageControls } from "@/lib/content/homepage-controls";
 
 export async function generateMetadata() {
-  const cookieStore = await cookies();
-  const gateCookie = cookieStore.get(gateCookieName);
-  const isGateOpen =
-    !releaseFeatures.publicGate.enabled ||
-    (gateCookie ? await verifyGateToken(gateCookie.value) : false);
+  const isGateOpen = await isPublicGateOpen();
 
   if (!isGateOpen) {
     return {
@@ -38,11 +32,7 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const cookieStore = await cookies();
-  const gateCookie = cookieStore.get(gateCookieName);
-  const isGateOpen =
-    !releaseFeatures.publicGate.enabled ||
-    (gateCookie ? await verifyGateToken(gateCookie.value) : false);
+  const isGateOpen = await isPublicGateOpen();
 
   if (!isGateOpen) {
     return <ComingSoonPage />;
