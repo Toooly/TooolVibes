@@ -573,3 +573,36 @@
     align-items: start;
   }
 }
+
+/* H6 report moderation inline forms */
+.tv-cc-inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tv-cc-inline-form__input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--tv-border-default);
+  border-radius: 0.5rem;
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.tv-cc-inline-form__submit {
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+}

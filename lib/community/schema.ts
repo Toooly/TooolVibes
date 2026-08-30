@@ -169,3 +169,42 @@ export const OWNER_COLUMNS =
   `${PUBLIC_COLUMNS}, status, created_at, submitted_at, moderated_at, moderation_reason` as const;
 
 export const ADMIN_COLUMNS = `${OWNER_COLUMNS}, moderated_by` as const;
+
+export const COMMUNITY_REPORT_REASONS = [
+  "spam",
+  "abuse",
+  "misleading",
+  "personal_data",
+  "other",
+] as const;
+
+export type CommunityReportReason = (typeof COMMUNITY_REPORT_REASONS)[number];
+
+export const REPORT_REASON_LABELS: Record<CommunityReportReason, string> = {
+  spam: "Spam",
+  abuse: "Contenuto offensivo",
+  misleading: "Informazione fuorviante",
+  personal_data: "Dati personali",
+  other: "Altro",
+};
+
+const reportDetailsSchema = z
+  .string()
+  .transform(nfcTrim)
+  .pipe(z.string().min(1).max(500));
+
+export const createReportSchema = z
+  .object({
+    reason: z.enum(COMMUNITY_REPORT_REASONS),
+    details: reportDetailsSchema.optional(),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    if (value.reason === "other" && !value.details) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "details required when reason is other",
+        path: ["details"],
+      });
+    }
+  });

@@ -2,6 +2,7 @@ import { ExperienceCard } from "@/components/community/experience-card";
 import { ExperienceLoadMore } from "@/components/community/experience-load-more";
 import { ExperienceOwnerPanel } from "@/components/community/experience-owner-panel";
 import { loadPublishedExperiencesForTool } from "@/lib/community/public-read";
+import { isCommunityReportUiEnabled } from "@/lib/community/report-flag";
 import { isCommunityWriteUiEnabled } from "@/lib/community/write-flag";
 
 export async function ExperienceSection({
@@ -14,6 +15,7 @@ export async function ExperienceSection({
   const result = await loadPublishedExperiencesForTool(toolSlug);
   if (result.skipped || !result.ok) return null;
   const writeEnabled = isCommunityWriteUiEnabled();
+  const reportEnabled = isCommunityReportUiEnabled();
 
   return (
     <section
@@ -45,6 +47,7 @@ export async function ExperienceSection({
               key={experience.id}
               experience={experience}
               catalogNames={catalogNames}
+              reportEnabled={reportEnabled}
             />
           ))}
           {result.nextCursor ? (

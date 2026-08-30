@@ -10,6 +10,8 @@ export type CommunityErrorCode =
   | "TURNSTILE_UNAVAILABLE"
   | "RATE_LIMITED"
   | "EXPERIENCE_ALREADY_EXISTS"
+  | "EXPERIENCE_ALREADY_REPORTED"
+  | "CANNOT_REPORT_OWN_EXPERIENCE"
   | "EXPERIENCE_NOT_FOUND"
   | "EXPERIENCE_VERSION_CONFLICT"
   | "EXPERIENCE_STATE_CONFLICT"
@@ -25,6 +27,8 @@ const STATUS: Record<CommunityErrorCode, number> = {
   TURNSTILE_UNAVAILABLE: 503,
   RATE_LIMITED: 429,
   EXPERIENCE_ALREADY_EXISTS: 409,
+  EXPERIENCE_ALREADY_REPORTED: 409,
+  CANNOT_REPORT_OWN_EXPERIENCE: 400,
   EXPERIENCE_NOT_FOUND: 404,
   EXPERIENCE_VERSION_CONFLICT: 409,
   EXPERIENCE_STATE_CONFLICT: 409,
@@ -41,6 +45,8 @@ const MESSAGE: Record<CommunityErrorCode, string> = {
   TURNSTILE_UNAVAILABLE: "Captcha unavailable.",
   RATE_LIMITED: "Too many requests.",
   EXPERIENCE_ALREADY_EXISTS: "You already have an experience for this tool.",
+  EXPERIENCE_ALREADY_REPORTED: "You already reported this experience.",
+  CANNOT_REPORT_OWN_EXPERIENCE: "You cannot report your own experience.",
   EXPERIENCE_NOT_FOUND: "Experience not found.",
   EXPERIENCE_VERSION_CONFLICT: "Experience was updated elsewhere.",
   EXPERIENCE_STATE_CONFLICT: "This moderation action is not allowed.",

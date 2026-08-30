@@ -5,10 +5,22 @@ import { encodeExperienceCursor } from "@/lib/community/http";
 import { listPublishedExperiences } from "@/lib/community/repository";
 import { isCommunityReadEnabled } from "@/lib/community/read-flag";
 import { MAX_PUBLIC_PAGE } from "@/lib/community/schema";
+import {
+  communityQaFixtureExperiences,
+  isCommunityQaFixtureEnabled,
+} from "@/lib/community/qa-fixture";
 
 export async function loadPublishedExperiencesForTool(toolSlug: string) {
   if (!isCommunityReadEnabled()) {
     return { skipped: true as const };
+  }
+  if (isCommunityQaFixtureEnabled()) {
+    return {
+      skipped: false as const,
+      ok: true as const,
+      experiences: communityQaFixtureExperiences(toolSlug),
+      nextCursor: null,
+    };
   }
   if (!isSupabaseAdminEnabled()) {
     return { skipped: false as const, ok: false as const };

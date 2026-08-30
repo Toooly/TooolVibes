@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ExperienceReportAction } from "@/components/community/experience-report-action";
 import { durationBucketLabel } from "@/lib/community/duration";
 import type { CommunityExperiencePublic } from "@/lib/community/schema";
 import { formatItalianDate } from "@/lib/utils";
@@ -7,9 +8,11 @@ import { formatItalianDate } from "@/lib/utils";
 export function ExperienceCard({
   experience,
   catalogNames,
+  reportEnabled = false,
 }: {
   experience: CommunityExperiencePublic;
   catalogNames: Record<string, string>;
+  reportEnabled?: boolean;
 }) {
   const switchedName = experience.switchedFromSlug
     ? catalogNames[experience.switchedFromSlug]
@@ -53,6 +56,12 @@ export function ExperienceCard({
         <p className="td-final-experience__date">
           Pubblicata il {formatItalianDate(experience.publishedAt)}
         </p>
+      ) : null}
+      {reportEnabled ? (
+        <ExperienceReportAction
+          experienceId={experience.id}
+          toolSlug={experience.toolSlug}
+        />
       ) : null}
     </article>
   );

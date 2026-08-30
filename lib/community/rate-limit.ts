@@ -34,6 +34,16 @@ export const communityRatePolicies = {
     limit: 120,
     windowMs: 60 * 1000,
   },
+  reportUser: {
+    namespace: "community-experience-report-user",
+    limit: 10,
+    windowMs: HOUR,
+  },
+  reportIp: {
+    namespace: "community-experience-report-ip",
+    limit: 20,
+    windowMs: HOUR,
+  },
 } as const;
 
 export async function consumeCommunityRateLimit(input: {

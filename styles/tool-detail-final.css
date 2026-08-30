@@ -1498,3 +1498,97 @@
   border-radius: var(--tv-radius-feature);
 }
 
+
+.td-final-experience__report {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.td-final-experience__report-status {
+  margin: 0;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.75rem;
+}
+
+.td-final-report-dialog .td-final-report-dialog__title {
+  font-size: 1.05rem;
+  font-weight: var(--tv-weight-semibold);
+}
+
+.td-final-report-dialog .td-final-report-dialog__description {
+  color: var(--tv-ink-secondary);
+  font-size: 0.875rem;
+}
+
+.td-final-report-dialog__form {
+  display: grid;
+  gap: var(--tv-space-3);
+  margin-top: var(--tv-space-2);
+}
+
+.td-final-report-dialog__fieldset {
+  display: grid;
+  gap: var(--tv-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 0.875rem;
+}
+
+.td-final-report-dialog__fieldset legend {
+  font-weight: var(--tv-weight-semibold);
+  padding-bottom: var(--tv-space-1);
+}
+
+.td-final-report-dialog__option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  font-weight: var(--tv-weight-regular);
+}
+
+.td-final-report-dialog__label {
+  display: grid;
+  gap: var(--tv-space-2);
+  font-size: 0.875rem;
+  font-weight: var(--tv-weight-semibold);
+}
+
+.td-final-report-dialog__textarea {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--tv-border-default);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  font: inherit;
+  resize: vertical;
+}
+
+.td-final-report-dialog__error {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-size: 0.875rem;
+}
+
+.td-final-report-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-space-2);
+}
+
+.td-final-report-dialog__cancel {
+  min-height: 44px;
+  padding: 0 var(--tv-space-3);
+  border: 0;
+  background: transparent;
+  color: var(--tv-ink-secondary);
+  font: inherit;
+}

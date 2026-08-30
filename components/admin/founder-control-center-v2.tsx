@@ -51,6 +51,7 @@ const navItems = [
   { href: "/admin/affiliate-links", label: "Link affiliati", icon: LayoutGrid, group: "Commerciale" },
   { href: "/admin/suggestions", label: "Suggerimenti", icon: AlertCircle, group: "Community" },
   { href: "/admin/experiences", label: "Esperienze", icon: MessageSquare, group: "Community" },
+  { href: "/admin/experiences/reports", label: "Segnalazioni", icon: AlertCircle, group: "Community" },
   { href: "/", label: "Sito", icon: Globe, group: "System" },
 ];
 

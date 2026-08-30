@@ -1,5 +1,9 @@
 import { parseOwnerExperience } from "@/lib/community/owner-page";
-import type { CommunityExperienceOwner, DurationBucket } from "@/lib/community/schema";
+import type {
+  CommunityExperienceOwner,
+  CommunityReportReason,
+  DurationBucket,
+} from "@/lib/community/schema";
 
 export type CommunityWriteError = {
   code: string;
@@ -152,4 +156,47 @@ export function communityWriteUserMessage(code: string) {
   if (code === "INVALID_INPUT") return "Controlla i campi e riprova.";
   if (code === "AUTH_REQUIRED") return "Accedi per continuare.";
   return "Operazione non riuscita. Riprova.";
+}
+
+export async function reportExperience(input: {
+  token: string;
+  experienceId: string;
+  reason: CommunityReportReason;
+  details?: string | null;
+}): Promise<
+  | { ok: true; id: string; status: string }
+  | { ok: false; error: CommunityWriteError }
+> {
+  const body: Record<string, unknown> = { reason: input.reason };
+  if (input.details) body.details = input.details;
+  const response = await fetch(
+    `/api/community/experiences/${input.experienceId}/report`,
+    {
+      method: "POST",
+      headers: authHeaders(input.token),
+      credentials: "same-origin",
+      body: JSON.stringify(body),
+    },
+  );
+  if (!response.ok) return { ok: false, error: await readError(response) };
+  const json = (await response.json()) as { id?: string; status?: string };
+  return {
+    ok: true,
+    id: typeof json.id === "string" ? json.id : "",
+    status: typeof json.status === "string" ? json.status : "open",
+  };
+}
+
+export function communityReportUserMessage(code: string) {
+  if (code === "EXPERIENCE_ALREADY_REPORTED") return "L\u2019hai gi\u00e0 segnalata.";
+  if (code === "CANNOT_REPORT_OWN_EXPERIENCE") {
+    return "Non puoi segnalare la tua stessa esperienza.";
+  }
+  if (code === "RATE_LIMITED") {
+    return "Troppe segnalazioni in poco tempo. Riprova pi\u00f9 tardi.";
+  }
+  if (code === "EXPERIENCE_NOT_FOUND") {
+    return "Questa esperienza non \u00e8 pi\u00f9 disponibile.";
+  }
+  return "Non siamo riusciti a inviare la segnalazione.";
 }
