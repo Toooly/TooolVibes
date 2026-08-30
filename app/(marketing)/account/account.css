@@ -350,13 +350,6 @@
   font-weight: 650;
 }
 
-body[data-account-surface] .command-bar,
-body[data-account-surface] .site-footer-v2,
-body[data-account-surface] .mobile-bottom-nav,
-body[data-account-surface] .mobile-top-bar {
-  display: none;
-}
-
 .tv-app--loop {
   display: block;
   min-height: 0;
@@ -367,11 +360,6 @@ body[data-account-surface] .mobile-top-bar {
     display: block;
     grid-template-columns: none;
   }
-}
-
-.marketing-shell main:has(.tv-app),
-.marketing-shell main:has(.v-auth-page) {
-  padding-bottom: 0;
 }
 
 .account-board {
@@ -1497,12 +1485,6 @@ body[data-account-surface] .mobile-top-bar {
 }
 
 @media (min-width: 768px) {
-  .tv-stacks-split {
-    grid-template-columns: minmax(13rem, 0.38fr) minmax(0, 1fr);
-    align-items: start;
-    gap: 1.75rem;
-  }
-
   .tv-journal {
     grid-template-columns: minmax(14rem, 0.42fr) minmax(0, 1fr);
     align-items: start;
@@ -2229,10 +2211,14 @@ body[data-account-surface] .mobile-top-bar {
   }
   .tv-lib-filters { grid-column: 1 / -1; }
   .tv-signal-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .tv-stacks-split { grid-template-columns: minmax(16rem, 0.9fr) minmax(0, 1.2fr); }
 }
 
 @media (min-width: 1024px) {
+  .tv-stacks-split {
+    grid-template-columns: minmax(13rem, 0.38fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.75rem;
+  }
   .tv-resume__title { font-size: 1.7rem; }
   .tv-lib-row { padding-top: 0.4rem; padding-bottom: 0.4rem; }
   .tv-home {

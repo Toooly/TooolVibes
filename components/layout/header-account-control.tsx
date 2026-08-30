@@ -4,7 +4,10 @@ import Link from "next/link";
 import { User, UserPlus } from "lucide-react";
 
 import { useAccount } from "@/components/account/account-provider";
-import { workspaceViewHref } from "@/components/account/workspace/workspace-model";
+import {
+  personalDashboardHref,
+  workspaceViewHref,
+} from "@/components/account/workspace/workspace-model";
 import { useHeaderAccountCta } from "@/components/layout/workspace-nav-selectors";
 
 export function HeaderAccountControl({
@@ -43,7 +46,7 @@ export function HeaderAccountControl({
           ) : null}
         </summary>
         <div className={panelClassName}>
-          <Link href="/account" prefetch={false}>
+          <Link href={personalDashboardHref()} prefetch={false}>
             Il tuo spazio
           </Link>
           <Link href={workspaceViewHref("salvati")} prefetch={false}>

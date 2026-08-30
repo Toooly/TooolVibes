@@ -1,6 +1,5 @@
 import { DefinitiveHome } from "@/components/home/definitive-home";
 import { ComingSoonPage } from "@/components/coming-soon/coming-soon-page";
-import { releaseFeatures } from "@/lib/config/release-features";
 import {
   getPublicToolViews,
   getToolSpotlightView,

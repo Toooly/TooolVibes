@@ -60,6 +60,10 @@ export function parseWorkspaceView(value: string | null | undefined): WorkspaceV
   return LEGACY_WORKSPACE_VIEWS[value] ?? "riprendi";
 }
 
+export function personalDashboardHref() {
+  return "/account?view=riprendi";
+}
+
 export function workspaceViewHref(
   view: WorkspaceView,
   extras?: { focus?: string; stack?: string },

@@ -547,7 +547,7 @@
 .def-editorial__spot-rail {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   margin: 4px 0 0;
   padding: 0;
@@ -580,7 +580,13 @@
   font-size: 18px;
   font-weight: 600;
   color: var(--tv-ink-inverted-primary);
-  line-height: 1.1;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.def-editorial__spot-rail span {
+  min-width: 0;
 }
 
 @media (max-width: 767px) {

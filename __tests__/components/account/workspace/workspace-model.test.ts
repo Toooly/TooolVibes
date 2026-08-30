@@ -6,6 +6,7 @@ import {
   parseWorkspaceView,
   salvatiHref,
   workspaceFocusHref,
+  personalDashboardHref,
   workspaceViewHref,
 } from "@/components/account/workspace/workspace-model";
 
@@ -42,6 +43,7 @@ describe("workspace-model", () => {
 
   it("workspaceViewHref is the only view-link builder", () => {
     expect(workspaceViewHref("riprendi")).toBe("/account");
+    expect(personalDashboardHref()).toBe("/account?view=riprendi");
     expect(workspaceViewHref("salvati")).toBe("/account?view=salvati");
     expect(workspaceViewHref("recenti")).toBe("/account?view=recenti");
     expect(workspaceViewHref("segnale")).toBe("/account?view=segnale");

@@ -48,6 +48,14 @@ import {
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
 
+export function formatHomeAnalysisTime(raw: string | null | undefined) {
+  const value = raw?.trim() ?? "";
+  if (!value) return "—";
+  if (/min/i.test(value)) return value;
+  return `${value} min`;
+}
+
+
 type DefinitiveHomeProps = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
@@ -260,11 +268,11 @@ function IvoryEditorial({
 
             <ul className="def-editorial__spot-rail" aria-label="Dettagli editoriali">
               <li>
-                <span>Valutazione</span>
+                <span>Valutazione editoriale</span>
                 <strong>
-                  {editorialScore.status === "assessed"
-                    ? "Valutazione editoriale"
-                    : "Valutazione editoriale / In preparazione"}
+                  {editorialScore.status === "assessed" && editorialScore.value !== null
+                    ? `${editorialScore.value.toFixed(1)} / 10`
+                    : "In preparazione"}
                 </strong>
               </li>
               <li>
@@ -273,7 +281,7 @@ function IvoryEditorial({
               </li>
               <li>
                 <span>Tempo di analisi</span>
-                <strong>{focusTool.readingTime ? `${focusTool.readingTime} min` : "—"}</strong>
+                <strong>{formatHomeAnalysisTime(focusTool.readingTime)}</strong>
               </li>
             </ul>
 

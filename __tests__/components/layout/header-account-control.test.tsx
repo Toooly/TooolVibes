@@ -56,6 +56,9 @@ describe("HeaderAccountControl", () => {
     accountState.status = "authenticated";
     renderControl();
     expect(screen.getByText("Il tuo account")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Il tuo spazio" }).getAttribute("href")).toBe(
+      "/account?view=riprendi",
+    );
     expect(screen.getByRole("link", { name: "Stack" }).getAttribute("href")).toBe(
       "/account?view=stack",
     );
