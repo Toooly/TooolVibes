@@ -16,6 +16,7 @@ export type CommunityErrorCode =
   | "EXPERIENCE_VERSION_CONFLICT"
   | "EXPERIENCE_STATE_CONFLICT"
   | "PAYLOAD_TOO_LARGE"
+  | "FEATURE_DISABLED"
   | "SERVER_ERROR";
 
 const STATUS: Record<CommunityErrorCode, number> = {
@@ -33,6 +34,7 @@ const STATUS: Record<CommunityErrorCode, number> = {
   EXPERIENCE_VERSION_CONFLICT: 409,
   EXPERIENCE_STATE_CONFLICT: 409,
   PAYLOAD_TOO_LARGE: 413,
+  FEATURE_DISABLED: 404,
   SERVER_ERROR: 500,
 };
 
@@ -51,6 +53,7 @@ const MESSAGE: Record<CommunityErrorCode, string> = {
   EXPERIENCE_VERSION_CONFLICT: "Experience was updated elsewhere.",
   EXPERIENCE_STATE_CONFLICT: "This moderation action is not allowed.",
   PAYLOAD_TOO_LARGE: "Payload too large.",
+  FEATURE_DISABLED: "This feature is not available.",
   SERVER_ERROR: "Server error.",
 };
 

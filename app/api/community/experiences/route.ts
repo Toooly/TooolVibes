@@ -23,9 +23,16 @@ import {
   MAX_PUBLIC_PAGE,
   createExperienceSchema,
 } from "@/lib/community/schema";
+import {
+  isCommunityPublicReadReleased,
+  isCommunityWriteReleased,
+} from "@/lib/community/release-gate";
 import { verifyCommunityTurnstile } from "@/lib/community/turnstile";
 
 export async function GET(request: Request) {
+  if (!isCommunityPublicReadReleased()) {
+    return communityError("FEATURE_DISABLED");
+  }
   const url = new URL(request.url);
   const tool = await requirePublicToolSlug(url.searchParams.get("tool"));
   if (!tool.ok) {
@@ -75,6 +82,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (!isCommunityWriteReleased()) {
+    return communityError("FEATURE_DISABLED");
+  }
   const auth = await requireCommunityUserId(request);
   if (!auth.ok) return communityError("AUTH_REQUIRED");
 

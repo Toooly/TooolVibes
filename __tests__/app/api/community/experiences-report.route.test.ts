@@ -13,6 +13,13 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("server-only", () => ({}));
 
+vi.mock("@/lib/community/release-gate", () => ({
+  isCommunityPublicReadReleased: () => true,
+  isCommunityWriteReleased: () => true,
+  isCommunityOwnerGetReleased: () => true,
+  isCommunityReportReleased: () => true,
+}));
+
 vi.mock("@/lib/community/auth", () => ({
   requireCommunityUserId: async () =>
     mocks.auth.ok

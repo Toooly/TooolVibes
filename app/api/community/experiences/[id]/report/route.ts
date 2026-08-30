@@ -9,6 +9,7 @@ import {
   getRequestAddress,
   rateLimitResponseHeaders,
 } from "@/lib/community/rate-limit";
+import { isCommunityReportReleased } from "@/lib/community/release-gate";
 import { createExperienceReport } from "@/lib/community/report-repository";
 import { createReportSchema } from "@/lib/community/schema";
 
@@ -18,6 +19,9 @@ const UUID_PATTERN =
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, context: RouteContext) {
+  if (!isCommunityReportReleased()) {
+    return communityError("FEATURE_DISABLED");
+  }
   const auth = await requireCommunityUserId(request);
   if (!auth.ok) return communityError("AUTH_REQUIRED");
 

@@ -14,11 +14,15 @@ import {
   updateOwnerExperience,
 } from "@/lib/community/repository";
 import { revalidateExperienceToolPage } from "@/lib/community/revalidate";
+import { isCommunityWriteReleased } from "@/lib/community/release-gate";
 import { updateExperienceSchema } from "@/lib/community/schema";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: Request, context: RouteContext) {
+  if (!isCommunityWriteReleased()) {
+    return communityError("FEATURE_DISABLED");
+  }
   const auth = await requireCommunityUserId(request);
   if (!auth.ok) return communityError("AUTH_REQUIRED");
 
@@ -71,6 +75,9 @@ export async function PATCH(request: Request, context: RouteContext) {
 }
 
 export async function DELETE(request: Request, context: RouteContext) {
+  if (!isCommunityWriteReleased()) {
+    return communityError("FEATURE_DISABLED");
+  }
   const auth = await requireCommunityUserId(request);
   if (!auth.ok) return communityError("AUTH_REQUIRED");
   const { id } = await context.params;

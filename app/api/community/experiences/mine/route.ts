@@ -3,9 +3,13 @@ import { NextResponse } from "next/server";
 import { requireCommunityUserId } from "@/lib/community/auth";
 import { requirePublicToolSlug } from "@/lib/community/catalog";
 import { communityError } from "@/lib/community/errors";
+import { isCommunityOwnerGetReleased } from "@/lib/community/release-gate";
 import { getOwnerExperience } from "@/lib/community/repository";
 
 export async function GET(request: Request) {
+  if (!isCommunityOwnerGetReleased()) {
+    return communityError("FEATURE_DISABLED");
+  }
   const auth = await requireCommunityUserId(request);
   if (!auth.ok) return communityError("AUTH_REQUIRED");
 
