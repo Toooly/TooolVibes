@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  DISMISS_NOTE_PREFIX,
   isReportDisposition,
   isReportStatus,
   normalizeReportResolutionNote,
@@ -33,7 +32,7 @@ describe("H6 report resolution matrix", () => {
     }
   });
 
-  it("H6-DISMISS-01 open -> dismissed applies with convention note", () => {
+  it("H6-DISMISS-01 open -> dismissed applies first-class status", () => {
     const plan = planReportResolution({
       ...base,
       currentStatus: "open",
@@ -42,11 +41,12 @@ describe("H6 report resolution matrix", () => {
     });
     expect(plan.ok).toBe(true);
     if (plan.ok) {
-      expect(plan.patch.resolution_note).toBe(`${DISMISS_NOTE_PREFIX} dopo revisione.`);
+      expect(plan.patch.status).toBe("dismissed");
+      expect(plan.patch.resolution_note).toBeNull();
     }
   });
 
-  it("H6-DISMISS-02 dismissed with admin note is prefixed", () => {
+  it("H6-DISMISS-02 dismissed keeps human note without machine prefix", () => {
     const plan = planReportResolution({
       ...base,
       currentStatus: "open",
@@ -55,9 +55,8 @@ describe("H6 report resolution matrix", () => {
     });
     expect(plan.ok).toBe(true);
     if (plan.ok) {
-      expect(plan.patch.resolution_note).toBe(
-        `${DISMISS_NOTE_PREFIX}: Non serve azione`,
-      );
+      expect(plan.patch.status).toBe("dismissed");
+      expect(plan.patch.resolution_note).toBe("Non serve azione");
     }
   });
 
@@ -104,7 +103,8 @@ describe("H6 report resolution matrix", () => {
 
   it("guards recognise statuses and dispositions", () => {
     expect(isReportStatus("open")).toBe(true);
-    expect(isReportStatus("dismissed")).toBe(false);
+    expect(isReportStatus("dismissed")).toBe(true);
+    expect(isReportStatus("ignored")).toBe(false);
     expect(isReportDisposition("dismissed")).toBe(true);
     expect(isReportDisposition("reopen")).toBe(false);
     expect(normalizeReportResolutionNote("  ")).toBeNull();

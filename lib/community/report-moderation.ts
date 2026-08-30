@@ -1,4 +1,4 @@
-export const REPORT_STATUSES = ["open", "resolved"] as const;
+export const REPORT_STATUSES = ["open", "resolved", "dismissed"] as const;
 export type ReportStatus = (typeof REPORT_STATUSES)[number];
 
 export const REPORT_DISPOSITIONS = ["resolved", "dismissed"] as const;
@@ -6,8 +6,6 @@ export type ReportDisposition = (typeof REPORT_DISPOSITIONS)[number];
 
 export const REPORT_RESOLUTION_NOTE_MAX = 500;
 export const ADMIN_REPORT_PAGE_SIZE = 20;
-
-export const DISMISS_NOTE_PREFIX = "Ignorata";
 
 export function isReportStatus(value: unknown): value is ReportStatus {
   return (
@@ -37,7 +35,7 @@ export type ReportResolutionPlan =
   | {
       ok: true;
       patch: {
-        status: "resolved";
+        status: "resolved" | "dismissed";
         resolved_at: string;
         resolved_by: string;
         resolution_note: string | null;
@@ -63,19 +61,13 @@ export function planReportResolution(input: {
   if (input.currentStatus !== "open") {
     return { ok: false, code: "REPORT_STATE_CONFLICT" };
   }
-  const resolutionNote =
-    input.disposition === "dismissed"
-      ? note
-        ? `${DISMISS_NOTE_PREFIX}: ${note}`.slice(0, REPORT_RESOLUTION_NOTE_MAX)
-        : `${DISMISS_NOTE_PREFIX} dopo revisione.`
-      : note;
   return {
     ok: true,
     patch: {
-      status: "resolved",
+      status: input.disposition,
       resolved_at: input.nowIso,
       resolved_by: actor,
-      resolution_note: resolutionNote,
+      resolution_note: note,
     },
   };
 }

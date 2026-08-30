@@ -4,7 +4,6 @@ import { createAdminSupabaseClient } from "@/lib/supabase/admin-client";
 import { COMMUNITY_MODERATOR_ACTOR } from "@/lib/community/moderation";
 import {
   ADMIN_REPORT_PAGE_SIZE,
-  DISMISS_NOTE_PREFIX,
   isReportStatus,
   planReportResolution,
   reportScopeForDisposition,
@@ -105,16 +104,9 @@ export async function listExperienceReports(input: {
       .eq("status", "open")
       .order("created_at", { ascending: true })
       .order("id", { ascending: true });
-  } else if (input.scope === "dismissed") {
-    query = query
-      .eq("status", "resolved")
-      .like("resolution_note", `${DISMISS_NOTE_PREFIX}%`)
-      .order("resolved_at", { ascending: false, nullsFirst: false })
-      .order("id", { ascending: false });
   } else {
     query = query
-      .eq("status", "resolved")
-      .or(`resolution_note.is.null,resolution_note.not.like.${DISMISS_NOTE_PREFIX}%`)
+      .eq("status", input.scope)
       .order("resolved_at", { ascending: false, nullsFirst: false })
       .order("id", { ascending: false });
   }
