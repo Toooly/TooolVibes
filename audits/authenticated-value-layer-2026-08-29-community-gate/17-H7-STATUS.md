@@ -1,6 +1,6 @@
 # H7 STATUS — production landing + release hardening
 
-Status: **IN PROGRESS** (schema landed dark; app not merged).
+Status: **BLOCKED on Worker size**. Schema landed dark. Git is on `main` `1d46ac3`. App runtime not updated.
 
 Do not mark H0–H6 RELEASED until the dark app deploy exists.
 
@@ -98,9 +98,29 @@ Did **not** apply `20260828000000` workspace events.
 
 DB stays. **No DROP** after public data exists. Before public data, drop is technically possible; policy is still flags/app rollback.
 
+## Deploy
+
+`git push origin main` → `1d46ac3`.
+
+Workers Builds left `/api/release` as `{ sha: development }`.
+
+Canonical `npm run cloudflare:deploy` from `1d46ac3` **failed**:
+
+- Cloudflare error **10027**
+- Worker exceeded **3 MiB** size limit
+- Upload `14590.15 KiB` / gzip **`3228.44 KiB`** (over 3072 KiB)
+- Largest: `.open-next/server-functions/default/handler.mjs` 14351.85 KiB
+- wrangler vars included Community flags all `"0"`
+- **No second deploy attempted**
+
+Latest successful Worker version remains **2026-08-29T22:03** (`89623406-…`), pre-Community.
+
+Production still has no `/api/community/*` (HTML 404). Tool Page has no Esperienze.
+
 ## Remaining H7
 
-- Full suite / lint / styles / flag-off build
-- Merge + dark deploy (`READ/WRITE/REPORT` stay 0)
-- Controlled activation + real-auth smokes
-- Cloudflare 1280 recheck
+- Unblock Worker size (account limit vs gzip growth) then **one** `cloudflare:deploy`
+- Dark production smoke on the new SHA
+- Controlled READ then WRITE (Turnstile) then REPORT
+- Real-auth smokes if safe sessions exist
+- Do **not** start Final Closure until the Worker is live
