@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { isValidUuid } from "@/app/(admin)/admin/actions/_helpers";
 import { requireAdminSession } from "@/lib/admin/session";
-import { isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
+import { isSupabaseAdminEnabled } from "@/lib/supabase/admin-client";
 import { toolSlugSchema } from "@/lib/community/schema";
 import {
   isReportDisposition,

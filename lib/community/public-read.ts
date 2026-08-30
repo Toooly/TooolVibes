@@ -1,6 +1,6 @@
 import "server-only";
 
-import { isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
+import { isSupabaseAdminEnabled } from "@/lib/supabase/admin-client";
 import { encodeExperienceCursor } from "@/lib/community/http";
 import { listPublishedExperiences } from "@/lib/community/repository";
 import { isCommunityReadEnabled } from "@/lib/community/read-flag";

@@ -101,7 +101,7 @@ const structuredData = [
   },
 ];
 
-import { IntroCinematic3D } from "@/components/3d-maestoso/intro-cinematic";
+import { IntroCinematic3DLazy } from "@/components/3d-maestoso/intro-cinematic-lazy";
 import { homeExperience } from "@/lib/config/home-experience";
 
 export default async function RootLayout({
@@ -171,7 +171,7 @@ export default async function RootLayout({
           {isGateOpen &&
             releaseFeatures.threeD.enabled &&
             homeExperience.introMode !== "off" && (
-              <IntroCinematic3D mode={homeExperience.introMode} />
+              <IntroCinematic3DLazy mode={homeExperience.introMode} />
             )}
           {children}
         </RootProviders>

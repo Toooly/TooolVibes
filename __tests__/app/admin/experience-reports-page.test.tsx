@@ -19,7 +19,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("server-only", () => ({}));
 
-vi.mock("@/lib/admin/tool-queries", () => ({
+vi.mock("@/lib/supabase/admin-client", () => ({
   isSupabaseAdminEnabled: () => mocks.adminEnabled,
 }));
 

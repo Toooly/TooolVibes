@@ -12,7 +12,7 @@ vi.mock("@/lib/community/read-flag", () => ({
   isCommunityReadEnabled: () => mocks.enabled,
 }));
 
-vi.mock("@/lib/admin/tool-queries", () => ({
+vi.mock("@/lib/supabase/admin-client", () => ({
   isSupabaseAdminEnabled: () => mocks.admin,
 }));
 

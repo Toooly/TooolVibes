@@ -1,5 +1,5 @@
 import { FounderControlCenterV2 } from "@/components/admin/founder-control-center-v2";
-import { SiteUniverseBackground } from "@/components/app/site-universe-background";
+import { SiteUniverseBackgroundLazy } from "@/components/app/site-universe-background-lazy";
 import { getAdminArticlesRuntime } from "@/lib/admin/article-queries";
 import { getSuggestionsRuntime } from "@/lib/admin/suggestion-queries";
 import { requireAdminSession } from "@/lib/admin/session";
@@ -19,7 +19,7 @@ export default async function ProtectedAdminLayout({
 
   return (
     <div className="relative min-h-screen overflow-x-clip" data-admin-shell>
-      <SiteUniverseBackground />
+      <SiteUniverseBackgroundLazy />
       <div className="relative z-10">
         <FounderControlCenterV2
           articlesRuntime={articlesRuntime}

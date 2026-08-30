@@ -11,7 +11,7 @@ import {
   hideExperienceFromReportAction,
   resolveExperienceReportAction,
 } from "@/app/(admin)/admin/actions/experience-reports";
-import { isSupabaseAdminEnabled } from "@/lib/admin/tool-queries";
+import { isSupabaseAdminEnabled } from "@/lib/supabase/admin-client";
 import { resolveCatalogToolLabels } from "@/lib/community/catalog";
 import {
   REPORT_REASON_LABELS,

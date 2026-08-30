@@ -25,7 +25,7 @@ vi.mock("@/lib/admin/session", () => ({
   },
 }));
 
-vi.mock("@/lib/admin/tool-queries", () => ({
+vi.mock("@/lib/supabase/admin-client", () => ({
   isSupabaseAdminEnabled: () => mocks.adminEnabled,
 }));
 
