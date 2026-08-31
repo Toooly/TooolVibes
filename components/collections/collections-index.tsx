@@ -87,7 +87,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
               ruoli e ordine di lavoro già decisi per un risultato preciso.
               Non un elenco di preferiti. Non una lista della spesa.
               <br />
-              Se cerchi un singolo tool, vai su <Link href="/toools">Catalogo</Link>.
+              Se cerchi un singolo tool, vai su <Link href="/archivio">Catalogo</Link>.
               Se vuoi studiarne uno in profondità, le <Link href="/posts">Guide</Link>.
             </p>
             <div className="cx-index__meta" aria-label="A colpo d'occhio">

@@ -211,7 +211,7 @@ export function CollectionDetailHeroV4({
             <span>Apri lo stack</span>
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
-          <Link href="/toools" className="cx-detail-hero-v4__cta cx-detail-hero-v4__cta--secondary">
+          <Link href="/archivio" className="cx-detail-hero-v4__cta cx-detail-hero-v4__cta--secondary">
             Tutti i tool del Catalogo
           </Link>
         </div>

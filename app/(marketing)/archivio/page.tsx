@@ -40,7 +40,10 @@ export default async function ArchivePage() {
      organico e mai in coda al catalogo. L'ordine organico resta intatto. */
   // V2 contract: non renderizzare lo slot se il record è demo/fixture/
   // development/placeholder. Wrapper identico a quello della Home V2.
-  const placement = resolvePublicMonetizationPlacement("catalog-native-sponsor");
+  const renderNow = new Date();
+  const placement = resolvePublicMonetizationPlacement("catalog-native-sponsor", {
+    now: renderNow,
+  });
 
   return (
     <div className="archive-final-surface relative overflow-x-hidden">
@@ -56,6 +59,7 @@ export default async function ArchivePage() {
               placementKey="catalog-native-sponsor"
               className="archive-partner-placement"
               trackerRoute="/archivio"
+              context={{ now: renderNow }}
             />
           ) : null
         }

@@ -312,12 +312,25 @@ export const monetizationPlacements = [
 
 export type MonetizationPlacementKey = (typeof monetizationPlacements)[number]["key"];
 
+export function resolutionNowMs(context?: Partial<PartnerResolutionContext>) {
+  const now = context?.now as unknown;
+  if (now instanceof Date) return now.getTime();
+  if (typeof now === "number" && Number.isFinite(now)) return now;
+  if (typeof now === "string") {
+    const parsed = Date.parse(now);
+    if (!Number.isNaN(parsed)) return parsed;
+  }
+  return Date.now();
+}
+
 export function resolvePublicMonetizationPlacement(
   key: MonetizationPlacementKey,
   context?: Partial<PartnerResolutionContext>,
 ): PublicMonetizationPlacement | null {
   const placement = getMonetizationPlacement(key, context);
-  return isPublicMonetizationPlacement(placement) ? placement : null;
+  return isPublicMonetizationPlacement(placement, resolutionNowMs(context))
+    ? placement
+    : null;
 }
 
 /**
@@ -343,7 +356,7 @@ function applyPartnerCampaign(
     toolSlug: context?.toolSlug,
     tags: context?.tags,
     text: context?.text,
-    now: context?.now,
+    now: new Date(resolutionNowMs(context)),
   });
 
   if (!campaign) {
@@ -429,8 +442,10 @@ function isAllowedPartnerUrl(value: string | undefined) {
   }
 }
 
-function isWithinFlightWindow(placement: MonetizationPlacement) {
-  const now = Date.now();
+function isWithinFlightWindow(
+  placement: MonetizationPlacement,
+  now: number = Date.now(),
+) {
   if (placement.startDate) {
     const start = Date.parse(placement.startDate);
     if (!Number.isNaN(start) && now < start) return false;
@@ -455,10 +470,11 @@ function isWithinFlightWindow(placement: MonetizationPlacement) {
  */
 export function isPublicMonetizationPlacement(
   placement: MonetizationPlacement | undefined,
+  now: number = Date.now(),
 ): placement is PublicMonetizationPlacement {
   if (!placement) return false;
   if (placement.active === false) return false;
-  if (!isWithinFlightWindow(placement)) return false;
+  if (!isWithinFlightWindow(placement, now)) return false;
   if (placement.partner?.isDemo) return false;
 
   return Boolean(

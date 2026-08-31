@@ -60,6 +60,7 @@ type DefinitiveHomeProps = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
   announcement?: { text: string; href: string; image?: string | null } | null;
+  renderNowMs?: number;
 };
 
 const METHOD_STEPS = [
@@ -657,8 +658,9 @@ function Method() {
 // ============================================================
 // ROOT
 // ============================================================
-export function DefinitiveHome({ tools, weeklyTool, announcement = null }: DefinitiveHomeProps) {
+export function DefinitiveHome({ tools, weeklyTool, announcement = null, renderNowMs }: DefinitiveHomeProps) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
+  const renderNow = new Date(renderNowMs ?? Date.now());
   return (
     <div className="def-home">
       {announcement ? (
@@ -676,7 +678,7 @@ export function DefinitiveHome({ tools, weeklyTool, announcement = null }: Defin
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <TinyAdzInlineSlot placement="home-editorial" />
       <Method />
-      <SponsorSection placementKey="home-featured-tool" />
+      <SponsorSection placementKey="home-featured-tool" now={renderNow} />
     </div>
   );
 }
@@ -688,11 +690,13 @@ export function DefinitiveHome({ tools, weeklyTool, announcement = null }: Defin
 // ============================================================
 function SponsorSection({
   placementKey,
+  now,
 }: {
   placementKey: Parameters<typeof FeaturedPartner>[0]["placementKey"];
+  now: Date;
 }) {
   // Resolve directly so we can hide the whole section if no real partner.
-  const placement = resolvePublicMonetizationPlacement(placementKey);
+  const placement = resolvePublicMonetizationPlacement(placementKey, { now });
   if (!placement) return null;
   return (
     <section
@@ -704,6 +708,7 @@ function SponsorSection({
           placementKey={placementKey}
           className="def-home__placement"
           trackerRoute="/"
+          context={{ now }}
         />
       </div>
       <div className="def-home__sponsor-opportunity">

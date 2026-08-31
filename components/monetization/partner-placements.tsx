@@ -24,6 +24,7 @@ import {
 import {
   getMonetizationPlacement,
   isPublicMonetizationPlacement,
+  resolutionNowMs,
   type MonetizationPlacement,
   type MonetizationPlacementKey,
   type PublicMonetizationPlacement,
@@ -53,7 +54,9 @@ export function resolvePublicPlacement(
   context?: Partial<PartnerResolutionContext>,
 ): PublicMonetizationPlacement | null {
   const placement = getMonetizationPlacement(placementKey, context);
-  return isPublicMonetizationPlacement(placement) ? placement : null;
+  return isPublicMonetizationPlacement(placement, resolutionNowMs(context))
+    ? placement
+    : null;
 }
 
 function isOpenSlotPlacement(
@@ -284,8 +287,9 @@ export function FeaturedPartner({
   placementKey,
   className,
   trackerRoute = "",
+  context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
 
   if (resolved.kind === "open-slot") {
     return (
@@ -358,8 +362,9 @@ export function PartnerEditorialInsert({
   placementKey,
   className,
   trackerRoute = "",
+  context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
 
   if (resolved.kind === "open-slot") {
     return (

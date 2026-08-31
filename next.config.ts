@@ -17,6 +17,15 @@ const nextConfig: NextConfig = {
     TOOOLVIBES_BUILD_TIMESTAMP:
       process.env.TOOOLVIBES_BUILD_TIMESTAMP ?? "development",
   },
+  async redirects() {
+    return [
+      {
+        source: "/toools",
+        destination: "/archivio",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
