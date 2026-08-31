@@ -5,17 +5,16 @@ import { usePathname } from "next/navigation";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
 import { isTinyAdzEligiblePath } from "@/lib/ads/tinyadz-config";
-import { bestEffortHideTinyAdz, tinyadzRuntimeActive } from "@/components/ads/tinyadz-runtime";
+import {
+  bestEffortHideTinyAdz,
+  requestTinyAdzAd,
+  tinyadzRuntimeActive,
+} from "@/components/ads/tinyadz-runtime";
 
 /**
- * SPA route-lifecycle guard for TinyAdz.
- *
- * `main.js` re-arms `requestNextAd()` on history/popstate, so a TinyAdz popup
- * can survive client navigation onto an excluded route (e.g. /compare, whose
- * own fresh load is clean). Because TinyAdz exposes no official destroy API,
- * when we transition from an ACTIVE eligible route to an EXCLUDED route we:
- * Hide the popup on excluded routes. Do not full-page reload: that made ads
- * appear intermittently after SPA navigation.
+ * SPA route-lifecycle for TinyAdz.
+ * Hide on excluded routes. Ask for the next ad when coming back to an
+ * eligible route so navigation cannot starve the runtime.
  */
 export function TinyAdzLifecycle() {
   const { state } = useAdvertisingConsent();
@@ -28,13 +27,16 @@ export function TinyAdzLifecycle() {
     previousEligible.current = eligible;
 
     if (previous === null) {
-      return; // initial mount — no transition to react to
+      return;
     }
 
-    const wasActive = previous === true && state === "granted";
-    const nowExcluded = eligible === false;
-    if (wasActive && nowExcluded && tinyadzRuntimeActive()) {
+    const granted = state === "granted";
+    if (previous === true && eligible === false && granted && tinyadzRuntimeActive()) {
       bestEffortHideTinyAdz();
+      return;
+    }
+    if (previous === false && eligible === true && granted) {
+      requestTinyAdzAd();
     }
   }, [pathname, state]);
 

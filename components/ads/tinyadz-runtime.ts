@@ -26,6 +26,7 @@ type TinyAdzManager = {
   hidePopup?: () => void;
   resetContent?: () => void;
   hideWidget?: (iframe?: HTMLElement | null) => void;
+  requestNextAd?: () => void;
 };
 
 type TinyAdzWindow = Window & { $ta2_ads?: TinyAdzManager };
@@ -92,5 +93,17 @@ export function reloadOnce(reason: string): boolean {
   } catch {
     window.location.reload();
     return true;
+  }
+}
+
+export function requestTinyAdzAd(): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  const manager = (window as TinyAdzWindow).$ta2_ads;
+  try {
+    manager?.requestNextAd?.();
+  } catch {
+    // TinyAdz has no guaranteed public API.
   }
 }

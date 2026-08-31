@@ -50,9 +50,9 @@ export function ConsentBanner() {
       <div className="mx-auto flex max-w-5xl flex-col gap-3">
         <h2 className="text-sm font-semibold">Rispettiamo la tua privacy</h2>
         <p className="text-sm text-muted-foreground">
-          Usiamo cookie tecnici per il funzionamento del sito. Pubblicità e
-          misurazione (TinyAdz) caricano componenti di terze parti e utilizzano
-          dati solo con il tuo consenso.
+          Usiamo cookie tecnici per far funzionare il sito. Per vedere anche
+          gli spazi pubblicitari TinyAdz, scegli Accetta tutto. Puoi cambiare
+          idea in qualsiasi momento.
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <button

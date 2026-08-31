@@ -7,10 +7,8 @@
  * identifier supplied by the TinyAdz owner dashboard — it is not a secret.
  *
  * Safety posture:
- *  - The whole integration is behind a feature flag that defaults to OFF.
- *  - The site id defaults to null; without it no script is ever rendered.
- *  - Test mode defaults to "true" so a fresh environment can never silently
- *    serve live advertising without an explicit opt-in.
+ *  - Local/test defaults stay off / test-mode on.
+ *  - Production with a site id stays on (live mode) unless explicitly disabled.
  */
 
 export const TINYADZ_SCRIPT_URL =
@@ -54,10 +52,18 @@ function parseFlag(value: string | undefined, defaultValue: boolean): boolean {
 export function readTinyAdzConfig(
   environment: Readonly<Record<string, string | undefined>> = {},
 ): TinyAdzConfig {
-  const enabled = parseFlag(environment[TINYADZ_ENABLED_ENV], false);
   const siteId = environment[TINYADZ_SITE_ID_ENV]?.trim() || null;
-  const testMode =
-    parseFlag(environment[TINYADZ_TEST_MODE_ENV], true) ? "true" : "false";
+  const production = process.env.NODE_ENV === "production";
+  const enabled = parseFlag(
+    environment[TINYADZ_ENABLED_ENV],
+    production && Boolean(siteId),
+  );
+  const testMode = parseFlag(
+    environment[TINYADZ_TEST_MODE_ENV],
+    !production,
+  )
+    ? "true"
+    : "false";
 
   return Object.freeze({ enabled, siteId, testMode });
 }
