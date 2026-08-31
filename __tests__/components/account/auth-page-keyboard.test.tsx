@@ -102,7 +102,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
     const email = screen.getByLabelText("Email");
     expect(email.className).toContain("tv-kbd-input");
 
-    const submit = screen.getByRole("button", { name: /Entra nel mio TooolVibes/ });
+    const submit = screen.getByRole("button", { name: /Inviami il link/ });
     expect(submit.className).toContain("tv-kbd-sheet__footer");
 
     vi.spyOn(email, "getBoundingClientRect").mockReturnValue({
@@ -138,7 +138,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
       expect(field.className).toContain("tv-kbd-input");
     }
 
-    const submit = screen.getByRole("button", { name: "Crea il mio spazio" });
+    const submit = screen.getByRole("button", { name: "Crea lo spazio" });
     expect(submit.className).toContain("tv-kbd-sheet__footer");
   });
 
@@ -168,7 +168,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
 
       const email = screen.getByLabelText("Email") as HTMLInputElement;
       expect(email.disabled).toBe(false);
-      const submit = screen.getByRole("button", { name: /Entra nel mio TooolVibes/ });
+      const submit = screen.getByRole("button", { name: /Inviami il link/ });
       expect(submit.className).toContain("tv-kbd-sheet__footer");
       // Recovery: tab switch e link footer restano nel DOM.
       expect(screen.getByRole("tab", { name: "Crea spazio" })).toBeTruthy();

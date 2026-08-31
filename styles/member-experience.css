@@ -38,7 +38,7 @@
 
 .tv-scenic-load__mark {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: var(--tv-text-eyebrow);
   font-weight: 700;
   letter-spacing: 0.28em;
   color: rgba(237, 233, 254, 0.82);
@@ -73,7 +73,7 @@
 
 .tv-member-gate__kicker {
   margin: 0 0 0.45rem;
-  font-size: 0.72rem;
+  font-size: var(--tv-text-eyebrow);
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -291,7 +291,7 @@
 
 .tv-route-guide__kicker {
   margin: 0 0 0.2rem;
-  font-size: 0.68rem;
+  font-size: var(--tv-text-eyebrow);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;

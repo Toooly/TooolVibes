@@ -27,6 +27,7 @@ const eslintConfig = [
       "_debug_*.mjs",
       "_quick_test.mjs",
       ".slim/**",
+      ".tmp-qa/**",
       "supabase/.temp/**",
       ".tmp-edit*.js",
       ".tmp-edit*.ts",

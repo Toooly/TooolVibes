@@ -128,6 +128,7 @@ describe("release design token contract", () => {
       "@/styles/admin-shell.css",
       "@/styles/partner-placements.css",
       "@/styles/premium-motion.css",
+      "@/styles/member-experience.css",
     ]);
   });
 });

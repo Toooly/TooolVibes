@@ -74,3 +74,11 @@ supabase/.branches/
 
 # Local prelaunch visual evidence (kept outside git)
 audits/prelaunch-*/
+
+# Local QA captures (must not pollute lint/CI)
+.tmp-qa/
+
+# Transient local logs / bridge artifacts
+.codex-next-dev*.log
+next-radar-start.*.log
+webbridge-req-*.json
