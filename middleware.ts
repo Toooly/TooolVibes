@@ -121,7 +121,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|brand|images|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2)$).*)",
-  ],
+  matcher: releaseFeatures.publicGate.enabled
+    ? [
+        "/((?!_next/static|_next/image|favicon.ico|brand|images|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2)$).*)",
+      ]
+    : ["/admin/:path*", "/admin-login", "/api/:path*", "/dev/:path*"],
 };

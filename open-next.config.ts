@@ -1,9 +1,13 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
+import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
 
 // Cloudflare Workers Builds and local release path both use Node 22.23.1 + npm.
-// Do not force bun here: CF builders do not guarantee bun, and an empty bun.lock
-// previously made Git-connected builds fail while manual wrangler deploys worked.
-const baseConfig = defineCloudflareConfig();
+// Prerendered pages are served from Workers static assets so Free-plan CPU
+// is not spent re-running Next on every public hit (Error 1102).
+const baseConfig = defineCloudflareConfig({
+  incrementalCache: staticAssetsIncrementalCache,
+  enableCacheInterception: true,
+});
 
 const config = {
   ...baseConfig,
