@@ -47,7 +47,7 @@ describe("RouteTransitionLoader", () => {
     );
 
     fireEvent.click(view.getByText("Radar"));
-    let loader = view.container.querySelector(".route-transition-signal");
+    let loader = view.container.querySelector(".tv-route-guide");
 
     expect(loader?.classList.contains("is-visible")).toBe(true);
 
@@ -62,14 +62,14 @@ describe("RouteTransitionLoader", () => {
     );
 
     act(() => {
-      vi.advanceTimersByTime(79);
+      vi.advanceTimersByTime(479);
     });
     expect(loader?.classList.contains("is-visible")).toBe(true);
 
     act(() => {
       vi.advanceTimersByTime(1);
     });
-    loader = view.container.querySelector(".route-transition-signal");
+    loader = view.container.querySelector(".tv-route-guide");
     expect(loader?.classList.contains("is-visible")).toBe(false);
   });
 
@@ -95,7 +95,7 @@ describe("RouteTransitionLoader", () => {
     );
 
     fireEvent.click(view.getByText("Radar"));
-    const loader = view.container.querySelector(".route-transition-signal");
+    const loader = view.container.querySelector(".tv-route-guide");
     expect(loader?.classList.contains("is-visible")).toBe(false);
   });
 });

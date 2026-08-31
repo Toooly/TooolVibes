@@ -4863,33 +4863,6 @@ canvas {
   }
 }
 
-/* Route transition loader: clean mobile overrides */
-@media (max-width: 640px) {
-  .route-transition-signal {
-    padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
-  }
-
-  .route-transition-signal__stage {
-    width: min(94vw, 24rem);
-    min-height: 16rem;
-    border-radius: 24px;
-  }
-
-  .route-transition-signal__word {
-    font-size: clamp(2rem, 10vw, 2.8rem);
-    letter-spacing: 0.035em;
-  }
-
-  .route-transition-signal__label {
-    font-size: var(--tv-text-xs);
-    letter-spacing: 0.14em;
-  }
-
-  .route-transition-signal__track {
-    width: min(72vw, 15rem);
-    height: 3px;
-  }
-}
 
 @keyframes tv-hologram-pulse {
   0%, 100% {

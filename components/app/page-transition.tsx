@@ -32,8 +32,8 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     <motion.div
       key={pathname}
       className="tv-page-transition"
-      initial={false}
-      animate={preset.animate}
+      initial={preferReducedMotion ? false : { opacity: 0.18 }}
+      animate={{ opacity: 1 }}
       transition={preset.transition}
     >
       {children}

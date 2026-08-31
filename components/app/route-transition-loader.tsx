@@ -1,13 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import {
-  type CSSProperties,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { SOUND_PLAY_EVENT } from "@/lib/config/sound";
 import {
@@ -15,43 +9,28 @@ import {
   shouldShowRouteTransitionPresentation,
 } from "@/lib/motion/reduced-motion";
 
-type RouteSignalConfig = {
-  label: string;
-  coordinate: string;
-  accentA: string;
-  accentB: string;
-};
+const HOLD_MS = 480;
+const SAFETY_MS = 900;
 
-/** Perceptual route feedback — never artificial waiting. */
-const SIGNAL_MS = 240;
-const SAFETY_MS = 420;
-
-const DEFAULT_ROUTE: RouteSignalConfig = {
-  label: "Nuova regione",
-  coordinate: "TV-00",
-  accentA: "106, 60, 255",
-  accentB: "57, 210, 246",
-};
-
-const ROUTE_COPY: Record<string, RouteSignalConfig> = {
-  "/": { label: "Home", coordinate: "TV-01", accentA: "106, 60, 255", accentB: "57, 210, 246" },
-  "/compare": { label: "Confronto", coordinate: "TV-CF", accentA: "243, 191, 76", accentB: "106, 60, 255" },
-  "/archivio": { label: "Catalogo", coordinate: "TV-CT", accentA: "57, 210, 246", accentB: "106, 60, 255" },
-  "/radar": { label: "Radar", coordinate: "TV-RD", accentA: "57, 210, 246", accentB: "255, 176, 76" },
-  "/product-hunt": { label: "Radar", coordinate: "TV-RD", accentA: "57, 210, 246", accentB: "255, 176, 76" },
-  "/collections": { label: "Raccolte", coordinate: "TV-RC", accentA: "216, 180, 254", accentB: "106, 60, 255" },
-  "/shortlist": { label: "Salvati", coordinate: "TV-SV", accentA: "243, 191, 76", accentB: "106, 60, 255" },
-  "/wishlist": { label: "Suggerisci", coordinate: "TV-SG", accentA: "216, 180, 254", accentB: "124, 58, 237" },
-  "/tags": { label: "Tag", coordinate: "TV-TG", accentA: "57, 210, 246", accentB: "124, 58, 237" },
-  "/posts": { label: "Guide", coordinate: "TV-GD", accentA: "243, 191, 76", accentB: "124, 58, 237" },
-  "/toools": { label: "Scheda tool", coordinate: "TV-TL", accentA: "57, 210, 246", accentB: "106, 60, 255" },
-  "/account": { label: "Account", coordinate: "TV-AC", accentA: "216, 180, 254", accentB: "106, 60, 255" },
-  "/shop": { label: "Shop", coordinate: "TV-SH", accentA: "243, 191, 76", accentB: "124, 58, 237" },
-  "/contributi": { label: "Contributi", coordinate: "TV-CN", accentA: "57, 210, 246", accentB: "124, 58, 237" },
-  "/studio": { label: "Studio", coordinate: "TV-ST", accentA: "216, 180, 254", accentB: "124, 58, 237" },
-  "/metodo": { label: "Metodo", coordinate: "TV-MT", accentA: "106, 60, 255", accentB: "243, 191, 76" },
-  "/chi-siamo": { label: "Chi siamo", coordinate: "TV-CS", accentA: "243, 191, 76", accentB: "106, 60, 255" },
-  "/affiliati": { label: "Affiliati", coordinate: "TV-AF", accentA: "57, 210, 246", accentB: "106, 60, 255" },
+const ROUTE_LABELS: Record<string, string> = {
+  "/": "Home",
+  "/compare": "Confronto",
+  "/archivio": "Catalogo",
+  "/radar": "Radar",
+  "/product-hunt": "Radar",
+  "/collections": "Raccolte",
+  "/shortlist": "Salvati",
+  "/wishlist": "Suggerisci",
+  "/tags": "Tag",
+  "/posts": "Guide",
+  "/toools": "Scheda tool",
+  "/account": "Il tuo spazio",
+  "/shop": "Shop",
+  "/contributi": "Contributi",
+  "/studio": "Studio",
+  "/metodo": "Metodo",
+  "/chi-siamo": "Chi siamo",
+  "/affiliati": "Affiliati",
 };
 
 function isModifiedNavigation(event: MouseEvent) {
@@ -68,44 +47,39 @@ function getInternalDestination(anchor: HTMLAnchorElement) {
   if (anchor.target || anchor.hasAttribute("download")) {
     return null;
   }
-
   const destination = new URL(anchor.href, window.location.href);
-
   if (destination.origin !== window.location.origin) {
     return null;
   }
-
   const current = new URL(window.location.href);
   const sameTarget =
     destination.pathname === current.pathname &&
     destination.search === current.search &&
     destination.hash === current.hash;
-
   return sameTarget ? null : destination;
 }
 
-function getRouteSignalConfig(pathname: string): RouteSignalConfig {
-  if (pathname === "/") return ROUTE_COPY["/"];
-  const match = Object.entries(ROUTE_COPY).find(
+function labelForPath(pathname: string) {
+  if (pathname === "/") return ROUTE_LABELS["/"];
+  const match = Object.entries(ROUTE_LABELS).find(
     ([path]) => path !== "/" && pathname.startsWith(path),
   );
-  return match?.[1] ?? DEFAULT_ROUTE;
+  return match?.[1] ?? "TooolVibes";
 }
 
-function canShowRouteSignal() {
+function canShow() {
   return shouldShowRouteTransitionPresentation(getPrefersReducedMotion());
 }
 
 export function RouteTransitionLoader() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [routeTheme, setRouteTheme] = useState(DEFAULT_ROUTE);
+  const [label, setLabel] = useState("TooolVibes");
   const visibleRef = useRef(false);
   const hideTimerRef = useRef<number | null>(null);
   const safetyTimerRef = useRef<number | null>(null);
-  const rafRef = useRef<number | null>(null);
   const previousPathRef = useRef(pathname);
+  const startedAtRef = useRef(0);
 
   const clearTimers = useCallback(() => {
     if (hideTimerRef.current) {
@@ -116,127 +90,78 @@ export function RouteTransitionLoader() {
       window.clearTimeout(safetyTimerRef.current);
       safetyTimerRef.current = null;
     }
-    if (rafRef.current) {
-      window.cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
   }, []);
 
-  const finishSignal = useCallback(() => {
+  const finish = useCallback(() => {
     if (!visibleRef.current) return;
     clearTimers();
-    setProgress(100);
+    const hold = Math.max(0, HOLD_MS - (performance.now() - startedAtRef.current));
     hideTimerRef.current = window.setTimeout(() => {
       visibleRef.current = false;
       setVisible(false);
-      setProgress(0);
-    }, 80);
+    }, hold);
   }, [clearTimers]);
 
-  const startSignal = useCallback(
+  const start = useCallback(
     (destination: URL) => {
-      if (!canShowRouteSignal()) return;
-
+      if (!canShow()) return;
       clearTimers();
-      const config = getRouteSignalConfig(destination.pathname);
-      const startedAt = performance.now();
+      startedAtRef.current = performance.now();
       visibleRef.current = true;
-      setRouteTheme(config);
+      setLabel(labelForPath(destination.pathname));
       setVisible(true);
-      setProgress(12);
       window.dispatchEvent(
         new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "route" } }),
       );
-
-      const tick = (now: number) => {
-        const elapsed = now - startedAt;
-        // Ease toward 88% while navigation resolves — never invent a long wait.
-        const next = Math.min(88, 12 + (elapsed / SIGNAL_MS) * 76);
-        setProgress(next);
-        if (elapsed < SIGNAL_MS && visibleRef.current) {
-          rafRef.current = window.requestAnimationFrame(tick);
-        }
-      };
-      rafRef.current = window.requestAnimationFrame(tick);
-
       safetyTimerRef.current = window.setTimeout(() => {
-        finishSignal();
+        finish();
       }, SAFETY_MS);
     },
-    [clearTimers, finishSignal],
+    [clearTimers, finish],
   );
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
       if (isModifiedNavigation(event)) return;
-
       const target =
         event.target instanceof Element
           ? event.target.closest<HTMLAnchorElement>("a[href]")
           : null;
-
       if (!target || target.closest("[data-loader-ignore='true']")) return;
-
       const destination = getInternalDestination(target);
       if (!destination) return;
-
-      const current = new URL(window.location.href);
-      startSignal(destination);
-
-      if (destination.pathname === current.pathname) {
-        hideTimerRef.current = window.setTimeout(() => {
-          finishSignal();
-        }, 100);
-      }
+      start(destination);
     }
-
     document.addEventListener("click", handleClick, { capture: true });
     return () =>
       document.removeEventListener("click", handleClick, { capture: true });
-  }, [finishSignal, startSignal]);
+  }, [start]);
 
   useEffect(() => {
     if (previousPathRef.current !== pathname) {
       previousPathRef.current = pathname;
-      finishSignal();
+      finish();
     }
-  }, [finishSignal, pathname]);
+  }, [finish, pathname]);
 
   useEffect(() => clearTimers, [clearTimers]);
 
-  const liveLabel = visible
-    ? `Navigazione verso ${routeTheme.label}`
-    : undefined;
-
   return (
     <div
-      className={`route-transition-signal ${visible ? "is-visible" : ""}`}
+      className={visible ? "tv-route-guide is-visible" : "tv-route-guide"}
+      data-testid="tv-route-guide"
       aria-hidden={visible ? undefined : true}
-      style={
-        {
-          "--route-progress": `${progress}%`,
-          "--route-accent-a": routeTheme.accentA,
-          "--route-accent-b": routeTheme.accentB,
-        } as CSSProperties
-      }
     >
+      <div className="tv-route-guide__veil" aria-hidden="true" />
       <div
-        className="route-transition-signal__bar"
+        className="tv-route-guide__card"
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        aria-label={liveLabel}
+        aria-label={visible ? `Verso ${label}` : undefined}
       >
-        <span className="route-transition-signal__fill" aria-hidden="true" />
-        <span className="route-transition-signal__meta" aria-hidden="true">
-          <span className="route-transition-signal__coord">
-            {routeTheme.coordinate}
-          </span>
-          <span className="route-transition-signal__label">
-            {routeTheme.label}
-          </span>
-          <span className="route-transition-signal__pulse" />
-        </span>
+        <p className="tv-route-guide__kicker">Verso</p>
+        <p className="tv-route-guide__title">{label}</p>
       </div>
     </div>
   );

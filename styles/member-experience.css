@@ -245,3 +245,94 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+
+/* Route guide — dock on mobile, panel on desktop. Never a top bar. */
+.tv-route-guide {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--tv-z-nav, 50) + 12);
+  display: grid;
+  place-items: end center;
+  padding: 0 1rem calc(var(--tv-bottom-nav-total, 4.0625rem) + 0.85rem);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease, visibility 200ms linear;
+}
+
+.tv-route-guide.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tv-route-guide__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 42%, rgba(8, 4, 24, 0.42) 100%);
+}
+
+.tv-route-guide__card {
+  position: relative;
+  width: min(20rem, calc(100vw - 2rem));
+  padding: 0.95rem 1.15rem 1.05rem;
+  border: 1px solid rgba(196, 181, 253, 0.26);
+  border-radius: 1.35rem;
+  background: #1a1238;
+  box-shadow: 0 18px 48px rgba(8, 4, 24, 0.45);
+  text-align: center;
+  transform: translate3d(0, 1.1rem, 0);
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tv-route-guide.is-visible .tv-route-guide__card {
+  transform: none;
+}
+
+.tv-route-guide__kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(196, 181, 253, 0.78);
+}
+
+.tv-route-guide__title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: #f8f5ff;
+}
+
+@media (min-width: 1280px) {
+  .tv-route-guide {
+    place-items: center;
+    padding: 0;
+  }
+
+  .tv-route-guide__veil {
+    background: rgba(8, 4, 24, 0.22);
+  }
+
+  .tv-route-guide__card {
+    width: min(22rem, 28vw);
+    padding: 1.15rem 1.4rem 1.25rem;
+    transform: translate3d(0, 0, 0) scale(0.96);
+  }
+
+  .tv-route-guide.is-visible .tv-route-guide__card {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-route-guide,
+  .tv-route-guide__card {
+    transition: none;
+    transform: none;
+  }
+}
+
+.tv-page-transition { min-width: 0; }
