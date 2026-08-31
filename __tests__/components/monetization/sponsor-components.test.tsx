@@ -98,6 +98,7 @@ function buildOpenSlotPlacement(key: string): Record<string, unknown> {
 
 vi.mock("@/lib/monetization/placements", () => ({
   getMonetizationPlacement: (key: string) => state.registered[key],
+  resolutionNowMs: () => Date.now(),
   isPublicMonetizationPlacement: (placement: { key?: string; partner?: { isDemo?: boolean } } | undefined) => {
     if (!placement) return false;
     if (placement.partner?.isDemo === true) return false;

@@ -10,6 +10,7 @@ import {
 import { DiscoveryPersistenceProvider } from "@/components/discovery/canonical-discovery-persistence-provider";
 import { TinyAdzLifecycle } from "@/components/ads/tinyadz-lifecycle";
 import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
+import { CommercialClockProvider } from "@/components/monetization/commercial-clock";
 import { ConsentBanner } from "@/components/ads/consent-banner";
 import { ConsentSettingsDialog } from "@/components/ads/consent-settings-dialog";
 import { MarketingChrome } from "@/components/layout/marketing-chrome";
@@ -51,12 +52,15 @@ export default async function MarketingLayout({
     return <>{children}</>;
   }
 
+  const renderNowMs = Date.now();
+
   return (
     <div className="marketing-shell relative isolate overflow-x-clip" style={{ background: "var(--tv-bg-base)" }}>
       <a href="#main-content" className="skip-link">
         Salta al contenuto
       </a>
       <AdvertisingConsentProvider>
+      <CommercialClockProvider nowMs={renderNowMs}>
       <OrbitalProvider>
         <AccountProvider initialAuthEnabled={initialAuthEnabled}>
           <AuthContinuationProvider>
@@ -76,6 +80,7 @@ export default async function MarketingLayout({
           </AuthContinuationProvider>
         </AccountProvider>
       </OrbitalProvider>
+      </CommercialClockProvider>
       </AdvertisingConsentProvider>
     </div>
   );

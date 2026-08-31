@@ -46,6 +46,7 @@ import {
   SponsorOpportunityLink,
 } from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
+import { useCommercialNow } from "@/components/monetization/commercial-clock";
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
 
 export function formatHomeAnalysisTime(raw: string | null | undefined) {
@@ -60,7 +61,6 @@ type DefinitiveHomeProps = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
   announcement?: { text: string; href: string; image?: string | null } | null;
-  renderNowMs?: number;
 };
 
 const METHOD_STEPS = [
@@ -658,9 +658,8 @@ function Method() {
 // ============================================================
 // ROOT
 // ============================================================
-export function DefinitiveHome({ tools, weeklyTool, announcement = null, renderNowMs }: DefinitiveHomeProps) {
+export function DefinitiveHome({ tools, weeklyTool, announcement = null }: DefinitiveHomeProps) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
-  const renderNow = new Date(renderNowMs ?? Date.now());
   return (
     <div className="def-home">
       {announcement ? (
@@ -678,7 +677,7 @@ export function DefinitiveHome({ tools, weeklyTool, announcement = null, renderN
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <TinyAdzInlineSlot placement="home-editorial" />
       <Method />
-      <SponsorSection placementKey="home-featured-tool" now={renderNow} />
+      <SponsorSection placementKey="home-featured-tool" />
     </div>
   );
 }
@@ -690,11 +689,10 @@ export function DefinitiveHome({ tools, weeklyTool, announcement = null, renderN
 // ============================================================
 function SponsorSection({
   placementKey,
-  now,
 }: {
   placementKey: Parameters<typeof FeaturedPartner>[0]["placementKey"];
-  now: Date;
 }) {
+  const now = useCommercialNow();
   // Resolve directly so we can hide the whole section if no real partner.
   const placement = resolvePublicMonetizationPlacement(placementKey, { now });
   if (!placement) return null;
@@ -708,7 +706,6 @@ function SponsorSection({
           placementKey={placementKey}
           className="def-home__placement"
           trackerRoute="/"
-          context={{ now }}
         />
       </div>
       <div className="def-home__sponsor-opportunity">

@@ -30,6 +30,7 @@ import {
   type PublicMonetizationPlacement,
 } from "@/lib/monetization/placements";
 import { cn } from "@/lib/utils";
+import { useCommercialNow } from "@/components/monetization/commercial-clock";
 
 type PartnerPlacementProps = {
   placementKey: MonetizationPlacementKey;
@@ -48,6 +49,13 @@ type PartnerPlacementProps = {
   formatVariant?: SponsorFormatVariant;
   impressionStateRef?: MutableRefObject<boolean>;
 };
+
+function usePartnerContext(
+  context?: Partial<PartnerResolutionContext>,
+): Partial<PartnerResolutionContext> {
+  const now = useCommercialNow();
+  return { ...context, now: context?.now ?? now };
+}
 
 export function resolvePublicPlacement(
   placementKey: MonetizationPlacementKey,
@@ -289,7 +297,7 @@ export function FeaturedPartner({
   trackerRoute = "",
   context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, usePartnerContext(context));
 
   if (resolved.kind === "open-slot") {
     return (
@@ -364,7 +372,7 @@ export function PartnerEditorialInsert({
   trackerRoute = "",
   context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, usePartnerContext(context));
 
   if (resolved.kind === "open-slot") {
     return (
@@ -429,7 +437,7 @@ export function PartnerToolCard({
   trackerRoute = "",
   context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, usePartnerContext(context));
 
   if (resolved.kind === "open-slot") {
     return (
@@ -497,7 +505,7 @@ export function ContextualPartnerBlock({
   formatVariant,
   impressionStateRef,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, usePartnerContext(context));
 
   if (resolved.kind === "open-slot") {
     return (
@@ -571,7 +579,7 @@ export function PartnerCollectionModule({
   trackerRoute = "",
   context,
 }: PartnerPlacementProps) {
-  const resolved = resolveVariantPlacement(placementKey, trackerRoute, context);
+  const resolved = resolveVariantPlacement(placementKey, trackerRoute, usePartnerContext(context));
 
   if (resolved.kind === "open-slot") {
     return (

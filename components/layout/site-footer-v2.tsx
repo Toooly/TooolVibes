@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
+import { useCommercialNow } from "@/components/monetization/commercial-clock";
 import { ArrowUpRight, Mail } from "lucide-react";
 
 import { trackSponsorOpportunityClick } from "@/lib/analytics/sponsor-events";
@@ -49,6 +50,7 @@ function FooterLink({ href, label, icon: Icon, onClick }: {
 }
 
 export function SiteFooterV2() {
+  const year = useCommercialNow().getFullYear();
   const productLinks = useNavItems("footer-v2-product");
   const companyLinks = useNavItems("footer-v2-company");
   const legalLinks = useNavItems("footer-v2-legal");
@@ -149,7 +151,7 @@ export function SiteFooterV2() {
 
         <div className="site-footer-v2__legal-row">
           <p>
-            &copy; {new Date().getFullYear()} TooolVibes. Tutti i diritti riservati.
+            &copy; {year} TooolVibes. Tutti i diritti riservati.
           </p>
           <div className="site-footer-v2__legal-links">
             {legalLinks.map((link) => (

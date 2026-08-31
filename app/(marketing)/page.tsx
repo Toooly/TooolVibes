@@ -51,7 +51,6 @@ export default async function HomePage() {
       tools={tools}
       weeklyTool={featured}
       announcement={homepage.announcement.enabled ? homepage.announcement : null}
-      renderNowMs={Date.now()}
     />
   );
 }
