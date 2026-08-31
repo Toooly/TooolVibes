@@ -65,8 +65,6 @@ function dedupeHeadings(headings: TocItemType[]): TocItemType[] {
   });
 }
 
-export const revalidate = 3600;
-
 export async function generateStaticParams() {
   const posts = await getPublishedEditorialPosts();
   return posts.map((post) => ({ slug: post.slug }));
