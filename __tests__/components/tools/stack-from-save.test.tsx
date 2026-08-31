@@ -575,7 +575,7 @@ describe("Wave 9 stack from Save", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Crea" }));
     expect(await screen.findByRole("dialog")).toBeTruthy();
-    expect(screen.getByText("Crea il tuo spazio di lavoro")).toBeTruthy();
+    expect(screen.getByText("Tieni lo stack con te")).toBeTruthy();
     expect(getCanonicalToolWorkspaceState().personalStacks).toEqual([]);
   });
 

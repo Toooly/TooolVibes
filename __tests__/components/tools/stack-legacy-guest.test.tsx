@@ -158,7 +158,7 @@ describe("legacy guest stack gating", () => {
     expect(screen.getByRole("button", { name: "Aggiungi a AI Coding" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Aggiungi a AI Coding" }));
     expect(await screen.findByRole("dialog")).toBeTruthy();
-    expect(screen.getByText("Crea il tuo spazio di lavoro")).toBeTruthy();
+    expect(screen.getByText("Tieni lo stack con te")).toBeTruthy();
     const stack = getCanonicalToolWorkspaceState().personalStacks.find(
       (item) => item.id === "ai-coding",
     );
@@ -298,9 +298,9 @@ describe("legacy guest stack gating", () => {
       </OverlayProvider>,
     );
     await openOverflow();
-    expect(screen.queryByText("Crea il tuo spazio di lavoro")).toBeNull();
+    expect(screen.queryByText("Tieni lo stack con te")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Aggiungi a AI Coding" }));
-    expect(screen.queryByText("Crea il tuo spazio di lavoro")).toBeNull();
+    expect(screen.queryByText("Tieni lo stack con te")).toBeNull();
     expect(
       getCanonicalToolWorkspaceState().personalStacks.find((item) => item.id === "ai-coding")
         ?.slugs,

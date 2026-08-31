@@ -78,7 +78,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
               Percorsi
             </span>
             <h1 className="cx-index__title">
-              Scegli il <em>workflow</em> che ti serve, non un altro tool.
+              Scegli il <em>percorso</em>, non un altro elenco di tool.
             </h1>
           </div>
           <div>
@@ -153,7 +153,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
         )}
 
         <MemberPreviewGate
-          title="Registrati per proseguire"
+          title="Continua nel tuo spazio"
           body="Le altre raccolte — stack completi, varianti e quando non usarle — restano nel tuo spazio."
         >
         {cxGroupOrder.map((groupKey) => {

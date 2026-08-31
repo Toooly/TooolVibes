@@ -30,13 +30,13 @@ describe("B30 resolveHeaderAccountCta — selector canonico (IA-502)", () => {
         state: "legacy",
         visible: true,
         href: "/account#account-upgrade",
-        label: "Accedi / Registrati",
+        label: "Accedi",
         ariaBusy: false,
       });
     }
   });
 
-  it("guest: unica CTA Accedi / Registrati verso /account#account-upgrade", () => {
+  it("guest: unica CTA Accedi verso /account#account-upgrade", () => {
     const cta = resolveHeaderAccountCta(
       { authEnabled: true, status: "guest", syncInProgress: false },
       { accountAware: true },
@@ -46,12 +46,12 @@ describe("B30 resolveHeaderAccountCta — selector canonico (IA-502)", () => {
       state: "guest",
       visible: true,
       href: "/account#account-upgrade",
-      label: "Accedi / Registrati",
+      label: "Accedi",
       ariaBusy: false,
     });
   });
 
-  it("authenticated: CTA Il tuo account verso /account, niente copy guest", () => {
+  it("authenticated: CTA Il tuo spazio verso /account, niente copy guest", () => {
     const cta = resolveHeaderAccountCta(
       { authEnabled: true, status: "authenticated", syncInProgress: false },
       { accountAware: true },
@@ -60,7 +60,7 @@ describe("B30 resolveHeaderAccountCta — selector canonico (IA-502)", () => {
     expect(cta.state).toBe("authenticated");
     expect(cta.visible).toBe(true);
     expect(cta.href).toBe("/account");
-    expect(cta.label).toBe("Il tuo account");
+    expect(cta.label).toBe("Il tuo spazio");
     expect(cta.label).not.toContain("Accedi");
     expect(cta.ariaBusy).toBe(false);
   });
@@ -74,7 +74,7 @@ describe("B30 resolveHeaderAccountCta — selector canonico (IA-502)", () => {
     expect(cta.state).toBe("syncing");
     expect(cta.visible).toBe(true);
     expect(cta.href).toBe("/account");
-    expect(cta.label).toBe("Il tuo account");
+    expect(cta.label).toBe("Il tuo spazio");
     expect(cta.ariaBusy).toBe(true);
   });
 

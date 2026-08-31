@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
+import { OAuthButtons } from "@/components/account/oauth-buttons";
 import {
   Dialog,
   DialogContent,
@@ -41,31 +42,31 @@ function authSheetCopy(capability: PendingAuthCapability) {
   if (capability === "note.private") {
     return {
       title: "Ricordalo nel tempo",
-      body: "Le note restano collegate al tool e diventano parte della tua Software Memory.",
+      body: "La nota resta sul tool e entra nella tua memoria. La rivedi quando serve.",
     };
   }
   if (capability === "search.personal") {
     return {
       title: "Cerca nel tuo spazio",
-      body: "Cerca tra salvati, Stack, decisioni e note personali.",
+      body: "Salvati, stack, decisioni e note: una sola ricerca, la tua.",
     };
   }
   if (capability === "compare.deep") {
     return {
       title: "Confrontalo con ciò che già usi",
-      body: "Aggiungi al confronto note, Stack, decisioni e utilizzo dal tuo spazio personale.",
+      body: "Note, stack, decisioni e utilizzo: il confronto legge il tuo spazio.",
     };
   }
   if (capability === "insight.personal") {
     return {
       title: "Vedi cosa significa per te",
-      body: "Insight basati sui tool che hai salvato, confrontato e usato.",
+      body: "Insight nati da ciò che hai salvato, confrontato e usato — non da un punteggio inventato.",
     };
   }
   if (capability === "radar.personal") {
     return {
       title: "Scopri cosa conta per te",
-      body: "Collega le novità del Radar ai tool che hai salvato, usato e valutato.",
+      body: "Il Radar resta pubblico. Il tuo filtro è ciò che hai già scelto, usato o scartato.",
     };
   }
   if (capability === "community.write") {
@@ -75,8 +76,8 @@ function authSheetCopy(capability: PendingAuthCapability) {
     };
   }
   return {
-    title: "Crea il tuo spazio di lavoro",
-    body: "Gli Stack restano sincronizzati con il tuo account e raccolgono i tool che usi insieme.",
+    title: "Tieni lo stack con te",
+    body: "Gli stack restano nel tuo spazio, sincronizzati su ogni dispositivo.",
   };
 }
 
@@ -109,6 +110,7 @@ function AuthSheetForm({
   description,
   onEmailChange,
   onSubmit,
+  onOAuth,
   onDismiss,
 }: {
   draft: AuthSheetDraft;
@@ -122,6 +124,7 @@ function AuthSheetForm({
   description: ReactNode;
   onEmailChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onOAuth?: (provider: "google" | "apple" | "github") => void;
   onDismiss: () => void;
 }) {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -134,7 +137,7 @@ function AuthSheetForm({
 
   return (
     <div className="tv-auth-sheet">
-      <p className="tv-auth-sheet__eyebrow">Spazio di lavoro</p>
+      <p className="tv-auth-sheet__eyebrow">Il tuo spazio</p>
       {title}
       {description}
       {sent ? (
@@ -153,6 +156,9 @@ function AuthSheetForm({
         </p>
       ) : (
         <form className="tv-auth-sheet__form" onSubmit={onSubmit} noValidate>
+          {onOAuth ? (
+            <OAuthButtons disabled={submitting} onSelect={onOAuth} />
+          ) : null}
           <label className="tv-auth-sheet__label" htmlFor={emailId}>
             Email
             <input
@@ -203,7 +209,7 @@ function AuthSheetForm({
         </button>
       ) : null}
       <p className="tv-auth-sheet__footnote">
-        Ti inviamo un link. Nessuna password.
+        Un click con Google, oppure un link. Niente password.
       </p>
     </div>
   );
@@ -306,6 +312,38 @@ export function AuthSheet({
     setPhase("sent");
   };
 
+  const handleOAuth = (provider: "google" | "apple" | "github") => {
+    if (!draft || !account.signInWithOAuth) return;
+    const written = writePendingAuthIntent({
+      capability: draft.capability ?? "stack.create",
+      toolSlug: draft.toolSlug,
+      query: draft.query,
+      desiredStackName: draft.desiredStackName,
+      targetStackId: draft.targetStackId,
+      targetStackName: draft.targetStackName,
+      returnTo: draft.returnTo,
+      origin: draft.origin,
+    });
+    if (written.status !== "ready") {
+      setError("Non siamo riusciti a conservare questa azione. Riprova.");
+      setPhase("error");
+      return;
+    }
+    trackAuthGateFromIntent({
+      name: "auth_gate_continue",
+      capability: draft.capability ?? "stack.create",
+      origin: draft.origin,
+      returnTo: draft.returnTo,
+    });
+    setPhase("submitting");
+    void account.signInWithOAuth(provider).then((result) => {
+      if (!result.ok) {
+        setError(result.message || "Accesso non riuscito. Riprova.");
+        setPhase("error");
+      }
+    });
+  };
+
   if (!draft) return null;
 
   const formProps = {
@@ -318,6 +356,7 @@ export function AuthSheet({
     statusId,
     onEmailChange: setEmail,
     onSubmit: handleSubmit,
+    onOAuth: account.signInWithOAuth ? handleOAuth : undefined,
     onDismiss: dismiss,
   };
 

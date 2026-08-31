@@ -46,8 +46,8 @@ describe("MemberPreviewGate", () => {
         </MemberPreviewGate>
       </AccountPreviewProvider>,
     );
-    expect(screen.getByRole("heading", { name: "Registrati per proseguire" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Crea il tuo spazio" }).getAttribute("href")).toBe(
+    expect(screen.getByRole("heading", { name: "Continua nel tuo spazio" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Entra per continuare" }).getAttribute("href")).toBe(
       "/account",
     );
     expect(screen.getByText("Stack operativo completo").closest(".tv-member-gate__locked")).toBeTruthy();
@@ -61,7 +61,7 @@ describe("MemberPreviewGate", () => {
         </MemberPreviewGate>
       </AccountPreviewProvider>,
     );
-    expect(screen.queryByRole("heading", { name: "Registrati per proseguire" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Continua nel tuo spazio" })).toBeNull();
     expect(screen.getByText("Stack operativo completo")).toBeTruthy();
     expect(screen.queryByText("Stack operativo completo")?.closest(".tv-member-gate__locked")).toBeNull();
   });

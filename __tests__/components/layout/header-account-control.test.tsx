@@ -47,7 +47,7 @@ describe("HeaderAccountControl", () => {
   it("SHELL-01 guest Accedi does not replace the public chrome control", () => {
     accountState.status = "guest";
     renderControl();
-    const link = screen.getByRole("link", { name: "Accedi / Registrati" });
+    const link = screen.getByRole("link", { name: "Accedi" });
     expect(link.getAttribute("href")).toBe("/account#account-upgrade");
     expect(screen.queryByRole("button", { name: "Esci" })).toBeNull();
   });
@@ -55,7 +55,7 @@ describe("HeaderAccountControl", () => {
   it("SHELL-10 auth adds workspace links without swapping the account control", () => {
     accountState.status = "authenticated";
     renderControl();
-    expect(screen.getByText("Il tuo account")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Il tuo spazio" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Il tuo spazio" }).getAttribute("href")).toBe(
       "/account?view=riprendi",
     );

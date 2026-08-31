@@ -78,7 +78,7 @@ const env = {
     process.env.TOOOLVIBES_RELEASE_SHA ??
     spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).stdout.trim(),
   TOOOLVIBES_RELEASE_NAME:
-    process.env.TOOOLVIBES_RELEASE_NAME ?? "TooolVibes V1.0 MVP GM Release",
+    process.env.TOOOLVIBES_RELEASE_NAME ?? "TooolVibes GM — MVP v.1.0.0",
   TOOOLVIBES_BUILD_TIMESTAMP:
     process.env.TOOOLVIBES_BUILD_TIMESTAMP ?? new Date().toISOString(),
   NEXT_PUBLIC_TINYADZ_ENABLED: String(

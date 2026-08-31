@@ -231,10 +231,10 @@ export function WorkspaceRiprendi({
       {blank ? (
         <section className="tv-mod tv-mod--resume tv-home__resume" aria-labelledby="tv-home-empty-title">
           <h2 id="tv-home-empty-title" className="tv-home-title">
-            Ancora niente da riprendere
+            Il tuo spazio è pronto
           </h2>
           <p className="tv-home-copy">
-            Qui restano stack, decisioni e note. Il catalogo resta pubblico: questo è il tuo laboratorio.
+            Qui restano stack, decisioni e note. Il catalogo è pubblico: questo è il laboratorio.
           </p>
           <div className="tv-home-actions">
             <Link className="tv-home-cta tv-home-cta--primary" href={workspaceViewHref("stack")}>
@@ -567,7 +567,7 @@ export function WorkspaceRiprendi({
 
       <section className="tv-home__members" aria-labelledby="tv-home-members-title">
         <h2 id="tv-home-members-title" className="tv-home-title">
-          Solo nel tuo spazio
+          Riservato a te
         </h2>
         <p className="tv-home-copy">
           Raccolte complete e guide profonde si aprono qui, insieme a stack e Salvati.

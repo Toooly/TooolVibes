@@ -89,7 +89,7 @@ export function CollectionDetailBodyV4({
       <div className="cx-detail-v4" data-cx-accent={accent}>
         <CollectionDetailHeroV4 collection={collection} />
         <MemberPreviewGate
-          title="Registrati per proseguire"
+          title="Continua nel tuo spazio"
           body="Lo stack operativo, le varianti e quando non usare questa raccolta restano nel tuo spazio."
         >
         <CollectionSectionNavV4

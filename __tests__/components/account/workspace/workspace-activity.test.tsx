@@ -107,13 +107,13 @@ describe("WorkspaceActivity dest — Wave 15 alias", () => {
     render(createElement(WorkspaceShell));
     expect(screen.queryByText("Ancora niente di recente")).toBeNull();
     expect(screen.queryByRole("heading", { name: "Recenti" })).toBeNull();
-    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
   });
 
   it("legacy view=attivita maps through Recenti onto Home", () => {
     navRuntime.search = "view=attivita";
     render(createElement(WorkspaceShell));
     expect(screen.queryByText("Ancora niente di recente")).toBeNull();
-    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
   });
 });

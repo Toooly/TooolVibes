@@ -389,7 +389,7 @@ describe("Workspace Home 2.0", () => {
 
   it("H2-T16 new user Home remains useful (catalog CTA, no zeros)", () => {
     renderHome(workspaceTestFixtures.newAuthenticated);
-    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Apri il catalogo" }).getAttribute("href")).toBe(
       "/archivio",
     );

@@ -254,9 +254,9 @@ describe("AuthSheet", () => {
   it("AUTH-02 uses benefit copy", async () => {
     renderGate();
     fireEvent.click(screen.getByRole("button", { name: "Apri stack" }));
-    expect(await screen.findByText("Crea il tuo spazio di lavoro")).toBeTruthy();
+    expect(await screen.findByText("Tieni lo stack con te")).toBeTruthy();
     expect(
-      screen.getByText(/Gli Stack restano sincronizzati con il tuo account/),
+      screen.getByText(/Gli stack restano nel tuo spazio/),
     ).toBeTruthy();
     expect(screen.queryByText(/Registrati per continuare/)).toBeNull();
   });
@@ -332,7 +332,7 @@ describe("AuthSheet", () => {
     expect(dialog.getAttribute("aria-labelledby")).toBeTruthy();
     expect(dialog.getAttribute("aria-describedby")).toBeTruthy();
     const labelId = dialog.getAttribute("aria-labelledby") ?? "";
-    expect(document.getElementById(labelId)?.textContent).toMatch(/Crea il tuo spazio di lavoro/);
+    expect(document.getElementById(labelId)?.textContent).toMatch(/Tieni lo stack con te/);
   });
 
   it("AUTH-11 stored intent never contains the email", async () => {
@@ -370,7 +370,7 @@ describe("AuthSheet", () => {
     fireEvent.click(screen.getByRole("button", { name: "Apri nota" }));
     expect(await screen.findByRole("dialog")).toBeTruthy();
     expect(screen.getByText("Ricordalo nel tempo")).toBeTruthy();
-    expect(screen.getByText(/Le note restano collegate al tool/)).toBeTruthy();
+    expect(screen.getByText(/La nota resta sul tool/)).toBeTruthy();
   });
 });
 
@@ -382,7 +382,7 @@ describe("AuthSheet — search.personal", () => {
     expect(await screen.findByRole("dialog")).toBeTruthy();
     expect(screen.getByText("Cerca nel tuo spazio")).toBeTruthy();
     expect(
-      screen.getByText("Cerca tra salvati, Stack, decisioni e note personali."),
+      screen.getByText("Salvati, stack, decisioni e note: una sola ricerca, la tua."),
     ).toBeTruthy();
   });
 
@@ -403,7 +403,7 @@ describe("AuthSheet — compare.deep", () => {
     expect(screen.getByText("Confrontalo con ciò che già usi")).toBeTruthy();
     expect(
       screen.getByText(
-        "Aggiungi al confronto note, Stack, decisioni e utilizzo dal tuo spazio personale.",
+        "Note, stack, decisioni e utilizzo: il confronto legge il tuo spazio.",
       ),
     ).toBeTruthy();
   });
@@ -424,7 +424,7 @@ describe("AuthSheet — insight.personal", () => {
     expect(await screen.findByRole("dialog")).toBeTruthy();
     expect(screen.getByText("Vedi cosa significa per te")).toBeTruthy();
     expect(
-      screen.getByText("Insight basati sui tool che hai salvato, confrontato e usato."),
+      screen.getByText("Insight nati da ciò che hai salvato, confrontato e usato — non da un punteggio inventato."),
     ).toBeTruthy();
   });
 
@@ -445,7 +445,7 @@ describe("AuthSheet — radar.personal", () => {
     expect(screen.getByText("Scopri cosa conta per te")).toBeTruthy();
     expect(
       screen.getByText(
-        "Collega le novità del Radar ai tool che hai salvato, usato e valutato.",
+        "Il Radar resta pubblico. Il tuo filtro è ciò che hai già scelto, usato o scartato.",
       ),
     ).toBeTruthy();
   });

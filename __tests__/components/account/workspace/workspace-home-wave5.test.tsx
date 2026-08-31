@@ -160,7 +160,7 @@ describe("Workspace Home — Wave 5", () => {
     renderHome(workspaceTestFixtures.newAuthenticated);
     expect(pageText()).not.toMatch(/\b0\b/);
     expect(screen.queryByText(/Ciao/)).toBeNull();
-    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Apri il catalogo" }).getAttribute("href")).toBe(
       "/archivio",
     );
@@ -244,7 +244,7 @@ describe("Workspace Home — Wave 5", () => {
     renderHome(workspaceTestFixtures.newAuthenticated);
     expect(pageText()).not.toMatch(/\b0\b/);
     expect(screen.queryByText(/Ciao/)).toBeNull();
-    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Apri il catalogo" })).toBeTruthy();
   });
 

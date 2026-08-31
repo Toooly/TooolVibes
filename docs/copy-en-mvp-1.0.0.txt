@@ -1,0 +1,129 @@
+TOOOLVIBES GM — MVP v.1.0.0
+English copy draft (NOT wired). Italian is live. Implement later.
+
+============================================================
+SITE
+============================================================
+IT  Scegli i tool AI, SaaS e no-code con evidenze, confronti onesti e una memoria di perché li hai scelti.
+EN  Choose AI, SaaS, and no-code tools with evidence, honest comparisons, and a memory of why you picked them.
+
+IT  Costruito in Italia. Per founder, indie e team che devono decidere lo stack — e ricordarsene.
+EN  Built in Italy. For founders, indies, and teams who need to choose a stack — and remember why.
+
+IT  Per chi sceglie lo stack, non la lista della spesa.
+EN  For people who choose a stack, not a shopping list.
+
+============================================================
+NAV
+============================================================
+Home / Catalogo / Radar / Confronto / Salvati
+Home / Catalog / Radar / Compare / Saved
+
+IT  Accedi
+EN  Sign in
+
+IT  Il tuo spazio
+EN  Your space
+
+============================================================
+PUBLIC HOME
+============================================================
+IT  Scegli il tool giusto. Ricordati perché.
+EN  Pick the right tool. Remember why.
+
+IT  Catalogo curato, confronti onesti e uno spazio dove le tue decisioni restano. Per chi costruisce prodotti, non liste.
+EN  A curated catalog, honest comparisons, and a space where your decisions stay. For people who ship products, not lists.
+
+IT  Esplora il catalogo / Confronta i tool / Guarda il Radar
+EN  Open the catalog / Compare tools / Open Radar
+
+IT  Scopri → Confronta → Decidi → Ricorda
+EN  Discover → Compare → Decide → Remember
+
+IT  Trova i candidati giusti / Confronta ciò che conta / Tieni la decisione
+EN  Find the right candidates / Compare what matters / Keep the decision
+
+============================================================
+AUTH
+============================================================
+IT  Il tuo spazio / Tutto ciò che decidi resta qui.
+EN  Your space / Everything you decide stays here.
+
+IT  Entra nel tuo spazio / Crea il tuo spazio / Rientra nel tuo spazio
+EN  Enter your space / Create your space / Return to your space
+
+IT  Google, Apple, GitHub — oppure un link alla tua email. Niente password.
+EN  Google, Apple, GitHub — or a link to your email. No password.
+
+IT  Entra in un attimo / Continua con Google / Apple / GitHub / oppure con email
+EN  Get in fast / Continue with Google / Apple / GitHub / or use email
+
+IT  Inviami il link / Crea lo spazio
+EN  Email me the link / Create space
+
+IT  Tieni lo stack con te
+EN  Keep the stack with you
+
+IT  Gli stack restano nel tuo spazio, sincronizzati su ogni dispositivo.
+EN  Stacks stay in your space, synced on every device.
+
+IT  Continua con il tuo account / Non ora
+EN  Continue with your account / Not now
+
+IT  Ricordalo nel tempo / Cerca nel tuo spazio / Confrontalo con ciò che già usi
+EN  Remember it over time / Search your space / Compare it with what you already use
+
+IT  Vedi cosa significa per te / Scopri cosa conta per te
+EN  See what it means for you / See what matters to you
+
+============================================================
+MEMBER GATE
+============================================================
+IT  Continua nel tuo spazio
+EN  Continue in your space
+
+IT  Raccolte complete, guide profonde e le tue decisioni restano nel tuo spazio.
+EN  Full collections, deep guides, and your decisions stay in your space.
+
+IT  Entra per continuare
+EN  Sign in to continue
+
+============================================================
+LOGGED-IN HOME
+============================================================
+IT  Il tuo spazio è pronto
+EN  Your space is ready
+
+IT  Qui restano stack, decisioni e note. Il catalogo è pubblico: questo è il laboratorio.
+EN  Stacks, decisions, and notes live here. The catalog is public: this is the lab.
+
+IT  Crea il primo stack / Apri i Salvati / Apri il catalogo
+EN  Create your first stack / Open Saved / Open the catalog
+
+IT  Riservato a te
+EN  Reserved for you
+
+IT  I tuoi stack / Salvati / Raccolte / Guide
+EN  Your stacks / Saved / Collections / Guides
+
+============================================================
+COLLECTIONS
+============================================================
+IT  Scegli il percorso, non un altro elenco di tool.
+EN  Choose the path, not another list of tools.
+
+IT  Lo stack operativo, le varianti e quando non usare questa raccolta restano nel tuo spazio.
+EN  The operating stack, variants, and when not to use this collection stay in your space.
+
+============================================================
+LOADING
+============================================================
+IT  Apriamo il tuo spazio / Apriamo il catalogo / Apriamo le raccolte / Apriamo il confronto / Apriamo il Radar / Apriamo i Salvati / Apriamo la scheda / Apriamo le guide
+EN  Opening your space / Opening the catalog / Opening collections / Opening compare / Opening Radar / Opening Saved / Opening the tool / Opening guides
+
+============================================================
+NOTES FOR LATER IMPLEMENTATION
+============================================================
+- Do not machine-replace in product until reviewed.
+- Keep Italian as source of truth until this file is approved.
+- OAuth buttons use the same verbs in both languages.

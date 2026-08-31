@@ -108,6 +108,6 @@ describe("WorkspaceSignal dest — Wave 15 alias", () => {
     expect(screen.queryByText(/Livello /)).toBeNull();
     expect(screen.queryByText(/non ci sono XP/)).toBeNull();
     expect(screen.queryByTestId("signal-progress-section")).toBeNull();
-    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
   });
 });

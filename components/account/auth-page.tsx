@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition } from "@/lib/motion/transitions";
 import { useAccount } from "./account-provider";
+import { OAuthButtons } from "./oauth-buttons";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
 import { Mail, User, RotateCcw, Sparkles } from "lucide-react";
@@ -90,13 +91,13 @@ export function AuthPage() {
     <div id="member-access" className="v-auth-page tv-kbd-page scroll-mt-24">
       <div className="v-auth-container v-auth-container--split">
         <aside className="v-auth-context" aria-labelledby="account-context-title">
-          <p className="v-auth-context__eyebrow">Memoria decisionale</p>
+          <p className="v-auth-context__eyebrow">Il tuo spazio</p>
           <p id="account-context-title" className="v-auth-context__title">
-            Riprendi da dove avevi lasciato.
+            Tutto ciò che decidi resta qui.
           </p>
           <p>
-            L&apos;account non è un modulo in più: è il posto in cui la tua
-            selezione resta disponibile, anche quando cambi dispositivo.
+            Salvati, confronti, stack e note in un solo posto — anche quando
+            cambi dispositivo.
           </p>
           {savedCount > 0 || compareCount > 0 ? (
             <p className="v-auth-context__live">
@@ -105,9 +106,9 @@ export function AuthPage() {
             </p>
           ) : (
             <ul>
-              <li>Salva i candidati con il loro contesto.</li>
-              <li>Confronta da due a cinque tool.</li>
-              <li>Riapri le decisioni quando serve.</li>
+              <li>Salva i candidati con il contesto giusto.</li>
+              <li>Confronta da due a cinque tool, senza rumore.</li>
+              <li>Riapri una decisione quando serve, non da zero.</li>
             </ul>
           )}
         </aside>
@@ -122,17 +123,17 @@ export function AuthPage() {
             </div>
             <h1 className="v-auth-title">
               {activeTab === "register"
-                ? "Crea il tuo TooolVibes"
+                ? "Crea il tuo spazio"
                 : activeTab === "recover"
-                  ? "Recupera il tuo spazio"
-                  : "Entra nel tuo TooolVibes"}
+                  ? "Rientra nel tuo spazio"
+                  : "Entra nel tuo spazio"}
             </h1>
             <p className="v-auth-subtitle">
               {activeTab === "register"
-                ? "Due minuti per non perdere salvati, confronti e motivazioni."
+                ? "Due minuti. Poi salvati, confronti e motivazioni restano con te."
                 : activeTab === "recover"
-                  ? "Stesso link sicuro: riapri salvati e confronti su questo dispositivo."
-                  : "Riprendi salvati e confronti con un link inviato alla tua email."}
+                  ? "Stesso accesso sicuro, sullo stesso spazio."
+                  : "Google, Apple, GitHub — oppure un link alla tua email. Niente password."}
             </p>
           </div>
 
@@ -165,6 +166,14 @@ export function AuthPage() {
 
           {/* Content */}
           <div className="v-auth-form-wrapper">
+              {account.signInWithOAuth && activeTab !== "recover" ? (
+                <OAuthButtons
+                  disabled={account.isSendingLink}
+                  onSelect={(provider) => {
+                    void account.signInWithOAuth?.(provider);
+                  }}
+                />
+              ) : null}
               <form onSubmit={handleSubmit} className="v-auth-form" noValidate>
                 {/* Register fields */}
                 {activeTab === "register" && (
@@ -256,7 +265,7 @@ export function AuthPage() {
                   ) : activeTab === "register" ? (
                     <>
                       <User size={16} />
-                      Crea il mio spazio
+                      Crea lo spazio
                     </>
                   ) : activeTab === "recover" ? (
                     <>
@@ -266,7 +275,7 @@ export function AuthPage() {
                   ) : (
                     <>
                       <Mail size={16} />
-                      Entra nel mio TooolVibes
+                      Inviami il link
                     </>
                   )}
                 </button>
@@ -275,10 +284,10 @@ export function AuthPage() {
               {/* Info */}
               <p className="v-auth-info">
                 {activeTab === "login"
-                  ? "Ti inviamo un link. Nessuna password da ricordare."
+                  ? "Apri la mail, clicca il link, sei dentro. Niente password da ricordare."
                   : activeTab === "recover"
-                    ? "Se l'email è già nello spazio, ricevi un nuovo link di accesso."
-                    : "Ti inviamo una mail di conferma. I salvati ospiti restano con te."}
+                    ? "Se questa email ha già uno spazio, ricevi un nuovo link di accesso."
+                    : "Ti arriva una mail di conferma. I salvati di questo browser restano con te."}
               </p>
             </div>
 

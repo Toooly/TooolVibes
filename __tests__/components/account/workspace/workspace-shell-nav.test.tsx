@@ -86,7 +86,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
 
     expect(screen.getByRole("heading", { name: "Salvati" })).toBeTruthy();
     expect(screen.getByText("Nessun tool salvato ancora")).toBeTruthy();
-    expect(screen.queryByText("Ancora niente da riprendere")).toBeNull();
+    expect(screen.queryByText("Il tuo spazio è pronto")).toBeNull();
     expect(screen.queryByRole("tablist")).toBeNull();
     expect(screen.queryByRole("tab")).toBeNull();
   });
@@ -103,7 +103,7 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     navRuntime.search = "view=nope";
     render(createElement(WorkspaceShell));
 
-    expect(screen.getByText("Ancora niente da riprendere")).toBeTruthy();
+    expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Salvati" })).toBeNull();
   });
 

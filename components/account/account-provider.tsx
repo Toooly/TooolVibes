@@ -36,6 +36,7 @@ import {
   isSupabaseBrowserEnabled,
   loadBrowserSupabaseRuntimeConfig,
 } from "@/lib/supabase/browser-client";
+import { oauthRedirectTo, type OAuthProviderId } from "@/lib/auth/oauth-providers";
 
 type AccountStatus = "loading" | "guest" | "authenticated" | "unavailable";
 type AccountMagicLinkMetadata = Record<string, string | number | boolean | null | undefined>;
@@ -55,6 +56,9 @@ export type AccountContextValue = {
     email: string,
     metadata?: AccountMagicLinkMetadata,
   ) => Promise<{ ok: boolean; message: string }>;
+  signInWithOAuth?: (
+    provider: OAuthProviderId,
+  ) => Promise<{ ok: boolean; message: string }>;
   restoreQuarantinedWorkspace: () => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
   workspaceReadyForIntentReplay: boolean;
@@ -72,6 +76,7 @@ const AccountContext = createContext<AccountContextValue>({
   isRestoringQuarantinedWorkspace: false,
   authMessage: null,
   sendMagicLink: async () => ({ ok: false, message: "Accesso email non disponibile." }),
+  signInWithOAuth: async () => ({ ok: false, message: "Accesso non disponibile." }),
   restoreQuarantinedWorkspace: async () => ({
     ok: false,
     message: "Nessuna selezione locale da ripristinare.",
@@ -536,6 +541,37 @@ export function AccountProvider({
     }
   }, []);
 
+  const signInWithOAuth = useCallback(async (provider: OAuthProviderId) => {
+    if (!isSupabaseBrowserEnabled()) {
+      const message = "Accesso non disponibile in questo momento.";
+      setAuthMessage(message);
+      return { ok: false, message };
+    }
+
+    setIsSendingLink(true);
+    setAuthMessage(null);
+
+    try {
+      const client = getBrowserSupabaseClient();
+      const { error } = await client.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: oauthRedirectTo() },
+      });
+      if (error) {
+        const message = "Non siamo riusciti ad aprire l'accesso. Riprova tra poco.";
+        setAuthMessage(message);
+        return { ok: false, message };
+      }
+      return { ok: true, message: "Ti stiamo portando al provider." };
+    } catch {
+      const message = "Non siamo riusciti ad aprire l'accesso. Riprova tra poco.";
+      setAuthMessage(message);
+      return { ok: false, message };
+    } finally {
+      setIsSendingLink(false);
+    }
+  }, []);
+
   const restoreQuarantinedWorkspace = useCallback(async () => {
     if (isAttaching) {
       const message = "Attendi la fine del collegamento prima di ripristinare la selezione locale.";
@@ -683,11 +719,12 @@ export function AccountProvider({
       isRestoringQuarantinedWorkspace,
       authMessage,
       sendMagicLink,
+      signInWithOAuth,
       restoreQuarantinedWorkspace,
       signOut,
       workspaceReadyForIntentReplay,
     }),
-    [authEnabled, authMessage, hasQuarantinedWorkspace, isAttaching, isRestoringQuarantinedWorkspace, isSendingLink, restoreQuarantinedWorkspace, sendMagicLink, session, signOut, status, user, workspaceAttachPending, workspaceReadyForIntentReplay],
+    [authEnabled, authMessage, hasQuarantinedWorkspace, isAttaching, isRestoringQuarantinedWorkspace, isSendingLink, restoreQuarantinedWorkspace, sendMagicLink, session, signInWithOAuth, signOut, status, user, workspaceAttachPending, workspaceReadyForIntentReplay],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

@@ -9,8 +9,8 @@ import { useAccount } from "./account-provider";
 export function MemberPreviewGate({
   children,
   kicker = "Spazio personale",
-  title = "Registrati per proseguire",
-  body = "Raccolte complete, guide profonde e la memoria delle tue decisioni restano nel tuo spazio.",
+  title = "Continua nel tuo spazio",
+  body = "Raccolte complete, guide profonde e le tue decisioni restano nel tuo spazio.",
 }: {
   children: React.ReactNode;
   kicker?: string;
@@ -36,7 +36,7 @@ export function MemberPreviewGate({
         </h2>
         <p className="tv-member-gate__body">{body}</p>
         <Link className="tv-member-gate__cta" href="/account">
-          Crea il tuo spazio
+          Entra per continuare
         </Link>
       </div>
       <div className="tv-member-gate__locked" inert aria-hidden="true">

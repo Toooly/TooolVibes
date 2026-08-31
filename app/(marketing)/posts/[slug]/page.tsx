@@ -240,7 +240,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 ) : null}
 
                 <MemberPreviewGate
-                  title="Registrati per proseguire"
+                  title="Continua nel tuo spazio"
                   body="Il resto della guida resta nel tuo spazio, insieme alle decisioni e alle note sul tool."
                 >
                   <GuideMarkdown content={post.content_markdown ?? ""} onHeadings={onHeadings} />
@@ -253,7 +253,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               <article className="guides-article__body" data-guides-article-body>
                 <p style={{ color: "var(--guides-text-soft)" }}>{post.summary}</p>
                 <MemberPreviewGate
-                  title="Registrati per proseguire"
+                  title="Continua nel tuo spazio"
                   body="Il resto della guida resta nel tuo spazio."
                 >
                   {post.details.length > 0 ? (

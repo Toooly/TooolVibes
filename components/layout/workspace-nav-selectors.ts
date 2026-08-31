@@ -54,7 +54,7 @@ const LEGACY_ACCOUNT_CTA: HeaderAccountCtaModel = Object.freeze({
   state: "legacy",
   visible: true,
   href: "/account#account-upgrade",
-  label: "Accedi / Registrati",
+  label: "Accedi",
   ariaBusy: false,
 });
 
@@ -107,7 +107,7 @@ export function resolveHeaderAccountCta(
       state: "guest",
       visible: true,
       href: "/account#account-upgrade",
-      label: "Accedi / Registrati",
+      label: "Accedi",
       ariaBusy: false,
     });
   }
@@ -116,7 +116,7 @@ export function resolveHeaderAccountCta(
     state: input.syncInProgress ? "syncing" : "authenticated",
     visible: true,
     href: "/account",
-    label: "Il tuo account",
+    label: "Il tuo spazio",
     ariaBusy: input.syncInProgress,
   });
 }

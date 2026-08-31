@@ -66,23 +66,23 @@ const METHOD_STEPS = [
   {
     n: "01",
     title: "Trova i candidati giusti",
-    body: "Filtra il catalogo per categoria, caso d'uso e livello. Parti da una selezione più piccola e pertinente.",
-    cta: "Esplora il catalogo",
+    body: "Filtra per categoria, caso d'uso e livello. Parti da pochi tool, quelli che contano.",
+    cta: "Apri il catalogo",
     href: "/archivio",
     accent: "var(--tv-accent-primary)",
   },
   {
     n: "02",
     title: "Confronta ciò che conta",
-    body: "Affianca pochi tool alla volta e valuta differenze, limiti e aderenza al tuo lavoro.",
+    body: "Due-cinque tool, differenze e limiti visibili. Niente tabelle infinite.",
     cta: "Apri il confronto",
     href: "/compare",
     accent: "var(--tv-accent-cyan)",
   },
   {
     n: "03",
-    title: "Salva la decisione",
-    body: "Conserva i candidati, aggiungi una nota e ritrova il motivo per cui hai scelto.",
+    title: "Tieni la decisione",
+    body: "Salva, annota, rivedi. Il motivo resta accanto al tool.",
     cta: "Vai ai salvati",
     href: "/shortlist",
     accent: "var(--tv-accent-gold)",
@@ -134,14 +134,13 @@ function Cockpit({ toolCount }: { toolCount: number }) {
           <h1
             id="def-cockpit-title"
             className="def-cockpit__title"
-            aria-label="Trova il tool giusto, senza perderti nel rumore."
+            aria-label="Scegli il tool giusto. Ricordati perché."
           >
-            Trova il tool giusto, senza perderti nel rumore.
+            Scegli il tool giusto. Ricordati perché.
           </h1>
           <p className="def-cockpit__lede">
-            Per chi costruisce prodotti e business digitali: esplora tool AI,
-            SaaS e no-code, confronta alternative e trade-off, salva i candidati
-            e conserva il motivo di ogni scelta.
+            Catalogo curato, confronti onesti e uno spazio dove le tue
+            decisioni restano. Per chi costruisce prodotti, non liste.
           </p>
           <div className="def-cockpit__ctas">
             <Link
@@ -162,9 +161,9 @@ function Cockpit({ toolCount }: { toolCount: number }) {
             <Link
               href="/radar"
               className="def-cockpit__cta def-cockpit__cta--ghost"
-              aria-label="Apri il Radar dei nuovi lanci"
+              aria-label="Guarda il Radar dei nuovi lanci"
             >
-              Apri il Radar
+              Guarda il Radar
             </Link>
           </div>
 
@@ -173,9 +172,9 @@ function Cockpit({ toolCount }: { toolCount: number }) {
             <span aria-hidden="true">→</span>
             <span>Confronta</span>
             <span aria-hidden="true">→</span>
-            <span>Salva</span>
-            <span aria-hidden="true">→</span>
             <span>Decidi</span>
+            <span aria-hidden="true">→</span>
+            <span>Ricorda</span>
           </p>
 
           <DecisionJourney />
