@@ -34,7 +34,7 @@ export default async function HomePage() {
   const isGateOpen = isPublicProductOpen();
 
   if (!isGateOpen) {
-    return <ComingSoonPage />;
+    return <ComingSoonPage year={new Date().getFullYear()} />;
   }
 
   const [tools, spotlightTool] = await Promise.all([
