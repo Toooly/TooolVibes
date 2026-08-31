@@ -4,12 +4,12 @@ import {
   getPublicToolViews,
   getToolSpotlightView,
 } from "@/lib/data/public-tools";
-import { isPublicGateOpen } from "@/lib/gate/is-public-gate-open";
+import { isPublicProductOpen } from "@/lib/gate/public-product-open";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import { getHomepageControls } from "@/lib/content/homepage-controls";
 
 export async function generateMetadata() {
-  const isGateOpen = await isPublicGateOpen();
+  const isGateOpen = isPublicProductOpen();
 
   if (!isGateOpen) {
     return {
@@ -31,7 +31,7 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const isGateOpen = await isPublicGateOpen();
+  const isGateOpen = isPublicProductOpen();
 
   if (!isGateOpen) {
     return <ComingSoonPage />;

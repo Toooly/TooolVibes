@@ -10,7 +10,7 @@ import type { GamificationClientModes } from "@/lib/gamification/release-context
 import { siteConfig } from "@/lib/config/site";
 import { defaultSocialImage, organizationLogoUrl } from "@/lib/seo/metadata";
 import { getPublicToolCatalogSnapshot } from "@/lib/data/public-tool-catalog";
-import { isPublicGateOpen } from "@/lib/gate/is-public-gate-open";
+import { isPublicProductOpen } from "@/lib/gate/public-product-open";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -107,7 +107,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isGateOpen = await isPublicGateOpen();
+  const isGateOpen = isPublicProductOpen();
   const toolCatalog = isGateOpen ? getPublicToolCatalogSnapshot() : [];
   const missionsEnabled =
     releaseFeatures.gamification.surfaces.missions.persistentRewardsEnabled;

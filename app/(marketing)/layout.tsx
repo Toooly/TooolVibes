@@ -16,7 +16,7 @@ import { MarketingChrome } from "@/components/layout/marketing-chrome";
 import { OrbitalProvider } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { buildSignalClientFlagSnapshot } from "@/lib/signal-progression/client-flags";
-import { isPublicGateOpen } from "@/lib/gate/is-public-gate-open";
+import { isPublicProductOpen } from "@/lib/gate/public-product-open";
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
 
 export default async function MarketingLayout({
@@ -24,7 +24,7 @@ export default async function MarketingLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isGateOpen = await isPublicGateOpen();
+  const isGateOpen = isPublicProductOpen();
   const { url: supabaseUrl, anonKey: supabaseAnonKey } =
     getSupabasePublicEnv();
   const initialAuthEnabled = Boolean(supabaseUrl && supabaseAnonKey);

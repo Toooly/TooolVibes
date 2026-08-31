@@ -13,6 +13,8 @@ import {
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "@/styles/archive-v4.css";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Catalogo di tool AI, SaaS e no-code",
   description:
@@ -23,22 +25,14 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Cerca, filtra e confronta tool AI, SaaS e no-code. Riduci le alternative e trova i candidati giusti per il tuo stack.",
 });
 
-type ArchivePageProps = {
-  searchParams: Promise<{ q?: string; tag?: string; group?: string; level?: string }>;
-};
-
-export default async function ArchivePage({ searchParams }: ArchivePageProps) {
-  const params = await searchParams;
+export default async function ArchivePage() {
   const [tools, filterGroups] = await Promise.all([
     getPublicToolViews(),
     getPublicToolFilterGroups(),
   ]);
-  const initialQuery = params.q?.trim() ?? "";
-  const requestedGroup = params.group ?? params.tag;
-  const initialGroup = filterGroups.some((group) => group.key === requestedGroup)
-    ? requestedGroup ?? "all"
-    : "all";
-  const initialLevel = parseCatalogLevelParam(params.level);
+  const initialQuery = "";
+  const initialGroup = "all";
+  const initialLevel = parseCatalogLevelParam(undefined);
 
   /* Partner Experience V3.1 — il Catalog Insert vive DENTRO il flusso di
      discovery: viene inserito a livello di render dopo il primo gruppo di
