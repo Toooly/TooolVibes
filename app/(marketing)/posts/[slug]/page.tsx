@@ -26,6 +26,7 @@ import { getRelatedGuides } from "@/lib/data/guide-related";
 import { getGuideTopic } from "@/lib/data/guide-topics";
 import {
   getEditorialPostBySlug,
+  getPublishedEditorialPosts,
 } from "@/lib/data/public-articles";
 import { getToolBySlug } from "@/lib/data/public-tools";
 import { getDirectoryToolBySlug } from "@/lib/data/tooolvibes-directory";
@@ -62,6 +63,13 @@ function dedupeHeadings(headings: TocItemType[]): TocItemType[] {
     seen.add(h.id);
     return true;
   });
+}
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const posts = await getPublishedEditorialPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: EditorialPostPageProps): Promise<Metadata> {

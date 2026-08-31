@@ -25,6 +25,11 @@ type CollectionPageProps = {
 // revalidate in the background instead of resolving every request cold.
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  const collections = await getCuratedCollections();
+  return collections.map((collection) => ({ slug: collection.slug }));
+}
+
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
   const { slug } = await params;
   const collection = await getCollectionBySlug(slug);
