@@ -55,10 +55,11 @@ describe("TinyAdzLifecycle SPA route handling", () => {
     expect(reloadOnce).not.toHaveBeenCalled();
   });
 
-  it("reloads once when navigating from an active eligible route to an excluded route", () => {
+  it("hides TinyAdz without reloading when leaving an eligible route", () => {
     pathnameMock = "/compare";
     view.rerender(<TinyAdzLifecycle />);
-    expect(reloadOnce).toHaveBeenCalledTimes(1);
+    expect(bestEffortHide).toHaveBeenCalledTimes(1);
+    expect(reloadOnce).not.toHaveBeenCalled();
   });
 
   it("does not reload when consent is not granted", () => {

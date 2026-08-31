@@ -107,6 +107,18 @@ describe("WorkspaceShell — URL-driven navigation", () => {
     expect(screen.queryByRole("heading", { name: "Salvati" })).toBeNull();
   });
 
+  it("exposes interior destinations without replacing the public shell", () => {
+    render(createElement(WorkspaceShell));
+    const nav = screen.getByRole("navigation", { name: "Il tuo spazio" });
+    expect(nav).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "Il tuo spazio" }).getAttribute("href"),
+    ).toBe("/account?view=riprendi");
+    expect(screen.getByRole("link", { name: "Stack" }).getAttribute("href")).toBe(
+      "/account?view=stack",
+    );
+  });
+
   it("does not mount atelier sidebar/chips chrome or Decisioni/Recenti/Segnale dests", () => {
     render(createElement(WorkspaceShell));
 

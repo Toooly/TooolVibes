@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
 import { isTinyAdzEligiblePath } from "@/lib/ads/tinyadz-config";
-import { bestEffortHideTinyAdz, reloadOnce, tinyadzRuntimeActive } from "@/components/ads/tinyadz-runtime";
+import { bestEffortHideTinyAdz, tinyadzRuntimeActive } from "@/components/ads/tinyadz-runtime";
 
 /**
  * SPA route-lifecycle guard for TinyAdz.
@@ -14,11 +14,8 @@ import { bestEffortHideTinyAdz, reloadOnce, tinyadzRuntimeActive } from "@/compo
  * can survive client navigation onto an excluded route (e.g. /compare, whose
  * own fresh load is clean). Because TinyAdz exposes no official destroy API,
  * when we transition from an ACTIVE eligible route to an EXCLUDED route we:
- *   1. best-effort hide any visible popup via the manager methods; and
- *   2. issue ONE session-guarded full-page reload.
- * After the reload the loader does not mount on the excluded route, so the
- * page is guaranteed to contain zero TinyAdz scripts/iframes/containers and no
- * reload loop is possible.
+ * Hide the popup on excluded routes. Do not full-page reload: that made ads
+ * appear intermittently after SPA navigation.
  */
 export function TinyAdzLifecycle() {
   const { state } = useAdvertisingConsent();
@@ -38,7 +35,6 @@ export function TinyAdzLifecycle() {
     const nowExcluded = eligible === false;
     if (wasActive && nowExcluded && tinyadzRuntimeActive()) {
       bestEffortHideTinyAdz();
-      reloadOnce("route");
     }
   }, [pathname, state]);
 

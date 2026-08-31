@@ -28,7 +28,6 @@ type NavChromeState = "expanded" | "compact" | "hidden";
 
 const SCROLL_DELTA_THRESHOLD = 12;
 const COMPACT_AFTER = 48;
-const HIDE_AFTER = 120;
 const BOTTOM_REVEAL_PX = 120;
 const TOP_FORCE_EXPAND_PX = 24;
 
@@ -153,9 +152,7 @@ export function MobileBottomNav() {
         if (delta > 0) {
           downDistance.current += delta;
           // Staged: compact after moderate down-scroll, hide after sustained down-scroll.
-          if (downDistance.current >= HIDE_AFTER) {
-            setChromeState("hidden");
-          } else if (downDistance.current >= COMPACT_AFTER) {
+          if (downDistance.current >= COMPACT_AFTER) {
             setChromeState("compact");
           }
         } else {

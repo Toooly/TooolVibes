@@ -1,13 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 import { readRewardPreferences } from "@/lib/rewards/preferences";
 
 import {
+  personalDashboardHref,
   WORKSPACE_VIEW_KICKERS,
   WORKSPACE_VIEW_LABELS,
+  workspaceViewHref,
   type WorkspaceView,
 } from "./workspace-model";
 
@@ -27,6 +30,36 @@ function AccountMotionSync() {
     return () => window.removeEventListener("storage", apply);
   }, []);
   return null;
+}
+
+function WorkspaceInteriorNav({
+  surface,
+  view,
+}: {
+  surface: AccountWorkspaceSurface;
+  view: WorkspaceView;
+}) {
+  const items = [
+    { href: personalDashboardHref(), label: "Il tuo spazio", current: surface === "workspace" && view === "riprendi" },
+    { href: workspaceViewHref("salvati"), label: "Salvati", current: surface === "workspace" && view === "salvati" },
+    { href: workspaceViewHref("stack"), label: "Stack", current: surface === "workspace" && view === "stack" },
+    { href: "/account/settings", label: "Impostazioni", current: surface === "settings" },
+  ];
+  return (
+    <nav className="tv-space-switch" aria-label="Il tuo spazio">
+      {items.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          prefetch={false}
+          aria-current={item.current ? "page" : undefined}
+          className={item.current ? "is-current" : undefined}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
+  );
 }
 
 function WorkspacePageHead({
@@ -79,6 +112,7 @@ export function AccountWorkspaceFrame({
       <AccountMotionSync />
       <div className="tv-app__main">
         <div className="tv-app__canvas">
+          <WorkspaceInteriorNav surface={resolvedSurface} view={view} />
           <WorkspacePageHead surface={resolvedSurface} view={view} />
           {children}
         </div>

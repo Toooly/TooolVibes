@@ -355,6 +355,32 @@
   min-height: 0;
 }
 
+.tv-space-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+}
+
+.tv-space-switch a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.1));
+  border-radius: 999px;
+  font-size: 0.875rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tv-space-switch a.is-current,
+.tv-space-switch a[aria-current="page"] {
+  border-color: color-mix(in srgb, var(--tv-accent-primary) 55%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-primary) 14%, transparent);
+}
+
+
 @media (min-width: 1024px) {
   .tv-app--loop {
     display: block;
