@@ -12,6 +12,7 @@ import { CollectionScenarioV4 } from "./collection-scenario-v4";
 import { CollectionAntiRecommendationV4 } from "./collection-anti-recommendation-v4";
 import { CollectionGuideBridgeV4 } from "./collection-guide-bridge-v4";
 import { CollectionNextStepV4 } from "./collection-next-step-v4";
+import { MemberPreviewGate } from "@/components/account/member-preview-gate";
 import { CollectionSectionNavV4 } from "./collection-section-nav-v4";
 
 type CollectionDetailBodyV4Props = {
@@ -87,6 +88,10 @@ export function CollectionDetailBodyV4({
       <JsonLd data={structuredData} />
       <div className="cx-detail-v4" data-cx-accent={accent}>
         <CollectionDetailHeroV4 collection={collection} />
+        <MemberPreviewGate
+          title="Registrati per proseguire"
+          body="Lo stack operativo, le varianti e quando non usare questa raccolta restano nel tuo spazio."
+        >
         <CollectionSectionNavV4
           items={[
             { id: "cx-detail-stack", label: "Stack" },
@@ -120,6 +125,7 @@ export function CollectionDetailBodyV4({
         <CollectionNextStepV4
           relatedCollections={relatedCollections}
         />
+        </MemberPreviewGate>
       </div>
     </>
   );

@@ -17,6 +17,7 @@ const expectedGlobalImports = [
   "@/styles/admin-shell.css",
   "@/styles/partner-placements.css",
   "@/styles/premium-motion.css",
+  "@/styles/member-experience.css",
 ];
 const retiredGlobalImports = [
   "@/styles/home.css",
@@ -31,6 +32,7 @@ const importantCeilings = {
   "styles/figma-implementation.css": 40,
   "styles/gamification.css": 14,
   "styles/premium-motion.css": 0,
+  "styles/member-experience.css": 0,
   "styles/radar.css": 4,
   "styles/public-routes.css": 46,
   "styles/partner-placements.css": 0,

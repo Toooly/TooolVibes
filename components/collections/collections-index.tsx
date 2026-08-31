@@ -5,6 +5,7 @@ import type { CuratedCollection } from "@/lib/types/collection";
 import { getCollectionCoreToolSlugs } from "@/lib/collections/helpers";
 import { collectionVisualIdentity, type CxVisualIdentity, cxGroupOrder, pickFeaturedCollection } from "@/lib/collections/visual-identity";
 
+import { MemberPreviewGate } from "@/components/account/member-preview-gate";
 import { CollectionCardV4 } from "./collection-card-v4";
 
 type CollectionsIndexProps = {
@@ -151,6 +152,10 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           </section>
         )}
 
+        <MemberPreviewGate
+          title="Registrati per proseguire"
+          body="Le altre raccolte — stack completi, varianti e quando non usarle — restano nel tuo spazio."
+        >
         {cxGroupOrder.map((groupKey) => {
           const items = groups[groupKey];
           if (items.length === 0) return null;
@@ -186,6 +191,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
             </section>
           );
         })}
+        </MemberPreviewGate>
 
         <section
           aria-labelledby="cx-principles-heading"

@@ -234,10 +234,16 @@ export function WorkspaceRiprendi({
             Ancora niente da riprendere
           </h2>
           <p className="tv-home-copy">
-            Salva un tool dal catalogo. Da lì parti a confrontare e decidere.
+            Qui restano stack, decisioni e note. Il catalogo resta pubblico: questo è il tuo laboratorio.
           </p>
           <div className="tv-home-actions">
-            <Link className="tv-home-cta tv-home-cta--primary" href="/archivio">
+            <Link className="tv-home-cta tv-home-cta--primary" href={workspaceViewHref("stack")}>
+              Crea il primo stack
+            </Link>
+            <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
+              Apri i Salvati
+            </Link>
+            <Link className="tv-home-textbtn" href="/archivio">
               Apri il catalogo
             </Link>
           </div>
@@ -558,6 +564,29 @@ export function WorkspaceRiprendi({
         </p>
       ) : null}
 
+
+      <section className="tv-home__members" aria-labelledby="tv-home-members-title">
+        <h2 id="tv-home-members-title" className="tv-home-title">
+          Solo nel tuo spazio
+        </h2>
+        <p className="tv-home-copy">
+          Raccolte complete e guide profonde si aprono qui, insieme a stack e Salvati.
+        </p>
+        <div className="tv-home-member-links">
+          <Link className="tv-home-cta tv-home-cta--primary" href={workspaceViewHref("stack")}>
+            I tuoi stack
+          </Link>
+          <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
+            Salvati
+          </Link>
+          <Link className="tv-home-textbtn" href="/collections">
+            Raccolte
+          </Link>
+          <Link className="tv-home-textbtn" href="/posts">
+            Guide
+          </Link>
+        </div>
+      </section>
       <HomeRadarPulse />
       {decideSlug ? (
         <DecisionSheet

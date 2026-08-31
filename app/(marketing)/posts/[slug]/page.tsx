@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { MemberPreviewGate } from "@/components/account/member-preview-gate";
 import { GuideMarkdown } from "@/components/guides/guide-markdown";
 import { GuideArticleToc } from "@/components/guides/guide-article-toc";
 import { GuideArticleHero } from "@/components/guides/guide-article-hero";
@@ -238,22 +239,31 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   />
                 ) : null}
 
-                <GuideMarkdown content={post.content_markdown ?? ""} onHeadings={onHeadings} />
-
-                <GuideCallout kind="decision" title="In sintesi">
-                  {post.summary}
-                </GuideCallout>
+                <MemberPreviewGate
+                  title="Registrati per proseguire"
+                  body="Il resto della guida resta nel tuo spazio, insieme alle decisioni e alle note sul tool."
+                >
+                  <GuideMarkdown content={post.content_markdown ?? ""} onHeadings={onHeadings} />
+                  <GuideCallout kind="decision" title="In sintesi">
+                    {post.summary}
+                  </GuideCallout>
+                </MemberPreviewGate>
               </article>
             ) : (
               <article className="guides-article__body" data-guides-article-body>
                 <p style={{ color: "var(--guides-text-soft)" }}>{post.summary}</p>
-                {post.details.length > 0 ? (
-                  <ul>
-                    {post.details.map((d) => (
-                      <li key={d}>{d}</li>
-                    ))}
-                  </ul>
-                ) : null}
+                <MemberPreviewGate
+                  title="Registrati per proseguire"
+                  body="Il resto della guida resta nel tuo spazio."
+                >
+                  {post.details.length > 0 ? (
+                    <ul>
+                      {post.details.map((d) => (
+                        <li key={d}>{d}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </MemberPreviewGate>
               </article>
             )}
 

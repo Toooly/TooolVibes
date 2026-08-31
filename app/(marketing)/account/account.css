@@ -4106,6 +4106,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
     align-items: start;
     grid-auto-flow: row;
     grid-template-areas:
+      "members members"
       "resume unfinished"
       "quiet quiet"
       "stacks stacks"
@@ -4122,6 +4123,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
     margin-bottom: 0;
   }
 
+  .tv-home__members { grid-area: members; }
   .tv-home__resume { grid-area: resume; }
   .tv-home__unfinished { grid-area: unfinished; }
   .tv-home__quiet { grid-area: quiet; }
@@ -4133,6 +4135,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
   .tv-home:not(:has(.tv-home__unfinished)) {
     grid-template-areas:
+      "members members"
       "resume resume"
       "quiet quiet"
       "stacks stacks"
@@ -4143,6 +4146,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
   .tv-home:not(:has(.tv-home__unfiled)) {
     grid-template-areas:
+      "members members"
       "resume unfinished"
       "quiet quiet"
       "stacks stacks"
@@ -4153,6 +4157,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
   .tv-home:not(:has(.tv-home__review)) {
     grid-template-areas:
+      "members members"
       "resume unfinished"
       "quiet quiet"
       "stacks stacks"
@@ -4163,6 +4168,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
   .tv-home:not(:has(.tv-home__unfinished)):not(:has(.tv-home__unfiled)) {
     grid-template-areas:
+      "members members"
       "resume resume"
       "quiet quiet"
       "stacks stacks"
@@ -4173,6 +4179,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
   .tv-home:not(:has(.tv-home__unfinished)):not(:has(.tv-home__review)) {
     grid-template-areas:
+      "members members"
       "resume resume"
       "quiet quiet"
       "stacks stacks"
@@ -4183,6 +4190,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
   .tv-home:not(:has(.tv-home__unfiled)):not(:has(.tv-home__review)) {
     grid-template-areas:
+      "members members"
       "resume unfinished"
       "quiet quiet"
       "stacks stacks"
@@ -4192,6 +4200,7 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
   .tv-home:not(:has(.tv-home__unfinished)):not(:has(.tv-home__unfiled)):not(:has(.tv-home__review)) {
     grid-template-areas:
+      "members members"
       "resume resume"
       "quiet quiet"
       "stacks stacks"
