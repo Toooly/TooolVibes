@@ -63,7 +63,8 @@ for (const route of PATHS) {
     return {
       script: Boolean(script),
       scriptSrc: script?.getAttribute("src") ?? null,
-      siteId: script?.getAttribute("site-id") ?? null,
+      siteId: script?.getAttribute("data-site-id") ?? null,
+      testMode: script?.getAttribute("data-test-mode") ?? null,
       slots: [...document.querySelectorAll("[data-tinyadz-placement]")].map((el) =>
         el.getAttribute("data-tinyadz-placement"),
       ),
@@ -78,7 +79,13 @@ for (const route of PATHS) {
 
 await browser.close();
 
-const scriptOk = results.every((row) => row.script && row.scriptSrc === SCRIPT_URL && row.siteId);
+const scriptOk = results.every(
+  (row) =>
+    row.script &&
+    row.scriptSrc === SCRIPT_URL &&
+    row.siteId === "6a744c56118838f2f4456e99" &&
+    row.testMode === "false",
+);
 const homeSlots = results.find((row) => row.route === "/")?.slots ?? [];
 const vendorScript = vendor.filter((row) => row.url.includes("/scripts/v2.0/main.js"));
 const vendorGsc = vendor.filter((row) => row.url.includes("/api/gsc"));

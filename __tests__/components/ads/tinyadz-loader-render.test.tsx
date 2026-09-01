@@ -49,8 +49,9 @@ describe("TinyAdzLoader render contract", () => {
       "https://cdn.apitiny.net/scripts/v2.0/main.js",
     );
     expect(script?.getAttribute("data-site-id")).toBe(SITE_ID);
-    expect(script?.getAttribute("site-id")).toBe(SITE_ID);
     expect(script?.getAttribute("data-test-mode")).toBe("true");
-    expect(script?.getAttribute("test-mode")).toBe("true");
+    expect(script?.getAttribute("data-nscript")).toBe("afterInteractive");
+    expect(script?.hasAttribute("site-id")).toBe(false);
+    expect(script?.hasAttribute("test-mode")).toBe(false);
   });
 });

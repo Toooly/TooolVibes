@@ -43,6 +43,6 @@ describe("TinyAdzLoader test mode", () => {
 
     const script = document.getElementById("tinyadz-v2");
     expect(script?.getAttribute("data-test-mode")).toBe("false");
-    expect(script?.getAttribute("test-mode")).toBe("false");
+    expect(script?.hasAttribute("test-mode")).toBe(false);
   });
 });

@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
-import { scheduleTinyAdzInlineBind } from "@/components/ads/tinyadz-runtime";
 import {
   isTinyAdzEligiblePath,
   readTinyAdzConfig,
@@ -40,18 +38,12 @@ export function TinyAdzInlineSlot({
     [TINYADZ_TEST_MODE_ENV]: process.env.NEXT_PUBLIC_TINYADZ_TEST_MODE,
   });
 
-  const canMount =
-    config.enabled &&
-    Boolean(config.siteId) &&
-    consent === "granted" &&
-    isTinyAdzEligiblePath(pathname);
-
-  useEffect(() => {
-    if (!canMount) return;
-    scheduleTinyAdzInlineBind();
-  }, [canMount, pathname, placement]);
-
-  if (!canMount) {
+  if (
+    !config.enabled ||
+    !config.siteId ||
+    consent !== "granted" ||
+    !isTinyAdzEligiblePath(pathname)
+  ) {
     return null;
   }
 

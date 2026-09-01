@@ -38,22 +38,29 @@ describe("TinyAdz release contract", () => {
     expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_ENABLED":\s*"1"/);
     expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_SITE_ID":\s*"[a-z0-9]{24}"/);
     expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_TEST_MODE":\s*"0"/);
-    expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_INLINE_WIDGET_ID":\s*"[a-z0-9]{24}"/);
+    expect(wrangler).not.toMatch(/NEXT_PUBLIC_TINYADZ_INLINE_WIDGET_ID/);
+  });
+
+  it("keeps the official TinyAdz v2 snippet", () => {
+    const loader = read("components/ads/tinyadz-loader.tsx");
+    expect(loader).toContain("https://cdn.apitiny.net/scripts/v2.0/main.js");
+    expect(loader).toContain("data-site-id");
+    expect(loader).toContain("data-test-mode");
+    expect(loader).toContain('strategy="afterInteractive"');
+    expect(loader).not.toContain("installTinyAdzConfigCapture");
+    expect(loader).not.toContain("requestTinyAdzAd");
+    const slot = read("components/ads/tinyadz-inline-slot.tsx");
+    expect(slot).toContain('<div ta-ad-container="" />');
+    expect(slot).not.toContain("scheduleTinyAdzInlineBind");
+    const runtime = read("components/ads/tinyadz-runtime.ts");
+    expect(runtime).not.toContain("NO_AD");
+    expect(runtime).not.toContain("/api/gsc");
   });
 
   it("keeps the TinyAdz script origin in the CSP contract", () => {
     const headers = read("lib/security/browser-headers.ts");
     expect(headers).toContain("https://cdn.apitiny.net");
     expect(headers).toContain("TINYADZ_SCRIPT_ORIGIN");
-  });
-
-  it("paints INLINED ads through the TinyAdz manager API", () => {
-    const runtime = read("components/ads/tinyadz-runtime.ts");
-    expect(runtime).toContain("renderInlined");
-    expect(runtime).toContain("$tam");
-    expect(runtime).toContain("installTinyAdzConfigCapture");
-    const loader = read("components/ads/tinyadz-loader.tsx");
-    expect(loader).toContain("installTinyAdzConfigCapture");
   });
 
   it("stamps a release SHA on every Next build", () => {
