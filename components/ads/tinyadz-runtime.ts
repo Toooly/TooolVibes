@@ -83,9 +83,7 @@ export function installTinyAdzWidgetMessages(): void {
     }
     if (payload.action === "NO_AD") {
       document.querySelectorAll("[data-tinyadz-placement]").forEach((node) => {
-        const slot = node as HTMLElement;
-        slot.hidden = true;
-        slot.setAttribute("data-tv-ad-empty", "true");
+        node.setAttribute("data-tv-ad-empty", "true");
       });
       return;
     }

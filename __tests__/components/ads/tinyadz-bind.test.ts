@@ -42,7 +42,7 @@ describe("TinyAdz official inline bind", () => {
     expect(bindTinyAdzInlineSlots()).toBe(false);
   });
 
-  it("hides the slot when TinyAdz reports NO_AD", () => {
+  it("keeps the Pubblicità slot visible when TinyAdz reports NO_AD", () => {
     mountSlot();
     installTinyAdzWidgetMessages();
     window.dispatchEvent(
@@ -51,7 +51,7 @@ describe("TinyAdz official inline bind", () => {
       }),
     );
     const slot = document.querySelector("[data-tinyadz-placement]") as HTMLElement | null;
-    expect(slot?.hidden).toBe(true);
+    expect(slot?.hidden).toBe(false);
     expect(slot?.getAttribute("data-tv-ad-empty")).toBe("true");
   });
 
