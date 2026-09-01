@@ -27,6 +27,7 @@
 /* TinyAdz IntersectionObserver uses threshold 0.1. A 0-height container never
    intersects, so inlined ads never paint. Reserve a short banner strip only
    after consent (this node is not mounted otherwise). */
+.tinyadz-inline-slot iframe.tv-ad-frame__iframe,
 .tinyadz-inline-slot iframe.tinyadz-iframe,
 .tinyadz-inline-slot iframe.inlined-ta-ad {
   display: block;
@@ -35,4 +36,7 @@
   margin-inline: auto;
   border: 0;
   background: transparent;
+  opacity: 1;
+  transform: none;
+  visibility: visible;
 }

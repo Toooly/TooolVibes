@@ -175,7 +175,7 @@ function inlineWidgetId(): string | null {
 
 function alreadyPainted(container: Element): boolean {
   return Boolean(
-    container.querySelector("iframe.tinyadz-iframe, iframe.inlined-ta-ad"),
+    container.querySelector("iframe.tv-ad-frame__iframe, iframe.tinyadz-iframe, iframe.inlined-ta-ad"),
   );
 }
 
@@ -189,7 +189,7 @@ function paintInlineFrame(
     return true;
   }
   const iframe = document.createElement("iframe");
-  iframe.className = "tinyadz-iframe inlined-ta-ad";
+  iframe.className = "tv-ad-frame__iframe";
   iframe.title = "Pubblicità";
   iframe.setAttribute("aria-label", "Pubblicità");
   iframe.loading = "eager";
