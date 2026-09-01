@@ -46,6 +46,15 @@ describe("TinyAdz release contract", () => {
     expect(headers).toContain("TINYADZ_SCRIPT_ORIGIN");
   });
 
+  it("paints INLINED ads through the TinyAdz manager API", () => {
+    const runtime = read("components/ads/tinyadz-runtime.ts");
+    expect(runtime).toContain("renderInlined");
+    expect(runtime).toContain("$tam");
+    expect(runtime).toContain("installTinyAdzConfigCapture");
+    const loader = read("components/ads/tinyadz-loader.tsx");
+    expect(loader).toContain("installTinyAdzConfigCapture");
+  });
+
   it("stamps a release SHA on every Next build", () => {
     const pkg = JSON.parse(read("package.json")) as { scripts: Record<string, string> };
     expect(pkg.scripts.build).toBe("node scripts/next-release-build.mjs");

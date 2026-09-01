@@ -18,8 +18,14 @@ function isFirstParty(url) {
   }
 }
 
-const browser = await chromium.launch({ headless: true, args: ["--disable-extensions"] });
-const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+const browser = await chromium.launch({ headless: true, args: ["--disable-extensions", "--disable-blink-features=AutomationControlled"] });
+const context = await browser.newContext({
+  viewport: { width: 1440, height: 1000 },
+  userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+});
+await context.addInitScript(() => {
+  Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+});
 const page = await context.newPage();
 const vendor = [];
 const firstPartyErrors = [];
@@ -62,7 +68,8 @@ for (const route of PATHS) {
         el.getAttribute("data-tinyadz-placement"),
       ),
       containers: document.querySelectorAll("[ta-ad-container]").length,
-      runtime: Boolean(window.$ta2_ads),
+      runtime: Boolean(window.$tam || window.$ta2_ads),
+      iframes: document.querySelectorAll("iframe.tinyadz-iframe, iframe.inlined-ta-ad").length,
       expectedSrc: scriptUrl,
     };
   }, SCRIPT_URL);
@@ -75,13 +82,15 @@ const scriptOk = results.every((row) => row.script && row.scriptSrc === SCRIPT_U
 const homeSlots = results.find((row) => row.route === "/")?.slots ?? [];
 const vendorScript = vendor.filter((row) => row.url.includes("/scripts/v2.0/main.js"));
 const vendorGsc = vendor.filter((row) => row.url.includes("/api/gsc"));
-const vendorNoFill = vendorGsc.some((row) => row.status === 204 || row.status === 200);
-const vendorConfigMissing = vendorGsc.some((row) => row.status === 403);
+const vendorNoFill = vendorGsc.some((row) => row.status === 204);
+const vendorReady = vendorGsc.some((row) => row.status === 200);
+const vendorLikelyBot = vendorGsc.some((row) => row.status === 403);
+const painted = results.some((row) => (row.iframes ?? 0) > 0);
 
 const summary = {
   baseUrl: BASE_URL,
   integration: scriptOk && homeSlots.includes("home-editorial") ? "healthy" : "broken",
-  vendor: vendorConfigMissing ? "config-missing" : vendorNoFill ? "response" : vendorScript.length ? "script-only" : "no-vendor-request",
+  vendor: vendorLikelyBot ? "likely-bot" : painted ? "painted" : vendorReady ? "ready-unpainted" : vendorNoFill ? "no-fill" : vendorScript.length ? "script-only" : "no-vendor-request",
   firstPartyErrors,
   results,
 };

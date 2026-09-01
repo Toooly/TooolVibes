@@ -13,7 +13,10 @@ import {
   TINYADZ_TEST_MODE_ENV,
 } from "@/lib/ads/tinyadz-config";
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
-import { requestTinyAdzAd } from "@/components/ads/tinyadz-runtime";
+import {
+  installTinyAdzConfigCapture,
+  requestTinyAdzAd,
+} from "@/components/ads/tinyadz-runtime";
 
 /**
  * TinyAdz publisher loader.
@@ -43,6 +46,8 @@ export function TinyAdzLoader() {
 
   useEffect(() => {
     if (!shouldLoad || !config.siteId) return;
+
+    installTinyAdzConfigCapture();
 
     const existing = document.getElementById(TINYADZ_SCRIPT_ID);
     if (existing) {
