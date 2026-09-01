@@ -65,7 +65,7 @@ export function TinyAdzLoader() {
     const script = document.createElement("script");
     script.id = TINYADZ_SCRIPT_ID;
     script.src = TINYADZ_SCRIPT_URL;
-    script.async = true;
+    script.async = false;
     script.setAttribute("site-id", config.siteId);
     script.setAttribute("data-site-id", config.siteId);
     script.setAttribute("test-mode", config.testMode);

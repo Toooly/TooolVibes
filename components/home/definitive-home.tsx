@@ -674,8 +674,8 @@ export function DefinitiveHome({ tools, weeklyTool, announcement = null }: Defin
         </p>
       ) : null}
       <Cockpit toolCount={tools.length} />
-      <TinyAdzInlineSlot placement="home-editorial" />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
+      <TinyAdzInlineSlot placement="home-editorial" />
       <Method />
       <SponsorSection placementKey="home-featured-tool" />
     </div>
