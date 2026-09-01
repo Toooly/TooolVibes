@@ -257,16 +257,14 @@ Costruisce l'app con OpenNext e la esegue localmente nel runtime Cloudflare Work
 
 ```bash
 npm run deploy
-```
-
-Deploya su Cloudflare Workers una build OpenNext gia` generata. Questo comando e`
-pensato per la fase Deploy di Workers Builds, dove la build e` gia` stata eseguita.
-
-```bash
 npm run deploy:local
+npm run cloudflare:upload
 ```
 
-Costruisce l'app e poi la deploya da locale.
+Questi comandi sono rifiutati. Sovrascriverebbero il Worker di produzione `tooolvibes`
+senza SHA di release (causa del drift `/api/release` → `development`).
+
+Il solo path di produzione e`: `npm run cloudflare:deploy`.
 
 ```bash
 npm run cf-typegen

@@ -25,7 +25,7 @@
     "build:cloudflare": "node scripts/run-cloudflare-build.mjs",
     "cloudflare:build": "node scripts/run-cloudflare-build.mjs",
     "cloudflare:deploy": "node scripts/run-cloudflare-deploy.mjs",
-    "cloudflare:upload": "opennextjs-cloudflare upload",
+    "cloudflare:upload": "node scripts/refuse-unguarded-cloudflare-deploy.mjs",
     "start": "node scripts/release/start-standalone.mjs",
     "lint": "eslint .",
     "lint:ci": "eslint . --max-warnings=0",
@@ -39,8 +39,8 @@
     "test:e2e:visual": "playwright test tests/e2e/visual-matrix.spec.ts",
     "test:e2e:update": "playwright test tests/e2e/visual-matrix.spec.ts --update-snapshots",
     "preview": "npm run build:cloudflare && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare deploy",
-    "deploy:local": "npm run build:cloudflare && opennextjs-cloudflare deploy",
+    "deploy": "node scripts/refuse-unguarded-cloudflare-deploy.mjs",
+    "deploy:local": "node scripts/refuse-unguarded-cloudflare-deploy.mjs",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
