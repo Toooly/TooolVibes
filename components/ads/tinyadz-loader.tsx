@@ -16,6 +16,7 @@ import {
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
 import {
   installTinyAdzConfigCapture,
+  installTinyAdzWidgetMessages,
   requestTinyAdzAd,
 } from "@/components/ads/tinyadz-runtime";
 
@@ -50,6 +51,7 @@ export function TinyAdzLoader() {
     if (!shouldLoad || !config.siteId) return;
 
     installTinyAdzConfigCapture();
+    installTinyAdzWidgetMessages();
 
     const existing = document.getElementById(TINYADZ_SCRIPT_ID);
     if (existing) {
@@ -63,7 +65,7 @@ export function TinyAdzLoader() {
     const script = document.createElement("script");
     script.id = TINYADZ_SCRIPT_ID;
     script.src = TINYADZ_SCRIPT_URL;
-    script.async = false;
+    script.async = true;
     script.setAttribute("site-id", config.siteId);
     script.setAttribute("data-site-id", config.siteId);
     script.setAttribute("test-mode", config.testMode);

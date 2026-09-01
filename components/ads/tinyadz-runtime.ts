@@ -8,8 +8,6 @@
  * remove unmatched slots; our frames stay outside that selector.
  */
 
-import { buildTinyAdzInlineFrameSrc } from "@/lib/ads/tinyadz-config";
-
 export const TINYADZ_RELOAD_GUARD_KEY = "tooolvibes.ta.reload-guard";
 export const TINYADZ_RELOAD_WINDOW_MS = 2000;
 
@@ -50,6 +48,7 @@ let siteConfig: TinyAdzSiteConfig | null = null;
 let fetchPatched = false;
 let bindAttempts = 0;
 let bindTimer: number | null = null;
+let messagesPatched = false;
 
 const MAX_BIND_ATTEMPTS = 20;
 
@@ -67,6 +66,42 @@ export function applyTinyAdzSiteConfig(config: TinyAdzSiteConfig | null): void {
 
 export function getTinyAdzSiteConfig(): TinyAdzSiteConfig | null {
   return siteConfig;
+}
+
+
+export function installTinyAdzWidgetMessages(): void {
+  if (typeof window === "undefined" || messagesPatched) {
+    return;
+  }
+  messagesPatched = true;
+  window.addEventListener("message", (event) => {
+    const payload = event.data as
+      | { sender?: string; action?: string }
+      | null;
+    if (!payload || payload.sender !== "tinyadz") {
+      return;
+    }
+    if (payload.action === "NO_AD") {
+      document.querySelectorAll("[data-tinyadz-placement]").forEach((node) => {
+        const slot = node as HTMLElement;
+        slot.hidden = true;
+        slot.setAttribute("data-tv-ad-empty", "true");
+      });
+      return;
+    }
+    if (payload.action === "WIDGET_LOADED") {
+      document.querySelectorAll("[data-tinyadz-placement]").forEach((node) => {
+        const slot = node as HTMLElement;
+        slot.hidden = false;
+        slot.removeAttribute("data-tv-ad-empty");
+      });
+      document.querySelectorAll("[data-tinyadz-placement] iframe").forEach((frame) => {
+        const iframe = frame as HTMLElement;
+        iframe.style.opacity = "1";
+        iframe.style.visibility = "visible";
+      });
+    }
+  });
 }
 
 export function installTinyAdzConfigCapture(): void {
@@ -160,85 +195,31 @@ export function reloadOnce(reason: string): boolean {
   }
 }
 
-function inlineWidgetId(): string | null {
-  const fromConfig = Array.isArray(siteConfig?.widgets)
-    ? siteConfig.widgets.find(
-        (entry) => !entry.renderMode || entry.renderMode === "INLINED",
-      )?.id
-    : null;
-  if (fromConfig) {
-    return fromConfig;
-  }
-  const script = document.getElementById("tinyadz-v2");
-  return script?.getAttribute("data-inline-widget-id")?.trim() || null;
-}
-
-function alreadyPainted(container: Element): boolean {
-  return Boolean(
-    container.querySelector("iframe.tv-ad-frame__iframe, iframe.tinyadz-iframe, iframe.inlined-ta-ad"),
-  );
-}
-
-function paintInlineFrame(
-  container: Element,
-  widgetId: string,
-  siteId: string,
-  testMode: boolean,
-): boolean {
-  if (alreadyPainted(container)) {
-    return true;
-  }
-  const iframe = document.createElement("iframe");
-  iframe.className = "tv-ad-frame__iframe";
-  iframe.title = "Pubblicità";
-  iframe.setAttribute("aria-label", "Pubblicità");
-  iframe.loading = "eager";
-  iframe.referrerPolicy = "no-referrer-when-downgrade";
-  iframe.setAttribute("allow", "autoplay; fullscreen");
-  iframe.src = buildTinyAdzInlineFrameSrc({
-    widgetId,
-    siteId,
-    pageUrl: window.location.href,
-    testMode,
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  });
-  iframe.style.width = "100%";
-  iframe.style.minHeight = "250px";
-  iframe.style.border = "0";
-  iframe.style.display = "block";
-  iframe.style.background = "transparent";
-  container.appendChild(iframe);
-  return alreadyPainted(container);
-}
-
 export function bindTinyAdzInlineSlots(): boolean {
   const w = tinyAdzWindow();
   if (!w) {
     return false;
   }
-  const widgetId = inlineWidgetId();
-  const script = document.getElementById("tinyadz-v2");
-  const siteId =
-    script?.getAttribute("site-id") ||
-    script?.getAttribute("data-site-id") ||
-    "";
-  if (!widgetId || !siteId) {
-    return false;
-  }
-  const testMode =
-    (script?.getAttribute("test-mode") || script?.getAttribute("data-test-mode")) ===
-    "true";
   const containers = document.querySelectorAll(
-    "[data-tinyadz-placement] [data-tv-ad-frame], [data-tv-ad-frame]",
+    "[data-tinyadz-placement] [ta-ad-container], [ta-ad-container]",
   );
   if (containers.length === 0) {
     return false;
   }
-  let painted = false;
-  containers.forEach((container) => {
-    painted = paintInlineFrame(container, widgetId, siteId, testMode) || painted;
-  });
-  return painted;
+  if (!w.$tam && !w.tam) {
+    return false;
+  }
+  try {
+    w.$tam?.requestNextAd?.();
+  } catch {
+    // ignore
+  }
+  try {
+    w.tam?.requestNextAd?.();
+  } catch {
+    // ignore
+  }
+  return true;
 }
 
 export function scheduleTinyAdzInlineBind(): void {

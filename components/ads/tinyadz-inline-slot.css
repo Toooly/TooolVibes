@@ -1,4 +1,4 @@
-/* TinyAdz manual inline slot — scoped, native to the page grid. */
+/* TinyAdz official inline slot — scoped, native to the page grid. */
 .tinyadz-inline-slot {
   display: grid;
   width: 100%;
@@ -19,17 +19,14 @@
   color: var(--muted);
 }
 
-.tinyadz-inline-slot [data-tv-ad-frame] {
+.tinyadz-inline-slot [ta-ad-container],
+.tinyadz-inline-slot *[ta-ad-container] {
   width: 100%;
   min-height: 15.625rem;
 }
 
-/* TinyAdz IntersectionObserver uses threshold 0.1. A 0-height container never
-   intersects, so inlined ads never paint. Reserve a short banner strip only
-   after consent (this node is not mounted otherwise). */
-.tinyadz-inline-slot iframe.tv-ad-frame__iframe,
-.tinyadz-inline-slot iframe.tinyadz-iframe,
-.tinyadz-inline-slot iframe.inlined-ta-ad {
+.tinyadz-inline-slot iframe.inlined-ta-ad,
+.tinyadz-inline-slot iframe.tinyadz-iframe {
   display: block;
   width: 100%;
   min-height: 15.625rem;

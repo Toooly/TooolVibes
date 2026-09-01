@@ -4,15 +4,16 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   applyTinyAdzSiteConfig,
   bindTinyAdzInlineSlots,
+  installTinyAdzWidgetMessages,
   requestTinyAdzAd,
 } from "@/components/ads/tinyadz-runtime";
 
-function mountSlot(widgetId = "6a744d88df8a33f3855e3997") {
+function mountSlot() {
   document.body.innerHTML = `
     <aside data-tinyadz-placement="home-editorial" class="tinyadz-inline-slot">
-      <div data-tv-ad-frame=""></div>
+      <div ta-ad-container=""></div>
     </aside>
-    <script id="tinyadz-v2" site-id="6a744c56118838f2f4456e99" test-mode="true" data-inline-widget-id="${widgetId}"></script>
+    <script id="tinyadz-v2" src="https://cdn.apitiny.net/scripts/v2.0/main.js" data-site-id="6a744c56118838f2f4456e99" data-test-mode="false"></script>
   `;
 }
 
@@ -23,38 +24,44 @@ afterEach(() => {
   delete (window as Window & { $tam?: unknown }).$tam;
 });
 
-describe("TinyAdz inline bind", () => {
-  it("paints a non-popup iframe without waiting for $ta2_ads", () => {
+describe("TinyAdz official inline bind", () => {
+  it("asks $tam to fill official ta-ad-container hosts", () => {
     mountSlot();
+    const requestNextAd = vi.fn();
+    (window as Window & { $tam?: { requestNextAd: typeof requestNextAd } }).$tam = {
+      requestNextAd,
+    };
     expect(bindTinyAdzInlineSlots()).toBe(true);
-    const iframe = document.querySelector("iframe.tv-ad-frame__iframe") as HTMLIFrameElement | null;
-    expect(iframe).not.toBeNull();
-    expect(iframe?.src).toContain("showInPopup=false");
-    expect(iframe?.src).toContain("renderMode=INLINED");
-    expect(iframe?.src).toContain("testMode=true");
-    expect(iframe?.src).toContain("/was/6a744d88df8a33f3855e3997");
-  });
-
-  it("does not paint when widget id and site id are missing", () => {
-    document.body.innerHTML = `<aside data-tinyadz-placement="home-editorial"><div data-tv-ad-frame=""></div></aside>`;
-    expect(bindTinyAdzInlineSlots()).toBe(false);
+    expect(requestNextAd).toHaveBeenCalledTimes(1);
+    expect(document.querySelector("[ta-ad-container]")).not.toBeNull();
     expect(document.querySelector("iframe.tv-ad-frame__iframe")).toBeNull();
   });
 
-  it("does not duplicate an already painted iframe", () => {
+  it("keeps retrying until the TinyAdz manager exists", () => {
     mountSlot();
-    expect(bindTinyAdzInlineSlots()).toBe(true);
-    expect(bindTinyAdzInlineSlots()).toBe(true);
-    expect(document.querySelectorAll("iframe.tv-ad-frame__iframe")).toHaveLength(1);
+    expect(bindTinyAdzInlineSlots()).toBe(false);
   });
 
-  it("asks $tam for the next ad and then binds slots", () => {
+  it("hides the slot when TinyAdz reports NO_AD", () => {
+    mountSlot();
+    installTinyAdzWidgetMessages();
+    window.dispatchEvent(
+      new MessageEvent("message", {
+        data: { sender: "tinyadz", action: "NO_AD" },
+      }),
+    );
+    const slot = document.querySelector("[data-tinyadz-placement]") as HTMLElement | null;
+    expect(slot?.hidden).toBe(true);
+    expect(slot?.getAttribute("data-tv-ad-empty")).toBe("true");
+  });
+
+  it("asks $tam for the next ad on requestTinyAdzAd", () => {
     mountSlot();
     const requestNextAd = vi.fn();
     (window as Window & { $tam?: { requestNextAd: typeof requestNextAd } }).$tam = {
       requestNextAd,
     };
     requestTinyAdzAd();
-    expect(requestNextAd).toHaveBeenCalledTimes(1);
+    expect(requestNextAd).toHaveBeenCalled();
   });
 });
