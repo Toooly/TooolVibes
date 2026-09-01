@@ -2137,7 +2137,7 @@ a.archive-v4-card:focus-visible {
 /* — Grid supporting copy (aria-live target) — */
 .ar4-grid__supporting {
   font-family: var(--tv-font-family-ui);
-  font-size: 13px;
+  font-size: var(--tv-text-caption);
   font-weight: 450;
   color: var(--tv-ink-muted-aa);
   margin: 6px 0 0;

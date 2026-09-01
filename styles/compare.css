@@ -42,7 +42,7 @@
 }
 
 .tool-battle-page__intro h1 {
-  max-inline-size: 16ch;
+  max-inline-size: 22ch;
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-display);

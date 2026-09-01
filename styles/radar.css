@@ -1263,8 +1263,9 @@ h1.tv-radar__title,
   margin: 0;
   color: var(--tv-ink-primary);
   font-size: clamp(1.75rem, 4.5vw, 3.25rem);
-  max-width: 18ch;
+  max-width: 24ch;
   overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 @media (max-width: 47.99rem) {
   h1.tv-radar__title,

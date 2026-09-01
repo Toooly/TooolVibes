@@ -159,12 +159,21 @@ for (const viewport of VIEWPORTS) {
     const consoleMessages = [];
     const pageErrors = [];
     const failedResources = [];
+    const httpErrors = [];
 
     page.on("console", (message) => {
       if (message.type() === "error" || message.type() === "warning") {
         consoleMessages.push({
           type: message.type(),
           text: message.text().slice(0, 500),
+        });
+      }
+    });
+    page.on("response", (response) => {
+      if (response.status() >= 400) {
+        httpErrors.push({
+          status: response.status(),
+          url: response.url().slice(0, 300),
         });
       }
     });
@@ -260,7 +269,7 @@ for (const viewport of VIEWPORTS) {
             element.closest(
               ".premium-badge,.pill,.editorial-label,[data-typography='metadata']",
             ) ||
-              /(?:eyebrow|kicker|category|text-meta|metadata|badge|tag|count|date|timestamp)/.test(
+              /(?:eyebrow|kicker|hint|dek|promise|supporting|signal|label|__meta|category|text-meta|metadata|badge|tag|count|date|timestamp)/.test(
                 className,
               ),
           );
@@ -551,6 +560,7 @@ for (const viewport of VIEWPORTS) {
         ...measurement,
         consoleMessages,
         failedResources,
+        httpErrors,
         label: LABEL,
         pageErrors,
         route: route.path,
@@ -564,6 +574,7 @@ for (const viewport of VIEWPORTS) {
         consoleMessages,
         error: error instanceof Error ? error.message : String(error),
         failedResources,
+        httpErrors,
         label: LABEL,
         pageErrors,
         route: route.path,
@@ -579,6 +590,41 @@ for (const viewport of VIEWPORTS) {
 }
 
 await browser.close();
+
+
+function isCloudflareChallengeUrl(url) {
+  return /challenges\.cloudflare\.com|turnstile|\/cdn-cgi\/challenge/i.test(
+    url,
+  );
+}
+
+function isFirstPartyHttpError(entry, baseUrl) {
+  if (isCloudflareChallengeUrl(entry.url)) return false;
+  try {
+    const origin = new URL(baseUrl).origin;
+    const url = new URL(entry.url);
+    return url.origin === origin || url.hostname === "127.0.0.1" || url.hostname === "localhost";
+  } catch {
+    return true;
+  }
+}
+
+function isVendorConsoleError(message, httpErrors, baseUrl) {
+  const text = message.text ?? "";
+  if (/\[Cloudflare Turnstile\]|Turnstile Error: 110200|challenges\.cloudflare\.com/i.test(text)) {
+    return true;
+  }
+  if (
+    message.type === "error" &&
+    /Failed to load resource: the server responded with a status of \d+/i.test(text)
+  ) {
+    const firstParty = (httpErrors ?? []).filter((entry) =>
+      isFirstPartyHttpError(entry, baseUrl),
+    );
+    return firstParty.length === 0;
+  }
+  return false;
+}
 
 const summary = {
   baseUrl: BASE_URL,
@@ -598,7 +644,14 @@ const summary = {
   pageOrConsoleErrors: results.filter(
     (result) =>
       result.pageErrors?.length > 0 ||
-      result.consoleMessages?.some((message) => message.type === "error"),
+      result.consoleMessages?.some(
+        (message) =>
+          message.type === "error" &&
+          !isVendorConsoleError(message, result.httpErrors, BASE_URL),
+      ) ||
+      (result.httpErrors ?? []).some((entry) =>
+        isFirstPartyHttpError(entry, BASE_URL),
+      ),
   ).length,
   consoleWarnings: results.reduce(
     (count, result) =>

@@ -1151,7 +1151,7 @@
 }
 
 .guides-article__hero-stat .hint {
-  font-size: 0.84rem;
+  font-size: var(--tv-text-caption);
   color: var(--guides-text-on-dark-soft);
   line-height: 1.5;
 }
@@ -1482,7 +1482,7 @@
 }
 
 .guides-rail__hint {
-  font-size: 0.86rem;
+  font-size: var(--tv-text-caption);
   line-height: 1.5;
   color: var(--guides-text-soft);
 }

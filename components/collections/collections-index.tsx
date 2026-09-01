@@ -144,7 +144,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           >
             <div className="cx-index__section-title">
               <h2 id="cx-start-here-heading">In evidenza</h2>
-              <p>La raccolta da cui partire oggi</p>
+              <p className="cx-index__section-kicker">La raccolta da cui partire oggi</p>
             </div>
             <div className="cx-index__grid cx-index__grid--lead">
               <CollectionCardV4 collection={lead} featured />
@@ -199,7 +199,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
         >
           <div className="cx-index__section-title">
             <h2 id="cx-principles-heading">Come leggere una raccolta</h2>
-            <p>Tre cose da cercare sempre</p>
+            <p className="cx-index__section-kicker">Tre cose da cercare sempre</p>
           </div>
           <div className="cx-index__principles-grid motion-stagger">
             <PrincipleCard

@@ -271,12 +271,13 @@
 }
 
 .shortlist-final-surface .mobile-library-empty__content h1 {
-  max-width: 15ch !important;
+  max-width: 22ch !important;
   margin: 1rem 0 0 !important;
   color: var(--tv-ink-primary) !important;
   font-size: clamp(2.8rem, 4.2vw, 4.4rem) !important;
   line-height: 0.92 !important;
   text-align: left !important;
+  text-wrap: balance;
 }
 
 .shortlist-final-surface .mobile-library-empty__content p {

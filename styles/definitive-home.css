@@ -1834,7 +1834,8 @@
   font-size: clamp(2.15rem, 5.2vw, 4.15rem);
   line-height: 0.98;
   letter-spacing: -0.035em;
-  max-width: none;
+  max-width: 20ch;
+  text-wrap: balance;
 }
 .def-cockpit__lede {
   max-width: 38rem;

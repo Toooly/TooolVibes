@@ -118,7 +118,7 @@ export default function AffiliatiPage() {
                 gap: "0.4rem",
                 color: "var(--tv-ink-secondary)",
                 fontFamily: "var(--tv-font-family-ui)",
-                fontSize: "0.86rem",
+                fontSize: "var(--tv-text-label)",
                 lineHeight: 1.5,
               }}
             >
