@@ -4,7 +4,8 @@
  * TinyAdz v2 exposes `window.$tam.requestNextAd` and `window.$ta2_ads.renderInlined`.
  * `requestNextAd()` without a container cannot paint INLINED widgets. Auto-placement
  * selectors on the homepage sit above the vendor's "too close to the top" cutoff.
- * We therefore paint our consent-gated `[ta-ad-container]` hosts directly.
+ * We paint `[data-tv-ad-frame]` hosts. TinyAdz `[ta-ad-container]` observers
+ * remove unmatched slots; our frames stay outside that selector.
  */
 
 import { buildTinyAdzInlineFrameSrc } from "@/lib/ads/tinyadz-config";
@@ -228,7 +229,7 @@ export function bindTinyAdzInlineSlots(): boolean {
     (script?.getAttribute("test-mode") || script?.getAttribute("data-test-mode")) ===
     "true";
   const containers = document.querySelectorAll(
-    "[data-tinyadz-placement] [ta-ad-container], [ta-ad-container]",
+    "[data-tinyadz-placement] [data-tv-ad-frame], [data-tv-ad-frame]",
   );
   if (containers.length === 0) {
     return false;

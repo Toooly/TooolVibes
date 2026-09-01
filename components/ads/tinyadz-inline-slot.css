@@ -19,8 +19,7 @@
   color: var(--muted);
 }
 
-.tinyadz-inline-slot [ta-ad-container],
-.tinyadz-inline-slot *[ta-ad-container] {
+.tinyadz-inline-slot [data-tv-ad-frame] {
   width: 100%;
   min-height: 15.625rem;
 }

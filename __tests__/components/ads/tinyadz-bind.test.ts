@@ -10,7 +10,7 @@ import {
 function mountSlot(widgetId = "6a744d88df8a33f3855e3997") {
   document.body.innerHTML = `
     <aside data-tinyadz-placement="home-editorial" class="tinyadz-inline-slot">
-      <div ta-ad-container=""></div>
+      <div data-tv-ad-frame=""></div>
     </aside>
     <script id="tinyadz-v2" site-id="6a744c56118838f2f4456e99" test-mode="false" data-inline-widget-id="${widgetId}"></script>
   `;
@@ -35,7 +35,7 @@ describe("TinyAdz inline bind", () => {
   });
 
   it("does not paint when widget id and site id are missing", () => {
-    document.body.innerHTML = `<aside data-tinyadz-placement="home-editorial"><div ta-ad-container=""></div></aside>`;
+    document.body.innerHTML = `<aside data-tinyadz-placement="home-editorial"><div data-tv-ad-frame=""></div></aside>`;
     expect(bindTinyAdzInlineSlots()).toBe(false);
     expect(document.querySelector("iframe.tinyadz-iframe")).toBeNull();
   });

@@ -19,7 +19,7 @@ import "./tinyadz-inline-slot.css";
  *
  * This component only renders the TinyAdz inline container agreement:
  *
- *    <div ta-ad-container="" />
+ *    <div data-tv-ad-frame="" />
  *
  * It renders NO script (the TinyAdzLoader owns the single script node), keeps
  * a single canonical consent state (consumed from AdvertisingConsentProvider),
@@ -62,7 +62,7 @@ export function TinyAdzInlineSlot({
       data-tinyadz-placement={placement}
     >
       <p className="tinyadz-inline-slot__label">Pubblicità</p>
-      <div ta-ad-container="" />
+      <div data-tv-ad-frame="" />
     </aside>
   );
 }

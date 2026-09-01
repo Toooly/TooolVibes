@@ -21,7 +21,7 @@ import {
 } from "@/lib/ads/tinyadz-config";
 
 const SITE_ID = "6a744c56118838f2f4456e99";
-const CONTAINER_SELECTOR = "div[ta-ad-container]";
+const CONTAINER_SELECTOR = "div[data-tv-ad-frame]";
 
 function stubEnv(overrides: Record<string, string | undefined> = {}) {
   vi.stubEnv(TINYADZ_ENABLED_ENV, overrides.enabled ?? "true");
@@ -95,11 +95,12 @@ describe("TinyAdzInlineSlot contract", () => {
     cleanup();
   });
 
-  it("exposes the exact ta-ad-container attribute", () => {
+  it("exposes a first-party ad frame host TinyAdz cannot remove", () => {
     const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
     const slot = container.querySelector(CONTAINER_SELECTOR);
     expect(slot).toBeTruthy();
-    expect(slot?.hasAttribute("ta-ad-container")).toBe(true);
+    expect(slot?.hasAttribute("data-tv-ad-frame")).toBe(true);
+    expect(slot?.hasAttribute("ta-ad-container")).toBe(false);
   });
 
   it("renders an accessible advertising label", () => {
