@@ -7,6 +7,8 @@
  * We therefore paint our consent-gated `[ta-ad-container]` hosts directly.
  */
 
+import { buildTinyAdzInlineFrameSrc } from "@/lib/ads/tinyadz-config";
+
 export const TINYADZ_RELOAD_GUARD_KEY = "tooolvibes.ta.reload-guard";
 export const TINYADZ_RELOAD_WINDOW_MS = 2000;
 
@@ -158,13 +160,16 @@ export function reloadOnce(reason: string): boolean {
 }
 
 function inlineWidgetId(): string | null {
-  if (!siteConfig?.enabled || !Array.isArray(siteConfig.widgets)) {
-    return null;
+  const fromConfig = Array.isArray(siteConfig?.widgets)
+    ? siteConfig.widgets.find(
+        (entry) => !entry.renderMode || entry.renderMode === "INLINED",
+      )?.id
+    : null;
+  if (fromConfig) {
+    return fromConfig;
   }
-  const widget = siteConfig.widgets.find(
-    (entry) => !entry.renderMode || entry.renderMode === "INLINED",
-  );
-  return widget?.id ?? null;
+  const script = document.getElementById("tinyadz-v2");
+  return script?.getAttribute("data-inline-widget-id")?.trim() || null;
 }
 
 function alreadyPainted(container: Element): boolean {
@@ -173,42 +178,64 @@ function alreadyPainted(container: Element): boolean {
   );
 }
 
+function paintInlineFrame(
+  container: Element,
+  widgetId: string,
+  siteId: string,
+  testMode: boolean,
+): boolean {
+  if (alreadyPainted(container)) {
+    return true;
+  }
+  const iframe = document.createElement("iframe");
+  iframe.className = "tinyadz-iframe inlined-ta-ad";
+  iframe.title = "Pubblicità";
+  iframe.setAttribute("aria-label", "Pubblicità");
+  iframe.loading = "eager";
+  iframe.referrerPolicy = "no-referrer-when-downgrade";
+  iframe.setAttribute("allow", "autoplay; fullscreen");
+  iframe.src = buildTinyAdzInlineFrameSrc({
+    widgetId,
+    siteId,
+    pageUrl: window.location.href,
+    testMode,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  });
+  iframe.style.width = "100%";
+  iframe.style.minHeight = "250px";
+  iframe.style.border = "0";
+  iframe.style.display = "block";
+  iframe.style.background = "transparent";
+  container.appendChild(iframe);
+  return alreadyPainted(container);
+}
+
 export function bindTinyAdzInlineSlots(): boolean {
   const w = tinyAdzWindow();
   if (!w) {
     return false;
   }
   const widgetId = inlineWidgetId();
-  const ads = w.$ta2_ads;
-  if (!widgetId || typeof ads?.renderInlined !== "function") {
+  const script = document.getElementById("tinyadz-v2");
+  const siteId =
+    script?.getAttribute("site-id") ||
+    script?.getAttribute("data-site-id") ||
+    "";
+  if (!widgetId || !siteId) {
     return false;
   }
-  const script = document.getElementById("tinyadz-v2");
-  const siteId = script?.getAttribute("site-id") || script?.getAttribute("data-site-id") || "";
   const testMode =
     (script?.getAttribute("test-mode") || script?.getAttribute("data-test-mode")) ===
     "true";
   const containers = document.querySelectorAll(
     "[data-tinyadz-placement] [ta-ad-container], [ta-ad-container]",
   );
+  if (containers.length === 0) {
+    return false;
+  }
   let painted = false;
   containers.forEach((container) => {
-    if (alreadyPainted(container)) {
-      painted = true;
-      return;
-    }
-    try {
-      ads.renderInlined?.(widgetId, {
-        theme: "light",
-        renderMode: "INLINED",
-        container,
-        testMode,
-        siteId,
-      });
-      painted = alreadyPainted(container) || painted;
-    } catch {
-      // Vendor render is best-effort.
-    }
+    painted = paintInlineFrame(container, widgetId, siteId, testMode) || painted;
   });
   return painted;
 }

@@ -38,6 +38,7 @@ describe("TinyAdz release contract", () => {
     expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_ENABLED":\s*"1"/);
     expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_SITE_ID":\s*"[a-z0-9]{24}"/);
     expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_TEST_MODE":\s*"0"/);
+    expect(wrangler).toMatch(/"NEXT_PUBLIC_TINYADZ_INLINE_WIDGET_ID":\s*"[a-z0-9]{24}"/);
   });
 
   it("keeps the TinyAdz script origin in the CSP contract", () => {

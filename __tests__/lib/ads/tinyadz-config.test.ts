@@ -8,6 +8,8 @@ import {
   TINYADZ_SCRIPT_URL,
   TINYADZ_SITE_ID_ENV,
   TINYADZ_TEST_MODE_ENV,
+  buildTinyAdzInlineFrameSrc,
+  TINYADZ_INLINE_WIDGET_ID_ENV,
 } from "@/lib/ads/tinyadz-config";
 
 const OFF = { [TINYADZ_ENABLED_ENV]: "0" };
@@ -19,6 +21,7 @@ describe("readTinyAdzConfig", () => {
     expect(config.enabled).toBe(false);
     expect(config.siteId).toBeNull();
     expect(config.testMode).toBe("true");
+    expect(config.inlineWidgetId).toBeNull();
   });
 
   it("parses boolean flags loosely (1/true/on/yes and 0/false/off/no)", () => {
@@ -54,6 +57,22 @@ describe("readTinyAdzConfig", () => {
   it("exposes the exact publisher constants", () => {
     expect(TINYADZ_SCRIPT_URL).toBe("https://cdn.apitiny.net/scripts/v2.0/main.js");
     expect(TINYADZ_SCRIPT_ID).toBe("tinyadz-v2");
+  });
+
+  it("reads the inline widget id and builds a non-popup WAS url", () => {
+    expect(
+      readTinyAdzConfig({ [TINYADZ_INLINE_WIDGET_ID_ENV]: "6a744d88df8a33f3855e3997" })
+        .inlineWidgetId,
+    ).toBe("6a744d88df8a33f3855e3997");
+    const src = buildTinyAdzInlineFrameSrc({
+      widgetId: "6a744d88df8a33f3855e3997",
+      siteId: "6a744c56118838f2f4456e99",
+      pageUrl: "https://tooolvibes.eu/",
+      testMode: false,
+    });
+    expect(src).toContain("showInPopup=false");
+    expect(src).toContain("renderMode=INLINED");
+    expect(src).not.toContain("showInPopup=true");
   });
 });
 

@@ -7,12 +7,12 @@ import {
   requestTinyAdzAd,
 } from "@/components/ads/tinyadz-runtime";
 
-function mountSlot() {
+function mountSlot(widgetId = "6a744d88df8a33f3855e3997") {
   document.body.innerHTML = `
     <aside data-tinyadz-placement="home-editorial" class="tinyadz-inline-slot">
       <div ta-ad-container=""></div>
     </aside>
-    <script id="tinyadz-v2" site-id="6a744c56118838f2f4456e99" test-mode="false"></script>
+    <script id="tinyadz-v2" site-id="6a744c56118838f2f4456e99" test-mode="false" data-inline-widget-id="${widgetId}"></script>
   `;
 }
 
@@ -24,55 +24,35 @@ afterEach(() => {
 });
 
 describe("TinyAdz inline bind", () => {
-  it("paints INLINED widgets into consent-gated slots", () => {
+  it("paints a non-popup iframe without waiting for $ta2_ads", () => {
     mountSlot();
-    const renderInlined = vi.fn((widgetId: string, options: { container?: Element }) => {
-      const iframe = document.createElement("iframe");
-      iframe.className = "tinyadz-iframe inlined-ta-ad";
-      iframe.src = `https://cdn.apitiny.net/was/${widgetId}`;
-      options.container?.appendChild(iframe);
-    });
-    (window as Window & { $ta2_ads?: { renderInlined: typeof renderInlined } }).$ta2_ads = {
-      renderInlined,
-    };
-    applyTinyAdzSiteConfig({
-      enabled: true,
-      widgets: [{ id: "widget-inline", renderMode: "INLINED" }],
-    });
-
     expect(bindTinyAdzInlineSlots()).toBe(true);
-    expect(renderInlined).toHaveBeenCalledTimes(1);
-    expect(document.querySelector("iframe.tinyadz-iframe")).not.toBeNull();
+    const iframe = document.querySelector("iframe.tinyadz-iframe") as HTMLIFrameElement | null;
+    expect(iframe).not.toBeNull();
+    expect(iframe?.src).toContain("showInPopup=false");
+    expect(iframe?.src).toContain("renderMode=INLINED");
+    expect(iframe?.src).toContain("/was/6a744d88df8a33f3855e3997");
   });
 
-  it("does not paint when vendor config is disabled", () => {
-    mountSlot();
-    const renderInlined = vi.fn();
-    (window as Window & { $ta2_ads?: { renderInlined: typeof renderInlined } }).$ta2_ads = {
-      renderInlined,
-    };
-    applyTinyAdzSiteConfig({
-      enabled: false,
-      widgets: [{ id: "widget-inline", renderMode: "INLINED" }],
-    });
+  it("does not paint when widget id and site id are missing", () => {
+    document.body.innerHTML = `<aside data-tinyadz-placement="home-editorial"><div ta-ad-container=""></div></aside>`;
     expect(bindTinyAdzInlineSlots()).toBe(false);
-    expect(renderInlined).not.toHaveBeenCalled();
+    expect(document.querySelector("iframe.tinyadz-iframe")).toBeNull();
+  });
+
+  it("does not duplicate an already painted iframe", () => {
+    mountSlot();
+    expect(bindTinyAdzInlineSlots()).toBe(true);
+    expect(bindTinyAdzInlineSlots()).toBe(true);
+    expect(document.querySelectorAll("iframe.tinyadz-iframe")).toHaveLength(1);
   });
 
   it("asks $tam for the next ad and then binds slots", () => {
     mountSlot();
     const requestNextAd = vi.fn();
-    const renderInlined = vi.fn();
     (window as Window & { $tam?: { requestNextAd: typeof requestNextAd } }).$tam = {
       requestNextAd,
     };
-    (window as Window & { $ta2_ads?: { renderInlined: typeof renderInlined } }).$ta2_ads = {
-      renderInlined,
-    };
-    applyTinyAdzSiteConfig({
-      enabled: true,
-      widgets: [{ id: "widget-inline", renderMode: "INLINED" }],
-    });
     requestTinyAdzAd();
     expect(requestNextAd).toHaveBeenCalledTimes(1);
   });

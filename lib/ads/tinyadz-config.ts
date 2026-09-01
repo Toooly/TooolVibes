@@ -19,6 +19,8 @@ export const TINYADZ_SCRIPT_ID = "tinyadz-v2";
 export const TINYADZ_ENABLED_ENV = "NEXT_PUBLIC_TINYADZ_ENABLED";
 export const TINYADZ_SITE_ID_ENV = "NEXT_PUBLIC_TINYADZ_SITE_ID";
 export const TINYADZ_TEST_MODE_ENV = "NEXT_PUBLIC_TINYADZ_TEST_MODE";
+export const TINYADZ_INLINE_WIDGET_ID_ENV = "NEXT_PUBLIC_TINYADZ_INLINE_WIDGET_ID";
+export const TINYADZ_WAS_ORIGIN = "https://cdn.apitiny.net";
 
 const TRUE_VALUES = new Set(["1", "true", "on", "yes"]);
 const FALSE_VALUES = new Set(["0", "false", "off", "no"]);
@@ -27,12 +29,14 @@ export type TinyAdzEnvironment = Readonly<{
   [TINYADZ_ENABLED_ENV]?: string;
   [TINYADZ_SITE_ID_ENV]?: string;
   [TINYADZ_TEST_MODE_ENV]?: string;
+  [TINYADZ_INLINE_WIDGET_ID_ENV]?: string;
 }>;
 
 export type TinyAdzConfig = Readonly<{
   enabled: boolean;
   siteId: string | null;
   testMode: "true" | "false";
+  inlineWidgetId: string | null;
 }>;
 
 function parseFlag(value: string | undefined, defaultValue: boolean): boolean {
@@ -53,6 +57,8 @@ export function readTinyAdzConfig(
   environment: Readonly<Record<string, string | undefined>> = {},
 ): TinyAdzConfig {
   const siteId = environment[TINYADZ_SITE_ID_ENV]?.trim() || null;
+  const inlineWidgetId =
+    environment[TINYADZ_INLINE_WIDGET_ID_ENV]?.trim() || null;
   const production = process.env.NODE_ENV === "production";
   const enabled = parseFlag(
     environment[TINYADZ_ENABLED_ENV],
@@ -65,7 +71,27 @@ export function readTinyAdzConfig(
     ? "true"
     : "false";
 
-  return Object.freeze({ enabled, siteId, testMode });
+  return Object.freeze({ enabled, siteId, testMode, inlineWidgetId });
+}
+
+export function buildTinyAdzInlineFrameSrc(input: {
+  widgetId: string;
+  siteId: string;
+  pageUrl: string;
+  testMode: boolean;
+  timeZone?: string;
+}): string {
+  const url = new URL(`${TINYADZ_WAS_ORIGIN}/was/${input.widgetId}`);
+  url.searchParams.set("showInPopup", "false");
+  url.searchParams.set("ref", input.pageUrl);
+  url.searchParams.set("theme", "light");
+  url.searchParams.set("renderMode", "INLINED");
+  url.searchParams.set("siteId", input.siteId);
+  url.searchParams.set("testMode", input.testMode ? "true" : "false");
+  if (input.timeZone) {
+    url.searchParams.set("timeZone", input.timeZone);
+  }
+  return url.toString();
 }
 
 const TINYADZ_EXCLUDED_PATH_PREFIXES: readonly string[] = [

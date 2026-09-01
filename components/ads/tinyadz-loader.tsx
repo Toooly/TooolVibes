@@ -11,6 +11,7 @@ import {
   TINYADZ_SCRIPT_URL,
   TINYADZ_SITE_ID_ENV,
   TINYADZ_TEST_MODE_ENV,
+  TINYADZ_INLINE_WIDGET_ID_ENV,
 } from "@/lib/ads/tinyadz-config";
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
 import {
@@ -34,6 +35,7 @@ export function TinyAdzLoader() {
     [TINYADZ_ENABLED_ENV]: process.env.NEXT_PUBLIC_TINYADZ_ENABLED,
     [TINYADZ_SITE_ID_ENV]: process.env.NEXT_PUBLIC_TINYADZ_SITE_ID,
     [TINYADZ_TEST_MODE_ENV]: process.env.NEXT_PUBLIC_TINYADZ_TEST_MODE,
+    [TINYADZ_INLINE_WIDGET_ID_ENV]: process.env.NEXT_PUBLIC_TINYADZ_INLINE_WIDGET_ID,
   });
 
   const loaded = consent.loaded !== false;
@@ -51,6 +53,9 @@ export function TinyAdzLoader() {
 
     const existing = document.getElementById(TINYADZ_SCRIPT_ID);
     if (existing) {
+      if (config.inlineWidgetId && !existing.getAttribute("data-inline-widget-id")) {
+        existing.setAttribute("data-inline-widget-id", config.inlineWidgetId);
+      }
       requestTinyAdzAd();
       return;
     }
@@ -63,11 +68,14 @@ export function TinyAdzLoader() {
     script.setAttribute("data-site-id", config.siteId);
     script.setAttribute("test-mode", config.testMode);
     script.setAttribute("data-test-mode", config.testMode);
+    if (config.inlineWidgetId) {
+      script.setAttribute("data-inline-widget-id", config.inlineWidgetId);
+    }
     script.addEventListener("load", () => {
       requestTinyAdzAd();
     });
     document.body.appendChild(script);
-  }, [shouldLoad, config.siteId, config.testMode, pathname]);
+  }, [shouldLoad, config.siteId, config.testMode, config.inlineWidgetId, pathname]);
 
   return null;
 }
