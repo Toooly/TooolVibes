@@ -144,7 +144,7 @@ export function SponsorOpenSlot({
               <ArrowUpRight aria-hidden="true" />
             </Link>
           </div>
-          <p className="partner-open__cue">Partner Experience curate da TooolVibes</p>
+          <p className="partner-open__cue partner-open__kicker" data-typography="metadata">Partner Experience curate da TooolVibes</p>
         </div>
         <div className="partner-open__visual" aria-hidden="true">
           <OpenSlotPreviewCreative />

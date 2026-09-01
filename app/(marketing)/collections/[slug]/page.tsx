@@ -21,10 +21,6 @@ type CollectionPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Collections are public editorial content. Pre-render known slugs and
-// revalidate in the background instead of resolving every request cold.
-export const revalidate = 3600;
-
 export async function generateStaticParams() {
   const collections = await getCuratedCollections();
   return collections.map((collection) => ({ slug: collection.slug }));

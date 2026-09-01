@@ -48,8 +48,6 @@ type EditorialPostPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const revalidate = 3600;
-
 const kindLabels: Record<EditorialPostRecord["kind"], string> = {
   "tool-writeup": "Analisi tool",
   guide: "Guida",

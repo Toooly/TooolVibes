@@ -14,34 +14,34 @@ const ROUTES = [
   {
     id: "home",
     path: "/",
-    readyText: "Trova il tool giusto",
+    readyText: "Scegli il tool giusto",
   },
-  { id: "archive", path: "/archivio", readyText: "Il catalogo, senza il caos." },
-  { id: "radar", path: "/radar", readyText: "Radar" },
+  { id: "archive", path: "/archivio", readyText: "Riduci le alternative" },
+  { id: "radar", path: "/radar", readyText: "Segui i lanci" },
   {
     id: "compare",
     path: "/compare",
-    readyText: "Confronta meno.",
+    readyText: "Metti a confronto",
   },
   {
     id: "shortlist",
     path: "/shortlist",
-    readyText: "La tua biblioteca",
+    readyText: "La tua shortlist è pronta a riempirsi.",
   },
   {
     id: "collections",
     path: "/collections",
-    readyText: "Il posto dove la selezione diventa percorso.",
+    readyText: "Scegli il percorso",
   },
   {
     id: "collection-detail",
     path: "/collections/ai-stack-solo-founders",
-    readyText: "Kit AI per founder solo",
+    readyText: "Stack AI per founder solo",
   },
   {
     id: "posts",
     path: "/posts",
-    readyText: "Guide e articoli per capire meglio cosa scegliere.",
+    readyText: "Guide scritte per",
   },
   {
     id: "post-detail",
@@ -72,7 +72,7 @@ const ROUTES = [
   {
     id: "account",
     path: "/account",
-    readyText: "Accedi al tuo spazio personale",
+    readyText: "Entra nel tuo spazio",
   },
   {
     id: "shop",

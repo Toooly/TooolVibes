@@ -12,8 +12,6 @@ export const metadata: Metadata = createPublicPageMetadata({
   path: "/collections",
 });
 
-export const revalidate = 3600;
-
 export default async function CollectionsPage() {
   const collections = await getCuratedCollections();
   return <CollectionsIndex collections={collections} />;

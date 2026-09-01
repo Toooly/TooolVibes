@@ -23,8 +23,6 @@ export const metadata = createPublicPageMetadata({
   path: "/posts",
 });
 
-export const revalidate = 3600;
-
 const FEATURED_SLUGS = [
   "frase-ai",
   "jenny-ai",
