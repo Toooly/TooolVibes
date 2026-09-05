@@ -164,6 +164,10 @@ export async function PUT(request: Request) {
         },
       } satisfies WorkspacePersistencePayload, { status: 409 });
     }
+    console.error("[workspace.save]", {
+      class: error instanceof Error ? error.name : "unknown",
+      message: error instanceof Error ? error.message.slice(0, 180) : "unknown",
+    });
     return NextResponse.json(localOnly("save-failed"), { status: 503 });
   }
 }

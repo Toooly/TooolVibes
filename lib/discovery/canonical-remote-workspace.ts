@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
 import { workspaceSyncStateV1Schema } from "@/lib/discovery/schema";
-import { stripUnsetSoftwareMemory } from "@/lib/discovery/workspace-contract";
+import { toRemoteWorkspaceState } from "@/lib/discovery/workspace-contract";
 import { createEmptyWorkspaceState } from "@/lib/discovery/workspace-state";
 import {
   synchronizeWorkspace,
@@ -189,11 +189,21 @@ function repository(viewerId: string): WorkspaceSyncRepository {
       const { data, error } = await createAdminSupabaseClient()
         .rpc("sync_viewer_workspace_v1", {
           p_viewer_id: viewerId,
-          p_state: stripUnsetSoftwareMemory(input.state),
+          p_state: toRemoteWorkspaceState(input.state),
           p_expected_revision: revisionInput(input.expectedRevision),
           p_operation_id: input.operationId,
         }).single();
-      if (error || !data) throw new Error("sync_viewer_workspace_v1 failed: " + (error?.message ?? "empty response"));
+      if (error || !data) {
+        console.error("[workspace.rpc]", {
+          rpc: "sync_viewer_workspace_v1",
+          code: error?.code ?? null,
+          message: (error?.message ?? "empty response").slice(0, 180),
+          details: error?.details ? String(error.details).slice(0, 180) : null,
+          hint: error?.hint ? String(error.hint).slice(0, 120) : null,
+          hasRevision: input.expectedRevision != null,
+        });
+        throw new Error("sync_viewer_workspace_v1 failed: " + (error?.message ?? "empty response"));
+      }
       const row = data as CanonicalWorkspaceRpcRow;
       if (row.sync_status !== "saved" && row.sync_status !== "conflict") {
         throw new Error("sync_viewer_workspace_v1 returned an invalid status.");

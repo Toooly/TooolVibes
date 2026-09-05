@@ -585,6 +585,44 @@ export function stripUnsetSoftwareMemory(state: WorkspaceStateV1): WorkspaceStat
   };
 }
 
+export function toRemoteWorkspaceState(state: WorkspaceStateV1): Record<string, unknown> {
+  const stripped = stripUnsetSoftwareMemory(state);
+  const toolStates = Object.fromEntries(
+    Object.entries(stripped.toolStates).map(([slug, tool]) => {
+      const next: Record<string, unknown> = {
+        stage: tool.stage,
+        note: tool.note,
+        saveReason: tool.saveReason,
+        pinned: tool.pinned,
+        decision: tool.decision,
+        updatedAt: tool.updatedAt,
+      };
+      if (tool.useCase) next.useCase = tool.useCase;
+      if (tool.alternatives.length > 0) next.alternatives = tool.alternatives;
+      if (tool.revisitAt) next.revisitAt = tool.revisitAt;
+      if (tool.usage) next.usage = tool.usage;
+      if (tool.replacedBy) next.replacedBy = tool.replacedBy;
+      if (tool.compareObjective) next.compareObjective = tool.compareObjective;
+      return [slug, next];
+    }),
+  );
+  const remote: Record<string, unknown> = {
+    schemaVersion: stripped.schemaVersion,
+    clearedAt: stripped.clearedAt,
+    saved: stripped.saved,
+    compare: stripped.compare,
+    stack: stripped.stack,
+    toolStates,
+  };
+  if (stripped.personalStacks.length > 0) {
+    remote.personalStacks = stripped.personalStacks;
+  }
+  if (stripped.events.length > 0) {
+    remote.events = stripped.events;
+  }
+  return remote;
+}
+
 function cloneOrderedList(list: WorkspaceOrderedList): WorkspaceOrderedList {
   return {
     slugs: [...list.slugs],

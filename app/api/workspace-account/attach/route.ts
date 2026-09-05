@@ -134,6 +134,10 @@ export async function POST(request: Request) {
         },
       } satisfies WorkspacePersistencePayload, { status: 409 });
     }
+    console.error("[workspace.attach]", {
+      class: error instanceof Error ? error.name : "unknown",
+      message: error instanceof Error ? error.message.slice(0, 180) : "unknown",
+    });
     return NextResponse.json(localOnly(fallback, "attach-failed"), {
       status: 503,
     });
