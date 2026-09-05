@@ -2,44 +2,31 @@
 
 import Link from "next/link";
 
+import {
+  DECISION_LIFECYCLE,
+  DECISION_LIFECYCLE_HINTS,
+  DECISION_LIFECYCLE_HREFS,
+  DECISION_LIFECYCLE_LABELS,
+  type DecisionLifecycleStage,
+} from "@/lib/product/decision-lifecycle";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
-type Step = {
-  id: string;
-  n: string;
-  label: string;
-  hint: string;
-  href: string;
-};
-
-const STEPS: Step[] = [
-  { id: "explore", n: "1", label: "Esplora", hint: "Catalogo", href: "/archivio" },
-  { id: "evaluate", n: "2", label: "Valuta", hint: "Schede", href: "/archivio" },
-  { id: "compare", n: "3", label: "Confronta", hint: "Differenze", href: "/compare" },
-  { id: "save", n: "4", label: "Salva", hint: "Candidati", href: "/shortlist" },
-  { id: "decide", n: "5", label: "Decidi", hint: "Motivazione", href: "/shortlist#wishlist" },
-];
-
-/**
- * Live decision path: steps light up from real workspace state
- * (compare slots + shortlist), never fake progress.
- */
 export function DecisionJourney() {
   const compareCount = useToolWorkspaceStore((s) => s.compareSlugs.length);
   const savedCount = useToolWorkspaceStore((s) => s.savedSlugs.length);
 
-  const activeId =
+  const activeId: DecisionLifecycleStage =
     savedCount > 0 && compareCount >= 2
-      ? "decide"
-      : savedCount > 0
-        ? "save"
-        : compareCount >= 2
-          ? "compare"
-          : compareCount === 1
-            ? "evaluate"
-            : "explore";
+      ? "ricorda"
+      : compareCount >= 2
+        ? "decidi"
+        : compareCount === 1
+          ? "valuta"
+          : savedCount > 0
+            ? "ricorda"
+            : "scopri";
 
-  const activeIndex = STEPS.findIndex((s) => s.id === activeId);
+  const activeIndex = DECISION_LIFECYCLE.indexOf(activeId);
 
   return (
     <nav className="def-cockpit__journey" aria-label="Il tuo percorso di decisione">
@@ -58,19 +45,19 @@ export function DecisionJourney() {
         )}
       </p>
       <ol>
-        {STEPS.map((step, index) => {
+        {DECISION_LIFECYCLE.map((stage, index) => {
           const done = index < activeIndex;
           const active = index === activeIndex;
           return (
             <li
-              key={step.id}
+              key={stage}
               className={[done && "is-done", active && "is-active"].filter(Boolean).join(" ") || undefined}
-              data-step={step.id}
+              data-step={stage}
             >
-              <Link href={step.href} aria-current={active ? "step" : undefined}>
-                <span aria-hidden="true">{done ? "✓" : step.n}</span>
-                <strong>{step.label}</strong>
-                <em>{step.hint}</em>
+              <Link href={DECISION_LIFECYCLE_HREFS[stage]} aria-current={active ? "step" : undefined}>
+                <span aria-hidden="true">{done ? "✓" : String(index + 1)}</span>
+                <strong>{DECISION_LIFECYCLE_LABELS[stage]}</strong>
+                <em>{DECISION_LIFECYCLE_HINTS[stage]}</em>
               </Link>
             </li>
           );

@@ -21,14 +21,14 @@ describe("buildPromoChips — public label dedupe", () => {
     expect(chips[0].kind).toBe("tool-of-week");
   });
 
-  it("does not duplicate \"In evidenza\" when levelLabel is already \"In evidenza\"", () => {
+  it("does not treat \"In evidenza\" as a skill level", () => {
     const chips = buildPromoChips({
       levelLabel: "In evidenza",
       toolOfWeek: true,
       featured: true,
     });
     expect(chips.map((c) => c.label)).toEqual(["In evidenza"]);
-    expect(chips[0].kind).toBe("level");
+    expect(chips[0].kind).toBe("tool-of-week");
   });
 
   it("keeps distinct labels side by side", () => {
@@ -55,13 +55,13 @@ describe("buildPromoChips — public label dedupe", () => {
     expect(chips[0].kind).toBe("featured");
   });
 
-  it("preserves the first-occurrence order for a multi-label collision", () => {
+  it("preserves featured when levelLabel wrongly repeats In evidenza", () => {
     const chips = buildPromoChips({
       levelLabel: "In evidenza",
       featured: true,
     });
     expect(chips.map((c) => c.label)).toEqual(["In evidenza"]);
-    expect(chips[0].kind).toBe("level");
+    expect(chips[0].kind).toBe("featured");
   });
 
   it("does not mutate the input signals", () => {

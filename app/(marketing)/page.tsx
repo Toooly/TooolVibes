@@ -7,6 +7,7 @@ import {
 import { isPublicProductOpen } from "@/lib/gate/public-product-open";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import { getHomepageControls } from "@/lib/content/homepage-controls";
+import { getCuratedCollections, getFeaturedCollections } from "@/lib/data/public-collections";
 
 export async function generateMetadata() {
   const isGateOpen = isPublicProductOpen();
@@ -37,20 +38,36 @@ export default async function HomePage() {
     return <ComingSoonPage year={new Date().getFullYear()} />;
   }
 
-  const [tools, spotlightTool] = await Promise.all([
+  const [tools, spotlightTool, featuredStacks, allStacks] = await Promise.all([
     getPublicToolViews(),
     getToolSpotlightView(),
+    getFeaturedCollections(),
+    getCuratedCollections(),
   ]);
   const homepage = getHomepageControls();
   const featured = homepage.featuredToolSlug
     ? tools.find((tool) => tool.slug === homepage.featuredToolSlug) ?? spotlightTool
     : spotlightTool;
 
+  const selectedStacks = [...featuredStacks];
+  for (const stack of allStacks) {
+    if (selectedStacks.length >= 3) break;
+    if (!selectedStacks.some((item) => item.slug === stack.slug)) {
+      selectedStacks.push(stack);
+    }
+  }
+
   return (
     <DefinitiveHome
       tools={tools}
       weeklyTool={featured}
       announcement={homepage.announcement.enabled ? homepage.announcement : null}
+      stacks={selectedStacks.slice(0, 3).map((stack) => ({
+        slug: stack.slug,
+        title: stack.title,
+        kicker: stack.cover_kicker ?? "Stack",
+        description: stack.description,
+      }))}
     />
   );
 }

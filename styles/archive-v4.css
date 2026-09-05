@@ -2493,3 +2493,88 @@ a.archive-v4-card:focus-visible {
 .ar4-save-overflow-sheet[data-compare-live="true"] {
   padding-bottom: calc(var(--tv-bottom-nav-total, 62px) + 2.75rem + env(safe-area-inset-bottom));
 }
+
+
+.ar4-card__triage {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+.ar4-card__skill,
+.ar4-card__score {
+  display: inline-flex;
+  margin-right: 8px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted);
+}
+.ar4-card__best {
+  margin: 0;
+  font-size: 13px;
+  color: var(--tv-ink-secondary);
+}
+.ar4-card__diff {
+  margin: 0;
+  font-size: 12px;
+  color: var(--tv-ink-muted);
+}
+.ar4-goals {
+  padding: 0 16px 8px;
+}
+.ar4-goals__inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  gap: 10px;
+}
+.ar4-goals__label {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ar4-goals__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+
+.ar4-applied {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px 12px;
+  display: grid;
+  gap: 8px;
+}
+.ar4-applied__label {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ar4-applied__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.ar4-applied__chip,
+.ar4-applied__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.12));
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+}
+.ar4-applied__reset {
+  text-decoration: underline;
+  border: 0;
+}

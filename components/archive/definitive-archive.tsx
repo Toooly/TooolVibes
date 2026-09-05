@@ -19,7 +19,7 @@
  *  - Sponsor module hidden when partner is demo/fixture/development/placeholder
  */
 
-import { Fragment, useMemo, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -31,7 +31,13 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { CatalogLevelFilter } from "@/components/directory/catalog/catalog-controller";
+import {
+  parseCatalogLevelParam,
+  resolveCatalogGroupParam,
+  serializeCatalogUrl,
+  type CatalogLevelFilter,
+} from "@/components/directory/catalog/catalog-controller";
+import { DISCOVERY_INTENTS } from "@/lib/product/discovery-intents";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
 import { ArchiveV4ToolCard } from "./archive-v4-tool-card";
 import { CatalogoFacetHead } from "./catalogo-facet-head";
@@ -121,6 +127,35 @@ export function DefinitiveArchive({
   const totalTools = tools.length;
   const totalGroups = filterGroups.length;
 
+  useEffect(() => {
+    function onPopState() {
+      const params = new URLSearchParams(window.location.search);
+      const parsedLevel = parseCatalogLevelParam(params.get("level"));
+      setQuery((params.get("q") ?? "").trim());
+      setActiveGroup(resolveCatalogGroupParam(filterGroups, params.get("group")));
+      setActiveLevel(
+        parsedLevel === "beginner" || parsedLevel === "intermediate" || parsedLevel === "expert"
+          ? parsedLevel
+          : "all",
+      );
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [filterGroups]);
+
+  useEffect(() => {
+    const next = serializeCatalogUrl({
+      query,
+      group: activeGroup === "all" ? null : activeGroup,
+      level: (activeLevel as CatalogLevelFilter) || "all",
+    });
+    const current = `${window.location.pathname}${window.location.search}`;
+    if (current !== next) {
+      window.history.replaceState(null, "", next);
+    }
+  }, [query, activeGroup, activeLevel]);
+
+
   // Per-category tool counts (used by both desktop chip rail and mobile sheet)
   const groupCounts = useMemo(() => {
     const map = new Map<string, number>();
@@ -157,7 +192,7 @@ export function DefinitiveArchive({
       }
       if (query.trim()) {
         const q = query.trim().toLowerCase();
-        const haystack = `${t.name} ${t.categoryLabel} ${t.tldr ?? ""} ${t.shortDescription ?? ""}`.toLowerCase();
+        const haystack = `${t.name} ${t.categoryLabel} ${t.tldr ?? ""} ${t.shortDescription ?? ""} ${(t.useCases ?? []).join(" ")} ${(t.tags ?? []).join(" ")} ${t.idealUseCase ?? ""}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
@@ -358,6 +393,67 @@ export function DefinitiveArchive({
           ) : null}
         </div>
       </section>
+
+      <section className="ar4-goals" aria-label="Obiettivi">
+        <div className="ar4-goals__inner">
+          <p className="ar4-goals__label">Cosa vuoi fare?</p>
+          <div className="ar4-goals__chips">
+            {DISCOVERY_INTENTS.map((intent) => {
+              const pressed = intent.group
+                ? activeGroup === intent.group
+                : Boolean(intent.query && query === intent.query);
+              return (
+                <button
+                  key={intent.id}
+                  type="button"
+                  className={cn("ar4-chip", pressed && "is-active")}
+                  aria-pressed={pressed}
+                  onClick={() => {
+                    if (intent.group) {
+                      setActiveGroup(intent.group);
+                      setQuery("");
+                    } else if (intent.query) {
+                      setQuery(intent.query);
+                      setActiveGroup("all");
+                    }
+                  }}
+                >
+                  {intent.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {hasActiveFilter ? (
+        <div className="ar4-applied" aria-label="Filtri attivi">
+          <p className="ar4-applied__label">Filtri attivi</p>
+          <div className="ar4-applied__chips">
+            {query.trim() ? (
+              <button type="button" className="ar4-applied__chip" onClick={() => setQuery("")}>
+                Ricerca: {query.trim()}
+                <X size={12} aria-hidden="true" />
+              </button>
+            ) : null}
+            {activeGroup !== "all" ? (
+              <button type="button" className="ar4-applied__chip" onClick={() => setActiveGroup("all")}>
+                {filterGroups.find((group) => group.key === activeGroup)?.label ?? activeGroup}
+                <X size={12} aria-hidden="true" />
+              </button>
+            ) : null}
+            {activeLevel !== "all" ? (
+              <button type="button" className="ar4-applied__chip" onClick={() => setActiveLevel("all")}>
+                {LEVEL_FILTERS.find((level) => level.key === activeLevel)?.label ?? activeLevel}
+                <X size={12} aria-hidden="true" />
+              </button>
+            ) : null}
+            <button type="button" className="ar4-applied__reset" onClick={resetAll}>
+              Reimposta
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       {/* ═══ 3a. DESKTOP FILTRI + ORDINAMENTO (>= 768px) ═══ */}
       <section className="ar4-filters" aria-label="Filtri catalogo">

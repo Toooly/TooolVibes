@@ -1747,3 +1747,98 @@
   display: grid;
   gap: var(--tv-space-3);
 }
+
+
+.tv-compare-dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--tv-bottom-nav-total, 0px);
+  z-index: 45;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+.tv-compare-dock__inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1120px;
+  margin: 0 auto;
+  min-height: 56px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  background: rgba(12, 12, 16, 0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(16px);
+}
+.tv-compare-dock__count {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.tv-compare-dock__list {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 8px;
+  overflow-x: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tv-compare-dock__list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  white-space: nowrap;
+  font-size: 13px;
+}
+.tv-compare-dock__list button {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+.tv-compare-dock__cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--tv-accent-primary, #6a3cff);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 650;
+  font-size: 13px;
+}
+@media (min-width: 1280px) {
+  .tv-compare-dock { bottom: 16px; }
+}
+html:has(.tv-consent-banner) .tv-compare-dock {
+  bottom: calc(var(--tv-bottom-nav-total, 0px) + 10rem);
+}
+@media (min-width: 1280px) {
+  html:has(.tv-consent-banner) .tv-compare-dock {
+    bottom: calc(16px + 10rem);
+  }
+}
+html:has([data-compare-dock]) main#main-content {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 0px) + 88px);
+}
+html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
+  padding-bottom: calc(var(--tv-bottom-nav-total, 0px) + 88px + 10rem);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-compare-dock { transition: none; }
+}

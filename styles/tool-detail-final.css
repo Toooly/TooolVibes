@@ -1592,3 +1592,30 @@
   color: var(--tv-ink-secondary);
   font: inherit;
 }
+
+
+.td-final-brief {
+  margin: 16px 0 8px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.08));
+}
+.td-final-brief dl {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .td-final-brief dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.td-final-brief dt {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted);
+  margin-bottom: 4px;
+}
+.td-final-brief dd {
+  margin: 0;
+  font-size: 14px;
+}

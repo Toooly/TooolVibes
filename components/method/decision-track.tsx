@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 /**
  * DecisionTrack — the signature visual for /metodo.
  *
- * Three numbered steps (Scopri → Confronta → Salva) with a connecting
+ * Lifecycle steps (Scopri → Valuta → Confronta → Decidi → Ricorda) with a connecting
  * trace. On wide viewports the steps lay out horizontally with a
  * gradient connector between them; on mobile they stack vertically with
  * a vertical connector dotted line.

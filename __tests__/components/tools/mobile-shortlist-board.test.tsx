@@ -162,15 +162,16 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "La tua shortlist è pronta a riempirsi.",
+        name: "Salva i tool che stai considerando.",
       }),
     ).toBeTruthy();
     expect(
       screen.getByRole("region", {
-        name: "La tua shortlist è pronta a riempirsi.",
+        name: "Salva i tool che stai considerando.",
       }),
     ).toBeTruthy();
-    expect(screen.getByText("3 tool in 1 categorie, ordinati per utilità reale.")).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Esplora catalogo/i })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Parti da uno stack/i })).toBeTruthy();
   });
 
   it("renders only saved tools and opens the decision sheet from a book", () => {

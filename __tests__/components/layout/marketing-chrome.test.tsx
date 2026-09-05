@@ -24,6 +24,10 @@ vi.mock("@/components/layout/site-footer-v2", () => ({
   SiteFooterV2: () => createElement("footer", { "data-testid": "site-footer-v2" }),
 }));
 
+vi.mock("@/components/layout/compare-session-dock", () => ({
+  CompareSessionDock: () => createElement("div", { "data-testid": "compare-session-dock" }),
+}));
+
 vi.mock("@/components/layout/mobile-bottom-nav", () => ({
   MobileBottomNav: () => createElement("nav", { "data-testid": "mobile-bottom-nav" }),
 }));
@@ -83,6 +87,7 @@ describe("MarketingChrome — public vs account app", () => {
       expect(screen.getByTestId("mobile-top-bar")).toBeTruthy();
       expect(screen.getByTestId("site-footer-v2")).toBeTruthy();
       expect(screen.getByTestId("mobile-bottom-nav")).toBeTruthy();
+      expect(screen.getByTestId("compare-session-dock")).toBeTruthy();
       expect(screen.getByTestId("tinyadz-loader")).toBeTruthy();
       expect(screen.getByTestId("page-transition")).toBeTruthy();
       expect(screen.getByText("page-body")).toBeTruthy();

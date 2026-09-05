@@ -689,7 +689,7 @@
 /* Connector line art on wide viewports — visual signature. */
 @media (min-width: 64rem) {
   .method-track__list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
     gap: 0;
   }
 

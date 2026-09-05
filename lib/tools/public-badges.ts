@@ -13,7 +13,9 @@ type PromoChipSource = {
 
 export function buildPromoChips(tool: PromoChipSource): PromoChip[] {
   const chips: PromoChip[] = [];
-  if (tool.levelLabel) chips.push({ label: tool.levelLabel, kind: "level" });
+  if (tool.levelLabel && tool.levelLabel !== "In evidenza") {
+    chips.push({ label: tool.levelLabel, kind: "level" });
+  }
   if (tool.toolOfWeek) chips.push({ label: "In evidenza", kind: "tool-of-week" });
   else if (tool.featured) chips.push({ label: "In evidenza", kind: "featured" });
   const seen = new Set<string>();

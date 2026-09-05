@@ -148,7 +148,7 @@ export const directoryTools: DirectoryTool[] = [
     slug: "blink",
     category: "Vibe Coding",
     categoryLabel: "Vibe coding / builder app AI",
-    level: "featured",
+    level: "beginner",
     segments: ["vibe-coding", "ai-app-builder"],
     shortDescription:
       "AI app builder che trasforma un'idea in un'app funzionante in pochi minuti.",
@@ -180,7 +180,7 @@ export const directoryTools: DirectoryTool[] = [
     slug: "vibecode",
     category: "Builder app AI",
     categoryLabel: "Vibe coding / builder app AI",
-    level: "featured",
+    level: "beginner",
     segments: ["vibe-coding", "ai-app-builder"],
     shortDescription:
       "Builder AI per creare app da prompt, iterare rapidamente e pubblicare progetti mobile/web.",
@@ -211,7 +211,7 @@ export const directoryTools: DirectoryTool[] = [
     slug: "weweb",
     category: "No-code",
     categoryLabel: "No-code / builder web app",
-    level: "featured",
+    level: "intermediate",
     segments: ["no-code", "ai-app-builder", "website-builder"],
     shortDescription:
       "Piattaforma visuale no-code/AI per creare web app production-grade.",
@@ -243,7 +243,7 @@ export const directoryTools: DirectoryTool[] = [
     slug: "cosmicjs",
     category: "Headless CMS",
     categoryLabel: "CMS headless / flussi AI",
-    level: "featured",
+    level: "intermediate",
     segments: ["headless-cms", "no-code", "automation"],
     shortDescription:
       "CMS headless con AI, API, flussi e strumenti per accelerare progetti guidati dai contenuti.",
@@ -274,7 +274,7 @@ export const directoryTools: DirectoryTool[] = [
     slug: "mocha",
     category: "Builder app AI",
     categoryLabel: "Builder app AI / no-code",
-    level: "featured",
+    level: "beginner",
     segments: ["ai-app-builder", "no-code"],
     shortDescription:
       "Builder no-code per app AI con backend, database, autenticazione, hosting e pubblicazione integrati.",
@@ -305,7 +305,7 @@ export const directoryTools: DirectoryTool[] = [
     slug: "v0",
     category: "UI Builder",
     categoryLabel: "Coding AI / builder UI",
-    level: "featured",
+    level: "beginner",
     segments: ["ui-builder", "ai-app-builder"],
     shortDescription:
       "Builder AI di Vercel per creare interfacce, app, componenti e progetti pronti alla pubblicazione.",
@@ -336,7 +336,7 @@ export const directoryTools: DirectoryTool[] = [
     slug: "meku",
     category: "Vibe Coding",
     categoryLabel: "Builder siti AI / vibe coding",
-    level: "featured",
+    level: "beginner",
     segments: ["vibe-coding", "ai-app-builder", "website-builder"],
     shortDescription:
       "AI web app & site builder per generare progetti React/Tailwind, iterare, esportare e pubblicare.",

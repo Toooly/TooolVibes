@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("global shell continuity", () => {
-  test("SHELL-NAV guest 390 Home → Archivio → Tool → Compare → Radar → Shortlist", async ({
+  test("SHELL-NAV guest 390 Home → Archivio → Tool → Raccolte → Shortlist", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
@@ -45,13 +45,9 @@ test.describe("global shell continuity", () => {
     await expect(page).toHaveURL(/\/toools\/blink/);
     await assertShell(/Catalogo/i);
 
-    await dock.getByRole("link", { name: /Confronto/i }).click();
-    await expect(page).toHaveURL(/\/compare/);
-    await assertShell(/Confronto/i);
-
-    await dock.getByRole("link", { name: /Radar/i }).click();
-    await expect(page).toHaveURL(/\/radar/);
-    await assertShell(/Radar/i);
+    await dock.getByRole("link", { name: /Raccolte/i }).click();
+    await expect(page).toHaveURL(/\/collections/);
+    await assertShell(/Raccolte/i);
 
     await dock.getByRole("link", { name: /Salvati/i }).click();
     await expect(page).toHaveURL(/\/shortlist/);

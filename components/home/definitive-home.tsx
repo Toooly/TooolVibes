@@ -32,6 +32,8 @@
 import Link from "next/link";
 
 import { DecisionJourney } from "@/components/home/decision-journey";
+import { IntentEntry } from "@/components/home/intent-entry";
+import { formatDecisionLifecycle } from "@/lib/product/decision-lifecycle";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -61,20 +63,21 @@ type DefinitiveHomeProps = {
   tools: ToolPublicView[];
   weeklyTool?: ToolPublicView | null;
   announcement?: { text: string; href: string; image?: string | null } | null;
+  stacks?: HomeStackPreview[];
 };
 
 const METHOD_STEPS = [
   {
     n: "01",
-    title: "Trova i candidati giusti",
-    body: "Filtra per categoria, caso d'uso e livello. Parti da pochi tool, quelli che contano.",
+    title: "Scopri e valuta",
+    body: "Parti da un obiettivo, non da una categoria. Riduci i candidati e leggi cosa è per te.",
     cta: "Apri il catalogo",
     href: "/archivio",
     accent: "var(--tv-accent-primary)",
   },
   {
     n: "02",
-    title: "Confronta ciò che conta",
+    title: "Confronta i trade-off",
     body: "Due-cinque tool, differenze e limiti visibili. Niente tabelle infinite.",
     cta: "Apri il confronto",
     href: "/compare",
@@ -82,13 +85,20 @@ const METHOD_STEPS = [
   },
   {
     n: "03",
-    title: "Tieni la decisione",
-    body: "Salva, annota, rivedi. Il motivo resta accanto al tool.",
+    title: "Decidi e ricorda il perché",
+    body: "Salvare è una shortlist. Decidere è scegliere un tool, rispetto ad altri, per un motivo.",
     cta: "Vai ai salvati",
     href: "/shortlist",
     accent: "var(--tv-accent-gold)",
   },
 ] as const;
+
+export type HomeStackPreview = {
+  slug: string;
+  title: string;
+  kicker: string;
+  description: string;
+};
 
 function hasAffiliateSignal(href: string | null | undefined) {
   if (!href) return false;
@@ -143,6 +153,8 @@ function Cockpit({ toolCount }: { toolCount: number }) {
             Catalogo curato, confronti onesti e uno spazio dove le tue
             decisioni restano. Per chi costruisce prodotti, non liste.
           </p>
+          {toolCount > 0 ? <IntentEntry /> : null}
+
           <div className="def-cockpit__ctas">
             <Link
               href={toolCount > 0 ? "/archivio" : "/metodo"}
@@ -153,30 +165,15 @@ function Cockpit({ toolCount }: { toolCount: number }) {
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
             <Link
-              href={toolCount > 0 ? "/compare" : "/collections"}
+              href="/collections"
               className="def-cockpit__cta def-cockpit__cta--secondary"
-              aria-label={toolCount > 0 ? "Confronta i tool selezionati" : "Sfoglia le raccolte editoriali"}
+              aria-label="Sfoglia gli stack curati"
             >
-              {toolCount > 0 ? "Confronta i tool" : "Sfoglia le raccolte"}
-            </Link>
-            <Link
-              href="/radar"
-              className="def-cockpit__cta def-cockpit__cta--ghost"
-              aria-label="Guarda il Radar dei nuovi lanci"
-            >
-              Guarda il Radar
+              Parti da uno stack
             </Link>
           </div>
 
-          <p className="def-cockpit__promise">
-            <span>Scopri</span>
-            <span aria-hidden="true">→</span>
-            <span>Confronta</span>
-            <span aria-hidden="true">→</span>
-            <span>Decidi</span>
-            <span aria-hidden="true">→</span>
-            <span>Ricorda</span>
-          </p>
+          <p className="def-cockpit__promise">{formatDecisionLifecycle()}</p>
 
           <DecisionJourney />
         </div>
@@ -355,19 +352,24 @@ function ClassificaOrAlternativa({
   iconUrl: (tool: ToolPublicView) => string | null;
   initial: (name: string) => string;
 }) {
-  const evaluated = tools.filter(
-    (t) => computeEditorialScore({ publicTool: t.publicTool }).status === "assessed",
-  );
+  const evaluated = tools
+    .map((tool) => ({
+      tool,
+      score: computeEditorialScore({ publicTool: tool.publicTool, cautions: tool.cautions }),
+    }))
+    .filter((item) => item.score.status === "assessed" && item.score.value !== null)
+    .sort((left, right) => (right.score.value ?? 0) - (left.score.value ?? 0))
+    .map((item) => item.tool);
   const isPodium = evaluated.length >= 3;
   const top3 = isPodium ? evaluated.slice(0, 3) : tools.slice(0, 3);
 
   if (isPodium) {
     return (
-      <div className="def-editorial__podium" role="region" aria-label="Classifica editoriale">
+      <div className="def-editorial__podium" role="region" aria-label="Valutazioni editoriali">
         <div className="def-editorial__pod-head-row">
-          <p className="def-editorial__pod-eyebrow">Classifica editoriale</p>
+          <p className="def-editorial__pod-eyebrow">Valutazioni editoriali</p>
           <p className="def-editorial__pod-subtitle">
-            I tool con la valutazione più alta.
+            Ordinate per valutazione della redazione, non per un ranking di mercato.
           </p>
         </div>
         <PodiumStage top3={top3} iconUrl={iconUrl} initial={initial} />
@@ -566,7 +568,7 @@ function PodiumCard({
       className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank}${revealed ? " is-revealed" : ""}`}
       data-rank={rank}
     >
-      <span className="def-editorial__pod-rank" aria-label={`Posizione ${rank}`}>
+      <span className="def-editorial__pod-rank" aria-label={`Valutazione editoriale ${rank}`}>
         {String(rank).padStart(2, "0")}
       </span>
       <span className="def-editorial__pod-avatar" aria-hidden="true">
@@ -626,7 +628,8 @@ function Method() {
         </h2>
         <p className="def-method__lede">
           TooolVibes ti aiuta a ridurre le alternative, confrontare ciò che
-          conta e conservare il motivo della tua scelta.
+          conta e conservare il motivo della tua scelta.{" "}
+          <Link href="/metodo">Come valutiamo</Link>
         </p>
       </header>
       <ol className="def-method__rail">
@@ -658,7 +661,42 @@ function Method() {
 // ============================================================
 // ROOT
 // ============================================================
-export function DefinitiveHome({ tools, weeklyTool, announcement = null }: DefinitiveHomeProps) {
+function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
+  if (stacks.length === 0) return null;
+  return (
+    <section className="def-stacks" aria-labelledby="def-stacks-title">
+      <header className="def-stacks__head">
+        <p className="def-stacks__eyebrow">Stack curati</p>
+        <h2 id="def-stacks-title">Se ti serve una combinazione, parti da qui.</h2>
+        <p className="def-stacks__lede">
+          Raccolte operative: ruolo di ogni tool, limiti e quando non usarle.
+        </p>
+      </header>
+      <ul className="def-stacks__grid">
+        {stacks.map((stack) => (
+          <li key={stack.slug}>
+            <Link href={`/collections/${stack.slug}`} className="def-stacks__card">
+              <span>{stack.kicker}</span>
+              <strong>{stack.title}</strong>
+              <em>{stack.description}</em>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <Link href="/collections" className="def-stacks__more">
+        Tutte le raccolte
+        <ArrowRight size={14} aria-hidden="true" />
+      </Link>
+    </section>
+  );
+}
+
+export function DefinitiveHome({
+  tools,
+  weeklyTool,
+  announcement = null,
+  stacks = [],
+}: DefinitiveHomeProps) {
   const focusTool = weeklyTool ?? tools[0] ?? null;
   return (
     <div className="def-home">
@@ -674,6 +712,7 @@ export function DefinitiveHome({ tools, weeklyTool, announcement = null }: Defin
         </p>
       ) : null}
       <Cockpit toolCount={tools.length} />
+      <HomeStacks stacks={stacks} />
       <IvoryEditorial focusTool={focusTool} tools={tools} />
       <TinyAdzInlineSlot placement="home-editorial" />
       <Method />

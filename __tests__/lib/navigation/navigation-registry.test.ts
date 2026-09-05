@@ -28,16 +28,14 @@ const EXPECTED_SURFACE_INVENTORY: Readonly<
   "header-v2-desktop": [
     ["Home", "/"],
     ["Catalogo", "/archivio"],
-    ["Radar", "/radar"],
-    ["Confronto", "/compare"],
+    ["Raccolte", "/collections"],
     ["Salvati", "/shortlist"],
   ],
   "bottom-nav": [
     ["Home", "/"],
     ["Catalogo", "/archivio"],
-    ["Radar", "/radar"],
+    ["Raccolte", "/collections"],
     ["Salvati", "/shortlist"],
-    ["Confronto", "/compare"],
   ],
   "footer-v2-product": [
     ["Catalogo", "/archivio"],
@@ -154,7 +152,7 @@ describe("V1 public navigation registry", () => {
     const primaryIds = navigationRegistry
       .filter((destination) => destination.scope === "primary")
       .map((destination) => destination.id);
-    expect(primaryIds).toEqual(["home", "catalog", "radar", "compare", "shortlist"]);
+    expect(primaryIds).toEqual(["home", "catalog", "collections", "shortlist"]);
 
     for (const surface of ["header-v2-desktop", "bottom-nav"] as const) {
       const ids = getNavItemsForSurface(surface).map((item) => item.id);

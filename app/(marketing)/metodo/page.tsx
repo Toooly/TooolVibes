@@ -17,34 +17,50 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Metodo",
   description:
-    "Come TooolVibes pensa una scelta: Scopri, Confronta, Salva. Un percorso editoriale in tre tappe con criteri verificabili.",
+    "Come TooolVibes pensa una scelta: Scopri, Valuta, Confronta, Decidi, Ricorda. Un percorso editoriale con criteri verificabili.",
   path: "/metodo",
   openGraphDescription:
-    "Scopri, confronta, salva — il metodo editoriale di TooolVibes per scegliere tool senza perdersi.",
+    "Scopri, valuta, confronta, decidi, ricorda — il metodo editoriale di TooolVibes per scegliere tool senza perdersi.",
 });
 
 const TRACK_STEPS = [
   {
     index: "01",
     label: "Scopri",
-    title: "Parti da tool già filtrati",
-    copy: "Categorie leggibili, filtri utili e un catalogo verificato che tiene fuori il rumore. Nessuna vetrina infinita.",
+    title: "Parti da quello che devi fare",
+    copy: "Obiettivi, catalogo e stack. Nessuna vetrina infinita: restringi i candidati prima di approfondire.",
     href: "/archivio",
     cta: "Apri catalogo",
   },
   {
     index: "02",
+    label: "Valuta",
+    title: "Leggi se è per te",
+    copy: "Ogni scheda deve dire per chi è, per chi no, il trade-off e cosa è stato valutato. Salvare un candidato non è ancora decidere.",
+    href: "/archivio",
+    cta: "Apri catalogo",
+  },
+  {
+    index: "03",
     label: "Confronta",
     title: "Confronta solo i candidati forti",
-    copy: "Porta avanti pochi tool alla volta e guarda differenze, livello e casi d'uso reali. La matrice serve a isolare gli scarti.",
+    copy: "Porta avanti pochi tool alla volta e guarda differenze e limiti reali. La matrice serve a isolare gli scarti.",
     href: "/compare",
     cta: "Vai al confronto",
   },
   {
-    index: "03",
-    label: "Salva",
-    title: "Chiudi con una scelta rapida",
-    copy: "Salva, rivedi e trasforma la ricerca in una lista operativa pronta da provare. Dai salvati si passa all'azione.",
+    index: "04",
+    label: "Decidi",
+    title: "Scegli con un motivo",
+    copy: "Una decisione è: questo tool, invece di quelli, perché. La shortlist resta il tavolo di lavoro, non il verdetto.",
+    href: "/compare",
+    cta: "Apri il confronto",
+  },
+  {
+    index: "05",
+    label: "Ricorda",
+    title: "Conserva il perché",
+    copy: "I Salvati tengono candidati, note e scelte. Così la ricerca non ricomincia da zero la volta dopo.",
     href: "/shortlist",
     cta: "Apri salvati",
   },
@@ -89,9 +105,9 @@ export default function MetodoPage() {
         routeIndex="04"
         routeLabel="Metodo editoriale"
         routeStatus="Come TooolVibes pensa"
-        emphasis="tre tappe"
-        title="Una scelta è un percorso in tre tappe."
-        lede="TooolVibes non è un elenco: è un metodo. Scopri, confronta, salva. Le schede si leggono in sequenza, non tutte insieme, e ogni tappa ha uno strumento dedicato."
+        emphasis="cinque tappe"
+        title="Una scelta è un percorso, non una lista."
+        lede="TooolVibes non è un elenco: è un metodo. Scopri, valuta, confronta, decidi, ricorda. Salvare un candidato non è decidere."
         actions={
           <>
             <Link

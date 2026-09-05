@@ -5,15 +5,16 @@ import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { PartnerEditorialInsert } from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
-import { parseCatalogLevelParam } from "@/components/directory/catalog/catalog-controller";
+import {
+  parseCatalogLevelParam,
+  resolveCatalogGroupParam,
+} from "@/components/directory/catalog/catalog-controller";
 import {
   getPublicToolFilterGroups,
   getPublicToolViews,
 } from "@/lib/data/public-tools";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "@/styles/archive-v4.css";
-
-export const dynamic = "force-static";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Catalogo di tool AI, SaaS e no-code",
@@ -25,14 +26,37 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Cerca, filtra e confronta tool AI, SaaS e no-code. Riduci le alternative e trova i candidati giusti per il tuo stack.",
 });
 
-export default async function ArchivePage() {
+type ArchiveSearchParams = {
+  q?: string | string[];
+  group?: string | string[];
+  level?: string | string[];
+};
+
+function firstParam(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
+
+function resolveArchiveLevel(value: string | null | undefined) {
+  const parsed = parseCatalogLevelParam(value);
+  return parsed === "beginner" || parsed === "intermediate" || parsed === "expert"
+    ? parsed
+    : "all";
+}
+
+export default async function ArchivePage({
+  searchParams,
+}: {
+  searchParams: Promise<ArchiveSearchParams>;
+}) {
+  const params = await searchParams;
   const [tools, filterGroups] = await Promise.all([
     getPublicToolViews(),
     getPublicToolFilterGroups(),
   ]);
-  const initialQuery = "";
-  const initialGroup = "all";
-  const initialLevel = parseCatalogLevelParam(undefined);
+  const initialQuery = (firstParam(params.q) ?? "").trim();
+  const initialGroup = resolveCatalogGroupParam(filterGroups, firstParam(params.group));
+  const initialLevel = resolveArchiveLevel(firstParam(params.level));
 
   /* Partner Experience V3.1 — il Catalog Insert vive DENTRO il flusso di
      discovery: viene inserito a livello di render dopo il primo gruppo di

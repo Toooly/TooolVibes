@@ -5,6 +5,7 @@ import { formatItalianDate } from "@/lib/utils";
 import { buildPromoChips } from "@/lib/tools/public-badges";
 
 import { ToolDetailActionSurface } from "./tool-detail-action-surface";
+import { ToolDetailDecisionBrief } from "./tool-detail-decision-brief";
 
 /**
  * A. Hero (Identity + Action Surface)
@@ -72,6 +73,8 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
         {tool.name}
       </h1>
       <p className="td-final-hero__deck">{tool.shortDescription}</p>
+
+      <ToolDetailDecisionBrief tool={tool} />
 
       <ToolDetailActionSurface
         slug={tool.slug}

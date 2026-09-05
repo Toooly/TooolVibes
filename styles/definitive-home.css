@@ -2107,3 +2107,127 @@
   display: inline-flex;
   align-items: center;
 }
+
+
+.def-intent { display: grid; gap: 12px; width: 100%; }
+.def-intent__label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted, rgba(255,255,255,0.64));
+}
+.def-intent__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--tv-ink-muted, rgba(255,255,255,0.64));
+}
+.def-intent__field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 8px 0 14px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(8,8,10,0.55);
+  border-radius: 14px;
+}
+.def-intent__field input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+.def-intent__field button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--tv-accent-primary, #6a3cff);
+  color: #fff;
+  font-weight: 650;
+}
+.def-intent__field:focus-within {
+  outline: 2px solid var(--tv-accent-primary, #6a3cff);
+  outline-offset: 2px;
+}
+.def-intent__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.def-intent__chips a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: inherit;
+  text-decoration: none;
+  font-size: 13px;
+}
+.def-intent__chips a:hover { border-color: rgba(255,255,255,0.28); }
+.def-stacks {
+  padding: 48px 20px 8px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.def-stacks__head { display: grid; gap: 8px; margin-bottom: 20px; }
+.def-stacks__eyebrow {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted);
+}
+.def-stacks__head h2, .def-stacks__lede { margin: 0; }
+.def-stacks__grid {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  .def-stacks__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.def-stacks__card {
+  display: grid;
+  gap: 8px;
+  min-height: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.08));
+  text-decoration: none;
+  color: inherit;
+  background: var(--tv-bg-raised, rgba(255,255,255,0.03));
+}
+.def-stacks__card span {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted);
+}
+.def-stacks__card strong { font-size: 16px; }
+.def-stacks__card em {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--tv-ink-secondary, rgba(255,255,255,0.72));
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.def-stacks__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+}

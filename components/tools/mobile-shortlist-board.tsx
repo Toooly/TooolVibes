@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo, type CSSProperties } from "react";
+import { useEffect, useState, useMemo, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { levelBTransition } from "@/lib/motion/transitions";
@@ -14,13 +14,10 @@ import {
   Clock,
   ClipboardCheck,
   Library,
-  Link2,
   NotebookPen,
   Pin,
   PlusCircle,
   RotateCcw,
-  Sparkles,
-  Tags,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -33,7 +30,6 @@ import {
   usageActionLabel,
   usageStateLabel,
 } from "@/lib/account/workspace-lifecycle";
-import { RequestToolForm } from "@/components/wishlist/request-tool-form";
 import { ShortlistStageToggle } from "@/components/tools/shortlist-stage-toggle";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import {
@@ -188,7 +184,6 @@ export function MobileShortlistBoard({
     return (
       <div className="mobile-library-board mobile-library-board--empty">
         <MobileLibraryEmpty tools={tools} />
-        <LibraryWishlistSection />
       </div>
     );
   }
@@ -368,8 +363,6 @@ export function MobileShortlistBoard({
         onOpenMemory={setNoteSlug}
       />
 
-      <LibraryWishlistSection />
-
       {/* Decision memory bottom sheet (B32) */}
       <AnimatePresence>
         {noteSlug && noteTool && (
@@ -396,56 +389,6 @@ export function MobileShortlistBoard({
   );
 }
 
-function LibraryWishlistSection() {
-  const signalCards = [
-    { icon: Link2, label: "Link ufficiale", copy: "Evita cloni e schede duplicate: partiamo sempre dalla fonte giusta." },
-    { icon: Tags, label: "Categoria", copy: "AI app builder, no-code, automazioni o SaaS: il contesto decide dove inserirlo." },
-    { icon: Sparkles, label: "Motivo", copy: "Una frase chiara aiuta a capire perché merita spazio nella libreria." },
-  ];
-
-  return (
-    <section id="wishlist" className="mobile-library-wishlist" aria-labelledby="library-wishlist-title">
-      <div className="mobile-library-wishlist__intro">
-        <span className="mobile-library-wishlist__eyebrow">
-          <Heart size={14} />
-          Segnalazioni TooolVibes
-        </span>
-        <h2 id="library-wishlist-title">Suggerisci un tool da valutare.</h2>
-        <p>
-          Se manca un tool AI, SaaS o builder che merita spazio, segnalalo da qui:
-          resta tra i tuoi suggerimenti e diventa parte del percorso di valutazione.
-        </p>
-        <div className="mobile-library-wishlist__signals" aria-label="Segnali utili per proporre un tool">
-          {signalCards.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div key={item.label} className="mobile-library-wishlist__signal-card">
-                <span aria-hidden="true">
-                  <Icon size={15} />
-                </span>
-                <strong>{item.label}</strong>
-                <small>{item.copy}</small>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <details className="mobile-library-wishlist__disclosure">
-        <summary>
-          <span>
-            <PlusCircle size={18} aria-hidden="true" />
-            Apri il modulo di segnalazione
-          </span>
-          <small>Link, categoria e motivo</small>
-        </summary>
-        <div className="mobile-library-wishlist__disclosure-body">
-          <RequestToolForm className="mobile-library-wishlist__form" />
-        </div>
-      </details>
-    </section>
-  );
-}
-
 function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; compareCount: number }) {
   const stats = [
     { label: "Salvati", value: totalCount },
@@ -464,8 +407,8 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
           <h1 id="mobile-library-title">I tuoi Salvati</h1>
           <p>
             {totalCount > 0
-              ? `${totalCount} tool ${totalCount === 1 ? "salvato" : "salvati"}: inventario, stati e verdetti.`
-              : "Qui restano i tool salvati e i verdetti. Stesso inventario di Salvati."}
+              ? `${totalCount} candidati. Salvare non è decidere: qui tieni le opzioni, poi confronti e scegli.`
+              : "La shortlist è il tavolo di lavoro. La decisione è il motivo della scelta."}
           </p>
         </div>
       </div>
@@ -1045,30 +988,6 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
   const catalogCategoryCount = new Set(
     tools.map((tool) => tool.taxonomy.sourceCategoryLabel),
   ).size;
-  const [suggestOpen, setSuggestOpen] = useState(false);
-  const suggestTriggerId = "mobile-library-empty__suggest-trigger";
-  const suggestDialogId = "mobile-library-empty__suggest-dialog";
-  const suggestTitleId = "mobile-library-empty__suggest-title";
-  const dialogCloseRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!suggestOpen) return;
-    dialogCloseRef.current?.focus();
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setSuggestOpen(false);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      const trigger = document.getElementById(suggestTriggerId);
-      if (trigger && typeof trigger.focus === "function") {
-        trigger.focus();
-      }
-    };
-  }, [suggestOpen]);
 
   return (
     <section
@@ -1076,16 +995,16 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
       aria-labelledby="mobile-library-empty-title"
     >
       <div className="mobile-library-empty__content">
-        <span className="mobile-library-empty__kicker">Nessun tool salvato, per ora</span>
-        <h1 id="mobile-library-empty-title">La tua shortlist è pronta a riempirsi.</h1>
+        <span className="mobile-library-empty__kicker">Nessun candidato, per ora</span>
+        <h1 id="mobile-library-empty-title">Salva i tool che stai considerando.</h1>
         <p>
-          Inizia con pochi candidati buoni: quando salvi un tool, qui trovi categoria,
-          stato, link alla scheda e scorciatoie per confronto o suggerimenti.
+          La shortlist è un tavolo di lavoro, non una decisione. Parti dal catalogo
+          o da uno stack, poi confronta.
         </p>
       </div>
       {starterTools.length > 0 ? (
         <div className="mobile-library-empty__starter" aria-label="Tool da cui partire">
-          <span>Da provare per iniziare</span>
+          <span>Da valutare per iniziare</span>
           <div>
             {starterTools.map((tool) => (
               <Link key={tool.slug} href={`/toools/${tool.slug}`}>
@@ -1103,55 +1022,18 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
           >
             <strong>Esplora catalogo</strong>
             <span>
-              {tools.length} tool in {catalogCategoryCount} categorie, ordinati per
-              utilità reale.
+              {tools.length} tool in {catalogCategoryCount} categorie da restringere.
             </span>
           </Link>
           <Link
-            href="/radar"
+            href="/collections"
             className="mobile-library-empty__recommendation-card"
           >
-            <strong>Apri Radar</strong>
-            <span>Lanci Product Hunt live, niente dati simulati.</span>
+            <strong>Parti da uno stack</strong>
+            <span>Raccolte con ruoli, limiti e ordine di lavoro.</span>
           </Link>
-          <button
-            type="button"
-            id={suggestTriggerId}
-            className="mobile-library-empty__recommendation-card"
-            aria-haspopup="dialog"
-            aria-expanded={suggestOpen}
-            onClick={() => setSuggestOpen(true)}
-          >
-            <strong>Suggerisci un tool</strong>
-            <span>Segnala un tool mancante: link, categoria, motivo.</span>
-          </button>
         </div>
       </div>
-      {suggestOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={suggestTitleId}
-          id={suggestDialogId}
-          className="mobile-library-empty__suggest-dialog"
-        >
-          <div className="mobile-library-empty__suggest-dialog-content">
-            <div className="mobile-library-empty__suggest-dialog-header">
-              <h2 id={suggestTitleId}>Suggerisci un tool</h2>
-              <button
-                type="button"
-                ref={dialogCloseRef}
-                className="mobile-library-empty__suggest-dialog-close"
-                aria-label="Chiudi"
-                onClick={() => setSuggestOpen(false)}
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <RequestToolForm />
-          </div>
-        </div>
-      )}
     </section>
   );
 }

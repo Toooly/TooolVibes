@@ -77,35 +77,33 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     cleanup();
   });
 
-  it("renderizza le 5 destinazioni del registry con ordine, label e href canonici", () => {
+  it("renderizza le 4 destinazioni del registry con ordine, label e href canonici", () => {
     renderBottomNav();
 
     const links = within(getBottomNav()).getAllByRole("link");
-    expect(links).toHaveLength(5);
+    expect(links).toHaveLength(4);
     expect(links.map((link) => link.textContent)).toEqual([
       "Home",
       "Catalogo",
-      "Radar",
+      "Raccolte",
       "Salvati",
-      "Confronto",
     ]);
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/",
       "/archivio",
-      "/radar",
+      "/collections",
       "/shortlist",
-      "/compare",
     ]);
   });
 
   it("active route: solo la destinazione corrente ha aria-current=page", () => {
-    pathnameState.current = "/radar";
+    pathnameState.current = "/collections";
     renderBottomNav();
 
     const links = within(getBottomNav()).getAllByRole("link");
     expect(
       links.map((link) => link.getAttribute("aria-current") ?? "none"),
-    ).toEqual(["none", "none", "page", "none", "none"]);
+    ).toEqual(["none", "none", "page", "none"]);
   });
 
   it("active route sulla home non attiva le altre destinazioni", () => {
@@ -114,7 +112,7 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     const links = within(getBottomNav()).getAllByRole("link");
     expect(
       links.map((link) => link.getAttribute("aria-current") ?? "none"),
-    ).toEqual(["page", "none", "none", "none", "none"]);
+    ).toEqual(["page", "none", "none", "none"]);
   });
 
   it("contract B22 preservato: z-token var(--tv-z-nav) sulla nav", () => {
@@ -130,22 +128,23 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     expect(shellRule).toContain("z-index: var(--tv-z-nav)");
   });
 
-  it("badge compare: conteggio dal workspace store sul link Confronto", () => {
+  it("badge compare: Confronto non è più una tab; Salvati resta badgato", () => {
     compareCountState.current = 2;
+    savedCountState.current = 1;
     renderBottomNav();
 
-    const compareLink = within(getBottomNav()).getByRole("link", {
-      name: /Confronto/,
+    expect(
+      within(getBottomNav()).queryByRole("link", { name: /Confronto/ }),
+    ).toBeNull();
+    const shortlistLink = within(getBottomNav()).getByRole("link", {
+      name: /Salvati/,
     });
-    const badge = compareLink.querySelector(".mobile-bottom-item__badge");
-    expect(badge).not.toBeNull();
-    expect(badge?.textContent).toBe("2");
-    expect(badge?.getAttribute("aria-label")).toBe("2 tool in confronto");
+    expect(shortlistLink.querySelector(".mobile-bottom-item__badge")?.textContent).toBe("1");
   });
 
   it("feature flag: destinazione con flag OFF non renderizzata", () => {
     const release = resolveNavigationRelease({
-      TOOOLVIBES_NAV_COMPARE_ENABLED: "0",
+      TOOOLVIBES_NAV_SHORTLIST_ENABLED: "0",
     });
 
     render(
@@ -155,15 +154,14 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     );
 
     const links = within(getBottomNav()).getAllByRole("link");
-    expect(links).toHaveLength(4);
+    expect(links).toHaveLength(3);
     expect(links.map((link) => link.textContent)).toEqual([
       "Home",
       "Catalogo",
-      "Radar",
-      "Salvati",
+      "Raccolte",
     ]);
     expect(
-      within(getBottomNav()).queryByRole("link", { name: /Confronto/ }),
+      within(getBottomNav()).queryByRole("link", { name: /Salvati/ }),
     ).toBeNull();
   });
 
@@ -174,16 +172,15 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     expect(screen.queryByRole("navigation")).toBeNull();
   });
 
-  it("SHELL-07 account keeps the same 5-destination mobile nav", () => {
+  it("SHELL-07 account keeps the same 4-destination mobile nav", () => {
     pathnameState.current = "/account";
     renderBottomNav();
     const links = within(getBottomNav()).getAllByRole("link");
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/",
       "/archivio",
-      "/radar",
+      "/collections",
       "/shortlist",
-      "/compare",
     ]);
   });
 });
@@ -214,27 +211,24 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
     expect(badge?.getAttribute("aria-label")).toBe("3 tool salvati");
   });
 
-  it("badge shortlist/compare coerenti su ogni route", () => {
+  it("badge shortlist coerente su ogni route", () => {
     savedCountState.current = 2;
     compareCountState.current = 1;
 
-    for (const pathname of ["/", "/archivio", "/compare", "/shortlist"]) {
+    for (const pathname of ["/", "/archivio", "/collections", "/shortlist"]) {
       pathnameState.current = pathname;
       const { unmount } = renderBottomNav();
 
       const shortlistLink = within(getBottomNav()).getByRole("link", {
         name: /Salvati/,
       });
-      const compareLink = within(getBottomNav()).getByRole("link", {
-        name: /Confronto/,
-      });
       expect(
         shortlistLink.querySelector(".mobile-bottom-item__badge")
           ?.textContent,
       ).toBe("2");
       expect(
-        compareLink.querySelector(".mobile-bottom-item__badge")?.textContent,
-      ).toBe("1");
+        within(getBottomNav()).queryByRole("link", { name: /Confronto/ }),
+      ).toBeNull();
       unmount();
     }
   });
@@ -264,11 +258,6 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
         .getByRole("link", { name: /Salvati/ })
         .querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("4");
-    expect(
-      within(getBottomNav())
-        .getByRole("link", { name: /Confronto/ })
-        .querySelector(".mobile-bottom-item__badge")?.textContent,
-    ).toBe("2");
   });
 
   it("release flag OFF: adapter legacy, badge compare senza badge salvati", () => {
@@ -284,12 +273,9 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
       shortlistLink.querySelector(".mobile-bottom-item__badge"),
     ).toBeNull();
 
-    const compareLink = within(getBottomNav()).getByRole("link", {
-      name: /Confronto/,
-    });
     expect(
-      compareLink.querySelector(".mobile-bottom-item__badge")?.textContent,
-    ).toBe("2");
+      within(getBottomNav()).queryByRole("link", { name: /Confronto/ }),
+    ).toBeNull();
   });
 });
 
@@ -322,32 +308,32 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       /\.mobile-bottom-shell__grid\s*\{([^}]+)\}/,
     )?.[1];
     expect(gridRule).toContain(
-      "grid-template-columns: repeat(5, minmax(0, 1fr))",
+      "grid-template-columns: repeat(4, minmax(0, 1fr))",
     );
   });
 
-  it("quinto item leggibile: griglia a 5 colonne con label completa Confronto", () => {
-    compareCountState.current = 2;
+  it("quarto item leggibile: griglia a 4 colonne con label completa Salvati", () => {
+    savedCountState.current = 2;
     renderBottomNav();
 
     const grid = getBottomNav().querySelector(".mobile-bottom-shell__grid");
     expect(grid).toBeTruthy();
-    expect(grid?.children).toHaveLength(5);
+    expect(grid?.children).toHaveLength(4);
 
     const links = within(getBottomNav()).getAllByRole("link");
-    expect(links).toHaveLength(5);
-    const fifth = links[4];
-    expect(fifth.textContent).toContain("Confronto");
+    expect(links).toHaveLength(4);
+    const fourth = links[3];
+    expect(fourth.textContent).toContain("Salvati");
     expect(
-      fifth.querySelector(".mobile-bottom-item__label")?.textContent,
-    ).toBe("Confronto");
+      fourth.querySelector(".mobile-bottom-item__label")?.textContent,
+    ).toBe("Salvati");
     expect(
-      fifth.querySelector(".mobile-bottom-item__badge")?.textContent,
+      fourth.querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("2");
   });
 
   it.each([320, 360, 390, 412, 430])(
-    "viewport %ipx: 5 destinazioni e badge sempre nel DOM",
+    "viewport %ipx: 4 destinazioni e badge Salvati nel DOM",
     (width) => {
       window.innerWidth = width;
       window.innerHeight = 844;
@@ -357,10 +343,10 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
 
       const { unmount } = renderBottomNav();
       const links = within(getBottomNav()).getAllByRole("link");
-      expect(links).toHaveLength(5);
+      expect(links).toHaveLength(4);
       expect(
         within(getBottomNav())
-          .getByRole("link", { name: /Confronto/ })
+          .getByRole("link", { name: /Salvati/ })
           .querySelector(".mobile-bottom-item__badge")?.textContent,
       ).toBe("1");
       unmount();
@@ -378,7 +364,7 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       window.dispatchEvent(new Event("resize"));
 
       const { unmount } = renderBottomNav();
-      expect(within(getBottomNav()).getAllByRole("link")).toHaveLength(5);
+      expect(within(getBottomNav()).getAllByRole("link")).toHaveLength(4);
       unmount();
     },
   );
