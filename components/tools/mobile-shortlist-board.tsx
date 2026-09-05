@@ -622,6 +622,7 @@ function MobileNoteSheet({
   onClose: () => void;
 }) {
   const preferReducedMotion = useReducedMotion();
+  const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const [noteDraft, setNoteDraft] = useState(memory.note ?? "");
   const [pendingReplace, setPendingReplace] = useState(false);
   const [decideOpen, setDecideOpen] = useState(false);
@@ -971,7 +972,7 @@ function MobileNoteSheet({
         onOpenChange={setDecideOpen}
         slug={slug}
         toolName={toolName}
-        alternatives={[]}
+        alternatives={compareSlugs.filter((item) => item !== slug)}
         source="shortlist"
         defaultOutcome={decisionOutcome ?? "selected"}
       />

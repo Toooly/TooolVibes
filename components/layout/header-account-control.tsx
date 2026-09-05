@@ -55,6 +55,9 @@ export function HeaderAccountControl({
           <Link href={workspaceViewHref("stack")} prefetch={false}>
             Stack
           </Link>
+          <Link href={workspaceViewHref("decisioni")} prefetch={false}>
+            Decisioni
+          </Link>
           <Link href="/account/settings" prefetch={false}>
             Impostazioni
           </Link>

@@ -43,6 +43,7 @@ function WorkspaceInteriorNav({
     { href: personalDashboardHref(), label: "Il tuo spazio", current: surface === "workspace" && view === "riprendi" },
     { href: workspaceViewHref("salvati"), label: "Salvati", current: surface === "workspace" && view === "salvati" },
     { href: workspaceViewHref("stack"), label: "Stack", current: surface === "workspace" && view === "stack" },
+    { href: workspaceViewHref("decisioni"), label: "Decisioni", current: surface === "workspace" && view === "decisioni" },
     { href: "/account/settings", label: "Impostazioni", current: surface === "settings" },
   ];
   return (

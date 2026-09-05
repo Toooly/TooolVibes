@@ -15,8 +15,11 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transitions";
 
 import { cn } from "@/lib/utils";
-import { isNavRouteActive } from "@/lib/navigation/selectors";
-import { useNavItems } from "@/lib/navigation/navigation-release-context";
+import { isAuthenticatedNavActive } from "@/lib/navigation/account-primary-nav";
+import {
+  useAuthenticatedNavItems,
+  useLocationSearch,
+} from "@/components/layout/use-authenticated-nav-items";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import {
@@ -34,7 +37,8 @@ const TOP_FORCE_EXPAND_PX = 24;
 export function MobileBottomNav() {
   const preferReducedMotion = useReducedMotion();
   const pathname = usePathname();
-  const navItems = useNavItems("bottom-nav");
+  const search = useLocationSearch();
+  const navItems = useAuthenticatedNavItems("bottom-nav");
   const [mounted, setMounted] = useState(false);
   const [chromeState, setChromeState] = useState<NavChromeState>("expanded");
   const isOverlayOpen = useMobileUIStore((s) => s.isOverlayOpen);
@@ -216,7 +220,7 @@ export function MobileBottomNav() {
         <div className="mobile-bottom-shell__grid">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = isNavRouteActive(pathname, item.href);
+            const isActive = isAuthenticatedNavActive(pathname ?? "", search, item.href);
             const badgeCount =
               item.id === "compare"
                 ? compareCount

@@ -3,6 +3,10 @@
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 
 import {
+  composeDecisionReason,
+  DECISION_REASON_CHIPS,
+} from "@/lib/account/decision-memory";
+import {
   commitWorkspaceDecision,
   reopenWorkspaceDecision,
 } from "@/lib/account/workspace-actions";
@@ -104,6 +108,7 @@ export function DecisionSheet({
   const [outcome, setOutcome] = useState<WorkspaceDecisionOutcome>(defaultOutcome);
   const [deepOpen, setDeepOpen] = useState(false);
   const [reason, setReason] = useState("");
+  const [reasonChips, setReasonChips] = useState<string[]>([]);
   const [useCase, setUseCase] = useState("");
   const [revisitAt, setRevisitAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -123,6 +128,7 @@ export function DecisionSheet({
       setError(null);
       setDeepOpen(false);
       setReason("");
+      setReasonChips([]);
       setUseCase("");
       setRevisitAt(null);
       return;
@@ -132,6 +138,7 @@ export function DecisionSheet({
     setOutcome(defaultOutcome);
     setDeepOpen(false);
     setReason("");
+    setReasonChips([]);
     setUseCase("");
     setRevisitAt(null);
     setError(null);
@@ -157,6 +164,7 @@ export function DecisionSheet({
     setOutcome(defaultOutcome);
     setDeepOpen(false);
     setReason("");
+    setReasonChips([]);
     setUseCase("");
     setRevisitAt(null);
     setError(null);
@@ -171,7 +179,7 @@ export function DecisionSheet({
     if (!eventIdRef.current) {
       eventIdRef.current = crypto.randomUUID();
     }
-    const why = reason.trim();
+    const why = composeDecisionReason(reasonChips, reason);
     const caseText = useCase.trim();
     try {
       commitWorkspaceDecision({
@@ -261,6 +269,33 @@ export function DecisionSheet({
                 })}
               </div>
             ) : null}
+
+            <div className="tv-decision-sheet__field" role="group" aria-label="Motivo rapido">
+              <span className="tv-decision-sheet__field-label">Motivo rapido</span>
+              <div className="tv-decision-sheet__chips">
+                {DECISION_REASON_CHIPS.map((chip) => {
+                  const active = reasonChips.includes(chip.id);
+                  return (
+                    <button
+                      key={chip.id}
+                      type="button"
+                      className="tv-decision-sheet__chip"
+                      data-active={active ? "true" : "false"}
+                      aria-pressed={active}
+                      onClick={() =>
+                        setReasonChips((current) =>
+                          current.includes(chip.id)
+                            ? current.filter((id) => id !== chip.id)
+                            : [...current, chip.id],
+                        )
+                      }
+                    >
+                      {chip.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             <button
               type="button"

@@ -18,6 +18,7 @@ import { useCanonicalWorkspace } from "./use-canonical-workspace";
 import { WorkspaceBiblioteca } from "./workspace-biblioteca";
 import { parseWorkspaceView, type WorkspaceView } from "./workspace-model";
 import { WorkspaceRiprendi } from "./workspace-riprendi";
+import { WorkspaceDecisioni } from "./workspace-decisioni";
 import { WorkspaceStacks } from "./workspace-stacks";
 
 function resolveViewFromSearch(
@@ -41,9 +42,7 @@ function WorkspaceShellView({
   const searchParams = useSearchParams();
   const requestedView = resolveViewFromSearch(searchParams, initialView);
   const view =
-    requestedView === "decisioni" ||
-    requestedView === "recenti" ||
-    requestedView === "segnale"
+    requestedView === "recenti" || requestedView === "segnale"
       ? "riprendi"
       : requestedView;
   const focusSlug = searchParams?.get("focus") ?? null;
@@ -75,13 +74,14 @@ function WorkspaceShellView({
           <WorkspaceRiprendi
             state={state}
             focusSlug={focusSlug}
-            autoOpenDecide={requestedView === "decisioni"}
+            autoOpenDecide={false}
           />
         ) : null}
         {view === "salvati" ? (
           <WorkspaceBiblioteca state={state} focusSlug={focusSlug} />
         ) : null}
         {view === "stack" ? <WorkspaceStacks state={state} stackId={stackId} /> : null}
+        {view === "decisioni" ? <WorkspaceDecisioni state={state} /> : null}
       </div>
     </AccountWorkspaceFrame>
   );

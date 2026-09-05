@@ -26,8 +26,9 @@ import { MusicToggleButton } from "@/components/app/music-toggle-button";
 import { SoundToggleButton } from "@/components/app/sound-toggle-button";
 import { BrandLogo } from "./brand-logo";
 import { HeaderAccountControl } from "./header-account-control";
-import { useNavItems } from "@/lib/navigation/navigation-release-context";
-import { isNavRouteActive } from "@/lib/navigation/selectors";
+import { useAuthenticatedNavItems } from "@/components/layout/use-authenticated-nav-items";
+import { isAuthenticatedNavActive } from "@/lib/navigation/account-primary-nav";
+import { useLocationSearch } from "@/components/layout/use-authenticated-nav-items";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 function CommandBarBrand() {
@@ -53,8 +54,9 @@ function CommandBarBrand() {
  */
 export function CommandBar() {
   const pathname = usePathname() ?? "/";
+  const search = useLocationSearch();
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
-  const items = useNavItems("header-v2-desktop");
+  const items = useAuthenticatedNavItems("header-v2-desktop");
   const preferReducedMotion = useReducedMotion();
 
   return (
@@ -75,7 +77,7 @@ export function CommandBar() {
           className="command-bar__nav"
         >
           {items.map((item) => {
-            const active = isNavRouteActive(pathname, item.href);
+            const active = isAuthenticatedNavActive(pathname, search, item.href);
             const Glyph = item.icon;
             return (
               <Link

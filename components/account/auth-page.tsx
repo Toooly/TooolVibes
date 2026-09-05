@@ -106,9 +106,9 @@ export function AuthPage() {
             </p>
           ) : (
             <ul>
-              <li>Salva i candidati con il contesto giusto.</li>
-              <li>Confronta da due a cinque tool, senza rumore.</li>
-              <li>Riapri una decisione quando serve, non da zero.</li>
+              <li>Salva i candidati che stai valutando.</li>
+              <li>Confronta, poi registra perché hai scelto.</li>
+              <li>Ritrova stack e decisioni quando torni.</li>
             </ul>
           )}
         </aside>

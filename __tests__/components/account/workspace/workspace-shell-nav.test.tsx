@@ -124,7 +124,9 @@ describe("WorkspaceShell — URL-driven navigation", () => {
 
     expect(screen.queryByLabelText("Spazio personale")).toBeNull();
     expect(screen.queryByLabelText("Altre destinazioni")).toBeNull();
-    expect(screen.queryByRole("link", { name: "Decisioni" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Decisioni" }).getAttribute("href")).toBe(
+      "/account?view=decisioni",
+    );
     expect(screen.queryByRole("link", { name: "Recenti" })).toBeNull();
     expect(screen.queryByRole("link", { name: "Segnale" })).toBeNull();
     expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
@@ -137,7 +139,9 @@ describe("WorkspaceShell — URL-driven navigation", () => {
 
     expect(screen.queryByLabelText("Spazio personale")).toBeNull();
     expect(screen.queryByLabelText("Altre destinazioni")).toBeNull();
-    expect(screen.queryByRole("link", { name: "Decisioni" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Decisioni" }).getAttribute("href")).toBe(
+      "/account?view=decisioni",
+    );
     expect(screen.queryByRole("link", { name: "Recenti" })).toBeNull();
     expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
   });

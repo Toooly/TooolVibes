@@ -26,7 +26,7 @@ export type CompareDecisionPanelProps = {
   objective?: CompareObjective | null;
   enabled?: boolean;
   idPrefix: string;
-  onDecidi?: () => void;
+  onDecidi?: (slug?: string | null) => void;
 };
 
 export type CompareDecisionTarget = {
@@ -126,6 +126,7 @@ export function CompareDecisionPanel({
   idPrefix,
   onDecidi,
 }: CompareDecisionPanelProps) {
+  const [chosenSlug, setChosenSlug] = useState(tools[0]?.slug ?? "");
   if (!enabled || tools.length < MIN_COMPARE_TOOLS || !tools[0]) return null;
 
   const titleId = `${idPrefix}-compare-decision-title`;
@@ -133,7 +134,7 @@ export function CompareDecisionPanel({
     ? `Confronto orientato a ${getCompareObjectiveLabel(objective)}`
     : "Confronto generale";
   const candidateNames = tools.map((tool) => tool.name).join(", ");
-  const focusTool = tools[0];
+  const focusTool = tools.find((tool) => tool.slug === chosenSlug) ?? tools[0];
 
   return (
     <section
@@ -154,6 +155,25 @@ export function CompareDecisionPanel({
           <p className="mt-1 text-xs" style={{ color: "var(--tv-ink-secondary)" }}>
             {contextLabel} · {candidateNames}
           </p>
+          <fieldset className="mt-3">
+            <legend className="text-xs font-semibold uppercase tracking-[0.15em]">
+              Quale scegli?
+            </legend>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {tools.map((tool) => (
+                <label key={tool.slug} className="selection-chip inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs">
+                  <input
+                    type="radio"
+                    name={`${idPrefix}-chosen`}
+                    value={tool.slug}
+                    checked={chosenSlug === tool.slug}
+                    onChange={() => setChosenSlug(tool.slug)}
+                  />
+                  {tool.name}
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button
@@ -164,7 +184,7 @@ export function CompareDecisionPanel({
               background: "rgba(112,82,255,0.2)",
               color: "var(--tv-ink-primary)",
             }}
-            onClick={onDecidi}
+            onClick={() => onDecidi?.(chosenSlug)}
           >
             Decidi
           </button>
