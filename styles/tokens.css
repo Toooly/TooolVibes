@@ -161,7 +161,9 @@
   --tv-z-floating: 100;
   --tv-z-toast: 110;
   --tv-z-effects: 120;
+  --tv-z-dock: 40;          /* compare session dock, under nav */
   --tv-z-skip: 9999;        /* a11y exception: .skip-link must top everything */
+  --tv-z-consent: 130;      /* cookie consent above toast, below skip-link */
 
   /* --- Container foundation --- */
   --tv-container-mobile: 20rem;      /* 320px */

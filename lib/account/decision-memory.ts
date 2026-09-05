@@ -67,7 +67,7 @@ function eventStatus(
 export function composeDecisionMemory(
   state: WorkspaceStateV1,
 ): DecisionMemoryItem[] {
-  return state.events
+  const fromEvents: DecisionMemoryItem[] = state.events
     .filter(
       (event): event is WorkspaceRelationshipEvent & { outcome: WorkspaceDecisionOutcome } =>
         event.type === "decided" &&
@@ -86,8 +86,32 @@ export function composeDecisionMemory(
       ),
       at: event.at,
       status: eventStatus(event, state),
-    }))
-    .sort((left, right) => right.at.localeCompare(left.at));
+    }));
+
+  const seen = new Set(fromEvents.map((item) => `${item.slug}:${item.at}`));
+  for (const [slug, tool] of Object.entries(state.toolStates)) {
+    const outcome = tool.decision?.outcome;
+    const at = tool.decision?.updatedAt;
+    if (!outcome || !at) continue;
+    const key = `${slug}:${at}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    fromEvents.push({
+      id: `state:${slug}:${at}`,
+      slug,
+      outcome,
+      reason: null,
+      useCase: tool.useCase?.trim() || null,
+      vsSlugs: (tool.alternatives ?? []).filter((item) => item !== slug),
+      at,
+      status: eventStatus(
+        { id: `state:${slug}:${at}`, type: "decided", slug, at, outcome },
+        state,
+      ),
+    });
+  }
+
+  return fromEvents.sort((left, right) => right.at.localeCompare(left.at));
 }
 
 export function currentDecisionMemories(

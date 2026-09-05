@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
 import { TinyAdzLoader } from "@/components/ads/tinyadz-loader";
 import { PageTransition } from "@/components/app/page-transition";
 import { CommandBar } from "@/components/layout/command-bar";
@@ -20,7 +19,7 @@ export function MarketingChrome({
 }) {
   return (
     <>
-      <Suspense fallback={null}><CommandBar /></Suspense>
+      <CommandBar />
       <MobileTopBar />
       <main
         id="main-content"
@@ -31,7 +30,7 @@ export function MarketingChrome({
       </main>
       <CompareSessionDock />
       <SiteFooterV2 />
-      <Suspense fallback={null}><MobileBottomNav /></Suspense>
+      <MobileBottomNav />
       <TinyAdzLoader />
     </>
   );

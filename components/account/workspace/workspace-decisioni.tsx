@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   composeDecisionMemory,
@@ -42,7 +42,7 @@ function DecisionCard({
         {nameOf(names, item.slug)}
       </h3>
       {vs.length > 0 ? (
-        <p className="tv-home-copy">Scelto rispetto a {vs.join(", ")}</p>
+        <p className="tv-home-copy">Rispetto a {vs.join(", ")}</p>
       ) : (
         <p className="tv-home-copy">Senza alternative registrate.</p>
       )}
@@ -60,23 +60,36 @@ function DecisionCard({
   );
 }
 
-export function WorkspaceDecisioni({ state }: { state: WorkspaceStateV1 }) {
+export function WorkspaceDecisioni({
+  state,
+  focusSlug = null,
+}: {
+  state: WorkspaceStateV1;
+  focusSlug?: string | null;
+}) {
   const catalog = usePublicToolCatalog();
   const names = useMemo(
     () => new Map(catalog.map((tool) => [tool.slug, tool.name])),
     [catalog],
   );
+  const allDecisions = composeDecisionMemory(state);
   const current = currentDecisionMemories(state);
-  const history = composeDecisionMemory(state);
-  const [reviewSlug, setReviewSlug] = useState<string | null>(null);
+  const history = allDecisions.filter(
+    (item) => !current.some((live) => live.id === item.id),
+  );
+  const [reviewSlug, setReviewSlug] = useState<string | null>(focusSlug);
+  useEffect(() => {
+    if (focusSlug) setReviewSlug(focusSlug);
+  }, [focusSlug]);
   const reviewName = reviewSlug ? nameOf(names, reviewSlug) : "";
   const reviewAlts =
-    history.find((item) => item.slug === reviewSlug)?.vsSlugs ??
+    allDecisions.find((item) => item.slug === reviewSlug)?.vsSlugs ??
     state.toolStates[reviewSlug ?? ""]?.alternatives ??
     [];
 
-  if (history.length === 0) {
+  if (allDecisions.length === 0) {
     return (
+      <>
       <section className="tv-mod tv-mod--resume" aria-labelledby="tv-decisioni-empty">
         <h2 id="tv-decisioni-empty" className="tv-home-title">
           Quando scegli un tool, salva anche il perché.
@@ -91,6 +104,19 @@ export function WorkspaceDecisioni({ state }: { state: WorkspaceStateV1 }) {
           </Link>
         </div>
       </section>
+      {reviewSlug ? (
+        <DecisionSheet
+          open
+          onOpenChange={(open) => {
+            if (!open) setReviewSlug(null);
+          }}
+          slug={reviewSlug}
+          toolName={reviewName}
+          alternatives={reviewAlts}
+          source="home"
+        />
+      ) : null}
+    </>
     );
   }
 
@@ -101,7 +127,7 @@ export function WorkspaceDecisioni({ state }: { state: WorkspaceStateV1 }) {
           In corso
         </h2>
         {current.length === 0 ? (
-          <p className="tv-home-copy">Nessuna decisione aperta. Lo storico resta sotto.</p>
+          <p className="tv-home-copy">Nessuna decisione aperta in questo momento.</p>
         ) : (
           <div className="tv-home-stack">
             {current.map((item) => (
@@ -115,6 +141,7 @@ export function WorkspaceDecisioni({ state }: { state: WorkspaceStateV1 }) {
           </div>
         )}
       </section>
+      {history.length > 0 ? (
       <section className="tv-mod" aria-labelledby="tv-decisioni-history">
         <h2 id="tv-decisioni-history" className="tv-home-title">
           Storico
@@ -125,6 +152,7 @@ export function WorkspaceDecisioni({ state }: { state: WorkspaceStateV1 }) {
           ))}
         </div>
       </section>
+      ) : null}
       {reviewSlug ? (
         <DecisionSheet
           open

@@ -81,7 +81,7 @@ function WorkspaceShellView({
           <WorkspaceBiblioteca state={state} focusSlug={focusSlug} />
         ) : null}
         {view === "stack" ? <WorkspaceStacks state={state} stackId={stackId} /> : null}
-        {view === "decisioni" ? <WorkspaceDecisioni state={state} /> : null}
+        {view === "decisioni" ? <WorkspaceDecisioni state={state} focusSlug={focusSlug} /> : null}
       </div>
     </AccountWorkspaceFrame>
   );

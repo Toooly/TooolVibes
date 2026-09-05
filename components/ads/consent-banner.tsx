@@ -45,7 +45,7 @@ export function ConsentBanner() {
       aria-modal="false"
       aria-label="Preferenze pubblicitarie"
       tabIndex={-1}
-      className="tv-consent-banner fixed inset-x-0 bottom-[calc(var(--tv-bottom-nav-total,0px)+env(safe-area-inset-bottom,0px))] z-[999999999] border-t border-border bg-background/95 p-4 backdrop-blur shadow-[0_-8px_24px_rgba(0,0,0,0.3)]"
+      className="tv-consent-banner fixed inset-x-0 bottom-[calc(var(--tv-bottom-nav-total,0px)+env(safe-area-inset-bottom,0px))] z-[var(--tv-z-consent)] border-t border-border bg-background/95 p-4 backdrop-blur shadow-[0_-8px_24px_rgba(0,0,0,0.3)]"
     >
       <div className="mx-auto flex max-w-5xl flex-col gap-3">
         <h2 className="text-sm font-semibold">Rispettiamo la tua privacy</h2>

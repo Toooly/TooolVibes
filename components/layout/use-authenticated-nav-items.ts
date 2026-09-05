@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -28,7 +28,11 @@ export function useLocationSearch() {
 export function useAuthenticatedNavItems(surface: NavSurface) {
   const items = useNavItems(surface);
   const account = useAccount();
-  const authenticated = account.status === "authenticated";
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const authenticated = mounted && account.status === "authenticated";
   return useMemo(
     () => applyAuthenticatedPrimaryNav(items, authenticated),
     [items, authenticated],

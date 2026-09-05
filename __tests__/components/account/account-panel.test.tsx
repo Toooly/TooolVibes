@@ -167,7 +167,7 @@ describe("AccountPanel — stato authenticated", () => {
     expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
     expect(screen.queryByPlaceholderText("nome@email.com")).toBeNull();
     expect(screen.queryByText("Gamification")).toBeNull();
-    expect(screen.queryByRole("link", { name: "Decisioni" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Decisioni" })).toBeTruthy();
     expect(screen.queryByRole("link", { name: "Recenti" })).toBeNull();
     expect(screen.queryByLabelText("Stato del toolbox")).toBeNull();
     expect(document.querySelector(".tv-app__sidebar")).toBeNull();

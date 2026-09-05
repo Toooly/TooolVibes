@@ -100,7 +100,7 @@ export function ConsentSettingsDialog() {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[999999999] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4"
+      className="fixed inset-0 z-[var(--tv-z-consent)] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4"
       onClick={() => closeSettings()}
     >
       <div

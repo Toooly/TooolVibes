@@ -270,8 +270,8 @@ export function DecisionSheet({
               </div>
             ) : null}
 
-            <div className="tv-decision-sheet__field" role="group" aria-label="Motivo rapido">
-              <span className="tv-decision-sheet__field-label">Motivo rapido</span>
+            <div className="tv-decision-sheet__field" role="group" aria-label="Perché lo scegli">
+              <span className="tv-decision-sheet__field-label">Perché lo scegli</span>
               <div className="tv-decision-sheet__chips">
                 {DECISION_REASON_CHIPS.map((chip) => {
                   const active = reasonChips.includes(chip.id);

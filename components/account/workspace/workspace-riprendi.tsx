@@ -363,25 +363,13 @@ export function WorkspaceRiprendi({
         </section>
       ) : null}
 
-      {!blank && liveDecisions.length > 0 ? (
+      {!blank && !quiet && liveDecisions.length > 0 ? (
         <section className="tv-mod" aria-labelledby="tv-home-decisions">
           <h2 id="tv-home-decisions" className="tv-home-title">Le tue decisioni</h2>
-          <ul className="tv-home-stack">
-            {liveDecisions.map((item) => (
-              <li key={item.id}>
-                <Link href={workspaceViewHref("decisioni")}>
-                  {nameOf(names, item.slug)}
-                  {item.reason ? ` — ${item.reason}` : ""}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : !blank ? (
-        <section className="tv-mod" aria-labelledby="tv-home-decisions-empty">
-          <h2 id="tv-home-decisions-empty" className="tv-home-title">Le tue decisioni</h2>
           <p className="tv-home-copy">
-            Quando scegli un tool, salva anche il perché. Lo ritroverai qui.
+            {liveDecisions.length === 1
+              ? "Hai una decisione da rivedere o ricordare."
+              : `Hai ${liveDecisions.length} decisioni salvate.`}
           </p>
           <Link className="tv-home-textbtn" href={workspaceViewHref("decisioni")}>
             Apri le decisioni

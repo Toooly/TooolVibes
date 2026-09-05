@@ -161,7 +161,7 @@ describe("Workspace Home — Wave 5", () => {
     expect(pageText()).not.toMatch(/\b0\b/);
     expect(screen.queryByText(/Ciao/)).toBeNull();
     expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Apri il catalogo" }).getAttribute("href")).toBe(
+    expect(screen.getByRole("link", { name: "Trova il primo tool" }).getAttribute("href")).toBe(
       "/archivio",
     );
   });
@@ -245,7 +245,7 @@ describe("Workspace Home — Wave 5", () => {
     expect(pageText()).not.toMatch(/\b0\b/);
     expect(screen.queryByText(/Ciao/)).toBeNull();
     expect(screen.getByText("Il tuo spazio è pronto")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Apri il catalogo" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Trova il primo tool" })).toBeTruthy();
   });
 
   it("W5-T13 does not dump Salvati on a quiet home", () => {

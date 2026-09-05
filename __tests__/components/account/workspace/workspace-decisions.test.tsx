@@ -123,12 +123,11 @@ describe("WorkspaceDecisions dest — Wave 8 redirect", () => {
     activateToolWorkspaceOwner({ kind: "guest" }, createEmptyWorkspaceState());
   });
 
-  it("view=decisioni renders Home instead of the journal editor", () => {
+  it("view=decisioni renders the decision memory, not a journal editor", () => {
     navRuntime.search = "view=decisioni";
     render(createElement(WorkspaceShell));
     expect(screen.queryByLabelText("Caso d’uso")).toBeNull();
-    expect(screen.queryByLabelText("Perché")).toBeNull();
-    expect(screen.getByText("Rivedi questa decisione")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Decisioni" })).toBeTruthy();
   });
 
   it("view=decisioni&focus opens DecisionSheet from Home", () => {
