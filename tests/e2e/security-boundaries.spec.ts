@@ -54,7 +54,7 @@ test.describe("release security boundaries", () => {
     );
 
     expect(response?.status()).toBeLessThan(400);
-    await expect(page.getByText(/non siamo riusciti a confermare il link/i)).toBeVisible();
+    await expect(page.getByText(/accesso interrotto/i)).toBeVisible();
   });
 
   test("accepts an approved optimized image and rejects an unapproved host", async ({

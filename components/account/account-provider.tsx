@@ -36,7 +36,8 @@ import {
   isSupabaseBrowserEnabled,
   loadBrowserSupabaseRuntimeConfig,
 } from "@/lib/supabase/browser-client";
-import { oauthRedirectTo, type OAuthProviderId } from "@/lib/auth/oauth-providers";
+import { mapAuthProviderError } from "@/lib/auth/auth-messages";
+import { oauthProviderLabel, oauthRedirectTo, type OAuthProviderId } from "@/lib/auth/oauth-providers";
 
 type AccountStatus = "loading" | "guest" | "authenticated" | "unavailable";
 type AccountMagicLinkMetadata = Record<string, string | number | boolean | null | undefined>;
@@ -59,6 +60,9 @@ export type AccountContextValue = {
   signInWithOAuth?: (
     provider: OAuthProviderId,
   ) => Promise<{ ok: boolean; message: string }>;
+  linkIdentity?: (
+    provider: OAuthProviderId,
+  ) => Promise<{ ok: boolean; message: string }>;
   restoreQuarantinedWorkspace: () => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
   workspaceReadyForIntentReplay: boolean;
@@ -77,6 +81,7 @@ const AccountContext = createContext<AccountContextValue>({
   authMessage: null,
   sendMagicLink: async () => ({ ok: false, message: "Accesso email non disponibile." }),
   signInWithOAuth: async () => ({ ok: false, message: "Accesso non disponibile." }),
+  linkIdentity: async () => ({ ok: false, message: "Accesso non disponibile." }),
   restoreQuarantinedWorkspace: async () => ({
     ok: false,
     message: "Nessuna selezione locale da ripristinare.",
@@ -555,16 +560,56 @@ export function AccountProvider({
       const client = getBrowserSupabaseClient();
       const { error } = await client.auth.signInWithOAuth({
         provider,
-        options: { redirectTo: oauthRedirectTo() },
+        options: {
+          redirectTo: oauthRedirectTo(),
+          skipBrowserRedirect: false,
+          queryParams:
+            provider === "google" ? { prompt: "select_account" } : undefined,
+        },
       });
       if (error) {
-        const message = "Non siamo riusciti ad aprire l'accesso. Riprova tra poco.";
+        const message = mapAuthProviderError(error);
         setAuthMessage(message);
         return { ok: false, message };
       }
       return { ok: true, message: "Ti stiamo portando al provider." };
-    } catch {
-      const message = "Non siamo riusciti ad aprire l'accesso. Riprova tra poco.";
+    } catch (error) {
+      const message = mapAuthProviderError(
+        error instanceof Error ? error.message : null,
+      );
+      setAuthMessage(message);
+      return { ok: false, message };
+    } finally {
+      setIsSendingLink(false);
+    }
+  }, []);
+
+  const linkIdentity = useCallback(async (provider: OAuthProviderId) => {
+    if (!isSupabaseBrowserEnabled()) {
+      const message = "Accesso non disponibile in questo momento.";
+      setAuthMessage(message);
+      return { ok: false, message };
+    }
+
+    setIsSendingLink(true);
+    setAuthMessage(null);
+
+    try {
+      const client = getBrowserSupabaseClient();
+      const { error } = await client.auth.linkIdentity({
+        provider,
+        options: { redirectTo: oauthRedirectTo() },
+      });
+      if (error) {
+        const message = mapAuthProviderError(error);
+        setAuthMessage(message);
+        return { ok: false, message };
+      }
+      return { ok: true, message: `Ti stiamo portando a ${oauthProviderLabel(provider)}.` };
+    } catch (error) {
+      const message = mapAuthProviderError(
+        error instanceof Error ? error.message : null,
+      );
       setAuthMessage(message);
       return { ok: false, message };
     } finally {
@@ -720,11 +765,12 @@ export function AccountProvider({
       authMessage,
       sendMagicLink,
       signInWithOAuth,
+      linkIdentity,
       restoreQuarantinedWorkspace,
       signOut,
       workspaceReadyForIntentReplay,
     }),
-    [authEnabled, authMessage, hasQuarantinedWorkspace, isAttaching, isRestoringQuarantinedWorkspace, isSendingLink, restoreQuarantinedWorkspace, sendMagicLink, session, signInWithOAuth, signOut, status, user, workspaceAttachPending, workspaceReadyForIntentReplay],
+    [authEnabled, authMessage, hasQuarantinedWorkspace, isAttaching, isRestoringQuarantinedWorkspace, isSendingLink, linkIdentity, restoreQuarantinedWorkspace, sendMagicLink, session, signInWithOAuth, signOut, status, user, workspaceAttachPending, workspaceReadyForIntentReplay],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

@@ -690,12 +690,27 @@ describe("B59 AccountPanel — state matrix integration", () => {
   it("submission 500: cella errore esplicita con retry che rifà la fetch", async () => {
     vi.mocked(fetch)
       .mockReset()
-      .mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: async () => ({}),
-      } as Response)
-      .mockResolvedValueOnce(submissionsOkResponse());
+      .mockImplementation(async (input) => {
+        const url = String(input);
+        if (url.includes("/api/auth/config")) {
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({ providers: [] }),
+          } as Response;
+        }
+        const call = vi.mocked(fetch).mock.calls.filter(
+          ([value]) => !String(value).includes("/api/auth/config"),
+        ).length;
+        if (call <= 1) {
+          return {
+            ok: false,
+            status: 500,
+            json: async () => ({}),
+          } as Response;
+        }
+        return submissionsOkResponse();
+      });
     setPanelState(
       makeAccount({
         status: "authenticated",
@@ -720,7 +735,11 @@ describe("B59 AccountPanel — state matrix integration", () => {
     await waitFor(() => {
       expect(screen.getByText(/Nessuna submission collegata/)).toBeTruthy();
     });
-    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(
+      vi.mocked(fetch).mock.calls.filter(
+        ([value]) => !String(value).includes("/api/auth/config"),
+      ),
+    ).toHaveLength(2);
   });
 
   it("submission 429: cella rate-limited con copy attesa", async () => {
@@ -978,7 +997,7 @@ describe("B59 auth callback — link pending ed expired", () => {
         ),
       ).toBeTruthy();
     });
-    const recovery = screen.getByText("Richiedi un nuovo link").closest("a");
+    const recovery = screen.getByText("Torna all'accesso").closest("a");
     expect(recovery).not.toBeNull();
     expect(recovery?.getAttribute("href")).toBe("/account");
     expect(callbackRuntime.replace).not.toHaveBeenCalled();
@@ -988,16 +1007,15 @@ describe("B59 auth callback — link pending ed expired", () => {
     callbackRuntime.exchangeCodeForSession.mockResolvedValue({
       error: new Error("code expired"),
     });
+    callbackRuntime.getSession.mockResolvedValue({ data: { session: null } });
     window.history.replaceState({}, "", "/auth/callback?code=abc");
     render(<AuthCallbackPage />);
 
     await waitFor(() => {
       expect(
-        screen.getByText(
-          "Non siamo riusciti a completare il collegamento. Il link potrebbe essere scaduto o già usato.",
-        ),
+        screen.getByText("L'accesso è scaduto o è già stato usato. Riprova."),
       ).toBeTruthy();
     });
-    expect(screen.getByText("Richiedi un nuovo link")).toBeTruthy();
+    expect(screen.getByText("Torna all'accesso")).toBeTruthy();
   });
 });

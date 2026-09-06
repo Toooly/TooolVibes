@@ -2,23 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { EmailOtpType } from "@supabase/supabase-js";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { completeAuthCallback } from "@/lib/auth/complete-auth-callback";
 import {
   getBrowserSupabaseClient,
   isSupabaseBrowserEnabled,
   loadBrowserSupabaseRuntimeConfig,
 } from "@/lib/supabase/browser-client";
-import { isAccountStateMatrixEnabled } from "@/components/account/panel/account-state-flags";
 import { PremiumLink, PremiumPanel } from "@/components/ui/premium";
 import { RouteMarker } from "@/components/ui/route-marker";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
-  /* B59: i messaggi "di lavoro" noti restano stati transienti; ogni altro
-     esito è un fallimento (link scaduto/usato o servizio non disponibile)
-     e mostra una recovery esplicita invece di un dead end. */
   const [message, setMessage] = useState("Sto collegando il tuo accesso...");
   const failed =
     message !== "Sto collegando il tuo accesso..." &&
@@ -28,12 +24,6 @@ export default function AuthCallbackPage() {
     let isActive = true;
 
     async function handleCallback() {
-      const finish = () => {
-        if (isActive) {
-          router.replace("/account?connected=1");
-        }
-      };
-
       if (!isSupabaseBrowserEnabled()) {
         if (isActive) {
           setMessage("Verifico l'accesso...");
@@ -49,90 +39,21 @@ export default function AuthCallbackPage() {
         return;
       }
 
-      const client = getBrowserSupabaseClient();
-      const searchParams = new URLSearchParams(window.location.search);
-      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-      const authError =
-        searchParams.get("error_description") ??
-        searchParams.get("error") ??
-        hashParams.get("error_description") ??
-        hashParams.get("error");
+      const result = await completeAuthCallback(getBrowserSupabaseClient(), {
+        search: window.location.search,
+        hash: window.location.hash,
+      });
 
-      if (authError) {
-        if (isActive) {
-          setMessage(`Non siamo riusciti a confermare il link: ${authError}`);
-        }
+      if (!isActive) {
         return;
       }
 
-      const code = searchParams.get("code");
-
-      if (code) {
-        const { error } = await client.auth.exchangeCodeForSession(code);
-
-        if (error) {
-          if (isActive) {
-            setMessage(
-              "Non siamo riusciti a completare il collegamento. Il link potrebbe essere scaduto o già usato.",
-            );
-          }
-          return;
-        }
-
-        finish();
+      if (!result.ok) {
+        setMessage(result.message);
         return;
       }
 
-      const tokenHash = searchParams.get("token_hash") ?? searchParams.get("token");
-      const type = searchParams.get("type") as EmailOtpType | null;
-
-      if (tokenHash && type) {
-        const { error } = await client.auth.verifyOtp({
-          token_hash: tokenHash,
-          type,
-        });
-
-        if (error) {
-          if (isActive) {
-            setMessage("Non sono riuscito a verificare il link. Apri l'ultima email ricevuta o richiedine una nuova.");
-          }
-          return;
-        }
-
-        finish();
-        return;
-      }
-
-      const accessToken = hashParams.get("access_token");
-      const refreshToken = hashParams.get("refresh_token");
-
-      if (accessToken && refreshToken) {
-        const { error } = await client.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        });
-
-        if (error) {
-          if (isActive) {
-            setMessage("Non siamo riusciti a salvare l'accesso. Il link potrebbe essere scaduto o già usato.");
-          }
-          return;
-        }
-
-        finish();
-        return;
-      }
-
-      const { data } = await client.auth.getSession();
-
-      if (data.session?.user) {
-        finish();
-        return;
-      }
-
-      if (isActive) {
-        setMessage("Link di conferma non valido o già usato. Apri l'ultima email ricevuta oppure richiedine una nuova.");
-      }
+      router.replace("/account?connected=1");
     }
 
     void handleCallback();
@@ -164,20 +85,22 @@ export default function AuthCallbackPage() {
             </h1>
             <p
               className="mt-4 text-[0.98rem] leading-7 text-[var(--tv-ink-secondary)]"
-              aria-live="polite"
+              aria-live={failed ? "assertive" : "polite"}
+              role={failed ? "alert" : "status"}
             >
               {message}
             </p>
           </div>
         </div>
 
-        {failed && isAccountStateMatrixEnabled() ? (
+        {failed ? (
           <div className="mt-7 border-t border-[var(--tv-border-subtle)] pt-6">
             <PremiumLink href="/account" className="w-full sm:w-auto">
-              Richiedi un nuovo link
+              Torna all&apos;accesso
             </PremiumLink>
             <p className="mt-3 max-w-[52ch] text-sm leading-6 text-[var(--tv-ink-secondary)]">
-              Il link può essere scaduto o già usato: dalla pagina account puoi inviarti una nuova mail di conferma.
+              Puoi riprovare Google o un altro social, oppure inviarti un nuovo
+              link email dalla pagina account.
             </p>
           </div>
         ) : null}

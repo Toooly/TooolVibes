@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition } from "@/lib/motion/transitions";
+import { isAuthFailureMessage } from "@/lib/auth/auth-messages";
 import { useAccount } from "./account-provider";
 import { OAuthButtons } from "./oauth-buttons";
 import { BrandLogo } from "@/components/layout/brand-logo";
@@ -333,7 +334,8 @@ export function AuthPage() {
           {/* Auth message */}
           {account.authMessage && stateCell?.kind !== "link-pending" && (
             <div
-              className={`v-auth-message ${account.authMessage.includes("non disponibile") || account.authMessage.includes("errore") || account.authMessage.includes("pausa") ? "v-auth-message--error" : "v-auth-message--success"}`}
+              className={`v-auth-message ${isAuthFailureMessage(account.authMessage) ? "v-auth-message--error" : "v-auth-message--success"}`}
+              role={isAuthFailureMessage(account.authMessage) ? "alert" : "status"}
             >
               {account.authMessage}
             </div>

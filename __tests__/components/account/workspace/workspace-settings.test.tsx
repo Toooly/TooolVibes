@@ -68,7 +68,8 @@ describe("AccountSettingsPage — Wave 3 grouping", () => {
     expect(screen.getByRole("heading", { name: "Profilo" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Segnale" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Account" })).toBeTruthy();
-    expect(screen.getByText("mario@example.com")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Metodi di accesso" })).toBeTruthy();
+    expect(screen.getAllByText("mario@example.com").length).toBeGreaterThan(0);
     expect(screen.getByText("Focus")).toBeTruthy();
     expect(screen.getByText("Obiettivo")).toBeTruthy();
     expect(screen.getByText("Modalità silenziosa")).toBeTruthy();

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
 import { AccountWorkspaceFrame } from "@/components/account/workspace/account-workspace-frame";
+import { AccountIdentitiesSection } from "@/components/account/account-identities-section";
 import { AccountRecoverySection } from "./panel/account-recovery-section";
 import { AccountSubmissionsSection } from "./panel/account-submissions-section";
 import { useAccountSubmissions } from "./panel/use-account-submissions";
@@ -136,11 +137,13 @@ export function AccountSettingsPage() {
           />
         </section>
 
+        <AccountIdentitiesSection />
+
         <section className="tv-settings-section" aria-labelledby="settings-account">
           <h2 id="settings-account" className="tv-settings-heading">
             Account
           </h2>
-          <p className="tv-settings-lead">Sessione e uscita. Nessun profilo sociale.</p>
+          <p className="tv-settings-lead">Sessione e uscita.</p>
           <button
             type="button"
             className="account-btn-secondary"

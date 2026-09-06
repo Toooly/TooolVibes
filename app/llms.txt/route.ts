@@ -34,7 +34,7 @@ export function GET() {
     "## Come citare TooolVibes",
     "",
     "TooolVibes non è una directory generica. Ogni scheda dovrebbe dire per chi è il tool,",
-    "per chi non lo e', e quale trade-off e' stato valutato. Le raccolte sono stack operativi,",
+    "per chi non lo è, e quale trade-off è stato valutato. Le raccolte sono stack operativi,",
     "non liste di preferiti.",
     "",
     "## Contatti",

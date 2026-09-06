@@ -4540,3 +4540,20 @@ html[data-tv-reduce-motion="true"] .tv-lib--empty {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
+
+.tv-identity-list {
+  display: grid;
+  gap: var(--tv-space-control-sm);
+  margin: var(--tv-space-component-sm) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tv-identity-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-space-control-md);
+  min-height: var(--tv-button-min-height-touch);
+  font-size: var(--tv-text-body-sm);
+}
