@@ -1,0 +1,442 @@
+/* Public visual system primitives.
+ *
+ * Token consumers only. No :root. No hex. No arbitrary radii.
+ * Pages and shared chrome adopt these roles so public surfaces
+ * feel designed at one moment.
+ */
+
+/* ============================================================
+   SECTION RHYTHM
+   Macro section space must exceed internal component space.
+   ============================================================ */
+
+.tv-sys-section {
+  padding-block: var(--tv-space-section-sm);
+}
+
+@media (min-width: 768px) {
+  .tv-sys-section {
+    padding-block: var(--tv-space-section-md);
+  }
+}
+
+.tv-sys-section--page {
+  padding-block: var(--tv-space-page-sm);
+}
+
+@media (min-width: 768px) {
+  .tv-sys-section--page {
+    padding-block: var(--tv-space-page-md);
+  }
+}
+
+.tv-sys-section__intro {
+  display: grid;
+  gap: var(--tv-space-component-sm);
+  margin-bottom: var(--tv-space-group-md);
+  max-width: var(--tv-content-text-wide);
+}
+
+.tv-sys-section__kicker {
+  margin: 0;
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  line-height: var(--tv-leading-heading);
+  text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
+}
+
+.tv-sys-section__title {
+  margin: 0;
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-text-h2);
+  font-weight: var(--tv-weight-regular);
+  line-height: var(--tv-leading-display);
+  letter-spacing: var(--tv-tracking-tight);
+  overflow-wrap: anywhere;
+  color: var(--tv-ink-primary);
+}
+
+.tv-sys-section__lede {
+  margin: 0;
+  max-width: var(--tv-content-text-default);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+  color: var(--tv-ink-secondary);
+}
+
+/* ============================================================
+   EDITORIAL PROSE
+   Readable measure; decision modules may stay full-width.
+   ============================================================ */
+
+.tv-sys-prose {
+  max-width: var(--tv-content-text-default);
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+  color: var(--tv-ink-secondary);
+}
+
+.tv-sys-prose > * + * {
+  margin-top: var(--tv-space-component-md);
+}
+
+.tv-sys-prose > :where(h2, h3, h4) {
+  margin-bottom: var(--tv-space-component-sm);
+  color: var(--tv-ink-primary);
+  line-height: var(--tv-leading-heading);
+}
+
+.tv-sys-prose > * + :where(h2, h3, h4) {
+  margin-top: var(--tv-space-group-md);
+}
+
+.tv-sys-prose :where(h2) {
+  font-family: var(--tv-font-family-display);
+  font-size: var(--tv-text-h2);
+  font-weight: var(--tv-weight-regular);
+  line-height: var(--tv-leading-display);
+}
+
+.tv-sys-prose :where(h3) {
+  font-size: var(--tv-text-h3);
+  font-weight: var(--tv-weight-semibold);
+}
+
+.tv-sys-prose :where(h4) {
+  font-size: var(--tv-text-h4);
+  font-weight: var(--tv-weight-semibold);
+}
+
+.tv-sys-prose :where(ul, ol) {
+  padding-left: var(--tv-space-layout-md);
+}
+
+.tv-sys-prose :where(li + li) {
+  margin-top: var(--tv-space-micro-sm);
+}
+
+.tv-sys-prose :where(strong) {
+  font-weight: var(--tv-weight-semibold);
+  color: var(--tv-ink-primary);
+}
+
+/* ============================================================
+   CARD DNA
+   Shared radius / border / type. Variants differ by job.
+   ============================================================ */
+
+.tv-sys-card {
+  display: grid;
+  gap: var(--tv-space-component-sm);
+  padding: var(--tv-card-padding-md);
+  border: 1px solid var(--tv-card-border);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-card);
+  box-shadow: var(--tv-elevation-rest);
+  color: var(--tv-ink-primary);
+}
+
+.tv-sys-card--tool {
+  padding: var(--tv-tool-card-padding);
+  gap: var(--tv-tool-card-gap);
+  border-color: var(--tv-tool-card-border);
+  border-radius: var(--tv-tool-card-radius);
+  background: var(--tv-tool-card-bg);
+}
+
+.tv-sys-card--editorial {
+  padding: var(--tv-card-editorial-padding);
+  border-color: var(--tv-card-editorial-border);
+  border-radius: var(--tv-card-editorial-radius);
+  background: var(--tv-card-editorial-bg);
+}
+
+.tv-sys-card--status {
+  gap: var(--tv-space-micro-sm);
+  padding: var(--tv-space-component-md);
+  border-color: var(--tv-border-subtle);
+  background: var(--tv-surface-subtle);
+  box-shadow: none;
+}
+
+.tv-sys-card--sponsor {
+  border-radius: var(--tv-partner-stage-radius);
+  background: var(--tv-partner-stage-bg);
+  box-shadow: var(--tv-partner-stage-shadow-rest);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tv-sys-card--tool:hover {
+    background: var(--tv-tool-card-bg-hover);
+    border-color: var(--tv-tool-card-border-hover);
+    box-shadow: var(--tv-tool-card-shadow-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-sys-card--tool {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   ACTIVATION GATE
+   Yellow surface = unlock / continue / persist.
+   Not glass. Not a generic white form.
+   ============================================================ */
+
+.tv-activation-gate {
+  display: grid;
+  gap: var(--tv-space-component-md);
+  width: min(100%, var(--tv-activation-max-width));
+  margin-inline: auto;
+  padding: var(--tv-space-component-lg);
+  border: 1px solid var(--tv-activation-accent-border);
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-activation-surface);
+  color: var(--tv-activation-ink);
+  box-shadow: var(--tv-elevation-rest);
+}
+
+.tv-activation-gate__icon {
+  display: grid;
+  width: var(--tv-icon-container-lg);
+  height: var(--tv-icon-container-lg);
+  place-items: center;
+  border: 1px solid var(--tv-activation-accent-border);
+  border-radius: var(--tv-radius-special);
+  background: var(--tv-activation-icon-bg);
+  color: var(--tv-activation-icon-fg);
+}
+
+.tv-activation-gate__kicker {
+  margin: 0;
+  font-size: var(--tv-text-eyebrow);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--tv-activation-accent);
+}
+
+.tv-activation-gate__title {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: var(--tv-text-h3);
+  font-weight: var(--tv-weight-semibold);
+  line-height: var(--tv-leading-heading);
+  color: var(--tv-activation-ink);
+}
+
+.tv-activation-gate__body {
+  margin: 0;
+  font-size: var(--tv-text-body);
+  line-height: var(--tv-leading-body);
+  color: var(--tv-activation-ink-secondary);
+}
+
+.tv-activation-gate__form {
+  display: grid;
+  gap: var(--tv-space-control-md);
+}
+
+.tv-activation-gate__label {
+  display: grid;
+  gap: var(--tv-space-micro-xs);
+  font-size: var(--tv-text-label);
+  color: var(--tv-activation-ink-secondary);
+}
+
+.tv-activation-gate__input {
+  min-height: var(--tv-input-min-height-touch);
+  width: 100%;
+  padding: 0 var(--tv-input-padding-x);
+  border: 1px solid var(--tv-border-default);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
+  font-size: var(--tv-text-body);
+}
+
+.tv-activation-gate__input:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+}
+
+.tv-activation-gate__cta {
+  display: inline-flex;
+  min-height: var(--tv-button-min-height-touch);
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--tv-button-padding-x-lg);
+  border: 0;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-activation-strong);
+  color: var(--tv-activation-strong-ink);
+  font-size: var(--tv-text-button);
+  font-weight: var(--tv-button-font-weight);
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tv-activation-gate__cta:hover {
+    background: var(--tv-activation-strong-hover);
+  }
+}
+
+.tv-activation-gate__cta:active {
+  background: var(--tv-activation-strong-pressed);
+}
+
+.tv-activation-gate__cta:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tv-activation-gate__cta:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+}
+
+.tv-activation-gate__dismiss {
+  display: inline-flex;
+  min-height: var(--tv-button-min-height-touch);
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--tv-button-padding-x-md);
+  border: 0;
+  border-radius: var(--tv-radius-pill);
+  background: transparent;
+  color: var(--tv-activation-ink-secondary);
+  font-size: var(--tv-text-button);
+  cursor: pointer;
+}
+
+.tv-activation-gate__dismiss:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+}
+
+.tv-activation-gate__footnote {
+  margin: 0;
+  font-size: var(--tv-text-caption);
+  color: var(--tv-ink-muted-aa);
+}
+
+@media (min-width: 768px) {
+  .tv-activation-gate {
+    padding: var(--tv-space-layout-lg);
+    gap: var(--tv-space-component-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-activation-gate,
+  .tv-activation-gate__cta,
+  .tv-activation-gate__input {
+    transition: none;
+  }
+}
+
+
+/* ============================================================
+   CONSENT — common chrome, not activation yellow
+   ============================================================ */
+
+.tv-consent-banner {
+  position: fixed;
+  inset-inline: 0;
+  bottom: calc(var(--tv-bottom-nav-total, 0px) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--tv-z-consent);
+  padding: var(--tv-space-component-md);
+  border-top: 1px solid var(--tv-border-subtle);
+  background: var(--tv-surface-raised);
+  box-shadow: var(--tv-elevation-floating);
+  color: var(--tv-ink-primary);
+}
+
+.tv-consent-banner__inner {
+  display: grid;
+  gap: var(--tv-space-control-md);
+  width: min(100%, var(--tv-container-wide));
+  margin-inline: auto;
+}
+
+.tv-consent-banner__title {
+  margin: 0;
+  font-size: var(--tv-text-label);
+  font-weight: var(--tv-weight-semibold);
+  line-height: var(--tv-leading-heading);
+}
+
+.tv-consent-banner__body {
+  margin: 0;
+  font-size: var(--tv-text-body-sm);
+  line-height: var(--tv-leading-body);
+  color: var(--tv-ink-secondary);
+}
+
+.tv-consent-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tv-space-micro-sm);
+}
+
+.tv-consent-banner__actions button {
+  min-height: var(--tv-button-min-height-touch);
+  padding: 0 var(--tv-button-padding-x-md);
+  border-radius: var(--tv-radius-pill);
+  font-size: var(--tv-text-button);
+  font-weight: var(--tv-button-font-weight);
+  cursor: pointer;
+}
+
+.tv-consent-banner__actions button:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+}
+
+.tv-consent-banner__cta {
+  border: 0;
+  background: var(--tv-ink-primary);
+  color: var(--tv-bg-base);
+}
+
+.tv-consent-banner__ghost {
+  border: 1px solid var(--tv-border-interactive);
+  background: transparent;
+  color: var(--tv-ink-primary);
+}
+
+.tv-consent-dialog__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--tv-z-consent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--tv-surface-scrim);
+}
+
+.tv-consent-dialog {
+  width: min(100%, 32rem);
+  padding: var(--tv-space-component-lg);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-modal) var(--tv-radius-modal) 0 0;
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  box-shadow: var(--tv-elevation-modal);
+}
+
+@media (min-width: 640px) {
+  .tv-consent-dialog__scrim {
+    align-items: center;
+    padding: var(--tv-space-component-lg);
+  }
+
+  .tv-consent-dialog {
+    border-radius: var(--tv-radius-modal);
+  }
+}

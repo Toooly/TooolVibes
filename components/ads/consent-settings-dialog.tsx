@@ -100,7 +100,7 @@ export function ConsentSettingsDialog() {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[var(--tv-z-consent)] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4"
+      className="tv-consent-dialog__scrim"
       onClick={() => closeSettings()}
     >
       <div
@@ -110,7 +110,7 @@ export function ConsentSettingsDialog() {
         aria-labelledby="consent-settings-title"
         tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-lg rounded-t-2xl border-t border-border bg-background p-5 shadow-2xl outline-none sm:rounded-2xl sm:border"
+        className="tv-consent-dialog outline-none"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>

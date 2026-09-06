@@ -13,7 +13,7 @@ const badgeVariants = cva(
         neutral:
           "border-[rgba(243,243,247,0.12)] bg-[rgba(37,37,43,0.86)] text-[var(--tv-ink-secondary)]",
         accent:
-          "border-[rgba(139,92,246,0.34)] bg-[rgba(139,92,246,0.16)] text-[var(--tv-ink-primary)]",
+          "border-[color-mix(in_srgb,var(--tv-accent-brand)_34%,transparent)] bg-[color-mix(in_srgb,var(--tv-accent-brand)_16%,transparent)] text-[var(--tv-ink-primary)]",
         secondary:
           "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
         trust:

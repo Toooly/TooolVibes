@@ -13,6 +13,7 @@ const expectedGlobalImports = [
   "@/styles/radar.css",
   "@/styles/tool-detail-final.css",
   "@/styles/public-routes.css",
+  "@/styles/public-system.css",
   "@/styles/secondary-pages.css",
   "@/styles/admin-shell.css",
   "@/styles/partner-placements.css",
@@ -35,6 +36,7 @@ const importantCeilings = {
   "styles/member-experience.css": 0,
   "styles/radar.css": 4,
   "styles/public-routes.css": 46,
+  "styles/public-system.css": 0,
   "styles/partner-placements.css": 0,
   "styles/shell.css": 138,
   "styles/tokens.css": 0,
@@ -114,6 +116,7 @@ for (const featureSheet of [
   "radar.css",
   "tool-detail-final.css",
   "public-routes.css",
+  "public-system.css",
   ...retiredGlobalImports.map((stylesheet) => stylesheet.split("/").at(-1)),
 ]) {
   if (

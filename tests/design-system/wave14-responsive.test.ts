@@ -26,15 +26,16 @@ describe("Wave 14 — responsive contracts", () => {
 
   it("cookie banner sits above the dock via --tv-bottom-nav-total", () => {
     const banner = read("components/ads/consent-banner.tsx");
-    expect(banner).toContain("--tv-bottom-nav-total");
-    expect(banner).toContain("env(safe-area-inset-bottom");
+    const bannerCss = read("styles/public-system.css");
+    expect(bannerCss).toContain("--tv-bottom-nav-total");
+    expect(bannerCss).toContain("env(safe-area-inset-bottom");
     expect(banner).not.toMatch(/bottom-0/);
     expect(banner).not.toContain("9999999999");
     expect(banner).toContain("Rispettiamo la tua privacy");
   });
 
   it("W14-T5 cookie or sheets consume --tv-bottom-nav-total without double-counting dock padding", () => {
-    const banner = read("components/ads/consent-banner.tsx");
+    const banner = read("styles/public-system.css");
     const sheetCss = read("components/account/workspace/decision-sheet.css");
     const loopCss = read("styles/loop-shell.css");
     const loopTsx = read("components/layout/loop-shell.tsx");

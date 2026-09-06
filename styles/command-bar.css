@@ -65,7 +65,7 @@
   height: 52px;
   display: grid;
   place-items: center;
-  border-radius: 14px;
+  border-radius: var(--tv-radius-feature);
   background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
   border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 40%, transparent);
   flex-shrink: 0;
@@ -73,7 +73,7 @@
 }
 
 @media (max-width: 1535px) {
-  .command-bar__brand-mark { width: 42px; height: 42px; border-radius: 10px; }
+  .command-bar__brand-mark { width: 42px; height: 42px; border-radius: var(--tv-radius-card); }
 }
 
 .command-bar__brand:hover .command-bar__brand-mark {
@@ -112,7 +112,7 @@
   padding: 6px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 70%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 12px;
+  border-radius: var(--tv-radius-special);
   position: relative;
 }
 
@@ -126,7 +126,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 18px;
-  border-radius: 9px;
+  border-radius: var(--tv-radius-card);
   text-decoration: none;
   color: var(--tv-ink-secondary);
   font-size: 15px;
@@ -165,7 +165,7 @@
 .command-bar__nav-marker {
   position: absolute;
   inset: 0;
-  border-radius: 8px;
+  border-radius: var(--tv-radius-card);
   background: var(--tv-accent-primary);
   z-index: -1;
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
@@ -189,7 +189,7 @@
   padding: 12px 18px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 90%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 14px;
+  border-radius: var(--tv-radius-feature);
   color: var(--tv-ink-secondary);
   font-size: 15px;
   font-weight: 500;
@@ -221,7 +221,7 @@
   font-size: 12px;
   font-weight: 700;
   padding: 3px 7px;
-  border-radius: 5px;
+  border-radius: var(--tv-radius-control);
   background: color-mix(in srgb, var(--tv-bg-base) 70%, transparent);
   border: 1px solid var(--tv-border-subtle);
   color: var(--tv-ink-muted-aa);
@@ -239,7 +239,7 @@
   border: none;
   background: transparent;
   color: var(--tv-ink-secondary);
-  border-radius: 8px;
+  border-radius: var(--tv-radius-card);
   cursor: pointer;
   transition: color var(--tv-duration-base) var(--tv-easing-standard), background var(--tv-duration-base) var(--tv-easing-standard), box-shadow var(--tv-duration-base) var(--tv-easing-standard);
   -webkit-tap-highlight-color: transparent;
@@ -258,7 +258,7 @@
   right: 5px;
   width: 5px;
   height: 5px;
-  border-radius: 999px;
+  border-radius: var(--tv-radius-pill);
   background: transparent;
   transition: background var(--tv-duration-base) var(--tv-easing-standard), transform var(--tv-duration-base) var(--tv-easing-standard);
 }
@@ -312,7 +312,7 @@
   padding: 4px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 50%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 12px;
+  border-radius: var(--tv-radius-special);
 }
 
 
@@ -324,7 +324,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 20px;
-  border-radius: 14px;
+  border-radius: var(--tv-radius-feature);
   background: var(--tv-bg-base);
   color: var(--tv-ink-primary);
   font-size: 14px;

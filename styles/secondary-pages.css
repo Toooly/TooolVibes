@@ -122,7 +122,7 @@
   font-size: clamp(2.1rem, 5vw, 3.6rem);
   font-weight: var(--tv-weight-regular);
   letter-spacing: -0.02em;
-  line-height: 1.02;
+  line-height: var(--tv-leading-display);
   text-wrap: balance;
   text-transform: none;
 }
@@ -252,7 +252,7 @@
   font-size: clamp(1.6rem, 3.2vw, 2.4rem);
   font-weight: var(--tv-weight-regular);
   letter-spacing: -0.01em;
-  line-height: 1.05;
+  line-height: var(--tv-leading-display);
   text-wrap: balance;
 }
 
@@ -337,7 +337,7 @@
   font-size: clamp(1.5rem, 3.5vw, 2.4rem);
   font-weight: var(--tv-weight-regular);
   letter-spacing: -0.01em;
-  line-height: 1.05;
+  line-height: var(--tv-leading-display);
   text-wrap: balance;
 }
 
@@ -847,7 +847,7 @@
   font-size: clamp(1.7rem, 3vw, 2.3rem);
   font-weight: var(--tv-weight-regular);
   letter-spacing: -0.015em;
-  line-height: 1.05;
+  line-height: var(--tv-leading-display);
   text-wrap: balance;
 }
 

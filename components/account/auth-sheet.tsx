@@ -365,7 +365,7 @@ export function AuthSheet({
       <Dialog open={open} onOpenChange={(next) => (next ? onOpenChange(true) : dismiss())}>
         <DialogContent
           showCloseButton={false}
-          className="tv-auth-sheet__surface !bg-[var(--tv-auth-sheet-veil)] border-0 p-0 shadow-none ring-0 sm:max-w-none"
+          className="tv-auth-sheet__surface !bg-[var(--tv-activation-surface)] border-0 p-0 shadow-none ring-0 sm:max-w-none"
           data-placement="desktop"
         >
           <AuthSheetForm
@@ -391,7 +391,7 @@ export function AuthSheet({
       <SheetContent
         side="bottom"
         showCloseButton={false}
-        className="tv-auth-sheet__surface !bg-[var(--tv-auth-sheet-veil)] border-0 p-0 shadow-none"
+        className="tv-auth-sheet__surface !bg-[var(--tv-activation-surface)] border-0 p-0 shadow-none"
         data-placement="mobile"
       >
         <AuthSheetForm

@@ -1257,8 +1257,8 @@ h1.tv-radar__title,
 .tv-radar__title {
   font-family: var(--tv-font-family-display);
   font-weight: var(--tv-weight-regular);
-  line-height: 0.95;
-  letter-spacing: -0.025em;
+  line-height: var(--tv-leading-display);
+  letter-spacing: var(--tv-tracking-tight);
   text-transform: none;
   margin: 0;
   color: var(--tv-ink-primary);

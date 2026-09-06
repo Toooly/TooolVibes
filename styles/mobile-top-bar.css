@@ -52,7 +52,7 @@
   height: 28px;
   display: grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: var(--tv-radius-card);
   background: color-mix(in srgb, var(--tv-surface-elevated) 70%, transparent);
   border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 30%, transparent);
   flex-shrink: 0;
@@ -78,7 +78,7 @@
   padding: 0 14px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 12px;
+  border-radius: var(--tv-radius-special);
   color: var(--tv-ink-secondary);
   font-size: 14px;
   cursor: pointer;
@@ -113,7 +113,7 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: var(--tv-radius-special);
   background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
   color: var(--tv-ink-primary);
   text-decoration: none;
@@ -150,7 +150,7 @@
 .mobile-top-bar__route-dot {
   width: 5px;
   height: 5px;
-  border-radius: 999px;
+  border-radius: var(--tv-radius-pill);
   background: var(--tv-accent-cyan);
   flex-shrink: 0;
 }

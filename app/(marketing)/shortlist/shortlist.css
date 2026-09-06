@@ -275,7 +275,7 @@
   margin: 1rem 0 0 !important;
   color: var(--tv-ink-primary) !important;
   font-size: clamp(2.8rem, 4.2vw, 4.4rem) !important;
-  line-height: 0.92 !important;
+  line-height: var(--tv-leading-display) !important;
   text-align: left !important;
   text-wrap: balance;
 }
@@ -402,7 +402,7 @@
   margin-top: 0.9rem !important;
   color: var(--tv-ink-primary) !important;
   font-size: clamp(2.4rem, 4.3vw, 4.2rem) !important;
-  line-height: 0.92 !important;
+  line-height: var(--tv-leading-display) !important;
   text-align: left !important;
 }
 

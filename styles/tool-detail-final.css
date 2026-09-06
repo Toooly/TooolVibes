@@ -62,10 +62,10 @@
 .td-final-hero {
   position: relative;
   overflow: hidden;
-  padding: clamp(var(--tv-space-5), 2.8vw, var(--tv-space-8));
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: 16px;
-  background: var(--tv-surface-raised);
+  padding: clamp(var(--tv-space-5), 2.8vw, var(--tv-space-8)) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .td-final-hero__inner {
@@ -205,9 +205,9 @@
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
   font-size: clamp(2.6rem, 6vw, 4.8rem);
-  font-weight: var(--tv-weight-black);
-  letter-spacing: -0.04em;
-  line-height: 0.92;
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: var(--tv-tracking-tight);
+  line-height: var(--tv-leading-display);
   text-transform: uppercase;
   overflow-wrap: normal;
   word-break: normal;
@@ -593,9 +593,9 @@
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
   font-size: clamp(1.8rem, 4vw, 2.6rem);
-  font-weight: var(--tv-weight-black);
-  letter-spacing: -0.04em;
-  line-height: 1;
+  font-weight: var(--tv-weight-regular);
+  letter-spacing: var(--tv-tracking-tight);
+  line-height: var(--tv-leading-display);
   text-transform: uppercase;
 }
 
@@ -1011,9 +1011,9 @@
    ============================================================ */
 .td-final-alternatives {
   position: relative;
-  margin-top: var(--tv-space-12);
+  margin-top: var(--tv-space-page-md);
   padding: clamp(var(--tv-space-8), 5vw, var(--tv-space-12)) clamp(var(--tv-space-4), 3vw, var(--tv-space-8));
-  border-radius: var(--tv-radius-modal);
+  border-radius: 0;
   background:
     radial-gradient(120% 60% at 100% 0%, color-mix(in srgb, var(--tv-accent-gold) 8%, transparent), transparent 60%),
     var(--tv-surface-inverted);
@@ -1095,7 +1095,7 @@
 
 .td-final-alternatives__table {
   display: grid;
-  gap: var(--tv-space-3);
+  gap: var(--tv-space-component-md);
 }
 
 /* ============================================================
@@ -1208,8 +1208,8 @@
 @media (max-width: 819px) {
   .td-final-alt-row {
     grid-template-columns: 1fr;
-    gap: var(--tv-space-2);
-    padding: var(--tv-space-4);
+    gap: var(--tv-space-component-sm);
+    padding: var(--tv-space-component-md);
   }
   .td-final-alt-cell--difference {
     justify-self: start;
@@ -1595,10 +1595,11 @@
 
 
 .td-final-brief {
-  margin: 16px 0 8px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.08));
+  margin: var(--tv-space-group-md) 0 var(--tv-space-section-sm);
+  padding: var(--tv-space-component-md) var(--tv-space-component-lg);
+  border-radius: var(--tv-radius-feature);
+  border: 1px solid var(--tv-border-subtle);
+  background: var(--tv-surface-subtle);
 }
 .td-final-brief dl {
   display: grid;

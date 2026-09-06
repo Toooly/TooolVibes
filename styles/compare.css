@@ -49,7 +49,7 @@
   font-size: clamp(2.8rem, 4.5vw, 4.4rem);
   font-weight: var(--tv-weight-black);
   letter-spacing: -0.06em;
-  line-height: 0.92;
+  line-height: var(--tv-leading-display);
   text-wrap: balance;
 }
 
@@ -1767,10 +1767,9 @@
   margin: 0 auto;
   min-height: 56px;
   padding: 8px 12px;
-  border-radius: 16px;
-  background: rgba(12, 12, 16, 0.92);
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(16px);
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-surface-floating);
+  border: 1px solid var(--tv-border-default);
 }
 .tv-compare-dock__count {
   margin: 0;
@@ -1794,10 +1793,10 @@
   align-items: center;
   gap: 6px;
   padding: 6px 8px 6px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.06);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-interactive);
   white-space: nowrap;
-  font-size: 13px;
+  font-size: var(--tv-text-label);
 }
 .tv-compare-dock__list button {
   display: inline-flex;
@@ -1813,14 +1812,14 @@
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
-  padding: 0 14px;
-  border-radius: 12px;
-  background: var(--tv-accent-primary, #6a3cff);
-  color: #fff;
+  min-height: var(--tv-button-min-height-touch);
+  padding: 0 var(--tv-button-padding-x-md);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-accent-brand);
+  color: var(--tv-button-primary-text);
   text-decoration: none;
-  font-weight: 650;
-  font-size: 13px;
+  font-weight: var(--tv-button-font-weight);
+  font-size: var(--tv-text-button);
 }
 @media (min-width: 1280px) {
   .tv-compare-dock { bottom: 16px; }

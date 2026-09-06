@@ -290,6 +290,27 @@
   --tv-accent-cyan-soft-on-ivory: color-mix(in srgb, var(--tv-accent-cyan-on-ivory) 12%, var(--tv-surface-inverted));
   --tv-accent-gold-soft-on-ivory: color-mix(in srgb, var(--tv-accent-gold-on-ivory) 12%, var(--tv-surface-inverted));
 
+  /* Activation yellow — ACTION / UNLOCK / CONTINUE.
+     Distinct from gold-as-winner (featured, podium, expert). Same gold
+     family, different job. Do not use for decoration. */
+  --tv-activation-strong: var(--tv-color-gold-500);
+  --tv-activation-strong-hover: var(--tv-color-gold-400);
+  --tv-activation-strong-pressed: var(--tv-color-gold-600);
+  --tv-activation-strong-ink: var(--tv-color-ink-800);
+  --tv-activation-surface: color-mix(in srgb, var(--tv-color-gold-500) 14%, var(--tv-surface-raised));
+  --tv-activation-surface-elevated: color-mix(in srgb, var(--tv-color-gold-500) 20%, var(--tv-surface-elevated));
+  --tv-activation-ink: var(--tv-ink-primary);
+  --tv-activation-ink-secondary: var(--tv-ink-secondary);
+  --tv-activation-accent: var(--tv-color-gold-400);
+  --tv-activation-accent-border: color-mix(in srgb, var(--tv-color-gold-500) 46%, transparent);
+  --tv-activation-icon-bg: color-mix(in srgb, var(--tv-color-gold-500) 18%, transparent);
+  --tv-activation-icon-fg: var(--tv-color-gold-400);
+  --tv-activation-surface-on-ivory: var(--tv-accent-gold-soft-on-ivory);
+  --tv-activation-strong-on-ivory: var(--tv-color-gold-500);
+  --tv-activation-strong-ink-on-ivory: var(--tv-color-ink-800);
+  --tv-activation-accent-on-ivory: var(--tv-accent-gold-on-ivory);
+  --tv-activation-max-width: 34rem;
+
   /* Status */
   --tv-status-success: var(--tv-color-green-500);
   --tv-status-success-pressed: var(--tv-color-green-600);
@@ -434,6 +455,13 @@
   --tv-text-editorial-feature: clamp(2.25rem, 4vw + 0.5rem, 4rem);
   --tv-text-eyebrow: 0.75rem;                                  /* 12px eyebrow */
   --tv-text-caption: 0.75rem;                                  /* 12px caption */
+  --tv-text-h1: var(--tv-text-hero);
+  --tv-text-h2: var(--tv-text-heading);
+  --tv-text-h3: var(--tv-text-title);
+  --tv-text-h4: var(--tv-text-subtitle);
+  --tv-text-body-lg: 1.125rem;                                 /* 18px body large */
+  --tv-text-metadata: var(--tv-text-caption);
+  --tv-text-button: var(--tv-text-label);
 
   /* Legacy scale kept for compat (use semantic above for new code) */
   --tv-text-xs: 0.75rem;
@@ -453,6 +481,7 @@
 
   /* Leading */
   --tv-leading-tight: 1.12;
+  --tv-leading-display: 1.14;
   --tv-leading-heading: 1.2;
   --tv-leading-snug: 1.35;
   --tv-leading-body: 1.58;
@@ -470,6 +499,7 @@
   /* Micro: between icon and label, inline gaps */
   --tv-space-micro-xs: var(--tv-space-px-1);      /* 4px */
   --tv-space-micro-sm: var(--tv-space-px-2);      /* 8px */
+  --tv-space-micro-md: var(--tv-space-px-3);      /* 12px */
 
   /* Control: button/input internal padding */
   --tv-space-control-sm: var(--tv-space-px-2);    /* 8px */
@@ -491,13 +521,25 @@
   --tv-space-section-md: var(--tv-space-px-16);   /* 64px */
   --tv-space-section-lg: var(--tv-space-px-24);   /* 96px */
 
+  /* Group: related fields/cards as a cluster */
+  --tv-space-group-sm: var(--tv-space-layout-md); /* 24px */
+  --tv-space-group-md: var(--tv-space-layout-lg); /* 32px */
+  --tv-space-group-lg: var(--tv-space-px-10);     /* 40px */
+
+  /* Page: hero ↔ next major area, route stage breathing */
+  --tv-space-page-sm: var(--tv-space-section-sm); /* 48px */
+  --tv-space-page-md: var(--tv-space-section-md); /* 64px */
+  --tv-space-page-lg: var(--tv-space-section-lg); /* 96px */
+  --tv-space-page-hero: var(--tv-stage-immersive);
+  --tv-space-page-hero-mobile: var(--tv-stage-immersive-mobile);
+
   /* --- Radius semantic (6 levels) --- */
-  --tv-radius-control: var(--tv-radius-px-sm);       /* 6px — buttons, inputs */
-  --tv-radius-card: var(--tv-radius-px-md);          /* 10px — small cards, chips */
-  --tv-radius-feature: var(--tv-radius-px-feature);  /* 24px — feature cards, heroes */
-  --tv-radius-panel: var(--tv-radius-px-feature);    /* 24px — panels, hero cards */
-  --tv-radius-modal: var(--tv-radius-px-modal);      /* 28px — modals, sheets */
-  --tv-radius-special: var(--tv-radius-px-lg);       /* 16px — special badges */
+  --tv-radius-control: var(--tv-radius-px-sm);       /* 4px — buttons, inputs */
+  --tv-radius-card: var(--tv-radius-px-md);          /* 8px — small cards, chips */
+  --tv-radius-feature: var(--tv-radius-px-feature);  /* 14px — feature cards, heroes */
+  --tv-radius-panel: var(--tv-radius-px-feature);    /* 14px — panels, hero cards */
+  --tv-radius-modal: var(--tv-radius-px-modal);      /* 16px — modals, sheets */
+  --tv-radius-special: var(--tv-radius-px-lg);       /* 12px — special badges */
   --tv-radius-pill: var(--tv-radius-px-pill);        /* 999px — pills, tags */
 
   /* Compatibility for existing usage */
@@ -511,6 +553,13 @@
   --tv-surface-tier-2: var(--tv-surface-raised);      /* card default */
   --tv-surface-tier-3: var(--tv-surface-elevated);    /* card hover/featured */
   --tv-surface-tier-4: var(--tv-surface-floating);    /* floating/3D */
+  --tv-surface-page: var(--tv-surface-base);
+  --tv-surface-subtle: var(--tv-surface-raised);
+  --tv-surface-card: var(--tv-surface-raised);
+  --tv-surface-interactive-raised: var(--tv-surface-elevated);
+  --tv-surface-overlay: var(--tv-surface-floating);
+  --tv-surface-scrim: var(--tv-overlay-backdrop);
+  --tv-surface-activation: var(--tv-activation-surface);
 
   /* --- Elevation semantic --- */
   --tv-elevation-rest: var(--tv-shadow-rest);
@@ -611,9 +660,19 @@
      xs mirrors h-7 used by Select/sm trigger. They keep the existing
      visual heights and let future Checkbox/Radio/Switch primitives share
      the same canonical control geometry. */
-  --tv-control-min-height-default: 2.5rem;  /* 40px (matches input, button) */
-  --tv-control-min-height-sm: 2rem;         /* 32px (matches Select default) */
-  --tv-control-min-height-xs: 1.75rem;      /* 28px (matches Select sm) */
+  --tv-control-min-height-default: 2.5rem;  /* 40px default control */
+  --tv-control-min-height-sm: 2rem;         /* 32px compact */
+  --tv-control-min-height-xs: 1.75rem;      /* 28px dense, icon-only */
+  --tv-control-min-height-large: 2.75rem;   /* 44px touch / primary */
+  --tv-control-min-height-compact: var(--tv-control-min-height-sm);
+  --tv-chip-min-height: 2.25rem;            /* 36px */
+  --tv-chip-min-height-sm: 2rem;            /* 32px */
+  --tv-icon-sm: 1rem;                       /* 16px */
+  --tv-icon-md: 1.25rem;                    /* 20px */
+  --tv-icon-lg: 1.5rem;                     /* 24px */
+  --tv-icon-container-sm: 1.75rem;          /* 28px */
+  --tv-icon-container-md: 2.25rem;          /* 36px */
+  --tv-icon-container-lg: 2.75rem;          /* 44px */
 
   /* --- Badge --- */
   --tv-badge-padding-x: var(--tv-space-px-2);
@@ -625,9 +684,9 @@
   /* --- Overlay (Dialog/Sheet/Drawer/Popover) --- */
   --tv-overlay-bg: rgba(9, 13, 28, 0.52);
   --tv-overlay-bg-soft: rgba(9, 13, 28, 0.22);
-  --tv-overlay-radius: var(--tv-radius-modal);          /* 28px — Dialog, Drawer */
-  --tv-overlay-radius-popover: var(--tv-radius-feature); /* 16px — Popover, DropdownMenu */
-  --tv-overlay-radius-tooltip: var(--tv-radius-card);    /* 10px — Tooltip */
+  --tv-overlay-radius: var(--tv-radius-modal);          /* 16px — Dialog, Drawer */
+  --tv-overlay-radius-popover: var(--tv-radius-feature); /* 14px — Popover, DropdownMenu */
+  --tv-overlay-radius-tooltip: var(--tv-radius-card);    /* 8px — Tooltip */
 
   /* Backdrop (added by Phase 6 BATCH 4): unified overlay backdrop values
      so Dialog, Drawer, Sheet all consume the same canonical dimming tone. */
@@ -658,6 +717,7 @@
      values derive from foundation tokens so a palette remap propagates. */
   --tv-partner-stage-bg: var(--tv-color-ink-100);
   --tv-partner-stage-radius: 1.75rem;
+  --tv-radius-commercial: var(--tv-partner-stage-radius);
   --tv-partner-stage-shadow-rest: 0 1px 0 color-mix(in srgb, var(--tv-ink-inverted-primary) 5%, transparent), 0 24px 56px -28px color-mix(in srgb, var(--tv-ink-inverted-primary) 30%, transparent);
   --tv-partner-visual-bg: var(--tv-color-surface-base);
   --tv-partner-visual-raised: var(--tv-color-surface-raised);

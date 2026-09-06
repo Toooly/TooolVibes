@@ -39,11 +39,11 @@ const buttonVariants = cva(
       size: {
         default:
           "min-h-[var(--tv-button-min-height)] gap-1.5 px-[var(--tv-button-padding-x-md)] py-[var(--tv-button-padding-y-md)] has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-        xs: "min-h-7 gap-1 px-2.5 py-1 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
-        sm: "min-h-9 gap-1.5 px-3.5 py-2 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-3.5",
+        xs: "min-h-[var(--tv-control-min-height-compact)] gap-1 px-2.5 py-1 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
+        sm: "min-h-[var(--tv-chip-min-height)] gap-1.5 px-3.5 py-2 text-[length:var(--tv-text-button)] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-3.5",
         md: "min-h-[var(--tv-button-min-height-touch)] gap-1.5 px-[var(--tv-button-padding-x-md)] py-[var(--tv-button-padding-y-md)]",
-        lg: "min-h-12 gap-2 px-5 py-3 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
-        xl: "min-h-[3.7rem] gap-2 px-7 py-4 text-base",
+        lg: "min-h-[var(--tv-control-min-height-large)] gap-2 px-5 py-3 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+        xl: "min-h-[var(--tv-control-min-height-large)] gap-2 px-7 py-4 text-[length:var(--tv-text-body)]",
         icon: "premium-button-icon size-11",
         "icon-xs":
           "premium-button-icon size-7 in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",

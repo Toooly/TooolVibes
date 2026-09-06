@@ -45,34 +45,34 @@ export function ConsentBanner() {
       aria-modal="false"
       aria-label="Preferenze pubblicitarie"
       tabIndex={-1}
-      className="tv-consent-banner fixed inset-x-0 bottom-[calc(var(--tv-bottom-nav-total,0px)+env(safe-area-inset-bottom,0px))] z-[var(--tv-z-consent)] border-t border-border bg-background/95 p-4 backdrop-blur shadow-[0_-8px_24px_rgba(0,0,0,0.3)]"
+      className="tv-consent-banner"
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-3">
-        <h2 className="text-sm font-semibold">Rispettiamo la tua privacy</h2>
-        <p className="text-sm text-muted-foreground">
+      <div className="tv-consent-banner__inner">
+        <h2 className="tv-consent-banner__title">Rispettiamo la tua privacy</h2>
+        <p className="tv-consent-banner__body">
           Usiamo cookie tecnici per far funzionare il sito. Per vedere anche
           gli spazi pubblicitari TinyAdz, scegli Accetta tutto. Puoi cambiare
           idea in qualsiasi momento.
         </p>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="tv-consent-banner__actions">
           <button
             type="button"
             onClick={grantAll}
-            className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+            className="tv-consent-banner__cta"
           >
             Accetta tutto
           </button>
           <button
             type="button"
             onClick={denyNonNecessary}
-            className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+            className="tv-consent-banner__cta"
           >
             Rifiuta non necessari
           </button>
           <button
             type="button"
             onClick={openSettings}
-            className="rounded-md border border-border bg-background px-4 py-2 text-sm font-medium hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+            className="tv-consent-banner__ghost"
           >
             Personalizza
           </button>

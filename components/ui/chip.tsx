@@ -22,9 +22,9 @@ const chipVariants = cva(
     variants: {
       variant: {
         default:
-          "border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-ink-secondary)] hover:border-[var(--tv-border-interactive)] hover:text-[var(--tv-ink-primary)] data-[pressed]:border-[rgba(139,92,246,0.34)] data-[pressed]:bg-[rgba(139,92,246,0.16)] data-[pressed]:text-[var(--tv-ink-primary)]",
+          "border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-ink-secondary)] hover:border-[var(--tv-border-interactive)] hover:text-[var(--tv-ink-primary)] data-[pressed]:border-[color-mix(in_srgb,var(--tv-accent-brand)_34%,transparent)] data-[pressed]:bg-[color-mix(in_srgb,var(--tv-accent-brand)_16%,transparent)] data-[pressed]:text-[var(--tv-ink-primary)]",
         accent:
-          "border-[rgba(139,92,246,0.34)] bg-[rgba(139,92,246,0.16)] text-[var(--tv-ink-primary)] hover:bg-[rgba(139,92,246,0.24)] data-[pressed]:border-transparent data-[pressed]:bg-[var(--tv-accent-aa)] data-[pressed]:text-white",
+          "border-[color-mix(in_srgb,var(--tv-accent-brand)_34%,transparent)] bg-[color-mix(in_srgb,var(--tv-accent-brand)_16%,transparent)] text-[var(--tv-ink-primary)] hover:bg-[color-mix(in_srgb,var(--tv-accent-brand)_24%,transparent)] data-[pressed]:border-transparent data-[pressed]:bg-[var(--tv-accent-aa)] data-[pressed]:text-white",
         outline:
           "border-[var(--tv-border-interactive)] bg-transparent text-[var(--tv-ink-secondary)] hover:bg-[var(--tv-surface-elevated)] hover:text-[var(--tv-ink-primary)] data-[pressed]:border-[var(--tv-accent-primary)] data-[pressed]:text-[var(--tv-ink-primary)]",
       },

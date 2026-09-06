@@ -82,17 +82,17 @@
 @media (max-width: 767px) {
   .def-cockpit__inner {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: var(--tv-space-layout-md);
     min-height: 0;
-    padding: 24px 18px 32px;
+    padding: var(--tv-space-layout-lg) var(--tv-gutter-mobile) var(--tv-space-section-sm);
   }
 }
 
 /* <430: compact mobile */
 @media (max-width: 429px) {
   .def-cockpit__inner {
-    padding: 20px 16px 28px;
-    gap: 18px;
+    padding: var(--tv-space-layout-md) var(--tv-gutter-mobile) var(--tv-space-section-sm);
+    gap: var(--tv-space-layout-md);
   }
 }
 
@@ -101,12 +101,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 18px;
+  gap: var(--tv-space-component-md);
   min-width: 0;
 }
 
 @media (max-width: 899px) {
-  .def-cockpit__hero { gap: 14px; }
+  .def-cockpit__hero { gap: var(--tv-space-component-sm); }
 }
 
 .def-cockpit__eyebrow {
@@ -148,8 +148,8 @@
   font-style: normal;
   font-weight: 400;
   font-size: clamp(3.5rem, 4.8vw, 4.75rem);
-  line-height: 0.92;
-  letter-spacing: -0.025em;
+  line-height: var(--tv-leading-display);
+  letter-spacing: var(--tv-tracking-tight);
   color: var(--tv-ink-primary);
   margin: 0;
   max-width: none;
@@ -200,8 +200,8 @@
   justify-content: center;
   gap: 8px;
   padding: 14px 22px;
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: var(--tv-radius-special);
+  font-size: var(--tv-text-button);
   font-weight: 700;
   letter-spacing: 0.01em;
   text-transform: none;
@@ -213,7 +213,7 @@
 }
 
 @media (max-width: 767px) {
-  .def-cockpit__cta { min-height: 44px; padding: 12px 18px; font-size: 13px; flex: 1; }
+  .def-cockpit__cta { min-height: var(--tv-button-min-height-touch); padding: 12px 18px; font-size: var(--tv-text-button); flex: 1; }
 }
 
 .def-cockpit__cta--primary {
@@ -2109,7 +2109,7 @@
 }
 
 
-.def-intent { display: grid; gap: 12px; width: 100%; }
+.def-intent { display: grid; gap: var(--tv-space-component-md); width: 100%; margin-top: var(--tv-space-group-sm); }
 .def-intent__label {
   display: block;
   font-size: 12px;
@@ -2130,7 +2130,7 @@
   padding: 0 8px 0 14px;
   border: 1px solid rgba(255,255,255,0.14);
   background: rgba(8,8,10,0.55);
-  border-radius: 14px;
+  border-radius: var(--tv-radius-feature);
 }
 .def-intent__field input {
   flex: 1;
@@ -2145,13 +2145,13 @@
   min-height: 36px;
   padding: 0 14px;
   border: 0;
-  border-radius: 10px;
-  background: var(--tv-accent-primary, #6a3cff);
-  color: #fff;
+  border-radius: var(--tv-radius-card);
+  background: var(--tv-accent-brand);
+  color: var(--tv-button-primary-text);
   font-weight: 650;
 }
 .def-intent__field:focus-within {
-  outline: 2px solid var(--tv-accent-primary, #6a3cff);
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
   outline-offset: 2px;
 }
 .def-intent__chips {
@@ -2171,11 +2171,11 @@
   border: 1px solid rgba(255,255,255,0.12);
   color: inherit;
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--tv-text-label);
 }
 .def-intent__chips a:hover { border-color: rgba(255,255,255,0.28); }
 .def-stacks {
-  padding: 48px 20px 8px;
+  padding: var(--tv-space-section-sm) var(--tv-gutter-mobile) var(--tv-space-section-sm);
   max-width: 1120px;
   margin: 0 auto;
 }
