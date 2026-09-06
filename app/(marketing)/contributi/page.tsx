@@ -20,7 +20,7 @@ import {
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Contributi",
+  title: "Contributi editoriali",
   description:
     "Proponi un tool, racconta un flusso di lavoro o segnala una correzione alla redazione TooolVibes.",
   path: "/contributi",

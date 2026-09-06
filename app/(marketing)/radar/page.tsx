@@ -16,7 +16,6 @@ export const metadata: Metadata = createPublicPageMetadata({
   description:
     "Segui i lanci di Product Hunt, organizzati per periodo. Consulta la mappa o l'elenco e individua i segnali da approfondire.",
   path: "/radar",
-  openGraphTitle: "Radar TooolVibes · Segnali da Product Hunt",
   openGraphDescription:
     "Lanci reali organizzati per periodo, con mappa, elenco e collegamento alla fonte. Nessun dato simulato.",
 });

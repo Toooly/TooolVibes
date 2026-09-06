@@ -17,6 +17,9 @@ type PublicPageMetadataInput = {
   openGraphTitle?: string;
   openGraphDescription?: string;
   type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  authors?: string[];
 };
 
 export const defaultSocialImage: SocialImage = {
@@ -36,6 +39,9 @@ export function createPublicPageMetadata({
   openGraphTitle = `${title} | ${siteConfig.name}`,
   openGraphDescription = description,
   type = "website",
+  publishedTime,
+  modifiedTime,
+  authors,
 }: PublicPageMetadataInput): Metadata {
   const canonicalUrl = new URL(path, `${siteConfig.url}/`).toString();
 
@@ -45,6 +51,7 @@ export function createPublicPageMetadata({
     alternates: {
       canonical: canonicalUrl,
     },
+    authors: authors?.map((name) => ({ name })),
     openGraph: {
       title: openGraphTitle,
       description: openGraphDescription,
@@ -53,6 +60,13 @@ export function createPublicPageMetadata({
       locale: "it_IT",
       type,
       images: [image],
+      ...(type === "article"
+        ? {
+            publishedTime,
+            modifiedTime,
+            authors,
+          }
+        : {}),
     },
     twitter: {
       card: "summary_large_image",

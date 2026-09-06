@@ -10,7 +10,7 @@ import {
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Tag",
+  title: "Tag e categorie del catalogo",
   description: "Esplora i tool TooolVibes per tag, categoria e scenario d'uso.",
   path: "/tags",
 });
@@ -32,7 +32,7 @@ export default async function TagsPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--accent-strong)]">
             Categorie e tag
           </p>
-          <h1 className="mt-4 max-w-[18ch] text-[clamp(2rem,10vw,2.65rem)] leading-[0.96] text-[var(--foreground)] sm:max-w-[24ch] sm:text-[3.2rem]">
+          <h1 className="mt-4 max-w-[18ch] font-[family-name:var(--tv-font-family-display)] text-[length:var(--tv-text-h1)] font-normal leading-[var(--tv-leading-display)] tracking-[var(--tv-tracking-tight)] text-[var(--foreground)] sm:max-w-[24ch]">
             Esplora TooolVibes per categoria, livello e caso d&apos;uso.
           </h1>
           <p className="mt-5 max-w-[40rem] text-[1rem] leading-7 text-[var(--muted-strong)]">
@@ -48,7 +48,7 @@ export default async function TagsPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               Filtri guida
             </p>
-            <h2 className="mt-3 text-[1.45rem] leading-[1.04] text-[var(--foreground)] sm:text-[2.4rem]">
+            <h2 className="mt-3 font-[family-name:var(--tv-font-family-display)] text-[length:var(--tv-text-h2)] font-normal leading-[var(--tv-leading-display)] text-[var(--foreground)]">
               Le famiglie più utili per leggere il catalogo.
             </h2>
           </div>
@@ -74,7 +74,7 @@ export default async function TagsPage() {
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
                     Categoria
                   </p>
-                  <h3 className="mt-3 text-[1.32rem] leading-[1.1] text-[var(--foreground)]">
+                  <h3 className="mt-3 font-[family-name:var(--tv-font-family-ui)] text-[length:var(--tv-text-h3)] font-semibold leading-[var(--tv-leading-heading)] text-[var(--foreground)]">
                     {group.label}
                   </h3>
                   <p className="mt-3 text-sm leading-6 text-[var(--muted-strong)]">
@@ -93,7 +93,7 @@ export default async function TagsPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
               Tutti i tag
             </p>
-            <h2 className="mt-3 text-[1.45rem] leading-[1.04] text-[var(--foreground)] sm:text-[2.4rem]">
+            <h2 className="mt-3 font-[family-name:var(--tv-font-family-display)] text-[length:var(--tv-text-h2)] font-normal leading-[var(--tv-leading-display)] text-[var(--foreground)]">
               Una mappa rapida per muoverti tra tool, risultati e casi d&apos;uso.
             </h2>
           </div>

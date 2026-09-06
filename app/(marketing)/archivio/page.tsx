@@ -21,7 +21,6 @@ export const metadata: Metadata = createPublicPageMetadata({
   description:
     "Esplora il catalogo TooolVibes: cerca e filtra tool AI, SaaS e no-code, salva i candidati e confronta le alternative per il tuo stack.",
   path: "/archivio",
-  openGraphTitle: "Catalogo · Trova i tool da valutare",
   openGraphDescription:
     "Cerca, filtra e confronta tool AI, SaaS e no-code. Riduci le alternative e trova i candidati giusti per il tuo stack.",
 });

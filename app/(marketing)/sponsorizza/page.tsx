@@ -30,7 +30,7 @@ const LIVE_PARTNER_CAMPAIGNS = ALL_SPONSOR_CAMPAIGNS.filter(
 import "@/styles/sponsorizza.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Sponsorizza",
+  title: "Sponsorizza un tool",
   description:
     "Porta il tuo tool davanti a founder, product manager e professionisti che stanno attivamente confrontando tool su TooolVibes. Partner Experience: Spotlight, Catalog Insert, Contextual Experience e Collection Partner.",
   path: "/sponsorizza",

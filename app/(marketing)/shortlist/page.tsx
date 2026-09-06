@@ -8,7 +8,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "./shortlist.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Salvati",
+  title: "Salvati: shortlist di tool",
   description: "La tua shortlist operativa: raccogli i candidati, annota il motivo e riprendi il confronto quando vuoi.",
   path: "/shortlist",
 });

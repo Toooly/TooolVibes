@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     "vibe coding",
     "automation",
     "Product Hunt",
+    "confronto tool AI",
+    "catalogo SaaS",
+    "stack no-code",
     "TooolVibes",
   ],
   icons: {
@@ -84,6 +87,7 @@ const structuredData = [
     name: siteConfig.name,
     url: siteConfig.url,
     description: siteConfig.description,
+    inLanguage: "it-IT",
     potentialAction: {
       "@type": "SearchAction",
       target: `${siteConfig.url}/archivio?q={search_term_string}`,
@@ -96,6 +100,7 @@ const structuredData = [
     name: siteConfig.name,
     url: siteConfig.url,
     logo: organizationLogoUrl,
+    description: siteConfig.description,
   },
 ];
 

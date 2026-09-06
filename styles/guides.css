@@ -197,9 +197,9 @@
 .guides-masthead__title {
   font-family: var(--tv-font-display);
   font-weight: 400;
-  font-size: clamp(2.1rem, 5.4vw, 4.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.025em;
+  font-size: var(--tv-text-h1);
+  line-height: var(--tv-leading-display);
+  letter-spacing: var(--tv-tracking-tight);
   color: var(--guides-text-on-dark);
   text-wrap: balance;
 }
@@ -1078,9 +1078,9 @@
 .guides-article__hero-h1 {
   font-family: var(--tv-font-display);
   font-weight: 400;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  line-height: 1.0;
-  letter-spacing: -0.022em;
+  font-size: var(--tv-text-h1);
+  line-height: var(--tv-leading-display);
+  letter-spacing: var(--tv-tracking-tight);
   color: var(--guides-text-on-dark);
   text-wrap: balance;
 }

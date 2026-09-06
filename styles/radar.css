@@ -1262,7 +1262,7 @@ h1.tv-radar__title,
   text-transform: none;
   margin: 0;
   color: var(--tv-ink-primary);
-  font-size: clamp(1.75rem, 4.5vw, 3.25rem);
+  font-size: var(--tv-text-h1);
   max-width: 24ch;
   overflow-wrap: anywhere;
   text-wrap: pretty;
@@ -1489,8 +1489,8 @@ h1.tv-radar__title,
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
-  font-weight: 600;
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: var(--tv-weight-regular);
+  font-size: var(--tv-text-h3);
   line-height: 1.15;
 }
 .tv-radar-state__body {
@@ -1594,8 +1594,8 @@ h1.tv-radar__title,
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
-  font-weight: 600;
-  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-weight: var(--tv-weight-regular);
+  font-size: var(--tv-text-h3);
   line-height: 1.15;
 }
 .tv-radar__loading-body {

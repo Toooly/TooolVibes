@@ -13,11 +13,10 @@ import {
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Studio",
+  title: "Studio editoriale",
   description:
     "Servizi di ricerca, sistemi decisionali e contenuti editoriali per prodotti, team e organizzazioni.",
   path: "/studio",
-  openGraphTitle: "Studio by TooolVibes",
   openGraphDescription:
     "Ricerca, sistemi decisionali e contenuti editoriali per prodotti e team.",
 });

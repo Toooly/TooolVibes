@@ -15,7 +15,7 @@ import { RouteMarker } from "@/components/ui/route-marker";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Metodo",
+  title: "Metodo di valutazione dei tool",
   description:
     "Come TooolVibes pensa una scelta: Scopri, Valuta, Confronta, Decidi, Ricorda. Un percorso editoriale con criteri verificabili.",
   path: "/metodo",

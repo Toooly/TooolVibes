@@ -64,6 +64,7 @@ export async function GET() {
     "/metodo",
     "/tags",
     "/shop",
+    "/sponsorizza",
     "/privacy",
     "/termini",
     "/cookie",

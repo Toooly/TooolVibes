@@ -147,7 +147,7 @@
   font-family: var(--tv-font-family-display);
   font-style: normal;
   font-weight: 400;
-  font-size: clamp(3.5rem, 4.8vw, 4.75rem);
+  font-size: var(--tv-text-h1);
   line-height: var(--tv-leading-display);
   letter-spacing: var(--tv-tracking-tight);
   color: var(--tv-ink-primary);
@@ -158,7 +158,7 @@
 @media (max-width: 767px) {
   .def-cockpit__title {
     max-width: 100%;
-    font-size: clamp(3rem, 11vw, 3.4rem);
+    font-size: var(--tv-text-h1);
   }
 }
 

@@ -6,7 +6,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "./collections.css";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Raccolte",
+  title: "Raccolte di stack AI e no-code",
   description:
     "Stack operativi TooolVibes: tool, ruoli e ordine di lavoro per costruire un risultato preciso. Non un elenco di preferiti.",
   path: "/collections",

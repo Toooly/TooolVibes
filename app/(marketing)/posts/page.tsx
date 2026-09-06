@@ -17,7 +17,7 @@ import {
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = createPublicPageMetadata({
-  title: "Guide TooolVibes",
+  title: "Guide per decidere i tool",
   description:
     "Guide editoriali verticali su tool AI, SaaS, produttività e business. Scritte per chi deve decidere, non per riempire una SERP.",
   path: "/posts",

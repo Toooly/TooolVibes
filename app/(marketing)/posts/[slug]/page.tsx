@@ -33,6 +33,7 @@ import { getDirectoryToolBySlug } from "@/lib/data/tooolvibes-directory";
 import {
   createPublicPageMetadata,
   defaultSocialImage,
+  organizationLogoUrl,
 } from "@/lib/seo/metadata";
 import { shouldSuppressTinyAdzForPaidPartner } from "@/lib/monetization/commercial-density-policy";
 import { partnerSegmentsForToolSlug } from "@/lib/sponsors/partner-context";
@@ -78,6 +79,9 @@ export async function generateMetadata({ params }: EditorialPostPageProps): Prom
     description: post.dek || post.summary,
     path: `/posts/${post.slug}`,
     type: "article",
+    publishedTime: post.published_at,
+    modifiedTime: post.updated_at,
+    authors: [post.author_name || siteConfig.name],
     image: post.cover_image_url
       ? {
           url: post.cover_image_url,
@@ -142,15 +146,20 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
         datePublished: post.published_at,
         dateModified: post.updated_at,
         image: post.cover_image_url ?? defaultSocialImage.url,
+        inLanguage: "it-IT",
         publisher: {
           "@type": "Organization",
           name: siteConfig.name,
           url: siteConfig.url,
+          logo: {
+            "@type": "ImageObject",
+            url: organizationLogoUrl,
+          },
         },
-        author: {
-          "@type": "Organization",
-          name: post.author_name ?? "TooolVibes",
-        },
+        author:
+          post.author_name && post.author_name !== siteConfig.name
+            ? { "@type": "Person", name: post.author_name }
+            : { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
       },
       {
         "@type": "BreadcrumbList",

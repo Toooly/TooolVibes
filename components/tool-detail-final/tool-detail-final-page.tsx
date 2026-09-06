@@ -108,6 +108,12 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         url: canonicalUrl,
         description: tool.shortDescription,
         applicationCategory: tool.categoryLabel,
+        inLanguage: "it-IT",
+        brand: {
+          "@type": "Organization",
+          name: siteConfig.name,
+          url: siteConfig.url,
+        },
         operatingSystem:
           tool.publicTool.attributes.platforms.length > 0
             ? tool.publicTool.attributes.platforms.join(", ")

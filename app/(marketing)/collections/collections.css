@@ -136,8 +136,8 @@
   max-width: 12ch;
   margin-top: 1rem;
   color: var(--tv-ink-inverted-primary);
-  font-size: clamp(3rem, 5vw, 5rem);
-  line-height: 0.9;
+  font-size: var(--tv-text-h1);
+  line-height: var(--tv-leading-display);
 }
 
 @media (max-width: 79.99rem) {
@@ -599,8 +599,8 @@
 .cx-index__title {
   font-family: var(--tv-font-family-display);
   font-weight: 400;
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
-  line-height: 0.96;
+  font-size: var(--tv-text-h1);
+  line-height: var(--tv-leading-display);
   letter-spacing: -0.01em;
   color: var(--tv-ink-primary);
   max-width: 18ch;
@@ -945,9 +945,9 @@
 
 /* Lead card variant */
 .cx-card--lead .cx-card__title {
-  font-size: clamp(1.85rem, 3.4vw, 2.8rem);
+  font-size: var(--tv-text-h2);
   max-width: 16ch;
-  line-height: 0.96;
+  line-height: var(--tv-leading-display);
 }
 
 .cx-card--lead .cx-card__promise {
@@ -1085,8 +1085,8 @@
 .cx-hero__title {
   font-family: var(--tv-font-family-display);
   font-weight: 400;
-  font-size: clamp(2.1rem, 4vw, 3.4rem);
-  line-height: 0.96;
+  font-size: var(--tv-text-h1);
+  line-height: var(--tv-leading-display);
   letter-spacing: -0.01em;
   color: var(--tv-ink-inverted-primary);
   margin: 0;

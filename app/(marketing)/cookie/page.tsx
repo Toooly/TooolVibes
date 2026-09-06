@@ -4,7 +4,7 @@ import { LegalPageShell } from "@/components/legal/legal-page-shell";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Cookie",
+  title: "Informativa cookie",
   description: "Informazioni sui cookie e salvataggio locale usati da TooolVibes.",
   path: "/cookie",
 });

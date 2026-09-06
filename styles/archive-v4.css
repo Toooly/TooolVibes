@@ -396,9 +396,9 @@
 
 .ar4-ivory__title {
   font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-weight: 600;
-  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
-  line-height: 1;
+  font-weight: var(--tv-weight-regular);
+  font-size: var(--tv-text-h2);
+  line-height: var(--tv-leading-display);
   letter-spacing: -0.01em;
   text-transform: none;
   color: var(--tv-ink-inverted-primary);
@@ -612,9 +612,9 @@
 
 .ar4-grid__title {
   font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-weight: 600;
-  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
-  line-height: 1;
+  font-weight: var(--tv-weight-regular);
+  font-size: var(--tv-text-h2);
+  line-height: var(--tv-leading-display);
   letter-spacing: -0.01em;
   text-transform: none;
   color: var(--tv-ink-primary);
@@ -2034,9 +2034,9 @@ a.archive-v4-card:focus-visible {
 }
 .ar4-categories__title {
   font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-weight: 600;
-  font-size: clamp(1.3rem, 2.2vw, 1.75rem);
-  line-height: 1.1;
+  font-weight: var(--tv-weight-regular);
+  font-size: var(--tv-text-h2);
+  line-height: var(--tv-leading-display);
   color: var(--tv-ink-primary);
   margin: 0;
 }

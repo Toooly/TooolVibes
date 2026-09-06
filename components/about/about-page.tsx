@@ -107,7 +107,7 @@ export function AboutPage() {
             <PremiumBadge tone="dark" className="after:!hidden">
               I servizi che offriamo
             </PremiumBadge>
-            <h2 className="mt-4 max-w-[11ch] text-[clamp(2rem,6vw,4.25rem)] leading-[0.98] text-white">
+            <h2 className="mt-4 max-w-[11ch] font-[family-name:var(--tv-font-family-display)] text-[length:var(--tv-text-h2)] font-normal leading-[var(--tv-leading-display)] text-white">
               Dal caos al sistema.
             </h2>
             <p className="mt-5 max-w-[34rem] text-[0.98rem] leading-7 text-white/72">
@@ -139,14 +139,14 @@ export function AboutPage() {
           <PremiumBadge tone="accent" className="after:!hidden">
             Come lavoriamo
           </PremiumBadge>
-          <h2 className="mt-3 max-w-[18ch] text-[clamp(1.8rem,5vw,2.8rem)] leading-[1.02] text-[var(--tv-ink-primary)]">
+          <h2 className="mt-3 max-w-[18ch] font-[family-name:var(--tv-font-family-display)] text-[length:var(--tv-text-h2)] font-normal leading-[var(--tv-leading-display)] text-[var(--tv-ink-primary)]">
             Una rotta, non una pila di card.
           </h2>
         </div>
         {aboutFeatures.map(([Icon, title, copy]) => (
           <article key={title} className="v-about-feature-card">
             <Icon className="v-about-feature-icon" aria-hidden="true" />
-            <h3 className="mt-4 text-[1.1rem] font-semibold text-[var(--tv-ink-primary)]">
+            <h3 className="mt-4 font-[family-name:var(--tv-font-family-ui)] text-[length:var(--tv-text-h3)] font-semibold leading-[var(--tv-leading-heading)] text-[var(--tv-ink-primary)]">
               {title}
             </h3>
             <p className="mt-2 text-sm leading-6 text-[var(--tv-ink-secondary)]">{copy}</p>
