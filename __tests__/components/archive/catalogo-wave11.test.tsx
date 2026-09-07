@@ -3,11 +3,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
-import { makeCatalogTool } from "../directory/catalog-test-fixtures";
+import { DefinitiveArchive } from "@/components/archive/definitive-archive";
+import { CATALOG_FILTER_GROUPS, makeCatalogTool } from "../directory/catalog-test-fixtures";
 import { dispatchWorkspaceChange } from "@/lib/discovery/workspace-events";
 import {
   createEmptyWorkspaceState,
@@ -154,5 +155,124 @@ describe("Wave 11 — quiet personal signals on Catalogo cards", () => {
 
     expect(screen.getByText("Scartato")).toBeTruthy();
     expect(container.querySelector(".ar4-card__rank")).toBeNull();
+  });
+});
+
+describe("Catalogo — compressed mobile discovery", () => {
+  it("opens the tool from the name link without a redundant CTA", () => {
+    render(
+      <ArchiveV4ToolCard tool={makeCatalogTool({ slug: "cursor", name: "Cursor" })} />,
+    );
+
+    const nameLink = screen.getByRole("link", { name: /Apri la scheda di/ });
+    expect(nameLink.getAttribute("href")).toBe("/toools/cursor");
+    expect(nameLink.textContent).toBe("Cursor");
+    expect(screen.queryByText("Apri la scheda")).toBeNull();
+    expect(document.querySelector(".ar4-card__open")).toBeNull();
+    expect(document.querySelector('[data-sonic-action="save"]')).toBeTruthy();
+    expect(document.querySelector('[data-sonic-action="compare"]')).toBeTruthy();
+  });
+
+  it("keeps a single catalog search and moves filters into an exclusive sheet accordion", () => {
+    render(
+      <DefinitiveArchive
+        tools={[makeCatalogTool({ slug: "cursor", name: "Cursor", filterGroups: ["vibe-coding"] })]}
+        filterGroups={CATALOG_FILTER_GROUPS}
+      />,
+    );
+
+    expect(screen.getAllByPlaceholderText("Cerca per nome o categoria…")).toHaveLength(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "Apri filtri catalogo" }));
+    const dialog = screen.getByRole("dialog", { name: "Filtra il catalogo" });
+
+    expect(within(dialog).queryByPlaceholderText("Cerca per nome o categoria…")).toBeNull();
+    expect(within(dialog).getByRole("button", { name: "Categoria" }).getAttribute("aria-expanded")).toBe("true");
+    expect(within(dialog).getByRole("region", { name: "Categoria" })).toBeTruthy();
+    expect(within(dialog).queryByRole("region", { name: "Obiettivi" })).toBeNull();
+    expect(within(dialog).queryByRole("region", { name: "Livello" })).toBeNull();
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Obiettivi" }));
+    expect(within(dialog).getByRole("button", { name: "Categoria" }).getAttribute("aria-expanded")).toBe("false");
+    expect(within(dialog).queryByRole("region", { name: "Categoria" })).toBeNull();
+    expect(within(dialog).getByRole("region", { name: "Obiettivi" })).toBeTruthy();
+    expect(within(dialog).getByRole("button", { name: "Creare un MVP" })).toBeTruthy();
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Livello" }));
+    expect(within(dialog).getByRole("region", { name: "Livello" })).toBeTruthy();
+    expect(within(dialog).queryByRole("region", { name: "Obiettivi" })).toBeNull();
+    expect(within(dialog).getByRole("button", { name: "Principiante" })).toBeTruthy();
+    expect(within(dialog).queryByRole("button", { name: "Altri filtri" })).toBeNull();
+  });
+
+  it("discloses every category inside the Categoria group", () => {
+    const filterGroups = [
+      { key: "all", label: "Tutti" },
+      ...Array.from({ length: 10 }, (_, index) => ({
+        key: `cat-${index}`,
+        label: `Gruppo ${index + 1}`,
+      })),
+    ];
+
+    render(
+      <DefinitiveArchive
+        tools={[makeCatalogTool({ slug: "one", name: "One", filterGroups: ["cat-0"] })]}
+        filterGroups={filterGroups}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Apri filtri catalogo" }));
+    const dialog = screen.getByRole("dialog", { name: "Filtra il catalogo" });
+
+    expect(within(dialog).getByRole("button", { name: /Gruppo 1/ })).toBeTruthy();
+    expect(within(dialog).queryByRole("button", { name: /Gruppo 10/ })).toBeNull();
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Mostra tutte le categorie" }));
+    expect(within(dialog).getByRole("button", { name: /Gruppo 10/ })).toBeTruthy();
+  });
+
+  it("keeps the archive method band as a compact integrity note", () => {
+    const page = readSource("app/(marketing)/archivio/page.tsx");
+    expect(page).toContain("Il catalogo resta editoriale. Gli sponsor restano dichiarati.");
+    expect(page).toContain("Scopri il metodo");
+    expect(page).not.toContain("archive-method-band__items");
+    expect(page).not.toContain("Selezione curata");
+  });
+
+  it("traps focus in the filter sheet, closes on Escape, and returns focus to the opener", async () => {
+    render(
+      <DefinitiveArchive
+        tools={[makeCatalogTool({ slug: "cursor", name: "Cursor", filterGroups: ["vibe-coding"] })]}
+        filterGroups={CATALOG_FILTER_GROUPS}
+      />,
+    );
+
+    const opener = screen.getByRole("button", { name: "Apri filtri catalogo" });
+    opener.focus();
+    fireEvent.click(opener);
+
+    const dialog = screen.getByRole("dialog", { name: "Filtra il catalogo" });
+    expect(dialog.getAttribute("aria-modal")).toBe("true");
+    expect(dialog.getAttribute("aria-describedby")).toBe("ar4-sheet-desc");
+    expect(opener.getAttribute("aria-controls")).toBe("ar4-filter-sheet");
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true);
+    });
+
+    const close = screen.getByRole("button", { name: "Chiudi i filtri" });
+    expect(document.activeElement).toBe(close);
+
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true);
+      expect(document.activeElement).not.toBe(close);
+    });
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Filtra il catalogo" })).toBeNull();
+      expect(document.activeElement).toBe(opener);
+    });
   });
 });

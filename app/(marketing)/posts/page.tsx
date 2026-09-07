@@ -11,6 +11,7 @@ import {
 } from "@/components/guides/guide-card";
 import { getGuideTopic, getGuideTopicOrder } from "@/lib/data/guide-topics";
 import { getPublishedTools } from "@/lib/data/public-tools";
+import { getCuratedCollections } from "@/lib/data/public-collections";
 import {
   getGuidePosts,
 } from "@/lib/data/public-articles";
@@ -39,9 +40,10 @@ const FEATURED_SLUGS = [
 ] as const;
 
 export default async function PostsPage() {
-  const [guides, tools] = await Promise.all([
+  const [guides, tools, collections] = await Promise.all([
     getGuidePosts(),
     getPublishedTools(),
+    getCuratedCollections(),
   ]);
 
   // Build a tool slug → tool map for fast lookup.
@@ -76,19 +78,22 @@ export default async function PostsPage() {
 
   // Sort items: featured first, then by reading time desc, then by date desc.
   const featuredSet = new Set<string>(FEATURED_SLUGS);
-  const itemsSorted = [...items].sort((a, b) => {
-    const aFeat = featuredSet.has(a.post.slug) ? 0 : 1;
-    const bFeat = featuredSet.has(b.post.slug) ? 0 : 1;
-    if (aFeat !== bFeat) return aFeat - bFeat;
-    if (b.readingMinutes !== a.readingMinutes) {
-      return b.readingMinutes - a.readingMinutes;
-    }
-    return b.post.published_at.localeCompare(a.post.published_at);
-  });
+  const featuredSlug = featureCandidate?.slug ?? null;
+  const itemsSorted = [...items]
+    .filter((item) => item.post.slug !== featuredSlug)
+    .sort((a, b) => {
+      const aFeat = featuredSet.has(a.post.slug) ? 0 : 1;
+      const bFeat = featuredSet.has(b.post.slug) ? 0 : 1;
+      if (aFeat !== bFeat) return aFeat - bFeat;
+      if (b.readingMinutes !== a.readingMinutes) {
+        return b.readingMinutes - a.readingMinutes;
+      }
+      return b.post.published_at.localeCompare(a.post.published_at);
+    });
 
   // Topic counts.
   const topicCounts = new Map<string, number>();
-  for (const item of items) {
+  for (const item of itemsSorted) {
     topicCounts.set(item.topic, (topicCounts.get(item.topic) ?? 0) + 1);
   }
   const topics = Array.from(topicCounts.entries())
@@ -111,9 +116,8 @@ export default async function PostsPage() {
       <GuideMasthead
         totalGuides={items.length}
         totalReadingMinutes={totalReadingMinutes}
-        topTopics={topics.slice(0, 6)}
         totalTools={tools.length}
-        totalCollections={Math.min(20, tools.length)}
+        totalCollections={collections.length}
       />
 
       {featureCandidate ? (
@@ -132,65 +136,20 @@ export default async function PostsPage() {
         initialVisible={9}
       />
 
-      {/* Editorial close block */}
       <section
         className="guides-section guides-section--ink"
         aria-labelledby="guides-close-title"
       >
-        <div className="guides-section__head guides-section__head-row">
-          <div>
-            <p className="guides-kicker is-on-dark">Prossimi passi</p>
-            <h2 id="guides-close-title" className="guides-section__title">
-              Una guida ti fa <em>partire</em>. Il catalogo ti porta dove vuoi.
-            </h2>
-          </div>
-          <p className="guides-section__dek">
-            Le guide sono il punto di ingresso. Il catalogo tool e le raccolte
-            tematiche sono dove confronti le alternative in modo strutturato.
-          </p>
-        </div>
-
-        <div className="guides-section__end-grid">
-          <div className="guides-article__end-card">
-            <p className="label">01 · Catalogo</p>
-            <p className="title">Confronta i tool</p>
-            <p className="dek">
-              Tutti i tool presenti nelle guide, con prezzi, integrazioni e
-              giudizio editoriale.
-            </p>
-            <Link href="/archivio">Apri il catalogo →</Link>
-          </div>
-          <div className="guides-article__end-card">
-            <p className="label">02 · Raccolte</p>
-            <p className="title">Tool per obiettivo</p>
-            <p className="dek">
-              Le guide sono verticali. Le raccolte sono laterali — gruppi di
-              tool che risolvono lo stesso problema.
-            </p>
-            <Link href="/collections">Vai alle raccolte →</Link>
-          </div>
-          <div className="guides-article__end-card">
-            <p className="label">03 · Radar</p>
-            <p className="title">Tool appena arrivati</p>
-            <p className="dek">
-              Quello che emerge nelle prossime settimane. Le guide arriveranno
-              quando il tema è maturo.
-            </p>
-            <Link href="/radar">Apri il radar →</Link>
-          </div>
-        </div>
-
-        <div className="guides-section__foot guides-section__foot--close">
-          <Link href="/metodo" className="guides-section__foot-link guides-section__foot-link--ink">
-            Come scriviamo le guide
-            <span aria-hidden>→</span>
-          </Link>
-          <Link href="/shortlist" className="guides-section__foot-link guides-section__foot-link--ink">
-            Salva i tool che ti interessano
-            <span aria-hidden>+</span>
-          </Link>
-        </div>
-
+        <p className="guides-kicker is-on-dark" id="guides-close-title">
+          Prossimi passi
+        </p>
+        <nav className="guides-next-steps" aria-label="Prossimi passi">
+          <Link href="/archivio">Catalogo</Link>
+          <span aria-hidden>·</span>
+          <Link href="/collections">Raccolte</Link>
+          <span aria-hidden>·</span>
+          <Link href="/radar">Radar</Link>
+        </nav>
         <p className="guides-section__meta guides-section__meta--ink">
           Lettura media: <strong>{readingTime} min</strong>{" "}
           per guida · ultimo aggiornamento editoriale:{" "}

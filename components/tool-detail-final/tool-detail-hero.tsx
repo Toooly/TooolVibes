@@ -1,16 +1,16 @@
 import Link from "next/link";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-import { formatItalianDate } from "@/lib/utils";
 import { buildPromoChips } from "@/lib/tools/public-badges";
 
 import { ToolDetailActionSurface } from "./tool-detail-action-surface";
-import { ToolDetailDecisionBrief } from "./tool-detail-decision-brief";
+import { ToolDetailScore } from "./tool-detail-score";
 
 /**
  * A. Hero (Identity + Action Surface)
- * Server component. Renders breadcrumb, avatar + chips, name, deck,
- * action surface, meta. No client JS in this file.
+ * Server component. Breadcrumb, avatar, chips, name, deck, compact
+ * score / best-for, actions. Meta (date, reading time, domain, tags)
+ * lives in Approfondisci → Dati tecnici.
  */
 
 type ToolDetailHeroProps = {
@@ -19,9 +19,11 @@ type ToolDetailHeroProps = {
 };
 
 export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
-  const formattedPublishedAt = tool.publishedAt
-    ? formatItalianDate(tool.publishedAt)
-    : "Data non disponibile";
+  const bestFor =
+    tool.idealUseCase?.trim() ||
+    tool.publicTool.content.bestFor ||
+    tool.useCases[0] ||
+    null;
 
   return (
     <div className="td-final-hero__identity">
@@ -51,7 +53,9 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
           <span className="td-final-chip td-final-chip--category">
             {tool.categoryLabel}
           </span>
-          {buildPromoChips(tool).map((chip) => (
+          {buildPromoChips(tool)
+            .filter((chip) => chip.kind === "level")
+            .map((chip) => (
             <span
               key={chip.label}
               className={
@@ -74,7 +78,15 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
       </h1>
       <p className="td-final-hero__deck">{tool.shortDescription}</p>
 
-      <ToolDetailDecisionBrief tool={tool} />
+      <div className="td-final-hero__facts">
+        <ToolDetailScore tool={tool} />
+        {bestFor ? (
+          <p className="td-final-hero__bestfor">
+            <span className="td-final-hero__bestfor-label">Ideale per</span>
+            {bestFor}
+          </p>
+        ) : null}
+      </div>
 
       <ToolDetailActionSurface
         slug={tool.slug}
@@ -83,29 +95,6 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
         primaryLabel={tool.ctaLabel ?? "Apri il sito"}
         isAffiliateLink={isAffiliateLink}
       />
-
-      <div className="td-final-hero__meta">
-        <div>
-          <strong>{formattedPublishedAt}</strong> · pubblicato
-        </div>
-        {tool.readingTime ? (
-          <div>
-            <strong>{tool.readingTime}</strong> · analisi
-          </div>
-        ) : null}
-        <div>
-          <strong>{tool.domain}</strong> · dominio
-        </div>
-        {tool.tags.length > 0 ? (
-          <div>
-            {tool.tags.slice(0, 3).map((tag) => (
-              <span key={tag} style={{ marginRight: "0.5rem" }}>
-                #{tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
-      </div>
     </div>
   );
 }

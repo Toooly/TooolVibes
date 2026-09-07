@@ -5,11 +5,8 @@
  *
  * V2 contract for /radar:
  *  - Hero: eyebrow split (desktop/mobile via CSS), H1 "Segui i lanci.
- *    Individua i segnali da approfondire.", lede "Il Radar raccoglie…",
- *    provenance "Fonte: Product Hunt. Disponibilità e frequenza di
- *    aggiornamento dipendono dalla fonte."
- *  - Status rail: Stato / Ultimo aggiornamento / Segnali disponibili /
- *    Periodo (4 dt/dd pairs).
+ *    Individua i segnali da approfondire.", CatalogoFacetHead, lede breve.
+ *  - Status bar compatta: Product Hunt · {rangeLabel} · {statusLabel}.
  *  - Periodo selector: Oggi / Ultimi 7 giorni / Ultimi 30 giorni
  *    (rolling windows — l'API ritorna last 24h / 7d / 30d).
  *  - Vista selector: Mappa / Elenco.
@@ -23,7 +20,7 @@
  *    Product Hunt. Apri il lancio."
  *  - Elenco: eyebrow "Elenco dei segnali", H2 "Tutti i segnali del
  *    periodo", colonne Posizione / Lancio / Voti / Commenti / PH.
- *  - Provenance section finale: "Informazioni sui dati" + body +
+ *  - Provenance in <details>: "Informazioni sui dati" + body +
  *    "Visita Product Hunt" link.
  *
  * Mantiene invariato HomeRadarPreview (consumato dalla home V2, copy
@@ -57,7 +54,6 @@ import type {
 } from "@/lib/radar/product-hunt-contract";
 import type { RadarPersonalSignal } from "@/lib/radar/radar-personal-signals";
 import {
-  formatRadarSignal,
   RADAR_RANGE_OPTIONS,
   resolveRadarUiModel,
   type RadarUiModel,
@@ -280,65 +276,6 @@ function RadarStatePanel({
   );
 }
 
-function RadarSignalIndex({
-  model,
-  personalById,
-}: {
-  model: RadarUiModel;
-  personalById?: Map<string, RadarPersonalSignal>;
-}) {
-  const signals = model.items.slice(0, 5);
-
-  return (
-    <aside className="tv-radar-index" aria-labelledby="tv-radar-index-title">
-      <header className="tv-radar-index__header">
-        <div>
-          <p>Elenco dei segnali</p>
-          <h2 id="tv-radar-index-title">Tutti i segnali del periodo</h2>
-        </div>
-        <span>{model.signalCount ?? "—"}</span>
-      </header>
-
-      {signals.length > 0 ? (
-        <ol className="tv-radar-index__list">
-          {signals.map((item, index) => {
-            const rank = index + 1;
-            return (
-              <li key={item.id}>
-                <a
-                  {...signalLinkProps(item)}
-                  className="tv-radar-index__row"
-                  aria-label={nodeAriaLabel(rank, item)}
-                >
-                  <span className="tv-radar-index__rank">
-                    {String(rank).padStart(2, "0")}
-                  </span>
-                  <SignalIdentity item={item} compact />
-                  <span className="tv-radar-index__copy">
-                    <strong>{item.name}</strong>
-                    <small>{item.tagline || "Descrizione non disponibile."}</small>
-                    <RadarPersonalReason signal={personalById?.get(item.id)} />
-                  </span>
-                  <span className="tv-radar-index__metric">
-                    {formatRadarSignal(item)}
-                  </span>
-                  <ExternalLink size={14} aria-hidden="true" />
-                </a>
-              </li>
-            );
-          })}
-        </ol>
-      ) : (
-        <div className="tv-radar-index__state" role="status" aria-live="polite">
-          <RadarIcon size={20} aria-hidden="true" />
-          <strong>{model.stageTitle}</strong>
-          <p>{model.stageBody}</p>
-        </div>
-      )}
-    </aside>
-  );
-}
-
 function RadarTable({
   model,
   personalById,
@@ -452,76 +389,37 @@ function RadarRetryButton({
   );
 }
 
-/**
- * Status rail V2 (§9): 4 dt/dd pairs: Stato, Ultimo aggiornamento,
- * Segnali disponibili, Periodo. Aria-live polite sul valore Stato.
- */
-function RadarStatusRail({ model }: { model: RadarUiModel }) {
-  const hasCount = model.signalCount !== null;
+function RadarStatusBar({ model }: { model: RadarUiModel }) {
   return (
-    <dl className="tv-radar-status-rail" aria-label="Stato Radar">
-      <div className="tv-radar-status-rail__item">
-        <dt>Stato</dt>
-        <dd>
-          <span
-            className="tv-radar-status-rail__status"
-            data-state={model.state}
-            role="status"
-            aria-live="polite"
-          >
-            <span aria-hidden="true" className="tv-radar-status-rail__dot" />
-            {model.statusLabel}
-          </span>
-        </dd>
-      </div>
-      <div className="tv-radar-status-rail__item">
-        <dt>Ultimo aggiornamento</dt>
-        <dd>
-          <span
-            className="tv-radar-status-rail__mobile-compact"
-            data-state={model.state}
-          >
-            {model.updatedAtLabel}
-          </span>
-        </dd>
-      </div>
-      <div className="tv-radar-status-rail__item">
-        <dt>Segnali disponibili</dt>
-        <dd>
-          <span
-            className="tv-radar-status-rail__count"
-            data-state={model.state}
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {hasCount
-              ? model.signalCount
-              : model.state === "error"
-                ? "Non disponibili"
-                : model.state === "loading"
-                  ? "In lettura"
-                  : "Nessun segnale"}
-          </span>
-        </dd>
-      </div>
-      <div className="tv-radar-status-rail__item">
-        <dt>Periodo</dt>
-        <dd>{model.rangeLabel}</dd>
-      </div>
-    </dl>
+    <div className="tv-radar-status-bar" role="group" aria-label="Stato Radar">
+      <span className="tv-radar-status-bar__source">Product Hunt</span>
+      <span className="tv-radar-status-bar__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="tv-radar-status-bar__range">{model.rangeLabel}</span>
+      <span className="tv-radar-status-bar__sep" aria-hidden="true">
+        ·
+      </span>
+      <span
+        className="tv-radar-status-bar__status"
+        data-state={model.state}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <span aria-hidden="true" className="tv-radar-status-bar__dot" />
+        {model.statusLabel}
+      </span>
+    </div>
   );
 }
 
-/**
- * Provenance section V2 (§19): "Informazioni sui dati" + body + link
- * "Visita Product Hunt". No claim su real-time / complete / verified.
- */
 function RadarProvenance() {
   return (
-    <section className="tv-radar-provenance" aria-labelledby="tv-radar-provenance-title">
-      <h2 id="tv-radar-provenance-title" className="tv-radar-provenance__title">
+    <details className="tv-radar-provenance">
+      <summary className="tv-radar-provenance__title">
         Informazioni sui dati
-      </h2>
+      </summary>
       <p className="tv-radar-provenance__body">
         I dati provengono da Product Hunt e vengono organizzati per periodo
         da TooolVibes. Disponibilità, completezza e frequenza di
@@ -536,117 +434,10 @@ function RadarProvenance() {
         Visita Product Hunt
         <ExternalLink size={14} aria-hidden="true" />
       </a>
-    </section>
+    </details>
   );
 }
 
-
-/** Deterministic relative intensity inside the current result set only. */
-function relativeIntensity(votes: number, maxVotes: number): number {
-  if (maxVotes <= 0) return 0;
-  return Math.round((votes / maxVotes) * 100);
-}
-
-function discussionRatio(votes: number, comments: number): number | null {
-  if (votes <= 0) return null;
-  return Math.round((comments / votes) * 100) / 100;
-}
-
-/**
- * Signal overview strip — makes /radar feel like an intelligence surface
- * without inventing trends or AI conclusions.
- */
-function RadarSignalOverview({
-  model,
-  personalById,
-}: {
-  model: RadarUiModel;
-  personalById?: Map<string, RadarPersonalSignal>;
-}) {
-  const items = model.items;
-  if (items.length === 0) return null;
-  const maxVotes = items.reduce((m, i) => Math.max(m, i.votesCount), 0);
-  const totalVotes = items.reduce((s, i) => s + i.votesCount, 0);
-  const totalComments = items.reduce((s, i) => s + i.commentsCount, 0);
-  const top = items.slice(0, 5);
-  const leader = items[0];
-
-  return (
-    <section className="tv-radar-overview" aria-labelledby="tv-radar-overview-title">
-      <header className="tv-radar-overview__head">
-        <div>
-          <p className="tv-radar-overview__eyebrow">Sintesi del periodo</p>
-          <h2 id="tv-radar-overview-title">Cosa merita attenzione ora</h2>
-        </div>
-        <p className="tv-radar-overview__note">
-          Metriche relative al set corrente · non sono trend storici
-        </p>
-      </header>
-
-      <div className="tv-radar-overview__stats">
-        <article>
-          <span>Segnali</span>
-          <strong>{model.signalCount ?? items.length}</strong>
-        </article>
-        <article>
-          <span>Voti totali (set)</span>
-          <strong>{totalVotes}</strong>
-        </article>
-        <article>
-          <span>Commenti totali (set)</span>
-          <strong>{totalComments}</strong>
-        </article>
-        <article>
-          <span>Leader del set</span>
-          <strong title={leader?.name}>{leader?.name ?? "—"}</strong>
-        </article>
-      </div>
-
-      <ol className="tv-radar-overview__top" aria-label="Top segnali del set corrente">
-        {top.map((item, index) => {
-          const intensity = relativeIntensity(item.votesCount, maxVotes);
-          const disc = discussionRatio(item.votesCount, item.commentsCount);
-          return (
-            <li key={item.id}>
-              <a
-                href={item.productHuntUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="tv-radar-overview__row"
-              >
-                <span className="tv-radar-overview__rank" aria-hidden="true">
-                  #{String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="tv-radar-overview__identity">
-                  <strong>{item.name}</strong>
-                  <em>{item.tagline || "Lancio Product Hunt"}</em>
-                  <RadarPersonalReason signal={personalById?.get(item.id)} />
-                </span>
-                <span className="tv-radar-overview__meta">
-                  <span>{item.votesCount} voti</span>
-                  <span>{item.commentsCount} commenti</span>
-                  {disc !== null ? (
-                    <span title="Rapporto commenti/voti nel set corrente">
-                      {disc.toFixed(2)} disc/voto
-                    </span>
-                  ) : null}
-                  <span title="Intensità relativa ai voti del set corrente">
-                    {intensity}% rel.
-                  </span>
-                </span>
-                <span
-                  className="tv-radar-overview__bar"
-                  aria-hidden="true"
-                  style={{ ["--intensity" as string]: `${intensity}%` }}
-                />
-              </a>
-            </li>
-          );
-        })}
-      </ol>
-    </section>
-  );
-}
 
 export function RadarExperience({
   initialVisual,
@@ -740,19 +531,12 @@ export function RadarExperience({
             </h1>
             <CatalogoFacetHead active="radar" />
             <p className="tv-radar__lede">
-              Il Radar raccoglie i lanci di Product Hunt, li organizza per
-              periodo e ti aiuta a individuare quelli da approfondire. Nessun
-              dato simulato.
-            </p>
-            <p className="tv-radar__provenance">
-              <span aria-hidden="true">Fonte: Product Hunt.</span>{" "}
-              Disponibilità e frequenza di aggiornamento dipendono dalla fonte.
+              Segnali organizzati per periodo. Nessun dato simulato.
             </p>
           </div>
         </header>
 
-        {/* ═══ 2. STATUS RAIL ═══ */}
-        <RadarStatusRail model={model} />
+        <RadarStatusBar model={model} />
 
         {/* ═══ 3-4. CONTROLLI: PERIODO + VISTA + RETRY ═══ */}
         <section className="tv-radar__controls" aria-label="Controlli Radar">
@@ -814,11 +598,6 @@ export function RadarExperience({
           />
         </section>
 
-        {/* ═══ 4b. SIGNAL OVERVIEW ═══ */}
-        {!hasErrorState && !personalEmpty ? (
-          <RadarSignalOverview model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
-        ) : null}
-
         {/* ═══ 5. RISULTATI: MAPPA O ELENCO ═══ */}
         <div
           id="tv-radar-results"
@@ -847,16 +626,13 @@ export function RadarExperience({
             <RadarPersonalEmpty />
           ) : activeVisual === "nodes" ? (
             <div className="tv-radar__visual">
-              <div>
-                <RadarInstrument model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
-                {displayModel.state === "live" ? (
-                  <p className="tv-radar__stage-note" role="status">
-                    <strong>{displayModel.stageTitle}</strong>
-                    <span>{displayModel.stageBody}</span>
-                  </p>
-                ) : null}
-              </div>
-              <RadarSignalIndex model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
+              <RadarInstrument model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />
+              {displayModel.state === "live" ? (
+                <p className="tv-radar__stage-note" role="status">
+                  <strong>{displayModel.stageTitle}</strong>
+                  <span>{displayModel.stageBody}</span>
+                </p>
+              ) : null}
             </div>
           ) : (
             <RadarTable model={displayModel} personalById={personal.lens === "personal" ? personal.byId : undefined} />

@@ -1,51 +1,27 @@
-import {
-  Compass,
-  FileText,
-  MessageSquare,
-  MessagesSquare,
-  TrendingUp,
-  Wrench,
-} from "lucide-react";
+import { Layers3, Wrench } from "lucide-react";
 
 /**
- * D. Decision Navigation
- * Server component. Sticky ≥1024, in-flow <1024. Scroll-padding-top
- * (declared in app/globals.css) ensures anchor targets land below the
- * topbar.
+ * In-page nav for the remaining public layers.
  */
 
 export function ToolDetailDecisionNav({
   showAlternatives,
-  showExperiences = false,
+  showDeepen = true,
 }: {
   showAlternatives: boolean;
-  showExperiences?: boolean;
+  showDeepen?: boolean;
 }) {
+  if (!showDeepen && !showAlternatives) return null;
+
   return (
     <nav
       className="td-final-decision-nav"
       aria-label="Sezioni della scheda"
     >
-      <a className="td-final-decision-nav__link" href="#td-final-overview">
-        <Compass size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-        Panoramica
-      </a>
-      <a className="td-final-decision-nav__link" href="#td-final-editorial">
-        <MessageSquare size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-        Valutazione
-      </a>
-      <a className="td-final-decision-nav__link" href="#td-final-information">
-        <FileText size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-        Scheda
-      </a>
-      <a className="td-final-decision-nav__link" href="#td-final-signal">
-        <TrendingUp size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-        Segnale
-      </a>
-      {showExperiences ? (
-        <a className="td-final-decision-nav__link" href="#td-final-experiences">
-          <MessagesSquare size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-          Esperienze
+      {showDeepen ? (
+        <a className="td-final-decision-nav__link" href="#td-final-approfondisci">
+          <Layers3 size={13} aria-hidden="true" style={{ marginRight: 4 }} />
+          Approfondisci
         </a>
       ) : null}
       {showAlternatives ? (

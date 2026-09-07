@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import {
@@ -9,16 +9,27 @@ import {
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 
 /**
- * G. Alternative da confrontare
- * Editorial comparison rows. Each row shows tool name, reason to
- * compare, essential difference, editorial score, and a single open
- * action. No rich cards, no save/compare bulkheads, no Archive DNA.
+ * Alternative da confrontare
+ * Editorial comparison rows. The tool name is the detail affordance.
  */
 
 type ToolDetailAlternativesProps = {
   current: ToolPublicView;
   related: ToolPublicView[];
 };
+
+function alternativeLede(count: number) {
+  if (count === 1) {
+    return "Un profilo affine, con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.";
+  }
+  if (count === 2) {
+    return "Due profili affini, ciascuno con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.";
+  }
+  if (count === 3) {
+    return "Tre profili affini, ciascuno con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.";
+  }
+  return `${count} profili affini, ciascuno con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.`;
+}
 
 export function ToolDetailAlternatives({ current, related }: ToolDetailAlternativesProps) {
   if (related.length === 0) return null;
@@ -41,8 +52,7 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
             Se ti interessa {current.name}, confronta questi.
           </h2>
           <p className="td-final-alternatives__lede">
-            Tre profili affini, ciascuno con un taglio diverso. Un confronto
-            rapido per scegliere senza aprire ogni scheda.
+            {alternativeLede(related.length)}
           </p>
         </div>
         <Link
@@ -85,15 +95,6 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
                 ) : (
                   <em>Da valutare</em>
                 )}
-              </span>
-              <span className="td-final-alt-cell td-final-alt-cell--action">
-                <Link
-                  href={`/toools/${alt.slug}`}
-                  className="td-final-alt-cell__open"
-                >
-                  Apri scheda
-                  <ExternalLink size={12} aria-hidden="true" />
-                </Link>
               </span>
             </div>
           );

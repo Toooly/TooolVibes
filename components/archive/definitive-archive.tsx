@@ -19,7 +19,7 @@
  *  - Sponsor module hidden when partner is demo/fixture/development/placeholder
  */
 
-import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -106,6 +106,21 @@ export const PARTNER_INSERT_AFTER = 6;
  */
 export const TINYADZ_INSERT_AFTER = 18;
 
+
+function applyDiscoveryIntent(
+  intent: (typeof DISCOVERY_INTENTS)[number],
+  onSetGroup: (g: string) => void,
+  onSetQuery: (q: string) => void,
+) {
+  if (intent.group) {
+    onSetGroup(intent.group);
+    onSetQuery("");
+  } else if (intent.query) {
+    onSetQuery(intent.query);
+    onSetGroup("all");
+  }
+}
+
 export function DefinitiveArchive({
   tools,
   filterGroups,
@@ -121,11 +136,12 @@ export function DefinitiveArchive({
   const [sortKey, setSortKey] = useState<SortKey>("name-asc");
   const [showAllCategories, setShowAllCategories] = useState<boolean>(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState<boolean>(false);
-  const [showAdvancedSheetFilters, setShowAdvancedSheetFilters] = useState<boolean>(false);
   const [mobileVisibleCount, setMobileVisibleCount] = useState<number>(INITIAL_MOBILE_COUNT);
+  const filterTriggerRef = useRef<HTMLButtonElement>(null);
+  const closeFilterSheet = useCallback(() => setFilterSheetOpen(false), []);
 
   const totalTools = tools.length;
-  const totalGroups = filterGroups.length;
+  const totalGroups = filterGroups.filter((group) => group.key !== "all").length;
 
   useEffect(() => {
     function onPopState() {
@@ -408,15 +424,7 @@ export function DefinitiveArchive({
                   type="button"
                   className={cn("ar4-chip", pressed && "is-active")}
                   aria-pressed={pressed}
-                  onClick={() => {
-                    if (intent.group) {
-                      setActiveGroup(intent.group);
-                      setQuery("");
-                    } else if (intent.query) {
-                      setQuery(intent.query);
-                      setActiveGroup("all");
-                    }
-                  }}
+                  onClick={() => applyDiscoveryIntent(intent, setActiveGroup, setQuery)}
                 >
                   {intent.label}
                 </button>
@@ -425,35 +433,6 @@ export function DefinitiveArchive({
           </div>
         </div>
       </section>
-
-      {hasActiveFilter ? (
-        <div className="ar4-applied" aria-label="Filtri attivi">
-          <p className="ar4-applied__label">Filtri attivi</p>
-          <div className="ar4-applied__chips">
-            {query.trim() ? (
-              <button type="button" className="ar4-applied__chip" onClick={() => setQuery("")}>
-                Ricerca: {query.trim()}
-                <X size={12} aria-hidden="true" />
-              </button>
-            ) : null}
-            {activeGroup !== "all" ? (
-              <button type="button" className="ar4-applied__chip" onClick={() => setActiveGroup("all")}>
-                {filterGroups.find((group) => group.key === activeGroup)?.label ?? activeGroup}
-                <X size={12} aria-hidden="true" />
-              </button>
-            ) : null}
-            {activeLevel !== "all" ? (
-              <button type="button" className="ar4-applied__chip" onClick={() => setActiveLevel("all")}>
-                {LEVEL_FILTERS.find((level) => level.key === activeLevel)?.label ?? activeLevel}
-                <X size={12} aria-hidden="true" />
-              </button>
-            ) : null}
-            <button type="button" className="ar4-applied__reset" onClick={resetAll}>
-              Reimposta
-            </button>
-          </div>
-        </div>
-      ) : null}
 
       {/* ═══ 3a. DESKTOP FILTRI + ORDINAMENTO (>= 768px) ═══ */}
       <section className="ar4-filters" aria-label="Filtri catalogo">
@@ -501,10 +480,12 @@ export function DefinitiveArchive({
         <div className="ar4-mobile-bar__inner">
           <button
             type="button"
+            ref={filterTriggerRef}
             className="ar4-mobile-bar__trigger"
             onClick={() => setFilterSheetOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={filterSheetOpen}
+            aria-controls="ar4-filter-sheet"
             aria-label="Apri filtri catalogo"
           >
             <SlidersHorizontal size={16} aria-hidden="true" />
@@ -527,6 +508,35 @@ export function DefinitiveArchive({
           </label>
         </div>
       </section>
+
+      {hasActiveFilter ? (
+        <div className="ar4-applied" aria-label="Filtri attivi">
+          <p className="ar4-applied__label">Filtri attivi</p>
+          <div className="ar4-applied__chips">
+            {query.trim() ? (
+              <button type="button" className="ar4-applied__chip" onClick={() => setQuery("")}>
+                Ricerca: {query.trim()}
+                <X size={12} aria-hidden="true" />
+              </button>
+            ) : null}
+            {activeGroup !== "all" ? (
+              <button type="button" className="ar4-applied__chip" onClick={() => setActiveGroup("all")}>
+                {filterGroups.find((group) => group.key === activeGroup)?.label ?? activeGroup}
+                <X size={12} aria-hidden="true" />
+              </button>
+            ) : null}
+            {activeLevel !== "all" ? (
+              <button type="button" className="ar4-applied__chip" onClick={() => setActiveLevel("all")}>
+                {LEVEL_FILTERS.find((level) => level.key === activeLevel)?.label ?? activeLevel}
+                <X size={12} aria-hidden="true" />
+              </button>
+            ) : null}
+            <button type="button" className="ar4-applied__reset" onClick={resetAll}>
+              Reimposta
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       {/* ═══ 4. GRIGLIA — H2 dinamico + supporting + cards ═══ */}
       <section className="ar4-grid" aria-labelledby="ar4-grid-title">
@@ -661,7 +671,6 @@ export function DefinitiveArchive({
           activeGroup={activeGroup}
           activeLevel={activeLevel}
           query={query}
-          showAdvanced={showAdvancedSheetFilters}
           visibleCategoryGroups={visibleCategoryGroups}
           hiddenCategoryGroups={hiddenCategoryGroups}
           groupCounts={groupCounts}
@@ -670,9 +679,9 @@ export function DefinitiveArchive({
           onSetGroup={setActiveGroup}
           onSetLevel={setActiveLevel}
           onSetQuery={setQuery}
-          onToggleAdvanced={() => setShowAdvancedSheetFilters((v) => !v)}
-          onClose={() => setFilterSheetOpen(false)}
+          onClose={closeFilterSheet}
           onReset={resetAll}
+          returnFocusRef={filterTriggerRef}
         />
       ) : null}
 
@@ -691,7 +700,6 @@ type FilterSheetProps = {
   activeGroup: string;
   activeLevel: string;
   query: string;
-  showAdvanced: boolean;
   visibleCategoryGroups: ToolFilterGroup[];
   hiddenCategoryGroups: ToolFilterGroup[];
   groupCounts: Map<string, number>;
@@ -700,17 +708,26 @@ type FilterSheetProps = {
   onSetGroup: (g: string) => void;
   onSetLevel: (l: string) => void;
   onSetQuery: (q: string) => void;
-  onToggleAdvanced: () => void;
   onClose: () => void;
   onReset: () => void;
+  returnFocusRef: RefObject<HTMLButtonElement | null>;
 };
+
+type SheetGroupId = "categoria" | "obiettivi" | "livello";
+
+function getSheetFocusable(root: HTMLElement) {
+  return Array.from(
+    root.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((el) => el.getClientRects().length > 0);
+}
 
 function FilterSheet({
   levelFilters,
   activeGroup,
   activeLevel,
   query,
-  showAdvanced,
   visibleCategoryGroups,
   hiddenCategoryGroups,
   groupCounts,
@@ -719,30 +736,99 @@ function FilterSheet({
   onSetGroup,
   onSetLevel,
   onSetQuery,
-  onToggleAdvanced,
   onClose,
   onReset,
+  returnFocusRef,
 }: FilterSheetProps) {
   const isDirty = activeGroup !== "all" || activeLevel !== "all" || query.trim().length > 0;
+  const [openGroup, setOpenGroup] = useState<SheetGroupId>("categoria");
+  const [showAllSheetCategories, setShowAllSheetCategories] = useState(
+    () => hiddenCategoryGroups.some((g) => g.key === activeGroup),
+  );
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  function toggleGroup(id: SheetGroupId) {
+    setOpenGroup(id);
+  }
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const root = panel;
+
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const opener = returnFocusRef.current ?? previouslyFocused;
+    const closeButton = root.querySelector<HTMLElement>(".ar4-sheet__close");
+    const focusFrame = window.requestAnimationFrame(() => {
+      (closeButton ?? getSheetFocusable(root)[0] ?? root).focus();
+    });
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getSheetFocusable(root);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        root.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    function onFocusIn(event: FocusEvent) {
+      if (!root.contains(event.target as Node)) {
+        const next = getSheetFocusable(root)[0] ?? root;
+        next.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("focusin", onFocusIn);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("focusin", onFocusIn);
+      opener?.focus();
+    };
+  }, [onClose, returnFocusRef]);
+
   return (
     <div
+      id="ar4-filter-sheet"
       className="ar4-sheet"
       role="dialog"
       aria-modal="true"
       aria-labelledby="ar4-sheet-title"
+      aria-describedby="ar4-sheet-desc"
     >
-      <button
-        type="button"
+      <div
         className="ar4-sheet__backdrop"
         onClick={onClose}
-        aria-label="Chiudi i filtri"
+        aria-hidden="true"
       />
-      <div className="ar4-sheet__panel">
+      <div
+        ref={panelRef}
+        className="ar4-sheet__panel"
+        tabIndex={-1}
+      >
         <div className="ar4-sheet__head">
           <h3 id="ar4-sheet-title" className="ar4-sheet__title">
             Filtra il catalogo
           </h3>
-          <p className="ar4-sheet__desc">
+          <p id="ar4-sheet-desc" className="ar4-sheet__desc">
             Restringi i risultati senza perdere la selezione corrente.
           </p>
           <button
@@ -755,105 +841,175 @@ function FilterSheet({
           </button>
         </div>
 
-        <div className="ar4-sheet__search">
-          <Search size={16} aria-hidden="true" />
-          <input
-            type="search"
-            placeholder="Cerca per nome o categoria…"
-            value={query}
-            onChange={(e) => onSetQuery(e.target.value)}
-            autoComplete="off"
-            spellCheck={false}
-            aria-label="Cerca nel catalogo"
-          />
-          {query.trim().length > 0 ? (
+        <div className="ar4-sheet__groups">
+          <div className="ar4-sheet__group">
             <button
               type="button"
-              className="ar4-sheet__search-clear"
-              onClick={() => onSetQuery("")}
-              aria-label="Cancella il termine di ricerca"
+              className="ar4-sheet__group-toggle"
+              aria-expanded={openGroup === "categoria"}
+              aria-controls="ar4-sheet-group-categoria"
+              id="ar4-sheet-group-categoria-label"
+              onClick={() => toggleGroup("categoria")}
             >
-              <X size={14} aria-hidden="true" />
+              <span>Categoria</span>
+              {openGroup === "categoria" ? (
+                <ChevronUp size={16} aria-hidden="true" />
+              ) : (
+                <ChevronDown size={16} aria-hidden="true" />
+              )}
             </button>
-          ) : null}
-        </div>
-
-        <div className="ar4-sheet__section">
-          <p className="ar4-sheet__label">Categoria</p>
-          <div className="ar4-sheet__chips">
-            <button
-              type="button"
-              className={cn("ar4-chip", activeGroup === "all" && "is-active")}
-              onClick={() => onSetGroup("all")}
-              aria-pressed={activeGroup === "all"}
-            >
-              Tutti <em>{totalTools}</em>
-            </button>
-            {visibleCategoryGroups.map((g) => (
-              <button
-                key={g.key}
-                type="button"
-                className={cn("ar4-chip", activeGroup === g.key && "is-active")}
-                onClick={() => onSetGroup(g.key)}
-                aria-pressed={activeGroup === g.key}
+            {openGroup === "categoria" ? (
+              <div
+                id="ar4-sheet-group-categoria"
+                role="region"
+                aria-labelledby="ar4-sheet-group-categoria-label"
+                className="ar4-sheet__group-body"
               >
-                {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
-              </button>
-            ))}
+                <div className="ar4-sheet__chips" role="group" aria-label="Categorie del catalogo">
+                  <button
+                    type="button"
+                    className={cn("ar4-chip", activeGroup === "all" && "is-active")}
+                    onClick={() => onSetGroup("all")}
+                    aria-pressed={activeGroup === "all"}
+                  >
+                    Tutti <em>{totalTools}</em>
+                  </button>
+                  {visibleCategoryGroups.map((g) => (
+                    <button
+                      key={g.key}
+                      type="button"
+                      className={cn("ar4-chip", activeGroup === g.key && "is-active")}
+                      onClick={() => onSetGroup(g.key)}
+                      aria-pressed={activeGroup === g.key}
+                    >
+                      {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
+                    </button>
+                  ))}
+                  {showAllSheetCategories
+                    ? hiddenCategoryGroups.map((g) => (
+                        <button
+                          key={g.key}
+                          type="button"
+                          className={cn("ar4-chip", activeGroup === g.key && "is-active")}
+                          onClick={() => onSetGroup(g.key)}
+                          aria-pressed={activeGroup === g.key}
+                        >
+                          {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
+                        </button>
+                      ))
+                    : null}
+                </div>
+                {hiddenCategoryGroups.length > 0 ? (
+                  <button
+                    type="button"
+                    className="ar4-sheet__disclosure"
+                    onClick={() => setShowAllSheetCategories((v) => !v)}
+                    aria-expanded={showAllSheetCategories}
+                  >
+                    {showAllSheetCategories ? (
+                      <ChevronUp size={14} aria-hidden="true" />
+                    ) : (
+                      <ChevronDown size={14} aria-hidden="true" />
+                    )}
+                    <span>
+                      {showAllSheetCategories
+                        ? "Mostra meno categorie"
+                        : "Mostra tutte le categorie"}
+                    </span>
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
           </div>
 
-          {hiddenCategoryGroups.length > 0 ? (
+          <div className="ar4-sheet__group">
             <button
               type="button"
-              className="ar4-sheet__disclosure"
-              onClick={onToggleAdvanced}
-              aria-expanded={showAdvanced}
+              className="ar4-sheet__group-toggle"
+              aria-expanded={openGroup === "obiettivi"}
+              aria-controls="ar4-sheet-group-obiettivi"
+              id="ar4-sheet-group-obiettivi-label"
+              onClick={() => toggleGroup("obiettivi")}
             >
-              {showAdvanced ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
-              <span>{showAdvanced ? "Nascondi i filtri" : "Altri filtri"}</span>
+              <span>Obiettivi</span>
+              {openGroup === "obiettivi" ? (
+                <ChevronUp size={16} aria-hidden="true" />
+              ) : (
+                <ChevronDown size={16} aria-hidden="true" />
+              )}
             </button>
-          ) : null}
+            {openGroup === "obiettivi" ? (
+              <div
+                id="ar4-sheet-group-obiettivi"
+                role="region"
+                aria-labelledby="ar4-sheet-group-obiettivi-label"
+                className="ar4-sheet__group-body"
+              >
+                <div className="ar4-sheet__chips" role="group" aria-label="Obiettivi">
+                  {DISCOVERY_INTENTS.map((intent) => {
+                    const pressed = intent.group
+                      ? activeGroup === intent.group
+                      : Boolean(intent.query && query === intent.query);
+                    return (
+                      <button
+                        key={intent.id}
+                        type="button"
+                        className={cn("ar4-chip", pressed && "is-active")}
+                        aria-pressed={pressed}
+                        onClick={() => applyDiscoveryIntent(intent, onSetGroup, onSetQuery)}
+                      >
+                        {intent.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="ar4-sheet__group">
+            <button
+              type="button"
+              className="ar4-sheet__group-toggle"
+              aria-expanded={openGroup === "livello"}
+              aria-controls="ar4-sheet-group-livello"
+              id="ar4-sheet-group-livello-label"
+              onClick={() => toggleGroup("livello")}
+            >
+              <span>Livello</span>
+              {openGroup === "livello" ? (
+                <ChevronUp size={16} aria-hidden="true" />
+              ) : (
+                <ChevronDown size={16} aria-hidden="true" />
+              )}
+            </button>
+            {openGroup === "livello" ? (
+              <div
+                id="ar4-sheet-group-livello"
+                role="region"
+                aria-labelledby="ar4-sheet-group-livello-label"
+                className="ar4-sheet__group-body"
+              >
+                <div className="ar4-sheet__chips" role="group" aria-label="Livello">
+                  {levelFilters.map((l) => (
+                    <button
+                      key={l.key}
+                      type="button"
+                      className={cn(
+                        "ar4-chip ar4-chip--level",
+                        activeLevel === l.key && "is-active",
+                      )}
+                      onClick={() => onSetLevel(l.key)}
+                      aria-pressed={activeLevel === l.key}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
-
-        {showAdvanced && hiddenCategoryGroups.length > 0 ? (
-          <div className="ar4-sheet__section">
-            <p className="ar4-sheet__label">Altre categorie</p>
-            <div className="ar4-sheet__chips">
-              {hiddenCategoryGroups.map((g) => (
-                <button
-                  key={g.key}
-                  type="button"
-                  className={cn("ar4-chip", activeGroup === g.key && "is-active")}
-                  onClick={() => onSetGroup(g.key)}
-                  aria-pressed={activeGroup === g.key}
-                >
-                  {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        {showAdvanced ? (
-          <div className="ar4-sheet__section">
-            <p className="ar4-sheet__label">Livello</p>
-            <div className="ar4-sheet__chips">
-              {levelFilters.map((l) => (
-                <button
-                  key={l.key}
-                  type="button"
-                  className={cn(
-                    "ar4-chip ar4-chip--level",
-                    activeLevel === l.key && "is-active",
-                  )}
-                  onClick={() => onSetLevel(l.key)}
-                >
-                  {l.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : null}
 
         <div className="ar4-sheet__foot">
           <button

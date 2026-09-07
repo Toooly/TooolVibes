@@ -12,6 +12,7 @@ import {
 } from "@/components/secondary";
 import { DecisionTrack } from "@/components/method/decision-track";
 import { RouteMarker } from "@/components/ui/route-marker";
+import { formatDecisionLifecycle } from "@/lib/product/decision-lifecycle";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
@@ -109,29 +110,21 @@ export default function MetodoPage() {
         title="Una scelta è un percorso, non una lista."
         lede="TooolVibes non è un elenco: è un metodo. Scopri, valuta, confronta, decidi, ricorda. Salvare un candidato non è decidere."
         actions={
-          <>
-            <Link
-              href="/archivio"
-              className="secondary-card__cta"
-              aria-label="Apri il catalogo e inizia la prima tappa"
-            >
-              <span>Inizia dal catalogo</span>
-              <ArrowRight aria-hidden="true" className="size-4" />
-            </Link>
-            <Link
-              href="/radar"
-              className="secondary-card__cta secondary-card__cta--ghost"
-            >
-              <span>Vedi i segnali Radar</span>
-            </Link>
-          </>
+          <Link
+            href="/archivio"
+            className="secondary-card__cta"
+            aria-label="Apri il catalogo e inizia la prima tappa"
+          >
+            <span>Inizia dal catalogo</span>
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Link>
         }
         signature={
           <>
             <span className="secondary-hero__signature-eyebrow">
               <RouteMarker
                 index="·"
-                label="Sistema a tre tappe"
+                label="Sistema a cinque tappe"
                 status="Editoriale"
                 density="minimal"
               />
@@ -147,9 +140,15 @@ export default function MetodoPage() {
               <strong style={{ color: "var(--tv-ink-primary)" }}>
                 Scopri
               </strong>{" "}
-              restringe, <strong style={{ color: "var(--tv-ink-primary)" }}>Confronta</strong>{" "}
-              isola, <strong style={{ color: "var(--tv-ink-primary)" }}>Salva</strong>{" "}
-              chiude. Nessun passaggio è facoltativo e ognuno ha un tool dedicato.
+              restringe,{" "}
+              <strong style={{ color: "var(--tv-ink-primary)" }}>Valuta</strong>{" "}
+              legge i limiti,{" "}
+              <strong style={{ color: "var(--tv-ink-primary)" }}>Confronta</strong>{" "}
+              isola,{" "}
+              <strong style={{ color: "var(--tv-ink-primary)" }}>Decidi</strong>{" "}
+              sceglie,{" "}
+              <strong style={{ color: "var(--tv-ink-primary)" }}>Ricorda</strong>{" "}
+              tiene il motivo.
             </p>
           </>
         }
@@ -157,8 +156,8 @@ export default function MetodoPage() {
 
       <SecondarySection
         eyebrow="Percorso"
-        title="Scopri · Confronta · Salva"
-        lede="Le tre tappe del percorso editoriale. Ogni tappa ha una destinazione reale su TooolVibes: non una descrizione, uno strumento."
+        title={formatDecisionLifecycle()}
+        lede="Ogni tappa ha una destinazione reale su TooolVibes: non una descrizione, uno strumento."
       >
         <DecisionTrack steps={TRACK_STEPS} />
       </SecondarySection>
@@ -186,7 +185,7 @@ export default function MetodoPage() {
       <SecondaryClosingCTA
         tone="dark"
         title="La cosa migliore da fare, adesso."
-        body="Apri uno dei tre strumenti: ognuno ha un compito preciso. Salva i tool che reggono il primo giro di confronto, poi restringi fino a sceglierne uno."
+        body="Parti dal catalogo per restringere i candidati. I Salvati tengono quelli che stai considerando, con il motivo."
         actions={
           <>
             <Link href="/archivio" className="secondary-card__cta">

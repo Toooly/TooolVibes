@@ -263,9 +263,14 @@ describe("footer /sponsorizza link", () => {
     );
 
     const sponsorLinks = screen
-      .getAllByRole("link")
+      .getAllByRole("link", { hidden: true })
       .filter((link) => link.getAttribute("href") === "/sponsorizza");
     expect(sponsorLinks).toHaveLength(1);
+
+    const companyGroup = screen.getByRole("heading", { name: "TooolVibes" }).closest("details");
+    if (companyGroup instanceof HTMLDetailsElement) {
+      companyGroup.open = true;
+    }
 
     fireEvent.click(sponsorLinks[0]);
 

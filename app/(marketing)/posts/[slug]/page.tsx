@@ -223,11 +223,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
         <GuideArticleHero
           post={post}
-          tool={tool}
-          toolHref={toolHrefForArticle}
           readingMinutes={readingMinutes}
           topicLabel={topicLabel}
-          relatedPosts={relatedGuides}
         />
 
         <div className="guides-article__layout">
@@ -314,11 +311,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               data-guide-partner-rail-host
             />
             <GuideRelatedRail
-              post={post}
               tool={tool}
               toolHref={toolHrefForArticle}
-              relatedPosts={relatedGuides}
-              topicLabel={topicLabel}
             />
           </div>
         </div>

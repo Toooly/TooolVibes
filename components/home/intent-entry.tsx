@@ -1,11 +1,16 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Search } from "lucide-react";
 
 import { DISCOVERY_INTENTS } from "@/lib/product/discovery-intents";
 
+const PRIMARY_INTENT_COUNT = 3;
+
 export function IntentEntry() {
+  const [moreOpen, setMoreOpen] = useState(false);
+  const extraIntents = DISCOVERY_INTENTS.length > PRIMARY_INTENT_COUNT;
+
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     const data = new FormData(event.currentTarget);
     const query = String(data.get("q") ?? "").trim();
@@ -43,11 +48,23 @@ export function IntentEntry() {
         </div>
       </form>
       <ul className="def-intent__chips" aria-label="Obiettivi del catalogo">
-        {DISCOVERY_INTENTS.map((intent) => (
-          <li key={intent.id}>
+        {DISCOVERY_INTENTS.map((intent, index) => (
+          <li key={intent.id} hidden={index >= PRIMARY_INTENT_COUNT && !moreOpen}>
             <a href={intent.href}>{intent.label}</a>
           </li>
         ))}
+        {extraIntents ? (
+          <li>
+            <button
+              type="button"
+              className="def-intent__more"
+              aria-expanded={moreOpen}
+              onClick={() => setMoreOpen((open) => !open)}
+            >
+              Altri obiettivi
+            </button>
+          </li>
+        ) : null}
       </ul>
     </div>
   );

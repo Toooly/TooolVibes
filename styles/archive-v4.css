@@ -1661,6 +1661,57 @@
   gap: 10px;
 }
 
+.ar4-sheet__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ar4-sheet__group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--tv-border-subtle);
+  padding-top: 8px;
+}
+
+.ar4-sheet__group:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ar4-sheet__group-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tv-ink-muted-aa);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ar4-sheet__group-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--tv-focus-ring, var(--tv-accent-primary));
+  border-radius: 8px;
+}
+
+.ar4-sheet__group-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .ar4-sheet__label {
   font-family: var(--tv-font-family-ui);
   font-size: 12px;
@@ -2077,32 +2128,18 @@ a.archive-v4-card:focus-visible {
 }
 
 @media (max-width: 767px) {
-  .ar4-categories {
-    padding: var(--tv-space-component-md) 0;
-    border-bottom: 0;
-  }
-  .ar4-categories__eyebrow,
-  .ar4-categories__title,
-  .ar4-categories__body {
+  .ar4-categories,
+  .ar4-goals {
     display: none;
   }
-  .ar4-categories__inner {
-    gap: var(--tv-space-micro-sm);
-  }
-  .ar4-categories__chips,
-  .ar4-goals__chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-  .ar4-categories__chips::-webkit-scrollbar,
-  .ar4-goals__chips::-webkit-scrollbar { display: none; }
-  .ar4-goals {
-    padding: 0 var(--tv-gutter-mobile) var(--tv-space-component-sm);
-  }
   .ar4-intro__lede {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 819px) {
+  .ar4-categories,
+  .ar4-goals {
     display: none;
   }
 }
@@ -2383,90 +2420,31 @@ a.archive-v4-card:focus-visible {
   color: var(--tv-ink-primary);
   border-top: 1px solid var(--tv-border-subtle);
   border-bottom: 1px solid var(--tv-border-subtle);
-  padding-block: clamp(var(--tv-space-10), 4vw, var(--tv-space-16));
+  padding-block: clamp(var(--tv-space-4), 2vw, var(--tv-space-6));
 }
 
 .archive-method-band__inner {
   width: min(calc(100% - 2rem), var(--tv-container-uw));
   margin-inline: auto;
   display: flex;
-  flex-direction: column;
-  gap: var(--tv-space-5);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-space-3) var(--tv-space-5);
 }
 
-.archive-method-band__eyebrow {
-  margin: 0;
-  font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-eyebrow);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--tv-accent-cyan-on-ivory);
-}
-
-.archive-method-band__title {
-  margin: 0;
-  font-family: var(--tv-font-family-ui);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--tv-ink-primary);
-  max-width: 38ch;
-  text-wrap: balance;
-}
-
-.archive-method-band__items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--tv-space-5);
-}
-
-@media (max-width: 899px) {
-  .archive-method-band__items {
-    grid-template-columns: 1fr;
-    gap: var(--tv-space-4);
-  }
-}
-
-.archive-method-band__item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tv-space-2);
-  padding: var(--tv-space-4);
-  background: var(--tv-surface-elevated);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-card);
-  transition: border-color var(--tv-duration-base) var(--tv-easing-standard);
-}
-
-.archive-method-band__item:hover {
-  border-color: var(--tv-border-interactive);
-}
-
-.archive-method-band__item-title {
-  margin: 0;
-  font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-subtitle);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--tv-ink-primary);
-}
-
-.archive-method-band__item-body {
+.archive-method-band__note {
   margin: 0;
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-body-sm);
-  line-height: 1.55;
+  font-weight: 500;
+  line-height: 1.45;
   color: var(--tv-ink-secondary);
+  max-width: 52ch;
 }
 
 .archive-method-band__link {
-  align-self: flex-start;
+  align-self: center;
   display: inline-flex;
   align-items: center;
   gap: 6px;

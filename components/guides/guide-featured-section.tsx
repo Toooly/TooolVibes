@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import type { EditorialPostRecord } from "@/lib/types/article";
 
 import { GuideCard } from "@/components/guides/guide-card";
@@ -51,20 +49,6 @@ export function GuideFeaturedSection({
         toolHref={toolHref ?? null}
         readMinutes={readingMinutes}
       />
-
-      <div className="guides-section__foot">
-        <Link
-          href={`/posts/${post.slug}`}
-          className="guides-section__foot-link"
-        >
-          Apri la guida completa
-          <span aria-hidden>→</span>
-        </Link>
-        <Link href="#guides-all" className="guides-section__foot-link">
-          Vedi tutte le guide
-          <span aria-hidden>↓</span>
-        </Link>
-      </div>
     </section>
   );
 }

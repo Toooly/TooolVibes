@@ -2,11 +2,11 @@
  *
  * Rebuilt for stronger composition density and intentional visual hierarchy.
  *
- * Three primary surfaces:
- *   1. def-cockpit       — dark command center, hero + shared Radar frame
- *   2. def-editorial     — warm ivory decision desk
- *                          v4: ONE large surface, true podium with 3 distinct towers
- *   3. def-method        — quiet dark stepper
+ * Four primary surfaces:
+ *   1. def-cockpit       — single-column intent hero
+ *   2. def-start         — tool / stack / radar
+ *   3. def-method        — 5-step decision journey
+ *   4. partner           — existing sponsor
  *
  * Responsive bands (custom, NOT Tailwind defaults):
  *   xs  < 430    compact mobile
@@ -49,41 +49,30 @@
 .def-cockpit__inner {
   position: relative;
   z-index: 1;
-  max-width: 1560px;
+  max-width: 46rem;
   margin: 0 auto;
-  padding: clamp(36px, 3.4vw, 56px) clamp(20px, 2.6vw, 40px);
+  padding: clamp(36px, 3.4vw, 56px) clamp(20px, 2.6vw, 40px) clamp(28px, 3vw, 48px);
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(25rem, 2fr);
-  gap: clamp(20px, 2.4vw, 48px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--tv-space-component-md);
   align-items: start;
-  min-height: 520px;
+  min-height: 0;
 }
 
-/* Tablet 900-1179: stack both instruments on the same content grid. */
 @media (max-width: 1179px) and (min-width: 900px) {
   .def-cockpit__inner {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    min-height: 0;
     padding-block: 32px;
   }
 }
 
-/* Tablet 768-899: stacked with radar immediately following */
 @media (max-width: 899px) and (min-width: 768px) {
   .def-cockpit__inner {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    min-height: 460px;
+    min-height: 0;
   }
 }
 
-/* 430-767: spacious mobile, 1 column, radar below */
 @media (max-width: 767px) {
   .def-cockpit__inner {
-    grid-template-columns: 1fr;
-    gap: var(--tv-space-layout-md);
-    min-height: 0;
     padding: var(--tv-space-layout-lg) var(--tv-gutter-mobile) var(--tv-space-section-sm);
   }
 }
@@ -746,7 +735,7 @@
 }
 .def-editorial__exploratory-card {
   display: grid;
-  grid-template-rows: auto auto auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr;
   gap: 8px;
   padding: 16px 14px 14px;
   border: 1px solid var(--tv-border-inverted);
@@ -841,11 +830,8 @@
 
 @media (max-width: 767px) {
   .def-editorial__exploratory-stage .def-editorial__exploratory-card {
-    height: auto;
-    min-height: 200px;
-  }
-  .def-editorial__exploratory-stage .def-editorial__exploratory-pill {
-    margin-top: 0;
+    height: 100%;
+    min-height: 14rem;
   }
 }
 
@@ -1002,24 +988,22 @@
 
 @media (max-width: 767px) {
   .def-editorial__pod-stage {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 12px;
     min-height: 0;
-    padding: 0 0 20px;
+    padding: 0 4px 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 4px;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .def-editorial__pod-stage::after {
-    left: -4px;
-    right: -4px;
-    height: 3px;
-    bottom: 8px;
-  }
-
+  .def-editorial__pod-stage::after,
   .def-editorial__pod-stage::before {
-    left: -4px;
-    right: -4px;
-    bottom: 5px;
-    height: 10px;
+    display: none;
   }
 }
 
@@ -1057,24 +1041,16 @@
 }
 
 @media (max-width: 767px) {
-  .def-editorial__pod-cell--first {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    align-self: auto;
-  }
-
-  .def-editorial__pod-cell--second {
-    grid-column: 1;
-    grid-row: 2;
-    align-self: auto;
-    padding-bottom: 0;
-  }
-
+  .def-editorial__pod-cell,
+  .def-editorial__pod-cell--first,
+  .def-editorial__pod-cell--second,
   .def-editorial__pod-cell--third {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: auto;
+    flex: 0 0 min(78%, 16.5rem);
+    grid-column: auto;
+    grid-row: auto;
+    align-self: stretch;
     padding-bottom: 0;
+    scroll-snap-align: start;
   }
 }
 
@@ -1153,11 +1129,10 @@
 }
 
 @media (max-width: 767px) {
-  .def-editorial__pod-card--rank-1 { min-height: 176px; }
-
+  .def-editorial__pod-card--rank-1,
   .def-editorial__pod-card--rank-2,
   .def-editorial__pod-card--rank-3 {
-    min-height: 156px;
+    min-height: 16rem;
   }
 }
 
@@ -1395,10 +1370,15 @@
 
 .def-method__head {
   max-width: 1280px;
-  margin: 0 auto 28px;
+  margin: 0 auto 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.def-method .def-cockpit__journey {
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .def-method__eyebrow {
@@ -1846,7 +1826,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: clamp(0px, 18vw, 22rem);
+  min-height: 0;
 }
 .def-cockpit__radar {
   align-self: stretch;
@@ -1858,8 +1838,8 @@
 }
 @media (min-width: 1180px) {
   .def-cockpit__inner {
-    grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 0.88fr);
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 46rem;
   }
 }
 @media (max-width: 767px) {
@@ -2070,8 +2050,10 @@
   }
 }
 .def-cockpit, .def-cockpit__inner, .def-cockpit__hero, .tv-home-radar--snapshot {
-  max-width: 100%;
   min-width: 0;
+}
+.def-cockpit, .def-cockpit__hero, .tv-home-radar--snapshot {
+  max-width: 100%;
 }
 .def-cockpit__journey ol {
   max-width: 100%;
@@ -2180,6 +2162,12 @@
   margin: 0 auto;
 }
 .def-stacks__head { display: grid; gap: 8px; margin-bottom: 20px; }
+.def-stacks__lede {
+  margin: 0 0 16px;
+  color: var(--tv-ink-secondary, rgba(255,255,255,0.72));
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
 .def-stacks__eyebrow {
   margin: 0;
   font-size: 12px;
@@ -2187,7 +2175,7 @@
   text-transform: uppercase;
   color: var(--tv-ink-muted);
 }
-.def-stacks__head h2, .def-stacks__lede { margin: 0; }
+.def-stacks__head h2 { margin: 0; }
 .def-stacks__grid {
   display: grid;
   gap: 12px;
@@ -2230,4 +2218,118 @@
   align-items: center;
   gap: 6px;
   margin-top: 16px;
+}
+
+.def-intent__more {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px dashed rgba(255,255,255,0.22);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--tv-text-label);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+.def-intent__more[aria-expanded="true"] {
+  border-style: solid;
+  border-color: rgba(255,255,255,0.28);
+}
+.def-intent__more:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: 2px;
+}
+
+.def-start {
+  display: flex;
+  flex-direction: column;
+  background: var(--tv-bg-base);
+}
+.def-start__head {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--tv-space-section-sm) var(--tv-gutter-mobile) 16px;
+}
+.def-start__title {
+  font-family: var(--tv-font-family-ui);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--tv-ink-primary);
+  margin: 0;
+  max-width: 20ch;
+}
+.def-start__tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.def-start__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: transparent;
+  color: inherit;
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.def-start__tab:hover {
+  border-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+.def-start__tab:focus-visible {
+  outline: 2px solid var(--tv-focus-ring);
+  outline-offset: 2px;
+}
+.def-start__tab.is-active,
+.def-start__tab[aria-selected="true"] {
+  border-color: var(--tv-accent-brand);
+  background: var(--tv-surface-selected);
+  color: var(--tv-ink-primary);
+}
+.def-start__panel {
+  width: 100%;
+}
+.def-start__panel[hidden] {
+  display: none;
+}
+.def-start__radar {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--tv-gutter-mobile) var(--tv-space-section-sm);
+}
+.def-start__radar .tv-home-radar--snapshot {
+  height: auto;
+}
+
+.def-method__lede a {
+  color: inherit;
+  text-underline-offset: 0.12em;
+}
+
+.def-intent__chips > [hidden] {
+  display: none;
+}
+.def-start .def-editorial {
+  padding-top: clamp(24px, 3vw, 40px);
+}
+.def-start .def-stacks {
+  padding-top: 4px;
 }

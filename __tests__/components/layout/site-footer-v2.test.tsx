@@ -18,16 +18,38 @@ afterEach(() => {
   cleanup();
 });
 
-describe("B29 SiteFooterV2 — registry canonico", () => {
-  function getColumnLinks(heading: string) {
-    const title = screen.getByRole("heading", { name: heading });
-    const column = title.parentElement;
-    if (!column) {
-      throw new Error(`colonna ${heading} non trovata`);
-    }
-    return within(column).getAllByRole("link");
-  }
+function stubMatchMedia(matchesDesktop: boolean) {
+  window.matchMedia = ((query: string) => {
+    const matches = query.includes("min-width: 48rem") ? matchesDesktop : false;
+    return {
+      matches,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    };
+  }) as typeof window.matchMedia;
+}
 
+function getNavGroup(heading: string) {
+  const title = screen.getByRole("heading", { name: heading });
+  const group = title.closest("details");
+  if (!(group instanceof HTMLDetailsElement)) {
+    throw new Error(`gruppo ${heading} non trovato`);
+  }
+  return group;
+}
+
+function getColumnLinks(heading: string) {
+  const group = getNavGroup(heading);
+  group.open = true;
+  return within(group).getAllByRole("link");
+}
+
+describe("B29 SiteFooterV2 — registry canonico", () => {
   it("renders product, company and legal links from the canonical registry", () => {
     render(
       <AdvertisingConsentProvider>
@@ -95,7 +117,7 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
     );
 
     const sponsorLinks = screen
-      .getAllByRole("link")
+      .getAllByRole("link", { hidden: true })
       .filter((link) => link.getAttribute("href") === "/sponsorizza");
     expect(sponsorLinks).toHaveLength(1);
 
@@ -142,5 +164,44 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
     expect(legalHrefs).toContain("/termini");
     expect(legalHrefs).toContain("/cookie");
     expect(legalHrefs).not.toContain("/privacy");
+  });
+});
+
+describe("SiteFooterV2 — mobile disclosure", () => {
+  it("collapses Prodotto and TooolVibes on small screens without hiding legal or contact", () => {
+    stubMatchMedia(false);
+
+    render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
+
+    expect(getNavGroup("Prodotto").open).toBe(false);
+    expect(getNavGroup("TooolVibes").open).toBe(false);
+
+    expect(screen.getByRole("link", { name: "TOOOLVIBES" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Parliamone" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Scrivici/ })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Privacy" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Termini" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Cookie" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Gestisci preferenze" })).toBeTruthy();
+    expect(screen.getByText(/link affiliati/i)).toBeTruthy();
+  });
+
+  it("keeps Prodotto and TooolVibes open at the desktop breakpoint", () => {
+    stubMatchMedia(true);
+
+    render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
+
+    expect(getNavGroup("Prodotto").open).toBe(true);
+    expect(getNavGroup("TooolVibes").open).toBe(true);
+    expect(getColumnLinks("Prodotto")).toHaveLength(8);
+    expect(getColumnLinks("TooolVibes")).toHaveLength(5);
   });
 });

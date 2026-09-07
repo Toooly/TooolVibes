@@ -1,43 +1,43 @@
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-import { computeEditorialScore } from "@/lib/data/editorial-score";
-import { skillLevelLabel } from "@/lib/product/skill-level";
+import {
+  extractMarkdownTradeOff,
+  extractMarkdownVerdict,
+  firstListItemOrSentence,
+  parsePublicToolMarkdown,
+} from "@/lib/content/tool-markdown-public";
 
 type ToolDetailDecisionBriefProps = {
   tool: ToolPublicView;
 };
 
 export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) {
-  const score = computeEditorialScore({
-    publicTool: tool.publicTool,
-    cautions: tool.cautions,
-  });
-  const bestFor =
+  const markdown = parsePublicToolMarkdown(tool.extendedContent);
+  const fit =
     tool.idealUseCase?.trim() ||
-    tool.publicTool.content.bestFor ||
+    firstListItemOrSentence(markdown.byId.fit) ||
     tool.useCases[0] ||
     null;
-  const notFor = tool.cautions[0] ?? null;
-  const tradeOff =
-    tool.highlights.find((item) => item && item !== bestFor) ??
-    tool.whyItMatters ??
+  const notFit =
+    tool.cautions[0] ??
+    firstListItemOrSentence(markdown.byId.notFit) ??
     null;
-  const skill = skillLevelLabel(tool.level, tool.levelLabel);
-  const pricing = tool.publicTool.attributes.pricing;
-  const assessed = score.status === "assessed" && score.value !== null;
+  const tradeOff =
+    tool.highlights.find((item) => item && item !== fit) ??
+    (tool.whyItMatters && tool.whyItMatters !== fit ? tool.whyItMatters : null) ??
+    extractMarkdownTradeOff(markdown.byId.verdict) ??
+    firstListItemOrSentence(markdown.byId.strengths) ??
+    null;
+  const verdict =
+    tool.editorialNote?.trim() ||
+    tool.editorialReview?.trim() ||
+    extractMarkdownVerdict(markdown.byId.verdict) ||
+    null;
+
   const rows = [
-    bestFor ? { dt: "Ideale per", dd: bestFor } : null,
-    notFor ? { dt: "Meno adatto se", dd: notFor } : null,
-    tradeOff ? { dt: "Cosa lo distingue", dd: tradeOff } : null,
-    pricing ? { dt: "Prezzo", dd: pricing } : null,
-    skill ? { dt: "Livello", dd: skill } : null,
-    assessed
-      ? {
-          dt: "Valutazione editoriale",
-          dd: `${score.value!.toFixed(1)} / 10${
-            score.lastVerified ? ` · aggiornata ${score.lastVerified.slice(0, 10)}` : ""
-          }`,
-        }
-      : null,
+    fit ? { dt: "Fa per te se", dd: fit } : null,
+    notFit ? { dt: "Non fa per te se", dd: notFit } : null,
+    tradeOff ? { dt: "Trade-off principale", dd: tradeOff } : null,
+    verdict ? { dt: "Verdetto editoriale", dd: verdict } : null,
   ].filter((row): row is { dt: string; dd: string } => row !== null);
 
   if (rows.length === 0) return null;

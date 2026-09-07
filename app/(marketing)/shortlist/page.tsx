@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
 import { ShortlistRouteGate } from "@/components/tools/shortlist-route-gate";
 import { releaseFeatures } from "@/lib/config/release-features";
-import { getPublishedTools } from "@/lib/data/public-tools";
+import { getPublishedTools, getPublicToolFilterGroups } from "@/lib/data/public-tools";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "./shortlist.css";
 
@@ -14,11 +14,17 @@ export const metadata: Metadata = createPublicPageMetadata({
 });
 
 export default async function ShortlistPage() {
+  const [tools, filterGroups] = await Promise.all([
+    getPublishedTools(),
+    getPublicToolFilterGroups(),
+  ]);
+
   return (
     <ShortlistRouteGate>
       <div className="shortlist-final-surface">
         <MobileShortlistBoard
-          tools={await getPublishedTools()}
+          tools={tools}
+          categoryCount={filterGroups.filter((group) => group.key !== "all").length}
           decisionMemoryEnabled={releaseFeatures.decisionMemoryBoard.enabled}
         />
       </div>

@@ -156,8 +156,8 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1.5rem, 2.8vw, 2.5rem);
-  padding: clamp(1.5rem, 3vw, 2.4rem);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1.25rem, 2.4vw, 2rem);
   border-radius: var(--guides-radius-xl);
   background:
     radial-gradient(ellipse 80% 60% at 0% 0%, rgba(106, 60, 255, 0.16), transparent 60%),
@@ -299,11 +299,7 @@
 }
 
 .guides-masthead__hud {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  align-content: start;
-  min-width: 0;
+  display: none;
 }
 
 .guides-hud-card {
@@ -392,11 +388,6 @@
 }
 
 @media (min-width: 56rem) {
-  .guides-masthead {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    align-items: end;
-  }
-
   .guides-masthead__cta a {
     padding: 0.85rem 1.25rem;
     font-size: 0.94rem;
@@ -1015,8 +1006,8 @@
 .guides-article__hero {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1.5rem, 3vw, 2.5rem);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1.25rem, 2.4vw, 2rem);
   border-radius: var(--guides-radius-xl);
   background:
     radial-gradient(ellipse 80% 60% at 0% 0%, rgba(106, 60, 255, 0.18), transparent 60%),
@@ -1093,12 +1084,7 @@
 }
 
 .guides-article__hero-points {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  display: none;
 }
 
 .guides-article__hero-points li {
@@ -1120,10 +1106,7 @@
 }
 
 .guides-article__hero-side {
-  display: grid;
-  gap: 1rem;
-  align-content: start;
-  min-width: 0;
+  display: none;
 }
 
 .guides-article__hero-stat {
@@ -1158,7 +1141,7 @@
 
 @media (min-width: 64rem) {
   .guides-article__hero {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr);
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1853,6 +1836,31 @@
   .guides-article__end-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+.guides-next-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.7rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.guides-next-steps a {
+  color: var(--guides-text-on-dark);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+}
+
+.guides-next-steps a:hover,
+.guides-next-steps a:focus-visible {
+  border-bottom-color: var(--guides-text-on-dark);
+  outline: none;
+}
+
+.guides-next-steps span[aria-hidden] {
+  color: var(--guides-text-on-dark-muted);
 }
 
 .guides-section__end-grid {

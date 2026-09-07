@@ -157,7 +157,7 @@ afterEach(() => {
 describe("MobileShortlistBoard — B32 editable decision memory", () => {
   it("keeps a page-level heading and named region in the empty state", () => {
     seedWorkspace(createEmptyWorkspaceState());
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
 
     expect(
       screen.getByRole("heading", {
@@ -172,10 +172,13 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     ).toBeTruthy();
     expect(screen.getByRole("link", { name: /Esplora catalogo/i })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Parti da uno stack/i })).toBeTruthy();
+    expect(
+      screen.getByText("3 tool in 4 categorie da restringere."),
+    ).toBeTruthy();
   });
 
   it("renders only saved tools and opens the decision sheet from a book", () => {
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
 
     expect(screen.getAllByText("Alpha").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Beta").length).toBeGreaterThan(0);
@@ -211,7 +214,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     });
     seedWorkspace(state);
 
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
 
     expect(
       screen
@@ -221,7 +224,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
   });
 
   it("edits and saves a note, persists it and re-opens it after a reload", () => {
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
 
     const textarea = screen.getByRole("textbox", {
@@ -239,7 +242,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
 
     // Reload: a fresh board re-opens the saved note from durable storage.
     cleanup();
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
     expect(
       (
@@ -259,7 +262,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
         at: T0,
       }),
     );
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
 
     const textarea = screen.getByRole("textbox", {
@@ -274,7 +277,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
   });
 
   it("caps long notes at 2000 chars and rejects longer drafts safely", () => {
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
 
     const textarea = screen.getByRole("textbox", {
@@ -292,7 +295,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
   });
 
   it("changes the stage from the sheet and persists it", () => {
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
 
     fireEvent.click(screen.getByRole("button", { name: "Candidato" }));
@@ -302,7 +305,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
   });
 
   it("records a decision outcome and reopens it", () => {
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
 
     fireEvent.click(screen.getByRole("button", { name: "Decidi" }));
@@ -329,7 +332,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
   });
 
   it("toggles save reason and pin from the sheet", () => {
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
 
     fireEvent.click(screen.getByRole("button", { name: "Da confrontare" }));
@@ -347,7 +350,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
   });
 
   it("closes the sheet with Escape (keyboard)", () => {
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
 
     fireEvent.keyDown(document, { key: "Escape" });
@@ -365,7 +368,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
       }),
     );
     render(
-      <MobileShortlistBoard tools={TOOLS} decisionMemoryEnabled={false} />,
+      <MobileShortlistBoard tools={TOOLS} categoryCount={4} decisionMemoryEnabled={false} />,
     );
     openSheetFor("Alpha");
 
@@ -390,7 +393,7 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
         at: "2026-07-18T09:00:00.000Z",
       }),
     );
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
 
     const section = screen.getByRole("region", {
       name: "Decisioni registrate",
@@ -434,7 +437,7 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
       at: "2026-07-18T10:00:00.000Z",
     });
     seedWorkspace(state);
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
 
     const section = screen.getByRole("region", {
       name: "Decisioni registrate",
@@ -462,7 +465,7 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
         at: "2026-07-18T09:00:00.000Z",
       }),
     );
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
 
     const section = screen.getByRole("region", {
       name: "Decisioni registrate",
@@ -492,7 +495,7 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
       }),
     );
     render(
-      <MobileShortlistBoard tools={TOOLS} decisionMemoryEnabled={false} />,
+      <MobileShortlistBoard tools={TOOLS} categoryCount={4} decisionMemoryEnabled={false} />,
     );
 
     expect(
@@ -509,7 +512,7 @@ describe("MobileShortlistBoard — B35 decision view (FLOW-604)", () => {
         at: "2026-07-18T09:00:00.000Z",
       }),
     );
-    render(<MobileShortlistBoard tools={TOOLS} />);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
 
     const section = screen.getByRole("region", {
       name: "Decisioni registrate",

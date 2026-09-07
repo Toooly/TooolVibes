@@ -21,9 +21,9 @@ export function DecisionJourney() {
       : compareCount >= 2
         ? "decidi"
         : compareCount === 1
-          ? "valuta"
+          ? "confronta"
           : savedCount > 0
-            ? "ricorda"
+            ? "valuta"
             : "scopri";
 
   const activeIndex = DECISION_LIFECYCLE.indexOf(activeId);

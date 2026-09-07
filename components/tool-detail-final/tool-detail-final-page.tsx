@@ -11,35 +11,25 @@ import {
 } from "@/lib/seo/metadata";
 
 import { ToolDetailHero } from "./tool-detail-hero";
-import { ToolDetailScore } from "./tool-detail-score";
-import { ToolDetailEditorial } from "./tool-detail-editorial";
+import { ToolDetailDecisionBrief } from "./tool-detail-decision-brief";
 import { ToolDetailExtendedContent } from "./tool-detail-extended-content";
 import { ToolDetailDecisionNav } from "./tool-detail-decision-nav";
-import { ToolDetailInformation } from "./tool-detail-information";
-import { ToolDetailSignal } from "./tool-detail-signal";
 import { ExperienceSection } from "@/components/community/experience-section";
 import { ToolDetailAlternatives } from "./tool-detail-alternatives";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
-import { ToolDetailFooter } from "./tool-detail-footer";
 import {
   PartnerToolCard,
 } from "@/components/monetization/partner-placements";
 
 /**
- * ToolDetailFinalPage — clean baseline owner.
+ * ToolDetailFinalPage — public cognitive compression.
  *
- * One new orchestrator, one isolated namespace (.td-final-*),
- * zero legacy component imports, zero premium-button mappings.
- *
- * Sections composed here:
- *   A. ToolDetailHero        (Identity + Action Surface)
- *   B. ToolDetailScore       (Score Instrument, rendered inside hero grid 7/5)
- *   C. ToolDetailEditorial   (Editorial Rationale)
- *   D. ToolDetailDecisionNav (In-page nav)
- *   E. ToolDetailInformation (Product Information)
- *   F. ToolDetailSignal      (Trend / Signal)
- *   G. ToolDetailAlternatives (Decision Desk)
- *   ToolDetailFooter         (route-level end marker)
+ * Layers:
+ *   1. Hero            identity, deck, score, best-for, level, actions
+ *   2. Snapshot        Fa per te / Non fa per te / trade-off / verdetto
+ *   3. Approfondisci   progressive disclosure (details/summary)
+ *   4. Alternatives    one comparison section
+ *   5. Sponsor         PartnerToolCard, separated
  *
  * The page is server-rendered (SEO, static params, structured data).
  * The action surface and alternative cards are client islands that
@@ -156,22 +146,20 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         >
           <div className="td-final-hero__inner">
             <ToolDetailHero tool={tool} isAffiliateLink={isAffiliateLink} />
-            <ToolDetailScore tool={tool} />
           </div>
         </section>
 
-        <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} showExperiences={showExperiences} />
-        <ToolDetailEditorial tool={tool} />
+        <ToolDetailDecisionBrief tool={tool} />
+        <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
         <ToolDetailExtendedContent
-          content={tool.extendedContent}
-          toolName={tool.name}
+          tool={tool}
+          experiences={
+            showExperiences ? (
+              <ExperienceSection toolSlug={tool.slug} catalogNames={catalogNames} />
+            ) : null
+          }
         />
         <TinyAdzInlineSlot placement="tool-detail" />
-        <ToolDetailInformation tool={tool} />
-        <ToolDetailSignal tool={tool} />
-        {showExperiences ? (
-          <ExperienceSection toolSlug={tool.slug} catalogNames={catalogNames} />
-        ) : null}
         <ToolDetailAlternatives current={tool} related={relatedTools} />
         {slug !== "taylora" ? (
           <div className="td-final-page__partner">
@@ -186,7 +174,6 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             />
           </div>
         ) : null}
-        <ToolDetailFooter />
       </div>
     </>
   );

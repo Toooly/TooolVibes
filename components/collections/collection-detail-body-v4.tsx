@@ -24,20 +24,12 @@ type CollectionDetailBodyV4Props = {
 /**
  * Detail Body V4 — orchestrator for the redesigned detail page.
  *
- * 9 sections in a guided sequence:
- *   1. HERO                    — composed, stack preview inline
- *   2. STACK FLOW              — connected vertical composition
- *   3. VARIANT PATHS           — additive or architectural
- *   4. DECISION NOTES          — editorial grouping
- *   5. SCENARIO                — visual sequence
- *   6. ANTI-RECOMMENDATION     — editorial honesty
- *   7. GUIDE BRIDGE            — deeper knowledge
- *   8. NEXT STEP               — progression to related Collections
- *   9. (Sponsor modules, in the page itself — preserved untouched)
+ * Default-visible: hero (outcome, audience, cost/setup, CTA) then
+ * stack flow. Optional depth (variants, decision notes, scenario)
+ * sits in collapsed <details>. Anti-recommendation stays visible.
+ * Guide bridge + next collection follow.
  *
- * Each section uses elevated surface only where it adds meaning.
- * The DNA of V4.1 (real tool glyphs, restrained accent, controlled
- * spacing) is preserved across all sections.
+ * Guest MemberPreviewGate is unchanged as a product rule.
  */
 export function CollectionDetailBodyV4({
   collection,
@@ -90,7 +82,7 @@ export function CollectionDetailBodyV4({
         <CollectionDetailHeroV4 collection={collection} />
         <MemberPreviewGate
           title="Continua nel tuo spazio"
-          body="Lo stack operativo, le varianti e quando non usare questa raccolta restano nel tuo spazio."
+          body="Lo stack completo resta nel tuo spazio."
         >
         <CollectionSectionNavV4
           items={[

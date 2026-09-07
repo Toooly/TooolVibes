@@ -71,46 +71,8 @@ export function GuideArticleEnd({
             boxShadow: "0 16px 36px rgba(118, 225, 255, 0.18)",
           }}
         >
-          Apri tutte le guide
+          Tutte le guide
           <span aria-hidden>→</span>
-        </Link>
-        <Link
-          href="/archivio"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            padding: "0.7rem 1.05rem",
-            borderRadius: "999px",
-            fontSize: "0.88rem",
-            fontWeight: 700,
-            textDecoration: "none",
-            color: "var(--guides-text-on-dark)",
-            border: "1px solid rgba(255, 255, 255, 0.18)",
-            background: "rgba(255, 255, 255, 0.04)",
-          }}
-        >
-          Vai all&apos;archivio
-          <span aria-hidden>↗</span>
-        </Link>
-        <Link
-          href="/shortlist"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            padding: "0.7rem 1.05rem",
-            borderRadius: "999px",
-            fontSize: "0.88rem",
-            fontWeight: 700,
-            textDecoration: "none",
-            color: "var(--guides-text-on-dark)",
-            border: "1px solid rgba(255, 255, 255, 0.18)",
-            background: "rgba(255, 255, 255, 0.04)",
-          }}
-        >
-          Porta nei salvati
-          <span aria-hidden>+</span>
         </Link>
       </div>
     </section>

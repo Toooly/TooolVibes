@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
@@ -14,6 +15,7 @@ import { ConsentFooterLink } from "@/components/ads/consent-footer-link";
 const contactEmailDestination = getNavDestination("contact-email");
 
 const SPONSOR_OPPORTUNITY_HREF = "/sponsorizza";
+const FOOTER_DESKTOP_MQ = "(min-width: 48rem)";
 
 function FooterLink({ href, label, icon: Icon, onClick }: {
   href: string;
@@ -46,6 +48,53 @@ function FooterLink({ href, label, icon: Icon, onClick }: {
         aria-hidden="true"
       />
     </Link>
+  );
+}
+
+function isDesktopFooter() {
+  return typeof window.matchMedia === "function"
+    && window.matchMedia(FOOTER_DESKTOP_MQ).matches;
+}
+
+function FooterNavGroup({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  useLayoutEffect(() => {
+    const node = detailsRef.current;
+    if (!node || typeof window.matchMedia !== "function") return;
+
+    const mq = window.matchMedia(FOOTER_DESKTOP_MQ);
+    const sync = () => {
+      node.open = mq.matches;
+    };
+
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  return (
+    <details
+      ref={detailsRef}
+      className="site-footer-v2__group"
+      open
+      onToggle={(event) => {
+        if (isDesktopFooter()) {
+          event.currentTarget.open = true;
+        }
+      }}
+    >
+      <summary className="site-footer-v2__group-summary">
+        <h3>{title}</h3>
+      </summary>
+      {children}
+    </details>
   );
 }
 
@@ -90,8 +139,7 @@ export function SiteFooterV2() {
             </div>
           </div>
 
-          <div>
-            <h3>Prodotto</h3>
+          <FooterNavGroup title="Prodotto">
             <div className="site-footer-v2__links">
               {productLinks.map((link) => (
                 <FooterLink
@@ -102,10 +150,9 @@ export function SiteFooterV2() {
                 />
               ))}
             </div>
-          </div>
+          </FooterNavGroup>
 
-          <div>
-            <h3>TooolVibes</h3>
+          <FooterNavGroup title="TooolVibes">
             <div className="site-footer-v2__links">
               {companyLinks.map((link) => (
                 <FooterLink
@@ -131,7 +178,7 @@ export function SiteFooterV2() {
                 />
               ))}
             </div>
-          </div>
+          </FooterNavGroup>
 
           <div>
             <h3>Parliamone</h3>

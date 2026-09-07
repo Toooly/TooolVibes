@@ -141,15 +141,17 @@ describe("Tool Detail clean baseline — owner tree", () => {
     const src = read(path.join(TOOL_DETAIL_DIR, "tool-detail-final-page.tsx"));
     const owners = [
       "ToolDetailHero",
-      "ToolDetailScore",
+      "ToolDetailDecisionBrief",
       "ToolDetailDecisionNav",
-      "ToolDetailEditorial",
-      "ToolDetailInformation",
-      "ToolDetailSignal",
+      "ToolDetailExtendedContent",
       "ExperienceSection",
       "ToolDetailAlternatives",
-      "ToolDetailFooter",
     ];
+    for (const removed of ["ToolDetailEditorial", "ToolDetailSignal", "ToolDetailFooter"]) {
+      expect(src, `removed owner ${removed} still composed`).not.toMatch(
+        new RegExp(`<${removed}\\b`),
+      );
+    }
     for (const o of owners) {
       expect(src, `owner ${o} not in final page`).toMatch(new RegExp(`\\b${o}\\b`));
     }
@@ -175,14 +177,15 @@ describe("Tool Detail clean baseline — owner tree", () => {
     expect(src).toMatch(/td-final-alt-row/);
   });
 
-  it("H4-UI-01 places Esperienze after Signal and before Alternatives", () => {
+  it("H4-UI-01 places Esperienze inside Approfondisci and before Alternatives", () => {
     const src = read(path.join(TOOL_DETAIL_DIR, "tool-detail-final-page.tsx"));
-    const signal = src.indexOf("<ToolDetailSignal");
+    const deepen = src.indexOf("<ToolDetailExtendedContent");
     const experiences = src.indexOf("<ExperienceSection");
     const alternatives = src.indexOf("<ToolDetailAlternatives");
-    expect(signal).toBeGreaterThan(-1);
-    expect(experiences).toBeGreaterThan(signal);
+    expect(deepen).toBeGreaterThan(-1);
+    expect(experiences).toBeGreaterThan(deepen);
     expect(alternatives).toBeGreaterThan(experiences);
+    expect(src).not.toMatch(/<ToolDetailSignal\b/);
   });
 
   it("H4-SEO-03 does not add Review structured data", () => {
@@ -198,6 +201,8 @@ describe("Tool Detail clean baseline — owner tree", () => {
     expect(new Set(hrefs).size).toBe(hrefs.length);
     expect(nav).not.toMatch(/aria-current=/);
     expect(nav).not.toMatch(/#td-final-use-cases/);
+    expect(nav).not.toMatch(/#td-final-signal/);
+    expect(nav).toMatch(/#td-final-approfondisci/);
     expect(page).toMatch(/id="td-final-overview"/);
     expect(page).toMatch(/showAlternatives=\{relatedTools\.length > 0\}/);
   });

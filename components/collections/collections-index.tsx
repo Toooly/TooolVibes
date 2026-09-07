@@ -2,7 +2,6 @@ import Link from "next/link";
 import { BookOpenText, GitBranch, ShieldAlert, Wrench, Sparkles, Cog, TrendingUp } from "lucide-react";
 
 import type { CuratedCollection } from "@/lib/types/collection";
-import { getCollectionCoreToolSlugs } from "@/lib/collections/helpers";
 import { collectionVisualIdentity, type CxVisualIdentity, cxGroupOrder, pickFeaturedCollection } from "@/lib/collections/visual-identity";
 
 import { MemberPreviewGate } from "@/components/account/member-preview-gate";
@@ -14,25 +13,21 @@ type CollectionsIndexProps = {
 
 type GroupKey = CxVisualIdentity["group"];
 
-const GROUP_LABELS: Record<GroupKey, { label: string; lede: string; icon: React.ReactNode }> = {
+const GROUP_LABELS: Record<GroupKey, { label: string; icon: React.ReactNode }> = {
   build: {
     label: "Costruisci",
-    lede: "Dall'idea al primo MVP, al prodotto vendibile.",
     icon: <Wrench className="size-3.5" aria-hidden="true" />,
   },
   create: {
     label: "Crea",
-    lede: "Contenuti, formazione, brand. Output ripetibili, non one-off.",
     icon: <Sparkles className="size-3.5" aria-hidden="true" />,
   },
   operate: {
     label: "Gestisci",
-    lede: "Operazioni, supporto, agenti, agenzie. Mossa che scala.",
     icon: <Cog className="size-3.5" aria-hidden="true" />,
   },
   grow: {
     label: "Cresci",
-    lede: "Acquisizione, distribuzione, lead qualificati. Il motore.",
     icon: <TrendingUp className="size-3.5" aria-hidden="true" />,
   },
 };
@@ -50,8 +45,8 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
     ? collections.filter((c) => c.slug !== lead.slug)
     : collections;
 
-  const totalCore = collections.reduce(
-    (acc, c) => acc + getCollectionCoreToolSlugs(c).length,
+  const totalTools = collections.reduce(
+    (acc, c) => acc + c.included_tools.length,
     0,
   );
 
@@ -97,45 +92,75 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
               </span>
               <span>
                 <span className="cx-index__meta-divider" aria-hidden="true" />
-                {totalCore} tool CORE
-              </span>
-              <span>
-                <span className="cx-index__meta-divider" aria-hidden="true" />
-                Verificato agosto 2026
+                {totalTools} tool nello stack
               </span>
             </div>
           </div>
         </header>
 
-        <section className="cx-index__discover motion-reveal">
-          <div className="cx-index__lede-block">
-            <h2>Le raccolte non sono guide né confronti.</h2>
-            <p>
-              Ogni raccolta ti dice quale software combinare, in che ordine, per
-              quale risultato. Include varianti LEAN quando esistono, alternative
-              oneste invece di duplicati, e una sezione esplicita su quando
-              <em> non </em> è la raccolta giusta per te.
-            </p>
-            <dl className="cx-index__compare-strip" aria-label="Differenza tra superfici">
-              <div>
-                <dt>Catalogo</dt>
-                <dd>Scopri tool singoli</dd>
+        <details className="cx-index__how motion-reveal">
+          <summary className="cx-index__how-summary">
+            Come funzionano le Raccolte?
+          </summary>
+          <div className="cx-index__how-panel">
+            <section className="cx-index__discover">
+              <div className="cx-index__lede-block">
+                <h2>Le raccolte non sono guide né confronti.</h2>
+                <p>
+                  Ogni raccolta ti dice quale software combinare, in che ordine, per
+                  quale risultato. Include varianti LEAN quando esistono, alternative
+                  oneste invece di duplicati, e una sezione esplicita su quando
+                  <em> non </em> è la raccolta giusta per te.
+                </p>
+                <dl className="cx-index__compare-strip" aria-label="Differenza tra superfici">
+                  <div>
+                    <dt>Catalogo</dt>
+                    <dd>Scopri tool singoli</dd>
+                  </div>
+                  <div>
+                    <dt>Guide</dt>
+                    <dd>Approfondisci un tool</dd>
+                  </div>
+                  <div>
+                    <dt>Raccolte</dt>
+                    <dd>Assembla uno stack</dd>
+                  </div>
+                  <div>
+                    <dt>Confronto</dt>
+                    <dd>Scegli tra 2 o 3 candidati</dd>
+                  </div>
+                </dl>
               </div>
-              <div>
-                <dt>Guide</dt>
-                <dd>Approfondisci un tool</dd>
+            </section>
+
+            <section
+              aria-labelledby="cx-principles-heading"
+              className="cx-index__principles"
+            >
+              <div className="cx-index__section-title">
+                <h2 id="cx-principles-heading">Come leggere una raccolta</h2>
+                <p className="cx-index__section-kicker">Tre cose da cercare sempre</p>
               </div>
-              <div>
-                <dt>Raccolte</dt>
-                <dd>Assembla uno stack</dd>
+              <div className="cx-index__principles-grid motion-stagger">
+                <PrincipleCard
+                  icon={<GitBranch className="size-4" aria-hidden="true" />}
+                  eyebrow="Il flusso"
+                  body="Ogni CORE è uno stadio del flusso, in ordine. Non sono sei card isolate: si parlano."
+                />
+                <PrincipleCard
+                  icon={<BookOpenText className="size-4" aria-hidden="true" />}
+                  eyebrow="CORE / OPT / ALT"
+                  body="CORE è lo stack. OPT aggiungi solo se serve. ALT è quando sostituisci, non quando aggiungi."
+                />
+                <PrincipleCard
+                  icon={<ShieldAlert className="size-4" aria-hidden="true" />}
+                  eyebrow="Quando non è per te"
+                  body="Ogni raccolta dichiara apertamente quando è la risposta sbagliata. Vale la pena leggerlo."
+                />
               </div>
-              <div>
-                <dt>Confronto</dt>
-                <dd>Scegli tra 2 o 3 candidati</dd>
-              </div>
-            </dl>
+            </section>
           </div>
-        </section>
+        </details>
 
         {lead && (
           <section
@@ -154,7 +179,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
 
         <MemberPreviewGate
           title="Continua nel tuo spazio"
-          body="Le altre raccolte — stack completi, varianti e quando non usarle — restano nel tuo spazio."
+          body="Le altre raccolte restano nel tuo spazio."
         >
         {cxGroupOrder.map((groupKey) => {
           const items = groups[groupKey];
@@ -168,17 +193,15 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
               data-cx-group={groupKey}
             >
               <div className="cx-index__group-header">
-                <span className="cx-index__group-eyebrow">
-                  {meta.icon}
-                  {meta.label}
-                </span>
                 <h2
                   id={`cx-group-${groupKey}-heading`}
                   className="cx-index__group-title"
                 >
+                  <span className="cx-index__group-eyebrow" aria-hidden="true">
+                    {meta.icon}
+                  </span>
                   {meta.label}
                 </h2>
-                <p className="cx-index__group-lede">{meta.lede}</p>
               </div>
               <div className="cx-index__grid cx-index__grid--group motion-stagger">
                 {items.map((collection) => (
@@ -192,33 +215,6 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           );
         })}
         </MemberPreviewGate>
-
-        <section
-          aria-labelledby="cx-principles-heading"
-          className="cx-index__principles motion-reveal"
-        >
-          <div className="cx-index__section-title">
-            <h2 id="cx-principles-heading">Come leggere una raccolta</h2>
-            <p className="cx-index__section-kicker">Tre cose da cercare sempre</p>
-          </div>
-          <div className="cx-index__principles-grid motion-stagger">
-            <PrincipleCard
-              icon={<GitBranch className="size-4" aria-hidden="true" />}
-              eyebrow="Il flusso"
-              body="Ogni CORE è uno stadio del flusso, in ordine. Non sono sei card isolate: si parlano."
-            />
-            <PrincipleCard
-              icon={<BookOpenText className="size-4" aria-hidden="true" />}
-              eyebrow="CORE / OPT / ALT"
-              body="CORE è lo stack. OPT aggiungi solo se serve. ALT è quando sostituisci, non quando aggiungi."
-            />
-            <PrincipleCard
-              icon={<ShieldAlert className="size-4" aria-hidden="true" />}
-              eyebrow="Quando non è per te"
-              body="Ogni raccolta dichiara apertamente quando è la risposta sbagliata. Vale la pena leggerlo."
-            />
-          </div>
-        </section>
       </div>
     </div>
   );

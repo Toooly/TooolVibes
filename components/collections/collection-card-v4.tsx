@@ -45,7 +45,7 @@ function buildCompositeSignal(
     if (setup) parts.push(setup);
   } else {
     // Standard merges count + cost + setup into a single line.
-    parts.push(coreCount === 1 ? "1 core" : `${coreCount} core`);
+    parts.push(coreCount === 1 ? "1 tool" : `${coreCount} tool`);
     if (cost) parts.push(cost);
     if (setup) parts.push(setup);
   }
@@ -133,7 +133,7 @@ export function CollectionCardV4({
 
       {/* LAYER 2 — STACK (real brand gradient glyph strip) */}
       {visibleCores.length > 0 && (
-        <div className="cx-card-v4__stack" aria-label="Stack CORE in ordine">
+        <div className="cx-card-v4__stack" aria-label="Tool nello stack">
           <ol className="cx-card-v4__stack-list">
             {visibleCores.map((slot) => (
               <li
@@ -164,7 +164,7 @@ export function CollectionCardV4({
           </ol>
           {featured && hiddenCoresCount > 0 && (
             <p className="cx-card-v4__stack-more">
-              +{hiddenCoresCount} {hiddenCoresCount === 1 ? "altro strumento" : "altri strumenti"} CORE
+              +{hiddenCoresCount} {hiddenCoresCount === 1 ? "altro strumento" : "altri strumenti"}
             </p>
           )}
         </div>

@@ -151,6 +151,7 @@ function ArchiveV4ToolCard({
               href={`/toools/${tool.slug}`}
               prefetch={false}
               className="ar4-card__name-link"
+              aria-label={`Apri la scheda di ${tool.name}`}
             >
               {tool.name}
             </Link>
@@ -208,15 +209,6 @@ function ArchiveV4ToolCard({
 
       {/* ═══ ACTION RAIL — reserved control cluster (no absolute overlays) ═══ */}
       <div className="ar4-card__actions">
-        <Link
-          href={`/toools/${tool.slug}`}
-          prefetch={false}
-          className="ar4-card__open"
-          aria-label={`Apri la scheda di ${tool.name}`}
-        >
-          Apri la scheda
-          <span aria-hidden="true">→</span>
-        </Link>
         <div className="ar4-card__control-rail" data-has-rank={showRank ? "true" : undefined}>
           {showRank ? (
             <div className="ar4-card__state-flags" aria-live="polite">

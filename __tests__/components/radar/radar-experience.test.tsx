@@ -109,7 +109,7 @@ describe("RadarExperience", () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar();
 
-    expect(await screen.findAllByText("Alpha Tool")).not.toHaveLength(0);
+    expect(await screen.findAllByText(/Alpha Tool/)).not.toHaveLength(0);
     expect(container.querySelectorAll(".tv-radar")).toHaveLength(1);
     expect(container.querySelector(".radar-mobile")).toBeNull();
     expect(container.querySelector(".radar-command--desktop")).toBeNull();
@@ -153,7 +153,7 @@ describe("RadarExperience", () => {
         "I dati potrebbero non essere aggiornati",
       ),
     ).toBeTruthy();
-    expect(await screen.findAllByText("Beta Tool")).not.toHaveLength(0);
+    expect(await screen.findAllByText(/Beta Tool/)).not.toHaveLength(0);
     expect(
       container.querySelector(".tv-radar-instrument__sweep"),
     ).toBeNull();
@@ -178,13 +178,8 @@ describe("RadarExperience", () => {
     // "QA FIXTURE" appare nello status rail (statusLabel) e non
     // viene presentato come live.
     expect(await screen.findByText("QA FIXTURE")).toBeTruthy();
-    // La lede hero V2 ("Il Radar raccoglie…") NON è sostituita per
-    // la fixture (la fixture conserva la lede canonica; il solo
-    // segnale di debug è la statusLabel).
     expect(
-      screen.getByText(
-        /Il Radar raccoglie i lanci di Product Hunt/,
-      ),
+      screen.getByText("Segnali organizzati per periodo. Nessun dato simulato."),
     ).toBeTruthy();
     expect(screen.queryByText("LIVE")).toBeNull();
     expect(screen.queryByText("Dati aggiornati")).toBeNull();
@@ -225,7 +220,7 @@ describe("RadarExperience", () => {
     );
     renderRadar("nodes");
 
-    expect(await screen.findAllByText("Alpha Tool")).not.toHaveLength(0);
+    expect(await screen.findAllByText(/Alpha Tool/)).not.toHaveLength(0);
     // V2: aria-label del button periodo è
     // "Mostra i segnali di Ultimi 7 giorni" (era "Settimana").
     fireEvent.click(
@@ -233,7 +228,7 @@ describe("RadarExperience", () => {
         name: "Mostra i segnali di Ultimi 7 giorni",
       }),
     );
-    expect(await screen.findAllByText("Gamma Tool")).not.toHaveLength(0);
+    expect(await screen.findAllByText(/Gamma Tool/)).not.toHaveLength(0);
 
     // V2: vista "Elenco" (era "Tabella")
     fireEvent.click(
@@ -268,17 +263,24 @@ describe("RadarExperience", () => {
     const { container } = renderRadar("table");
 
     await screen.findByText("Tutti i segnali del periodo");
+    await screen.findByText("Dati aggiornati");
     expect(screen.getByRole("group", { name: "Periodo" })).toBeTruthy();
     expect(screen.getByRole("group", { name: "Vista" })).toBeTruthy();
-    // V2: status rail 4 dt/dd (Stato, Ultimo aggiornamento,
-    // Segnali disponibili, Periodo). "Periodo" appare anche come
-    // label del gruppo controlli: usa getAllByText per evitare
-    // ambiguità.
-    expect(screen.getByText("Stato")).toBeTruthy();
-    expect(screen.getByText("Ultimo aggiornamento")).toBeTruthy();
-    expect(screen.getByText("Segnali disponibili")).toBeTruthy();
-    expect(screen.getAllByText("Periodo").length).toBeGreaterThanOrEqual(2);
-    // V2: provenance section
+    const statusBar = container.querySelector(".tv-radar-status-bar");
+    expect(statusBar?.textContent).toContain("Product Hunt");
+    expect(statusBar?.textContent).toContain("Oggi");
+    expect(statusBar?.textContent).toContain("Dati aggiornati");
+    expect(
+      statusBar?.querySelector("[role='status']")?.getAttribute("aria-live"),
+    ).toBe("polite");
+    expect(screen.queryByText("Stato")).toBeNull();
+    expect(screen.queryByText("Ultimo aggiornamento")).toBeNull();
+    expect(screen.queryByText("Segnali disponibili")).toBeNull();
+    expect(screen.getByText("Periodo")).toBeTruthy();
+    expect(screen.queryByText("Cosa merita attenzione ora")).toBeNull();
+    const provenance = container.querySelector("details.tv-radar-provenance");
+    expect(provenance).toBeTruthy();
+    expect(provenance?.hasAttribute("open")).toBe(false);
     expect(screen.getByText("Informazioni sui dati")).toBeTruthy();
 
     const results = await axe.run(container, {
@@ -293,7 +295,7 @@ describe("RadarExperience", () => {
   it("rende eyebrow desktop su desktop e eyebrow mobile su mobile", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar();
-    await screen.findAllByText("Alpha Tool");
+    await screen.findAllByText(/Alpha Tool/);
 
     // Default = desktop
     const desktopEyebrow = container.querySelector(
@@ -307,7 +309,7 @@ describe("RadarExperience", () => {
   it("W11-T6 T7 T20 Catalogo facet Tutti | Radar is present and is not Segnale", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     renderRadar();
-    await screen.findAllByText("Alpha Tool");
+    await screen.findAllByText(/Alpha Tool/);
 
     const tutti = screen.getByRole("link", { name: "Tutti" });
     const radar = screen.getByRole("link", { name: "Radar" });
@@ -327,7 +329,7 @@ describe("RadarExperience", () => {
   it("espone una sola eyebrow all'accessibility tree (no doppia lettura)", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar();
-    await screen.findAllByText("Alpha Tool");
+    await screen.findAllByText(/Alpha Tool/);
 
     // Le varianti visuali (desktop + mobile) devono essere
     // marcate aria-hidden per evitare che lo screen reader legga

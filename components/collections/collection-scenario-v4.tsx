@@ -32,11 +32,12 @@ export function CollectionScenarioV4({ collection }: CollectionScenarioV4Props) 
   const isShort = steps.length <= 2;
 
   return (
-    <section
+    <details
       id="cx-detail-scenario"
-      className="cx-scenario-v4 motion-reveal"
+      className="cx-scenario-v4 cx-detail-depth motion-reveal"
       aria-labelledby="cx-scenario-title"
     >
+      <summary className="cx-detail-depth__summary">Esempio reale</summary>
       <header className="cx-scenario-v4__head">
         <span className="cx-scenario-v4__eyebrow">
           <Sparkles className="size-3.5" aria-hidden="true" />
@@ -66,6 +67,6 @@ export function CollectionScenarioV4({ collection }: CollectionScenarioV4Props) 
         Scenario ipotetico ma credibile. Non si basa su un cliente
         reale.
       </p>
-    </section>
+    </details>
   );
 }

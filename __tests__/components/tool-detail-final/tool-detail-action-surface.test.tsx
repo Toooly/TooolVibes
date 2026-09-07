@@ -109,14 +109,16 @@ describe("ToolDetailActionSurface personal workspace", () => {
 
     expect(screen.queryByText("In uso")).toBeNull();
     expect(screen.queryByText("Scelto")).toBeNull();
+    expect(screen.queryByText("Il tuo stato")).toBeNull();
     expect(screen.queryByRole("button", { name: "Lo sto usando" })).toBeNull();
     expect(screen.queryByLabelText("Aggiungi allo stack")).toBeNull();
     expect(screen.queryByRole("link", { name: "Aggiungi allo stack" })).toBeNull();
     expect(screen.getByRole("button", { name: "Salva Cursor" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Aggiungi al confronto" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Confronta Cursor" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Visita il sito ufficiale di Cursor" })).toBeTruthy();
   });
 
-  it("shows Lo sto usando when selected and unused, then calls markWorkspaceToolUsing", () => {
+  it("hides personal chrome on the first view even when the tool is selected", () => {
     seedWorkspace([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       { type: "tool/decision", slug: "cursor", outcome: "selected", at: T0 },
@@ -124,13 +126,15 @@ describe("ToolDetailActionSurface personal workspace", () => {
 
     renderSurface();
 
-    expect(screen.getByText("Scelto")).toBeTruthy();
-    const using = screen.getByRole("button", { name: "Lo sto usando" });
-    fireEvent.click(using);
-    expect(markWorkspaceToolUsing).toHaveBeenCalledWith("cursor");
+    expect(screen.queryByText("Scelto")).toBeNull();
+    expect(screen.queryByText("Il tuo stato")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Lo sto usando" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Rimuovi Cursor dai Salvati" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Confronta Cursor" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Visita il sito ufficiale di Cursor" })).toBeTruthy();
   });
 
-  it("shows In uso without Lo sto usando when already using", () => {
+  it("hides In uso and keeps the three public actions when already using", () => {
     seedWorkspace([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       { type: "tool/decision", slug: "cursor", outcome: "selected", at: T0 },
@@ -139,10 +143,11 @@ describe("ToolDetailActionSurface personal workspace", () => {
 
     renderSurface();
 
-    expect(screen.getByText("In uso")).toBeTruthy();
+    expect(screen.queryByText("In uso")).toBeNull();
     expect(screen.queryByRole("button", { name: "Lo sto usando" })).toBeNull();
     expect(screen.getByRole("button", { name: "Rimuovi Cursor dai Salvati" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Aggiungi al confronto" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Confronta Cursor" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Visita il sito ufficiale di Cursor" })).toBeTruthy();
   });
 
   it("offers Aggiungi allo stack from Speed 2 overflow", async () => {
@@ -181,7 +186,7 @@ describe("ToolDetailActionSurface personal workspace", () => {
     renderSurface();
 
     expect(screen.queryByLabelText("Aggiungi allo stack")).toBeNull();
-    expect(screen.getByText("Nello stack: AI Coding")).toBeTruthy();
+    expect(screen.queryByText("Nello stack: AI Coding")).toBeNull();
     await openOverflow();
     expect(screen.getByRole("button", { name: /Nello stack/ })).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Aggiungi a AI Coding" })).toBeNull();

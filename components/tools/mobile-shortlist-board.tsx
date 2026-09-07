@@ -53,6 +53,7 @@ import type { ToolPublic } from "@/lib/types/tool-public";
 
 type MobileShortlistBoardProps = {
   tools: ToolPublic[];
+  categoryCount: number;
   /**
    * B32 release flag (TOOOLVIBES_DECISION_MEMORY_BOARD_ENABLED). When false
    * the sheet stays the legacy read-only note viewer.
@@ -134,6 +135,7 @@ const sheetChipIdleStyle: CSSProperties = {
 
 export function MobileShortlistBoard({
   tools,
+  categoryCount,
   decisionMemoryEnabled = true,
 }: MobileShortlistBoardProps) {
   const discovery = useDiscoverySnapshot();
@@ -183,7 +185,7 @@ export function MobileShortlistBoard({
   if (totalCount === 0) {
     return (
       <div className="mobile-library-board mobile-library-board--empty">
-        <MobileLibraryEmpty tools={tools} />
+        <MobileLibraryEmpty tools={tools} categoryCount={categoryCount} />
       </div>
     );
   }
@@ -984,11 +986,14 @@ function MobileNoteSheet({
    MobileLibraryEmpty
    ═══════════════════════════════════════════════════════════════ */
 
-function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
+function MobileLibraryEmpty({
+  tools,
+  categoryCount,
+}: {
+  tools: ToolPublic[];
+  categoryCount: number;
+}) {
   const starterTools = tools.slice(0, 3);
-  const catalogCategoryCount = new Set(
-    tools.map((tool) => tool.taxonomy.sourceCategoryLabel),
-  ).size;
 
   return (
     <section
@@ -1023,7 +1028,7 @@ function MobileLibraryEmpty({ tools }: { tools: ToolPublic[] }) {
           >
             <strong>Esplora catalogo</strong>
             <span>
-              {tools.length} tool in {catalogCategoryCount} categorie da restringere.
+              {tools.length} tool in {categoryCount} categorie da restringere.
             </span>
           </Link>
           <Link

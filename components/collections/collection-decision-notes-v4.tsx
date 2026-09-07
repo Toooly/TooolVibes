@@ -33,11 +33,12 @@ export function CollectionDecisionNotesV4({
   if (!hasGroup1 && !hasGroup2 && !hasGroup3) return null;
 
   return (
-    <section
+    <details
       id="cx-detail-decision"
-      className="cx-decision-notes-v4 motion-reveal"
+      className="cx-decision-notes-v4 cx-detail-depth motion-reveal"
       aria-labelledby="cx-decision-notes-title"
     >
+      <summary className="cx-detail-depth__summary">Note di decisione</summary>
       <header className="cx-decision-notes-v4__head">
         <span className="cx-decision-notes-v4__eyebrow">
           Decision notes
@@ -124,6 +125,6 @@ export function CollectionDecisionNotesV4({
           </article>
         )}
       </div>
-    </section>
+    </details>
   );
 }

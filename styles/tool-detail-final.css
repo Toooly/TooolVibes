@@ -4,16 +4,12 @@
  * Clean baseline. One stylesheet, one namespace (.td-final-*),
  * zero legacy inheritance, zero cascade overrides.
  *
- * Architecture (A-G sections):
- *   A. Hero (Identity + Action Surface)        .td-final-hero
- *   B. Score Instrument                         .td-final-score
- *   C. Editorial Rationale                      .td-final-editorial
- *   D. Decision Navigation                      .td-final-decision-nav
- *   E. Product Information                      .td-final-information
- *   F. Trend / Signal Module                    .td-final-signal
- *   F2. Esperienze                              .td-final-experiences
- *   G. Alternatives Decision Desk               .td-final-alternatives
- *                                                  .td-final-alt-* (cards)
+ * Public layers:
+ *   1. Hero                                     .td-final-hero
+ *   2. Decision snapshot                        .td-final-brief
+ *   3. Approfondisci                            .td-final-deepen
+ *   4. Alternatives                             .td-final-alternatives
+ *   5. Sponsor                                  .td-final-page__partner
  *
  * Visual parity with V4 commit 2d4551d — same layout, same DNA,
  * same data binding. This is a clean port, not a redesign.
@@ -79,13 +75,6 @@
   min-width: 0;
 }
 
-@media (min-width: 1180px) {
-  .td-final-hero__inner {
-    grid-template-columns: minmax(0, 1.3fr) minmax(22rem, 0.7fr);
-    align-items: stretch;
-    gap: var(--tv-space-8);
-  }
-}
 
 .td-final-hero__breadcrumb {
   display: flex;
@@ -215,10 +204,36 @@
 
 .td-final-hero__deck {
   max-width: 36rem;
-  margin: 0 0 var(--tv-space-6);
+  margin: 0 0 var(--tv-space-4);
   color: var(--tv-ink-secondary);
   font-size: clamp(0.95rem, 1.6vw, 1.125rem);
   line-height: var(--tv-leading-relaxed);
+}
+
+.td-final-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--tv-space-3) var(--tv-space-5);
+  margin: 0 0 var(--tv-space-5);
+}
+
+.td-final-hero__bestfor {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--tv-ink-secondary);
+  font-size: 0.875rem;
+  line-height: var(--tv-leading-snug);
+}
+
+.td-final-hero__bestfor-label {
+  display: inline-block;
+  margin-right: 0.5rem;
+  color: var(--tv-ink-muted-aa);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
 }
 
 /* ============================================================
@@ -445,6 +460,34 @@
   .td-final-score__number {
     font-size: clamp(3rem, 4.5vw, 4.5rem);
   }
+  .td-final-score--compact .td-final-score__number {
+    font-size: 1.5rem;
+  }
+}
+
+.td-final-score--compact {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.td-final-score--compact .td-final-score__number {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.td-final-score--compact .td-final-score__number--status {
+  font-size: 0.8125rem;
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-label);
+  text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
 }
 
 .td-final-score__denom {
@@ -526,16 +569,6 @@
 @media (max-width: 1179px) {
   .td-final-hero__inner {
     grid-template-columns: 1fr;
-  }
-  .td-final-score {
-    margin-top: 0;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1179px) {
-  .td-final-hero__inner {
-    grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
-    gap: var(--tv-space-8);
   }
 }
 
@@ -1103,7 +1136,7 @@
    ============================================================ */
 .td-final-alt-row {
   display: grid;
-  grid-template-columns: minmax(8rem, 1.2fr) minmax(12rem, 2fr) minmax(6rem, 1fr) minmax(4rem, 0.6fr) minmax(6rem, 0.8fr);
+  grid-template-columns: minmax(8rem, 1.2fr) minmax(12rem, 2fr) minmax(6rem, 1fr) minmax(4rem, 0.6fr);
   gap: var(--tv-space-3);
   align-items: center;
   padding: var(--tv-space-3) var(--tv-space-4);
@@ -1206,16 +1239,28 @@
 }
 
 @media (max-width: 819px) {
+  .td-final-alternatives__table {
+    display: flex;
+    flex-direction: row;
+    gap: var(--tv-space-3);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: var(--tv-space-2);
+  }
+  .td-final-alternatives__table::-webkit-scrollbar {
+    display: none;
+  }
   .td-final-alt-row {
+    flex: 0 0 min(18.5rem, 82vw);
+    scroll-snap-align: start;
     grid-template-columns: 1fr;
     gap: var(--tv-space-component-sm);
     padding: var(--tv-space-component-md);
   }
   .td-final-alt-cell--difference {
     justify-self: start;
-  }
-  .td-final-alt-cell--action {
-    justify-self: end;
   }
   .td-final-alt-row .td-final-alt-cell--reason {
     order: 2;
@@ -1225,9 +1270,6 @@
   }
   .td-final-alt-row .td-final-alt-cell--score {
     order: 4;
-  }
-  .td-final-alt-row .td-final-alt-cell--action {
-    order: 5;
   }
 }
 
@@ -1273,8 +1315,14 @@
     padding: var(--tv-space-3);
     gap: var(--tv-space-2);
   }
+  .td-final-score--compact {
+    padding: 0;
+  }
   .td-final-score__number {
     font-size: clamp(1.8rem, 5vw, 2.4rem);
+  }
+  .td-final-score--compact .td-final-score__number {
+    font-size: 1.35rem;
   }
   .td-final-score__dimensions {
     gap: var(--tv-space-1);
@@ -1619,4 +1667,128 @@
 .td-final-brief dd {
   margin: 0;
   font-size: 14px;
+}
+
+
+.td-final-page__partner {
+  margin-top: var(--tv-space-10);
+}
+
+.td-final-deepen {
+  margin-top: var(--tv-space-10);
+  padding: clamp(var(--tv-space-6), 4vw, var(--tv-space-8));
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-surface-raised);
+}
+
+.td-final-deepen__list {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--tv-border-subtle);
+}
+
+.td-final-deepen__item {
+  border-bottom: 1px solid var(--tv-border-subtle);
+}
+
+.td-final-deepen__item:last-child {
+  border-bottom: none;
+}
+
+.td-final-deepen__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-space-3);
+  min-height: 2.75rem;
+  padding: var(--tv-space-3) 0;
+  cursor: pointer;
+  list-style: none;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.95rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.td-final-deepen__summary:focus-visible {
+  outline: 3px solid var(--tv-focus-ring);
+  outline-offset: 2px;
+}
+
+.td-final-deepen__summary::-webkit-details-marker {
+  display: none;
+}
+
+.td-final-deepen__summary::marker {
+  content: "";
+}
+
+.td-final-deepen__chevron {
+  width: 0.45rem;
+  height: 0.45rem;
+  flex-shrink: 0;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--tv-duration-fast) var(--tv-ease-standard);
+}
+
+.td-final-deepen__item[open] > .td-final-deepen__summary > .td-final-deepen__chevron {
+  transform: rotate(225deg);
+}
+
+.td-final-deepen__panel {
+  padding: 0 0 var(--tv-space-4);
+}
+
+.td-final-deepen__block + .td-final-deepen__block {
+  margin-top: var(--tv-space-4);
+}
+
+.td-final-deepen__subhead {
+  margin: 0 0 var(--tv-space-2);
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-family-display);
+  font-size: 0.85rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: var(--tv-tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.td-final-deepen__body {
+  color: var(--tv-ink-secondary);
+  font-size: 0.875rem;
+  line-height: var(--tv-leading-relaxed);
+}
+
+.td-final-deepen .td-final-information__grid {
+  margin: 0;
+}
+
+.td-final-deepen .td-final-experiences {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.td-final-deepen .td-final-experiences > .td-final-section-eyebrow,
+.td-final-deepen .td-final-experiences > .td-final-section-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  border: 0;
+}
+
+.td-final-deepen .td-final-score__dimensions {
+  margin-top: var(--tv-space-4);
 }

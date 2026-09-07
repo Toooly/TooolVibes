@@ -134,11 +134,12 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
   const totalCount = collection.included_tools.filter((s) => s.is_core).length;
 
   return (
-    <section
-      className="cx-variant-paths-v4 cx-variant-paths-v4--additive motion-reveal"
+    <details
+      className="cx-variant-paths-v4 cx-variant-paths-v4--additive cx-detail-depth motion-reveal"
       id="cx-detail-variants"
       aria-labelledby="cx-variants-title"
     >
+      <summary className="cx-detail-depth__summary">Varianti e percorsi</summary>
       <header className="cx-variant-paths-v4__head">
         <span className="cx-variant-paths-v4__eyebrow">
           <GitBranch className="size-3.5" aria-hidden="true" />
@@ -205,7 +206,7 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
           collection={collection}
         />
       </div>
-    </section>
+    </details>
   );
 }
 
@@ -249,11 +250,12 @@ function PathBasedVariants({ collection }: { collection: CuratedCollection }) {
   if (paths.length === 0) return null;
 
   return (
-    <section
-      className="cx-variant-paths-v4 cx-variant-paths-v4--path motion-reveal"
+    <details
+      className="cx-variant-paths-v4 cx-variant-paths-v4--path cx-detail-depth motion-reveal"
       id="cx-detail-variants"
       aria-labelledby="cx-variants-title"
     >
+      <summary className="cx-detail-depth__summary">Varianti e percorsi</summary>
       <header className="cx-variant-paths-v4__head">
         <span className="cx-variant-paths-v4__eyebrow">
           <GitBranch className="size-3.5" aria-hidden="true" />
@@ -329,7 +331,7 @@ function PathBasedVariants({ collection }: { collection: CuratedCollection }) {
           );
         })}
       </div>
-    </section>
+    </details>
   );
 }
 

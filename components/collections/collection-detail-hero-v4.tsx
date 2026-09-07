@@ -33,10 +33,11 @@ function cx(...classes: Array<string | false | null | undefined>) {
  *   1. IDENTITY    — eyebrow · area · title · promise · thesis
  *   2. STACK GLANCE — CORE tool glyphs as a horizontal strip with
  *                     stage labels (matches Card V4.1 stack preview
- *                     but more prominent)
+ *                     but more prominent). Hidden on small screens
+ *                     where CollectionStackFlowV4 repeats the sequence.
  *   3. DECISION    — cost · setup · difficulty · verified,
  *                     compact 1-line strip
- *   4. ACTIONS     — primary + secondary pill CTAs
+ *   4. ACTIONS     — primary stack CTA + demoted catalog link
  *
  * Inherits the V4.1 DNA: real tool glyphs (brand gradients + favicon
  * via CollectionToolGlyph), elevated surface, restrained accent use,
@@ -114,15 +115,15 @@ export function CollectionDetailHeroV4({
           )}
         </div>
 
-        {/* ZONE 2 — STACK GLANCE (CORE tool glyph strip) */}
+        {/* ZONE 2 — STACK GLANCE (hidden on small screens via CSS) */}
         {previewCores.length > 0 && (
-          <div className="cx-detail-hero-v4__stack" aria-label="Stack CORE">
+          <div className="cx-detail-hero-v4__stack" aria-label="Il flusso, in ordine">
             <div className="cx-detail-hero-v4__stack-head">
               <span className="cx-detail-hero-v4__stack-label">
                 Il flusso, in ordine
               </span>
               <span className="cx-detail-hero-v4__stack-count">
-                {coreCount} {coreCount === 1 ? "strumento" : "strumenti"} CORE
+                {coreCount} {coreCount === 1 ? "strumento" : "strumenti"}
               </span>
             </div>
             <ol className="cx-detail-hero-v4__strip">
@@ -211,8 +212,8 @@ export function CollectionDetailHeroV4({
             <span>Apri lo stack</span>
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
-          <Link href="/archivio" className="cx-detail-hero-v4__cta cx-detail-hero-v4__cta--secondary">
-            Tutti i tool del Catalogo
+          <Link href="/archivio" className="cx-detail-hero-v4__catalog">
+            Catalogo
           </Link>
         </div>
       </div>

@@ -46,10 +46,6 @@ export async function CollectionAntiRecommendationV4({
         <h2 id="cx-anti-rec-title" className="cx-anti-rec-v4__title">
           Quando NON sceglierei questo stack
         </h2>
-        <p className="cx-anti-rec-v4__lede">
-          Alcune raccolte non sono la risposta giusta per tutti. E va
-          bene così.
-        </p>
       </header>
 
       {ar.not_for && (

@@ -289,7 +289,7 @@
 
 .tv-radar__visual {
   display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(18rem, 0.75fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
   gap: var(--tv-space-layout-lg);
 }
@@ -866,7 +866,7 @@
   }
 
   .tv-radar__visual {
-    grid-template-columns: minmax(0, 1.2fr) minmax(17rem, 0.8fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .tv-radar-index__row {
@@ -1288,67 +1288,50 @@ h1.tv-radar__title,
   font-weight: var(--tv-weight-semibold);
 }
 
-/* — Status rail V2 (Stato / Ultimo aggiornamento / Segnali / Periodo) — */
-.tv-radar-status-rail {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--tv-space-component-md);
-  margin: 0 0 var(--tv-space-component-lg);
-  padding: var(--tv-space-component-md) var(--tv-space-component-lg);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-panel);
-  background: var(--tv-surface-tier-2);
-  list-style: none;
-}
-.tv-radar-status-rail__item {
+/* — Status bar compatta (fonte · periodo · stato) — */
+.tv-radar-status-bar {
   display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  min-width: 0;
-  padding-inline: var(--tv-space-component-md);
-  border-left: 1px solid var(--tv-border-subtle);
-}
-.tv-radar-status-rail__item:first-child { padding-left: 0; border-left: 0; }
-.tv-radar-status-rail__item dt {
-  color: var(--tv-ink-muted-aa);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 var(--tv-space-component-lg);
+  padding: var(--tv-space-px-2) var(--tv-space-px-3);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-tier-2);
+  color: var(--tv-ink-secondary);
   font-family: var(--tv-font-family-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.tv-radar-status-rail__item dd {
-  margin: 0;
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-mono);
-  font-size: 0.95rem;
+  font-size: var(--tv-text-caption);
   font-weight: var(--tv-weight-semibold);
-  min-width: 0;
-  overflow-wrap: anywhere;
 }
-.tv-radar-status-rail__status {
+.tv-radar-status-bar__source,
+.tv-radar-status-bar__range {
+  color: var(--tv-ink-primary);
+}
+.tv-radar-status-bar__sep {
+  color: var(--tv-ink-muted-aa);
+}
+.tv-radar-status-bar__status {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
 }
-.tv-radar-status-rail__dot {
+.tv-radar-status-bar__dot {
   display: inline-block;
   width: 0.5rem;
   height: 0.5rem;
   border-radius: var(--tv-radius-pill);
   background: currentColor;
 }
-.tv-radar-status-rail__status[data-state="live"] { color: var(--tv-status-success); }
-.tv-radar-status-rail__status[data-state="loading"] { color: var(--tv-status-info); }
-.tv-radar-status-rail__status[data-state="empty"],
-.tv-radar-status-rail__status[data-state="stale"] { color: var(--tv-status-warning); }
-.tv-radar-status-rail__status[data-state="error"],
-.tv-radar-status-rail__status[data-state="missing-token"] { color: var(--tv-status-danger); }
-@media (max-width: 47.99rem) {
-  .tv-radar-status-rail {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--tv-space-component-sm);
-  }
-}
+.tv-radar-status-bar__status[data-state="live"] { color: var(--tv-status-success); }
+.tv-radar-status-bar__status[data-state="loading"] { color: var(--tv-status-info); }
+.tv-radar-status-bar__status[data-state="empty"],
+.tv-radar-status-bar__status[data-state="stale"],
+.tv-radar-status-bar__status[data-state="fixture"] { color: var(--tv-status-warning); }
+.tv-radar-status-bar__status[data-state="error"],
+.tv-radar-status-bar__status[data-state="missing-token"] { color: var(--tv-status-danger); }
 
 /* — Controls V2 — */
 .tv-radar__controls {
@@ -1417,11 +1400,8 @@ h1.tv-radar__title,
 .tv-radar__visual {
   display: grid;
   gap: clamp(1rem, 2vw, 1.5rem);
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-}
-@media (max-width: 63.99rem) {
-  .tv-radar__visual { grid-template-columns: 1fr; }
 }
 
 /* — Mappa central count (quando ci sono nodi) — */
@@ -1539,7 +1519,7 @@ h1.tv-radar__title,
   color: var(--tv-accent-primary);
 }
 
-/* — Provenance section (V2 §19) — */
+/* — Provenance accordion (V2 §19) — */
 .tv-radar-provenance {
   margin-top: var(--tv-space-component-lg);
   padding: clamp(1rem, 2vw, 1.5rem);
@@ -1548,13 +1528,21 @@ h1.tv-radar__title,
   background: var(--tv-surface-tier-1);
 }
 .tv-radar-provenance__title {
-  margin: 0 0 0.4rem;
+  margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-mono);
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  cursor: pointer;
+}
+.tv-radar-provenance__title:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+}
+.tv-radar-provenance[open] .tv-radar-provenance__title {
+  margin-bottom: 0.4rem;
 }
 .tv-radar-provenance__body {
   margin: 0 0 0.6rem;
@@ -1666,7 +1654,7 @@ h1.tv-radar__title,
 }
 
 /* Soft refetch indicator — not a full cold-load skeleton */
-.tv-radar[data-refreshing="true"] .tv-radar-status-rail,
+.tv-radar[data-refreshing="true"] .tv-radar-status-bar,
 .tv-radar[data-refreshing="true"] .tv-radar-instrument {
   opacity: 0.92;
 }
@@ -1690,160 +1678,6 @@ h1.tv-radar__title,
   100% { transform: translateX(30%); opacity: 0.35; }
 }
 
-/* ── MVP 1.0 Full Radar signal overview ── */
-.tv-radar-overview {
-  margin: 1.25rem 0 0.5rem;
-  padding: 1rem 1.1rem 1.15rem;
-  border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--tv-border-subtle, #333) 90%, transparent);
-  background: color-mix(in srgb, var(--tv-surface-elevated, #14151a) 88%, transparent);
-}
-.tv-radar-overview__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  margin-bottom: 0.85rem;
-}
-.tv-radar-overview__eyebrow {
-  margin: 0 0 0.2rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--tv-ink-muted-aa, #8b877c);
-}
-.tv-radar-overview__head h2 {
-  margin: 0;
-  font-size: clamp(1.1rem, 2vw, 1.45rem);
-  letter-spacing: -0.02em;
-}
-.tv-radar-overview__note {
-  margin: 0;
-  font-size: 0.78rem;
-  color: var(--tv-ink-muted-aa, #8b877c);
-  max-width: 22rem;
-}
-.tv-radar-overview__stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin-bottom: 0.85rem;
-}
-.tv-radar-overview__stats article {
-  padding: 0.65rem 0.7rem;
-  border-radius: 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--tv-border-subtle, #333) 85%, transparent);
-  background: color-mix(in srgb, var(--tv-bg-base, #0c0d10) 55%, transparent);
-}
-.tv-radar-overview__stats span {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tv-ink-muted-aa, #8b877c);
-}
-.tv-radar-overview__stats strong {
-  display: block;
-  margin-top: 0.25rem;
-  font-size: 1.15rem;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tv-radar-overview__top {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.tv-radar-overview__row {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.35rem 0.75rem;
-  padding: 0.65rem 0.75rem 0.75rem;
-  border-radius: 0.8rem;
-  border: 1px solid color-mix(in srgb, var(--tv-border-subtle, #333) 80%, transparent);
-  text-decoration: none;
-  color: inherit;
-  overflow: hidden;
-}
-.tv-radar-overview__row:hover {
-  border-color: color-mix(in srgb, var(--tv-accent-primary, #6a3cff) 40%, transparent);
-}
-.tv-radar-overview__rank {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-size: 0.95rem;
-  color: var(--tv-accent-primary, #6a3cff);
-}
-.tv-radar-overview__identity {
-  min-width: 0;
-}
-.tv-radar-overview__identity strong {
-  display: block;
-  font-size: 0.98rem;
-}
-.tv-radar-overview__identity em {
-  display: block;
-  margin-top: 0.1rem;
-  font-style: normal;
-  font-size: 0.84rem;
-  color: var(--tv-ink-secondary, #b8b3a8);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tv-radar-overview__meta {
-  grid-column: 2;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.65rem;
-  font-size: 0.75rem;
-  font-weight: 650;
-  color: var(--tv-ink-muted-aa, #8b877c);
-}
-.tv-radar-overview__bar {
-  grid-column: 1 / -1;
-  height: 3px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--tv-border-subtle, #333) 70%, transparent);
-  overflow: hidden;
-}
-.tv-radar-overview__bar::after {
-  content: "";
-  display: block;
-  height: 100%;
-  width: var(--intensity, 0%);
-  background: var(--tv-accent-brand);
-}
-@media (max-width: 767px) {
-  .tv-radar-overview__stats {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (min-width: 1180px) {
-  .tv-radar-overview__row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-  }
-  .tv-radar-overview__meta {
-    grid-column: auto;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-  }
-  .tv-radar-overview__bar {
-    grid-column: 1 / -1;
-  }
-}
-
-
 .tv-radar-personal-reason {
   margin: 0.2rem 0 0;
   color: var(--tv-ink-secondary);
@@ -1864,16 +1698,14 @@ h1.tv-radar__title,
 
 .tv-radar-node .tv-radar-personal-reason,
 .tv-radar-index__copy .tv-radar-personal-reason,
-.tv-radar-table__tool .tv-radar-personal-reason,
-.tv-radar-overview__identity .tv-radar-personal-reason {
+.tv-radar-table__tool .tv-radar-personal-reason {
   max-width: 18rem;
 }
 
 @media (max-width: 47.99rem) {
   .tv-radar-node .tv-radar-personal-reason,
   .tv-radar-index__copy .tv-radar-personal-reason,
-  .tv-radar-table__tool .tv-radar-personal-reason,
-  .tv-radar-overview__identity .tv-radar-personal-reason {
+  .tv-radar-table__tool .tv-radar-personal-reason {
     max-width: none;
   }
 }

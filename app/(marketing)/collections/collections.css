@@ -3059,6 +3059,14 @@
   color: var(--tv-ink-primary);
 }
 
+/* On small screens the stack flow below is the sequence — don't repeat
+   a full CORE glyph strip in the first viewport. */
+@media (max-width: 47.99rem) {
+  .cx-detail-hero-v4__stack {
+    display: none;
+  }
+}
+
 /* Decision strip */
 .cx-detail-hero-v4__decision {
   display: flex;
@@ -3134,6 +3142,23 @@
   border-color: var(--cx-accent);
   color: var(--cx-accent);
   /* shell.css canonical :focus-visible outline applies */
+}
+
+.cx-detail-hero-v4__catalog {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.35rem 0.45rem;
+  color: var(--tv-ink-muted, rgba(255, 255, 255, 0.55));
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.cx-detail-hero-v4__catalog:hover,
+.cx-detail-hero-v4__catalog:focus-visible {
+  color: var(--cx-accent);
 }
 
 /* ===== STACK FLOW V4 ===== */
@@ -3954,8 +3979,8 @@
 .cx-anti-rec-v4 {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  padding: 1.5rem 1.6rem 1.6rem;
+  gap: 0.75rem;
+  padding: 1.05rem 1.15rem 1.15rem;
   background: color-mix(in srgb, var(--tv-bg-base) 92%, var(--cx-accent) 8%);
   border: 1px solid var(--cx-accent-soft);
   border-radius: 16px;
@@ -3977,7 +4002,7 @@
 
 .cx-anti-rec-v4__title {
   font-family: var(--tv-font-family-display);
-  font-size: clamp(1.4rem, 4.4vw, 1.85rem);
+  font-size: clamp(1.2rem, 3.6vw, 1.5rem);
   line-height: 1.1;
   /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
   font-weight: 400;
@@ -4347,8 +4372,8 @@
 }
 
 .cx-index__group {
-  margin-top: clamp(2rem, 4vw, 3rem);
-  padding-top: clamp(1.4rem, 2.2vw, 1.8rem);
+  margin-top: clamp(1.25rem, 2.4vw, 2rem);
+  padding-top: clamp(0.9rem, 1.6vw, 1.2rem);
   border-top: 1px solid var(--cx-border, rgba(255, 255, 255, 0.08));
 }
 
@@ -4377,12 +4402,15 @@
 .cx-index__group-title {
   font-family: var(--tv-font-family-display);
   font-weight: 400;
-  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
   line-height: 1.05;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
   text-wrap: balance;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .cx-index__group-lede {
@@ -4397,14 +4425,15 @@
    (was previously margin-top on the grid, which double-counted with any
    parent gap). */
 .cx-index__grid--group {
-  margin-top: 1.1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  margin-top: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0.75rem;
 }
 
 .cx-index__principles {
-  margin-top: clamp(2.4rem, 4.4vw, 3.4rem);
-  padding-top: clamp(1.6rem, 2.6vw, 2.2rem);
-  border-top: 1px solid var(--cx-border, rgba(255, 255, 255, 0.08));
+  margin-top: 0;
+  padding-top: 0.25rem;
+  border-top: none;
 }
 
 .cx-index__principles-grid {
@@ -4419,30 +4448,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Group header: split h2 + lede into 2 columns so long ledes don't
-     push the cards below the fold. Eyebrow spans full width. */
-  .cx-index__group-header {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 2rem;
-    row-gap: 0.6rem;
-    align-items: baseline;
-  }
-
-  .cx-index__group-eyebrow {
-    grid-column: 1 / -1;
-  }
-
   .cx-index__group-title {
-    grid-column: 1;
-    font-size: clamp(1.55rem, 2.4vw, 2rem);
-  }
-
-  .cx-index__group-lede {
-    grid-column: 2;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    max-width: none;
+    font-size: clamp(1.2rem, 1.8vw, 1.45rem);
   }
 }
 
@@ -4712,4 +4719,193 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .cx-section-nav a { transition: none; }
+}
+
+
+/* ====================================================================
+   CX UX COMPRESSION — index how-it-works + detail depth + denser groups
+   ==================================================================== */
+
+.cx-index__how,
+.cx-detail-depth {
+  border: 1px solid var(--cx-border, var(--tv-border-subtle));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--tv-bg-base) 94%, var(--cx-accent, var(--tv-accent-cyan)) 6%);
+}
+
+.cx-index__how {
+  margin: 0;
+}
+
+.cx-index__how-summary,
+.cx-detail-depth__summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  padding: 0.7rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 560;
+  color: var(--tv-ink-primary);
+  letter-spacing: 0.01em;
+}
+
+.cx-index__how-summary::-webkit-details-marker,
+.cx-detail-depth__summary::-webkit-details-marker {
+  display: none;
+}
+
+.cx-index__how-summary::after,
+.cx-detail-depth__summary::after {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  flex: 0 0 auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.7;
+  transition: transform 160ms ease;
+}
+
+.cx-index__how[open] > .cx-index__how-summary::after,
+.cx-detail-depth[open] > .cx-detail-depth__summary::after {
+  transform: rotate(-135deg);
+  margin-top: 0.25rem;
+}
+
+.cx-index__how-panel {
+  display: grid;
+  gap: 1.15rem;
+  padding: 0 0.85rem 1rem;
+}
+
+.cx-index__how .cx-index__lede-block {
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+}
+
+.cx-index__how .cx-index__principles-grid {
+  margin-top: 0.75rem;
+}
+
+.cx-detail-depth {
+  padding-bottom: 0.35rem;
+}
+
+.cx-detail-depth .cx-variant-paths-v4__head,
+.cx-detail-depth .cx-decision-notes-v4__head,
+.cx-detail-depth .cx-scenario-v4__head {
+  padding: 0.15rem 1rem 0.85rem;
+}
+
+.cx-detail-depth .cx-decision-notes-v4__groups,
+.cx-detail-depth .cx-scenario-v4__body,
+.cx-detail-depth .cx-scenario-v4__steps,
+.cx-detail-depth .cx-scenario-v4__disclaimer,
+.cx-detail-depth .cx-variant-paths-v4__tabs,
+.cx-detail-depth .cx-variant-paths-v4__panel,
+.cx-detail-depth .cx-variant-paths-v4__paths {
+  padding-inline: 1rem;
+}
+
+.cx-variant-paths-v4.cx-detail-depth,
+.cx-decision-notes-v4.cx-detail-depth,
+.cx-scenario-v4.cx-detail-depth {
+  padding-top: 0;
+  border-top: none;
+  border-bottom: none;
+}
+
+.cx-scenario-v4.cx-detail-depth {
+  padding-bottom: 0.85rem;
+}
+
+/* Denser non-featured cards in group grids */
+.cx-index__grid--group .cx-card-v4 {
+  padding: 0.85rem 0.9rem 0.9rem;
+  gap: 0.45rem;
+}
+
+.cx-index__grid--group .cx-card-v4__promise {
+  -webkit-line-clamp: 2;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.cx-index__grid--group .cx-card-v4__stack-list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.cx-index__grid--group .cx-card-v4__stack-meta {
+  display: none;
+}
+
+.cx-index__grid--group .cx-card-v4__foot {
+  padding-top: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+/* Featured stays first and full; tighten the section gap only */
+.cx-index__start {
+  margin-top: 0.35rem;
+}
+
+/* Collection-scoped guest gate: keep the rule, consume less page length */
+.cx-index .tv-member-gate,
+.cx-detail-v4 .tv-member-gate {
+  margin-top: 1.1rem;
+}
+
+.cx-index .tv-member-gate__card,
+.cx-detail-v4 .tv-member-gate__card {
+  margin-bottom: 0.75rem;
+  padding: 1rem 1.15rem;
+  gap: 0.5rem;
+}
+
+.cx-index .tv-member-gate__title,
+.cx-detail-v4 .tv-member-gate__title {
+  font-size: 1.15rem;
+}
+
+.cx-index .tv-member-gate__body,
+.cx-detail-v4 .tv-member-gate__body {
+  font-size: 0.9rem;
+}
+
+.cx-index .tv-member-gate__locked,
+.cx-detail-v4 .tv-member-gate__locked {
+  max-height: 9rem;
+}
+
+@media (max-width: 47.99rem) {
+  .cx-index__grid--group {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0.15rem;
+    gap: 0.7rem;
+    padding-bottom: 0.35rem;
+    margin-top: 0.65rem;
+    grid-template-columns: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cx-index__grid--group > .cx-card-v4 {
+    flex: 0 0 min(82vw, 18.5rem);
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cx-index__how-summary::after,
+  .cx-detail-depth__summary::after {
+    transition: none;
+  }
 }

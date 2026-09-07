@@ -1,37 +1,25 @@
 "use client";
 
 /**
- * TooolVibes — Tool Detail FINAL — Action Surface (A.2)
+ * TooolVibes — Tool Detail FINAL — Action Surface
  *
- * 44×44 controls: external CTA, Save, Compare, rank chip, shortcut CTA.
- * Reads / writes the canonical tool workspace store.
- * Respects MIN_COMPARE_TOOLS=2 / MAX_COMPARE_TOOLS=5.
- *
- * Wave 6: bookmark is Speed 1; ⋯ / hold opens SaveOverflow (stack + Confronta).
+ * Public actions: Salva, Confronta, Visita.
+ * Speed 2 overflow/hold still opens stack actions for logged-in workspace.
  * Namespace: .td-final-*
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Bookmark, Columns3, ExternalLink } from "lucide-react";
 
-import { markWorkspaceToolUsing } from "@/lib/account/workspace-actions";
-import { formatRevisitLine, usageActionLabel } from "@/lib/account/workspace-lifecycle";
 import {
   MAX_COMPARE_TOOLS,
   MIN_COMPARE_TOOLS,
-  getCanonicalToolWorkspaceState,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
-import {
-  WorkspacePersonalStatusBadge,
-  usePersonalToolStatus,
-} from "@/components/account/workspace/workspace-personal-status";
 import { SaveOverflow } from "@/components/tools/save-overflow";
 import { useSaveHold } from "@/components/tools/save-hold";
 import { openSaveOverflow } from "@/components/tools/save-overflow-state";
-import { PrivateNoteEditor } from "@/components/account/workspace/private-note-editor";
-import { PersonalInsightsLayer } from "@/components/account/workspace/personal-insights-layer";
 
 type ToolDetailActionSurfaceProps = {
   slug: string;
@@ -45,19 +33,12 @@ export function ToolDetailActionSurface({
   slug,
   name,
   externalUrl,
-  primaryLabel,
   isAffiliateLink = false,
 }: ToolDetailActionSurfaceProps) {
   const savedSlugs = useToolWorkspaceStore((s) => s.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const toggleSaved = useToolWorkspaceStore((s) => s.toggleSaved);
   const toggleCompare = useToolWorkspaceStore((s) => s.toggleCompare);
-  const status = usePersonalToolStatus(slug);
-  const [stackUiReady, setStackUiReady] = useState(false);
-  useEffect(() => {
-    setStackUiReady(true);
-  }, []);
-  const workspace = getCanonicalToolWorkspaceState();
 
   const isSaved = savedSlugs.includes(slug);
   const compareRank = useMemo(
@@ -65,12 +46,7 @@ export function ToolDetailActionSurface({
     [compareSlugs, slug],
   );
   const compareCount = compareSlugs.length;
-  const isAtMax = compareCount >= MAX_COMPARE_TOOLS;
-  const canMarkUsing = status?.key === "selected";
-  const activeStacks = stackUiReady
-    ? workspace.personalStacks.filter((stack) => !stack.archivedAt)
-    : [];
-  const containingStacks = activeStacks.filter((stack) => stack.slugs.includes(slug));
+  const isAtMax = compareCount >= MAX_COMPARE_TOOLS && compareRank === 0;
 
   const saveHold = useSaveHold({
     isSaved,
@@ -83,48 +59,6 @@ export function ToolDetailActionSurface({
 
   return (
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
-      <WorkspacePersonalStatusBadge slug={slug} />
-      <PrivateNoteEditor slug={slug} origin="tool" />
-      <PersonalInsightsLayer slug={slug} origin="tool" />
-
-      {status && (containingStacks.length > 0 || workspace.toolStates[slug]?.revisitAt) ? (
-        <div className="td-final-personal">
-          <p className="td-final-personal__label">Il tuo stato</p>
-          <p className="td-final-personal__facts">
-            {containingStacks.length > 0 ? (
-              <span>Stack: {containingStacks.map((stack) => stack.name).join(", ")}</span>
-            ) : null}
-            {formatRevisitLine(workspace.toolStates[slug]?.revisitAt) ? (
-              <span>{formatRevisitLine(workspace.toolStates[slug]?.revisitAt)}</span>
-            ) : null}
-          </p>
-        </div>
-      ) : null}
-
-      <button
-        type="button"
-        onClick={() => toggleCompare(slug)}
-        className="td-final-cta--primary"
-        aria-pressed={compareRank > 0}
-        aria-label={
-          compareRank > 0
-            ? `Rimuovi dal confronto (posizione ${compareRank})`
-            : isAtMax
-              ? `Limite di ${MAX_COMPARE_TOOLS} tool raggiunto`
-              : "Aggiungi al confronto"
-        }
-        title={
-          compareRank > 0
-            ? `Confronto #${String(compareRank).padStart(2, "0")}`
-            : isAtMax
-              ? "Limite raggiunto"
-              : "Confronta"
-        }
-      >
-        <Columns3 size={17} aria-hidden="true" />
-        <span>{compareRank > 0 ? "Rimuovi dal confronto" : "Aggiungi al confronto"}</span>
-      </button>
-
       <div className="td-final-save-cluster">
         <button
           type="button"
@@ -148,30 +82,38 @@ export function ToolDetailActionSurface({
         />
       </div>
 
-      {canMarkUsing ? (
-        <button
-          type="button"
-          className="td-final-cta--secondary"
-          onClick={() => markWorkspaceToolUsing(slug)}
-        >
-          {usageActionLabel("using")}
-        </button>
-      ) : null}
-
-      {containingStacks.length > 0 ? (
-        <span className="text-[length:var(--tv-text-xs)] text-[var(--tv-ink-muted-aa)]">
-          Nello stack: {containingStacks.map((stack) => stack.name).join(", ")}
-        </span>
-      ) : null}
+      <button
+        type="button"
+        onClick={() => toggleCompare(slug)}
+        className="td-final-cta--primary"
+        aria-pressed={compareRank > 0}
+        aria-label={
+          compareRank > 0
+            ? `Rimuovi ${name} dal confronto (posizione ${compareRank})`
+            : isAtMax
+              ? `Limite di ${MAX_COMPARE_TOOLS} tool raggiunto`
+              : `Confronta ${name}`
+        }
+        title={
+          compareRank > 0
+            ? `Confronto #${String(compareRank).padStart(2, "0")}`
+            : isAtMax
+              ? "Limite raggiunto"
+              : "Confronta"
+        }
+      >
+        <Columns3 size={17} aria-hidden="true" />
+        <span>{compareRank > 0 ? "In confronto" : "Confronta"}</span>
+      </button>
 
       <a
         href={externalUrl}
         target="_blank"
         rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
         className="td-final-cta--secondary"
-        aria-label={`${primaryLabel} di ${name} in una nuova scheda`}
+        aria-label={`Visita il sito ufficiale di ${name}`}
       >
-        <span>Visita il sito ufficiale</span>
+        <span>Visita</span>
         <ExternalLink size={15} aria-hidden="true" />
       </a>
 
@@ -209,7 +151,7 @@ export function ToolDetailActionSurface({
           <span>
             {compareCount >= MIN_COMPARE_TOOLS
               ? "Apri confronto"
-              : `Confronto · ${compareCount}/${MAX_COMPARE_TOOLS}`}
+              : `Confronto · ${compareCount}/{MAX_COMPARE_TOOLS}`}
           </span>
         </a>
       ) : null}
