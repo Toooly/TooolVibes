@@ -88,7 +88,14 @@ export function GuideCard({
       >
         <div className="guides-feature__body">
           <div className="guides-feature__topline guides-feature__topline--feature">
-            <span className="guides-kicker">Guida in evidenza</span>
+            <span className="guides-kicker guides-feature__kicker">Guida in evidenza</span>
+            <p className="guides-feature__signal">
+              <span>{resolvedTopic}</span>
+              <span className="guides-feature__signal-dot" aria-hidden>
+                ·
+              </span>
+              <span>{minutes} min</span>
+            </p>
           </div>
 
           <h2

@@ -11,7 +11,7 @@ import { GuideRelatedRail } from "@/components/guides/guide-related";
 import { GuidePartnerExperience } from "@/components/guides/guide-partner-experience";
 import {
   GuideCallout,
-  GuideKeyTakeaways,
+  GuideTakeawaysDisclosure,
   GuideByline,
 } from "@/components/guides/guide-callout";
 import {
@@ -242,12 +242,7 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   readingMinutes={readingMinutes}
                 />
 
-                {post.highlights.length > 0 ? (
-                  <GuideKeyTakeaways
-                    title="Cosa otterrai da questa guida"
-                    items={post.highlights}
-                  />
-                ) : null}
+                <GuideTakeawaysDisclosure items={post.highlights} />
 
                 <MemberPreviewGate
                   title="Continua nel tuo spazio"

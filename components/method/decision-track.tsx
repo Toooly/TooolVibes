@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
  *
  * Lifecycle steps (Scopri → Valuta → Confronta → Decidi → Ricorda) with a connecting
  * trace. On wide viewports the steps lay out horizontally with a
- * gradient connector between them; on mobile they stack vertically with
- * a vertical connector dotted line.
+ * gradient connector between them; on mobile they stack as a native
+ * <details> accordion (first open, exclusive via the `name` attribute).
  *
  * Facts are kept verbatim from the prior /metodo composition so the
  * editorial meaning is preserved while the visual gets reconstructed.
@@ -46,20 +46,28 @@ export function DecisionTrack({ steps, className, eyebrow }: DecisionTrackProps)
         </div>
       ) : null}
       <ol className="method-track__list" aria-label="Percorso editoriale TooolVibes">
-        {steps.map((step) => (
+        {steps.map((step, index) => (
           <li key={step.label} className="method-track__step">
-            <span className="method-track__step-index" aria-hidden="true">
-              {step.index}
-            </span>
-            <div className="method-track__step-body">
-              <span className="method-track__step-label">{step.label}</span>
-              <h3 className="method-track__step-title">{step.title}</h3>
-              <p className="method-track__step-copy">{step.copy}</p>
-              <Link className="method-track__step-cta" href={step.href}>
-                <span>{step.cta}</span>
-                <ArrowRight aria-hidden="true" className="size-3.5" />
-              </Link>
-            </div>
+            <details
+              className="method-track__disclosure"
+              name="tooolvibes-method-track"
+              open={index === 0}
+            >
+              <summary className="method-track__summary">
+                <span className="method-track__step-index" aria-hidden="true">
+                  {step.index}
+                </span>
+                <span className="method-track__step-label">{step.label}</span>
+                <h3 className="method-track__step-title">{step.title}</h3>
+              </summary>
+              <div className="method-track__step-body">
+                <p className="method-track__step-copy">{step.copy}</p>
+                <Link className="method-track__step-cta" href={step.href}>
+                  <span>{step.cta}</span>
+                  <ArrowRight aria-hidden="true" className="size-3.5" />
+                </Link>
+              </div>
+            </details>
           </li>
         ))}
       </ol>

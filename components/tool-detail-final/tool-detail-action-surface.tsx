@@ -3,7 +3,7 @@
 /**
  * TooolVibes — Tool Detail FINAL — Action Surface
  *
- * Public actions: Salva, Confronta, Visita.
+ * Public actions: Confronta (primary yellow), Salva (tertiary), Visita (outline).
  * Speed 2 overflow/hold still opens stack actions for logged-in workspace.
  * Namespace: .td-final-*
  */
@@ -59,29 +59,6 @@ export function ToolDetailActionSurface({
 
   return (
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
-      <div className="td-final-save-cluster">
-        <button
-          type="button"
-          {...saveHold}
-          className={cn("td-final-cta--save", isSaved && "is-saved")}
-          aria-pressed={isSaved}
-          aria-label={isSaved ? `Rimuovi ${name} dai Salvati` : `Salva ${name}`}
-          title={isSaved ? "Salvato" : "Salva"}
-        >
-          <Bookmark
-            size={17}
-            aria-hidden="true"
-            fill={isSaved ? "currentColor" : "none"}
-          />
-          <span>{isSaved ? "Salvato" : "Salva"}</span>
-        </button>
-        <SaveOverflow
-          slug={slug}
-          toolName={name}
-          triggerClassName="td-final-save-more"
-        />
-      </div>
-
       <button
         type="button"
         onClick={() => toggleCompare(slug)}
@@ -105,6 +82,29 @@ export function ToolDetailActionSurface({
         <Columns3 size={17} aria-hidden="true" />
         <span>{compareRank > 0 ? "In confronto" : "Confronta"}</span>
       </button>
+
+      <div className="td-final-save-cluster">
+        <button
+          type="button"
+          {...saveHold}
+          className={cn("td-final-cta--save", isSaved && "is-saved")}
+          aria-pressed={isSaved}
+          aria-label={isSaved ? `Rimuovi ${name} dai Salvati` : `Salva ${name}`}
+          title={isSaved ? "Salvato" : "Salva"}
+        >
+          <Bookmark
+            size={17}
+            aria-hidden="true"
+            fill={isSaved ? "currentColor" : "none"}
+          />
+          <span>{isSaved ? "Salvato" : "Salva"}</span>
+        </button>
+        <SaveOverflow
+          slug={slug}
+          toolName={name}
+          triggerClassName="td-final-save-more"
+        />
+      </div>
 
       <a
         href={externalUrl}
@@ -140,6 +140,7 @@ export function ToolDetailActionSurface({
           href="/compare"
           className={cn(
             "td-final-cta--secondary",
+            "td-final-cta--open-compare",
             compareCount >= MIN_COMPARE_TOOLS && "is-ready",
           )}
           aria-label={

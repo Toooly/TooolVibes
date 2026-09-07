@@ -929,7 +929,8 @@
 
   .tv-radar__toolbar,
   .tv-radar__results {
-    padding: var(--tv-space-component-md);
+    padding-block: var(--tv-space-component-md);
+    padding-inline: 0;
   }
 
   .tv-radar__provenance dl {
@@ -1063,7 +1064,7 @@
 
   .tv-radar__results,
   .tv-radar__toolbar {
-    padding-inline: var(--tv-space-px-3);
+    padding-inline: 0;
   }
 
   .tv-radar-node__label {
@@ -1707,5 +1708,41 @@ h1.tv-radar__title,
   .tv-radar-index__copy .tv-radar-personal-reason,
   .tv-radar-table__tool .tv-radar-personal-reason {
     max-width: none;
+  }
+}
+
+/* Mobile density + gutter: first view is H1, status row, chips, results. */
+@media (max-width: 47.99rem) {
+  .tv-radar__eyebrow,
+  .tv-radar__lede {
+    display: none;
+  }
+
+  .tv-radar__header {
+    margin-bottom: var(--tv-space-px-4);
+  }
+
+  h1.tv-radar__title,
+  .tv-radar__title {
+    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+    max-width: 18ch;
+  }
+
+  .tv-radar-control__label {
+    display: none;
+  }
+
+  .tv-radar__results,
+  .tv-radar__toolbar {
+    padding-inline: 0;
+  }
+
+  .tv-radar-status-bar {
+    margin-bottom: var(--tv-space-px-3);
+  }
+
+  .tv-radar__controls {
+    margin-bottom: var(--tv-space-px-4);
+    padding-block: var(--tv-space-px-3);
   }
 }

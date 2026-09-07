@@ -10,7 +10,7 @@
 
   .mobile-compare-arena__empty,
   .mobile-compare-arena__partial {
-    margin-inline: 0.75rem;
+    margin-inline: 0;
     border: 1px solid rgba(255, 255, 255, 0.14);
     background: #11111b;
     border-radius: 24px;
@@ -270,12 +270,12 @@
   }
 
   .tool-battle-page__intro {
-    width: min(calc(100% - 2 * var(--tv-space-4)), var(--tv-content-wide));
+    width: min(calc(100% - 2 * var(--tv-gutter-mobile)), var(--tv-content-wide));
   }
 
   .tool-battle-page__intro h1 {
     max-inline-size: none;
-    font-size: clamp(2.5rem, 10.5vw, 3.3rem);
+    font-size: clamp(1.5rem, 7vw, 2.15rem);
   }
 
   .tool-battle-page__lede {
@@ -316,7 +316,7 @@
     min-height: 0;
     padding:
       0
-      var(--tv-space-4)
+      var(--tv-gutter-mobile)
       calc(var(--tv-bottom-nav-total, 5.5rem) + var(--tv-space-8));
   }
 
@@ -1845,4 +1845,12 @@ html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
 }
 @media (prefers-reduced-motion: reduce) {
   .tv-compare-dock { transition: none; }
+}
+
+@media (max-width: 47.99rem) {
+  .compare-workbench-chrome--empty,
+  .compare-workbench-chrome--prep {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
 }

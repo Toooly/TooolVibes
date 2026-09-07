@@ -21,6 +21,8 @@
   display: flex;
   flex-direction: column;
   background: var(--tv-bg-base);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 /* ============================================================
@@ -116,12 +118,10 @@
   align-self: flex-start;
 }
 
-/* V2 HOME — eyebrow split: long desktop copy vs compact mobile copy. */
-.def-cockpit__eyebrow-mobile { display: none; }
+/* Desktop-only eyebrow; hidden on mobile for hero density. */
 .def-cockpit__eyebrow-desktop { display: inline; }
 @media (max-width: 47.99rem) {
-  .def-cockpit__eyebrow-desktop { display: none; }
-  .def-cockpit__eyebrow-mobile { display: inline; }
+  .def-cockpit__eyebrow { display: none; }
 }
 
 .def-cockpit__eyebrow-dot {
@@ -170,11 +170,19 @@
   max-width: 480px;
 }
 
+.def-cockpit__lede-mobile { display: none; }
+.def-cockpit__lede-desktop { display: inline; }
+
 @media (max-width: 767px) {
   .def-cockpit__lede {
     max-width: 42rem;
     font-size: 0.9375rem;
   }
+}
+
+@media (max-width: 47.99rem) {
+  .def-cockpit__lede-desktop { display: none; }
+  .def-cockpit__lede-mobile { display: inline; }
 }
 
 .def-cockpit__ctas {
@@ -458,6 +466,10 @@
 
 @media (max-width: 767px) {
   .def-editorial__title { font-size: clamp(1.5rem, 6.2vw, 2rem); }
+  .def-editorial {
+    padding-inline: var(--tv-gutter-mobile);
+    max-width: 100%;
+  }
 }
 
 .def-editorial__head-actions {
@@ -989,17 +1001,23 @@
 }
 
 @media (max-width: 767px) {
+  .def-editorial__inner,
+  .def-editorial__podium {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .def-editorial__pod-stage {
     display: flex;
     flex-direction: row;
     align-items: stretch;
     gap: 12px;
     min-height: 0;
-    padding: 0 4px 12px;
+    padding: 0 0 12px;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 4px;
+    scroll-padding-inline: var(--tv-gutter-mobile);
     -webkit-overflow-scrolling: touch;
   }
 
@@ -1365,6 +1383,12 @@
   background: var(--tv-bg-base);
   padding: clamp(48px, 5vw, 72px) clamp(20px, 3vw, 40px);
   border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
+}
+
+@media (max-width: 47.99rem) {
+  .def-method {
+    padding: var(--tv-space-section-sm) var(--tv-gutter-mobile);
+  }
 }
 
 .def-method__head {
@@ -2091,6 +2115,8 @@
 
 
 .def-intent { display: grid; gap: var(--tv-space-component-md); width: 100%; margin-top: var(--tv-space-group-sm); }
+.def-intent__submit-mobile { display: none; }
+.def-intent__submit-desktop { display: inline; }
 .def-intent__label {
   display: block;
   font-size: 12px;
@@ -2339,4 +2365,59 @@
 }
 .def-start .def-stacks {
   padding-top: 4px;
+}
+
+/* ============================================================
+   HOME mobile density — 47.99rem / 767px
+   Compact hero internals; keep desktop copy and yellow search.
+   ============================================================ */
+@media (max-width: 47.99rem) {
+  .def-cockpit__inner {
+    padding-inline: var(--tv-gutter-mobile);
+  }
+
+  .def-cockpit__hero {
+    gap: var(--tv-space-2);
+  }
+
+  .def-intent {
+    margin-top: var(--tv-space-2);
+    gap: var(--tv-space-2);
+  }
+
+  .def-intent__form {
+    position: relative;
+  }
+
+  .def-intent__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .def-intent__hint {
+    display: none;
+  }
+
+  .def-intent__field {
+    width: 100%;
+    min-height: 56px;
+  }
+
+  .def-intent__submit-desktop { display: none; }
+  .def-intent__submit-mobile { display: inline; }
+
+  .def-cockpit__journey-kicker {
+    display: none;
+  }
+
+  .def-cockpit__journey li em {
+    display: none;
+  }
 }

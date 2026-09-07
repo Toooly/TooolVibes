@@ -78,12 +78,17 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           </div>
           <div>
             <p className="cx-index__lede">
-              Le <strong>raccolte TooolVibes</strong> sono stack operativi: tool,
-              ruoli e ordine di lavoro già decisi per un risultato preciso.
-              Non un elenco di preferiti. Non una lista della spesa.
-              <br />
-              Se cerchi un singolo tool, vai su <Link href="/archivio">Catalogo</Link>.
-              Se vuoi studiarne uno in profondità, le <Link href="/posts">Guide</Link>.
+              <span className="cx-index__lede-lead">
+                Le <strong>raccolte TooolVibes</strong> sono stack operativi: tool,
+                ruoli e ordine di lavoro già decisi per un risultato preciso.
+              </span>
+              <span className="cx-index__lede-extra">
+                {" "}
+                Non un elenco di preferiti. Non una lista della spesa.
+                {" "}
+                Se cerchi un singolo tool, vai su <Link href="/archivio">Catalogo</Link>.
+                Se vuoi studiarne uno in profondità, le <Link href="/posts">Guide</Link>.
+              </span>
             </p>
             <div className="cx-index__meta" aria-label="A colpo d'occhio">
               <span>

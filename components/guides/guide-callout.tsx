@@ -73,6 +73,19 @@ export function GuideKeyTakeaways({
   );
 }
 
+export function GuideTakeawaysDisclosure({
+  title = "Cosa otterrai da questa guida",
+  items,
+}: GuideKeyTakeawaysProps) {
+  if (!items || items.length === 0) return null;
+  return (
+    <details className="guides-takeaways-disclosure">
+      <summary>Quando ti serve questa guida</summary>
+      <GuideKeyTakeaways title={title} items={items} />
+    </details>
+  );
+}
+
 type GuideBylineProps = {
   author?: string;
   publishedAt?: string;

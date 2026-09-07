@@ -55,10 +55,14 @@ export function GuideArticleHero({
       <div className="guides-article__hero-main">
         <div className="guides-article__hero-meta">
           <span className="pill pill--accent">Guida</span>
-          <span className="pill">{topicLabel}</span>
-          <span className="pill">Pubblicata {published}</span>
-          {showUpdated ? <span className="pill">Aggiornata {updated}</span> : null}
-          <span className="pill">{readingMinutes} min di lettura</span>
+          <span className="pill" data-guide-pill="topic">{topicLabel}</span>
+          <span className="pill" data-guide-pill="date">Pubblicata {published}</span>
+          {showUpdated ? (
+            <span className="pill" data-guide-pill="updated">
+              Aggiornata {updated}
+            </span>
+          ) : null}
+          <span className="pill" data-guide-pill="time">{readingMinutes} min di lettura</span>
         </div>
 
         <h1 id="guide-article-title" className="guides-article__hero-h1">

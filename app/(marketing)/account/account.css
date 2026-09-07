@@ -260,7 +260,7 @@
 
 @media (max-width: 47.99rem) {
   .v-auth-page {
-    padding: 0.75rem 1rem 2rem;
+    padding: 0.75rem var(--tv-gutter-mobile) 2rem;
   }
 
   .v-auth-container--split {
@@ -276,20 +276,16 @@
 
   .v-auth-card {
     border-radius: 0.6rem;
-    padding: 1rem;
+    padding-block: 1rem;
+    padding-inline: var(--tv-gutter-mobile);
   }
 
-  .v-auth-context > p:not(.v-auth-context__eyebrow):not(.v-auth-context__title) {
-    margin-top: 0.75rem;
-    font-size: 0.9375rem;
+  .v-auth-context > p:not(.v-auth-context__title):not(.v-auth-context__live) {
+    display: none;
   }
 
   .v-auth-context ul {
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    margin-bottom: 0;
-    font-size: 0.9375rem;
+    display: none;
   }
 
   .v-auth-header {

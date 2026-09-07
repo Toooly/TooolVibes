@@ -40,14 +40,17 @@ export function IntentEntry() {
             id="home-intent-query"
             type="search"
             name="q"
-            placeholder="MVP, Make, video AI, WeWeb…"
+            placeholder="Cerca un tool o un obiettivo…"
             autoComplete="off"
             aria-describedby="home-intent-hint"
           />
-          <button type="submit">Cerca nel catalogo</button>
+          <button type="submit">
+            <span className="def-intent__submit-desktop">Cerca nel catalogo</span>
+            <span className="def-intent__submit-mobile">Cerca</span>
+          </button>
         </div>
       </form>
-      <ul className="def-intent__chips" aria-label="Obiettivi del catalogo">
+      <ul className="def-intent__chips" id="home-intent-extra" aria-label="Obiettivi del catalogo">
         {DISCOVERY_INTENTS.map((intent, index) => (
           <li key={intent.id} hidden={index >= PRIMARY_INTENT_COUNT && !moreOpen}>
             <a href={intent.href}>{intent.label}</a>
@@ -59,6 +62,7 @@ export function IntentEntry() {
               type="button"
               className="def-intent__more"
               aria-expanded={moreOpen}
+              aria-controls="home-intent-extra"
               onClick={() => setMoreOpen((open) => !open)}
             >
               Altri obiettivi

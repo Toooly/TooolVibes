@@ -6,6 +6,7 @@ import path from "node:path";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
+import { completeToolPublicFixture } from "@/__tests__/fixtures/tool-public";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { CATALOG_FILTER_GROUPS, makeCatalogTool } from "../directory/catalog-test-fixtures";
@@ -167,10 +168,69 @@ describe("Catalogo — compressed mobile discovery", () => {
     const nameLink = screen.getByRole("link", { name: /Apri la scheda di/ });
     expect(nameLink.getAttribute("href")).toBe("/toools/cursor");
     expect(nameLink.textContent).toBe("Cursor");
+    expect(nameLink.getAttribute("aria-label")).toBe("Apri la scheda di Cursor");
     expect(screen.queryByText("Apri la scheda")).toBeNull();
     expect(document.querySelector(".ar4-card__open")).toBeNull();
     expect(document.querySelector('[data-sonic-action="save"]')).toBeTruthy();
     expect(document.querySelector('[data-sonic-action="compare"]')).toBeTruthy();
+    expect(document.querySelector(".ar4-card__save-more")).toBeTruthy();
+  });
+
+  it("renders compact score · skill copy without the editorial label", () => {
+    render(
+      <ArchiveV4ToolCard
+        tool={makeCatalogTool({
+          slug: "cursor",
+          name: "Cursor",
+          level: "intermediate",
+          levelLabel: "Intermedio",
+          idealUseCase: "Prototipi con AI",
+          highlights: ["Differenziatore unico"],
+          publicTool: {
+            ...completeToolPublicFixture,
+            score: {
+              ...completeToolPublicFixture.score,
+              value: 8.4,
+              verdict: "Una scelta solida per ricerche con fonti controllabili.",
+              limitationsAssessed: true,
+            },
+          },
+          cautions: ["Serve revisione umana"],
+        })}
+      />,
+    );
+
+    expect(screen.queryByText(/Valutazione editoriale/)).toBeNull();
+    expect(screen.getByText("8.4 · Intermedio")).toBeTruthy();
+    expect(screen.getByText("Ideale per: Prototipi con AI")).toBeTruthy();
+    expect(document.querySelector(".ar4-card__diff")?.textContent).toBe(
+      "Differenziatore unico",
+    );
+  });
+
+  it("keeps the mobile density, stretched-link, and gutter contracts", () => {
+    const css = readSource("styles/archive-v4.css");
+    const card = readSource("components/archive/archive-v4-tool-card.tsx");
+
+    expect(card).not.toContain("Valutazione editoriale");
+    expect(card).toContain('aria-label={`Apri la scheda di ${tool.name}`}');
+    expect(card).toContain("ar4-card__name-link");
+    expect(card).toContain("ShortlistToggle");
+    expect(card).toContain("CompareToggle");
+    expect(card).toContain("ar4-card__save-more");
+
+    expect(css).toContain(".ar4-card__name-link::after");
+    expect(css).toContain("inset: 0");
+    expect(css).toContain("padding: 24px var(--tv-gutter-mobile) 28px");
+    expect(css).toContain("padding: 28px var(--tv-gutter-mobile) 36px");
+    expect(css).not.toContain("padding: 24px 18px 28px");
+    expect(css).not.toContain("padding: 28px 18px 36px");
+    expect(css).toContain(".ar4-intro__data");
+    expect(css).toContain(".ar4-card__diff");
+    expect(css).toContain(".ar4-card__save-more");
+    expect(css).toContain("-webkit-line-clamp: 1");
+    expect(css).toContain("background: var(--tv-button-activation-bg)");
+    expect(css).not.toContain("100vw");
   });
 
   it("keeps a single catalog search and moves filters into an exclusive sheet accordion", () => {

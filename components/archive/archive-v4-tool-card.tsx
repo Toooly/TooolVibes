@@ -111,6 +111,14 @@ function ArchiveV4ToolCard({
     : computeEditorialScore({ publicTool: tool.publicTool, cautions: tool.cautions });
   const showScore =
     editorialScore?.status === "assessed" && editorialScore.value !== null;
+  const scoreLine = [
+    showScore && editorialScore?.value != null
+      ? editorialScore.value.toFixed(1)
+      : null,
+    skill,
+  ]
+    .filter((part): part is string => Boolean(part))
+    .join(" · ");
   const tierLabel = effectiveTier ? TIER_LABEL[effectiveTier] : null;
 
   return (
@@ -153,7 +161,7 @@ function ArchiveV4ToolCard({
               className="ar4-card__name-link"
               aria-label={`Apri la scheda di ${tool.name}`}
             >
-              {tool.name}
+              <span className="ar4-card__name-text">{tool.name}</span>
             </Link>
           </h3>
           <p className="ar4-card__category">{tool.categoryLabel}</p>
@@ -192,14 +200,9 @@ function ArchiveV4ToolCard({
       <p className="ar4-card__desc">
         {tool.tldr || tool.shortDescription || "Scheda in preparazione."}
       </p>
-      {!reduced && (skill || showScore || bestFor || differentiator) ? (
+      {!reduced && (scoreLine || bestFor || differentiator) ? (
         <div className="ar4-card__triage">
-          {skill ? <span className="ar4-card__skill">{skill}</span> : null}
-          {showScore && editorialScore?.value != null ? (
-            <span className="ar4-card__score">
-              Valutazione editoriale {editorialScore.value.toFixed(1)}/10
-            </span>
-          ) : null}
+          {scoreLine ? <span className="ar4-card__score">{scoreLine}</span> : null}
           {bestFor ? <p className="ar4-card__best">Ideale per: {bestFor}</p> : null}
           {differentiator ? (
             <p className="ar4-card__diff">{differentiator}</p>

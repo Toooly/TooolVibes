@@ -17,10 +17,6 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
     firstListItemOrSentence(markdown.byId.fit) ||
     tool.useCases[0] ||
     null;
-  const notFit =
-    tool.cautions[0] ??
-    firstListItemOrSentence(markdown.byId.notFit) ??
-    null;
   const tradeOff =
     tool.highlights.find((item) => item && item !== fit) ??
     (tool.whyItMatters && tool.whyItMatters !== fit ? tool.whyItMatters : null) ??
@@ -34,16 +30,18 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
     null;
 
   const rows = [
-    fit ? { dt: "Fa per te se", dd: fit } : null,
-    notFit ? { dt: "Non fa per te se", dd: notFit } : null,
-    tradeOff ? { dt: "Trade-off principale", dd: tradeOff } : null,
-    verdict ? { dt: "Verdetto editoriale", dd: verdict } : null,
+    fit ? { dt: "Ideale per", dd: fit } : null,
+    tradeOff ? { dt: "Trade-off", dd: tradeOff } : null,
+    verdict ? { dt: "Verdetto", dd: verdict } : null,
   ].filter((row): row is { dt: string; dd: string } => row !== null);
 
   if (rows.length === 0) return null;
 
   return (
-    <section className="td-final-brief" aria-label="Sintesi per decidere">
+    <section className="td-final-brief" aria-labelledby="td-final-brief-heading">
+      <p id="td-final-brief-heading" className="td-final-brief__eyebrow">
+        In breve
+      </p>
       <dl>
         {rows.map((row) => (
           <div key={row.dt}>

@@ -31,7 +31,6 @@ function Cockpit({ toolCount }: { toolCount: number }) {
     toolCount > 0
       ? `Per chi costruisce prodotti digitali · ${toolCount} tool nel catalogo`
       : "Per chi costruisce prodotti digitali";
-  const eyebrowMobile = toolCount > 0 ? `${toolCount} tool da valutare` : "Catalogo in arrivo";
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div aria-hidden="true" className="def-cockpit__bg">
@@ -44,7 +43,6 @@ function Cockpit({ toolCount }: { toolCount: number }) {
           <p className="def-cockpit__eyebrow">
             <span className="def-cockpit__eyebrow-dot" aria-hidden="true" />
             <span className="def-cockpit__eyebrow-desktop">{eyebrowDesktop}</span>
-            <span className="def-cockpit__eyebrow-mobile">{eyebrowMobile}</span>
           </p>
           <h1
             id="def-cockpit-title"
@@ -54,8 +52,13 @@ function Cockpit({ toolCount }: { toolCount: number }) {
             Scegli il tool giusto. Ricordati perché.
           </h1>
           <p className="def-cockpit__lede">
-            Catalogo curato, confronti onesti e uno spazio dove le tue
-            decisioni restano. Per chi costruisce prodotti, non liste.
+            <span className="def-cockpit__lede-desktop">
+              Catalogo curato, confronti onesti e uno spazio dove le tue
+              decisioni restano. Per chi costruisce prodotti, non liste.
+            </span>
+            <span className="def-cockpit__lede-mobile">
+              Trova, confronta e scegli il software giusto per quello che devi fare.
+            </span>
           </p>
           {toolCount > 0 ? <IntentEntry /> : null}
         </div>

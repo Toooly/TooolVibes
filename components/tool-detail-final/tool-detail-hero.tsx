@@ -1,16 +1,16 @@
 import Link from "next/link";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-import { buildPromoChips } from "@/lib/tools/public-badges";
 
 import { ToolDetailActionSurface } from "./tool-detail-action-surface";
 import { ToolDetailScore } from "./tool-detail-score";
 
 /**
  * A. Hero (Identity + Action Surface)
- * Server component. Breadcrumb, avatar, chips, name, deck, compact
- * score / best-for, actions. Meta (date, reading time, domain, tags)
+ * Server component. Breadcrumb, avatar, category, name, deck, compact
+ * score · level, actions. Meta (date, reading time, domain, tags)
  * lives in Approfondisci → Dati tecnici.
+ * Fit copy lives in In breve, not in the hero facts.
  */
 
 type ToolDetailHeroProps = {
@@ -19,12 +19,6 @@ type ToolDetailHeroProps = {
 };
 
 export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
-  const bestFor =
-    tool.idealUseCase?.trim() ||
-    tool.publicTool.content.bestFor ||
-    tool.useCases[0] ||
-    null;
-
   return (
     <div className="td-final-hero__identity">
       <nav className="td-final-hero__breadcrumb" aria-label="Percorso">
@@ -53,23 +47,6 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
           <span className="td-final-chip td-final-chip--category">
             {tool.categoryLabel}
           </span>
-          {buildPromoChips(tool)
-            .filter((chip) => chip.kind === "level")
-            .map((chip) => (
-            <span
-              key={chip.label}
-              className={
-                chip.kind === "level"
-                  ? "td-final-chip td-final-chip--level"
-                  : `td-final-chip td-final-chip--${chip.kind}`
-              }
-            >
-              {chip.kind !== "level" ? (
-                <span className="td-final-chip__dot" aria-hidden="true" />
-              ) : null}
-              {chip.label}
-            </span>
-          ))}
         </div>
       </div>
 
@@ -80,11 +57,13 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
 
       <div className="td-final-hero__facts">
         <ToolDetailScore tool={tool} />
-        {bestFor ? (
-          <p className="td-final-hero__bestfor">
-            <span className="td-final-hero__bestfor-label">Ideale per</span>
-            {bestFor}
-          </p>
+        {tool.levelLabel ? (
+          <>
+            <span className="td-final-hero__facts-sep" aria-hidden="true">
+              ·
+            </span>
+            <span className="td-final-hero__level">{tool.levelLabel}</span>
+          </>
         ) : null}
       </div>
 

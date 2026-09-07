@@ -192,3 +192,48 @@ describe("ToolDetailActionSurface personal workspace", () => {
     expect(screen.queryByRole("button", { name: "Aggiungi a AI Coding" })).toBeNull();
   });
 });
+
+describe("ToolDetailActionSurface public CTA order", () => {
+  it("orders Confronta before Salva, then Visita", () => {
+    renderSurface();
+
+    const group = screen.getByRole("group", { name: "Azioni scheda" });
+    const kids = Array.from(group.children);
+
+    expect(kids[0]?.className).toContain("td-final-cta--primary");
+    expect(kids[0]?.textContent).toContain("Confronta");
+    expect(kids[1]?.className).toContain("td-final-save-cluster");
+    expect(kids[1]?.textContent).toContain("Salva");
+    expect(kids[2]?.className).toContain("td-final-cta--secondary");
+    expect(kids[2]?.className).not.toContain("td-final-cta--primary");
+    expect(kids[2]?.className).not.toContain("is-ready");
+    expect(kids[2]?.getAttribute("href")).toBe("https://cursor.com");
+  });
+
+  it("keeps Visita outline/secondary and Confronta as the yellow primary", () => {
+    renderSurface();
+
+    const compare = screen.getByRole("button", { name: "Confronta Cursor" });
+    const visit = screen.getByRole("link", { name: "Visita il sito ufficiale di Cursor" });
+    const save = screen.getByRole("button", { name: "Salva Cursor" });
+
+    expect(compare.className).toContain("td-final-cta--primary");
+    expect(save.className).toContain("td-final-cta--save");
+    expect(save.className).not.toContain("td-final-cta--primary");
+    expect(visit.className).toContain("td-final-cta--secondary");
+    expect(visit.className).not.toContain("td-final-cta--primary");
+    expect(visit.className).not.toContain("is-ready");
+  });
+
+  it("keeps compare rank and Apri confronto in the DOM for desktop", () => {
+    seedWorkspace([{ type: "compare/toggle", slug: "cursor", at: T0 }]);
+    renderSurface();
+
+    expect(document.querySelector(".td-final-compare-rank")).toBeTruthy();
+    const openCompare = screen.getByRole("link", { name: "Aggiungi ancora 1 tool per attivare il confronto" });
+    expect(openCompare.className).toContain("td-final-cta--open-compare");
+    expect(openCompare.className).toContain("td-final-cta--secondary");
+    expect(openCompare.className).not.toContain("td-final-cta--primary");
+    expect(openCompare.getAttribute("href")).toBe("/compare");
+  });
+});

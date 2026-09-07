@@ -409,7 +409,7 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
           <h1 id="mobile-library-title">I tuoi Salvati</h1>
           <p>
             {totalCount > 0
-              ? `${totalCount} candidati. Salvare non è decidere: qui tieni le opzioni, poi confronti e scegli.`
+              ? `${totalCount} candidati. Salvare non è decidere.`
               : "La shortlist è il tavolo di lavoro. La decisione è il motivo della scelta."}
           </p>
         </div>
@@ -417,7 +417,14 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
 
       <div className="mobile-library-hero__stats">
         {stats.map((item) => (
-          <div key={item.label} className="mobile-library-hero__stat">
+          <div
+            key={item.label}
+            className={
+              item.label === "Segnalazioni"
+                ? "mobile-library-hero__stat mobile-library-hero__stat--signals"
+                : "mobile-library-hero__stat"
+            }
+          >
             <strong>{item.value}</strong>
             <span>{item.label}</span>
           </div>
