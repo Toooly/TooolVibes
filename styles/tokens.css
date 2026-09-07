@@ -618,6 +618,11 @@
   --tv-button-primary-bg-pressed: var(--tv-accent-brand-pressed);
   --tv-button-primary-text: var(--tv-color-ink-100);
 
+  --tv-button-activation-bg: var(--tv-activation-strong);
+  --tv-button-activation-bg-hover: var(--tv-activation-strong-hover);
+  --tv-button-activation-bg-pressed: var(--tv-activation-strong-pressed);
+  --tv-button-activation-text: var(--tv-activation-strong-ink);
+
   --tv-button-secondary-bg: var(--tv-color-white-08);
   --tv-button-secondary-bg-hover: var(--tv-color-white-12);
   --tv-button-secondary-bg-pressed: var(--tv-color-white-16);

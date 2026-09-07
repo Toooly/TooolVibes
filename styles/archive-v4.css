@@ -739,20 +739,17 @@
 
 .ar4-card.is-selected {
   border-color: var(--tv-accent-primary);
-  background: color-mix(in srgb, var(--tv-accent-primary) 8%, var(--tv-bg-base));
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 30%, transparent),
-    0 12px 32px -16px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-primary) 6%, var(--tv-bg-base));
 }
 
 .ar4-card.is-promoted {
   border-color: var(--tv-accent-gold);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-gold) 6%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 60%);
+  background: var(--tv-bg-base);
 }
 
 .ar4-card.is-promoted.is-selected {
   border-color: var(--tv-accent-gold);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-gold) 8%, var(--tv-bg-base)) 0%, color-mix(in srgb, var(--tv-accent-primary) 6%, var(--tv-bg-base)) 100%);
+  background: color-mix(in srgb, var(--tv-accent-gold) 6%, var(--tv-bg-base));
 }
 
 .ar4-card[data-density="compact"] { padding: 14px; gap: 10px; min-height: 160px; }
@@ -1353,10 +1350,7 @@
 /* Selected (compare) state — already defined; ensure no glow-only reliance */
 .ar4-card.is-selected {
   border-color: var(--tv-accent-primary);
-  background: color-mix(in srgb, var(--tv-accent-primary) 8%, var(--tv-bg-base));
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 30%, transparent),
-    0 12px 32px -16px color-mix(in srgb, var(--tv-accent-primary) 50%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-primary) 6%, var(--tv-bg-base));
 }
 
 .ar4-card.is-selected .ar4-card__rank {
@@ -1767,12 +1761,12 @@
 
 .ar4-sheet__apply {
   flex: 1.6;
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
-  border-color: var(--tv-accent-primary);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  border-color: transparent;
 }
 
-.ar4-sheet__apply:hover { background: color-mix(in srgb, var(--tv-accent-primary) 88%, white 12%); }
+.ar4-sheet__apply:hover { background: var(--tv-button-activation-bg-hover); }
 
 /* ============================================================
    14. STABILIZED v4 — PROGRESSIVE DISCLOSURE + TOGGLE

@@ -98,6 +98,7 @@ describe("Button canonical contract", () => {
         <Button variant="ghost">Ghost</Button>
         <Button variant="destructive">Danger</Button>
         <Button variant="premium">Premium</Button>
+        <Button variant="activation">Activation</Button>
       </>,
     );
 
@@ -116,6 +117,9 @@ describe("Button canonical contract", () => {
     expect(
       screen.getByRole("button", { name: "Premium" }).className,
     ).toContain("premium-button-premium");
+    expect(
+      screen.getByRole("button", { name: "Activation" }).className,
+    ).toContain("tv-cta-primary");
   });
 
   it("exposes every canonical size through data-size", () => {

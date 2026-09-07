@@ -135,14 +135,14 @@
 .v-auth-btn-primary,
 .v-auth-btn-admin {
   border-radius: 0.4rem;
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   box-shadow: none;
 }
 
 .v-auth-btn-primary:hover:not(:disabled),
 .v-auth-btn-admin:hover:not(:disabled) {
-  background: var(--tv-accent-brand-hover);
+  background: var(--tv-button-activation-bg-hover);
   box-shadow: none;
   transform: none;
 }

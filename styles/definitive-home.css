@@ -854,14 +854,16 @@
 }
 
 .def-editorial__spot-cta--primary {
-  background: var(--tv-accent-violet-on-ivory);
-  color: var(--tv-color-ink-100);
-  border-color: transparent;
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
+  background: transparent;
+  color: var(--tv-ink-inverted-primary);
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-muted) 40%, transparent);
+  box-shadow: none;
 }
 
 .def-editorial__spot-cta--primary:hover {
-  background: color-mix(in srgb, var(--tv-accent-violet-on-ivory) 88%, black 12%);
+  border-color: var(--tv-accent-violet-on-ivory);
+  color: var(--tv-accent-violet-on-ivory);
+  background: transparent;
 }
 
 .def-editorial__spot-cta--ghost {
@@ -1088,14 +1090,11 @@
 /* v4: Rank #1 — winner treatment, gold signal, TALLEST */
 .def-editorial__pod-card--rank-1 {
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-accent-gold) 22%, var(--tv-bg-base)) 0%,
-    color-mix(in srgb, var(--tv-accent-gold) 8%, var(--tv-bg-base)) 30%,
-    var(--tv-bg-base) 100%);
-  border: 1.5px solid var(--tv-accent-gold);
+    color-mix(in srgb, var(--tv-accent-gold) 14%, var(--tv-bg-base)) 0%,
+    var(--tv-bg-base) 42%);
+  border: 1px solid var(--tv-accent-gold);
   min-height: 320px;
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 20%, transparent),
-    0 16px 36px -16px color-mix(in srgb, var(--tv-accent-gold) 60%, transparent);
+  box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--tv-accent-gold) 36%, transparent);
 }
 
 @media (max-width: 899px) {
@@ -2128,9 +2127,17 @@
   padding: 0 14px;
   border: 0;
   border-radius: var(--tv-radius-card);
-  background: var(--tv-accent-brand);
-  color: var(--tv-button-primary-text);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   font-weight: 650;
+}
+@media (hover: hover) and (pointer: fine) {
+  .def-intent__field button:hover {
+    background: var(--tv-button-activation-bg-hover);
+  }
+}
+.def-intent__field button:active {
+  background: var(--tv-button-activation-bg-pressed);
 }
 .def-intent__field:focus-within {
   outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);

@@ -242,7 +242,6 @@
   height: 0.4rem;
   border-radius: var(--tv-radius-pill);
   background: var(--tv-accent-gold);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
 }
 
 .secondary-section__title {
@@ -511,8 +510,8 @@
   min-height: 2.75rem;
   padding: 0.5rem 1rem;
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-brand);
-  color: var(--tv-ink-on-brand);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-label);
   font-weight: var(--tv-weight-semibold);
@@ -523,8 +522,8 @@
 }
 
 .secondary-card__cta:hover {
-  background: var(--tv-accent-brand-hover);
-  color: var(--tv-ink-on-brand);
+  background: var(--tv-button-activation-bg-hover);
+  color: var(--tv-button-activation-text);
 }
 
 .secondary-card__cta:focus-visible {

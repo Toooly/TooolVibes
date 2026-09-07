@@ -25,6 +25,7 @@ const buttonVariants = cva(
       variant: {
         default: "premium-button-primary",
         primary: "premium-button-primary",
+        activation: "tv-cta-primary",
         premium: "premium-button-premium",
         glow: "premium-button-glow",
         outline:
@@ -92,7 +93,7 @@ function Button({
 }
 
 type ButtonLinkProps = React.ComponentProps<typeof Link> & {
-  variant?: "primary" | "premium" | "secondary" | "ghost" | "outline";
+  variant?: "primary" | "activation" | "premium" | "secondary" | "ghost" | "outline";
 };
 
 function ButtonLink({
@@ -105,6 +106,7 @@ function ButtonLink({
       className={cn(
         "premium-button text-ui-strong group/button inline-flex w-full items-center justify-center gap-2 rounded-[var(--tv-button-radius)] px-[var(--tv-button-padding-x-md)] py-[var(--tv-button-padding-y-md)] text-center text-[0.95rem] font-[weight:var(--tv-button-font-weight)] tracking-normal sm:w-auto",
         variant === "primary" && "premium-button-primary text-white sm:min-w-[11.75rem]",
+        variant === "activation" && "tv-cta-primary sm:min-w-[11.75rem]",
         variant === "premium" && "premium-button-premium text-white sm:min-w-[11.75rem]",
         variant === "secondary" && "premium-button-secondary sm:min-w-[10.5rem]",
         variant === "ghost" && "premium-button-ghost sm:min-w-[10.5rem]",

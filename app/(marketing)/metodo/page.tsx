@@ -188,7 +188,7 @@ export default function MetodoPage() {
         body="Parti dal catalogo per restringere i candidati. I Salvati tengono quelli che stai considerando, con il motivo."
         actions={
           <>
-            <Link href="/archivio" className="secondary-card__cta">
+            <Link href="/archivio" className="secondary-card__cta secondary-card__cta--ghost">
               <span>Apri il catalogo</span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>

@@ -341,6 +341,51 @@
 
 
 /* ============================================================
+   PUBLIC PRIMARY CTA — activation yellow, not editorial gold
+   ============================================================ */
+
+.tv-cta-primary {
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tv-cta-primary:hover:not(:disabled) {
+    background: var(--tv-button-activation-bg-hover);
+    color: var(--tv-button-activation-text);
+  }
+}
+
+.tv-cta-primary:active:not(:disabled) {
+  background: var(--tv-button-activation-bg-pressed);
+}
+
+.tv-cta-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tv-cta-primary:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+}
+
+.premium-button.tv-cta-primary {
+  animation: none;
+  filter: none;
+  background-image: none;
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+}
+
+.premium-button.tv-cta-primary::before,
+.premium-button.tv-cta-primary::after {
+  display: none;
+}
+
+/* ============================================================
    CONSENT — common chrome, not activation yellow
    ============================================================ */
 

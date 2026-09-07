@@ -1536,11 +1536,10 @@
   cursor: pointer;
 }
 
-.compare-workbench-chrome__cta--primary,
-.compare-workbench-identity__decide,
-.compare-workbench-decide-jump {
-  border-color: color-mix(in srgb, var(--tv-accent-brand, #7052ff) 40%, var(--tv-border-subtle));
-  background: color-mix(in srgb, var(--tv-accent-brand, #7052ff) 16%, transparent);
+.compare-workbench-chrome__cta--primary {
+  border-color: transparent;
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
 }
 
 .compare-workbench-chrome__cta:focus-visible,
@@ -1815,11 +1814,17 @@
   min-height: var(--tv-button-min-height-touch);
   padding: 0 var(--tv-button-padding-x-md);
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-brand);
-  color: var(--tv-button-primary-text);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   text-decoration: none;
   font-weight: var(--tv-button-font-weight);
   font-size: var(--tv-text-button);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tv-compare-dock__cta:hover {
+    background: var(--tv-button-activation-bg-hover);
+    color: var(--tv-button-activation-text);
+  }
 }
 @media (min-width: 1280px) {
   .tv-compare-dock { bottom: 16px; }

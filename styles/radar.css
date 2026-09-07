@@ -1502,11 +1502,11 @@ h1.tv-radar__title,
   text-decoration: none;
 }
 .tv-radar-state__cta--primary {
-  background: var(--tv-button-primary-bg);
-  color: var(--tv-button-primary-fg);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
 }
 .tv-radar-state__cta--primary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--tv-button-primary-bg) 88%, var(--tv-ink-primary));
+  background: var(--tv-button-activation-bg-hover);
 }
 .tv-radar-state__cta--primary:disabled { opacity: 0.65; cursor: progress; }
 .tv-radar-state__cta--secondary {

@@ -55,22 +55,7 @@ export function GuideArticleEnd({
           padding: "1rem 0 0 0",
         }}
       >
-        <Link
-          href="/posts"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            padding: "0.7rem 1.05rem",
-            borderRadius: "999px",
-            fontSize: "0.88rem",
-            fontWeight: 700,
-            textDecoration: "none",
-            background: "linear-gradient(135deg, #c0b2ff 0%, #76e1ff 100%)",
-            color: "#0b0820",
-            boxShadow: "0 16px 36px rgba(118, 225, 255, 0.18)",
-          }}
-        >
+        <Link href="/posts" className="guides-end__cta">
           Tutte le guide
           <span aria-hidden>→</span>
         </Link>

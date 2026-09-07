@@ -481,13 +481,22 @@
 .marketing-shell :is(
   .premium-button-primary,
   .premium-button-glow,
+  .tv-cta-primary
+) {
+  border-color: transparent;
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  box-shadow: none;
+}
+
+.marketing-shell :is(
   .home-discovery-hero__cta--primary,
   .home-radar-preview__cta,
   .v-spotlight-cta--primary
 ) {
-  border-color: var(--tv-accent-primary);
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
+  border-color: var(--tv-border-interactive);
+  background: transparent;
+  color: currentColor;
 }
 
 .marketing-shell :is(
