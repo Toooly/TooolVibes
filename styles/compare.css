@@ -1757,6 +1757,14 @@
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
   pointer-events: none;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .tv-compare-dock {
+    animation: tv-motion-dock-in var(--tv-motion-base) var(--tv-easing-decelerate);
+  }
+  .tv-compare-dock[data-ready] .tv-compare-dock__cta {
+    animation: tv-emphasis-once var(--tv-duration-reward) var(--tv-easing-decelerate);
+  }
+}
 .tv-compare-dock__inner {
   pointer-events: auto;
   display: flex;
@@ -1819,6 +1827,12 @@
   text-decoration: none;
   font-weight: var(--tv-button-font-weight);
   font-size: var(--tv-text-button);
+  transition: background var(--tv-duration-fast) var(--tv-easing-standard);
+}
+.tv-compare-dock:not([data-ready]) .tv-compare-dock__cta {
+  background: transparent;
+  color: var(--tv-ink-primary);
+  border: 1px solid var(--tv-border-interactive);
 }
 @media (hover: hover) and (pointer: fine) {
   .tv-compare-dock__cta:hover {

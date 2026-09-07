@@ -397,3 +397,131 @@
   }
 }
 
+
+/* ============================================================
+   MVP V2.0 — semantic motion (orient / guide / confirm / prioritize)
+   Durations: fast 120 · default 180/240 · slow 360
+   Attention budget: one strong signal at a time, then settle.
+   ============================================================ */
+
+@keyframes tv-motion-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tv-motion-dock-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tv-chip-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tv-search-settle {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-activation-strong) 0%, transparent);
+  }
+  40% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-activation-strong) 32%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes tv-emphasis-once {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-activation-strong) 0%, transparent);
+  }
+  35% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-activation-strong) 40%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes tv-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tv-emphasis {
+  position: relative;
+}
+
+.tv-emphasis--decision {
+  border-color: color-mix(in srgb, var(--tv-accent-gold) 55%, var(--tv-border-subtle));
+  background: color-mix(in srgb, var(--tv-accent-gold) 7%, var(--tv-surface-subtle));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tv-emphasis--decision {
+    animation: tv-motion-enter var(--tv-duration-cinematic) var(--tv-easing-decelerate) both;
+  }
+
+  .tv-emphasis--search {
+    animation: tv-search-settle var(--tv-duration-cinematic) var(--tv-easing-decelerate) both;
+  }
+
+  .td-final-deepen__item,
+  .site-footer-v2__group,
+  .cx-index__how {
+    interpolate-size: allow-keywords;
+  }
+
+  .td-final-deepen__item::details-content,
+  .site-footer-v2__group::details-content,
+  .cx-index__how::details-content {
+    transition:
+      height var(--tv-duration-slow) var(--tv-easing-decelerate),
+      content-visibility var(--tv-duration-slow) allow-discrete;
+    overflow: clip;
+  }
+
+  .td-final-deepen__item:not([open])::details-content,
+  .site-footer-v2__group:not([open])::details-content,
+  .cx-index__how:not([open])::details-content {
+    height: 0;
+    transition-duration: var(--tv-duration-fast);
+    transition-timing-function: var(--tv-easing-accelerate);
+  }
+
+  .td-final-deepen__item[open]::details-content,
+  .site-footer-v2__group[open]::details-content,
+  .cx-index__how[open]::details-content {
+    height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-emphasis--decision,
+  .tv-emphasis--search,
+  .tv-compare-dock,
+  .tv-compare-dock[data-ready] .tv-compare-dock__cta,
+  .tv-member-gate__card,
+  .ar4-sheet__panel,
+  .ar4-sheet__backdrop {
+    animation: none;
+  }
+}

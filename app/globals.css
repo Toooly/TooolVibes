@@ -4254,7 +4254,7 @@ img {
   }
 
   .selection-chip.is-fresh {
-    animation: chip-pop 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: chip-pop var(--tv-duration-reward) var(--tv-easing-spring-snappy);
   }
 
   .filter-control {
@@ -6764,7 +6764,7 @@ img {
   }
 
   .toggle-chip-glow.is-fresh {
-    animation: chip-pop 560ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: chip-pop var(--tv-duration-reward) var(--tv-easing-spring-snappy);
   }
 
   .progress-track {

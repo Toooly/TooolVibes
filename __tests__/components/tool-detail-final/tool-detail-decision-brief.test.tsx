@@ -56,6 +56,7 @@ describe("ToolDetailDecisionBrief", () => {
     const { container } = render(<ToolDetailDecisionBrief tool={makeTool()} />);
 
     expect(screen.getByText("In breve")).toBeTruthy();
+    expect(container.querySelector(".tv-emphasis--decision")).toBeTruthy();
     const dts = Array.from(container.querySelectorAll("dt")).map(
       (node) => node.textContent?.trim(),
     );

@@ -34,7 +34,7 @@ export function IntentEntry() {
         <p className="def-intent__hint" id="home-intent-hint">
           Filtra il catalogo per obiettivo, nome o categoria. Non interpreta frasi libere.
         </p>
-        <div className="def-intent__field">
+        <div className="def-intent__field tv-emphasis tv-emphasis--search">
           <Search size={16} aria-hidden="true" />
           <input
             id="home-intent-query"
@@ -52,7 +52,11 @@ export function IntentEntry() {
       </form>
       <ul className="def-intent__chips" id="home-intent-extra" aria-label="Obiettivi del catalogo">
         {DISCOVERY_INTENTS.map((intent, index) => (
-          <li key={intent.id} hidden={index >= PRIMARY_INTENT_COUNT && !moreOpen}>
+          <li
+            key={intent.id}
+            hidden={index >= PRIMARY_INTENT_COUNT && !moreOpen}
+            data-intent-extra={index >= PRIMARY_INTENT_COUNT ? "" : undefined}
+          >
             <a href={intent.href}>{intent.label}</a>
           </li>
         ))}

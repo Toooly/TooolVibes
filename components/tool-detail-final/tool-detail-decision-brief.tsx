@@ -38,7 +38,10 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
   if (rows.length === 0) return null;
 
   return (
-    <section className="td-final-brief" aria-labelledby="td-final-brief-heading">
+    <section
+      className="td-final-brief tv-emphasis tv-emphasis--decision"
+      aria-labelledby="td-final-brief-heading"
+    >
       <p id="td-final-brief-heading" className="td-final-brief__eyebrow">
         In breve
       </p>

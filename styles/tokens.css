@@ -1016,6 +1016,8 @@
   /* --- Motion compatibility --- */
   --tv-ease-standard: var(--tv-easing-standard);
   --tv-ease-emphasis: var(--tv-easing-emphasis);
+  --tv-ease-decelerate: var(--tv-easing-decelerate);
+  --tv-ease-accelerate: var(--tv-easing-accelerate);
 
   /* --- Z-index compatibility --- */
 

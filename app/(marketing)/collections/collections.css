@@ -3200,6 +3200,18 @@
   background: var(--tv-bg-base);
   border: 1px solid var(--cx-accent);
   border-radius: 50%;
+  transition:
+    background var(--tv-duration-fast) var(--tv-easing-standard),
+    border-color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+.cx-stack-flow-v4__item:first-child .cx-stack-flow-v4__node {
+  background: color-mix(in srgb, var(--cx-accent) 14%, var(--tv-bg-base));
+}
+@media (hover: hover) and (pointer: fine) {
+  .cx-stack-flow-v4__item:hover .cx-stack-flow-v4__node,
+  .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__node {
+    background: color-mix(in srgb, var(--cx-accent) 18%, var(--tv-bg-base));
+  }
 }
 
 .cx-stack-flow-v4__num {

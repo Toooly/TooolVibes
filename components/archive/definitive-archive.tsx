@@ -795,12 +795,16 @@ function FilterSheet({
       }
     }
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("focusin", onFocusIn);
     return () => {
       window.cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("focusin", onFocusIn);
+      document.body.style.overflow = previousOverflow;
       opener?.focus();
     };
   }, [onClose, returnFocusRef]);

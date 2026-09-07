@@ -69,9 +69,11 @@ export function StartHere({
   stacks: HomeStackPreview[];
 }) {
   const [tab, setTab] = useState<StartTabId>("tool");
+  const [hasSwitched, setHasSwitched] = useState(false);
   const tabRefs = useRef<Partial<Record<StartTabId, HTMLButtonElement | null>>>({});
 
   function selectTab(next: StartTabId, focus = false) {
+    if (next !== tab) setHasSwitched(true);
     setTab(next);
     if (focus) tabRefs.current[next]?.focus();
   }
@@ -89,7 +91,11 @@ export function StartHere({
   }
 
   return (
-    <section className="def-start" aria-labelledby="def-start-title">
+    <section
+      className="def-start"
+      aria-labelledby="def-start-title"
+      data-switched={hasSwitched ? "" : undefined}
+    >
       <header className="def-start__head">
         <h2 id="def-start-title" className="def-start__title">
           Da dove partire?

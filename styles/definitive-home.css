@@ -2138,6 +2138,13 @@
   border: 1px solid rgba(255,255,255,0.14);
   background: rgba(8,8,10,0.55);
   border-radius: var(--tv-radius-feature);
+  transition:
+    border-color var(--tv-duration-fast) var(--tv-easing-standard),
+    background var(--tv-duration-fast) var(--tv-easing-standard);
+}
+.def-intent__field svg {
+  flex-shrink: 0;
+  transition: transform var(--tv-duration-fast) var(--tv-easing-standard);
 }
 .def-intent__field input {
   flex: 1;
@@ -2156,6 +2163,9 @@
   background: var(--tv-button-activation-bg);
   color: var(--tv-button-activation-text);
   font-weight: 650;
+  transition:
+    background var(--tv-duration-fast) var(--tv-easing-standard),
+    transform var(--tv-duration-fast) var(--tv-easing-standard);
 }
 @media (hover: hover) and (pointer: fine) {
   .def-intent__field button:hover {
@@ -2168,6 +2178,10 @@
 .def-intent__field:focus-within {
   outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
   outline-offset: 2px;
+  border-color: color-mix(in srgb, var(--tv-activation-strong) 72%, rgba(255,255,255,0.14));
+}
+.def-intent__field:focus-within svg {
+  transform: translateX(2px);
 }
 .def-intent__chips {
   display: flex;
@@ -2187,8 +2201,14 @@
   color: inherit;
   text-decoration: none;
   font-size: var(--tv-text-label);
+  transition:
+    border-color var(--tv-duration-fast) var(--tv-easing-standard),
+    background var(--tv-duration-fast) var(--tv-easing-standard);
 }
 .def-intent__chips a:hover { border-color: rgba(255,255,255,0.28); }
+.def-intent__chips a:active {
+  transform: scale(0.98);
+}
 .def-stacks {
   padding: var(--tv-space-section-sm) var(--tv-gutter-mobile) var(--tv-space-section-sm);
   max-width: 1120px;
@@ -2266,6 +2286,9 @@
   font-size: var(--tv-text-label);
   letter-spacing: 0.01em;
   cursor: pointer;
+  transition:
+    border-color var(--tv-duration-fast) var(--tv-easing-standard),
+    border-style var(--tv-duration-fast) var(--tv-easing-standard);
 }
 .def-intent__more[aria-expanded="true"] {
   border-style: solid;
@@ -2322,6 +2345,10 @@
   line-height: 1;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color var(--tv-duration-fast) var(--tv-easing-standard),
+    background var(--tv-duration-fast) var(--tv-easing-standard),
+    color var(--tv-duration-fast) var(--tv-easing-standard);
 }
 .def-start__tab:hover {
   border-color: color-mix(in srgb, currentColor 40%, transparent);
@@ -2341,6 +2368,30 @@
 }
 .def-start__panel[hidden] {
   display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .def-intent__field.tv-emphasis--search {
+    animation: tv-search-settle var(--tv-duration-cinematic) var(--tv-easing-decelerate) both;
+  }
+  .def-intent__chips > li[data-intent-extra]:not([hidden]) {
+    animation: tv-chip-in var(--tv-duration-fast) var(--tv-easing-decelerate) both;
+  }
+  .def-start[data-switched] .def-start__panel:not([hidden]) {
+    animation: tv-motion-enter var(--tv-duration-base) var(--tv-easing-decelerate) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .def-intent__field svg,
+  .def-intent__chips a:active {
+    transform: none;
+  }
+  .def-intent__field,
+  .def-intent__field button,
+  .def-intent__chips a,
+  .def-intent__more,
+  .def-start__tab {
+    transition: none;
+  }
 }
 .def-start__radar {
   width: 100%;

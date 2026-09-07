@@ -26,6 +26,8 @@ export function CompareSessionDock() {
     <div
       className="tv-compare-dock"
       data-compare-dock=""
+      data-ready={ready ? "" : undefined}
+      data-count={String(slugs.length)}
       role="region"
       aria-label="Confronto in corso"
       aria-live="polite"

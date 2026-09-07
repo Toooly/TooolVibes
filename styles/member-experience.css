@@ -69,6 +69,11 @@
   color: var(--tv-activation-ink);
   text-align: left;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .tv-member-gate__card {
+    animation: tv-motion-enter var(--tv-duration-cinematic) var(--tv-easing-decelerate) both;
+  }
+}
 
 .tv-member-gate__kicker {
   margin: 0;
