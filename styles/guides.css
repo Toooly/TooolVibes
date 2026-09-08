@@ -205,7 +205,7 @@
 }
 
 .guides-masthead__title em {
-  font-style: italic;
+  font-style: normal;
   background: linear-gradient(120deg, #d6c2ff 10%, #76e1ff 70%, #76e1ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -323,9 +323,9 @@
 }
 
 .guides-hud-card__big {
-  font-family: var(--tv-font-display);
+  font-family: var(--tv-font-data);
   font-size: clamp(1.5rem, 2vw, 1.9rem);
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--guides-text-on-dark);
   line-height: 1;
@@ -360,9 +360,9 @@
 }
 
 .guides-hud-card--stats p:last-child {
-  font-family: var(--tv-font-display);
+  font-family: var(--tv-font-data);
   font-size: clamp(1.2rem, 1.6vw, 1.5rem);
-  font-weight: 400;
+  font-weight: 700;
   color: var(--guides-text-on-dark);
   margin-top: 0.35rem;
   line-height: 1;
@@ -723,11 +723,11 @@
 }
 
 .guides-card__title {
-  font-family: var(--tv-font-display);
-  font-weight: 400;
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
   font-size: clamp(1.18rem, 1.6vw, 1.42rem);
   line-height: 1.12;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
   color: var(--guides-text);
   text-wrap: balance;
   margin: 0;
@@ -883,17 +883,17 @@
 }
 
 .guides-section__title {
-  font-family: var(--tv-font-display);
-  font-weight: 400;
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
   font-size: clamp(1.4rem, 2.4vw, 2rem);
   line-height: 1.1;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
   color: inherit;
   text-wrap: balance;
 }
 
 .guides-section__title em {
-  font-style: italic;
+  font-style: normal;
   color: var(--guides-accent);
 }
 
@@ -984,9 +984,10 @@
 }
 
 .guides-filter__chip[aria-pressed="true"] {
-  background: var(--guides-text);
-  color: #fbf9f5;
-  border-color: var(--guides-text);
+  /* V3 — selected state: purple, never a yellow action fill. */
+  background: var(--tv-accent-primary);
+  color: var(--tv-ink-on-brand);
+  border-color: var(--tv-accent-primary);
 }
 
 .guides-filter__chip__count {
@@ -1135,7 +1136,8 @@
 }
 
 .guides-article__hero-stat .value {
-  font-family: var(--tv-font-display);
+  font-family: var(--tv-font-data);
+  font-weight: 700;
   font-size: clamp(1.4rem, 1.8vw, 1.7rem);
   color: var(--guides-text-on-dark);
   line-height: 1.05;
@@ -1205,9 +1207,9 @@
 }
 
 .guides-article__body > .editorial-markdown :is(h1, h2, h3, h4) {
-  font-family: var(--tv-font-display);
-  font-weight: 400;
-  letter-spacing: -0.012em;
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
+  letter-spacing: 0;
   color: var(--guides-text);
   text-wrap: balance;
 }
@@ -1463,11 +1465,11 @@
 }
 
 .guides-rail__title {
-  font-family: var(--tv-font-display);
-  font-weight: 400;
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
   font-size: clamp(1.1rem, 1.4vw, 1.3rem);
   line-height: 1.1;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   color: var(--guides-text);
   text-wrap: balance;
 }
@@ -1559,15 +1561,16 @@
 }
 
 .guides-rail__cta[data-variant="primary"] {
-  background: var(--guides-text);
-  color: #fbf9f5;
-  border-color: var(--guides-text);
+  /* V3 CTA law — the linked-tool module's action is the one yellow here. */
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  border-color: transparent;
 }
 
 .guides-rail__cta[data-variant="primary"]:hover,
 .guides-rail__cta[data-variant="primary"]:focus-visible {
-  background: #060414;
-  border-color: #060414;
+  background: var(--tv-button-activation-bg-hover);
+  border-color: transparent;
 }
 
 .guides-rail__cta--ink {
@@ -1804,11 +1807,11 @@
 }
 
 .guides-article__end-title {
-  font-family: var(--tv-font-display);
-  font-weight: 400;
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
   font-size: clamp(1.5rem, 2.4vw, 2rem);
   line-height: 1.1;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
   color: var(--guides-text-on-dark);
   text-wrap: balance;
 }
@@ -1818,7 +1821,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-style: italic;
+  font-style: normal;
 }
 
 .guides-article__end-dek {
@@ -1941,9 +1944,9 @@
 }
 
 .guides-article__end-card .title {
-  font-family: var(--tv-font-display);
+  font-family: var(--tv-font-ui);
   font-size: 1.1rem;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.18;
   color: var(--guides-text-on-dark);
 }

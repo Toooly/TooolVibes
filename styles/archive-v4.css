@@ -245,7 +245,7 @@
 }
 
 .ar4-intro__data-item strong {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-data);
   font-size: 22px;
   font-weight: 600;
   line-height: 1;
@@ -395,11 +395,11 @@
 }
 
 .ar4-ivory__title {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-ui);
   font-weight: var(--tv-weight-regular);
   font-size: var(--tv-text-h2);
   line-height: var(--tv-leading-display);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   text-transform: none;
   color: var(--tv-ink-inverted-primary);
   margin: 0;
@@ -611,11 +611,11 @@
 }
 
 .ar4-grid__title {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-ui);
   font-weight: var(--tv-weight-regular);
   font-size: var(--tv-text-h2);
   line-height: var(--tv-leading-display);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   text-transform: none;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -717,7 +717,8 @@
   flex-direction: column;
   gap: var(--tv-tool-card-gap);
   padding: var(--tv-space-component-md);
-  background: var(--tv-bg-base);
+  /* V3 editorial DNA — warm-tinted raised surface on the dark catalog shell. */
+  background: color-mix(in srgb, var(--tv-surface-inverted) 6%, var(--tv-surface-raised));
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-tool-card-radius);
   transition:
@@ -802,7 +803,8 @@
   height: 28px;
   display: grid;
   place-items: center;
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-ui);
+  font-weight: 800;
   font-size: 14px;
   color: var(--tv-ink-on-brand);
   text-transform: none;
@@ -944,7 +946,7 @@
 }
 
 .ar4-card__score strong {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-data);
   font-size: 22px;
   line-height: 0.9;
   font-weight: 700;
@@ -1049,7 +1051,7 @@
   justify-content: center;
   min-width: 2.25rem;
   min-height: 1.75rem;
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-data);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1629,9 +1631,9 @@
 }
 
 .ar4-sheet__title {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-ui);
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 700;
   text-transform: none;
   letter-spacing: 0.02em;
   color: var(--tv-ink-primary);
@@ -2082,7 +2084,7 @@ a.archive-v4-card:focus-visible {
   min-width: 0;
 }
 .ar4-intro__data strong {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-data);
   font-size: 22px;
   font-weight: 600;
   line-height: 1;
@@ -2129,7 +2131,7 @@ a.archive-v4-card:focus-visible {
   margin: 0;
 }
 .ar4-categories__title {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-ui);
   font-weight: var(--tv-weight-regular);
   font-size: var(--tv-text-h2);
   line-height: var(--tv-leading-display);
@@ -2271,7 +2273,7 @@ a.archive-v4-card:focus-visible {
   margin: 0 auto;
 }
 .ar4-grid__empty-title {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-ui);
   font-weight: 600;
   font-size: clamp(1.1rem, 1.8vw, 1.4rem);
   line-height: 1.15;
@@ -2311,11 +2313,12 @@ a.archive-v4-card:focus-visible {
   transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
 }
 .ar4-grid__empty-cta--primary {
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
+  /* V3 CTA law — primary action is activation yellow, never purple fill. */
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
 }
 .ar4-grid__empty-cta--primary:hover {
-  background: var(--tv-accent-primary-hover, var(--tv-accent-primary));
+  background: var(--tv-button-activation-bg-hover);
 }
 .ar4-grid__empty-cta--secondary {
   background: transparent;

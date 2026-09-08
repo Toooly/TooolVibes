@@ -18,7 +18,7 @@ export function GuideArticleEnd({
   return (
     <section className="guides-article__end" aria-labelledby="guide-article-end-title">
       <div>
-        <p className="guides-eyebrow" style={{ color: "rgba(190, 178, 255, 0.82)" }}>
+        <p className="guides-eyebrow is-on-dark">
           Continua a leggere
         </p>
         <h2 id="guide-article-end-title" className="guides-article__end-title">
