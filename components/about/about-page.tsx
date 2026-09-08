@@ -159,7 +159,7 @@ export function AboutPage() {
             {communityCopy}
           </p>
         </div>
-        <PremiumLink href="/community" tone="premium" className="tv-cta-primary w-full shrink-0 sm:w-auto">
+        <PremiumLink href="/community" tone="ghost" className="w-full shrink-0 sm:w-auto">
           Entra nella community
         </PremiumLink>
       </section>

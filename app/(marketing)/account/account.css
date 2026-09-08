@@ -27,8 +27,8 @@
   font-size: clamp(0.9375rem, 1.4vw, 1.125rem);
   line-height: 1.35;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-display);
-  font-weight: var(--tv-weight-semibold);
+  font-family: var(--tv-font-ui);
+  font-weight: var(--tv-weight-bold);
 }
 
 .v-auth-context li::before {
