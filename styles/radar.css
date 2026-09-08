@@ -7,9 +7,10 @@
  */
 
 .tv-radar-page {
-  min-height: calc(100svh - var(--tv-main-offset-top));
-  background: var(--tv-radar-bg);
-  color: var(--tv-ink-primary);
+  /* Header is sticky in-flow; shell already fills 100svh. */
+  min-height: 100%;
+  background: var(--tv-grammar-signal-surface);
+  color: var(--tv-grammar-signal-ink);
 }
 
 .tv-radar {
@@ -247,8 +248,9 @@
 }
 
 .tv-radar-control button[aria-pressed="true"] {
-  background: var(--tv-button-primary-bg);
+  background: var(--tv-accent-brand);
   color: var(--tv-button-primary-text);
+  font-weight: 700;
 }
 
 .tv-radar__retry {
@@ -257,15 +259,15 @@
   justify-content: center;
   gap: var(--tv-space-micro-sm);
   padding: var(--tv-space-px-2) var(--tv-space-px-3);
-  border: 1px solid var(--tv-border-default);
+  border: 1px solid var(--tv-button-activation-bg);
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-button-secondary-bg);
-  color: var(--tv-button-secondary-text);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
 }
 
 .tv-radar__retry:hover:not(:disabled) {
-  border-color: var(--tv-border-interactive);
-  background: var(--tv-button-secondary-bg-hover);
+  border-color: var(--tv-button-activation-bg-hover);
+  background: var(--tv-button-activation-bg-hover);
 }
 
 .tv-radar__retry:disabled {
@@ -642,8 +644,8 @@
 
 .tv-radar-index__rank,
 .tv-radar-table__rank {
-  color: var(--tv-accent-brand);
-  font-family: var(--tv-font-family-mono);
+  color: var(--tv-grammar-signal-accent);
+  font-family: var(--tv-font-data);
   font-size: var(--tv-text-caption);
   font-weight: var(--tv-weight-bold);
 }
@@ -917,6 +919,7 @@
 
   .tv-radar__header {
     align-items: start;
+    margin-bottom: var(--tv-space-component-md);
   }
 
   .tv-radar__lede {
@@ -1368,22 +1371,24 @@ h1.tv-radar__title,
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: 2.75rem;
   padding: 0.5rem 0.9rem;
-  border: 1px solid var(--tv-border-interactive);
+  border: 1px solid var(--tv-button-activation-bg);
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-surface-elevated);
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-ui);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  font-family: var(--tv-font-ui);
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   margin-left: auto;
   align-self: end;
   -webkit-tap-highlight-color: transparent;
 }
 .tv-radar__retry:hover:not(:disabled) {
-  border-color: var(--tv-accent-primary);
-  color: var(--tv-accent-primary);
+  border-color: var(--tv-button-activation-bg-hover);
+  background: var(--tv-button-activation-bg-hover);
+  color: var(--tv-button-activation-text);
 }
 .tv-radar__retry:disabled { opacity: 0.6; cursor: progress; }
 
@@ -1469,8 +1474,8 @@ h1.tv-radar__title,
 .tv-radar-state__title {
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-display);
-  font-weight: var(--tv-weight-regular);
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
   font-size: var(--tv-text-h3);
   line-height: 1.15;
 }
@@ -1544,6 +1549,7 @@ h1.tv-radar__title,
 }
 .tv-radar-provenance[open] .tv-radar-provenance__title {
   margin-bottom: 0.4rem;
+  color: var(--tv-accent-brand);
 }
 .tv-radar-provenance__body {
   margin: 0 0 0.6rem;
@@ -1582,8 +1588,8 @@ h1.tv-radar__title,
 .tv-radar__loading-title {
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-display);
-  font-weight: var(--tv-weight-regular);
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
   font-size: var(--tv-text-h3);
   line-height: 1.15;
 }
@@ -1666,7 +1672,7 @@ h1.tv-radar__title,
   display: block;
   height: 2px;
   margin: 0 0 -2px;
-  background: linear-gradient(90deg, transparent, var(--tv-accent-brand), transparent);
+  background: linear-gradient(90deg, transparent, var(--tv-grammar-signal-accent), transparent);
   animation: tv-radar-refresh-scan 1.1s ease-in-out infinite;
   z-index: 5;
 }

@@ -1226,6 +1226,14 @@
   --tv-grammar-radar-live: var(--tv-status-success);
   --tv-grammar-radar-border: color-mix(in srgb, var(--tv-accent-cyan) 28%, transparent);
 
+  /* SIGNAL aliases — /radar consumes these; same family as RADAR. */
+  --tv-grammar-signal-surface: var(--tv-grammar-radar-surface);
+  --tv-grammar-signal-surface-raised: var(--tv-grammar-radar-surface-raised);
+  --tv-grammar-signal-ink: var(--tv-grammar-radar-ink);
+  --tv-grammar-signal-accent: var(--tv-grammar-radar-accent);
+  --tv-grammar-signal-live: var(--tv-grammar-radar-live);
+  --tv-grammar-signal-border: var(--tv-grammar-radar-border);
+
   /* PERSONAL / SAVED — graphite + muted lilac */
   --tv-grammar-personal-surface: var(--tv-color-surface-raised);
   --tv-grammar-personal-ink: var(--tv-ink-primary);
