@@ -28,5 +28,6 @@ describe("IntentEntry motion affordances", () => {
   it("marks search as the home emphasis surface", () => {
     const { container } = render(<IntentEntry />);
     expect(container.querySelector(".def-intent__field.tv-emphasis--search")).toBeTruthy();
+    expect(container.querySelector(".tv-signal-search__orbit")).toBeNull();
   });
 });

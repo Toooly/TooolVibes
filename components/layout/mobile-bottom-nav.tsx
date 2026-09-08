@@ -2,8 +2,8 @@
 
 /**
  * TooolVibes — Mobile Bottom Nav
- * Dynamic chrome: full → compact on decisive scroll-down, hidden deeper,
- * restored on scroll-up / near page end / focus interactions.
+ * Dynamic chrome: expanded labels → compact icons-only on scroll-down,
+ * restored on scroll-up, pause, near page end, or focus interactions.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -33,6 +33,7 @@ const SCROLL_DELTA_THRESHOLD = 12;
 const COMPACT_AFTER = 48;
 const BOTTOM_REVEAL_PX = 120;
 const TOP_FORCE_EXPAND_PX = 24;
+const PAUSE_EXPAND_MS = 900;
 
 export function MobileBottomNav() {
   const preferReducedMotion = useReducedMotion();
@@ -52,6 +53,7 @@ export function MobileBottomNav() {
   const downDistance = useRef(0);
   const lockedByInteraction = useRef(false);
   const rafId = useRef<number | null>(null);
+  const pauseTimer = useRef<number | null>(null);
   const innerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -110,6 +112,23 @@ export function MobileBottomNav() {
       );
     };
 
+    const clearPauseTimer = () => {
+      if (pauseTimer.current !== null) {
+        window.clearTimeout(pauseTimer.current);
+        pauseTimer.current = null;
+      }
+    };
+
+    const schedulePauseExpand = () => {
+      clearPauseTimer();
+      pauseTimer.current = window.setTimeout(() => {
+        pauseTimer.current = null;
+        if (!lockedByInteraction.current && !isOverlayOpen && !isCommandOpen) {
+          setChromeState("expanded");
+        }
+      }, PAUSE_EXPAND_MS);
+    };
+
     const onFocusIn = (event: FocusEvent) => {
       if (isEditableTarget(event.target) || isOverlayOpen || isCommandOpen) {
         lockedByInteraction.current = true;
@@ -144,6 +163,7 @@ export function MobileBottomNav() {
 
         if (y <= TOP_FORCE_EXPAND_PX || nearBottom) {
           downDistance.current = 0;
+          clearPauseTimer();
           setChromeState("expanded");
           lastScrollY.current = y;
           return;
@@ -155,13 +175,13 @@ export function MobileBottomNav() {
 
         if (delta > 0) {
           downDistance.current += delta;
-          // Staged: compact after moderate down-scroll, hide after sustained down-scroll.
           if (downDistance.current >= COMPACT_AFTER) {
             setChromeState("compact");
+            schedulePauseExpand();
           }
         } else {
           downDistance.current = 0;
-          // Upward motion restores full chrome immediately.
+          clearPauseTimer();
           setChromeState("expanded");
         }
 
@@ -179,6 +199,9 @@ export function MobileBottomNav() {
       document.removeEventListener("focusout", onFocusOut);
       if (rafId.current !== null) {
         window.cancelAnimationFrame(rafId.current);
+      }
+      if (pauseTimer.current !== null) {
+        window.clearTimeout(pauseTimer.current);
       }
     };
   }, [mounted, isOverlayOpen, isCommandOpen]);

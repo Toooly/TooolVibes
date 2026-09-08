@@ -11,7 +11,6 @@ import { trackSponsorOpportunityClick } from "@/lib/analytics/sponsor-events";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
 import { getNavDestination } from "@/lib/navigation/selectors";
 import { ConsentFooterLink } from "@/components/ads/consent-footer-link";
-import { useOnceInView } from "@/lib/motion/use-once-in-view";
 
 const contactEmailDestination = getNavDestination("contact-email");
 
@@ -124,10 +123,7 @@ export function SiteFooterV2() {
     return (
       <LaunchpadFooter
         year={year}
-        pathname={pathname}
-        companyLinks={companyLinks}
         legalLinks={legalLinks}
-        socialLinks={socialLinks}
       />
     );
   }
@@ -240,37 +236,14 @@ export function SiteFooterV2() {
 
 function LaunchpadFooter({
   year,
-  pathname,
-  companyLinks,
   legalLinks,
-  socialLinks,
 }: {
   year: number;
-  pathname: string;
-  companyLinks: ReturnType<typeof useNavItems>;
   legalLinks: ReturnType<typeof useNavItems>;
-  socialLinks: ReturnType<typeof useNavItems>;
 }) {
-  const { ref, hasBeenVisible, preferReducedMotion } = useOnceInView<HTMLDivElement>({
-    threshold: 0.4,
-  });
-
   return (
     <footer className="site-footer-v2 tv-launchpad relative mt-auto">
       <div className="tv-launchpad__shell site-footer-v2__shell">
-        <div
-          ref={ref}
-          className="tv-launchpad__brand"
-          data-settle={hasBeenVisible && !preferReducedMotion ? "true" : "false"}
-        >
-          <Link href="/" className="tv-launchpad__logo site-footer-v2__brand" aria-label="TOOOLVIBES">
-            <div className="site-footer-v2__logo">
-              <BrandLogo size={40} fallback="png" priority />
-            </div>
-            <span className="site-footer-v2__wordmark">TOOOLVIBES</span>
-          </Link>
-        </div>
-
         <h2 className="tv-launchpad__title">Dove vuoi andare adesso?</h2>
 
         <ul className="tv-launchpad__destinations">
@@ -302,26 +275,6 @@ function LaunchpadFooter({
           </a>
         </section>
 
-        <div className="tv-launchpad__company">
-          <h3>TooolVibes</h3>
-          <div>
-            {companyLinks.map((link) => (
-              <Link
-                key={link.id}
-                href={link.href}
-                className="site-footer-v2__link"
-                onClick={
-                  link.href === SPONSOR_OPPORTUNITY_HREF
-                    ? () => trackFooterSponsor(pathname)
-                    : undefined
-                }
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-
         <div className="tv-launchpad__legal site-footer-v2__legal-row">
           {legalLinks.map((link) => (
             <Link
@@ -344,21 +297,6 @@ function LaunchpadFooter({
           </p>
         </details>
 
-        <div className="tv-launchpad__socials site-footer-v2__socials">
-          {socialLinks.map((social) => {
-            const SocialIcon = social.icon;
-            return (
-              <a
-                key={social.id}
-                href={social.href}
-                className="site-footer-v2__social"
-                aria-label={social.label}
-              >
-                {SocialIcon ? <SocialIcon size={18} aria-hidden="true" /> : null}
-              </a>
-            );
-          })}
-        </div>
       </div>
     </footer>
   );

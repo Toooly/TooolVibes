@@ -83,8 +83,6 @@ export function IntentEntry() {
           data-tv-signal-search=""
           data-locking={locking ? "" : undefined}
         >
-          <span aria-hidden="true" className="tv-signal-search__orbit" />
-          <span aria-hidden="true" className="tv-signal-search__sweep" />
           <Search size={16} aria-hidden="true" />
           <input
             id="home-intent-query"

@@ -240,5 +240,7 @@ describe("SiteFooterV2 — Home launchpad", () => {
     );
     expect(screen.getByText("Trasparenza e affiliazioni")).toBeTruthy();
     expect(screen.getByText(/TOOOLVIBES ·/)).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "TooolVibes" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Chi siamo" })).toBeNull();
   });
 });

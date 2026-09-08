@@ -196,14 +196,18 @@
   opacity: 1;
 }
 
+.mobile-bottom-shell--compact {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 4px);
+}
+
 .mobile-bottom-shell--compact .mobile-bottom-shell__inner {
-  height: 48px;
+  height: 40px;
 }
 
 .mobile-bottom-shell--compact .mobile-bottom-item {
-  min-height: 48px;
+  min-height: 40px;
   gap: 0;
-  padding-block: 4px;
+  padding-block: 0;
 }
 
 .mobile-bottom-shell--compact .mobile-bottom-item__label {

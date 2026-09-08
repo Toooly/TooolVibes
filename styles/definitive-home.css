@@ -2539,27 +2539,10 @@
   overflow: hidden;
 }
 
-.tv-signal-search__orbit,
-.tv-signal-search__sweep {
+.tv-signal-search::after {
   position: absolute;
-  pointer-events: none;
-  inset: auto;
-}
-
-.tv-signal-search__orbit {
-  width: 2.75rem;
-  height: 2.75rem;
-  right: 5.5rem;
-  top: 50%;
-  translate: 0 -50%;
-  border: var(--tv-brand-orbit-stroke) solid color-mix(in srgb, var(--tv-signal-focus-to) 35%, transparent);
-  border-radius: var(--tv-radius-pill);
-  opacity: 0.14;
-  z-index: 0;
-}
-
-.tv-signal-search__sweep {
   inset: 0;
+  pointer-events: none;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -2568,6 +2551,7 @@
   );
   opacity: 0;
   z-index: 0;
+  content: "";
 }
 
 .tv-signal-search > svg,
@@ -2582,12 +2566,7 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-signal-focus-to) 28%, transparent);
 }
 
-.tv-signal-search:focus-within .tv-signal-search__orbit {
-  opacity: 0.55;
-  border-color: color-mix(in srgb, var(--tv-signal-focus-to) 70%, transparent);
-}
-
-.tv-signal-search:focus-within .tv-signal-search__sweep {
+.tv-signal-search:focus-within::after {
   animation: tv-signal-sweep var(--tv-motion-base) var(--tv-easing-decelerate) 1;
 }
 
@@ -2608,7 +2587,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tv-signal-search:focus-within .tv-signal-search__sweep,
+  .tv-signal-search:focus-within::after,
   .tv-signal-search[data-locking] {
     animation: none;
   }
@@ -2923,6 +2902,33 @@
   }
 }
 
+
+.tv-home-radar--snapshot .tv-radar-instrument {
+  width: min(100%, 31rem);
+  max-height: min(42vh, 22.5rem);
+  margin-block: var(--tv-rhythm-related) var(--tv-rhythm-group);
+  border-color: var(--tv-grammar-radar-border);
+  background: var(--tv-grammar-radar-surface-raised);
+}
+
+.tv-home-radar--snapshot .tv-radar-instrument::before {
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--tv-grammar-radar-accent) 16%, transparent) 0,
+    transparent 58%
+  );
+}
+
+.tv-home-radar--snapshot .tv-radar-instrument__ring--outer,
+.tv-home-radar--snapshot .tv-radar-instrument__ring--middle {
+  border-color: color-mix(in srgb, var(--tv-grammar-radar-accent) 32%, transparent);
+}
+
+.tv-home-radar--snapshot .tv-radar-instrument__sweep {
+  background: linear-gradient(90deg, var(--tv-grammar-radar-accent), transparent);
+  box-shadow: 0 0 1rem color-mix(in srgb, var(--tv-grammar-radar-accent) 48%, transparent);
+}
+
 /* Radar rail */
 .tv-home-radar--snapshot {
   background: transparent;
@@ -3036,7 +3042,7 @@
 }
 
 .def-method {
-  background: color-mix(in srgb, var(--tv-color-violet-900) 28%, var(--tv-bg-base));
+  background: color-mix(in srgb, var(--tv-color-violet-900) 42%, var(--tv-bg-base));
 }
 
 .def-method__title {
@@ -3056,7 +3062,7 @@
   display: grid;
   gap: var(--tv-rhythm-related);
   padding-block: var(--tv-rhythm-section);
-  background: var(--tv-bg-base);
+  background: color-mix(in srgb, var(--tv-grammar-commercial-shell) 22%, var(--tv-bg-base));
 }
 
 .tv-partner-signal__label {

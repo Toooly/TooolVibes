@@ -27,6 +27,7 @@ import { SponsorOpportunityMailtoLink } from "@/components/monetization/sponsor-
 
 const mockTrackSponsorOpportunityClick = vi.hoisted(() => vi.fn());
 const mockTrackSponsorClick = vi.hoisted(() => vi.fn());
+const pathnameState = vi.hoisted(() => ({ current: "/" }));
 
 vi.mock("@/lib/analytics/sponsor-events", () => ({
   trackSponsorImpression: vi.fn(),
@@ -48,7 +49,7 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
+  usePathname: () => pathnameState.current,
 }));
 
 function buildFixturePlacement() {
@@ -250,10 +251,12 @@ describe("footer /sponsorizza link", () => {
   });
 
   afterEach(() => {
+    pathnameState.current = "/";
     cleanup();
   });
 
   it("emits one sponsor_opportunity_click on the single footer Sponsorizza link", () => {
+    pathnameState.current = "/archivio";
     render(
       <AdvertisingConsentProvider>
         <NavigationReleaseProvider value={release}>

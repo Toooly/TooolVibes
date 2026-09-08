@@ -624,9 +624,10 @@
 .tv-launchpad__tile {
   display: grid;
   gap: 0.35rem;
-  padding: 0;
-  background: transparent;
-  border: 0;
+  padding: var(--tv-rhythm-related-lg);
+  background: var(--tv-surface-raised);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-feature);
 }
 
 .tv-launchpad__tile p {
@@ -645,6 +646,20 @@
   color: var(--tv-ink-primary);
   text-decoration: none;
   font-size: var(--tv-type-body);
+  font-weight: var(--tv-weight-semibold);
+}
+
+.tv-launchpad__tile a:hover {
+  color: var(--tv-accent-cyan-on-dark);
+}
+
+.tv-launchpad__legal {
+  font-size: var(--tv-type-meta);
+}
+
+.tv-launchpad__legal a {
+  color: var(--tv-ink-muted-aa);
+  text-decoration: none;
 }
 
 .tv-launchpad__contact {

@@ -684,6 +684,8 @@ export function HomeRadarPreview() {
         </span>
       </header>
 
+      <RadarInstrument model={model} />
+
       <p className="tv-home-radar__pulse tv-home-radar__rail" aria-label="Sintesi segnali di oggi">
         <span>
           <strong className="tv-home-radar__pulse-value">
