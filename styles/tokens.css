@@ -1260,6 +1260,26 @@
   --tv-grammar-commercial-label: var(--tv-ink-muted-aa);
   --tv-grammar-commercial-ink: var(--tv-ink-secondary);
 
+  /* INSTITUTIONAL — charcoal, warm ivory, calm authority.
+     Law: yellow = primary action, purple = selection/system accent only.
+     No radar cyan, no editorial gold as decoration, no second palette. */
+  --tv-grammar-institutional-surface: var(--tv-color-surface-base);
+  --tv-grammar-institutional-surface-raised: var(--tv-color-surface-raised);
+  --tv-grammar-institutional-ivory: var(--tv-surface-inverted);
+  --tv-grammar-institutional-ink: var(--tv-ink-primary);
+  --tv-grammar-institutional-ink-secondary: var(--tv-ink-secondary);
+  --tv-grammar-institutional-ink-ivory: var(--tv-ink-inverted-primary);
+  --tv-grammar-institutional-border: var(--tv-border-subtle);
+  --tv-grammar-institutional-accent: var(--tv-accent-brand);
+
+  /* RESOURCE / SHOP — premium access, commercial. Yellow = purchase/access. */
+  --tv-grammar-resource-surface: var(--tv-grammar-commercial-shell);
+  --tv-grammar-resource-surface-raised: var(--tv-color-surface-elevated);
+  --tv-grammar-resource-border: var(--tv-grammar-commercial-border);
+  --tv-grammar-resource-ink: var(--tv-grammar-commercial-ink);
+  --tv-grammar-resource-label: var(--tv-grammar-commercial-label);
+  --tv-grammar-resource-premium: var(--tv-accent-brand);
+
   /* Signal search primitive */
   --tv-signal-rest-border: var(--tv-border-default);
   --tv-signal-focus-from: var(--tv-accent-brand);

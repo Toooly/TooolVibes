@@ -9,8 +9,8 @@
  * Design contract:
  *   - Dark command-center surface (var(--tv-surface-raised)) for hero / panels
  *   - Warm ivory surfaces for readable body sections (var(--tv-surface-inverted))
- *   - Anton 400 display + Manrope UI, text-wrap: balance on titles
- *   - Solid violet AA for filled actions (var(--tv-accent-brand-aa))
+ *   - UI = Manrope; DISPLAY = Anton exceptional only
+ *   - Yellow = primary action; purple = selected/system accent
  *   - Reduced-motion safe, focus rings preserved, 44px+ targets
  *   - Token-only palette; no raw hex values
  *   - Responsive 320px .. 1920px
@@ -54,9 +54,9 @@
   background:
     linear-gradient(
       135deg,
-      color-mix(in srgb, var(--tv-accent-brand) 8%, var(--tv-surface-raised)),
-      var(--tv-surface-raised) 55%,
-      color-mix(in srgb, var(--tv-accent-cyan) 4%, var(--tv-surface-raised))
+      color-mix(in srgb, var(--tv-grammar-institutional-accent) 8%, var(--tv-grammar-institutional-surface-raised)),
+      var(--tv-grammar-institutional-surface-raised) 55%,
+      var(--tv-grammar-institutional-surface-raised)
     );
   color: var(--tv-ink-primary);
 }
@@ -107,9 +107,9 @@
 .secondary-hero__title {
   margin: 0;
   color: inherit;
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: var(--tv-text-h1);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   letter-spacing: -0.02em;
   line-height: var(--tv-leading-display);
   text-wrap: balance;
@@ -184,8 +184,8 @@
   width: 0.4rem;
   height: 0.4rem;
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-cyan);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent);
+  background: var(--tv-grammar-institutional-accent);
+  box-shadow: none;
 }
 
 .secondary-hero--ivory .secondary-hero__signature-eyebrow::before {
@@ -230,15 +230,15 @@
   width: 0.4rem;
   height: 0.4rem;
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-gold);
+  background: var(--tv-grammar-institutional-accent);
 }
 
 .secondary-section__title {
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.6rem, 3.2vw, 2.4rem);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   letter-spacing: -0.01em;
   line-height: var(--tv-leading-display);
   text-wrap: balance;
@@ -292,9 +292,9 @@
   background:
     linear-gradient(
       135deg,
-      color-mix(in srgb, var(--tv-accent-cyan) 6%, var(--tv-surface-raised)),
-      var(--tv-surface-raised) 60%,
-      color-mix(in srgb, var(--tv-accent-brand) 6%, var(--tv-surface-raised))
+      var(--tv-grammar-institutional-surface-raised),
+      var(--tv-grammar-institutional-surface-raised) 60%,
+      color-mix(in srgb, var(--tv-grammar-institutional-accent) 6%, var(--tv-grammar-institutional-surface-raised))
     );
   color: var(--tv-ink-primary);
 }
@@ -321,9 +321,9 @@
 .secondary-closing__title {
   margin: 0;
   color: inherit;
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.5rem, 3.5vw, 2.4rem);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   letter-spacing: -0.01em;
   line-height: var(--tv-leading-display);
   text-wrap: balance;
@@ -516,7 +516,7 @@
 }
 
 .secondary-card__cta:focus-visible {
-  outline: 2px solid var(--tv-accent-cyan);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
 }
 
@@ -694,7 +694,7 @@
 }
 
 .method-track__step-cta:focus-visible {
-  outline: 2px solid var(--tv-accent-cyan);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
 }
 
@@ -848,7 +848,7 @@
     ),
     radial-gradient(
       ellipse 50% 50% at 100% 100%,
-      color-mix(in srgb, var(--tv-accent-cyan) 10%, transparent),
+      color-mix(in srgb, var(--tv-grammar-institutional-accent) 8%, transparent),
       transparent 70%
     );
   z-index: -1;
@@ -868,9 +868,9 @@
 .affiliates-intro .secondary-section__title {
   max-width: min(100%, 36ch);
   color: var(--tv-ink-inverted);
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.7rem, 3vw, 2.3rem);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   letter-spacing: -0.015em;
   line-height: var(--tv-leading-display);
   text-wrap: balance;
@@ -1069,6 +1069,7 @@
   display: grid;
   gap: clamp(1.25rem, 2.5vw, 2rem);
   padding-block: clamp(1.5rem, 3vw, 2.75rem);
+  padding-inline: var(--tv-gutter-mobile);
 }
 
 .legal-page__layout {
@@ -1101,14 +1102,14 @@
 
 .legal-page__intro h1 {
   margin: 0.25rem 0 0;
-  max-width: 9ch;
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-display);
+  max-width: 12ch;
+  color: var(--tv-grammar-institutional-ink);
+  font-family: var(--tv-font-ui);
   font-size: var(--tv-text-h1);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   letter-spacing: var(--tv-tracking-tight);
   line-height: var(--tv-leading-display);
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .legal-page__intro > p:last-child {
@@ -1124,9 +1125,10 @@
 .legal-page__body {
   display: grid;
   gap: 1.15rem;
-  border: 1px solid var(--tv-border-subtle);
+  max-width: 42rem;
+  border: 1px solid var(--tv-grammar-institutional-border);
   border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-raised);
+  background: var(--tv-grammar-institutional-surface-raised);
   padding: clamp(1.35rem, 4vw, 2.5rem);
   color: var(--tv-ink-secondary);
   font-family: var(--tv-font-family-ui);
@@ -1228,8 +1230,9 @@
 }
 
 .legal-page__nav a[aria-current="page"] {
-  background: var(--tv-surface-elevated);
-  color: var(--tv-ink-primary);
+  background: var(--tv-grammar-selected-wash);
+  color: var(--tv-grammar-institutional-ink);
+  font-weight: var(--tv-weight-bold);
 }
 
 .legal-page__nav a:hover,
@@ -1239,7 +1242,7 @@
 }
 
 .legal-page__nav a:focus-visible {
-  outline: 2px solid var(--tv-accent-primary);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: -3px;
 }
 
@@ -1328,5 +1331,118 @@
   .method-track__disclosure[open] > .method-track__summary::after {
     top: 1.15rem;
     transform: rotate(225deg);
+  }
+}
+
+
+/* V3 — Resource objects (Shop) */
+.resource-page .secondary-principle {
+  border: 1px solid var(--tv-grammar-resource-border);
+  background: var(--tv-grammar-resource-surface);
+  box-shadow: none;
+}
+
+.resource-inventory {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.resource-inventory__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--tv-grammar-resource-border);
+  border-radius: var(--tv-radius-card);
+  background: var(--tv-grammar-resource-surface);
+}
+
+.resource-inventory__kicker {
+  margin: 0;
+  color: var(--tv-grammar-resource-label);
+  font-family: var(--tv-font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: var(--tv-kicker-tracking);
+  text-transform: uppercase;
+}
+
+.resource-inventory__title {
+  margin: 0.2rem 0 0;
+  color: var(--tv-ink-primary);
+  font-family: var(--tv-font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.resource-inventory__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-grammar-selected-wash);
+  color: var(--tv-grammar-resource-premium);
+  font-family: var(--tv-font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: var(--tv-kicker-tracking);
+  text-transform: uppercase;
+}
+
+.resource-inventory__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--tv-grammar-resource-border);
+  border-radius: var(--tv-radius-card);
+  background: var(--tv-grammar-resource-surface);
+}
+
+.resource-inventory__row[data-highlight="true"] {
+  border-color: var(--tv-grammar-selected);
+}
+
+.resource-inventory__index {
+  display: grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: var(--tv-radius-control);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-data);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.resource-inventory__row[data-highlight="true"] .resource-inventory__index {
+  background: var(--tv-grammar-selected);
+  color: var(--tv-ink-on-brand);
+}
+
+.resource-inventory__value {
+  color: var(--tv-ink-muted-aa);
+  font-family: var(--tv-font-data);
+  font-size: 1.15rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.resource-inventory__row[data-highlight="true"] .resource-inventory__value {
+  color: var(--tv-ink-primary);
+}
+
+.secondary-page--tight {
+  padding-block: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+@media (max-width: 47.99rem) {
+  .legal-page.page-shell {
+    padding-inline: var(--tv-gutter-mobile);
   }
 }

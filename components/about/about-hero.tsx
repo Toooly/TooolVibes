@@ -21,7 +21,7 @@ export function AboutHero({ heroCopy, teamCaptionCopy }: AboutHeroProps) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section className="v-about-hero motion-reveal overflow-hidden px-4 py-6 text-[var(--tv-ink-inverted)] sm:px-7 sm:py-8 lg:px-8">
+    <section className="v-about-hero motion-reveal overflow-hidden px-0 py-6 text-[var(--tv-ink-inverted)] sm:py-8">
       <div className="grid gap-8 xl:grid-cols-[minmax(0,0.88fr)_minmax(24rem,1.12fr)] xl:items-center">
         <motion.div
           initial={false}

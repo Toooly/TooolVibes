@@ -25,42 +25,36 @@ const serviceCards: ReadonlyArray<AboutService> = [
     label: "01",
     copy: "Trasformiamo obiettivi, vincoli e priorità in una roadmap concreta, misurabile e pronta da eseguire.",
     icon: <Target className="size-5" aria-hidden="true" />,
-    accent: "#6a3cff",
   },
   {
     title: "Web app su misura",
     label: "02",
     copy: "Progettiamo prodotti veloci e accessibili, costruiti intorno ai flussi reali delle persone che li useranno.",
     icon: <Code2 className="size-5" aria-hidden="true" />,
-    accent: "#39d2f6",
   },
   {
     title: "Automazioni AI",
     label: "03",
     copy: "Colleghiamo modelli, dati e strumenti per eliminare passaggi ripetitivi senza perdere controllo sul processo.",
     icon: <BrainCircuit className="size-5" aria-hidden="true" />,
-    accent: "#f3bf4c",
   },
   {
     title: "Sistemi e integrazioni",
     label: "04",
     copy: "Facciamo dialogare piattaforme, API e contenuti in un'architettura stabile, leggibile e facile da mantenere.",
     icon: <Cpu className="size-5" aria-hidden="true" />,
-    accent: "#10b981",
   },
   {
     title: "Esperienze e interfacce",
     label: "05",
     copy: "Diamo forma a interfacce chiare, riconoscibili e curate in ogni stato, dal primo accesso al risultato finale.",
     icon: <Layers3 className="size-5" aria-hidden="true" />,
-    accent: "#ec4899",
   },
   {
     title: "Lancio e crescita",
     label: "06",
     copy: "Prepariamo il rilascio, osserviamo i segnali utili e miglioriamo il prodotto con cicli brevi e decisioni motivate.",
     icon: <Rocket className="size-5" aria-hidden="true" />,
-    accent: "#4f46e5",
   },
 ];
 
@@ -81,7 +75,7 @@ const communityCopy =
 
 export function AboutPage() {
   return (
-    <div className="page-shell pb-12 pt-4 sm:pt-6">
+    <div className="v-about-page page-shell pb-12 pt-4 sm:pt-6">
       {/* ─── Identity header (server) ─── */}
       <header className="v-about-identity">
         <RouteMarker
@@ -101,20 +95,20 @@ export function AboutPage() {
       </div>
 
       {/* ─── Servizi ─── */}
-      <section className="v-about-services-section relative mt-8 overflow-hidden px-4 py-7 sm:mt-10 sm:px-7 sm:py-9 lg:px-8">
+      <section className="v-about-services-section relative mt-8 py-7 sm:mt-10 sm:py-9">
         <div className="relative grid gap-7 lg:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)] lg:items-start">
           <div className="lg:sticky lg:top-28">
             <PremiumBadge tone="dark" className="after:!hidden">
               I servizi che offriamo
             </PremiumBadge>
-            <h2 className="mt-4 max-w-[11ch] font-[family-name:var(--tv-font-family-display)] text-[length:var(--tv-text-h2)] font-normal leading-[var(--tv-leading-display)] text-white">
+            <h2 className="mt-4 max-w-[14ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]">
               Dal caos al sistema.
             </h2>
-            <p className="mt-5 max-w-[34rem] text-[0.98rem] leading-7 text-white/72">
+            <p className="mt-5 max-w-[34rem] text-[0.98rem] leading-7 text-[var(--tv-grammar-institutional-ink-secondary)]">
               {servicesIntroCopy}
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-              <PremiumLink href={contactEmailDestination.href} tone="primary">
+              <PremiumLink href={contactEmailDestination.href} tone="primary" className="tv-cta-primary">
                 Raccontaci il progetto
               </PremiumLink>
               <a
@@ -139,7 +133,7 @@ export function AboutPage() {
           <PremiumBadge tone="accent" className="after:!hidden">
             Come lavoriamo
           </PremiumBadge>
-          <h2 className="mt-3 max-w-[18ch] font-[family-name:var(--tv-font-family-display)] text-[length:var(--tv-text-h2)] font-normal leading-[var(--tv-leading-display)] text-[var(--tv-ink-primary)]">
+          <h2 className="mt-3 max-w-[18ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]">
             Una rotta, non una pila di card.
           </h2>
         </div>
@@ -165,7 +159,7 @@ export function AboutPage() {
             {communityCopy}
           </p>
         </div>
-        <PremiumLink href="/community" tone="premium" className="w-full shrink-0 sm:w-auto">
+        <PremiumLink href="/community" tone="premium" className="tv-cta-primary w-full shrink-0 sm:w-auto">
           Entra nella community
         </PremiumLink>
       </section>

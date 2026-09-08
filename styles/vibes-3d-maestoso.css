@@ -123,10 +123,16 @@
 .v-about-hero {
   position: relative;
   overflow: hidden;
-  border-radius: 2rem;
-  background: var(--tv-surface-inverted);
+  border-radius: var(--tv-radius-feature);
+  background: var(--tv-grammar-institutional-ivory);
   border: 1px solid var(--tv-border-inverted);
   box-shadow: none;
+  padding: 1.25rem;
+}
+@media (min-width: 48rem) {
+  .v-about-hero {
+    padding: 1.75rem;
+  }
 }
 
 .v-about-hero::before {
@@ -179,9 +185,9 @@
 .v-about-services-section {
   position: relative;
   overflow: hidden;
-  border-radius: 34px;
-  border: 1px solid var(--tv-border-subtle);
-  background: var(--tv-surface-raised);
+  border-radius: 0;
+  border: 0;
+  background: transparent;
   box-shadow: none;
 }
 
@@ -194,10 +200,10 @@
 .v-about-service-card {
   position: relative;
   overflow: hidden;
-  border-radius: 26px;
-  border: 1px solid var(--tv-border-subtle);
-  background: var(--tv-surface-elevated);
-  padding: 1.5rem;
+  border-radius: var(--tv-radius-feature);
+  border: 1px solid var(--tv-grammar-institutional-border);
+  background: transparent;
+  padding: 1.1rem 0;
   box-shadow: none;
 }
 
@@ -209,11 +215,12 @@
 .v-about-service-icon {
   display: grid;
   place-items: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 18px;
-  border: 1px solid var(--tv-border-interactive);
-  background: var(--tv-surface-floating);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--tv-radius-pill);
+  border: 1px solid var(--tv-grammar-institutional-border);
+  background: transparent;
+  color: var(--tv-grammar-institutional-accent);
   box-shadow: none;
 }
 
@@ -232,19 +239,21 @@
 }
 
 .v-about-service-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  line-height: 1.2;
-  color: #fff;
-  margin-top: 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--tv-grammar-institutional-ink);
+  font-family: var(--tv-font-ui);
+  margin-top: 1rem;
   letter-spacing: -0.01em;
 }
 
 .v-about-service-copy {
   font-size: 0.9rem;
-  line-height: 1.7;
-  color: rgba(255,255,255,0.72);
-  margin-top: 0.75rem;
+  line-height: 1.6;
+  color: var(--tv-grammar-institutional-ink-secondary);
+  font-family: var(--tv-font-ui);
+  margin-top: 0.5rem;
 }
 
 /* Feature cards */
@@ -321,18 +330,40 @@
 /* Identity header on /chi-siamo — server-rendered above the dark hero.
    H1 is constrained to keep balanced wrapping on the widest viewport. */
 .v-about-identity {
-  padding-inline: 1rem;
+  padding-inline: 0;
 }
 
-@media (min-width: 40rem) {
-  .v-about-identity {
-    padding-inline: 1.75rem;
+.v-about-page.page-shell {
+  padding-inline: var(--tv-gutter-mobile);
+}
+
+.v-about-services-more {
+  margin-top: 0.5rem;
+}
+
+.v-about-services-more > summary {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  cursor: pointer;
+  color: var(--tv-grammar-institutional-ink);
+  font-family: var(--tv-font-ui);
+  font-size: 0.9rem;
+  font-weight: 700;
+  list-style: none;
+}
+
+.v-about-services-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .v-about-services-more {
+    display: contents;
   }
-}
 
-@media (min-width: 64rem) {
-  .v-about-identity {
-    padding-inline: 2rem;
+  .v-about-services-more > summary {
+    display: none;
   }
 }
 

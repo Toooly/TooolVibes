@@ -21,7 +21,7 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Lo Shop TooolVibes è in preparazione. Il prodotto editoriale resta nel Catalogo e nelle Raccolte.",
 });
 
-const SCARCITY_BADGE = "Disponibile · 0 posti";
+const SCARCITY_BADGE = "In preparazione";
 
 const CARDS = [
   {
@@ -52,7 +52,7 @@ const INVENTORY = [
 
 export default function ShopPage() {
   return (
-    <SecondaryPageShell>
+    <SecondaryPageShell className="resource-page">
       <SecondaryHero
         tone="dark"
         layout="split"
@@ -163,82 +163,17 @@ function InventoryPanel({
 }) {
   const [head, ...rest] = items;
   return (
-    <div
-      style={{
-        display: "grid",
-        gap: "0.75rem",
-        alignContent: "start",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "0.75rem",
-          padding: "0.75rem 0.85rem",
-          border: "1px solid var(--tv-border-subtle)",
-          borderRadius: "var(--tv-radius-card)",
-          background: "var(--tv-surface-raised)",
-        }}
-      >
+    <div className="resource-inventory">
+      <div className="resource-inventory__status">
         <div>
-          <p
-            style={{
-              margin: 0,
-              color: "var(--tv-ink-muted-aa)",
-              fontFamily: "var(--tv-font-family-ui)",
-              fontSize: "0.75rem",
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-            }}
-          >
-            Stato dello Shop
-          </p>
-          <p
-            style={{
-              margin: "0.2rem 0 0",
-              color: "var(--tv-ink-primary)",
-              fontFamily: "var(--tv-font-family-ui)",
-              fontSize: "0.95rem",
-              fontWeight: 600,
-            }}
-          >
-            {status}
-          </p>
+          <p className="resource-inventory__kicker">Stato dello Shop</p>
+          <p className="resource-inventory__title">{status}</p>
         </div>
-        <span
-          aria-hidden="true"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.4rem",
-            padding: "0.3rem 0.65rem",
-            borderRadius: "var(--tv-radius-pill)",
-            background: "color-mix(in srgb, var(--tv-accent-gold) 16%, transparent)",
-            color: "var(--tv-accent-gold)",
-            fontFamily: "var(--tv-font-family-ui)",
-            fontSize: "0.75rem",
-            fontWeight: 700,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-          }}
-        >
-          <span
-            aria-hidden="true"
-            style={{
-              width: "0.4rem",
-              height: "0.4rem",
-              borderRadius: "var(--tv-radius-pill)",
-              background: "var(--tv-accent-gold)",
-            }}
-          />
-          {badge}
-        </span>
+        <span className="resource-inventory__badge">{badge}</span>
       </div>
-
-      {head ? <InventoryRow index={1} label={head.title} value={head.value} caption={head.caption} highlight /> : null}
+      {head ? (
+        <InventoryRow index={1} label={head.title} value={head.value} caption={head.caption} highlight />
+      ) : null}
       {rest.map((item, idx) => (
         <InventoryRow
           key={item.title}
@@ -266,42 +201,13 @@ function InventoryRow({
   highlight?: boolean;
 }) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "auto 1fr auto",
-        gap: "0.75rem",
-        alignItems: "center",
-        padding: "0.7rem 0.85rem",
-        border: highlight
-          ? "1px solid var(--tv-border-interactive)"
-          : "1px solid var(--tv-border-subtle)",
-        borderRadius: "var(--tv-radius-card)",
-        background: "var(--tv-surface-raised)",
-      }}
-    >
-      <span
-        style={{
-          display: "grid",
-          placeItems: "center",
-          width: "1.65rem",
-          height: "1.65rem",
-          borderRadius: "var(--tv-radius-control)",
-          background: highlight ? "var(--tv-accent-brand)" : "var(--tv-surface-elevated)",
-          color: "var(--tv-ink-on-brand)",
-          fontFamily: "var(--tv-font-family-ui)",
-          fontSize: "0.75rem",
-          fontWeight: 700,
-          fontVariantNumeric: "tabular-nums",
-        }}
-      >
-        {index}
-      </span>
+    <div className="resource-inventory__row" data-highlight={highlight ? "true" : "false"}>
+      <span className="resource-inventory__index">{index}</span>
       <span style={{ display: "grid", gap: "0.1rem" }}>
         <strong
           style={{
             color: "var(--tv-ink-primary)",
-            fontFamily: "var(--tv-font-family-ui)",
+            fontFamily: "var(--tv-font-ui)",
             fontSize: "0.85rem",
             fontWeight: 600,
             lineHeight: 1.2,
@@ -312,7 +218,7 @@ function InventoryRow({
         <span
           style={{
             color: "var(--tv-ink-secondary)",
-            fontFamily: "var(--tv-font-family-ui)",
+            fontFamily: "var(--tv-font-ui)",
             fontSize: "0.75rem",
             lineHeight: 1.4,
           }}
@@ -320,18 +226,7 @@ function InventoryRow({
           {caption}
         </span>
       </span>
-      <span
-        style={{
-          color: highlight ? "var(--tv-ink-primary)" : "var(--tv-ink-muted-aa)",
-          fontFamily: "var(--tv-font-family-display)",
-          fontSize: "1.4rem",
-          fontWeight: 400,
-          letterSpacing: "-0.02em",
-          fontVariantNumeric: "tabular-nums",
-        }}
-      >
-        {value}
-      </span>
+      <span className="resource-inventory__value">{value}</span>
     </div>
   );
 }

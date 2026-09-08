@@ -21,6 +21,7 @@
   overflow-x: clip;
   padding-block: clamp(2.5rem, 5vw, 4.5rem)
     clamp(3rem, 6vw, 5.5rem);
+  padding-inline: var(--tv-gutter-mobile);
 }
 
 .sponsorizza-page::before {
@@ -37,7 +38,7 @@
     ),
     radial-gradient(
       ellipse 50% 35% at 92% 8%,
-      color-mix(in srgb, var(--tv-accent-cyan) 10%, transparent),
+      color-mix(in srgb, var(--tv-accent-brand) 6%, transparent),
       transparent 70%
     );
 }
@@ -56,7 +57,7 @@
       135deg,
       color-mix(in srgb, var(--tv-accent-brand) 8%, var(--tv-surface-raised)),
       var(--tv-surface-raised) 55%,
-      color-mix(in srgb, var(--tv-accent-cyan) 5%, var(--tv-surface-raised))
+      var(--tv-surface-raised)
     );
   padding: clamp(1.5rem, 4vw, 3rem);
   box-shadow: var(--tv-elevation-raised);
@@ -120,16 +121,16 @@
   height: 0.4rem;
   flex: 0 0 auto;
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-gold);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
+  background: var(--tv-accent-brand);
+  box-shadow: none;
 }
 
 .sponsorizza-hero__title {
   margin: 0;
   color: var(--tv-ink-primary);
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(2.1rem, 5vw, 3.6rem);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   letter-spacing: -0.02em;
   line-height: 1.02;
   text-wrap: balance;
@@ -151,11 +152,11 @@
   gap: 0.55rem;
   min-height: 3rem;
   align-self: start;
-  border: 1px solid var(--tv-border-brand);
+  border: 1px solid transparent;
   border-radius: var(--tv-radius-pill);
   padding: 0.65rem 1.4rem;
-  color: var(--tv-ink-on-brand);
-  background: var(--tv-accent-brand);
+  color: var(--tv-button-activation-text);
+  background: var(--tv-button-activation-bg);
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-label);
   font-weight: var(--tv-weight-semibold);
@@ -168,12 +169,12 @@
 }
 
 .sponsorizza-hero__cta:hover {
-  background: var(--tv-accent-brand-hover);
-  border-color: var(--tv-accent-brand-hover);
+  background: var(--tv-button-activation-bg-hover);
+  border-color: transparent;
 }
 
 .sponsorizza-hero__cta:focus-visible {
-  outline: 2px solid var(--tv-accent-cyan);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
 }
 
@@ -289,7 +290,7 @@
   place-items: center;
   border: 1px solid var(--tv-border-interactive);
   border-radius: var(--tv-radius-card);
-  color: var(--tv-accent-cyan);
+  color: var(--tv-accent-violet-on-dark);
   background: var(--tv-surface-elevated);
 }
 
@@ -332,8 +333,8 @@
   width: 0.4rem;
   height: 0.4rem;
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-gold);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
+  background: var(--tv-accent-brand);
+  box-shadow: none;
 }
 
 .sponsorizza-section__title {
@@ -410,13 +411,13 @@
   width: 0.55rem;
   height: 0.55rem;
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-cyan);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-cyan) 18%, transparent);
+  background: var(--tv-accent-brand);
+  box-shadow: none;
 }
 
 .sponsorizza-audience__visual-row.is-warm .dot {
-  background: var(--tv-accent-gold);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-gold) 18%, transparent);
+  background: var(--tv-accent-brand);
+  box-shadow: none;
 }
 
 .sponsorizza-audience__visual-row.is-violet .dot {
@@ -506,7 +507,7 @@
   min-height: 2.25rem;
   border: 1px solid var(--tv-border-interactive);
   border-radius: var(--tv-radius-card);
-  color: var(--tv-accent-cyan);
+  color: var(--tv-accent-violet-on-dark);
   background: var(--tv-surface-raised);
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-eyebrow);
@@ -515,7 +516,7 @@
 }
 
 .sponsorizza-format-card--spotlight .sponsorizza-format-card__index {
-  color: var(--tv-accent-gold);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .sponsorizza-format-card--dispatch .sponsorizza-format-card__index {
@@ -523,7 +524,7 @@
 }
 
 .sponsorizza-format-card--collection .sponsorizza-format-card__index {
-  color: var(--tv-accent-cyan);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .sponsorizza-format-card__title {
@@ -586,11 +587,11 @@
   width: 0.4rem;
   height: 0.4rem;
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-cyan);
+  background: var(--tv-accent-brand);
 }
 
 .sponsorizza-format-card--spotlight .sponsorizza-format-card__bullets li::before {
-  background: var(--tv-accent-gold);
+  background: var(--tv-accent-brand);
 }
 
 .sponsorizza-format-card--dispatch .sponsorizza-format-card__bullets li::before {
@@ -598,7 +599,7 @@
 }
 
 .sponsorizza-format-card--collection .sponsorizza-format-card__bullets li::before {
-  background: var(--tv-accent-cyan);
+  background: var(--tv-accent-brand);
 }
 
 /* =====================================================================
@@ -615,7 +616,7 @@
   background:
     linear-gradient(
       135deg,
-      color-mix(in srgb, var(--tv-accent-cyan) 6%, var(--tv-surface-raised)),
+      var(--tv-surface-raised),
       var(--tv-surface-raised) 60%
     );
 }
@@ -772,7 +773,7 @@
   background:
     radial-gradient(
       circle at 30% 30%,
-      color-mix(in srgb, var(--tv-accent-cyan) 26%, transparent),
+      color-mix(in srgb, var(--tv-accent-brand) 12%, transparent),
       transparent 70%
     ),
     linear-gradient(
@@ -874,12 +875,12 @@
 }
 
 .sponsorizza-example__cta:hover {
-  border-color: var(--tv-accent-cyan);
-  color: var(--tv-accent-cyan);
+  border-color: var(--tv-accent-brand);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .sponsorizza-example__cta:focus-visible {
-  outline: 2px solid var(--tv-accent-cyan);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
 }
 
@@ -1009,7 +1010,7 @@
     ),
     radial-gradient(
       ellipse 60% 70% at 100% 100%,
-      color-mix(in srgb, var(--tv-accent-cyan) 10%, transparent),
+      color-mix(in srgb, var(--tv-accent-brand) 6%, transparent),
       transparent 70%
     ),
     var(--tv-surface-raised);
@@ -1064,7 +1065,7 @@
 }
 
 .sponsorizza-final-cta__body a:focus-visible {
-  outline: 2px solid var(--tv-accent-cyan);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -1078,8 +1079,8 @@
   padding: 0.65rem 1.4rem;
   border: 1px solid var(--tv-border-brand);
   border-radius: var(--tv-radius-pill);
-  color: var(--tv-ink-on-brand);
-  background: var(--tv-accent-brand);
+  color: var(--tv-button-activation-text);
+  background: var(--tv-button-activation-bg);
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-label);
   font-weight: var(--tv-weight-semibold);
@@ -1091,12 +1092,12 @@
 }
 
 .sponsorizza-final-cta__email:hover {
-  background: var(--tv-accent-brand-hover);
-  border-color: var(--tv-accent-brand-hover);
+  background: var(--tv-button-activation-bg-hover);
+  border-color: transparent;
 }
 
 .sponsorizza-final-cta__email:focus-visible {
-  outline: 2px solid var(--tv-accent-cyan);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
 }
 
