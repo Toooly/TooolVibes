@@ -90,7 +90,11 @@ export function WorkspaceDecisioni({
   if (allDecisions.length === 0) {
     return (
       <>
-      <section className="tv-mod tv-mod--resume" aria-labelledby="tv-decisioni-empty">
+      <section
+        className="tv-mod tv-mod--resume"
+        data-workspace-view="decisioni"
+        aria-labelledby="tv-decisioni-empty"
+      >
         <h2 id="tv-decisioni-empty" className="tv-home-title">
           Quando scegli un tool, salva anche il perché.
         </h2>
@@ -121,7 +125,7 @@ export function WorkspaceDecisioni({
   }
 
   return (
-    <div className="tv-home">
+    <div className="tv-home" data-workspace-view="decisioni">
       <section className="tv-mod" aria-labelledby="tv-decisioni-current">
         <h2 id="tv-decisioni-current" className="tv-home-title">
           In corso

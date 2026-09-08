@@ -288,7 +288,7 @@
   z-index: calc(var(--tv-z-nav, 50) + 12);
   display: grid;
   place-items: end center;
-  padding: 0 1rem calc(var(--tv-bottom-nav-total, 4.0625rem) + 0.85rem);
+  padding: 0 var(--tv-gutter-mobile) calc(var(--tv-bottom-nav-total, 4.0625rem) + 0.85rem);
   pointer-events: none;
   opacity: 0;
   visibility: hidden;

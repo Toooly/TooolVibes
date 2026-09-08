@@ -29,14 +29,7 @@ export function ShortlistStageToggle({ slug }: ShortlistStageToggleProps) {
             disabled={active}
             aria-pressed={active}
             data-sonic-action="tab"
-            className={`selection-chip text-ui-strong inline-flex shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] disabled:cursor-default disabled:opacity-100 ${
-              active ? "quick-filter-chip is-active" : ""
-            }`}
-            style={{
-              borderColor: active ? "rgba(112,82,255,0.24)" : "var(--line)",
-              background: active ? "#efe8ff" : "#f7f4ff",
-              color: active ? meta.tone : "var(--muted-strong)",
-            }}
+            className="shortlist-stage-chip"
           >
             {meta.label}
           </button>

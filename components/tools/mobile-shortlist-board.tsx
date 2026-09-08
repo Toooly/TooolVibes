@@ -24,7 +24,6 @@ import Link from "next/link";
 import { DecisionSheet } from "@/components/account/workspace/decision-sheet";
 import {
   formatRevisitLine,
-  OUTCOME_ACTION_LABELS,
   OUTCOME_STATE_LABELS,
   STAGE_LABELS,
   usageActionLabel,
@@ -41,7 +40,10 @@ import {
   setWorkspacePinned,
   setWorkspaceSaveReason,
 } from "@/lib/account/workspace-actions";
-import type { WorkspaceDecisionOutcome, WorkspaceUsage } from "@/lib/discovery/types";
+import type {
+  WorkspaceDecisionOutcome,
+  WorkspaceUsage,
+} from "@/lib/discovery/types";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import {
   formatDecisionTimestamp,
@@ -67,10 +69,19 @@ type ToolWithMeta = ToolPublic & {
   isInCompare: boolean;
 };
 
+/**
+ * Personal family identity tone: muted lilac variants only, never a rainbow.
+ * Used as a thin spine / dot accent, not a fill.
+ */
 function getToolColor(tool: ToolPublic): string {
-  const palette = ["#6a3cff","#39d2f6","#f3bf4c","#ec4899","#22c55e","#f97316","#8b5cf6","#14b8a6"];
+  const palette = [
+    "var(--tv-grammar-personal-accent-strong)",
+    "var(--tv-accent-violet-on-dark)",
+    "var(--tv-grammar-personal-accent)",
+  ];
   let hash = 0;
-  for (let i = 0; i < tool.slug.length; i++) hash = ((hash << 5) - hash) + tool.slug.charCodeAt(i);
+  for (let i = 0; i < tool.slug.length; i++)
+    hash = (hash << 5) - hash + tool.slug.charCodeAt(i);
   return palette[Math.abs(hash) % palette.length];
 }
 
@@ -86,7 +97,10 @@ function getStageLabel(stage: ShortlistStage): string {
   return STAGE_LABELS[stage];
 }
 
-function resolveToolName(tools: ToolPublic[], slug: string | null | undefined): string | null {
+function resolveToolName(
+  tools: ToolPublic[],
+  slug: string | null | undefined,
+): string | null {
   if (!slug) return null;
   return tools.find((tool) => tool.slug === slug)?.name ?? null;
 }
@@ -97,40 +111,18 @@ function formatUsageLine(
 ): string | null {
   if (!usage) return null;
   const label = usageStateLabel(usage);
-  return usage === "replaced" && replacedByName ? `${label} → ${replacedByName}` : label;
+  return usage === "replaced" && replacedByName
+    ? `${label} → ${replacedByName}`
+    : label;
 }
 
 const decisionOutcomeMeta: Record<
   WorkspaceDecisionOutcome,
-  { actionLabel: string; stateLabel: string; tone: string; background: string }
+  { stateLabel: string }
 > = {
-  selected: {
-    actionLabel: OUTCOME_ACTION_LABELS.selected,
-    stateLabel: OUTCOME_STATE_LABELS.selected,
-    tone: "var(--accent-strong)",
-    background: "rgba(106,60,255,0.22)",
-  },
-  rejected: {
-    actionLabel: OUTCOME_ACTION_LABELS.rejected,
-    stateLabel: OUTCOME_STATE_LABELS.rejected,
-    tone: "var(--muted-strong)",
-    background: "rgba(255,82,82,0.14)",
-  },
-  deferred: {
-    actionLabel: OUTCOME_ACTION_LABELS.deferred,
-    stateLabel: OUTCOME_STATE_LABELS.deferred,
-    tone: "var(--muted-strong)",
-    background: "rgba(243,191,76,0.14)",
-  },
-};
-
-const sheetChipClassName =
-  "selection-chip text-ui-strong inline-flex shrink-0 items-center rounded-md border px-3 py-1.5 text-xs font-semibold tracking-[0.04em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-strong)] disabled:cursor-default disabled:opacity-100";
-
-const sheetChipIdleStyle: CSSProperties = {
-  borderColor: "var(--line)",
-  background: "rgba(255,255,255,0.06)",
-  color: "#f4f1ff",
+  selected: { stateLabel: OUTCOME_STATE_LABELS.selected },
+  rejected: { stateLabel: OUTCOME_STATE_LABELS.rejected },
+  deferred: { stateLabel: OUTCOME_STATE_LABELS.deferred },
 };
 
 export function MobileShortlistBoard({
@@ -191,7 +183,9 @@ export function MobileShortlistBoard({
   }
 
   const favoriteTools = baseTools.filter((t) => t.stage === "top");
-  const toTryTools = baseTools.filter((t) => t.stage === "saved" || t.stage === "review");
+  const toTryTools = baseTools.filter(
+    (t) => t.stage === "saved" || t.stage === "review",
+  );
   const recentTools = [...baseTools].reverse().slice(0, 8);
   const readyToCompare = baseTools.filter((t) => t.isInCompare);
   const noteTool = noteSlug
@@ -200,7 +194,10 @@ export function MobileShortlistBoard({
 
   return (
     <div className="mobile-library-board">
-      <MobileLibraryHero totalCount={totalCount} compareCount={compareSlugs.length} />
+      <MobileLibraryHero
+        totalCount={totalCount}
+        compareCount={compareSlugs.length}
+      />
 
       {/* Decision view (B35 / FLOW-604): le decisioni registrate — anche dal
           confronto — restano visibili qui dopo reload e login, riapribili con
@@ -227,14 +224,7 @@ export function MobileShortlistBoard({
               );
 
               return (
-                <li
-                  key={tool.slug}
-                  className="flex flex-wrap items-center gap-2 rounded-[16px] border px-3 py-2"
-                  style={{
-                    borderColor: "var(--line)",
-                    background: "rgba(18,13,46,0.92)",
-                  }}
-                >
+                <li key={tool.slug} className="mobile-library-board__decision">
                   <button
                     type="button"
                     onClick={() => setNoteSlug(tool.slug)}
@@ -244,33 +234,18 @@ export function MobileShortlistBoard({
                     {tool.name}
                   </button>
                   <span
-                    className={sheetChipClassName}
-                    style={{
-                      borderColor: "rgba(112,82,255,0.24)",
-                      background: meta.background,
-                      color: meta.tone,
-                    }}
+                    className="shortlist-decision-chip"
+                    data-outcome={outcome}
                   >
                     {meta.stateLabel}
                   </span>
                   {usageLine ? (
-                    <span
-                      className={sheetChipClassName}
-                      style={{
-                        borderColor: "rgba(112,82,255,0.24)",
-                        background: "rgba(106,60,255,0.18)",
-                        color: "var(--accent-strong)",
-                      }}
-                    >
-                      {usageLine}
-                    </span>
+                    <span className="shortlist-usage-chip">{usageLine}</span>
                   ) : null}
-                  <span
-                    className="text-xs uppercase tracking-[0.14em]"
-                    style={{ color: "var(--muted)" }}
-                  >
+                  <span className="shortlist-decision-meta">
                     {outcome === "deferred"
-                      ? (formatRevisitLine(decisionRevisitAts[tool.slug]) ?? "Rivedi: data da impostare")
+                      ? (formatRevisitLine(decisionRevisitAts[tool.slug]) ??
+                        "Rivedi: data da impostare")
                       : `Registrata ${formatDecisionTimestamp(decisionUpdatedAts[tool.slug])}`}
                   </span>
                   <button
@@ -278,8 +253,7 @@ export function MobileShortlistBoard({
                     onClick={() => reopenWorkspaceDecision(tool.slug)}
                     aria-label={`Riapri decisione di ${tool.name}`}
                     data-sonic-action="update"
-                    className={`${sheetChipClassName} gap-2`}
-                    style={sheetChipIdleStyle}
+                    className="shortlist-sheet-chip"
                   >
                     <RotateCcw size={12} />
                     Riapri
@@ -311,7 +285,7 @@ export function MobileShortlistBoard({
             ))}
             <Link
               href="/compare"
-              className="mobile-library-board__compare-chip"
+              className="mobile-library-board__compare-chip mobile-library-board__compare-chip--open"
               aria-label={`Apri il confronto con ${readyToCompare.length} tool`}
               data-sonic-action="navigate"
             >
@@ -328,7 +302,7 @@ export function MobileShortlistBoard({
         icon={Heart}
         tools={favoriteTools}
         catalogTools={tools}
-        color="#f3bf4c"
+        color="var(--tv-grammar-personal-accent-strong)"
         emptyText="I tool che ami di più appariranno qui"
         decisionOutcomes={decisionOutcomes}
         decisionRevisitAts={decisionRevisitAts}
@@ -342,7 +316,7 @@ export function MobileShortlistBoard({
         icon={Bookmark}
         tools={toTryTools}
         catalogTools={tools}
-        color="#9be8ff"
+        color="var(--tv-grammar-personal-accent)"
         emptyText="Tool salvati da esplorare"
         decisionOutcomes={decisionOutcomes}
         decisionRevisitAts={decisionRevisitAts}
@@ -356,7 +330,7 @@ export function MobileShortlistBoard({
         icon={Clock}
         tools={recentTools}
         catalogTools={tools}
-        color="#ff8ecb"
+        color="var(--tv-grammar-personal-ink-muted)"
         emptyText="Gli ultimi tool aggiunti"
         decisionOutcomes={decisionOutcomes}
         decisionRevisitAts={decisionRevisitAts}
@@ -391,15 +365,23 @@ export function MobileShortlistBoard({
   );
 }
 
-function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; compareCount: number }) {
+function MobileLibraryHero({
+  totalCount,
+  compareCount,
+}: {
+  totalCount: number;
+  compareCount: number;
+}) {
   const stats = [
     { label: "Salvati", value: totalCount },
     { label: "Confronto", value: compareCount },
-    { label: "Segnalazioni", value: "Aperte" },
   ];
 
   return (
-    <section className="mobile-library-hero" aria-labelledby="mobile-library-title">
+    <section
+      className="mobile-library-hero"
+      aria-labelledby="mobile-library-title"
+    >
       <div className="mobile-library-board__header">
         <div className="mobile-library-board__icon">
           <Library size={22} />
@@ -417,14 +399,7 @@ function MobileLibraryHero({ totalCount, compareCount }: { totalCount: number; c
 
       <div className="mobile-library-hero__stats">
         {stats.map((item) => (
-          <div
-            key={item.label}
-            className={
-              item.label === "Segnalazioni"
-                ? "mobile-library-hero__stat mobile-library-hero__stat--signals"
-                : "mobile-library-hero__stat"
-            }
-          >
+          <div key={item.label} className="mobile-library-hero__stat">
             <strong>{item.value}</strong>
             <span>{item.label}</span>
           </div>
@@ -452,7 +427,11 @@ function MobileLibraryShelf({
   onOpenMemory,
 }: {
   title: string;
-  icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
+  icon: React.ComponentType<{
+    size?: number;
+    className?: string;
+    style?: React.CSSProperties;
+  }>;
   tools: ToolWithMeta[];
   catalogTools: ToolPublic[];
   color: string;
@@ -464,7 +443,10 @@ function MobileLibraryShelf({
   onOpenMemory: (slug: string) => void;
 }) {
   return (
-    <section className="mobile-library-shelf" style={{ "--shelf-color": color } as CSSProperties}>
+    <section
+      className="mobile-library-shelf"
+      style={{ "--shelf-color": color } as CSSProperties}
+    >
       <div className="mobile-library-shelf__header">
         <Icon size={14} style={{ color }} />
         <h2 style={{ color }}>{title}</h2>
@@ -481,7 +463,10 @@ function MobileLibraryShelf({
               decisionOutcome={decisionOutcomes[tool.slug] ?? null}
               decisionRevisitAt={decisionRevisitAts[tool.slug] ?? null}
               usage={toolUsages[tool.slug] ?? null}
-              replacedByName={resolveToolName(catalogTools, toolReplacedBy[tool.slug])}
+              replacedByName={resolveToolName(
+                catalogTools,
+                toolReplacedBy[tool.slug],
+              )}
               onOpenMemory={() => onOpenMemory(tool.slug)}
             />
           ))}
@@ -559,7 +544,8 @@ function LibraryBook({
         {decisionOutcome ? (
           <span>
             {decisionOutcomeMeta[decisionOutcome].stateLabel}
-            {decisionOutcome === "deferred" && formatRevisitLine(decisionRevisitAt)
+            {decisionOutcome === "deferred" &&
+            formatRevisitLine(decisionRevisitAt)
               ? ` · ${formatRevisitLine(decisionRevisitAt)}`
               : ""}
           </span>
@@ -572,12 +558,8 @@ function LibraryBook({
         <button
           type="button"
           onClick={onOpenMemory}
-          className="mobile-library-book__remove"
+          className="mobile-library-book__remove mobile-library-book__remove--memory"
           aria-label={`Apri nota e decisione di ${tool.name}`}
-          style={{
-            background: "#5b3fd6",
-            boxShadow: "0 2px 6px rgba(91,63,214,0.24)",
-          }}
         >
           <NotebookPen size={12} />
         </button>
@@ -667,23 +649,6 @@ function MobileNoteSheet({
       role="dialog"
       aria-modal="true"
       aria-label={`Memoria decisionale di ${toolName}`}
-      style={{
-        position: "fixed",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 70,
-        margin: "0 auto",
-        maxWidth: 520,
-        maxHeight: "82vh",
-        overflowY: "auto",
-        borderRadius: "24px 24px 0 0",
-        border: "1px solid var(--line)",
-        borderBottom: "none",
-        background: "#fbfaff",
-        boxShadow: "0 -18px 48px rgba(31,16,71,0.18)",
-        padding: "10px 20px 28px",
-      }}
     >
       <div className="mobile-shortlist-board__sheet-header">
         <button
@@ -717,18 +682,7 @@ function MobileNoteSheet({
                 onClick={() => setWorkspacePinned(slug, !memory.is_pinned)}
                 data-sonic-action="update"
                 aria-pressed={Boolean(memory.is_pinned)}
-                className={`${sheetChipClassName} gap-2 ${
-                  memory.is_pinned ? "quick-filter-chip is-active" : ""
-                }`}
-                style={
-                  memory.is_pinned
-                    ? {
-                        borderColor: "rgba(112,82,255,0.24)",
-                        background: "rgba(106,60,255,0.22)",
-                        color: "var(--accent-strong)",
-                      }
-                    : sheetChipIdleStyle
-                }
+                className="shortlist-sheet-chip"
               >
                 <Pin size={12} />
                 {memory.is_pinned ? "In primo piano" : "Metti in primo piano"}
@@ -749,22 +703,14 @@ function MobileNoteSheet({
                   type="button"
                   onClick={() => setDecideOpen(true)}
                   data-sonic-action="tab"
-                  className={sheetChipClassName}
-                  style={{
-                    borderColor: "rgba(112,82,255,0.24)",
-                    background: "rgba(106,60,255,0.22)",
-                    color: "var(--accent-strong)",
-                  }}
+                  className="shortlist-sheet-chip shortlist-sheet-chip--decide"
                 >
                   Decidi
                 </button>
               </div>
               {decisionOutcome ? (
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                  <p
-                    className="text-xs uppercase tracking-[0.16em]"
-                    style={{ color: "var(--muted)" }}
-                  >
+                  <p className="shortlist-sheet-meta">
                     {decisionOutcomeMeta[decisionOutcome].stateLabel}
                     {formatUsageLine(usage, replacedByName)
                       ? ` · ${formatUsageLine(usage, replacedByName)}`
@@ -782,8 +728,7 @@ function MobileNoteSheet({
                       reopenWorkspaceDecision(slug);
                     }}
                     data-sonic-action="update"
-                    className={`${sheetChipClassName} gap-2`}
-                    style={sheetChipIdleStyle}
+                    className="shortlist-sheet-chip"
                   >
                     <RotateCcw size={12} />
                     Riapri decisione
@@ -796,12 +741,7 @@ function MobileNoteSheet({
                     type="button"
                     onClick={() => markWorkspaceToolUsing(slug)}
                     data-sonic-action="update"
-                    className={sheetChipClassName}
-                    style={{
-                      borderColor: "rgba(112,82,255,0.24)",
-                      background: "rgba(106,60,255,0.22)",
-                      color: "var(--accent-strong)",
-                    }}
+                    className="shortlist-sheet-chip"
                   >
                     {usageActionLabel("using")}
                   </button>
@@ -816,8 +756,7 @@ function MobileNoteSheet({
                       markWorkspaceToolStopped(slug);
                     }}
                     data-sonic-action="update"
-                    className={sheetChipClassName}
-                    style={sheetChipIdleStyle}
+                    className="shortlist-sheet-chip"
                   >
                     {usageActionLabel("stopped")}
                   </button>
@@ -827,18 +766,7 @@ function MobileNoteSheet({
                       onClick={() => setPendingReplace(true)}
                       aria-pressed={pendingReplace}
                       data-sonic-action="tab"
-                      className={`${sheetChipClassName} ${
-                        pendingReplace ? "quick-filter-chip is-active" : ""
-                      }`}
-                      style={
-                        pendingReplace
-                          ? {
-                              borderColor: "rgba(112,82,255,0.24)",
-                              background: "rgba(106,60,255,0.22)",
-                              color: "var(--accent-strong)",
-                            }
-                          : sheetChipIdleStyle
-                      }
+                      className="shortlist-sheet-chip"
                     >
                       {usageActionLabel("replaced")}
                     </button>
@@ -864,18 +792,7 @@ function MobileNoteSheet({
                           setPendingReplace(false);
                         }}
                         data-sonic-action="tab"
-                        className={`${sheetChipClassName} ${
-                          active ? "quick-filter-chip is-active" : ""
-                        }`}
-                        style={
-                          active
-                            ? {
-                                borderColor: "rgba(112,82,255,0.24)",
-                                background: "rgba(106,60,255,0.22)",
-                                color: "var(--accent-strong)",
-                              }
-                            : sheetChipIdleStyle
-                        }
+                        className="shortlist-sheet-chip"
                       >
                         {candidate.name}
                       </button>
@@ -905,18 +822,7 @@ function MobileNoteSheet({
                         setWorkspaceSaveReason(slug, active ? null : option)
                       }
                       data-sonic-action="tab"
-                      className={`${sheetChipClassName} ${
-                        active ? "quick-filter-chip is-active" : ""
-                      }`}
-                      style={
-                        active
-                          ? {
-                              borderColor: "rgba(112,82,255,0.24)",
-                              background: "rgba(106,60,255,0.22)",
-                              color: meta.tone,
-                            }
-                          : sheetChipIdleStyle
-                      }
+                      className="shortlist-sheet-chip"
                     >
                       {meta.label}
                     </button>
@@ -937,17 +843,10 @@ function MobileNoteSheet({
                 maxLength={2000}
                 placeholder={`Segnati cosa ti interessa davvero di ${toolName}...`}
                 data-sonic-action="update"
-                className="filter-control mt-3 w-full rounded-[18px] border px-4 py-3 outline-none"
-                style={{
-                  borderColor: "var(--line)",
-                  background: "rgba(18,13,46,0.92)",
-                }}
+                className="shortlist-note-field mt-3 w-full px-4 py-3"
               />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                <p
-                  className="text-xs uppercase tracking-[0.16em]"
-                  style={{ color: "var(--muted)" }}
-                >
+                <p className="shortlist-sheet-meta">
                   {noteDraft.length}/2000 · Ultimo salvataggio:{" "}
                   {formatDecisionTimestamp(memory.updated_at)}
                 </p>
@@ -958,16 +857,8 @@ function MobileNoteSheet({
                   }
                   disabled={!noteIsDirty}
                   data-sonic-action="save"
-                  className="selection-chip text-ui-strong inline-flex items-center rounded-full border px-2.75 py-1.25 text-xs font-semibold uppercase tracking-[0.14em] disabled:cursor-default disabled:opacity-55"
-                  style={{
-                    borderColor: noteIsDirty
-                      ? "rgba(112,82,255,0.24)"
-                      : "var(--line)",
-                    background: noteIsDirty
-                      ? "rgba(106,60,255,0.22)"
-                      : "rgba(255,255,255,0.06)",
-                    color: noteIsDirty ? "var(--accent-strong)" : "var(--muted)",
-                  }}
+                  data-dirty={noteIsDirty ? "true" : "false"}
+                  className="shortlist-sheet-chip shortlist-sheet-chip--save"
                 >
                   {noteIsDirty ? "Salva nota" : "Nota salvata"}
                 </button>
@@ -1008,15 +899,17 @@ function MobileLibraryEmpty({
       aria-labelledby="mobile-library-empty-title"
     >
       <div className="mobile-library-empty__content">
-        <span className="mobile-library-empty__kicker">Nessun candidato, per ora</span>
-        <h1 id="mobile-library-empty-title">Salva i tool che stai considerando.</h1>
-        <p>
-          La shortlist è un tavolo di lavoro, non una decisione. Parti dal catalogo
-          o da uno stack, poi confronta.
-        </p>
+        <span className="mobile-library-empty__kicker">Salvati</span>
+        <h1 id="mobile-library-empty-title">
+          Salva i tool che stai considerando.
+        </h1>
+        <p>La shortlist è un tavolo di lavoro, non una decisione.</p>
       </div>
       {starterTools.length > 0 ? (
-        <div className="mobile-library-empty__starter" aria-label="Tool da cui partire">
+        <div
+          className="mobile-library-empty__starter"
+          aria-label="Tool da cui partire"
+        >
           <span>Da valutare per iniziare</span>
           <div>
             {starterTools.map((tool) => (
@@ -1028,6 +921,10 @@ function MobileLibraryEmpty({
         </div>
       ) : null}
       <div className="mobile-library-empty__actions">
+        <Link href="/archivio" className="mobile-library-empty__cta">
+          Esplora i tool
+          <ArrowRight size={15} aria-hidden="true" />
+        </Link>
         <div className="mobile-library-empty__recommendations">
           <Link
             href="/archivio"

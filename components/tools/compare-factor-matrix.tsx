@@ -1,6 +1,12 @@
 "use client";
 
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ArrowRight, Scale } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -63,7 +69,12 @@ function DesktopFactorMatrix({
   const factors = useMemo(() => {
     const all = tools.flatMap((t) => t.weightedDimensions ?? []);
     const seen = new Set<string>();
-    const result: { key: string; label: string; weight: number; isPrimary: boolean }[] = [];
+    const result: {
+      key: string;
+      label: string;
+      weight: number;
+      isPrimary: boolean;
+    }[] = [];
     for (const dim of all) {
       if (!seen.has(dim.key)) {
         seen.add(dim.key);
@@ -126,7 +137,10 @@ function DesktopFactorMatrix({
           onScroll={() => handleScroll(tools.length + 6)}
         >
           {canScroll ? (
-            <div className="compare-factor-matrix__scroll-hint" aria-hidden="true">
+            <div
+              className="compare-factor-matrix__scroll-hint"
+              aria-hidden="true"
+            >
               <ArrowRight size={14} />
             </div>
           ) : null}
@@ -167,7 +181,10 @@ function DesktopFactorMatrix({
             : `Fattore secondario · peso ${pct}%`;
           return (
             <div key={factor.key} className="compare-factor-matrix__row">
-              <div className="compare-factor-matrix__axis" data-primary={isPrimary}>
+              <div
+                className="compare-factor-matrix__axis"
+                data-primary={isPrimary}
+              >
                 <span>{factor.label}</span>
                 <small>{helper}</small>
               </div>
@@ -195,7 +212,10 @@ function DesktopFactorMatrix({
                     );
                     if (!dim) {
                       return (
-                        <div key={tool.slug} className="compare-factor-matrix__cell">
+                        <div
+                          key={tool.slug}
+                          className="compare-factor-matrix__cell"
+                        >
                           <span className="compare-factor-matrix__value">
                             <small className="compare-factor-matrix__fit-note">
                               Dimensione non valutata per questo tool.
@@ -224,6 +244,11 @@ function DesktopFactorMatrix({
                             <span className="compare-factor-matrix__factor-value">
                               {dim.value}/5
                             </span>
+                            {isWinner ? (
+                              <span className="compare-factor-matrix__factor-advantage">
+                                Vantaggio
+                              </span>
+                            ) : null}
                           </div>
                           <div
                             className="compare-factor-matrix__factor-track"
@@ -291,13 +316,11 @@ function MobileFactorAccordion({
       aria-label={`Fattori per ${objective ? getCompareObjectiveLabel(objective) : "il confronto"}`}
     >
       {factors.map(([key, label], index) => {
-        const isOpen = openFactor === key || (openFactor === null && index === 0);
+        const isOpen =
+          openFactor === key || (openFactor === null && index === 0);
         const contentId = `compare-factor-${key}`;
         return (
-          <section
-            key={key}
-            className="compare-factor-accordion__section"
-          >
+          <section key={key} className="compare-factor-accordion__section">
             <button
               type="button"
               className="compare-factor-accordion__summary"
@@ -309,10 +332,7 @@ function MobileFactorAccordion({
               <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
             </button>
             {isOpen ? (
-              <div
-                id={contentId}
-                className="compare-factor-accordion__content"
-              >
+              <div id={contentId} className="compare-factor-accordion__content">
                 {tools.map((tool) => {
                   const dimension = tool.weightedDimensions?.find(
                     (item) => item.key === key,
@@ -374,8 +394,7 @@ export function CompareFactorMatrix({
   if (tools.length < MIN_COMPARE_TOOLS) return null;
 
   if (layoutMode === "mobile") {
-    const verdict =
-      suppliedVerdict ?? getBattleVerdict(tools, objective);
+    const verdict = suppliedVerdict ?? getBattleVerdict(tools, objective);
     return (
       <MobileFactorAccordion
         tools={tools}

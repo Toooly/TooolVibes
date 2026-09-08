@@ -39,11 +39,16 @@ export type CompareDecisionTarget = {
 };
 
 export function captureCompareDecisionTarget(
-  tools: readonly Pick<NormalisedTool, "slug" | "name" | "accentFrom" | "accentTo">[],
+  tools: readonly Pick<
+    NormalisedTool,
+    "slug" | "name" | "accentFrom" | "accentTo"
+  >[],
   chosenSlug?: string | null,
 ): CompareDecisionTarget | null {
   const chosen =
-    (chosenSlug ? tools.find((tool) => tool.slug === chosenSlug) : null) ?? tools[0] ?? null;
+    (chosenSlug ? tools.find((tool) => tool.slug === chosenSlug) : null) ??
+    tools[0] ??
+    null;
   if (!chosen) return null;
   const rest = tools.filter((tool) => tool.slug !== chosen.slug);
   return {
@@ -52,7 +57,10 @@ export function captureCompareDecisionTarget(
     accentFrom: chosen.accentFrom,
     accentTo: chosen.accentTo,
     alternatives: rest.map((tool) => tool.slug),
-    alternativeNames: rest.map((tool) => ({ slug: tool.slug, name: tool.name })),
+    alternativeNames: rest.map((tool) => ({
+      slug: tool.slug,
+      name: tool.name,
+    })),
   };
 }
 
@@ -90,7 +98,10 @@ export function CompareDecideSheet({
 }
 
 export function useCompareDecisionDoor(
-  tools: readonly Pick<NormalisedTool, "slug" | "name" | "accentFrom" | "accentTo">[],
+  tools: readonly Pick<
+    NormalisedTool,
+    "slug" | "name" | "accentFrom" | "accentTo"
+  >[],
   objective: CompareObjective | null = null,
 ) {
   const [open, setOpen] = useState(false);
@@ -139,11 +150,7 @@ export function CompareDecisionPanel({
   return (
     <section
       id="compare-decide"
-      className="compare-decision-panel mt-6 rounded-[24px] border p-5"
-      style={{
-        borderColor: "var(--line)",
-        background: "rgba(255,255,255,0.04)",
-      }}
+      className="compare-decision-panel mt-6 p-5"
       aria-labelledby={titleId}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -152,7 +159,7 @@ export function CompareDecisionPanel({
           <h3 id={titleId} className="mt-1 text-base font-semibold">
             Registra decisione
           </h3>
-          <p className="mt-1 text-xs" style={{ color: "var(--tv-ink-secondary)" }}>
+          <p className="compare-decision-panel__context mt-1 text-xs">
             {contextLabel} · {candidateNames}
           </p>
           <fieldset className="mt-3">
@@ -161,7 +168,10 @@ export function CompareDecisionPanel({
             </legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {tools.map((tool) => (
-                <label key={tool.slug} className="selection-chip inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs">
+                <label
+                  key={tool.slug}
+                  className="compare-decision-panel__option"
+                >
                   <input
                     type="radio"
                     name={`${idPrefix}-chosen`}
@@ -178,24 +188,14 @@ export function CompareDecisionPanel({
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            className="selection-chip text-ui-strong inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]"
-            style={{
-              borderColor: "rgba(112,82,255,0.24)",
-              background: "rgba(112,82,255,0.2)",
-              color: "var(--tv-ink-primary)",
-            }}
+            className="compare-decision-panel__decide"
             onClick={() => onDecidi?.(chosenSlug)}
           >
             Decidi
           </button>
           <Link
             href={`/toools/${focusTool.slug}`}
-            className="selection-chip text-ui-strong inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]"
-            style={{
-              borderColor: "var(--line)",
-              background: "rgba(255,255,255,0.06)",
-              color: "var(--tv-ink-primary)",
-            }}
+            className="compare-decision-panel__view"
           >
             {`Vedi ${focusTool.name}`}
             <ArrowRight size={12} />

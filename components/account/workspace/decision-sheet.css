@@ -202,6 +202,8 @@
   background: inherit;
 }
 
+/* V3 CTA law — confirming the decision is the primary action: activation
+   yellow. Purple stays on selected outcomes/reasons (state, not action). */
 .tv-decision-sheet__confirm {
   display: inline-flex;
   min-height: 2.85rem;
@@ -209,12 +211,16 @@
   justify-content: center;
   border: 0;
   border-radius: 999px;
-  background: var(--tv-accent-brand);
-  color: var(--tv-ink-on-brand);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   font: inherit;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+.tv-decision-sheet__confirm:not(:disabled):hover {
+  background: var(--tv-button-activation-bg-hover);
 }
 
 .tv-decision-sheet__confirm:disabled {

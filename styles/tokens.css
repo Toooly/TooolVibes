@@ -1234,10 +1234,21 @@
   --tv-grammar-signal-live: var(--tv-grammar-radar-live);
   --tv-grammar-signal-border: var(--tv-grammar-radar-border);
 
-  /* PERSONAL / SAVED — graphite + muted lilac */
+  /* PERSONAL / SAVED — graphite + muted lilac.
+     Law: yellow = next action, purple = selected/remembered, lilac = personal
+     structure only. No editorial gold, no radar cyan, no second palette. */
   --tv-grammar-personal-surface: var(--tv-color-surface-raised);
+  --tv-grammar-personal-surface-raised: var(--tv-color-surface-elevated);
   --tv-grammar-personal-ink: var(--tv-ink-primary);
+  --tv-grammar-personal-ink-secondary: var(--tv-ink-secondary);
+  --tv-grammar-personal-ink-muted: var(--tv-ink-muted-aa);
   --tv-grammar-personal-accent: color-mix(in srgb, var(--tv-color-violet-300) 62%, var(--tv-color-ink-400));
+  --tv-grammar-personal-accent-strong: var(--tv-color-violet-300);
+  --tv-grammar-personal-border: color-mix(in srgb, var(--tv-color-violet-300) 22%, var(--tv-border-subtle));
+  --tv-grammar-personal-wash: color-mix(in srgb, var(--tv-color-violet-300) 12%, var(--tv-color-surface-raised));
+  /* Remembered-state motif: one quiet lilac edge, never a fill. */
+  --tv-grammar-personal-remembered-edge: color-mix(in srgb, var(--tv-color-violet-300) 48%, transparent);
+  --tv-grammar-personal-remembered-marker: var(--tv-color-violet-300);
 
   /* ACTION / SELECTED / COMMERCIAL */
   --tv-grammar-activation: var(--tv-activation-strong);

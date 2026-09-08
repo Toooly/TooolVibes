@@ -11,10 +11,10 @@
   .mobile-compare-arena__empty,
   .mobile-compare-arena__partial {
     margin-inline: 0;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: #11111b;
+    border: 1px solid var(--tv-grammar-personal-border);
+    background: var(--tv-grammar-personal-surface);
     border-radius: 24px;
-    box-shadow: 0 22px 52px rgba(0, 0, 0, 0.32);
+    box-shadow: none;
   }
 }
 
@@ -41,13 +41,15 @@
   text-transform: uppercase;
 }
 
-.tool-battle-page__intro h1 {
+/* Specificity beats the legacy `.compare-space-page h1` display rule:
+   the Personal family speaks in UI voice here (§27). */
+.tool-battle-page .tool-battle-page__intro h1 {
   max-inline-size: 22ch;
   margin: 0;
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-display);
+  color: var(--tv-grammar-personal-ink);
+  font-family: var(--tv-font-ui);
   font-size: var(--tv-text-h1);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   letter-spacing: var(--tv-tracking-tight);
   line-height: var(--tv-leading-display);
   text-wrap: balance;
@@ -82,7 +84,7 @@
 }
 
 .tool-battle-page__steps span {
-  color: var(--tv-accent-cyan);
+  color: var(--tv-grammar-personal-accent-strong);
 }
 
 .tool-battle-page__viewport {
@@ -214,6 +216,7 @@
   line-height: var(--tv-leading-body);
 }
 
+/* V3 CTA law — primary action is activation yellow, never a purple fill. */
 .compare-onboarding__cta {
   display: inline-flex;
   min-height: 3rem;
@@ -221,14 +224,18 @@
   gap: var(--tv-space-2);
   margin-top: var(--tv-space-5);
   padding-inline: var(--tv-space-6);
-  border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 62%, var(--tv-border-interactive));
+  border: 1px solid transparent;
   border-radius: var(--tv-radius-md);
-  background: var(--tv-accent-primary);
-  color: white;
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   font-size: var(--tv-text-sm);
-  font-weight: var(--tv-weight-semibold);
+  font-weight: var(--tv-weight-bold);
   text-decoration: none;
   box-shadow: none;
+}
+
+.compare-onboarding__cta:hover {
+  background: var(--tv-button-activation-bg-hover);
 }
 
 .compare-onboarding__signals {
@@ -382,16 +389,17 @@
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #CBD5E1;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--tv-grammar-personal-ink-secondary);
+  background: var(--tv-surface-3);
+  border: 1px solid var(--tv-border-subtle);
   cursor: pointer;
   white-space: nowrap;
 }
 
+/* V3 — selected state: purple, never a yellow action fill. */
 .mobile-compare-arena__chip.is-active {
-  color: #ffffff;
-  background: #7c4dff;
+  color: var(--tv-ink-on-brand);
+  background: var(--tv-accent-brand);
   border-color: transparent;
 }
 
@@ -455,9 +463,10 @@
   cursor: pointer;
 }
 
+/* V3 — selected state: purple, never a yellow action fill. */
 .compare-trend-list__tabs button.is-active {
-  color: #ffffff;
-  background: #7c4dff;
+  color: var(--tv-ink-on-brand);
+  background: var(--tv-accent-brand);
   border-color: transparent;
 }
 
@@ -738,9 +747,9 @@
 .mobile-compare-arena__empty {
   text-align: center;
   padding: 2.5rem 1.5rem;
-  border: 1px solid color-mix(in srgb, var(--tv-ink-muted) 24%, transparent);
+  border: 1px solid var(--tv-grammar-personal-border);
   border-radius: 12px;
-  background: var(--tv-surface-elevated);
+  background: var(--tv-grammar-personal-surface-raised);
   box-shadow: none;
 }
 
@@ -773,8 +782,8 @@
 }
 
 .mobile-compare-arena__cta {
-  background: var(--accent-strong, #6d3bff);
-  color: #fff;
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   border-radius: 9px;
   align-items: center;
   gap: .4rem;
@@ -790,9 +799,9 @@
 .mobile-compare-arena__partial {
   text-align: center;
   padding: 1.25rem;
-  border: 1px dashed color-mix(in srgb, var(--tv-accent-brand) 40%, transparent);
+  border: 1px dashed var(--tv-grammar-personal-border);
   border-radius: 12px;
-  background: color-mix(in srgb, var(--tv-accent-brand) 10%, var(--tv-bg-base));
+  background: var(--tv-grammar-personal-wash);
   box-shadow: none;
 }
 
@@ -901,21 +910,22 @@
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #CBD5E1;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--tv-grammar-personal-ink-secondary);
+  background: var(--tv-surface-3);
+  border: 1px solid var(--tv-border-subtle);
   white-space: nowrap;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
+/* V3 — selected state: purple, never a yellow action fill. */
 .compare-objective__chip[data-active="true"] .compare-objective__chip-label {
-  color: #ffffff;
-  background: #7c4dff;
+  color: var(--tv-ink-on-brand);
+  background: var(--tv-accent-brand);
   border-color: transparent;
 }
 
 .compare-objective__input:focus-visible + .compare-objective__chip-label {
-  outline: 2px solid #39D2F6;
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 2px;
 }
 
@@ -1084,16 +1094,17 @@
   transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
+/* V3 CTA law — primary action is activation yellow, never a purple fill. */
 .tool-battle-page__cta--primary {
-  background: var(--tv-accent-primary);
-  border: 1px solid var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
+  background: var(--tv-button-activation-bg);
+  border: 1px solid transparent;
+  color: var(--tv-button-activation-text);
 }
 
 .tool-battle-page__cta--primary:hover,
 .tool-battle-page__cta--primary:focus-visible {
-  background: var(--tv-accent-brand-hover);
-  border-color: var(--tv-accent-brand-hover);
+  background: var(--tv-button-activation-bg-hover);
+  border-color: transparent;
 }
 
 .tool-battle-page__cta--secondary {
@@ -1195,7 +1206,7 @@
   pointer-events: none;
   opacity: 0.35;
   background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--tv-accent-primary) 14%, transparent) 1px, transparent 1px),
+    linear-gradient(to right, color-mix(in srgb, var(--tv-grammar-personal-accent) 14%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in srgb, var(--tv-border-subtle) 80%, transparent) 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
@@ -1419,7 +1430,18 @@
 .compare-factor-matrix__grid { display: grid; grid-template-columns: repeat(var(--tool-count, 3), minmax(290px, 340px)); width: max-content; min-width: 100%; }
 .compare-factor-matrix__grid[data-scrollable], .compare-factor-matrix__rows[data-scrollable="true"] .compare-factor-matrix__grid { min-width: max-content; }
 .compare-factor-matrix__cell { display: flex; min-width: 0; align-items: stretch; padding: var(--tv-space-4); border: 1px solid var(--tv-border-subtle); color: var(--tv-ink-secondary); background: var(--tv-surface-elevated); }
-.compare-factor-matrix__cell.is-winner { background: var(--tv-surface-selected); }
+.compare-factor-matrix__cell.is-winner { background: var(--tv-surface-selected); font-weight: var(--tv-weight-bold); box-shadow: inset 2px 0 0 var(--tv-grammar-selected); }
+
+.compare-factor-matrix__factor-advantage {
+  display: inline-block;
+  margin-left: 0.35rem;
+  color: var(--tv-accent-violet-on-dark);
+  font-family: var(--tv-font-data);
+  font-size: 0.75rem;
+  font-weight: var(--tv-weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
 .compare-factor-matrix__cell--head { flex-direction: column; justify-content: center; gap: var(--tv-space-1); background: var(--tv-surface-raised); }
 .compare-factor-matrix__tool { color: var(--tv-ink-primary); font-weight: var(--tv-weight-bold); }
 .compare-factor-matrix__tool-score { color: var(--tv-ink-primary); font-size: var(--tv-text-sm); font-weight: var(--tv-weight-bold); }
@@ -1542,12 +1564,31 @@
   color: var(--tv-button-activation-text);
 }
 
+.compare-workbench-chrome__cta--primary:hover {
+  background: var(--tv-button-activation-bg-hover);
+}
+
+/* V3 CTA law — with 2+ candidates the decision is ready: Decidi is THE
+   primary action, so it carries activation yellow (§13). */
+.compare-workbench-identity__decide,
+.compare-workbench-decide-jump {
+  border-color: transparent;
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  font-weight: var(--tv-weight-bold);
+}
+
+.compare-workbench-identity__decide:hover,
+.compare-workbench-decide-jump:hover {
+  background: var(--tv-button-activation-bg-hover);
+}
+
 .compare-workbench-chrome__cta:focus-visible,
 .compare-workbench-chrome__chiudi:focus-visible,
 .compare-workbench-chrome__remove:focus-visible,
 .compare-workbench-identity__decide:focus-visible,
 .compare-workbench-decide-jump:focus-visible {
-  outline: 2px solid var(--tv-focus-ring, var(--tv-accent-brand-aa, #7052ff));
+  outline: 2px solid var(--tv-focus-ring);
   outline-offset: 2px;
 }
 
@@ -1571,7 +1612,7 @@
   gap: 0.65rem;
   margin: 0 0 var(--tv-space-4, 1rem);
   padding: 0.65rem 0 0.75rem;
-  background: var(--tv-bg-base, #0c0c10);
+  background: var(--tv-bg-base);
   border-bottom: 1px solid var(--tv-border-subtle);
 }
 
@@ -1866,5 +1907,113 @@ html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
   .compare-workbench-chrome--prep {
     margin-inline: 0;
     padding-inline: 0;
+  }
+}
+
+/* ─── Phase 5 — Personal family: decision panel (selection → decision) ─── */
+.compare-decision-panel {
+  border: 1px solid var(--tv-grammar-personal-border);
+  border-radius: var(--tv-radius-modal);
+  background: var(--tv-grammar-personal-surface);
+}
+
+.compare-decision-panel__context {
+  color: var(--tv-grammar-personal-ink-secondary);
+  font-family: var(--tv-font-ui);
+}
+
+.compare-decision-panel__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 999px;
+  background: var(--tv-surface-3);
+  color: var(--tv-grammar-personal-ink);
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--tv-motion-fast) var(--tv-ease-standard),
+    border-color var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+/* V3 — selected state: purple, never a yellow action fill. */
+.compare-decision-panel__option:has(input:checked) {
+  border-color: var(--tv-grammar-selected);
+  background: var(--tv-grammar-selected-wash);
+  font-weight: var(--tv-weight-bold);
+}
+
+.compare-decision-panel__option input[type="radio"] {
+  accent-color: var(--tv-accent-brand);
+}
+
+.compare-decision-panel__option:focus-within {
+  outline: 2px solid var(--tv-accent-brand-aa);
+  outline-offset: 2px;
+}
+
+/* V3 CTA law — Decidi is the primary action when the comparison is ready. */
+.compare-decision-panel__decide {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tv-kicker-tracking);
+  cursor: pointer;
+  transition: background var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+.compare-decision-panel__decide:hover {
+  background: var(--tv-button-activation-bg-hover);
+}
+
+.compare-decision-panel__view {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tv-grammar-personal-ink-secondary);
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tv-kicker-tracking);
+  text-decoration: none;
+  transition: border-color var(--tv-motion-fast) var(--tv-ease-standard),
+    color var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+.compare-decision-panel__view:hover {
+  border-color: var(--tv-grammar-personal-accent-strong);
+  color: var(--tv-grammar-personal-ink);
+}
+
+.compare-factor-accordion__tool-row[data-winner="true"] .compare-factor-accordion__tool-name {
+  font-weight: var(--tv-weight-bold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compare-decision-panel__option,
+  .compare-decision-panel__decide,
+  .compare-decision-panel__view {
+    transition: none;
   }
 }

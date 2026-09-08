@@ -258,8 +258,11 @@ describe("Workspace Home — Liquid Glass visual contract", () => {
   it("LG-T5 CTA material and focus contract live in account.css", () => {
     const primaryBlock = accountCss.match(/\.tv-home-cta--primary\s*\{[^}]*\}/);
     expect(primaryBlock).not.toBeNull();
-    expect(primaryBlock?.[0]).toContain("linear-gradient");
-    expect(primaryBlock?.[0]).toContain("box-shadow");
+    // Phase 5 (V3 CTA law): the primary action is activation yellow,
+    // never the legacy layered violet glass.
+    expect(primaryBlock?.[0]).toContain("var(--tv-button-activation-bg)");
+    expect(primaryBlock?.[0]).toContain("var(--tv-button-activation-text)");
+    expect(primaryBlock?.[0]).not.toContain("linear-gradient");
     const disabledBlock = accountCss.match(
       /\.tv-home-cta--primary:disabled[^{]*\{[^}]*\}/,
     );

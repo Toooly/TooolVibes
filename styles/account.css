@@ -478,6 +478,8 @@
 }
 
 /* Buttons — primary stays premium */
+/* V3 CTA law — the app-wide primary action is activation yellow, never a
+   violet glass fill. Purple stays selected/remembered state only. */
 .account-btn-primary {
   position: relative;
   isolation: isolate;
@@ -490,25 +492,21 @@
   padding: 0.85rem 1.5rem;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #fff;
-  border: 1px solid rgba(139, 119, 255, 0.4);
-  background:
-    radial-gradient(circle at 82% 12%, rgba(57, 210, 246, 0.22), transparent 30%),
-    linear-gradient(135deg, #8b6cff 0%, #6a3cff 42%, #4f46e5 75%, #2c1f86 100%);
-  box-shadow:
-    0 10px 28px rgba(47, 30, 108, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  color: var(--tv-button-activation-text);
+  border: 1px solid transparent;
+  background: var(--tv-button-activation-bg);
+  box-shadow: none;
   transition:
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 260ms ease,
+    background 260ms ease,
     filter 260ms ease;
   cursor: pointer;
 }
 
 .account-btn-primary:hover {
   transform: translate3d(0, -2px, 0) scale(1.015);
-  box-shadow: 0 14px 36px rgba(47, 30, 108, 0.28);
-  filter: brightness(1.06);
+  background: var(--tv-button-activation-bg-hover);
+  filter: brightness(1.04);
 }
 
 .account-btn-primary:active {
@@ -733,7 +731,7 @@
 .account-btn-primary:focus-visible,
 .account-btn-secondary:focus-visible,
 .account-link:focus-visible {
-  outline: 2px solid var(--tv-accent-primary);
+  outline: 2px solid var(--tv-accent-brand-aa);
   outline-offset: 3px;
 }
 
