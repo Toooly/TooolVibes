@@ -28,24 +28,13 @@
   isolation: isolate;
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
-  padding-block: clamp(1.5rem, 3vw, 2.75rem) clamp(4.5rem, 7vw, 6.5rem);
+  padding-block: clamp(1.5rem, 3vw, 2.75rem);
   padding-inline: clamp(1rem, 3vw, 1.5rem);
-}
-
-.secondary-page--tight {
-  padding-block-end: clamp(3rem, 5vw, 4.5rem);
 }
 
 .secondary-page__stack {
   display: grid;
   gap: clamp(1.5rem, 3vw, 2.5rem);
-}
-
-/* Extra bottom space when the bottom-nav is visible on mobile-first layouts. */
-@media (max-width: 47.99rem) {
-  .secondary-page {
-    padding-block-end: clamp(5rem, 10vw, 6.5rem);
-  }
 }
 
 /* =====================================================================

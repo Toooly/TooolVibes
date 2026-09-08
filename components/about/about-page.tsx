@@ -81,7 +81,7 @@ const communityCopy =
 
 export function AboutPage() {
   return (
-    <div className="page-shell pb-24 pt-4 sm:pb-18 sm:pt-6">
+    <div className="page-shell pb-12 pt-4 sm:pt-6">
       {/* ─── Identity header (server) ─── */}
       <header className="v-about-identity">
         <RouteMarker

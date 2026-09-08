@@ -24,7 +24,7 @@ export function MarketingChrome({
       <main
         id="main-content"
         tabIndex={-1}
-        className="relative z-10 pb-mobile-nav xl:pb-0"
+        className="relative z-10"
       >
         <PageTransition>{children}</PageTransition>
       </main>

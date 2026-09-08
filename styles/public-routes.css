@@ -304,10 +304,6 @@
 }
 
 @media (max-width: 47.99rem) {
-  .marketing-shell main {
-    padding-bottom: 5.5rem;
-  }
-
   .route-marker {
     grid-template-columns: minmax(2.25rem, 3.5rem) auto minmax(0, 1fr);
     gap: 0.65rem;

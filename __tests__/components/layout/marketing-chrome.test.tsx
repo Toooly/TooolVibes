@@ -92,7 +92,7 @@ describe("MarketingChrome — public vs account app", () => {
       expect(screen.getByTestId("page-transition")).toBeTruthy();
       expect(screen.getByText("page-body")).toBeTruthy();
       expect(screen.queryByTestId("loop-shell")).toBeNull();
-      expect(document.getElementById("main-content")?.className).toContain("pb-mobile-nav");
+      expect(document.getElementById("main-content")?.className).not.toContain("pb-mobile-nav");
     },
   );
 
