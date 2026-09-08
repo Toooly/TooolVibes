@@ -97,3 +97,32 @@ describe("v3.1 responsive contract", () => {
     );
   });
 });
+
+describe("v3.1 collection gate vs mobile nav", () => {
+  const collectionsCss = readFileSync(
+    resolve(process.cwd(), "app/(marketing)/collections/collections.css"),
+    "utf8",
+  );
+  const memberCss = readFileSync(
+    resolve(process.cwd(), "styles/member-experience.css"),
+    "utf8",
+  );
+
+  it("short-height collection gate compression beats the default card padding", () => {
+    expect(collectionsCss).toMatch(
+      /@media \(max-height: 844px\) and \(max-width: 47\.99rem\)[\s\S]*?\.cx-detail-v4 \.tv-member-gate__card \{[\s\S]*?padding:\s*0\.5rem 1\.15rem/,
+    );
+    expect(collectionsCss).toMatch(
+      /@media \(max-height: 844px\) and \(max-width: 47\.99rem\)[\s\S]*?\.cx-detail-v4 \.tv-member-gate__card \{[\s\S]*?gap:\s*0\.25rem/,
+    );
+  });
+
+  it("gate CTA scroll-margin uses the shared bottom-nav token", () => {
+    expect(memberCss).toMatch(
+      /\.tv-member-gate__cta \{[\s\S]*?scroll-margin-bottom:\s*calc\([\s\S]*?--tv-bottom-nav-total/,
+    );
+    expect(collectionsCss).toMatch(
+      /\.cx-detail-v4 \.tv-member-gate__cta \{[\s\S]*?scroll-margin-bottom:\s*calc\([\s\S]*?--tv-bottom-nav-total/,
+    );
+  });
+});
