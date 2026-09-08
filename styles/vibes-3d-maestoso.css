@@ -202,7 +202,7 @@
   overflow: hidden;
   border-radius: var(--tv-radius-feature);
   border: 1px solid var(--tv-grammar-institutional-border);
-  background: transparent;
+  background: var(--tv-grammar-institutional-wash);
   padding: 1.1rem 0;
   box-shadow: none;
 }
@@ -1554,13 +1554,13 @@ canvas {
 }
 .v-auth-card {
   position: relative;
-  background: var(--tv-activation-surface);
-  border: 1px solid var(--tv-activation-accent-border);
+  background: var(--tv-grammar-personal-surface);
+  border: 1px solid var(--tv-grammar-personal-border);
   border-radius: var(--tv-radius-modal);
   padding: var(--tv-space-component-lg);
-  box-shadow: var(--tv-elevation-rest);
+  box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
   overflow: hidden;
-  color: var(--tv-activation-ink);
+  color: var(--tv-grammar-personal-ink);
 }
 @media (min-width: 640px) {
   .v-auth-card {

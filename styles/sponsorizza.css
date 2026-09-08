@@ -462,14 +462,10 @@
   display: grid;
   gap: 1rem;
   padding: clamp(1.25rem, 2.5vw, 1.65rem);
-  border: 1px solid var(--tv-border-default);
+  border: 1px solid var(--tv-grammar-commercial-border);
   border-radius: var(--tv-radius-feature);
-  background:
-    linear-gradient(
-      180deg,
-      var(--tv-surface-elevated),
-      var(--tv-surface-raised)
-    );
+  background: var(--tv-grammar-commercial-surface);
+  box-shadow: inset 0 1px 0 var(--tv-grammar-commercial-rule);
   transition:
     border-color var(--tv-duration-base) var(--tv-easing-standard),
     background-color var(--tv-duration-base) var(--tv-easing-standard);
@@ -477,21 +473,11 @@
 
 .sponsorizza-format-card:hover,
 .sponsorizza-format-card:focus-within {
-  border-color: var(--tv-border-interactive);
+  border-color: var(--tv-grammar-commercial-border);
 }
 
 .sponsorizza-format-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background: radial-gradient(
-    ellipse 80% 50% at 50% 0%,
-    color-mix(in srgb, var(--tv-accent-brand) 8%, transparent),
-    transparent 70%
-  );
-  opacity: 0.7;
+  content: none;
 }
 
 .sponsorizza-format-card > * {

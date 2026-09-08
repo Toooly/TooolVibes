@@ -720,7 +720,8 @@
   padding: var(--tv-space-2);
   border: 1px solid var(--tv-border-subtle);
   border-radius: 10px;
-  background: var(--tv-surface-raised);
+  background: var(--tv-grammar-editorial-surface-dark);
+  box-shadow: inset 0 1px 0 var(--tv-grammar-editorial-rail);
   display: flex;
   gap: var(--tv-space-1);
   overflow-x: auto;

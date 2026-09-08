@@ -36,12 +36,12 @@
 }
 
 .v-auth-card {
-  border: 1px solid var(--tv-border-default);
+  border: 1px solid var(--tv-grammar-personal-border);
   border-radius: 0.75rem;
-  background: var(--tv-surface-raised);
+  background: var(--tv-grammar-personal-surface);
   padding: clamp(1.5rem, 3vw, 2.5rem);
-  color: var(--tv-ink-primary);
-  box-shadow: none;
+  color: var(--tv-grammar-personal-ink);
+  box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
 }
 
 .v-auth-card::before {
@@ -545,15 +545,15 @@
 }
 
 .tv-space-card {
-  border: 1px solid var(--tv-border-default);
+  border: 1px solid var(--tv-grammar-personal-border);
   border-radius: 0.85rem;
-  background: var(--tv-surface-raised);
+  background: var(--tv-grammar-personal-surface);
   padding: 1.1rem 1.15rem;
+  box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
 }
 
 .tv-space-card--resume {
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--tv-surface-raised) 88%, #2a1f55), var(--tv-surface-raised));
+  background: var(--tv-grammar-personal-wash);
 }
 
 .tv-space-card__title {

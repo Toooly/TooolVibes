@@ -73,10 +73,12 @@ describe("V3 editorial typography — archive", () => {
     expect(withUi).toBe(true);
   });
 
-  it("la card catalogo è una superficie calda, non un rettangolo nero", () => {
-    const block = extractBlock(archiveCss, ".ar4-card {");
-    expect(block).toContain("color-mix");
-    expect(block).toContain("var(--tv-surface-inverted)");
+  it("la card catalogo è una superficie resource calda, non workflow purple", () => {
+    const block = extractBlock(archiveCss, ".ar4-card {\n  position: relative");
+    expect(block).toContain("var(--tv-grammar-resource-surface)");
+    expect(block).toContain("var(--tv-grammar-resource-edge)");
+    expect(block).not.toContain("var(--tv-grammar-workflow-surface)");
+    expect(block).not.toContain("var(--tv-accent-cyan)");
   });
 });
 

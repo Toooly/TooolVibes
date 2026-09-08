@@ -1081,15 +1081,26 @@
   gap: 8px;
   width: 100%;
   padding: 20px 18px 18px;
-  background: var(--tv-bg-base);
+  background: var(--tv-grammar-editorial-surface-dark);
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-px-feature);
   text-decoration: none;
   color: inherit;
   position: relative;
   -webkit-tap-highlight-color: transparent;
-  transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+  transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease, transform 200ms ease;
   height: 100%;
+}
+
+.def-editorial__pod-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.1rem;
+  width: 2.35rem;
+  height: 2px;
+  background: var(--tv-grammar-editorial-edge);
+  pointer-events: none;
 }
 
 @media (max-width: 429px) {
@@ -1097,8 +1108,13 @@
 }
 
 .def-editorial__pod-card:hover {
-  border-color: var(--tv-accent-primary);
-  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--tv-accent-primary) 30%, transparent);
+  border-color: var(--tv-border-default);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .def-editorial__pod-card:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .def-editorial__pod-card:focus-visible {
@@ -1109,11 +1125,15 @@
 /* v4: Rank #1 — winner treatment, gold signal, TALLEST */
 .def-editorial__pod-card--rank-1 {
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-accent-gold) 14%, var(--tv-bg-base)) 0%,
-    var(--tv-bg-base) 42%);
-  border: 1px solid var(--tv-accent-gold);
+    color-mix(in srgb, var(--tv-grammar-editorial-brass) 10%, var(--tv-grammar-editorial-surface-dark)) 0%,
+    var(--tv-grammar-editorial-surface-dark) 42%);
+  border: 1px solid var(--tv-border-subtle);
   min-height: 320px;
-  box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--tv-accent-gold) 36%, transparent);
+}
+
+.def-editorial__pod-card--rank-1::after {
+  width: 3.25rem;
+  background: var(--tv-grammar-editorial-rail);
 }
 
 @media (max-width: 899px) {
@@ -1125,11 +1145,15 @@
 }
 
 .def-editorial__pod-card--rank-2 {
-  border-color: color-mix(in srgb, var(--tv-accent-cyan) 70%, transparent);
+  border-color: var(--tv-border-subtle);
   min-height: 240px;
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-accent-cyan) 8%, var(--tv-bg-base)) 0%,
-    var(--tv-bg-base) 100%);
+    color-mix(in srgb, var(--tv-accent-cyan) 6%, var(--tv-grammar-editorial-surface-dark)) 0%,
+    var(--tv-grammar-editorial-surface-dark) 100%);
+}
+
+.def-editorial__pod-card--rank-2::after {
+  background: var(--tv-grammar-signal-trace);
 }
 
 @media (max-width: 429px) {
@@ -1138,8 +1162,12 @@
 
 .def-editorial__pod-card--rank-3 {
   min-height: 180px;
-  background: var(--tv-bg-base);
-  border-color: color-mix(in srgb, var(--tv-accent-violet-on-dark) 55%, transparent);
+  background: var(--tv-grammar-editorial-surface-dark);
+  border-color: var(--tv-border-subtle);
+}
+
+.def-editorial__pod-card--rank-3::after {
+  background: color-mix(in srgb, var(--tv-accent-violet-on-dark) 70%, transparent);
 }
 
 @media (max-width: 429px) {
@@ -1907,10 +1935,10 @@
   height: 100%;
   padding: 1rem 1.05rem 1.1rem;
   border-radius: 1.15rem;
-  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 22%, transparent);
+  border: 1px solid var(--tv-grammar-signal-border);
   background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 14%, transparent), transparent 42%),
-    color-mix(in srgb, #0a0c12 92%, #1a1030);
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--tv-grammar-signal-accent) 14%, transparent), transparent 42%),
+    var(--tv-grammar-signal-surface);
 }
 .tv-home-radar--snapshot .tv-home-radar__header {
   display: flex;
@@ -1931,7 +1959,7 @@
   font-size: clamp(1.05rem, 1.6vw, 1.35rem);
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #f4f0ea;
+  color: var(--tv-grammar-signal-ink);
   max-width: none;
 }
 .tv-home-radar__pulse {

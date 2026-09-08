@@ -905,7 +905,7 @@
   --gold-soft: rgba(243, 191, 76, 0.18);
   --card: var(--tv-surface-raised);
   --card-foreground: var(--tv-ink-primary);
-  --popover: var(--tv-surface-elevated);
+  --popover: var(--tv-surface-floating);
   --popover-foreground: var(--tv-ink-primary);
   --border: rgba(62, 46, 132, 0.13);
   --input: rgba(62, 46, 132, 0.16);
@@ -1199,6 +1199,9 @@
   --tv-grammar-editorial-accent: var(--tv-accent-gold-on-ivory);
   --tv-grammar-editorial-brass: var(--tv-accent-gold);
   --tv-grammar-editorial-border: var(--tv-border-inverted-default);
+  --tv-grammar-editorial-surface-dark: color-mix(in srgb, var(--tv-surface-inverted) 7%, var(--tv-color-surface-raised));
+  --tv-grammar-editorial-edge: color-mix(in srgb, var(--tv-grammar-editorial-brass) 42%, transparent);
+  --tv-grammar-editorial-rail: color-mix(in srgb, var(--tv-grammar-editorial-brass) 70%, transparent);
 
   /* STACK / COLLECTIONS — deep indigo, purple structure, periwinkle */
   --tv-grammar-stack-surface: color-mix(in srgb, var(--tv-color-violet-900) 58%, var(--tv-color-surface-base));
@@ -1233,6 +1236,8 @@
   --tv-grammar-signal-accent: var(--tv-grammar-radar-accent);
   --tv-grammar-signal-live: var(--tv-grammar-radar-live);
   --tv-grammar-signal-border: var(--tv-grammar-radar-border);
+  --tv-grammar-signal-edge: var(--tv-grammar-signal-border);
+  --tv-grammar-signal-trace: color-mix(in srgb, var(--tv-grammar-signal-accent) 55%, transparent);
 
   /* PERSONAL / SAVED — graphite + muted lilac.
      Law: yellow = next action, purple = selected/remembered, lilac = personal
@@ -1256,9 +1261,11 @@
   --tv-grammar-selected: var(--tv-accent-brand);
   --tv-grammar-selected-wash: var(--tv-surface-selected);
   --tv-grammar-commercial-shell: var(--tv-surface-raised);
+  --tv-grammar-commercial-surface: color-mix(in srgb, var(--tv-surface-inverted) 4%, var(--tv-surface-raised));
   --tv-grammar-commercial-border: var(--tv-border-subtle);
   --tv-grammar-commercial-label: var(--tv-ink-muted-aa);
   --tv-grammar-commercial-ink: var(--tv-ink-secondary);
+  --tv-grammar-commercial-rule: var(--tv-grammar-commercial-border);
 
   /* INSTITUTIONAL — charcoal, warm ivory, calm authority.
      Law: yellow = primary action, purple = selection/system accent only.
@@ -1271,11 +1278,14 @@
   --tv-grammar-institutional-ink-ivory: var(--tv-ink-inverted-primary);
   --tv-grammar-institutional-border: var(--tv-border-subtle);
   --tv-grammar-institutional-accent: var(--tv-accent-brand);
+  --tv-grammar-institutional-edge: var(--tv-grammar-institutional-border);
+  --tv-grammar-institutional-wash: color-mix(in srgb, var(--tv-surface-inverted) 5%, var(--tv-color-surface-raised));
 
   /* RESOURCE / SHOP — premium access, commercial. Yellow = purchase/access. */
-  --tv-grammar-resource-surface: var(--tv-grammar-commercial-shell);
+  --tv-grammar-resource-surface: color-mix(in srgb, var(--tv-surface-inverted) 8%, var(--tv-color-surface-raised));
   --tv-grammar-resource-surface-raised: var(--tv-color-surface-elevated);
   --tv-grammar-resource-border: var(--tv-grammar-commercial-border);
+  --tv-grammar-resource-edge: color-mix(in srgb, var(--tv-color-ink-200) 14%, var(--tv-border-subtle));
   --tv-grammar-resource-ink: var(--tv-grammar-commercial-ink);
   --tv-grammar-resource-label: var(--tv-grammar-commercial-label);
   --tv-grammar-resource-premium: var(--tv-accent-brand);

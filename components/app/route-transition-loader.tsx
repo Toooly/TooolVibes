@@ -67,6 +67,33 @@ function labelForPath(pathname: string) {
   return match?.[1] ?? "TooolVibes";
 }
 
+function familyForPath(pathname: string) {
+  if (pathname.startsWith("/radar") || pathname.startsWith("/product-hunt")) {
+    return "signal";
+  }
+  if (
+    pathname.startsWith("/shortlist") ||
+    pathname.startsWith("/wishlist") ||
+    pathname.startsWith("/account")
+  ) {
+    return "personal";
+  }
+  if (pathname.startsWith("/collections")) return "workflow";
+  if (
+    pathname.startsWith("/archivio") ||
+    pathname.startsWith("/toools") ||
+    pathname.startsWith("/shop") ||
+    pathname.startsWith("/tags")
+  ) {
+    return "resource";
+  }
+  if (pathname.startsWith("/posts")) return "editorial";
+  if (pathname.startsWith("/sponsorizza") || pathname.startsWith("/affiliati")) {
+    return "commercial";
+  }
+  return "institutional";
+}
+
 function canShow() {
   return shouldShowRouteTransitionPresentation(getPrefersReducedMotion());
 }
@@ -75,6 +102,7 @@ export function RouteTransitionLoader() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [label, setLabel] = useState("TooolVibes");
+  const [family, setFamily] = useState("institutional");
   const visibleRef = useRef(false);
   const hideTimerRef = useRef<number | null>(null);
   const safetyTimerRef = useRef<number | null>(null);
@@ -109,6 +137,7 @@ export function RouteTransitionLoader() {
       startedAtRef.current = performance.now();
       visibleRef.current = true;
       setLabel(labelForPath(destination.pathname));
+      setFamily(familyForPath(destination.pathname));
       setVisible(true);
       window.dispatchEvent(
         new CustomEvent(SOUND_PLAY_EVENT, { detail: { kind: "route" } }),
@@ -150,6 +179,7 @@ export function RouteTransitionLoader() {
     <div
       className={visible ? "tv-route-guide is-visible" : "tv-route-guide"}
       data-testid="tv-route-guide"
+      data-family={family}
       aria-hidden={visible ? undefined : true}
     >
       <div className="tv-route-guide__veil" aria-hidden="true" />

@@ -31,8 +31,13 @@ describe("V3 institutional tokens", () => {
     expect(tokensCss).toContain("--tv-grammar-institutional-accent: var(--tv-accent-brand)");
   });
 
-  it("espone la famiglia resource come alias commercial", () => {
-    expect(tokensCss).toContain("--tv-grammar-resource-surface: var(--tv-grammar-commercial-shell)");
+  it("espone la famiglia resource come graphite caldo distinto dal commercial shell", () => {
+    expect(tokensCss).toContain(
+      "--tv-grammar-resource-surface: color-mix(in srgb, var(--tv-surface-inverted) 8%, var(--tv-color-surface-raised))",
+    );
+    expect(tokensCss).not.toContain(
+      "--tv-grammar-resource-surface: var(--tv-grammar-commercial-shell)",
+    );
     expect(tokensCss).toContain("--tv-grammar-resource-premium: var(--tv-accent-brand)");
   });
 });

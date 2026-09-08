@@ -552,9 +552,9 @@
   display: grid;
   gap: 0;
   padding: clamp(1rem, 2.5vw, 1.5rem);
-  border: 1px solid var(--tv-border-subtle);
+  border: 1px solid var(--tv-grammar-institutional-border);
   border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-raised);
+  background: var(--tv-grammar-institutional-surface-raised);
   isolation: isolate;
 }
 
@@ -566,9 +566,9 @@
 
 .method-track__step {
   padding: clamp(0.85rem, 2vw, 1.15rem);
-  border: 1px solid var(--tv-border-subtle);
+  border: 1px solid var(--tv-grammar-institutional-border);
   border-radius: var(--tv-radius-card);
-  background: var(--tv-surface-elevated);
+  background: var(--tv-grammar-institutional-wash);
   position: relative;
   transition: border-color var(--tv-duration-fast) var(--tv-easing-standard);
 }
@@ -744,11 +744,26 @@
   display: grid;
   gap: 0.75rem;
   padding: clamp(1.1rem, 2.4vw, 1.5rem);
-  border: 1px solid var(--tv-border-subtle);
+  border: 1px solid var(--tv-grammar-institutional-border);
   border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-raised);
-  color: var(--tv-ink-primary);
+  background: var(--tv-grammar-institutional-wash);
+  color: var(--tv-grammar-institutional-ink);
   min-height: 100%;
+}
+
+.secondary-principle.secondary-card--ivory {
+  background: var(--tv-grammar-institutional-ivory);
+  border-color: var(--tv-border-inverted-subtle);
+  color: var(--tv-ink-inverted-primary);
+}
+
+.secondary-principle.secondary-card--ivory .secondary-principle__copy,
+.secondary-principle.secondary-card--ivory .secondary-principle__list li {
+  color: var(--tv-ink-inverted-secondary);
+}
+
+.secondary-principle.secondary-card--ivory .secondary-principle__list li::before {
+  background: var(--tv-accent-violet-on-ivory);
 }
 
 .secondary-principle__head {
@@ -1336,9 +1351,16 @@
 
 
 /* V3 — Resource objects (Shop) */
-.resource-page .secondary-principle {
+.resource-page .secondary-principle:not(.secondary-card--ivory) {
   border: 1px solid var(--tv-grammar-resource-border);
   background: var(--tv-grammar-resource-surface);
+  box-shadow: none;
+}
+
+.resource-page .secondary-principle.secondary-card--ivory {
+  background: var(--tv-grammar-institutional-ivory);
+  border-color: var(--tv-border-inverted-subtle);
+  color: var(--tv-ink-inverted-primary);
   box-shadow: none;
 }
 

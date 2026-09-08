@@ -517,6 +517,7 @@
   font-family: var(--tv-font-ui);
   font-size: inherit;
   transition: border-color var(--tv-motion-fast) var(--tv-ease-standard);
+  box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
 }
 
 .shortlist-final-surface .mobile-library-empty__recommendation-card:is(:hover, :focus-visible) {

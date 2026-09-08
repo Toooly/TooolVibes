@@ -303,9 +303,9 @@
   aspect-ratio: 1;
   margin-inline: auto;
   overflow: hidden;
-  border: 1px solid var(--tv-border-default);
+  border: 1px solid var(--tv-grammar-signal-border);
   border-radius: var(--tv-radius-panel);
-  background: var(--tv-surface-tier-1);
+  background: var(--tv-grammar-signal-surface);
 }
 
 .tv-radar-instrument::before {
@@ -569,7 +569,8 @@
   overflow: hidden;
   border: 1px solid var(--tv-border-default);
   border-radius: var(--tv-radius-panel);
-  background: var(--tv-surface-tier-1);
+  background: var(--tv-grammar-signal-surface);
+  box-shadow: inset 0 1px 0 var(--tv-grammar-signal-trace);
 }
 
 .tv-radar-index {
@@ -1304,7 +1305,8 @@ h1.tv-radar__title,
   padding: var(--tv-space-px-2) var(--tv-space-px-3);
   border: 1px solid var(--tv-border-subtle);
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-surface-tier-2);
+  background: var(--tv-grammar-signal-surface-raised);
+  box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
   color: var(--tv-ink-secondary);
   font-family: var(--tv-font-family-mono);
   font-size: var(--tv-text-caption);
