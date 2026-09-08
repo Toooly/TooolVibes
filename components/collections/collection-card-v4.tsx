@@ -135,11 +135,14 @@ export function CollectionCardV4({
       {visibleCores.length > 0 && (
         <div className="cx-card-v4__stack" aria-label="Tool nello stack">
           <ol className="cx-card-v4__stack-list">
-            {visibleCores.map((slot) => (
+            {visibleCores.map((slot, index) => (
               <li
                 key={slot.tool.slug}
                 className="cx-card-v4__stack-item"
               >
+                <span className="cx-card-v4__stack-no" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 <CollectionToolGlyph
                   slug={slot.tool.slug}
                   name={slot.tool.name}

@@ -12,10 +12,12 @@
 /* Accent utilities — used by accent={indigo|violet|teal|amber} data-attr.
    Mobile-first: thin left rule, small color tint on the kicker text.
    Never a full card fill. */
-[data-cx-accent="indigo"] { --cx-accent: var(--cx-accent-indigo); --cx-accent-soft: var(--cx-accent-indigo-soft); --cx-accent-on-dark: var(--cx-accent-indigo-on-dark); }
-[data-cx-accent="violet"] { --cx-accent: var(--cx-accent-violet); --cx-accent-soft: var(--cx-accent-violet-soft); --cx-accent-on-dark: var(--cx-accent-violet-on-dark); }
-[data-cx-accent="teal"]   { --cx-accent: var(--cx-accent-teal);   --cx-accent-soft: var(--cx-accent-teal-soft);   --cx-accent-on-dark: var(--cx-accent-teal-on-dark); }
-[data-cx-accent="amber"]  { --cx-accent: var(--cx-accent-amber);  --cx-accent-soft: var(--cx-accent-amber-soft);  --cx-accent-on-dark: var(--cx-accent-amber-on-dark); }
+/* V3 workflow law: every accent variant resolves to indigo/periwinkle. */
+[data-cx-accent] {
+  --cx-accent: var(--tv-grammar-workflow-accent);
+  --cx-accent-soft: color-mix(in srgb, var(--tv-grammar-workflow-accent) 22%, transparent);
+  --cx-accent-on-dark: var(--tv-grammar-workflow-accent);
+}
 
 /* =====================================================================
    END PHASE 4 TOKENS
@@ -555,7 +557,7 @@
 
   position: relative;
   width: 100%;
-  background: var(--tv-bg-base);
+  background: var(--tv-grammar-workflow-surface);
   color: var(--tv-ink-primary);
   padding: clamp(2.5rem, 4.4vw, 4.5rem) clamp(1rem, 4vw, 3rem) 6rem;
 }
@@ -584,7 +586,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--tv-accent-cyan);
+  color: var(--tv-grammar-workflow-accent);
   margin-bottom: 0.85rem;
 }
 
@@ -592,8 +594,8 @@
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 999px;
-  background: var(--tv-accent-cyan);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-accent-cyan) 22%, transparent);
+  background: var(--tv-grammar-workflow-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-grammar-workflow-accent) 22%, transparent);
 }
 
 .cx-index__title {
@@ -611,7 +613,7 @@
   font-style: normal;
   /* Index title sits on dark base — use on-dark accent */
   color: var(--tv-accent-violet-on-dark);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-cyan-on-dark) 28%, transparent), transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-grammar-workflow-accent) 28%, transparent), transparent);
   padding: 0 0.1em;
   border-radius: 0.18rem;
 }
@@ -650,7 +652,7 @@
   width: 0.3rem;
   height: 0.3rem;
   border-radius: 999px;
-  background: var(--tv-accent-cyan);
+  background: var(--tv-grammar-workflow-accent);
 }
 
 .cx-index__discover {
@@ -669,7 +671,7 @@
 }
 
 .cx-index__lede-block h2 {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.4rem, 2.4vw, 1.85rem);
   line-height: 1.05;
   margin: 0;
@@ -728,7 +730,7 @@
 }
 
 .cx-index__section-title h2 {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: clamp(1.45rem, 2.2vw, 1.85rem);
   line-height: 1;
@@ -811,7 +813,7 @@
 }
 
 .cx-card__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: clamp(1.35rem, 2.2vw, 1.7rem);
   line-height: 1.02;
@@ -1194,8 +1196,8 @@
   gap: 0.5rem;
   min-height: 2.8rem;
   padding: 0.75rem 1.1rem;
-  background: var(--tv-accent-primary);
-  color: var(--tv-ink-on-brand);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   border-radius: 0.55rem;
   font-size: 0.85rem;
   font-weight: 700;
@@ -1249,7 +1251,7 @@
 }
 
 .cx-stack__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: clamp(1.4rem, 2.4vw, 1.85rem);
   line-height: 1.04;
@@ -1301,7 +1303,7 @@
   font-weight: 800;
   letter-spacing: 0;
   z-index: 1;
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-data);
 }
 
 .cx-stack__node-line {
@@ -1642,7 +1644,7 @@
 }
 
 .cx-variants__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: clamp(1.4rem, 2.4vw, 1.85rem);
   line-height: 1.04;
@@ -1721,7 +1723,7 @@
 }
 
 .cx-variants__panel-title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.15rem, 1.8vw, 1.35rem);
   margin: 0;
   line-height: 1.04;
@@ -1842,7 +1844,7 @@
 }
 
 .cx-variants__path-title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.05rem, 1.6vw, 1.18rem);
   line-height: 1.04;
   margin: 0;
@@ -1892,7 +1894,7 @@
 }
 
 .cx-decision__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: clamp(1.4rem, 2.4vw, 1.85rem);
   line-height: 1.04;
@@ -1997,7 +1999,7 @@
 }
 
 .cx-anti__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: clamp(1.4rem, 2.4vw, 1.85rem);
   line-height: 1.04;
@@ -2078,7 +2080,7 @@
 }
 
 .cx-scenario__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: clamp(1.4rem, 2.4vw, 1.85rem);
   line-height: 1.04;
@@ -2125,12 +2127,12 @@
 }
 
 .cx-related-card:hover {
-  border-color: var(--tv-accent-cyan);
+  border-color: var(--tv-grammar-workflow-accent);
 }
 
 .cx-related-card--guide {
-  border-color: color-mix(in srgb, var(--tv-accent-cyan) 30%, transparent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-cyan) 5%, var(--tv-surface-inverted)), var(--tv-surface-inverted));
+  border-color: color-mix(in srgb, var(--tv-grammar-workflow-accent) 30%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-grammar-workflow-accent) 5%, var(--tv-surface-inverted)), var(--tv-surface-inverted));
 }
 
 .cx-related-card-eyebrow {
@@ -2138,8 +2140,8 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  /* Principle card sits on ivory surface — use on-ivory accent */
-  color: var(--tv-accent-cyan-on-ivory);
+  /* Principle card sits on ivory surface — use on-ivory workflow structure */
+  color: var(--tv-accent-violet-on-ivory);
 }
 
 .cx-related-card-eyebrow--collection {
@@ -2147,7 +2149,7 @@
 }
 
 .cx-related-card-title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-weight: 400;
   font-size: 1.1rem;
   line-height: 1.05;
@@ -2262,6 +2264,22 @@
   .cx-index__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.85rem;
+  }
+
+  .cx-index__grid--group {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: var(--tv-rhythm-related-lg, 0.85rem);
+    padding-bottom: var(--tv-rhythm-related, 0.5rem);
+    scroll-padding-inline: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cx-index__grid--group > .cx-card-v4 {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    min-width: 0;
   }
 
   .cx-index__compare-strip {
@@ -2414,8 +2432,8 @@
   flex-direction: column;
   gap: 0.7rem;
   padding: 1.05rem 1.1rem 1.1rem;
-  background: var(--tv-bg-base);
-  border: 1px solid var(--tv-border-subtle);
+  background: var(--tv-grammar-workflow-surface-raised);
+  border: 1px solid var(--tv-grammar-workflow-border);
   border-radius: 14px;
   color: var(--tv-ink-primary);
   position: relative;
@@ -2489,6 +2507,7 @@
 }
 
 .cx-card-v4__count-num {
+  font-family: var(--tv-font-data);
   font-size: 0.8rem;
   font-weight: 700;
   color: inherit;
@@ -2505,11 +2524,11 @@
 }
 
 .cx-card-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.3rem, 4.2vw, 1.5rem);
   line-height: 1.08;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -2570,6 +2589,16 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
+}
+
+.cx-card-v4__stack-no {
+  font-family: var(--tv-font-data);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--tv-grammar-workflow-accent);
+  min-width: 1.4rem;
+  flex: 0 0 auto;
 }
 
 .cx-card-v4__stack-meta {
@@ -2643,10 +2672,10 @@
   gap: 0.35rem;
   font-size: 0.8rem;
   font-weight: 560;
-  color: var(--cx-accent);
+  color: var(--tv-button-activation-text);
   text-decoration: none;
-  background: color-mix(in srgb, var(--cx-accent) 12%, transparent);
-  border: 1px solid var(--cx-accent-soft);
+  background: var(--tv-button-activation-bg);
+  border: 1px solid var(--tv-button-activation-bg);
   border-radius: 999px;
   padding: 0.5rem 0.9rem;
   transition:
@@ -2658,9 +2687,9 @@
 
 .cx-card-v4__cta:hover,
 .cx-card-v4__cta:focus-visible {
-  background: color-mix(in srgb, var(--cx-accent) 18%, transparent);
-  border-color: var(--cx-accent);
-  color: var(--cx-accent);
+  background: var(--tv-button-activation-bg-hover);
+  border-color: var(--tv-button-activation-bg-hover);
+  color: var(--tv-button-activation-text);
 }
 
 .cx-card-v4__cta-arrow {
@@ -2681,8 +2710,8 @@
 .cx-card-v4--featured {
   padding: 1.6rem 1.4rem 1.7rem;
   gap: 1rem;
-  background: color-mix(in srgb, var(--cx-accent) 8%, var(--tv-bg-base));
-  border-color: color-mix(in srgb, var(--cx-accent) 42%, transparent);
+  background: color-mix(in srgb, var(--tv-grammar-workflow-accent) 10%, var(--tv-grammar-workflow-surface-raised));
+  border-color: var(--tv-grammar-workflow-border);
   border-width: 1px;
 }
 
@@ -2721,18 +2750,18 @@
 }
 
 .cx-card-v4--featured .cx-card-v4__cta {
-  background: color-mix(in srgb, var(--cx-accent) 16%, transparent);
-  border-color: var(--cx-accent-soft);
-  color: var(--cx-accent);
+  background: var(--tv-button-activation-bg);
+  border-color: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
   font-size: 0.9rem;
   padding: 0.55rem 1rem;
 }
 
 .cx-card-v4--featured .cx-card-v4__cta:hover,
 .cx-card-v4--featured .cx-card-v4__cta:focus-visible {
-  background: color-mix(in srgb, var(--cx-accent) 22%, transparent);
-  border-color: var(--cx-accent);
-  color: var(--cx-accent);
+  background: var(--tv-button-activation-bg-hover);
+  border-color: var(--tv-button-activation-bg-hover);
+  color: var(--tv-button-activation-text);
   filter: none;
 }
 
@@ -2800,14 +2829,15 @@
   flex-direction: column;
   gap: clamp(2.5rem, 5vw, 4rem);
   color: var(--tv-ink-primary);
+  background: var(--tv-grammar-workflow-surface);
 }
 
 /* ===== HERO V4 ===== */
 .cx-detail-hero-v4 {
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-bg-base) 88%, var(--cx-accent) 12%),
-    var(--tv-bg-base));
-  border: 1px solid var(--cx-accent-soft);
+    color-mix(in srgb, var(--tv-grammar-workflow-surface) 88%, var(--tv-grammar-workflow-accent) 12%),
+    var(--tv-grammar-workflow-surface));
+  border: 1px solid var(--tv-grammar-workflow-border);
   border-radius: 18px;
   padding: clamp(1.5rem, 4vw, 2.4rem);
   position: relative;
@@ -3006,9 +3036,10 @@
 }
 
 .cx-detail-hero-v4__strip-num {
+  font-family: var(--tv-font-data);
   font-variant-numeric: tabular-nums;
   font-size: 0.75rem;
-  color: var(--cx-accent);
+  color: var(--tv-grammar-workflow-accent);
   font-weight: 650;
   letter-spacing: 0.06em;
 }
@@ -3051,6 +3082,7 @@
 }
 
 .cx-detail-hero-v4__decision-value {
+  font-family: var(--tv-font-data);
   font-size: 0.92rem;
   font-weight: 510;
   color: var(--tv-ink-primary);
@@ -3078,16 +3110,16 @@
 }
 
 .cx-detail-hero-v4__cta--primary {
-  background: color-mix(in srgb, var(--cx-accent) 16%, transparent);
-  color: var(--cx-accent);
-  border: 1px solid var(--cx-accent-soft);
+  background: var(--tv-button-activation-bg);
+  color: var(--tv-button-activation-text);
+  border: 1px solid var(--tv-button-activation-bg);
 }
 
 .cx-detail-hero-v4__cta--primary:hover,
 .cx-detail-hero-v4__cta--primary:focus-visible {
-  background: color-mix(in srgb, var(--cx-accent) 22%, transparent);
-  border-color: var(--cx-accent);
-  color: var(--cx-accent);
+  background: var(--tv-button-activation-bg-hover);
+  border-color: var(--tv-button-activation-bg-hover);
+  color: var(--tv-button-activation-text);
   filter: none;
 }
 
@@ -3146,11 +3178,11 @@
 }
 
 .cx-stack-flow-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -3172,7 +3204,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  border-left: 1px solid var(--cx-accent-soft);
+  border-left: 1px solid var(--tv-grammar-workflow-border);
   margin-left: 0.85rem;
 }
 
@@ -3197,28 +3229,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--tv-bg-base);
-  border: 1px solid var(--cx-accent);
+  background: var(--tv-grammar-workflow-surface);
+  border: 1px solid var(--tv-grammar-workflow-accent);
   border-radius: 50%;
   transition:
     background var(--tv-duration-fast) var(--tv-easing-standard),
     border-color var(--tv-duration-fast) var(--tv-easing-standard);
 }
 .cx-stack-flow-v4__item:first-child .cx-stack-flow-v4__node {
-  background: color-mix(in srgb, var(--cx-accent) 14%, var(--tv-bg-base));
+  background: color-mix(in srgb, var(--tv-grammar-workflow-structure) 14%, var(--tv-grammar-workflow-surface));
 }
 @media (hover: hover) and (pointer: fine) {
   .cx-stack-flow-v4__item:hover .cx-stack-flow-v4__node,
   .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__node {
-    background: color-mix(in srgb, var(--cx-accent) 18%, var(--tv-bg-base));
+    background: color-mix(in srgb, var(--tv-grammar-workflow-structure) 18%, var(--tv-bg-base));
+    border-color: var(--tv-grammar-workflow-structure);
   }
+}
+.cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__node {
+  background: color-mix(in srgb, var(--tv-grammar-workflow-structure) 18%, var(--tv-bg-base));
+  border-color: var(--tv-grammar-workflow-structure);
 }
 
 .cx-stack-flow-v4__num {
+  font-family: var(--tv-font-data);
   font-variant-numeric: tabular-nums;
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--cx-accent);
+  color: var(--tv-grammar-workflow-accent);
 }
 
 .cx-stack-flow-v4__stage {
@@ -3556,11 +3594,11 @@
 }
 
 .cx-variant-paths-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -3770,11 +3808,11 @@
 }
 
 .cx-decision-notes-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -3869,11 +3907,11 @@
 }
 
 .cx-scenario-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.4rem, 4.2vw, 1.8rem);
   line-height: 1.1;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -3973,11 +4011,11 @@
 }
 
 .cx-anti-rec-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.2rem, 3.6vw, 1.5rem);
   line-height: 1.1;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -4096,11 +4134,11 @@
 }
 
 .cx-guide-bridge-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.4rem, 4.2vw, 1.8rem);
   line-height: 1.1;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -4184,11 +4222,11 @@
 }
 
 .cx-next-step-v4__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: clamp(1.5rem, 4.6vw, 2rem);
   line-height: 1.05;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -4242,11 +4280,11 @@
 }
 
 .cx-next-step-v4__card-title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-ui);
   font-size: 1.2rem;
   line-height: 1.1;
-  /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
-  font-weight: 400;
+  /* UI title — Manrope 700 */
+  font-weight: 700;
   letter-spacing: -0.012em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -4372,8 +4410,8 @@
 }
 
 .cx-index__group-title {
-  font-family: var(--tv-font-family-display);
-  font-weight: 400;
+  font-family: var(--tv-font-ui);
+  font-weight: 700;
   font-size: clamp(1.15rem, 1.8vw, 1.4rem);
   line-height: 1.05;
   letter-spacing: -0.012em;
@@ -4702,7 +4740,7 @@
 .cx-detail-depth {
   border: 1px solid var(--cx-border, var(--tv-border-subtle));
   border-radius: 14px;
-  background: color-mix(in srgb, var(--tv-bg-base) 94%, var(--cx-accent, var(--tv-accent-cyan)) 6%);
+  background: color-mix(in srgb, var(--tv-grammar-workflow-surface) 94%, var(--tv-grammar-workflow-accent) 6%);
 }
 
 .cx-index__how {
@@ -4743,10 +4781,15 @@
   transition: transform 160ms ease;
 }
 
+.cx-index__how[open] > .cx-index__how-summary,
+.cx-detail-depth[open] > .cx-detail-depth__summary {
+  color: var(--tv-grammar-workflow-structure);
+}
 .cx-index__how[open] > .cx-index__how-summary::after,
 .cx-detail-depth[open] > .cx-detail-depth__summary::after {
   transform: rotate(-135deg);
   margin-top: 0.25rem;
+  color: var(--tv-grammar-workflow-structure);
 }
 
 .cx-index__how-panel {

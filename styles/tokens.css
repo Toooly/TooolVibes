@@ -1130,14 +1130,14 @@
 
   /* Collections editorial accents — owned here so feature sheets do not
      declare :root custom properties. Values unchanged from collections.css. */
-  --cx-accent-indigo: #7c8cff;
-  --cx-accent-violet: #a78bfa;
-  --cx-accent-teal: #5eead4;
-  --cx-accent-amber: #fbbf24;
-  --cx-accent-indigo-on-dark: #a8b3ff;
-  --cx-accent-violet-on-dark: #c7b6ff;
-  --cx-accent-teal-on-dark: #8ef0dd;
-  --cx-accent-amber-on-dark: #ffd668;
+  --cx-accent-indigo: var(--tv-grammar-workflow-accent);
+  --cx-accent-violet: var(--tv-grammar-workflow-accent);
+  --cx-accent-teal: var(--tv-grammar-workflow-accent);
+  --cx-accent-amber: var(--tv-grammar-workflow-accent);
+  --cx-accent-indigo-on-dark: var(--tv-grammar-workflow-accent);
+  --cx-accent-violet-on-dark: var(--tv-grammar-workflow-accent);
+  --cx-accent-teal-on-dark: var(--tv-grammar-workflow-accent);
+  --cx-accent-amber-on-dark: var(--tv-grammar-workflow-accent);
   --cx-accent-indigo-soft: color-mix(in srgb, var(--cx-accent-indigo) 22%, transparent);
   --cx-accent-violet-soft: color-mix(in srgb, var(--cx-accent-violet) 22%, transparent);
   --cx-accent-teal-soft: color-mix(in srgb, var(--cx-accent-teal) 22%, transparent);
@@ -1208,6 +1208,15 @@
   --tv-grammar-stack-accent: var(--tv-accent-brand);
   --tv-grammar-stack-node: var(--tv-color-violet-300);
   --tv-grammar-stack-border: color-mix(in srgb, var(--tv-color-violet-400) 28%, transparent);
+
+  /* WORKFLOW aliases — collections consume these; same family as STACK. */
+  --tv-grammar-workflow-surface: var(--tv-grammar-stack-surface);
+  --tv-grammar-workflow-surface-raised: var(--tv-grammar-stack-surface-raised);
+  --tv-grammar-workflow-ink: var(--tv-grammar-stack-ink);
+  --tv-grammar-workflow-structure: var(--tv-grammar-stack-accent);
+  --tv-grammar-workflow-accent: var(--tv-grammar-stack-node);
+  --tv-grammar-workflow-muted: var(--tv-grammar-stack-ink-secondary);
+  --tv-grammar-workflow-border: var(--tv-grammar-stack-border);
 
   /* RADAR — midnight + cyan; green only for live status */
   --tv-grammar-radar-surface: var(--tv-color-surface-base);
