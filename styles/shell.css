@@ -488,15 +488,26 @@
   font-weight: var(--tv-weight-bold);
 }
 
-.marketing-shell :is(
-  .premium-button-primary,
-  .premium-button-glow,
-  .tv-cta-primary
-) {
-  border-color: transparent;
-  background: var(--tv-button-activation-bg);
-  color: var(--tv-button-activation-text);
-  box-shadow: none;
+/* V3 CTA law — the ONE public primary: activation yellow.
+   Every shared primary primitive maps here so routes stop inventing CTAs.
+   Purple stays selected/active state only. The block joins the existing
+   "components" cascade layer by name: the legacy gradient primitives
+   declare their ink with !important inside @layer components, and layered
+   !important outranks unlayered !important — same layer, higher
+   specificity wins cleanly. */
+@layer components {
+  .marketing-shell :is(
+    .premium-button-primary,
+    .premium-button-glow,
+    .premium-button-premium,
+    .button-primary,
+    .tv-cta-primary
+  ) {
+    border-color: transparent;
+    background: var(--tv-button-activation-bg);
+    color: var(--tv-button-activation-text) !important;
+    box-shadow: none;
+  }
 }
 
 .marketing-shell :is(
@@ -737,6 +748,169 @@
   }
 }
 
+
+/* ============================================================
+   V3 UTILITY FOOTER (non-Home) — compact dark product ending.
+   Same system as the Home Launchpad, different job: essential
+   navigation, contact, legal, progressive affiliate disclosure.
+   No accordion, no CMS columns.
+   ============================================================ */
+
+.site-footer-v2.tv-utility {
+  background: var(--tv-bg-base) !important;
+  color: var(--tv-ink-primary) !important;
+  border-top: 1px solid var(--tv-border-subtle) !important;
+}
+
+.site-footer-v2.tv-utility :is(h2, h3, a, p, summary) {
+  color: inherit;
+}
+
+.site-footer-v2.tv-utility .site-footer-v2__shell {
+  display: grid;
+  gap: var(--tv-rhythm-group-lg);
+}
+
+.tv-utility__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tv-rhythm-related-lg);
+}
+
+.tv-utility__brand {
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-type-meta);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--tv-ink-primary);
+  text-decoration: none;
+}
+
+.tv-utility__contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding-inline: var(--tv-rhythm-related-lg);
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: var(--tv-radius-pill);
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-type-button);
+  font-weight: var(--tv-weight-semibold);
+  color: var(--tv-ink-primary);
+  text-decoration: none;
+  transition:
+    border-color var(--tv-motion-fast) var(--tv-easing-standard),
+    color var(--tv-motion-fast) var(--tv-easing-standard);
+}
+
+.tv-utility__contact:hover,
+.tv-utility__contact:focus-visible {
+  border-color: var(--tv-accent-cyan-on-dark);
+  color: var(--tv-accent-cyan-on-dark);
+}
+
+.tv-utility__nav {
+  display: grid;
+  gap: var(--tv-rhythm-group);
+}
+
+.tv-utility__group h3 {
+  margin: 0 0 var(--tv-rhythm-related);
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-type-meta);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
+}
+
+.tv-utility__group ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-rhythm-related-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tv-utility__link {
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-type-body);
+  color: var(--tv-ink-secondary);
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  transition: color var(--tv-motion-fast) var(--tv-easing-standard);
+}
+
+.tv-utility__link:hover,
+.tv-utility__link:focus-visible {
+  color: var(--tv-ink-primary);
+}
+
+.tv-utility__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tv-rhythm-related-lg);
+  font-size: var(--tv-type-meta);
+  color: var(--tv-ink-muted-aa);
+}
+
+.tv-utility__legal :is(a, button) {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tv-utility__legal :is(a, button):hover,
+.tv-utility__legal :is(a, button):focus-visible {
+  color: var(--tv-ink-secondary);
+}
+
+.tv-utility__disclosure {
+  font-size: var(--tv-type-meta);
+  color: var(--tv-ink-muted-aa);
+}
+
+.tv-utility__disclosure summary {
+  cursor: pointer;
+  color: inherit;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tv-utility__disclosure-body {
+  max-width: 64ch;
+  margin: var(--tv-rhythm-related) 0 0;
+  color: var(--tv-ink-secondary);
+  line-height: var(--tv-type-leading-body);
+}
+
+@media (min-width: 48rem) {
+  .site-footer-v2.tv-utility .site-footer-v2__shell {
+    padding-block: var(--tv-space-10) var(--tv-space-8);
+  }
+
+  .tv-utility__nav {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--tv-rhythm-group-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-utility__contact,
+  .tv-utility__link {
+    transition: none;
+  }
+}
 
 .site-footer-v2.tv-launchpad {
   background: var(--tv-bg-base) !important;

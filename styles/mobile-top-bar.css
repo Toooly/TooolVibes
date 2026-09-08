@@ -59,12 +59,14 @@
 }
 
 .mobile-top-bar__brand-text {
+  /* V3: chrome wordmarks use the UI role — display is for statements only. */
   display: inline-block;
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-family: var(--tv-font-ui);
   color: var(--tv-ink-primary);
-  font-size: 18px;
+  font-size: 13px;
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: 0.035em;
+  letter-spacing: 0.14em;
   white-space: nowrap;
 }
 

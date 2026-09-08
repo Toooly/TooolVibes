@@ -1,14 +1,9 @@
 // @vitest-environment jsdom
 
-import { createElement } from "react";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const pathnameState = vi.hoisted(() => ({ current: "/archivio" }));
-
-vi.mock("@/lib/motion/use-once-in-view", () => ({
-  useOnceInView: () => ({ ref: { current: null }, hasBeenVisible: true, preferReducedMotion: true }),
-}));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameState.current,
@@ -21,7 +16,7 @@ import { resolveNavigationRelease } from "@/lib/navigation/release";
 
 /* Brand logo mock: l'identità visiva non è sotto test. */
 vi.mock("@/components/layout/brand-logo", () => ({
-  BrandLogo: () => createElement("span", { "data-testid": "brand-logo" }),
+  BrandLogo: () => null,
 }));
 
 afterEach(() => {
@@ -29,38 +24,20 @@ afterEach(() => {
   cleanup();
 });
 
-function stubMatchMedia(matchesDesktop: boolean) {
-  window.matchMedia = ((query: string) => {
-    const matches = query.includes("min-width: 48rem") ? matchesDesktop : false;
-    return {
-      matches,
-      media: query,
-      onchange: null,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      addListener: () => {},
-      removeListener: () => {},
-      dispatchEvent: () => false,
-    };
-  }) as typeof window.matchMedia;
-}
-
-function getNavGroup(heading: string) {
+function getGroup(heading: string) {
   const title = screen.getByRole("heading", { name: heading });
-  const group = title.closest("details");
-  if (!(group instanceof HTMLDetailsElement)) {
+  const group = title.closest(".tv-utility__group");
+  if (!(group instanceof HTMLElement)) {
     throw new Error(`gruppo ${heading} non trovato`);
   }
   return group;
 }
 
-function getColumnLinks(heading: string) {
-  const group = getNavGroup(heading);
-  group.open = true;
-  return within(group).getAllByRole("link");
+function getGroupLinks(heading: string) {
+  return within(getGroup(heading)).getAllByRole("link");
 }
 
-describe("B29 SiteFooterV2 — registry canonico", () => {
+describe("V3 utility footer — registry canonico (non-Home)", () => {
   it("renders product, company and legal links from the canonical registry", () => {
     render(
       <AdvertisingConsentProvider>
@@ -68,7 +45,7 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
       </AdvertisingConsentProvider>,
     );
 
-    const product = getColumnLinks("Prodotto");
+    const product = getGroupLinks("Esplora");
     expect(product.map((link) => link.textContent)).toEqual([
       "Catalogo",
       "Radar",
@@ -90,7 +67,7 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
       "/contributi",
     ]);
 
-    const company = getColumnLinks("TooolVibes");
+    const company = getGroupLinks("TooolVibes");
     expect(company.map((link) => link.textContent)).toEqual([
       "Chi siamo",
       "Studio by TooolVibes",
@@ -132,31 +109,30 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
       .filter((link) => link.getAttribute("href") === "/sponsorizza");
     expect(sponsorLinks).toHaveLength(1);
 
-    const company = getColumnLinks("TooolVibes");
-    const companyHrefs = company.map((link) => link.getAttribute("href"));
+    const companyHrefs = getGroupLinks("TooolVibes").map((link) =>
+      link.getAttribute("href"),
+    );
     expect(companyHrefs.at(-1)).toBe("/sponsorizza");
 
-    const product = getColumnLinks("Prodotto");
     expect(
-      product.some((link) => link.getAttribute("href") === "/sponsorizza"),
+      getGroupLinks("Esplora").some(
+        (link) => link.getAttribute("href") === "/sponsorizza",
+      ),
     ).toBe(false);
   });
 
-  it("contatto mailto dal registry: icona social e CTA newsletter", () => {
+  it("contatto mailto dal registry: azione compatta Scrivici", () => {
     render(
       <AdvertisingConsentProvider>
         <SiteFooterV2 />
       </AdvertisingConsentProvider>,
     );
 
-    const social = screen.getByRole("link", { name: "Email" });
-    expect(social.getAttribute("href")).toBe("mailto:hello@tooolvibes.com");
-
     const cta = screen.getByRole("link", { name: /Scrivici/ });
     expect(cta.getAttribute("href")).toBe("mailto:hello@tooolvibes.com");
   });
 
-  it("feature flag: Privacy con flag OFF non renderizzata nella colonna legal", () => {
+  it("feature flag: Privacy con flag OFF non renderizzata nella riga legal", () => {
     const release = resolveNavigationRelease({
       TOOOLVIBES_NAV_PRIVACY_ENABLED: "0",
     });
@@ -178,45 +154,44 @@ describe("B29 SiteFooterV2 — registry canonico", () => {
   });
 });
 
-describe("SiteFooterV2 — mobile disclosure", () => {
-  it("collapses Prodotto and TooolVibes on small screens without hiding legal or contact", () => {
-    stubMatchMedia(false);
+describe("V3 utility footer — architettura compatta", () => {
+  it("niente accordion CMS: i gruppi nav sono visibili senza aprire details", () => {
+    const { container } = render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
 
+    const expectedCounts: Record<string, number> = {
+      Esplora: 8,
+      TooolVibes: 5,
+    };
+    for (const [heading, count] of Object.entries(expectedCounts)) {
+      const group = getGroup(heading);
+      expect(group.closest("details")).toBeNull();
+      expect(group.querySelectorAll("a")).toHaveLength(count);
+    }
+
+    // L'unico details è la disclosure progressiva affiliazioni.
+    const details = container.querySelectorAll("details");
+    expect(details).toHaveLength(1);
+    expect(details[0].className).toContain("tv-utility__disclosure");
+  });
+
+  it("legal e consenso restano azioni visibili e raggiungibili", () => {
     render(
       <AdvertisingConsentProvider>
         <SiteFooterV2 />
       </AdvertisingConsentProvider>,
     );
 
-    expect(getNavGroup("Prodotto").open).toBe(false);
-    expect(getNavGroup("TooolVibes").open).toBe(false);
-
-    expect(screen.getByRole("link", { name: "TOOOLVIBES" })).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Parliamone" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Scrivici/ })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Privacy" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Termini" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Cookie" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Gestisci preferenze" })).toBeTruthy();
-    expect(screen.getByText(/link affiliati/i)).toBeTruthy();
-  });
-
-  it("keeps Prodotto and TooolVibes open at the desktop breakpoint", () => {
-    stubMatchMedia(true);
-
-    render(
-      <AdvertisingConsentProvider>
-        <SiteFooterV2 />
-      </AdvertisingConsentProvider>,
-    );
-
-    expect(getNavGroup("Prodotto").open).toBe(true);
-    expect(getNavGroup("TooolVibes").open).toBe(true);
-    expect(getColumnLinks("Prodotto")).toHaveLength(8);
-    expect(getColumnLinks("TooolVibes")).toHaveLength(5);
+    expect(screen.getByText("Trasparenza e affiliazioni")).toBeTruthy();
   });
 });
-
 
 describe("SiteFooterV2 — Home launchpad", () => {
   it("renders destination tiles and progressive affiliate disclosure", () => {

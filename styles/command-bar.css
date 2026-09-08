@@ -89,16 +89,17 @@
 }
 
 .command-bar__brand-word {
-  font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  /* V3: chrome wordmarks use the UI role — display is for statements only. */
+  font-family: var(--tv-font-ui);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   color: var(--tv-ink-primary);
   line-height: 1;
 }
 
 @media (max-width: 1535px) {
-  .command-bar__brand-word { font-size: 18px; }
+  .command-bar__brand-word { font-size: 14px; }
 }
 
 /* ============================================================

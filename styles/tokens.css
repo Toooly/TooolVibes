@@ -586,7 +586,7 @@
   --tv-container-page-uw: var(--tv-container-uw);
 
   /* Gutter (page horizontal padding) */
-  --tv-gutter-mobile: var(--tv-space-px-4);          /* 16px */
+  --tv-gutter-mobile: var(--tv-space-px-5);  /* V3 canonical public outer axis — 20px @390 */
   --tv-gutter-tablet: var(--tv-space-px-6);          /* 24px */
   --tv-gutter-desktop: var(--tv-space-px-8);         /* 32px */
 
@@ -801,6 +801,12 @@
      Comparison Tray publishes --tv-tray-height.
      Routes consume both for their padding-bottom. */
   --tv-bottom-nav-total: 4.0625rem; /* ~65px = nav 3.55 + safe-area padding 6 + extra */
+  /* V3 chrome geometry: --tv-bottom-nav-total is the ONLY layout reservation
+     (footer shell padding). Inner heights below are visual chrome metrics.
+     --bottom-nav-height stays chrome-geometry only (FAB dock inset + legacy
+     .pb-mobile-nav); it must never be consumed as page padding again. */
+  --tv-bottom-nav-inner: 3.25rem;          /* 52px — expanded inner */
+  --tv-bottom-nav-inner-compact: 2.5rem;   /* 40px — compact icons-only inner */
   --tv-bottom-nav-total-desktop: 0px;
   --tv-tray-height: 0px;
   --surface-brand-panel-bg:
@@ -979,6 +985,7 @@
   /* Target migration: SEMANTIC typography tokens */
   --tv-font-ui: var(--tv-font-family-ui);                  /* same name */
   --tv-font-display: var(--tv-font-family-display);        /* same name */
+  --tv-font-data: var(--tv-font-family-mono);              /* V3 DATA role: system/data semantics only */
   --tv-font-system: var(--tv-font-family-system);          /* same name */
   --tv-text-xs: var(--tv-text-eyebrow);
   --tv-text-sm: var(--tv-text-label);
@@ -1154,6 +1161,7 @@
   /* --- Type roles --- */
   --tv-type-display: var(--tv-font-family-display);
   --tv-type-ui: var(--tv-font-family-ui);
+  --tv-type-data: var(--tv-font-family-mono);
   --tv-type-mono: var(--tv-font-family-mono);
 
   /* ~390px targets: display 48–52, h1 38–42, h2 30–32, h3 22–24,

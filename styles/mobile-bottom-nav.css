@@ -29,7 +29,7 @@
   pointer-events: auto;
   position: relative;
   display: block;
-  height: 52px;
+  height: var(--tv-bottom-nav-inner);
   background: var(--tv-bg-base);
   border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
   border-radius: var(--tv-radius-modal);
@@ -67,7 +67,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 6px 4px;
-  min-height: 52px;
+  min-height: var(--tv-bottom-nav-inner);
   -webkit-tap-highlight-color: transparent;
   isolation: isolate;
   transition: color 200ms ease;
@@ -201,11 +201,11 @@
 }
 
 .mobile-bottom-shell--compact .mobile-bottom-shell__inner {
-  height: 40px;
+  height: var(--tv-bottom-nav-inner-compact);
 }
 
 .mobile-bottom-shell--compact .mobile-bottom-item {
-  min-height: 40px;
+  min-height: var(--tv-bottom-nav-inner-compact);
   gap: 0;
   padding-block: 0;
 }

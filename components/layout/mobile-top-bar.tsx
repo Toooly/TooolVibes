@@ -22,6 +22,28 @@ import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import { cn } from "@/lib/utils";
 
+/**
+ * V3 route-context policy (Phase 1): the compact strip exists only inside
+ * task/product areas where it answers "where am I inside the product?".
+ * Editorial/marketing/utility routes repeat their own page title and must
+ * not carry bureaucratic chrome. Keep this list explicit and small.
+ */
+export const ROUTE_STRIP_PATH_PREFIXES = [
+  "/archivio",
+  "/collections",
+  "/radar",
+  "/shortlist",
+  "/compare",
+  "/toools",
+] as const;
+
+export function hasRouteStrip(pathname: string): boolean {
+  if (pathname === "/") return false;
+  return ROUTE_STRIP_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+}
+
 function getRouteLabel(pathname: string): string {
   const destination = getNavDestinationForPathname(pathname);
   if (destination) return destination.label;
@@ -82,7 +104,7 @@ export function MobileTopBar() {
         />
       </div>
 
-      {isHome ? null : (
+      {isHome || !hasRouteStrip(pathname) ? null : (
         <div className="mobile-top-bar__route">
           <span aria-hidden="true" className="mobile-top-bar__route-dot" />
           <span className="mobile-top-bar__route-label">{routeLabel}</span>
