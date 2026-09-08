@@ -271,6 +271,13 @@
   padding-bottom: var(--tv-space-12);
 }
 
+@media (max-width: 1279px) {
+  .tool-battle-page__intro h1 {
+    max-inline-size: none;
+    text-wrap: pretty;
+  }
+}
+
 @media (max-width: 767px) {
   .tool-battle-page {
     padding-top: var(--tv-space-5);
@@ -1893,10 +1900,10 @@ html:has(.tv-consent-banner) .tv-compare-dock {
   }
 }
 html:has([data-compare-dock]) main#main-content {
-  padding-bottom: calc(var(--tv-bottom-nav-total, 0px) + 88px);
+  padding-bottom: 88px;
 }
 html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
-  padding-bottom: calc(var(--tv-bottom-nav-total, 0px) + 88px + 10rem);
+  padding-bottom: calc(88px + 10rem);
 }
 @media (prefers-reduced-motion: reduce) {
   .tv-compare-dock { transition: none; }

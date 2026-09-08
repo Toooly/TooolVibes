@@ -52,6 +52,18 @@
 .tv-member-gate {
   position: relative;
   margin-top: var(--tv-space-group-md);
+  margin-bottom: var(--tv-space-group-md);
+}
+
+@media (max-height: 844px) and (max-width: 47.99rem) {
+  .tv-member-gate {
+    margin-top: var(--tv-space-group-sm);
+  }
+
+  .tv-member-gate__card {
+    padding: var(--tv-space-component-md);
+    gap: var(--tv-space-component-sm);
+  }
 }
 
 .tv-member-gate__card {

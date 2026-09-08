@@ -76,6 +76,14 @@
   white-space: nowrap;
 }
 
+@media (max-width: 79.99rem) {
+  .route-marker__label {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+}
+
 .route-marker__status {
   color: var(--tv-ink-muted-aa);
   letter-spacing: 0.1em;

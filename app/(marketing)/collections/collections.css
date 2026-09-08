@@ -4463,7 +4463,7 @@
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1280px) {
   .cx-index__grid--group {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

@@ -158,6 +158,9 @@
 
 .v-auth-link {
   color: var(--tv-accent-violet-on-dark);
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .account-loading-state.v-auth-loading {
@@ -3335,7 +3338,9 @@ html[data-tv-reduce-motion="true"] .tv-tool-mark::after {
   color: var(--tv-ink-secondary);
   font-size: 0.8rem;
   line-height: 1.35;
-  min-height: 1.75rem;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .tv-filo__summary::-webkit-details-marker {

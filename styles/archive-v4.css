@@ -552,7 +552,7 @@
   .ar4-ivory__promoted-grid { grid-template-columns: 1fr; }
 }
 
-@media (min-width: 900px) and (max-width: 1179px) {
+@media (min-width: 900px) and (max-width: 1279px) {
   .ar4-ivory__promoted-grid { grid-template-columns: 1.5fr 1fr; }
 }
 
@@ -643,7 +643,7 @@
   padding: 0;
 }
 
-@media (max-width: 1179px) and (min-width: 900px) {
+@media (max-width: 1279px) and (min-width: 900px) {
   .ar4-grid__list { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -1043,6 +1043,13 @@
   pointer-events: auto;
 }
 
+.ar4-card__toggles button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
 .ar4-card__rank {
   position: static;
   display: inline-flex;
@@ -1437,14 +1444,14 @@
   .ar4-ivory__promoted-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
 }
 
-/* Large tablet 1024-1179: 2-col spacious */
-@media (min-width: 1024px) and (max-width: 1179px) {
+/* Large tablet / hybrid 1024-1279: 2-col (mobile chrome until 1280) */
+@media (min-width: 1024px) and (max-width: 1279px) {
   .ar4-grid__list { grid-template-columns: 1fr 1fr; gap: 20px; }
   .ar4-ivory__promoted-grid { grid-template-columns: 2fr 1fr; gap: 18px; }
 }
 
-/* Compact desktop 1180-1439: 3-col */
-@media (min-width: 1180px) and (max-width: 1439px) {
+/* Desktop chrome 1280-1439: 3-col */
+@media (min-width: 1280px) and (max-width: 1439px) {
   .ar4-grid__list { grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
   .ar4-ivory__promoted-grid { grid-template-columns: 2fr 1fr 1fr; gap: 18px; }
 }
@@ -1456,7 +1463,7 @@
 }
 
 /* Tablet card anatomy — controlled metadata, not miniaturized */
-@media (min-width: 768px) and (max-width: 1179px) {
+@media (min-width: 768px) and (max-width: 1279px) {
   .ar4-card {
     padding: 16px;
     gap: 10px;
@@ -1923,15 +1930,10 @@
    ============================================================ */
 /* Mobile: ensure shell has room for both the comparison tray (when shown)
    AND the mobile bottom navigation, with safe area inset. */
-@media (max-width: 767px) {
+@media (max-width: 1279px) {
   .ar4-shell {
-    /* bottom-nav (4.75rem = 76px) + tray (max ~120px) + buffer */
-    padding-bottom: 196px;
+    padding-bottom: calc(var(--tv-tray-height, 0px) + var(--tv-space-5));
   }
-}
-
-@media (min-width: 768px) and (max-width: 1279px) {
-  .ar4-shell { padding-bottom: 160px; }
 }
 
 @media (min-width: 1280px) {
@@ -1942,7 +1944,7 @@
    padding so there's no extra empty space below the last content card. */
 @media (max-width: 767px) {
   .ar4-shell:not(:has(.ar4-tray)) {
-    padding-bottom: calc(4.75rem + 12px + env(safe-area-inset-bottom));
+    padding-bottom: var(--tv-space-3);
   }
 }
 

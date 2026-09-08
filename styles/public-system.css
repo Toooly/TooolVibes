@@ -485,3 +485,13 @@
     border-radius: var(--tv-radius-modal);
   }
 }
+
+@media (max-width: 1279px) {
+  button.selection-chip.h-8\.5 {
+    width: 2.75rem;
+    height: 2.75rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+

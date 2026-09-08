@@ -20,7 +20,7 @@ describe("Wave 14 — responsive contracts", () => {
     expect(loopPrimaryDestinations("guest")).toHaveLength(2);
     expect(LOOP_RAIL_MIN_WIDTH_PX).toBe(1024);
     expect(read("components/tools/tool-battle-view.tsx")).toContain(
-      'export const COMPARE_DESKTOP_MEDIA_QUERY = "(min-width: 1180px)"',
+      'export const COMPARE_DESKTOP_MEDIA_QUERY = "(min-width: 1280px)"',
     );
   });
 
@@ -77,7 +77,7 @@ describe("Wave 14 — responsive contracts", () => {
     expect(mobile?.[1]).not.toMatch(/flex-wrap:\s*nowrap/);
     expect(mobile?.[1]).not.toMatch(/overflow-x:\s*auto/);
     expect(read("components/tools/tool-battle-view.tsx")).toContain(
-      'export const COMPARE_DESKTOP_MEDIA_QUERY = "(min-width: 1180px)"',
+      'export const COMPARE_DESKTOP_MEDIA_QUERY = "(min-width: 1280px)"',
     );
   });
 

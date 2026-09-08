@@ -930,6 +930,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: 2.75rem;
   padding: 0.5rem 0.85rem;
   border-radius: 999px;
   background: rgba(18, 13, 47, 0.05);
@@ -1297,7 +1298,7 @@
 /* ---------- TOC (sticky) ------------------------------------------------ */
 .guides-toc {
   position: sticky;
-  top: clamp(5rem, 6vw, 6.5rem);
+  top: calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem);
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
@@ -2152,10 +2153,14 @@
 .guides-toc.is-compact .guides-toc__list {
   gap: 0.15rem;
 }
-@media (min-width: 1180px) {
+@media (min-width: 1280px) {
+  .guides-toc {
+    top: calc(var(--tv-header-height, 5.25rem) + 0.5rem);
+  }
+
   .guides-article__rail:has(.guides-toc.is-compact) {
     position: sticky;
-    top: 5.5rem;
+    top: calc(var(--tv-header-height, 5.25rem) + 0.5rem);
     align-self: start;
   }
 }

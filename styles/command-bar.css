@@ -117,9 +117,6 @@
   position: relative;
 }
 
-@media (max-width: 1180px) {
-  .command-bar__nav { display: none; }
-}
 
 .command-bar__nav-item {
   position: relative;

@@ -484,7 +484,15 @@
   background: var(--tv-surface-tier-2);
 }
 
-.tv-radar-node__label strong,
+.tv-radar-node__label strong {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .tv-radar-node__label small {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -971,6 +979,7 @@
 
   .tv-radar-instrument {
     border-radius: var(--tv-radius-feature);
+    width: min(100%, calc(100svh - 18.5rem));
   }
 
   .tv-radar-node {
@@ -982,7 +991,7 @@
   }
 
   .tv-radar-node__label {
-    max-width: 5.5rem;
+    max-width: 7.25rem;
     padding-inline: var(--tv-space-px-1);
   }
 
@@ -1072,7 +1081,7 @@
   }
 
   .tv-radar-node__label {
-    max-width: 4.75rem;
+    max-width: 6.5rem;
   }
 
   .tv-radar-node__label small {

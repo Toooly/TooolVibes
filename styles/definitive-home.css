@@ -12,8 +12,8 @@
  *   xs  < 430    compact mobile
  *   sm  430-767  spacious mobile
  *   md  768-899  tablet
- *   lg  900-1179 large tablet / laptop
- *   xl  1180-1439 compact desktop
+ *   lg  900-1279 large tablet / hybrid (mobile chrome)
+ *   xl  1280-1439 desktop chrome
  *   2xl >=1440    full desktop
  */
 
@@ -62,7 +62,7 @@
   min-height: 0;
 }
 
-@media (max-width: 1179px) and (min-width: 900px) {
+@media (max-width: 1279px) and (min-width: 900px) {
   .def-cockpit__inner {
     padding-block: 32px;
   }
@@ -1888,7 +1888,7 @@
   flex: 1;
   width: 100%;
 }
-@media (min-width: 1180px) {
+@media (min-width: 1280px) {
   .def-cockpit__inner {
     grid-template-columns: minmax(0, 1fr);
     max-width: 46rem;
@@ -2185,6 +2185,7 @@
   outline: none;
 }
 .def-intent__field button {
+  position: relative;
   min-height: 36px;
   padding: 0 14px;
   border: 0;
@@ -2222,6 +2223,7 @@
 }
 .def-intent__chips a {
   display: inline-flex;
+  position: relative;
   min-height: 36px;
   align-items: center;
   padding: 0 12px;
@@ -2237,6 +2239,16 @@
 .def-intent__chips a:hover { border-color: rgba(255,255,255,0.28); }
 .def-intent__chips a:active {
   transform: scale(0.98);
+}
+
+@media (max-width: 1279px) {
+  .def-intent__field button::after,
+  .def-intent__chips a::after,
+  .def-intent__more::after {
+    content: "";
+    position: absolute;
+    inset: -4px 0;
+  }
 }
 .def-stacks {
   padding: var(--tv-space-section-sm) var(--tv-gutter-mobile) var(--tv-space-section-sm);
@@ -2304,6 +2316,7 @@
 
 .def-intent__more {
   display: inline-flex;
+  position: relative;
   min-height: 36px;
   align-items: center;
   padding: 0 12px;
