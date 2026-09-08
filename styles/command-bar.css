@@ -405,3 +405,15 @@
   border: 0;
   cursor: pointer;
 }
+
+
+.command-bar__search.is-hero-suppressed {
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border-width: 0;
+}

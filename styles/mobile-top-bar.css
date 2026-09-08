@@ -208,3 +208,22 @@
   border: 0;
   cursor: pointer;
 }
+
+
+.mobile-top-bar--home .mobile-top-bar__inner {
+  grid-template-columns: 1fr auto;
+  padding-inline: var(--tv-home-gutter);
+  height: 3.25rem;
+}
+
+.mobile-top-bar--home:has(.mobile-top-bar__search:not(.is-hero-suppressed)) .mobile-top-bar__inner {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.mobile-top-bar__search.is-hero-suppressed {
+  display: none;
+}
+
+.marketing-shell:has(.def-home) {
+  --tv-header-height-mobile: 3.25rem;
+}

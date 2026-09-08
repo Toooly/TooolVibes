@@ -4,6 +4,16 @@ import { createElement } from "react";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+const pathnameState = vi.hoisted(() => ({ current: "/archivio" }));
+
+vi.mock("@/lib/motion/use-once-in-view", () => ({
+  useOnceInView: () => ({ ref: { current: null }, hasBeenVisible: true, preferReducedMotion: true }),
+}));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => pathnameState.current,
+}));
+
 import { SiteFooterV2 } from "@/components/layout/site-footer-v2";
 import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
 import { NavigationReleaseProvider } from "@/lib/navigation/navigation-release-context";
@@ -15,6 +25,7 @@ vi.mock("@/components/layout/brand-logo", () => ({
 }));
 
 afterEach(() => {
+  pathnameState.current = "/archivio";
   cleanup();
 });
 
@@ -203,5 +214,31 @@ describe("SiteFooterV2 — mobile disclosure", () => {
     expect(getNavGroup("TooolVibes").open).toBe(true);
     expect(getColumnLinks("Prodotto")).toHaveLength(8);
     expect(getColumnLinks("TooolVibes")).toHaveLength(5);
+  });
+});
+
+
+describe("SiteFooterV2 — Home launchpad", () => {
+  it("renders destination tiles and progressive affiliate disclosure", () => {
+    pathnameState.current = "/";
+    render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
+
+    expect(screen.getByRole("heading", { name: "Dove vuoi andare adesso?" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Catalogo" }).getAttribute("href")).toBe("/archivio");
+    expect(screen.getByRole("link", { name: "Radar" }).getAttribute("href")).toBe("/radar");
+    expect(screen.getByRole("link", { name: "Raccolte" }).getAttribute("href")).toBe("/collections");
+    expect(screen.getByRole("link", { name: "Guide" }).getAttribute("href")).toBe("/posts");
+    expect(screen.getByRole("link", { name: "Confronto" }).getAttribute("href")).toBe("/compare");
+    expect(screen.getByRole("link", { name: "Salvati" }).getAttribute("href")).toBe("/shortlist");
+    expect(screen.getByRole("heading", { name: "Parliamone" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Scrivici/ }).getAttribute("href")).toBe(
+      "mailto:hello@tooolvibes.com",
+    );
+    expect(screen.getByText("Trasparenza e affiliazioni")).toBeTruthy();
+    expect(screen.getByText(/TOOOLVIBES ·/)).toBeTruthy();
   });
 });

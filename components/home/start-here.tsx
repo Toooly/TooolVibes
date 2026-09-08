@@ -1,13 +1,12 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
-import { useOnceInView } from "@/lib/motion/use-once-in-view";
 
 export function formatHomeAnalysisTime(raw: string | null | undefined) {
   const value = raw?.trim() ?? "";
@@ -16,11 +15,20 @@ export function formatHomeAnalysisTime(raw: string | null | undefined) {
   return `${value} min`;
 }
 
+export type HomeStackStage = {
+  label: string;
+  name: string;
+};
+
 export type HomeStackPreview = {
   slug: string;
   title: string;
   kicker: string;
   description: string;
+  outcome?: string | null;
+  setupTime?: string | null;
+  cost?: string | null;
+  stages?: HomeStackStage[];
 };
 
 const START_TABS = [
@@ -92,16 +100,17 @@ export function StartHere({
 
   return (
     <section
-      className="def-start"
+      className="def-start tv-discovery-stage"
       aria-labelledby="def-start-title"
+      data-mode={tab}
       data-switched={hasSwitched ? "" : undefined}
     >
-      <header className="def-start__head">
+      <header className="def-start__head tv-discovery-stage__head">
         <h2 id="def-start-title" className="def-start__title">
           Da dove partire?
         </h2>
         <div
-          className="def-start__tabs"
+          className="def-start__tabs tv-discovery-stage__switch"
           role="tablist"
           aria-label="Da dove partire"
           onKeyDown={onTabsKeyDown}
@@ -130,35 +139,37 @@ export function StartHere({
         </div>
       </header>
 
-      <div
-        className="def-start__panel"
-        role="tabpanel"
-        id="def-start-panel-tool"
-        aria-labelledby="def-start-tab-tool"
-        hidden={tab !== "tool"}
-      >
-        <IvoryEditorial focusTool={focusTool} tools={tools} />
-      </div>
+      <div className="tv-discovery-stage__frame">
+        <div
+          className="def-start__panel"
+          role="tabpanel"
+          id="def-start-panel-tool"
+          aria-labelledby="def-start-tab-tool"
+          hidden={tab !== "tool"}
+        >
+          <IvoryEditorial focusTool={focusTool} tools={tools} />
+        </div>
 
-      <div
-        className="def-start__panel"
-        role="tabpanel"
-        id="def-start-panel-stack"
-        aria-labelledby="def-start-tab-stack"
-        hidden={tab !== "stack"}
-      >
-        <HomeStacks stacks={stacks} />
-      </div>
+        <div
+          className="def-start__panel"
+          role="tabpanel"
+          id="def-start-panel-stack"
+          aria-labelledby="def-start-tab-stack"
+          hidden={tab !== "stack"}
+        >
+          <HomeStacks stacks={stacks} />
+        </div>
 
-      <div
-        className="def-start__panel"
-        role="tabpanel"
-        id="def-start-panel-radar"
-        aria-labelledby="def-start-tab-radar"
-        hidden={tab !== "radar"}
-      >
-        <div className="def-start__radar">
-          <HomeRadarPreview />
+        <div
+          className="def-start__panel"
+          role="tabpanel"
+          id="def-start-panel-radar"
+          aria-labelledby="def-start-tab-radar"
+          hidden={tab !== "radar"}
+        >
+          <div className="def-start__radar">
+            <HomeRadarPreview />
+          </div>
         </div>
       </div>
     </section>
@@ -176,15 +187,18 @@ function IvoryEditorial({
   const editorialScore = computeEditorialScore(focusTool);
   const isAffiliateLink =
     Boolean(focusTool.affiliateUrl) || hasAffiliateSignal(focusTool.url);
+  const scoreLabel =
+    editorialScore.status === "assessed" && editorialScore.value !== null
+      ? editorialScore.value.toFixed(1)
+      : "—";
+  const positioning = truncate(focusTool.tldr || focusTool.shortDescription || "", 140);
+
   return (
-    <div className="def-editorial" aria-label="In evidenza">
-      <div aria-hidden="true" className="def-editorial__traces" />
+    <div className="def-editorial tv-tool-mode" aria-label="In evidenza">
       <div className="def-editorial__inner">
-        <article className="def-editorial__spotlight">
+        <article className="def-editorial__spotlight tv-featured-tool">
           <div className="def-editorial__spot-body">
-            <p className="def-editorial__spot-eyebrow">
-              In primo piano
-            </p>
+            <p className="def-editorial__spot-eyebrow">Scelta della redazione</p>
             <div className="def-editorial__spot-head">
               <span className="def-editorial__spot-avatar" aria-hidden="true">
                 {iconUrlFor(focusTool) ? (
@@ -196,46 +210,37 @@ function IvoryEditorial({
               </span>
               <div className="def-editorial__spot-identity">
                 <h3 className="def-editorial__spot-name">{focusTool.name}</h3>
-                <p className="def-editorial__spot-cat">
-                  {focusTool.categoryLabel}
-                  {focusTool.levelLabel ? ` · ${focusTool.levelLabel}` : ""}
-                </p>
+                <p className="def-editorial__spot-cat">{focusTool.categoryLabel}</p>
               </div>
             </div>
-            <p className="def-editorial__spot-lede">
-              {focusTool.tldr || focusTool.shortDescription}
-            </p>
-            <p className="def-editorial__distinction">
-              {focusTool.editorialNote ||
-                "Scelta per il taglio, non per il punteggio."}
-            </p>
+            {positioning ? (
+              <p className="def-editorial__spot-lede">{positioning}</p>
+            ) : null}
 
-            <ul className="def-editorial__spot-rail" aria-label="Dettagli editoriali">
-              <li>
-                <span>Valutazione editoriale</span>
-                <strong>
-                  {editorialScore.status === "assessed" && editorialScore.value !== null
-                    ? `${editorialScore.value.toFixed(1)} / 10`
-                    : "In preparazione"}
+            <p className="tv-featured-tool__meta">
+              <span>
+                <span className="tv-featured-tool__meta-label">Score</span>
+                <strong className="tv-featured-tool__mono">{scoreLabel}</strong>
+              </span>
+              <span>
+                <span className="tv-featured-tool__meta-label">Livello</span>
+                <strong>{focusTool.levelLabel ?? "—"}</strong>
+              </span>
+              <span>
+                <span className="tv-featured-tool__meta-label">Lettura</span>
+                <strong className="tv-featured-tool__mono">
+                  {formatHomeAnalysisTime(focusTool.readingTime)}
                 </strong>
-              </li>
-              <li>
-                <span>Casi d&apos;uso</span>
-                <strong>{focusTool.useCases.length}</strong>
-              </li>
-              <li>
-                <span>Tempo di analisi</span>
-                <strong>{formatHomeAnalysisTime(focusTool.readingTime)}</strong>
-              </li>
-            </ul>
+              </span>
+            </p>
 
             <div className="def-editorial__spot-actions">
               <Link
                 href={`/toools/${focusTool.slug}`}
                 className="def-editorial__spot-cta def-editorial__spot-cta--primary"
-                aria-label="Apri la scheda dello strumento selezionato"
+                aria-label={`Apri ${focusTool.name}`}
               >
-                Apri la scheda
+                Apri {focusTool.name}
                 <ArrowRight size={14} aria-hidden="true" />
               </Link>
               {focusTool.url ? (
@@ -250,36 +255,30 @@ function IvoryEditorial({
                   className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
                   aria-label={
                     isAffiliateLink
-                      ? `Prova ${focusTool.name} (link affiliato)`
-                      : `Visita ${focusTool.name}`
+                      ? `Sito ufficiale di ${focusTool.name} (link affiliato)`
+                      : `Sito ufficiale di ${focusTool.name}`
                   }
                 >
-                  {focusTool.ctaLabel ??
-                    (isAffiliateLink ? `Prova ${focusTool.name}` : `Visita ${focusTool.name}`)}
+                  Sito
                   <ExternalLink size={14} aria-hidden="true" />
                 </a>
               ) : null}
             </div>
             {isAffiliateLink ? (
               <p className="def-editorial__spot-disclosure">
-                Link affiliato: potremmo ricevere una commissione, senza costi
-                aggiuntivi per te.
+                Link affiliato: commissione possibile, senza costi extra.
               </p>
             ) : null}
           </div>
         </article>
 
-        <ClassificaOrAlternativa tools={tools} />
+        <EditorialDeck tools={tools} />
       </div>
     </div>
   );
 }
 
-function ClassificaOrAlternativa({
-  tools,
-}: {
-  tools: ToolPublicView[];
-}) {
+function EditorialDeck({ tools }: { tools: ToolPublicView[] }) {
   const evaluated = tools
     .map((tool) => ({
       tool,
@@ -290,71 +289,105 @@ function ClassificaOrAlternativa({
     .map((item) => item.tool);
   const isPodium = evaluated.length >= 3;
   const top3 = isPodium ? evaluated.slice(0, 3) : tools.slice(0, 3);
+  const [active, setActive] = useState(0);
+  const scrollerRef = useRef<HTMLUListElement>(null);
 
-  if (isPodium) {
-    return (
-      <div className="def-editorial__podium" role="region" aria-label="Valutazioni editoriali">
-        <div className="def-editorial__pod-head-row">
-          <p className="def-editorial__pod-eyebrow">Valutazioni editoriali</p>
-          <p className="def-editorial__pod-subtitle">
-            Ordinate per valutazione della redazione, non per un ranking di mercato.
-          </p>
-        </div>
-        <PodiumStage top3={top3} />
-      </div>
+  useEffect(() => {
+    const root = scrollerRef.current;
+    if (!root) return;
+    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-deck-card]"));
+    if (cards.length === 0) return;
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const index = cards.indexOf(visible.target as HTMLElement);
+        if (index >= 0) setActive(index);
+      },
+      { root, threshold: 0.6 },
     );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [top3.length]);
+
+  function scrollToIndex(index: number) {
+    const root = scrollerRef.current;
+    const card = root?.querySelectorAll<HTMLElement>("[data-deck-card]")[index];
+    card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
   }
 
+  if (top3.length === 0) return null;
+
   return (
-    <div className="def-editorial__podium" role="region" aria-label="Tre tool da esplorare">
+    <div
+      className="tv-editorial-deck def-editorial__podium"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={isPodium ? "Valutazioni editoriali" : "Tre tool da esplorare"}
+    >
       <div className="def-editorial__pod-head-row">
-        <p className="def-editorial__pod-eyebrow">Dal catalogo</p>
+        <p className="def-editorial__pod-eyebrow">{isPodium ? "Valutazioni editoriali" : "Dal catalogo"}</p>
         <p className="def-editorial__pod-subtitle">
-          Tre tool da esplorare.
+          {isPodium
+            ? "Copertina editoriale, non una classifica di mercato."
+            : "Tre tool da esplorare."}
         </p>
       </div>
-      <ExploratoryPodium top3={top3} />
+      <div className="tv-editorial-deck__controls">
+        <button
+          type="button"
+          className="tv-editorial-deck__nav"
+          aria-label="Scheda precedente"
+          onClick={() => scrollToIndex(Math.max(0, active - 1))}
+          disabled={active === 0}
+        >
+          <ChevronLeft size={16} aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="tv-editorial-deck__nav"
+          aria-label="Scheda successiva"
+          onClick={() => scrollToIndex(Math.min(top3.length - 1, active + 1))}
+          disabled={active === top3.length - 1}
+        >
+          <ChevronRight size={16} aria-hidden="true" />
+        </button>
+      </div>
+      <ul ref={scrollerRef} className="tv-editorial-deck__track def-editorial__pod-stage">
+        {top3.map((tool, index) => (
+          <li
+            key={tool.slug}
+            className={`tv-editorial-deck__cell def-editorial__pod-cell${index === 0 ? " def-editorial__pod-cell--first" : index === 1 ? " def-editorial__pod-cell--second" : " def-editorial__pod-cell--third"}${index === active ? " is-active" : ""}`}
+            data-deck-card=""
+          >
+            {isPodium ? (
+              <DeckCard tool={tool} rank={index + 1} active={index === active} />
+            ) : (
+              <ExploratoryCard tool={tool} active={index === active} />
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
-  );
-}
-
-function ExploratoryPodium({
-  top3,
-}: {
-  top3: ToolPublicView[];
-}) {
-  return (
-    <ol className="def-editorial__pod-stage def-editorial__exploratory-stage">
-      {top3[0] ? (
-        <li className="def-editorial__pod-cell def-editorial__pod-cell--first">
-          <ExploratoryCard tool={top3[0]} />
-        </li>
-      ) : null}
-      {top3[1] ? (
-        <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
-          <ExploratoryCard tool={top3[1]} />
-        </li>
-      ) : null}
-      {top3[2] ? (
-        <li className="def-editorial__pod-cell def-editorial__pod-cell--third">
-          <ExploratoryCard tool={top3[2]} />
-        </li>
-      ) : null}
-    </ol>
   );
 }
 
 function ExploratoryCard({
   tool,
+  active,
 }: {
   tool: ToolPublicView;
+  active: boolean;
 }) {
   const iconUrl = iconUrlFor(tool);
   const initial = initialFor(tool.name);
   return (
     <Link
       href={`/toools/${tool.slug}`}
-      className="def-editorial__exploratory-card"
+      className={`def-editorial__exploratory-card tv-editorial-deck__card${active ? " is-active" : ""}`}
       aria-label={`Apri la scheda di ${tool.name}`}
     >
       <span className="def-editorial__exploratory-avatar" aria-hidden="true">
@@ -376,86 +409,28 @@ function ExploratoryCard({
   );
 }
 
-function PodiumStage({
-  top3,
-}: {
-  top3: ToolPublicView[];
-}) {
-  const { ref, hasBeenVisible, preferReducedMotion } = useOnceInView<HTMLOListElement>({
-    threshold: 0.28,
-    rootMargin: "0px 0px -8% 0px",
-  });
-  const pending = !preferReducedMotion && !hasBeenVisible;
-
-  return (
-    <ol
-      ref={ref}
-      className="def-editorial__pod-stage"
-      data-motion-pending={pending ? "true" : "false"}
-    >
-      {top3[0] ? (
-        <li className="def-editorial__pod-cell def-editorial__pod-cell--first">
-          <PodiumCard
-            tool={top3[0]}
-            rank={1}
-            revealed={hasBeenVisible || preferReducedMotion}
-          />
-        </li>
-      ) : null}
-      {top3[1] ? (
-        <li className="def-editorial__pod-cell def-editorial__pod-cell--second">
-          <PodiumCard
-            tool={top3[1]}
-            rank={2}
-            revealed={hasBeenVisible || preferReducedMotion}
-          />
-        </li>
-      ) : null}
-      {top3[2] ? (
-        <li className="def-editorial__pod-cell def-editorial__pod-cell--third">
-          <PodiumCard
-            tool={top3[2]}
-            rank={3}
-            revealed={hasBeenVisible || preferReducedMotion}
-          />
-        </li>
-      ) : null}
-    </ol>
-  );
-}
-
-function PodiumCard({
+function DeckCard({
   tool,
   rank,
-  revealed = true,
+  active,
 }: {
   tool: ToolPublicView;
-  rank: 1 | 2 | 3;
-  revealed?: boolean;
+  rank: number;
+  active: boolean;
 }) {
   const score = computeEditorialScore(tool);
-  const rationale = truncate(tool.tldr || tool.shortDescription || "", rank === 1 ? 110 : 90);
-  const pills: { label: string; tone: "gold" | "cyan" | "violet" }[] = [
-    {
-      label: score.status === "assessed" ? "Valutato" : "Da valutare",
-      tone: rank === 1 ? "gold" : rank === 2 ? "cyan" : "violet",
-    },
-  ];
-  if (tool.levelLabel) {
-    pills.push({ label: tool.levelLabel, tone: rank === 1 ? "gold" : rank === 2 ? "cyan" : "violet" });
-  }
-  const visiblePills = pills.slice(0, 2);
+  const rationale = truncate(tool.tldr || tool.shortDescription || "", rank === 1 ? 110 : 72);
   const iconUrl = iconUrlFor(tool);
   const initial = initialFor(tool.name);
 
   return (
     <Link
       href={`/toools/${tool.slug}`}
-      className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank}${revealed ? " is-revealed" : ""}`}
+      className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank} tv-editorial-deck__card${active ? " is-active is-revealed" : " is-revealed"}`}
       data-rank={rank}
       aria-label={`Apri la scheda di ${tool.name}`}
     >
-      <span className="def-editorial__pod-rank" aria-label={`Valutazione editoriale ${rank}`}>
+      <span className="def-editorial__pod-rank tv-featured-tool__mono" aria-label={`Posizione editoriale ${rank}`}>
         {String(rank).padStart(2, "0")}
       </span>
       <span className="def-editorial__pod-avatar" aria-hidden="true">
@@ -468,26 +443,9 @@ function PodiumCard({
       </span>
       <span className="def-editorial__pod-name">{tool.name}</span>
       <span className="def-editorial__pod-cat">{tool.categoryLabel}</span>
-
-      {rationale ? (
-        <span className="def-editorial__pod-rationale">{rationale}</span>
-      ) : null}
-
-      {visiblePills.length > 0 ? (
-        <span className="def-editorial__pod-pills" aria-hidden="true">
-          {visiblePills.map((pill, i) => (
-            <span
-              key={i}
-              className={`def-editorial__pod-pill def-editorial__pod-pill--${pill.tone}`}
-            >
-              {pill.label}
-            </span>
-          ))}
-        </span>
-      ) : null}
-
+      {rationale ? <span className="def-editorial__pod-rationale">{rationale}</span> : null}
       <span className="def-editorial__pod-score">
-        <span className="def-editorial__pod-score-num">
+        <span className="def-editorial__pod-score-num tv-featured-tool__mono">
           {score.value !== null ? score.value.toFixed(1) : "—"}
         </span>
         <span className="def-editorial__pod-score-max">
@@ -499,23 +457,97 @@ function PodiumCard({
 }
 
 function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
+  const scrollerRef = useRef<HTMLUListElement>(null);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const root = scrollerRef.current;
+    if (!root) return;
+    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-stack-card]"));
+    if (cards.length === 0) return;
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const index = cards.indexOf(visible.target as HTMLElement);
+        if (index >= 0) setActive(index);
+      },
+      { root, threshold: 0.55 },
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [stacks.length]);
+
+  function scrollToIndex(index: number) {
+    const root = scrollerRef.current;
+    const card = root?.querySelectorAll<HTMLElement>("[data-stack-card]")[index];
+    card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+  }
+
   return (
-    <div className="def-stacks">
+    <div className="def-stacks tv-stack-mode">
       <p className="def-stacks__lede">
-        Raccolte operative: ruolo di ogni tool, limiti e quando non usarle.
+        Workflow operativi: sequenza, esito, tempo e costo.
       </p>
       {stacks.length > 0 ? (
-        <ul className="def-stacks__grid">
-          {stacks.map((stack) => (
-            <li key={stack.slug}>
-              <Link href={`/collections/${stack.slug}`} className="def-stacks__card">
-                <span>{stack.kicker}</span>
-                <strong>{stack.title}</strong>
-                <em>{stack.description}</em>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div
+          className="tv-workflow-deck"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Stack in evidenza"
+        >
+          <div className="tv-editorial-deck__controls">
+            <button
+              type="button"
+              className="tv-editorial-deck__nav"
+              aria-label="Stack precedente"
+              onClick={() => scrollToIndex(Math.max(0, active - 1))}
+              disabled={active === 0}
+            >
+              <ChevronLeft size={16} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="tv-editorial-deck__nav"
+              aria-label="Stack successivo"
+              onClick={() => scrollToIndex(Math.min(stacks.length - 1, active + 1))}
+              disabled={active === stacks.length - 1}
+            >
+              <ChevronRight size={16} aria-hidden="true" />
+            </button>
+          </div>
+          <ul ref={scrollerRef} className="def-stacks__grid tv-workflow-deck__track">
+            {stacks.map((stack, index) => (
+              <li key={stack.slug} data-stack-card="" className={index === active ? "is-active" : undefined}>
+                <Link href={`/collections/${stack.slug}`} className="def-stacks__card tv-workflow-card">
+                  <span>{stack.kicker}</span>
+                  <strong>{stack.title}</strong>
+                  {stack.outcome ? <em>{stack.outcome}</em> : stack.description ? <em>{stack.description}</em> : null}
+                  {stack.stages && stack.stages.length > 0 ? (
+                    <ol className="tv-workflow-card__flow" aria-label="Flusso">
+                      {stack.stages.slice(0, 3).map((stage) => (
+                        <li key={`${stack.slug}-${stage.name}`}>
+                          <b>{stage.label}</b>
+                          <span>{stage.name}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  ) : null}
+                  {(stack.setupTime || stack.cost) ? (
+                    <p className="tv-workflow-card__meta">
+                      {stack.setupTime ? <span className="tv-featured-tool__mono">{stack.setupTime}</span> : null}
+                      {stack.setupTime && stack.cost ? " · " : null}
+                      {stack.cost ? <span className="tv-featured-tool__mono">{stack.cost}</span> : null}
+                    </p>
+                  ) : null}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
       <Link href="/collections" className="def-stacks__more">
         Tutte le raccolte

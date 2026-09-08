@@ -1145,6 +1145,91 @@
   --cx-card-signal-weight: 480;
 
   /* ============================================================== */
+  /* ============================================================== */
+  /* === VISUAL GRAMMAR V3 (additive, Home reference first) ======= */
+  /* Semantic families. Do not remap locked brand/canvas tokens.    */
+  /* Other routes inherit later; Home is the reference skin.        */
+  /* ============================================================== */
+
+  /* --- Type roles --- */
+  --tv-type-display: var(--tv-font-family-display);
+  --tv-type-ui: var(--tv-font-family-ui);
+  --tv-type-mono: var(--tv-font-family-mono);
+
+  /* ~390px targets: display 48–52, h1 38–42, h2 30–32, h3 22–24,
+     body-lg ~19, body ~17, meta 13–14, button 16–17. */
+  --tv-type-display-xl: clamp(3rem, 4vw + 1.55rem, 5rem);
+  --tv-type-h1: clamp(2.375rem, 2.4vw + 1.5rem, 3.75rem);
+  --tv-type-h2: clamp(1.875rem, 1.6vw + 1.25rem, 2.75rem);
+  --tv-type-h3: clamp(1.375rem, 0.8vw + 1.1rem, 1.75rem);
+  --tv-type-body-lg: 1.1875rem;
+  --tv-type-body: 1.0625rem;
+  --tv-type-meta: 0.8125rem;
+  --tv-type-button: 1rem;
+  --tv-type-leading-display: 1.08;
+  --tv-type-leading-heading: 1.18;
+  --tv-type-leading-body: 1.5;
+  --tv-type-leading-meta: 1.35;
+
+  /* --- Spatial rhythm --- */
+  --tv-rhythm-related: var(--tv-space-px-3);
+  --tv-rhythm-related-lg: var(--tv-space-px-4);
+  --tv-rhythm-group: var(--tv-space-px-6);
+  --tv-rhythm-group-lg: var(--tv-space-px-8);
+  --tv-rhythm-section: clamp(4rem, 10vw, 5.5rem);
+
+  /* Home axis — 20px on 390. Do not change --tv-gutter-mobile. */
+  --tv-home-gutter: var(--tv-space-px-5);
+  --tv-home-gutter-desktop: var(--tv-space-px-8);
+
+  /* TOOL / EDITORIAL — warm cream, charcoal, brass */
+  --tv-grammar-editorial-surface: var(--tv-surface-inverted);
+  --tv-grammar-editorial-surface-raised: var(--tv-surface-inverted-raised);
+  --tv-grammar-editorial-ink: var(--tv-ink-inverted-primary);
+  --tv-grammar-editorial-ink-secondary: var(--tv-ink-inverted-secondary);
+  --tv-grammar-editorial-ink-muted: var(--tv-ink-inverted-muted);
+  --tv-grammar-editorial-accent: var(--tv-accent-gold-on-ivory);
+  --tv-grammar-editorial-brass: var(--tv-accent-gold);
+  --tv-grammar-editorial-border: var(--tv-border-inverted-default);
+
+  /* STACK / COLLECTIONS — deep indigo, purple structure, periwinkle */
+  --tv-grammar-stack-surface: color-mix(in srgb, var(--tv-color-violet-900) 58%, var(--tv-color-surface-base));
+  --tv-grammar-stack-surface-raised: color-mix(in srgb, var(--tv-color-violet-800) 46%, var(--tv-color-surface-raised));
+  --tv-grammar-stack-ink: var(--tv-ink-primary);
+  --tv-grammar-stack-ink-secondary: var(--tv-ink-secondary);
+  --tv-grammar-stack-accent: var(--tv-accent-brand);
+  --tv-grammar-stack-node: var(--tv-color-violet-300);
+  --tv-grammar-stack-border: color-mix(in srgb, var(--tv-color-violet-400) 28%, transparent);
+
+  /* RADAR — midnight + cyan; green only for live status */
+  --tv-grammar-radar-surface: var(--tv-color-surface-base);
+  --tv-grammar-radar-surface-raised: var(--tv-color-surface-raised);
+  --tv-grammar-radar-ink: var(--tv-ink-primary);
+  --tv-grammar-radar-accent: var(--tv-accent-cyan);
+  --tv-grammar-radar-live: var(--tv-status-success);
+  --tv-grammar-radar-border: color-mix(in srgb, var(--tv-accent-cyan) 28%, transparent);
+
+  /* PERSONAL / SAVED — graphite + muted lilac */
+  --tv-grammar-personal-surface: var(--tv-color-surface-raised);
+  --tv-grammar-personal-ink: var(--tv-ink-primary);
+  --tv-grammar-personal-accent: color-mix(in srgb, var(--tv-color-violet-300) 62%, var(--tv-color-ink-400));
+
+  /* ACTION / SELECTED / COMMERCIAL */
+  --tv-grammar-activation: var(--tv-activation-strong);
+  --tv-grammar-activation-ink: var(--tv-activation-strong-ink);
+  --tv-grammar-selected: var(--tv-accent-brand);
+  --tv-grammar-selected-wash: var(--tv-surface-selected);
+  --tv-grammar-commercial-shell: var(--tv-surface-raised);
+  --tv-grammar-commercial-border: var(--tv-border-subtle);
+  --tv-grammar-commercial-label: var(--tv-ink-muted-aa);
+  --tv-grammar-commercial-ink: var(--tv-ink-secondary);
+
+  /* Signal search primitive */
+  --tv-signal-rest-border: var(--tv-border-default);
+  --tv-signal-focus-from: var(--tv-accent-brand);
+  --tv-signal-focus-to: var(--tv-accent-cyan);
+  --tv-signal-lock-duration: var(--tv-motion-base);
+
   /* === WAVE 13 BANCO ALIASES (additive) ======================== */
   /* Do not redefine locked --tv-space-* / --tv-radius-sm.         */
   /* Do not change --tv-color-surface-base / --tv-accent-brand.    */
@@ -1179,7 +1264,7 @@
    Duplicate mobile-page values were identical and are intentionally merged. */
 @media (max-width: 767px) {
   :root {
-    --bottom-nav-height: 4.75rem;
+    --bottom-nav-height: 4.25rem;
     --mobile-page-inline: clamp(1rem, 4.7vw, 1.35rem);
     --mobile-content-max: 24.5rem;
   }

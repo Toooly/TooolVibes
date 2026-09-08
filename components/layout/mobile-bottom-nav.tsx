@@ -27,7 +27,7 @@ import {
   useWorkspaceNavCounts,
 } from "./workspace-nav-selectors";
 
-type NavChromeState = "expanded" | "compact" | "hidden";
+type NavChromeState = "expanded" | "compact";
 
 const SCROLL_DELTA_THRESHOLD = 12;
 const COMPACT_AFTER = 48;
@@ -78,7 +78,7 @@ export function MobileBottomNav() {
     }
     // Always reserve expanded chrome height so content never jumps when
     // the nav compacts or slides away.
-    const expandedHeight = 56;
+    const expandedHeight = 52;
     const padding = 6;
     const safe = Number.parseFloat(
       getComputedStyle(root).getPropertyValue("env(safe-area-inset-bottom)") || "0",

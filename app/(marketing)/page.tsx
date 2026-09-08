@@ -62,12 +62,23 @@ export default async function HomePage() {
       tools={tools}
       weeklyTool={featured}
       announcement={homepage.announcement.enabled ? homepage.announcement : null}
-      stacks={selectedStacks.slice(0, 3).map((stack) => ({
-        slug: stack.slug,
-        title: stack.title,
-        kicker: stack.cover_kicker ?? "Stack",
-        description: stack.description,
-      }))}
+      stacks={selectedStacks.slice(0, 3).map((stack) => {
+        const cores = stack.included_tools.filter((slot) => slot.is_core).slice(0, 3);
+        const nodes = (cores.length >= 2 ? cores : stack.included_tools).slice(0, 3);
+        return {
+          slug: stack.slug,
+          title: stack.title,
+          kicker: stack.cover_kicker ?? "Stack",
+          description: stack.description,
+          outcome: stack.stack_meta?.concise_promise ?? stack.rationale ?? stack.description,
+          setupTime: stack.stack_meta?.setup_time ?? null,
+          cost: stack.stack_meta?.monthly_cost_band ?? null,
+          stages: nodes.map((slot) => ({
+            label: slot.stage ?? slot.role,
+            name: slot.tool.name,
+          })),
+        };
+      })}
     />
   );
 }

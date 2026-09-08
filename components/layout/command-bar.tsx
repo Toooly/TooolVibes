@@ -30,6 +30,8 @@ import { useAuthenticatedNavItems } from "@/components/layout/use-authenticated-
 import { isAuthenticatedNavActive } from "@/lib/navigation/account-primary-nav";
 import { useLocationSearch } from "@/components/layout/use-authenticated-nav-items";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
+import { cn } from "@/lib/utils";
 
 function CommandBarBrand() {
   return (
@@ -58,6 +60,9 @@ export function CommandBar() {
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
   const items = useAuthenticatedNavItems("header-v2-desktop");
   const preferReducedMotion = useReducedMotion();
+  const isHome = pathname === "/";
+  const heroSearchVisible = useMobileUIStore((state) => state.heroSearchVisible);
+  const suppressSearch = isHome && heroSearchVisible;
 
   return (
     <header
@@ -109,8 +114,13 @@ export function CommandBar() {
         <div className="command-bar__right">
           <button
             type="button"
-            className="command-bar__search"
+            className={cn(
+              "command-bar__search",
+              suppressSearch && "is-hero-suppressed",
+            )}
             aria-label="Apri ricerca"
+            aria-hidden={suppressSearch || undefined}
+            tabIndex={suppressSearch ? -1 : undefined}
             onClick={() => setCommandOpen(true)}
           >
             <Search size={15} aria-hidden="true" />

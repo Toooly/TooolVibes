@@ -43,3 +43,11 @@ export const SHORTLIST_MEANING =
 
 export const DECISION_MEANING =
   "Hai scelto un tool, rispetto ad altri, per un motivo.";
+
+export const DECISION_LIFECYCLE_COPY: Record<DecisionLifecycleStage, string> = {
+  scopri: "Esplora il catalogo per obiettivo, non per hype.",
+  valuta: "Leggi scheda, limiti e livello prima di innamorarti del tool.",
+  confronta: "Tieni in gioco solo le alternative che contano davvero.",
+  decidi: "Scegli con un criterio. Una lista infinita non è una decisione.",
+  ricorda: "Conserva il motivo. Tra tre mesi ti servirà.",
+};

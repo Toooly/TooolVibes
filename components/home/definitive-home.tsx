@@ -35,8 +35,6 @@ function Cockpit({ toolCount }: { toolCount: number }) {
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div aria-hidden="true" className="def-cockpit__bg">
         <span className="tv-brand-cartograph" />
-        <span className="def-cockpit__signature-arc" />
-        <span className="def-cockpit__signature-node" />
       </div>
       <div className="def-cockpit__inner">
         <div className="def-cockpit__hero">
@@ -57,7 +55,7 @@ function Cockpit({ toolCount }: { toolCount: number }) {
               decisioni restano. Per chi costruisce prodotti, non liste.
             </span>
             <span className="def-cockpit__lede-mobile">
-              Trova, confronta e scegli il software giusto per quello che devi fare.
+              Trova e confronta il software giusto per quello che devi fare.
             </span>
           </p>
           {toolCount > 0 ? <IntentEntry /> : null}
@@ -75,8 +73,7 @@ function Method() {
           Dal primo confronto a una scelta motivata.
         </h2>
         <p className="def-method__lede">
-          TooolVibes ti aiuta a ridurre le alternative, confrontare ciò che
-          conta e conservare il motivo della tua scelta.{" "}
+          Cinque tappe. Una sola attiva.{" "}
           <Link href="/metodo">Come valutiamo</Link>
         </p>
       </header>
@@ -124,10 +121,11 @@ function SponsorSection({
   if (!placement) return null;
   return (
     <section
-      className="def-home__sponsor"
+      className="def-home__sponsor tv-partner-signal"
       aria-label="Contenuto sponsorizzato"
     >
-      <div className="def-home__sponsor-frame">
+      <p className="tv-partner-signal__label">Sponsor</p>
+      <div className="def-home__sponsor-frame tv-partner-signal__shell">
         <FeaturedPartner
           placementKey={placementKey}
           className="def-home__placement"

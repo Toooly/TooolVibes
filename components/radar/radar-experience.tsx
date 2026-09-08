@@ -684,26 +684,26 @@ export function HomeRadarPreview() {
         </span>
       </header>
 
-      <div className="tv-home-radar__pulse" aria-label="Sintesi segnali di oggi">
-        <div>
-          <span className="tv-home-radar__pulse-label">Segnali oggi</span>
+      <p className="tv-home-radar__pulse tv-home-radar__rail" aria-label="Sintesi segnali di oggi">
+        <span>
           <strong className="tv-home-radar__pulse-value">
             {model.signalCount ?? (isLoading ? "…" : "—")}
           </strong>
-        </div>
-        <div>
-          <span className="tv-home-radar__pulse-label">Aggiornato</span>
+          <span className="tv-home-radar__pulse-label"> segnali</span>
+        </span>
+        <span>
+          <span className="tv-home-radar__pulse-label">Aggiornato </span>
           <strong className="tv-home-radar__pulse-value tv-home-radar__pulse-value--sm">
             {model.updatedAtLabel}
           </strong>
-        </div>
-        <div>
-          <span className="tv-home-radar__pulse-label">Fonte</span>
+        </span>
+        <span>
+          <span className="tv-home-radar__pulse-label">Fonte </span>
           <strong className="tv-home-radar__pulse-value tv-home-radar__pulse-value--sm">
             Product Hunt
           </strong>
-        </div>
-      </div>
+        </span>
+      </p>
 
       {top.length > 0 ? (
         <ol className="tv-home-radar__launches" aria-label="Top lanci del periodo">

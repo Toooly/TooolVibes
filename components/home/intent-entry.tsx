@@ -1,22 +1,64 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { DISCOVERY_INTENTS } from "@/lib/product/discovery-intents";
+import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 
 const PRIMARY_INTENT_COUNT = 3;
 
 export function IntentEntry() {
   const [moreOpen, setMoreOpen] = useState(false);
+  const [locking, setLocking] = useState(false);
+  const fieldRef = useRef<HTMLDivElement>(null);
+  const preferReducedMotion = useReducedMotion();
   const extraIntents = DISCOVERY_INTENTS.length > PRIMARY_INTENT_COUNT;
+  const setHeroSearchVisible = useMobileUIStore((s) => s.setHeroSearchVisible);
+
+  useEffect(() => {
+    const node = fieldRef.current;
+    if (!node) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setHeroSearchVisible(true);
+      return () => setHeroSearchVisible(false);
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHeroSearchVisible(entry.isIntersecting);
+      },
+      { threshold: 0.45, rootMargin: "-12% 0px -40% 0px" },
+    );
+    observer.observe(node);
+    setHeroSearchVisible(true);
+    return () => {
+      observer.disconnect();
+      setHeroSearchVisible(false);
+    };
+  }, [setHeroSearchVisible]);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     const data = new FormData(event.currentTarget);
     const query = String(data.get("q") ?? "").trim();
-    if (query) return;
+    const dest = query
+      ? `/archivio?q=${encodeURIComponent(query)}`
+      : "/archivio";
+
+    if (preferReducedMotion) {
+      if (!query) {
+        event.preventDefault();
+        window.location.assign(dest);
+      }
+      return;
+    }
+
     event.preventDefault();
-    window.location.assign("/archivio");
+    setLocking(true);
+    window.setTimeout(() => {
+      window.location.assign(dest);
+    }, 280);
   }
 
   return (
@@ -27,6 +69,7 @@ export function IntentEntry() {
         method="get"
         role="search"
         onSubmit={onSubmit}
+        data-locking={locking ? "" : undefined}
       >
         <label className="def-intent__label" htmlFor="home-intent-query">
           Cosa vuoi fare?
@@ -34,7 +77,14 @@ export function IntentEntry() {
         <p className="def-intent__hint" id="home-intent-hint">
           Filtra il catalogo per obiettivo, nome o categoria. Non interpreta frasi libere.
         </p>
-        <div className="def-intent__field tv-emphasis tv-emphasis--search">
+        <div
+          ref={fieldRef}
+          className="def-intent__field tv-emphasis tv-emphasis--search tv-signal-search"
+          data-tv-signal-search=""
+          data-locking={locking ? "" : undefined}
+        >
+          <span aria-hidden="true" className="tv-signal-search__orbit" />
+          <span aria-hidden="true" className="tv-signal-search__sweep" />
           <Search size={16} aria-hidden="true" />
           <input
             id="home-intent-query"
@@ -57,7 +107,9 @@ export function IntentEntry() {
             hidden={index >= PRIMARY_INTENT_COUNT && !moreOpen}
             data-intent-extra={index >= PRIMARY_INTENT_COUNT ? "" : undefined}
           >
-            <a href={intent.href}>{intent.label}</a>
+            <a href={intent.href}>
+              {index < PRIMARY_INTENT_COUNT ? intent.shortLabel : intent.label}
+            </a>
           </li>
         ))}
         {extraIntents ? (
@@ -69,7 +121,7 @@ export function IntentEntry() {
               aria-controls="home-intent-extra"
               onClick={() => setMoreOpen((open) => !open)}
             >
-              Altri obiettivi
+              <span aria-hidden="true">+ </span>Altri obiettivi
             </button>
           </li>
         ) : null}
