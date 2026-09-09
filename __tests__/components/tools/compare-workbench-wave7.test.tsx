@@ -11,7 +11,6 @@ import {
   render,
   screen,
   waitFor,
-  within,
 } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -80,7 +79,6 @@ vi.mock("@/components/tools/compare-trend-list", () => ({
   CompareTrendList: () => null,
 }));
 
-import { CompareLiveChip } from "@/components/layout/compare-live-chip";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
 import { CompareEditorialDetails } from "@/components/tools/compare-editorial-details";
 import { MobileCompareView } from "@/components/tools/mobile-compare-view";
@@ -322,29 +320,9 @@ describe("Wave 7 — Compare workbench", () => {
     ]);
   });
 
-  it("W7-T6 chip hidden at 0", () => {
-    render(<CompareLiveChip placement="dock" />);
-    expect(document.querySelector("[data-compare-live-chip]")).toBeNull();
-  });
-
-  it("W7-T7 chip updates 1–5", () => {
-    seedWorkspace(compareState("atlas-ai"));
-    const view = render(<CompareLiveChip placement="dock" />);
-    expect(screen.getByRole("link", { name: "Confronta 1 su 5" })).toBeTruthy();
-    seedWorkspace(compareState("atlas-ai", "gamma-app", "cursor", "v0", "weweb"));
-    view.rerender(<CompareLiveChip placement="dock" />);
-    expect(screen.getByRole("link", { name: "Confronta 5 su 5" })).toBeTruthy();
-  });
-
-  it("W7-T8 collector reads the same compare.slugs", () => {
+  it("W7-T8 workbench reads the same compare.slugs", () => {
     seedWorkspace(compareState("atlas-ai", "gamma-app"));
-    render(
-      <>
-        <CompareLiveChip placement="dock" />
-        <MobileCompareView tools={TOOLS} />
-      </>,
-    );
-    expect(screen.getByRole("link", { name: "Confronta 2 su 5" })).toBeTruthy();
+    render(<MobileCompareView tools={TOOLS} />);
     expect(getCanonicalToolWorkspaceState().compare.slugs).toEqual([
       "atlas-ai",
       "gamma-app",
@@ -464,26 +442,6 @@ describe("Wave 7 — Compare workbench", () => {
       setWorkspaceDecision("atlas-ai", "selected");
     });
     expect(getCanonicalToolWorkspaceState().compare.slugs).toEqual([]);
-  });
-
-  it("W7-T20 after decide the live chip unmounts", () => {
-    seedWorkspace(compareState("atlas-ai", "gamma-app"));
-    render(
-      <>
-        <CompareLiveChip placement="dock" />
-        <MobileCompareView tools={TOOLS} />
-      </>,
-    );
-    expect(document.querySelector("[data-compare-live-chip]")).toBeTruthy();
-    fireEvent.click(screen.getAllByRole("button", { name: "Decidi" })[0]);
-    const sheet = document.querySelector("[data-decision-sheet]");
-    expect(sheet).toBeInstanceOf(HTMLElement);
-    fireEvent.click(
-      within(sheet as HTMLElement).getByRole("button", { name: "Conferma" }),
-    );
-    expect(getCanonicalToolWorkspaceState().compare.slugs).toEqual([]);
-    expect(document.querySelector("[data-compare-live-chip]")).toBeNull();
-    expect(screen.getByText("Confronto chiuso.")).toBeTruthy();
   });
 
   it("W7-T21 completed battle is not resumable", () => {

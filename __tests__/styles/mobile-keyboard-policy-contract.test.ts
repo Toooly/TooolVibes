@@ -21,12 +21,6 @@ const globalsCss = read("app/globals.css");
 const layoutSource = read("app/layout.tsx");
 const gateModalSource = read("components/coming-soon/gate-modal.tsx");
 const authPageSource = read("components/account/auth-page.tsx");
-const headerSearchSource = read(
-  "components/directory/directory-header-search.tsx",
-);
-const catalogControlsSource = read(
-  "components/directory/catalog/catalog-controls.tsx",
-);
 
 /** Estrae il blocco `{ ... }` che segue la prima occorrenza di `selector`. */
 function extractBlock(source: string, selector: string): string | null {
@@ -216,16 +210,6 @@ describe("B39 wrapper Gate/Auth/Search — classi della policy applicate", () =>
     expect(authPageSource).toContain("tv-kbd-sheet__footer");
     const zoomGuardCount = authPageSource.split("tv-kbd-input").length - 1;
     expect(zoomGuardCount).toBe(3);
-  });
-
-  it("directory-header-search: zoom guard e scroll-to-input sul form", () => {
-    expect(headerSearchSource).toContain("tv-kbd-input");
-    expect(headerSearchSource).toContain("useKeyboardAwareScroll");
-    expect(headerSearchSource).toContain('enterKeyHint="search"');
-  });
-
-  it("catalog search control: zoom guard sull'input del catalogo", () => {
-    expect(catalogControlsSource).toContain("tv-kbd-input");
   });
 
 });

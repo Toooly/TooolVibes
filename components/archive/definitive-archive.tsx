@@ -685,7 +685,7 @@ export function DefinitiveArchive({
         />
       ) : null}
 
-      {/* Wave 7: live compare tray unmounted. Collector is CompareLiveChip.
+      {/* Wave 7: live compare tray unmounted. Collector is CompareSessionDock.
           Tray source kept on disk for Wave 15 DELETE-LATER.
           .ar4-shell:not(:has(.ar4-tray)) already shrinks catalog padding. */}
     </div>

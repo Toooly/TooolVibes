@@ -62,10 +62,9 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
     expect(radar).toContain('active="radar"');
   });
 
-  it("W11-T10 CompareLiveChip remains the collector; tray is not in archive source", () => {
+  it("W11-T10 tray is not in archive source", () => {
     const archive = readSource("components/archive/definitive-archive.tsx");
     expect(archive).not.toContain("ArchiveV4CompareTray");
-    expect(archive).toContain("CompareLiveChip");
   });
 
   it("W11-T12 ArchiveV4CompareTray is not mounted from catalog cards", () => {

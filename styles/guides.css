@@ -2116,15 +2116,6 @@
   }
 }
 
-/* ---------- Hide desktop-only / mobile-only helpers --------------------- */
-.guides-mobile-only { display: block; }
-.guides-desktop-only { display: none; }
-
-@media (min-width: 48rem) {
-  .guides-mobile-only { display: none; }
-  .guides-desktop-only { display: block; }
-}
-
 /* ---------- Utilities ---------------------------------------------------- */
 .guides-stack-tight {
   display: flex;

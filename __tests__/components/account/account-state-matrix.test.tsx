@@ -557,10 +557,6 @@ vi.mock("@/lib/gamification/hooks/use-game-profile", () => ({
   useGameProfile: () => gamificationRuntime.gameProfile,
 }));
 
-vi.mock("@/lib/gamification/hooks/use-badges", () => ({
-  useBadges: () => ({ badges: gamificationRuntime.badges }),
-}));
-
 vi.mock("@/lib/gamification/game-progress-store", () => ({
   useGameProgressStore: (selector: (state: { totalXp: number }) => unknown) =>
     selector({ totalXp: gamificationRuntime.localXp }),
@@ -568,10 +564,6 @@ vi.mock("@/lib/gamification/game-progress-store", () => ({
 
 vi.mock("@/components/gamification/game-mission-panel", () => ({
   GameMissionPanel: () => null,
-}));
-
-vi.mock("@/components/gamification/game-profile-bar", () => ({
-  GameProfileBar: () => null,
 }));
 
 vi.mock("@/components/gamification/vibe-tap-mini-game", () => ({

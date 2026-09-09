@@ -30,11 +30,7 @@ export function getSoundKind(element: HTMLElement): SoundKind {
   if (element.matches("summary, [data-slot='accordion-trigger']")) {
     return "expand";
   }
-  if (
-    element.classList.contains("category-tool-carousel__control") ||
-    element.classList.contains("category-tool-carousel__dot") ||
-    actionText.includes("scorri")
-  ) {
+  if (actionText.includes("scorri")) {
     return "carousel";
   }
   if (element.closest(".group\\/brand, .brand-mark")) {

@@ -5,7 +5,6 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { WorkspacePersonalStatusBadge } from "@/components/account/workspace/workspace-personal-status";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
-import { CanonicalToolCard } from "@/components/directory/canonical-tool-card";
 import { makeCatalogTool } from "../../directory/catalog-test-fixtures";
 import { dispatchWorkspaceChange } from "@/lib/discovery/workspace-events";
 import {
@@ -167,29 +166,3 @@ describe("ArchiveV4ToolCard personal status", () => {
   });
 });
 
-describe("CanonicalToolCard personal status", () => {
-  it("does not add a personal status node for a guest empty workspace", () => {
-    const { container } = render(
-      <CanonicalToolCard tool={makeCatalogTool({ slug: "cursor", name: "Cursor" })} />,
-    );
-
-    expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
-    expect(screen.queryByText("In uso")).toBeNull();
-    expect(screen.queryByText("Scelto")).toBeNull();
-  });
-
-  it("shows In uso on the catalog card instead of Salvato", () => {
-    seedWorkspace([
-      { type: "saved/set", slug: "cursor", saved: true, at: T0 },
-      { type: "tool/decision", slug: "cursor", outcome: "selected", at: T0 },
-      { type: "tool/usage", slug: "cursor", usage: "using", at: T0 },
-    ]);
-
-    render(
-      <CanonicalToolCard tool={makeCatalogTool({ slug: "cursor", name: "Cursor" })} />,
-    );
-
-    expect(screen.getByText("In uso")).toBeTruthy();
-    expect(screen.queryByText("Sostituito →")).toBeNull();
-  });
-});

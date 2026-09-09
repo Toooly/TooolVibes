@@ -21,7 +21,6 @@ function tokensFrom(source: string) {
 
 const tokens = tokensFrom(read("styles/tokens.css"));
 const accountCss = read("app/(marketing)/account/account.css");
-const loopCss = read("styles/loop-shell.css");
 const commandTsx = read("components/ui/command.tsx");
 const compareCss = read("styles/compare.css");
 
@@ -79,13 +78,6 @@ describe("Wave 13 — Banco visual contract", () => {
     expect(compareCss).toMatch(
       /\.tool-fighter\[data-fighting="true"\] \.tool-fighter__orb[\s\S]*?animation:\s*none/,
     );
-  });
-
-  it("W13-T4 loop dest geometry stays 1024 with 4/2 dest count var", () => {
-    expect(loopCss).toMatch(/@media\s*\(min-width:\s*1024px\)/);
-    expect(loopCss).toMatch(/--tv-loop-dest-count/);
-    expect(loopCss).toMatch(/\.tv-loop__dest\[aria-current="page"\]/);
-    expect(loopCss).toMatch(/var\(--tv-compare-live\)/);
   });
 
   it("W13-T9 palette surface no longer uses the leftover hex world", () => {

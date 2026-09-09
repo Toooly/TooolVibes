@@ -489,34 +489,6 @@
   font-weight: var(--tv-weight-bold);
 }
 
-.td-final-score__bar {
-  height: 0.45rem;
-  border-radius: var(--tv-radius-pill);
-  background: var(--tv-surface-elevated);
-  overflow: hidden;
-}
-
-.td-final-score__bar-fill {
-  display: block;
-  height: 100%;
-  width: 100%;
-  border-radius: inherit;
-  background: var(--tv-accent-gold);
-  transform-origin: left center;
-  transform: scaleX(0);
-  transition: transform var(--tv-duration-reward) var(--tv-easing-decelerate);
-}
-
-.td-final-score__bar-fill[data-animate="done"] {
-  /* transform set inline to the real score ratio */
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .td-final-score__bar-fill {
-    transition: none;
-  }
-}
-
 .td-final-score__dimensions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -583,14 +555,6 @@
 /* ============================================================
    C. EDITORIAL RATIONALE
    ============================================================ */
-.td-final-editorial {
-  margin-top: var(--tv-space-12);
-  padding: clamp(var(--tv-space-6), 4vw, var(--tv-space-8));
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-modal);
-  background: var(--tv-surface-raised);
-}
-
 .td-final-section-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -625,82 +589,6 @@
   text-transform: uppercase;
 }
 
-.td-final-editorial__grid {
-  display: grid;
-  gap: var(--tv-space-4);
-}
-
-@media (min-width: 820px) {
-  .td-final-editorial__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--tv-space-5);
-  }
-}
-
-.td-final-editorial__card {
-  padding: var(--tv-space-5);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-elevated);
-}
-
-.td-final-editorial__card h3 {
-  margin: 0 0 var(--tv-space-3);
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-ui);
-  font-size: 1.05rem;
-  font-weight: var(--tv-weight-black);
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-}
-
-.td-final-editorial__card p {
-  margin: 0;
-  color: var(--tv-ink-secondary);
-  font-size: 0.875rem;
-  line-height: var(--tv-leading-relaxed);
-}
-
-.td-final-editorial__card ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--tv-space-2);
-}
-
-.td-final-editorial__card li {
-  position: relative;
-  padding-left: 1.1rem;
-  color: var(--tv-ink-secondary);
-  font-size: 0.875rem;
-  line-height: var(--tv-leading-relaxed);
-}
-
-.td-final-editorial__card li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: var(--tv-radius-pill);
-  background: var(--tv-accent-cyan);
-  box-shadow: 0 0 6px var(--tv-accent-cyan);
-}
-
-.td-final-editorial__card--cautions li::before {
-  background: var(--tv-accent-gold);
-  box-shadow: 0 0 6px var(--tv-accent-gold);
-}
-
-.td-final-editorial__card a {
-  color: var(--tv-accent-cyan);
-  text-decoration: none;
-}
-.td-final-editorial__card a:hover {
-  text-decoration: underline;
-}
 .td-final-internal-link {
   color: var(--tv-accent-cyan);
   text-decoration: underline;
@@ -841,76 +729,6 @@
   font-weight: var(--tv-weight-semibold);
   letter-spacing: var(--tv-tracking-label);
 }
-
-/* ============================================================
-   F. TREND / SIGNAL MODULE
-   ============================================================ */
-.td-final-signal {
-  margin-top: var(--tv-space-10);
-  padding: clamp(var(--tv-space-6), 4vw, var(--tv-space-8));
-  border: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 24%, var(--tv-border-subtle));
-  border-radius: var(--tv-radius-modal);
-  background:
-    radial-gradient(120% 60% at 0% 0%, color-mix(in srgb, var(--tv-accent-cyan) 12%, transparent), transparent 50%),
-    var(--tv-surface-raised);
-}
-
-.td-final-signal__grid {
-  display: grid;
-  gap: var(--tv-space-3);
-  margin-top: var(--tv-space-4);
-}
-
-@media (min-width: 820px) {
-  .td-final-signal__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.td-final-signal__cell {
-  padding: var(--tv-space-4);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-elevated);
-}
-
-.td-final-signal__label {
-  color: var(--tv-accent-cyan);
-  font-size: var(--tv-text-xs);
-  font-weight: var(--tv-weight-bold);
-  letter-spacing: var(--tv-tracking-eyebrow);
-  text-transform: uppercase;
-}
-
-.td-final-signal__value {
-  margin-top: var(--tv-space-2);
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-data);
-  font-size: 1.4rem;
-  font-weight: var(--tv-weight-black);
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.td-final-signal__hint {
-  margin-top: var(--tv-space-2);
-  color: var(--tv-ink-muted-aa);
-  font-size: var(--tv-text-xs);
-  line-height: var(--tv-leading-snug);
-}
-
-.td-final-signal__empty {
-  margin: 0;
-  padding: var(--tv-space-4);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-elevated);
-  color: var(--tv-ink-muted-aa);
-  font-size: 0.875rem;
-  font-style: italic;
-  line-height: var(--tv-leading-relaxed);
-}
-
 
 /* ============================================================
    F2. ESPERIENZE (public published UGC)

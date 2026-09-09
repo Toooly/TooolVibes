@@ -37,17 +37,9 @@ describe("Wave 14 — responsive contracts", () => {
   it("W14-T5 cookie or sheets consume --tv-bottom-nav-total without double-counting dock padding", () => {
     const banner = read("styles/public-system.css");
     const sheetCss = read("components/account/workspace/decision-sheet.css");
-    const loopCss = read("styles/loop-shell.css");
-    const loopTsx = read("components/layout/loop-shell.tsx");
 
     expect(banner).toMatch(/var\(--tv-bottom-nav-total/);
     expect(sheetCss).toMatch(/var\(--tv-bottom-nav-total/);
-    expect(loopCss).toMatch(/padding-bottom:\s*var\(--tv-bottom-nav-total/);
-    expect(loopTsx).toMatch(/"--tv-bottom-nav-total",\s*"62px"/);
-    expect(loopTsx).toMatch(/"--tv-bottom-nav-total",\s*"0px"/);
-
-    const dock = loopCss.match(/\.tv-loop__dock\s*\{[^}]+\}/);
-    expect(dock?.[0]).toMatch(/padding-bottom:\s*env\(safe-area-inset-bottom\)/);
   });
 
   it("DecisionSheet desktop query is 1024 not 768 and wins 480px width", () => {
@@ -96,17 +88,6 @@ describe("Wave 14 — responsive contracts", () => {
     expect(accountCss).toMatch(/\.tv-tool-mark__jewel[\s\S]*?pointer-events:\s*none/);
   });
 
-  it("loop tabs can wrap at 390 / 200% zoom without ellipsis", () => {
-    const css = read("styles/loop-shell.css");
-    expect(css).toContain("text-overflow: clip");
-    expect(css).not.toContain("text-overflow: ellipsis");
-    expect(css).toContain("minmax(0, 1fr)");
-    expect(css).not.toContain("minmax(max-content, 1fr)");
-    expect(css).toMatch(
-      /@media \(max-width: 1023px\)[\s\S]*?\.tv-loop__nav--tabs \.tv-loop__dest-label[\s\S]*?white-space:\s*normal/,
-    );
-  });
-
   it("compact stack create inputs have a 44px min-height", () => {
     const css = read("app/(marketing)/account/account.css");
     expect(css).toMatch(/\.tv-compose-stack input,[\s\S]*?min-height:\s*2\.75rem/);
@@ -130,9 +111,7 @@ describe("Wave 14 — responsive contracts", () => {
 
   it("W14-T11 HUD is not a loop destination", () => {
     const routes = read("lib/navigation/loop-routes.ts");
-    const shell = read("components/layout/loop-shell.tsx");
     expect(routes).not.toMatch(/\bHUD\b/);
-    expect(shell).not.toMatch(/\bHUD\b/);
     expect(loopPrimaryDestinations("authenticated").map((item) => item.id)).toEqual([
       "home",
       "salvati",

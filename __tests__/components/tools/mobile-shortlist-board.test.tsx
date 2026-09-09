@@ -64,11 +64,6 @@ vi.mock("motion/react", () => {
   };
 });
 
-/* The wishlist form is outside B32 scope; keep the test hermetic. */
-vi.mock("@/components/wishlist/request-tool-form", () => ({
-  RequestToolForm: () => null,
-}));
-
 const T0 = "2026-07-17T10:00:00.000Z";
 
 function makeTool(slug: string, name: string): ToolPublic {

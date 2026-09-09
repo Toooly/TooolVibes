@@ -314,8 +314,6 @@
 }
 
 
-.command-bar__util-pulse { display: none; }
-
 /* Account — compact secondary, purple border */
 .command-bar__account {
   display: inline-flex;

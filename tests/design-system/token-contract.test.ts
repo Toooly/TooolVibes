@@ -79,8 +79,6 @@ describe("release design token contract", () => {
   it("keeps floating portals and toasts on their semantic release layers", () => {
     for (const relativePath of [
       "components/ui/popover.tsx",
-      "components/ui/dropdown-menu.tsx",
-      "components/ui/select.tsx",
       "components/ui/tooltip.tsx",
     ]) {
       const source = fs.readFileSync(path.join(root, relativePath), "utf8");

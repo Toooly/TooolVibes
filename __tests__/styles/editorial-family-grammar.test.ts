@@ -100,7 +100,6 @@ describe("V3 editorial typography — tool detail", () => {
       ".td-final-score__number {",
       ".td-final-score__denom {",
       ".td-final-score__dim-value {",
-      ".td-final-signal__value {",
     ]) {
       const block = extractBlock(toolCss, selector);
       expect(block, selector).toContain("var(--tv-font-data)");

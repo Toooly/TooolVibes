@@ -14,7 +14,6 @@ const motionSelectors = [
   "main .page-shell > section",
   "main .page-shell > .premium-panel",
   "main .premium-card",
-  "main .category-tool-carousel",
   "footer .premium-panel",
 ].join(",");
 

@@ -41,13 +41,6 @@ vi.mock("@/components/app/page-transition", () => ({
     createElement("div", { "data-testid": "page-transition" }, children),
 }));
 
-vi.mock("@/components/layout/loop-shell", () => ({
-  LoopShell: ({ children }: { children: ReactNode }) =>
-    createElement("div", { "data-testid": "loop-shell" }, children),
-  LoopShellFallback: ({ children }: { children: ReactNode }) =>
-    createElement("div", { "data-testid": "loop-shell-fallback" }, children),
-}));
-
 import { MarketingChrome } from "@/components/layout/marketing-chrome";
 
 function renderChrome() {

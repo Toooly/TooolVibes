@@ -86,26 +86,3 @@ describe("B38 catalog density policy — archivio route sponsor placement", () =
   });
 });
 
-describe("B38 catalog density policy — component wiring", () => {
-  it("applies the density-list variant only under the route flag", () => {
-    const source = read("components/directory/catalog/catalog-result-list.tsx");
-    expect(source).toContain("isCatalogDensityPolicyEnabled");
-    expect(source).toContain("mobile-tool-grid--density-list");
-    expect(source).toContain('density="mobile-list"');
-    /* Fallback legacy preservato nel branch OFF. */
-    expect(source).toContain("MobileToolCard");
-  });
-
-  it("exposes the mobile-list density in the canonical card config", () => {
-    const source = read("components/directory/canonical-tool-card.tsx");
-    expect(source).toContain('"mobile-list"');
-    expect(source).toContain('density === "mobile-list"');
-  });
-
-  it("declares the sponsor disclosure in the featured slot", () => {
-    const source = read("components/directory/catalog/catalog-featured-rail.tsx");
-    expect(source).toContain("Promosso");
-    expect(source).toContain('data-sponsor-slot="catalog-featured"');
-    expect(source).toContain("catalog-featured-rail__disclosure");
-  });
-});

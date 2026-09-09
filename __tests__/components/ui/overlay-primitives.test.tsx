@@ -26,12 +26,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
 import {
   Popover,
@@ -39,13 +33,6 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -352,47 +339,6 @@ describe("floating primitives on the shared host", () => {
       "popover content",
     );
     expect(portalHost().contains(popup)).toBe(true);
-  });
-
-  it("portals DropdownMenu content into the shared host", async () => {
-    render(
-      <OverlayProvider>
-        <DropdownMenu>
-          <DropdownMenuTrigger>Apri menu</DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>Voce uno</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </OverlayProvider>,
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: "Apri menu" }));
-    const menu = await screen.findByRole("menu");
-    expect(screen.getByRole("menuitem", { name: "Voce uno" })).not.toBeNull();
-    expect(portalHost().contains(menu)).toBe(true);
-  });
-
-  it("portals Select content into the shared host", async () => {
-    render(
-      <OverlayProvider>
-        <Select>
-          <SelectTrigger aria-label="Selettore di prova">
-            <SelectValue placeholder="Scegli voce" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="alpha">Alpha</SelectItem>
-            <SelectItem value="beta">Beta</SelectItem>
-          </SelectContent>
-        </Select>
-      </OverlayProvider>,
-    );
-
-    fireEvent.click(
-      screen.getByRole("combobox", { name: "Selettore di prova" }),
-    );
-    const listbox = await screen.findByRole("listbox");
-    expect(screen.getByRole("option", { name: "Alpha" })).not.toBeNull();
-    expect(portalHost().contains(listbox)).toBe(true);
   });
 
   it("portals Tooltip content into the shared host", async () => {

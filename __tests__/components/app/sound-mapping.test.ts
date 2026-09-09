@@ -48,10 +48,6 @@ describe("sound-mapping getSoundKind", () => {
 
     const summary = inWrapper(document.createElement("summary"));
     expect(getSoundKind(summary)).toBe("expand");
-
-    const carousel = inWrapper(document.createElement("button"));
-    carousel.classList.add("category-tool-carousel__dot");
-    expect(getSoundKind(carousel)).toBe("carousel");
   });
 
   it("classifies by accessible text for common actions", () => {

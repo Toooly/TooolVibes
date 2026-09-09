@@ -68,20 +68,18 @@ describe("Tool Detail clean baseline — source files", () => {
     }
   });
 
-  it("components/tool-detail-final/ contains the 9 owners + alt card", () => {
+  it("components/tool-detail-final/ contains the live owners", () => {
     expect(fs.existsSync(TOOL_DETAIL_DIR)).toBe(true);
     const required = [
       "tool-detail-final-page.tsx",
       "tool-detail-hero.tsx",
       "tool-detail-score.tsx",
-      "tool-detail-editorial.tsx",
       "tool-detail-decision-nav.tsx",
       "tool-detail-information.tsx",
-      "tool-detail-signal.tsx",
       "tool-detail-alternatives.tsx",
       "tool-detail-action-surface.tsx",
-      "tool-detail-footer.tsx",
-      "alternative-decision-card.tsx",
+      "tool-detail-decision-brief.tsx",
+      "tool-detail-extended-content.tsx",
     ];
     for (const f of required) {
       const p = path.join(TOOL_DETAIL_DIR, f);

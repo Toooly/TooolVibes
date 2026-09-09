@@ -2384,60 +2384,6 @@ canvas {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   NAVBAR CIRCUIT MARKERS — real rounded-rect path animation
-   ═══════════════════════════════════════════════════════════════ */
-
-/* Hide old rectangular CSS markers on desktop when circuit is active */
-
-/* Circuit marker base styles */
-.navbar-circuit-marker {
-  border-radius: 999px;
-  pointer-events: none;
-}
-
-.navbar-circuit-marker[data-shape="square"] {
-  border-radius: 2px;
-}
-
-.navbar-circuit-marker[data-shape="triangle"] {
-  border-radius: 1px;
-  clip-path: polygon(50% 4%, 96% 90%, 4% 90%);
-}
-
-/* Ensure pills have relative positioning for marker absolute positioning */
-.navbar-circuit-pill {
-  position: relative !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   NAVBAR MOBILE FIXES
-   ═══════════════════════════════════════════════════════════════ */
-
-/* Hide circuit markers on mobile */
-@media (max-width: 1023px) {
-  .navbar-circuit-marker,
-  .navbar-circuit-pill > svg[aria-hidden="true"] {
-    display: none !important;
-  }
-}
-
-/* Mobile header layout fixes */
-
-/* Extra small screens */
-
-/* Tablet adjustments */
-
-/* Safe area for iOS notch */
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .navbar-circuit-marker {
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════
    CATALOG PREMIUM CARDS — 3D Maestoso override
    ═══════════════════════════════════════════════════════════════ */
 
