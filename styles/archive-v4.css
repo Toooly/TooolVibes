@@ -755,11 +755,6 @@
   background: color-mix(in srgb, var(--tv-accent-primary) 6%, var(--tv-bg-base));
 }
 
-.ar4-card.is-promoted {
-  border-color: var(--tv-accent-gold);
-  background: var(--tv-bg-base);
-}
-
 .ar4-card.is-promoted.is-selected {
   border-color: var(--tv-accent-gold);
   background: color-mix(in srgb, var(--tv-accent-gold) 6%, var(--tv-bg-base));
@@ -1418,12 +1413,6 @@
   background: var(--tv-grammar-personal-remembered-marker);
   border-radius: 0 1px 1px 0;
   pointer-events: none;
-}
-
-/* Selected (compare) state — already defined; ensure no glow-only reliance */
-.ar4-card.is-selected {
-  border-color: var(--tv-accent-primary);
-  background: color-mix(in srgb, var(--tv-accent-primary) 6%, var(--tv-bg-base));
 }
 
 .ar4-card.is-selected .ar4-card__rank {

@@ -73,14 +73,12 @@
     .catalog-category-map__card,
     .premium-card,
     .category-tool-card,
-    .tool-detail-editorial-card,
     .tool-detail-meta-block
   ):hover,
   :where(a, button, [role="link"], [role="button"], [data-interactive="true"]):is(
     .catalog-category-map__card,
     .premium-card,
     .category-tool-card,
-    .tool-detail-editorial-card,
     .tool-detail-meta-block
   ):focus-within {
     transform: none;
@@ -105,7 +103,6 @@
   .catalog-category-map__card,
   .premium-card,
   .category-tool-card,
-  .tool-detail-editorial-card,
   .tool-detail-meta-block
 ) {
   transition:

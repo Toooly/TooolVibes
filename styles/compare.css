@@ -52,6 +52,7 @@
   font-weight: var(--tv-weight-bold);
   letter-spacing: var(--tv-tracking-tight);
   line-height: var(--tv-leading-display);
+  text-transform: uppercase;
   text-wrap: balance;
 }
 

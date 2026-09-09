@@ -10479,8 +10479,6 @@ img {
 
   .route-transition-signal,
 
-  .mobile-radar-view__scan-line,
-
   .mobile-spotlight-cosmic__satellite,
 
   .mobile-vibe-field-grid {
@@ -17840,42 +17838,6 @@ img {
   .vibe-mini-game__missions,
   .vibe-mini-game__facts {
     padding: 0.68rem;
-  }
-}
-
-.mobile-radar-view__scan-line {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 4;
-  width: 47%;
-  height: 2px;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, rgba(255,255,255,0.94), rgba(57,210,246,0.78) 42%, rgba(106,60,255,0.28) 76%, transparent);
-  box-shadow:
-    0 0 18px rgba(57, 210, 246, 0.6),
-    0 0 42px rgba(106, 60, 255, 0.28);
-  opacity: 0.9;
-  pointer-events: none;
-  transform-origin: 0 50%;
-  animation: tv-mobile-radar-scan-line var(--radar-sweep-duration, 3.2s) linear infinite;
-}
-
-.mobile-radar-view__scan-line::after {
-  content: "";
-  position: absolute;
-  inset: -2.6rem -0.8rem -2.6rem 0;
-  border-radius: 50%;
-  background:
-    conic-gradient(from -15deg at 0% 50%, rgba(57,210,246,0.24), rgba(106,60,255,0.1), transparent 34%);
-  filter: blur(2px);
-  opacity: 0.72;
-}
-
-@keyframes tv-mobile-radar-scan-line {
-  to {
-    transform: rotate(360deg);
   }
 }
 

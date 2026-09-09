@@ -1,53 +1,3 @@
-/* Account gate fallback used while the session resolves. */
-.account-loading-state.v-auth-loading {
-  display: grid;
-  justify-items: center;
-  width: min(calc(100% - 2 * var(--tv-space-6)), 38rem);
-  min-height: 22rem;
-  align-content: start;
-  padding: clamp(var(--tv-space-6), 5vw, var(--tv-space-10));
-  border-color: var(--tv-border-subtle);
-  border-radius: var(--tv-radius-feature);
-  background:
-    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--tv-accent-primary) 18%, transparent), transparent 22rem),
-    var(--tv-surface-raised);
-  text-align: center;
-  box-shadow: var(--tv-elevation-raised);
-}
-
-.account-loading-state .account-loading-state__eyebrow {
-  margin: var(--tv-space-6) 0 var(--tv-space-3);
-  color: var(--tv-accent-cyan);
-  font-size: var(--tv-text-xs);
-  font-weight: var(--tv-weight-bold);
-  letter-spacing: var(--tv-tracking-eyebrow);
-  text-transform: uppercase;
-}
-
-.account-loading-state h1 {
-  max-width: 16ch;
-  margin: 0;
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-display);
-  font-size: clamp(var(--tv-text-2xl), 5vw, var(--tv-text-3xl));
-  font-weight: var(--tv-weight-semibold);
-  line-height: var(--tv-leading-tight);
-}
-
-.account-loading-state .v-auth-loading-text {
-  max-width: 30rem;
-  margin: var(--tv-space-4) 0 0;
-  color: var(--tv-ink-secondary);
-  line-height: var(--tv-leading-body);
-}
-
-@media (max-width: 767px) {
-  .account-loading-state.v-auth-loading {
-    width: min(calc(100% - 2 * var(--tv-space-4)), 38rem);
-    min-height: 23rem;
-  }
-}
-
 /* ============================================
    Account Page — Dark Vibes (TooolVibes)
    ============================================ */
@@ -737,40 +687,6 @@
 
 .account-status-badge {
   letter-spacing: 0.08em;
-}
-
-.account-loading-state__skeleton {
-  display: grid;
-  gap: 0.65rem;
-  margin-top: 1.25rem;
-}
-
-.account-loading-state__row {
-  display: block;
-  height: 0.7rem;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent),
-    color-mix(in srgb, var(--tv-accent-primary) 18%, transparent),
-    color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent)
-  );
-  background-size: 200% 100%;
-}
-
-.account-loading-state__row--short {
-  width: 62%;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .account-loading-state__row {
-    animation: account-skeleton-shine 1.4s ease-in-out infinite;
-  }
-}
-
-@keyframes account-skeleton-shine {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

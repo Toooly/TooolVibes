@@ -163,17 +163,6 @@
   align-items: center;
 }
 
-.account-loading-state.v-auth-loading {
-  border-radius: 0.75rem;
-  background: var(--tv-surface-raised);
-  box-shadow: none;
-}
-
-.account-loading-state h1 {
-  color: var(--tv-ink-primary);
-}
-
-
 /* Phase 5 — Personal family: local aliases map to grammar tokens.
    Cyan is not a Personal voice; the unused local is gone. */
 .tone-account,
@@ -312,33 +301,6 @@
   color: var(--tv-ink-secondary);
   background: transparent;
   border-color: var(--tv-border-interactive);
-}
-
-.account-loading-state__hint {
-  margin-top: 1.25rem;
-  color: var(--tv-ink-secondary);
-  font-size: 0.95rem;
-  line-height: 1.55;
-  max-width: 32rem;
-}
-
-.account-loading-state__skeleton {
-  margin-top: 1.5rem;
-  display: grid;
-  gap: 0.65rem;
-}
-
-.account-loading-state__row {
-  display: block;
-  height: 0.65rem;
-  width: 100%;
-  border-radius: 999px;
-  background: var(--tv-border-default);
-  opacity: 0.55;
-}
-
-.account-loading-state__row--short {
-  width: 65%;
 }
 
 .v-auth-context__live {
@@ -669,91 +631,6 @@
   }
 }
 
-.tv-signal-mark {
-  display: block;
-  overflow: visible;
-}
-
-.tv-signal-mark circle,
-.tv-signal-mark rect,
-.tv-signal-mark path {
-  stroke: currentColor;
-  stroke-width: 1.4;
-}
-
-.tv-signal-mark--locked {
-  color: color-mix(in srgb, var(--tv-ink-secondary) 70%, transparent);
-}
-
-.tv-signal-mark--locked circle,
-.tv-signal-mark--locked rect,
-.tv-signal-mark--locked path {
-  fill: none;
-  stroke-dasharray: 2 2;
-}
-
-.tv-signal-mark--nearby {
-  color: var(--tv-ink-primary);
-}
-
-.tv-signal-mark--nearby circle,
-.tv-signal-mark--nearby rect,
-.tv-signal-mark--nearby path {
-  fill: none;
-}
-
-.tv-signal-mark--earned {
-  color: var(--tv-ink-primary);
-}
-
-.tv-signal-mark--earned circle[r="3.2"],
-.tv-signal-mark--earned circle[r="2.4"],
-.tv-signal-mark--earned circle[r="2.2"],
-.tv-signal-mark--earned circle[r="2.1"] {
-  fill: currentColor;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tv-signal-mark {
-    animation: none;
-  }
-}
-
-
-.tv-signal-map {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tv-signal-map__node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  min-height: 72px;
-  padding: 10px 4px;
-  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
-  border-radius: 16px;
-  text-align: center;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.tv-signal-map__node.is-nearby {
-  border-color: color-mix(in srgb, var(--tv-accent-gold) 40%, var(--line));
-  color: var(--account-ink);
-}
-
-.tv-signal-map__node.is-earned {
-  border-color: color-mix(in srgb, var(--tv-accent-gold) 55%, var(--line));
-}
-
 .tv-space-records {
   display: grid;
   gap: 10px;
@@ -771,12 +648,6 @@
 .tv-space-records strong {
   font-variant-numeric: tabular-nums;
   font-size: 1.25rem;
-}
-
-@media (max-width: 430px) {
-  .tv-signal-map {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 .tv-space-row--library {
@@ -2580,36 +2451,6 @@
   margin-top: 0.25rem;
 }
 
-.tv-mark-cabinet {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.65rem;
-}
-
-.tv-mark-tile {
-  display: grid;
-  justify-items: center;
-  gap: 0.4rem;
-  padding: 0.85rem 0.6rem 0.75rem;
-  text-align: center;
-}
-
-.tv-mark-tile .tv-signal-mark {
-  width: 2.6rem;
-  height: 2.6rem;
-}
-
-.tv-mark-tile__name {
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-
-.tv-mark-tile__copy {
-  color: var(--tv-ink-muted-aa);
-  font-size: 0.75rem;
-  line-height: 1.35;
-}
-
 @media (min-width: 768px) {
   .tv-story {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2663,11 +2504,6 @@
   background: transparent;
 }
 
-
-.tv-mark-tile {
-  background: var(--tv-surface-raised);
-  border-radius: 1rem;
-}
 
 .tv-story {
   padding: 0.35rem 0.2rem 0.2rem;

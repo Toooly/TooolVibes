@@ -50,9 +50,6 @@
   pointer-events: none !important;
 }
 
-/* Scan line removed */
-.mobile-bottom-shell__inner::before { display: none; }
-
 .mobile-bottom-item {
   position: relative;
   display: flex;

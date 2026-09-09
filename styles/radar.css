@@ -253,28 +253,6 @@
   font-weight: 700;
 }
 
-.tv-radar__retry {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--tv-space-micro-sm);
-  padding: var(--tv-space-px-2) var(--tv-space-px-3);
-  border: 1px solid var(--tv-button-activation-bg);
-  border-radius: var(--tv-radius-pill);
-  background: var(--tv-button-activation-bg);
-  color: var(--tv-button-activation-text);
-}
-
-.tv-radar__retry:hover:not(:disabled) {
-  border-color: var(--tv-button-activation-bg-hover);
-  background: var(--tv-button-activation-bg-hover);
-}
-
-.tv-radar__retry:disabled {
-  cursor: wait;
-  opacity: 0.55;
-}
-
 .tv-radar-control button:focus-visible,
 .tv-radar__retry:focus-visible,
 .tv-radar-node:focus-visible,
@@ -1380,6 +1358,7 @@ h1.tv-radar__title,
 .tv-radar__retry {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   min-height: 2.75rem;
   padding: 0.5rem 0.9rem;

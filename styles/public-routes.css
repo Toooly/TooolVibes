@@ -350,24 +350,6 @@
   }
 }
 
-/* Shared editorial hierarchy for secondary public routes. */
-.catalog-discovery__copy h1,
-
-.compare-space-page h1,
-
-.tool-detail-title,
-
-.internal-page h1,
-
-.tone-screen h1,
-
-.hero-shell h1 {
-  font-family: var(--tv-font-display);
-  font-weight: var(--tv-weight-regular);
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
 .marketing-shell main :where(
   .light-surface,
   .premium-card,

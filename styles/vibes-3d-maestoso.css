@@ -489,16 +489,6 @@
   background: rgba(6,6,14,0.9) !important;
 }
 
-/* Shortlist specific dark */
-.shortlist-slot-card {
-  background: rgba(26,26,51,0.9) !important;
-  border-color: rgba(124,77,255,0.1) !important;
-}
-.shortlist-slot-card.empty {
-  border-style: dashed !important;
-  border-color: rgba(124,77,255,0.2) !important;
-}
-
 /* Gamification dark */
 .gamification-shell,
 .game-effects-layer {
@@ -537,15 +527,6 @@
 .mobile-shortlist-board p {
   color: #F0EFFF !important;
 }
-.mobile-tool-card {
-  background: rgba(26,26,51,0.9) !important;
-  border-color: rgba(124,77,255,0.1) !important;
-}
-.mobile-tool-card h2,
-.mobile-tool-card p {
-  color: #F0EFFF !important;
-}
-
 /* ─── Catalogo — sistema filtro premium ─── */
 .mobile-category-map__grid {
   display: grid !important;
@@ -638,37 +619,6 @@
   font-size: var(--tv-text-xs) !important;
 }
 
-/* Tool cards premium depth */
-.mobile-tool-card {
-  position: relative !important;
-  background: rgba(18,18,42,0.92) !important;
-  border: 1px solid rgba(124,77,255,0.1) !important;
-  border-radius: var(--v-radius-lg) !important;
-  box-shadow:
-    0 6px 20px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.05) !important;
-  transition: all 300ms cubic-bezier(0.16,1,0.3,1) !important;
-  overflow: hidden !important;
-}
-
-.mobile-tool-card::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  border-radius: inherit !important;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent 40%) !important;
-  pointer-events: none !important;
-}
-
-.mobile-tool-card:hover {
-  transform: translateY(-4px) rotateX(2deg) rotateY(2deg) !important;
-  border-color: rgba(124,77,255,0.25) !important;
-  box-shadow:
-    0 16px 48px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(124,77,255,0.2),
-    0 0 40px rgba(124,77,255,0.12) !important;
-}
-
 /* Filter chips premium */
 .mobile-catalog-view__chip {
   background: rgba(26,26,51,0.8) !important;
@@ -720,35 +670,11 @@
 
 /* Card tilt 3D effect for existing cards */
 
-.shortlist-slot-card,
-
-.mobile-tool-card {
-  transform-style: preserve-3d !important;
-  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease, border-color 0.3s ease !important;
-}
-
-.shortlist-slot-card:hover,
-
-.mobile-tool-card:hover {
-  transform: translateY(-4px) rotateX(2deg) rotateY(2deg) !important;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,77,255,0.2), 0 0 40px rgba(124,77,255,0.15) !important;
-}
-
 /* Focus cards glow */
 
 /* Hero section glow underlay */
 
 /* Smooth scroll for all sections */
-
-/* Reduced motion for tilt */
-@media (prefers-reduced-motion: reduce) {
-
-  .shortlist-slot-card:hover,
-
-  .mobile-tool-card:hover {
-    transform: none !important;
-  }
-}
 
 /* ─── NEW: Method Steps 3D Dark ─── */
 .v-method-section {
@@ -2279,109 +2205,6 @@ canvas {
   }
 }
 
-
-/* ═══════════════════════════════════════════════════════════════
-   ARENA 3D SCENE
-   ═══════════════════════════════════════════════════════════════ */
-
-.arena-3d-wrapper {
-  position: relative;
-  width: 100%;
-  height: 320px;
-  border-radius: 20px;
-  overflow: hidden;
-  background: linear-gradient(180deg, #0a0a14, #06060E);
-  border: 1px solid rgba(124, 77, 255, 0.12);
-  margin-bottom: 1.5rem;
-  box-shadow: inset 0 0 40px rgba(124, 77, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4);
-}
-
-.arena-3d-scene {
-  width: 100%;
-  height: 100%;
-}
-
-.arena-3d-scene canvas {
-  border-radius: 20px;
-}
-
-.arena-3d-fallback {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  color: var(--v-text-dim);
-}
-
-/* Arena battle stage enhanced */
-.arena-battle-stage {
-  position: relative;
-  border-radius: 24px;
-  border: 1px solid rgba(124, 77, 255, 0.1);
-  background: linear-gradient(180deg, rgba(10, 10, 22, 0.9), rgba(6, 6, 14, 0.95));
-  padding: 1.5rem;
-  overflow: hidden;
-}
-
-.arena-battle-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  padding: 1px;
-  background: linear-gradient(
-    180deg,
-    rgba(124, 77, 255, 0.15),
-    transparent 40%,
-    transparent 60%,
-    rgba(0, 229, 255, 0.08)
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.arena-battle-stage-pro__flash {
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15), transparent 60%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.05s ease;
-  z-index: 10;
-}
-
-.arena-battle-stage-pro__flash--active {
-  opacity: 1;
-}
-
-/* Mobile responsive for arena */
-@media (max-width: 640px) {
-  .arena-3d-wrapper {
-    height: 240px;
-    border-radius: 16px;
-  }
-  .arena-battle-stage {
-    padding: 1rem;
-    border-radius: 20px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .arena-3d-wrapper {
-    height: 400px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .arena-3d-wrapper {
-    height: 480px;
-  }
-}
 
 /* ═══════════════════════════════════════════════════════════════
    CATALOG PREMIUM CARDS — 3D Maestoso override
@@ -4588,52 +4411,4 @@ canvas {
     padding: 0.42rem 0.95rem !important;
   }
 
-}
-
-.internal-tool-page .tool-detail-profile-title {
-  color: #171235 !important;
-  -webkit-text-fill-color: #171235 !important;
-}
-
-.internal-tool-page .tool-detail-profile-copy {
-  color: #51487a !important;
-  -webkit-text-fill-color: #51487a !important;
-}
-
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta),
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta):is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline),
-.internal-page .directory-tool-card__action:is(.premium-button, .premium-button-primary, .premium-button-secondary, .premium-button-subtle, .premium-button-outline) {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.internal-tool-page :is(.tool-detail-main-cta, .tool-detail-secondary-cta) :is(span, svg),
-.internal-page .directory-tool-card__action :is(span, svg) {
-  color: inherit !important;
-  -webkit-text-fill-color: currentColor !important;
-}
-
-.internal-page .directory-tool-card .directory-tool-card__actions {
-  border: 0 !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-.internal-page .directory-tool-card__action-primary {
-  border-color: rgba(124, 151, 255, 0.42) !important;
-  background:
-    linear-gradient(135deg, #8258ff 0%, #4e7dff 100%) !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.internal-page .directory-tool-card__action-secondary {
-  border-color: rgba(167, 214, 232, 0.22) !important;
-  background:
-    linear-gradient(180deg, rgba(134, 153, 172, 0.32), rgba(28, 48, 66, 0.46)) !important;
-  color: #f6fbff !important;
-  -webkit-text-fill-color: #f6fbff !important;
 }
