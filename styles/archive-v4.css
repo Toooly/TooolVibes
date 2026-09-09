@@ -853,6 +853,12 @@
 
 .ar4-card__name-link:hover { color: var(--tv-accent-primary); }
 
+.ar4-card:has(.ar4-card__status--editorial) .ar4-card__name-link:hover,
+.ar4-card:has(.ar4-card__status--editorial).is-hover .ar4-card__name-link,
+.ar4-card:has(.ar4-card__status--editorial):hover .ar4-card__name-link {
+  color: var(--tv-ink-primary);
+}
+
 /* Mobile: name MUST NOT truncate (Blink → "BL..." regression fix). */
 @media (max-width: 767px) {
   .ar4-card__name-link {
@@ -1395,7 +1401,11 @@
 }
 
 .ar4-card[data-saved]:not(.is-promoted) {
-  background: var(--tv-grammar-personal-wash);
+  background: color-mix(
+    in srgb,
+    var(--tv-grammar-personal-remembered-edge) 7%,
+    var(--tv-grammar-resource-surface)
+  );
 }
 
 .ar4-card[data-saved]::before {
@@ -2720,8 +2730,19 @@ a.archive-v4-card:focus-visible {
 @media (hover: hover) and (pointer: fine) {
   .ar4-card:has(.ar4-card__status--editorial):hover,
   .ar4-card:has(.ar4-card__status--editorial).is-hover {
-    border-color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 40%, var(--tv-grammar-resource-edge));
+    border-color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 52%, var(--tv-grammar-resource-edge));
   }
+
+  .ar4-card:has(.ar4-card__status--editorial):hover::after,
+  .ar4-card:has(.ar4-card__status--editorial).is-hover::after {
+    width: 3.25rem;
+    background: var(--tv-grammar-editorial-brass);
+  }
+}
+
+.ar4-card:has(.ar4-card__status--editorial):focus-visible {
+  outline: 2px solid var(--tv-grammar-editorial-focus-dark);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

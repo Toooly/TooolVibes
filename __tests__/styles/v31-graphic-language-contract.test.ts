@@ -122,6 +122,21 @@ describe("Workflow Connector", () => {
     );
   });
 
+  it("workflow hover emphasizes connector structure, not card fill", () => {
+    expect(collectionsCss).toContain(
+      ".cx-card-v4__stack-item:is(:hover, :focus-within)::before",
+    );
+    const activeSpine = extractBlock(
+      collectionsCss,
+      ".cx-card-v4__stack-item:is(:hover, :focus-within)::before {",
+    );
+    expect(activeSpine).toContain("width: 2px");
+    expect(activeSpine).toContain("var(--tv-grammar-workflow-structure)");
+    expect(collectionsCss).toContain(
+      ".cx-stack-flow-v4__item:hover:not(:last-child)::after",
+    );
+  });
+
   it("home stack preview connects existing nodes without extra markup", () => {
     expect(homeCss).toContain(".tv-workflow-card__flow li:not(:last-child)::after");
     expect(
@@ -141,6 +156,17 @@ describe("Memory Mark", () => {
     );
   });
 
+  it("saved catalog cards keep Resource surface identity under a muted memory tint", () => {
+    const wash = extractBlock(
+      archiveCss,
+      ".ar4-card[data-saved]:not(.is-promoted) {",
+    );
+    expect(wash).toContain("var(--tv-grammar-resource-surface)");
+    expect(wash).toContain("var(--tv-grammar-personal-remembered-edge)");
+    expect(wash).not.toContain("var(--tv-grammar-personal-wash)");
+    expect(wash).not.toContain("var(--tv-accent-primary)");
+  });
+
   it("save state remains text/ARIA independent of the graphic", () => {
     expect(shortlistToggle).toContain("is-active");
     expect(shortlistToggle).toContain("aria-pressed");
@@ -148,6 +174,23 @@ describe("Memory Mark", () => {
 });
 
 describe("Editorial Mark", () => {
+  it("editorial hover keeps the title ivory, not selected purple", () => {
+    expect(archiveCss).toContain(
+      ".ar4-card:has(.ar4-card__status--editorial) .ar4-card__name-link:hover",
+    );
+    const hoverChunk = archiveCss.slice(
+      archiveCss.indexOf(
+        ".ar4-card:has(.ar4-card__status--editorial) .ar4-card__name-link:hover",
+      ),
+      archiveCss.indexOf(
+        ".ar4-card:has(.ar4-card__status--editorial) .ar4-card__name-link:hover",
+      ) + 420,
+    );
+    expect(hoverChunk).toContain("var(--tv-ink-primary)");
+    expect(hoverChunk).not.toContain("var(--tv-accent-primary)");
+    expect(hoverChunk).not.toContain("var(--tv-grammar-selected)");
+  });
+
   it("editorial catalog cards wear a brass rail, not a stamp revival", () => {
     expect(archiveCss).toContain(".ar4-card:has(.ar4-card__status--editorial)::after");
     expect(
@@ -175,6 +218,20 @@ describe("Decision Mark", () => {
     expect(compareCss).toContain(
       ".tv-compare-dock[data-ready] .tv-compare-dock__inner",
     );
+    expect(compareCss).toContain(
+      ".tv-compare-dock[data-ready] .tv-compare-dock__inner::before",
+    );
+    const mark = extractBlock(
+      compareCss,
+      ".tv-compare-dock[data-ready] .tv-compare-dock__inner::before {",
+    );
+    expect(mark).toContain("var(--tv-grammar-activation)");
+    expect(mark).toContain("width: 2px");
+    const inner = extractBlock(
+      compareCss,
+      ".tv-compare-dock[data-ready] .tv-compare-dock__inner {",
+    );
+    expect(inner).not.toContain("box-shadow");
   });
 
   it("closed comparison settles into memory, not a celebration", () => {

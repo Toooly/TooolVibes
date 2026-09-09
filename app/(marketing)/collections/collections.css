@@ -2604,6 +2604,17 @@
   position: relative;
 }
 
+.cx-card-v4__stack-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  bottom: 0.1rem;
+  width: 1px;
+  background: transparent;
+  pointer-events: none;
+}
+
 .cx-card-v4__stack-no {
   font-family: var(--tv-font-data);
   font-size: 0.75rem;
@@ -2615,8 +2626,18 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .cx-card-v4__stack-item:is(:hover, :focus-within)::before {
+    width: 2px;
+    background: var(--tv-grammar-workflow-structure);
+  }
+
   .cx-card-v4__stack-item:is(:hover, :focus-within) .cx-card-v4__stack-no {
     color: var(--tv-grammar-workflow-structure);
+    font-weight: 800;
+  }
+
+  .cx-card-v4__stack-item:is(:hover, :focus-within) .cx-card-v4__stack-name {
+    font-weight: 650;
   }
 }
 
@@ -3261,24 +3282,50 @@
 @media (hover: hover) and (pointer: fine) {
   .cx-stack-flow-v4__item:hover .cx-stack-flow-v4__node,
   .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__node {
-    background: color-mix(in srgb, var(--tv-grammar-workflow-structure) 18%, var(--tv-bg-base));
+    background: color-mix(in srgb, var(--tv-grammar-workflow-structure) 28%, var(--tv-grammar-workflow-surface));
     border-color: var(--tv-grammar-workflow-structure);
+    border-width: 2px;
   }
 }
 .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__node {
-  background: color-mix(in srgb, var(--tv-grammar-workflow-structure) 18%, var(--tv-bg-base));
+  background: color-mix(in srgb, var(--tv-grammar-workflow-structure) 28%, var(--tv-grammar-workflow-surface));
   border-color: var(--tv-grammar-workflow-structure);
+  border-width: 2px;
+}
+
+.cx-stack-flow-v4__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 2.2rem;
+  bottom: 0;
+  width: 1px;
+  background: transparent;
+  pointer-events: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .cx-stack-flow-v4__item:hover:not(:last-child)::after,
+  .cx-stack-flow-v4__item:focus-within:not(:last-child)::after {
+    width: 2px;
+    background: var(--tv-grammar-workflow-structure);
+  }
+
   .cx-stack-flow-v4__item:hover .cx-stack-flow-v4__stage-label,
   .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__stage-label {
     color: var(--tv-grammar-workflow-ink);
+    font-weight: 650;
   }
+}
+
+.cx-stack-flow-v4__item:focus-within:not(:last-child)::after {
+  width: 2px;
+  background: var(--tv-grammar-workflow-structure);
 }
 
 .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__stage-label {
   color: var(--tv-grammar-workflow-ink);
+  font-weight: 650;
 }
 
 .cx-stack-flow-v4__num {
