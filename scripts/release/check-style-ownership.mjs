@@ -19,6 +19,7 @@ const expectedGlobalImports = [
   "@/styles/partner-placements.css",
   "@/styles/premium-motion.css",
   "@/styles/member-experience.css",
+  "@/styles/visual-character.css",
 ];
 const retiredGlobalImports = [
   "@/styles/home.css",

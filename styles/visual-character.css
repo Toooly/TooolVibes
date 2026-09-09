@@ -1,0 +1,410 @@
+/* V3.1 visual character restore.
+   Late global sheet: chapter materials, logo-derived marks, footer presence.
+   Does not change IA, copy, chrome breakpoint, or nav reservation. */
+
+/* ---------- Logo-derived motifs ---------- */
+.tv-mark-bracket {
+  position: relative;
+}
+.tv-mark-bracket::before,
+.tv-mark-bracket::after {
+  content: "";
+  position: absolute;
+  width: 1.15rem;
+  height: 1.15rem;
+  pointer-events: none;
+  border-color: color-mix(in srgb, var(--tv-accent-brand) 55%, transparent);
+  border-style: solid;
+}
+.tv-mark-bracket::before {
+  top: 0.65rem;
+  left: 0.65rem;
+  border-width: 2px 0 0 2px;
+}
+.tv-mark-bracket::after {
+  right: 0.65rem;
+  bottom: 0.65rem;
+  border-width: 0 2px 2px 0;
+  border-color: color-mix(in srgb, var(--tv-accent-gold) 50%, transparent);
+}
+
+/* ============================================================
+   HOME — chapter rhythm
+   ivory discovery → midnight signal → ivory editorial
+   → indigo workflow → commercial → ivory brand ending
+   ============================================================ */
+
+.def-home {
+  background: var(--tv-grammar-discovery-surface);
+  color: var(--tv-grammar-discovery-ink);
+}
+
+/* HERO / DISCOVERY — light product identity */
+.def-cockpit {
+  background:
+    radial-gradient(ellipse at 0% -10%, color-mix(in srgb, var(--tv-accent-brand) 14%, transparent) 0%, transparent 42%),
+    radial-gradient(ellipse at 100% 110%, color-mix(in srgb, var(--tv-accent-gold) 12%, transparent) 0%, transparent 46%),
+    var(--tv-grammar-discovery-surface);
+  border-bottom: 0;
+  color: var(--tv-grammar-discovery-ink);
+}
+.def-cockpit__bg {
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--tv-accent-brand) 16%, transparent) 0%, transparent 36%),
+    radial-gradient(circle at 88% 100%, color-mix(in srgb, var(--tv-accent-gold) 10%, transparent) 0%, transparent 36%);
+}
+.def-cockpit__bg .tv-brand-cartograph {
+  opacity: 0.42;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--tv-accent-brand) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--tv-accent-cyan) 16%, transparent) 1px, transparent 1px);
+}
+.def-cockpit::before {
+  content: "TOOOL";
+  position: absolute;
+  right: -0.12em;
+  top: 8%;
+  z-index: 0;
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(6rem, 22vw, 16rem);
+  line-height: 0.72;
+  letter-spacing: -0.08em;
+  color: color-mix(in srgb, var(--tv-accent-brand) 10%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+.def-cockpit__inner { z-index: 1; }
+.def-cockpit__title {
+  color: var(--tv-ink-inverted-primary);
+}
+.def-cockpit__lede,
+.def-cockpit__lede-desktop,
+.def-cockpit__lede-mobile {
+  color: var(--tv-ink-inverted-secondary);
+}
+.def-cockpit__eyebrow {
+  color: var(--tv-ink-inverted-muted);
+  background: color-mix(in srgb, var(--tv-surface-inverted-raised) 80%, transparent);
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 14%, transparent);
+}
+.def-cockpit__eyebrow-dot {
+  background: var(--tv-accent-brand);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--tv-accent-brand) 55%, transparent);
+}
+.def-intent__label,
+.def-intent__hint {
+  color: var(--tv-ink-inverted-muted);
+}
+.def-intent__chips a,
+.def-intent__more {
+  color: var(--tv-ink-inverted-primary);
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 16%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-inverted-raised) 70%, transparent);
+}
+.def-intent__chips a:hover,
+.def-intent__more:hover {
+  border-color: color-mix(in srgb, var(--tv-accent-brand) 40%, transparent);
+}
+/* Search remains a localized dark instrument on the light field */
+.def-intent__field.tv-signal-search {
+  background: var(--tv-surface-raised);
+  color: var(--tv-ink-primary);
+  border-color: color-mix(in srgb, var(--tv-accent-brand) 28%, var(--tv-border-default));
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--tv-accent-brand) 12%, transparent);
+}
+
+/* START-HERE — ivory stage, family frames */
+.def-start.tv-discovery-stage {
+  background: var(--tv-grammar-discovery-surface);
+  color: var(--tv-grammar-discovery-ink);
+  padding-block: var(--tv-rhythm-section);
+}
+.def-start__title {
+  color: var(--tv-ink-inverted-primary);
+}
+.def-start__tabs.tv-discovery-stage__switch {
+  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 6%, var(--tv-surface-inverted));
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
+}
+.def-start__tab {
+  color: var(--tv-ink-inverted-secondary);
+}
+.def-start__tab.is-active {
+  color: var(--tv-ink-inverted-primary);
+  background: var(--tv-grammar-selected-wash);
+}
+
+/* TOOL frame already ivory — restore brass rail + oversized ranks */
+.tv-discovery-stage[data-mode="tool"] .tv-discovery-stage__frame {
+  box-shadow: inset 3px 0 0 var(--tv-grammar-editorial-rail);
+}
+.def-editorial__pod-stage::before {
+  display: block;
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--tv-grammar-editorial-rail);
+  pointer-events: none;
+}
+.def-editorial__pod-rank {
+  font-size: clamp(2.4rem, 6vw, 4.25rem);
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: var(--tv-grammar-editorial-brass);
+  font-family: var(--tv-font-data);
+}
+.def-editorial__spot-eyebrow {
+  letter-spacing: 0.16em;
+}
+
+/* STACK / WORKFLOW — indigo field */
+.tv-discovery-stage[data-mode="stack"] .tv-discovery-stage__frame {
+  background: var(--tv-grammar-workflow-field);
+  border-color: var(--tv-grammar-workflow-border);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tv-grammar-workflow-accent) 28%, transparent);
+}
+.tv-workflow-card__flow {
+  position: relative;
+}
+.tv-workflow-card__flow li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -0.55rem;
+  width: 0.7rem;
+  height: 2px;
+  background: var(--tv-grammar-workflow-accent);
+  opacity: 0.7;
+}
+
+/* RADAR HOME — midnight signal, not generic charcoal */
+.tv-discovery-stage[data-mode="radar"] .tv-discovery-stage__frame {
+  background:
+    radial-gradient(circle at 80% 12%, color-mix(in srgb, var(--tv-grammar-signal-accent) 16%, transparent), transparent 42%),
+    var(--tv-grammar-radar-canvas);
+  border-color: var(--tv-grammar-signal-border);
+  color: var(--tv-grammar-signal-ink);
+}
+.tv-home-radar.tv-home-radar--snapshot {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.tv-home-radar.tv-home-radar--snapshot .tv-radar-instrument {
+  border-color: var(--tv-grammar-signal-border);
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--tv-grammar-signal-accent) 10%, transparent), transparent 58%),
+    var(--tv-grammar-radar-canvas);
+}
+
+/* METHOD / LIFECYCLE — workflow color moment */
+.def-method {
+  background:
+    radial-gradient(ellipse at 0% 50%, color-mix(in srgb, var(--tv-color-violet-400) 16%, transparent), transparent 46%),
+    var(--tv-grammar-workflow-field);
+  border-bottom: 0;
+  color: var(--tv-ink-primary);
+  padding-block: var(--tv-rhythm-section);
+}
+.def-method__title,
+.def-method__lede {
+  color: var(--tv-ink-primary);
+}
+.tv-decision-track__rail {
+  position: relative;
+}
+.tv-decision-track__rail::before {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  right: 0.7rem;
+  top: 0.7rem;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--tv-grammar-workflow-accent),
+    var(--tv-accent-brand),
+    var(--tv-grammar-activation)
+  );
+  opacity: 0.55;
+  pointer-events: none;
+}
+.tv-decision-track__dot {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-grammar-workflow-field) 88%, transparent);
+}
+
+/* PARTNER — commercial field, not page charcoal */
+.def-home__sponsor,
+.def-home__sponsor.tv-partner-signal {
+  background: var(--tv-grammar-commercial-field);
+  padding-block: var(--tv-rhythm-section);
+}
+.tv-partner-signal__shell {
+  background: var(--tv-grammar-commercial-shell);
+  box-shadow: inset 0 0 0 1px var(--tv-grammar-commercial-border);
+}
+.def-home__sponsor-opportunity .partner-placement__opportunity {
+  color: var(--tv-ink-primary);
+}
+
+/* ============================================================
+   FOOTER — ivory band restored; dark tiles as contrast objects
+   ============================================================ */
+.site-footer-v2.tv-launchpad,
+.site-footer-v2.tv-utility {
+  background: var(--tv-surface-inverted) !important;
+  color: var(--tv-ink-inverted-secondary) !important;
+  border-top: 1px solid var(--tv-border-inverted) !important;
+}
+
+.site-footer-v2.tv-launchpad .site-footer-v2__shell,
+.site-footer-v2.tv-launchpad .tv-launchpad__shell,
+.tv-launchpad,
+.tv-launchpad .site-footer-v2__shell,
+.tv-launchpad__shell {
+  background: transparent !important;
+  color: var(--tv-ink-inverted-primary);
+}
+
+.site-footer-v2.tv-launchpad h2,
+.site-footer-v2.tv-launchpad h3,
+.site-footer-v2.tv-launchpad a,
+.site-footer-v2.tv-launchpad p,
+.site-footer-v2.tv-launchpad summary,
+.site-footer-v2.tv-utility :is(h2, h3, a, p, summary) {
+  color: var(--tv-ink-inverted-primary);
+}
+
+.tv-launchpad__title {
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  line-height: 0.95;
+  color: var(--tv-ink-inverted-primary);
+}
+.tv-launchpad__tile {
+  background: var(--tv-surface-raised);
+  border: 1px solid var(--tv-border-subtle);
+  color: var(--tv-ink-primary);
+}
+.tv-launchpad__tile p {
+  color: var(--tv-ink-muted-aa);
+}
+.tv-launchpad__tile--discover p { color: var(--tv-grammar-radar-accent) !important; }
+.tv-launchpad__tile--build p { color: var(--tv-grammar-stack-node) !important; }
+.tv-launchpad__tile--decide p { color: var(--tv-grammar-personal-accent) !important; }
+.tv-launchpad__tile a {
+  color: var(--tv-ink-primary) !important;
+}
+.tv-launchpad__tile a:hover {
+  color: var(--tv-accent-cyan-on-dark) !important;
+}
+.tv-launchpad__contact p,
+.tv-launchpad__legal a,
+.tv-launchpad__disclosure summary,
+.tv-launchpad__mark {
+  color: var(--tv-ink-inverted-secondary) !important;
+}
+.site-footer-v2.tv-launchpad .site-footer-v2__contact {
+  color: var(--tv-ink-inverted-primary) !important;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-brand) 40%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-brand) 8%, transparent);
+}
+.site-footer-v2.tv-launchpad .site-footer-v2__legal-link,
+.site-footer-v2.tv-launchpad .site-footer-v2__disclosure {
+  color: var(--tv-ink-inverted-secondary) !important;
+}
+
+
+.tv-launchpad__wordmark {
+  font-family: var(--tv-font-family-ui);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  color: var(--tv-ink-inverted-primary);
+}
+.tv-workflow-card__flow li {
+  position: relative;
+}
+
+.tv-launchpad__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: var(--tv-ink-inverted-primary);
+}
+.tv-launchpad__signature {
+  margin: 0;
+  font-family: var(--tv-font-family-display);
+  font-size: clamp(3.2rem, 12vw, 8.5rem);
+  line-height: 0.78;
+  letter-spacing: -0.06em;
+  color: color-mix(in srgb, var(--tv-accent-brand) 18%, var(--tv-ink-inverted-primary));
+  pointer-events: none;
+}
+
+.tv-utility__brand,
+.tv-utility__contact,
+.tv-utility__link,
+.tv-utility__group h3 {
+  color: var(--tv-ink-inverted-primary);
+}
+.tv-utility__contact {
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 22%, transparent);
+  color: var(--tv-ink-inverted-primary);
+}
+.tv-utility__contact:hover,
+.tv-utility__contact:focus-visible {
+  border-color: var(--tv-accent-brand);
+  color: var(--tv-accent-brand);
+}
+.tv-utility__link {
+  color: var(--tv-ink-inverted-secondary);
+}
+.tv-utility__link:hover,
+.tv-utility__link:focus-visible {
+  color: var(--tv-ink-inverted-primary);
+}
+.tv-utility__legal,
+.tv-utility__disclosure,
+.tv-utility__disclosure-body {
+  color: var(--tv-ink-inverted-muted);
+}
+.tv-utility__legal :is(a, button):hover,
+.tv-utility__legal :is(a, button):focus-visible {
+  color: var(--tv-ink-inverted-primary);
+}
+
+/* ============================================================
+   FAMILY ROUTES — canvases only, no IA change
+   ============================================================ */
+.ar4-shell {
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--tv-surface-inverted) 8%, transparent), transparent 36%),
+    var(--tv-bg-base);
+}
+.cx-index {
+  background: var(--tv-grammar-workflow-field);
+}
+.tv-radar-page {
+  background: var(--tv-grammar-radar-canvas);
+}
+.shortlist-final-surface {
+  background:
+    radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--tv-grammar-personal-accent) 10%, transparent), transparent 40%),
+    var(--tv-bg-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .def-cockpit::before,
+  .tv-launchpad__signature {
+    content: none;
+  }
+  .def-cockpit::before {
+    display: none;
+  }
+}

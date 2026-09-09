@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCommercialNow } from "@/components/monetization/commercial-clock";
 import { Mail } from "lucide-react";
+import { BrandLogo } from "@/components/layout/brand-logo";
 
 import { trackSponsorOpportunityClick } from "@/lib/analytics/sponsor-events";
 import { useNavItems } from "@/lib/navigation/navigation-release-context";
@@ -129,6 +130,11 @@ function LaunchpadFooter({
   return (
     <footer className="site-footer-v2 tv-launchpad relative mt-auto">
       <div className="tv-launchpad__shell site-footer-v2__shell">
+        <Link href="/" className="tv-launchpad__brand">
+          <BrandLogo size={40} fallback="png" />
+          <span className="tv-launchpad__wordmark">TOOOLVIBES</span>
+        </Link>
+        <p className="tv-launchpad__signature" aria-hidden="true">TOOOLVIBES</p>
         <h2 className="tv-launchpad__title">Dove vuoi andare adesso?</h2>
 
         <ul className="tv-launchpad__destinations">

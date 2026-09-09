@@ -6,7 +6,9 @@
 .shortlist-final-surface,
 .shortlist-final-surface .mobile-library-board {
   min-height: 100svh;
-  background: var(--tv-bg-base) !important;
+  background:
+    radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--tv-grammar-personal-accent) 12%, transparent), transparent 42%),
+    var(--tv-bg-base) !important;
   color: var(--tv-grammar-personal-ink);
 }
 

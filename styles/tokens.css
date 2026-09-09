@@ -1222,7 +1222,8 @@
   --tv-grammar-workflow-border: var(--tv-grammar-stack-border);
 
   /* RADAR — midnight + cyan; green only for live status */
-  --tv-grammar-radar-surface: var(--tv-color-surface-base);
+  --tv-grammar-radar-canvas: #07111c;
+  --tv-grammar-radar-surface: var(--tv-grammar-radar-canvas);
   --tv-grammar-radar-surface-raised: var(--tv-color-surface-raised);
   --tv-grammar-radar-ink: var(--tv-ink-primary);
   --tv-grammar-radar-accent: var(--tv-accent-cyan);
@@ -1262,6 +1263,12 @@
   --tv-grammar-editorial-focus: var(--tv-accent-gold-on-ivory);
   --tv-grammar-editorial-focus-dark: var(--tv-accent-gold-on-dark);
   --tv-grammar-activation-focus: var(--tv-accent-gold-on-dark);
+
+  /* Color fields — chapter canvases, not locked brand/canvas. */
+  --tv-grammar-discovery-surface: var(--tv-surface-inverted);
+  --tv-grammar-discovery-ink: var(--tv-ink-inverted-primary);
+  --tv-grammar-workflow-field: color-mix(in srgb, var(--tv-color-violet-900) 72%, #12081f);
+  --tv-grammar-commercial-field: color-mix(in srgb, var(--tv-surface-inverted) 22%, #121018);
 
   /* ACTION / SELECTED / COMMERCIAL */
   --tv-grammar-activation: var(--tv-activation-strong);

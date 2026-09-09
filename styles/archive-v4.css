@@ -79,6 +79,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--tv-surface-inverted) 10%, transparent), transparent 42%),
+    var(--tv-bg-base);
 }
 
 /* Partner Experience insert lives inside the discovery grid (render-level

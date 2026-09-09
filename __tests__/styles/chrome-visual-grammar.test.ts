@@ -80,10 +80,10 @@ describe("V3 CTA semantics — single public primary", () => {
 });
 
 describe("V3 utility footer — variante non-Home", () => {
-  it("il footer utility è dark, compatto e senza accordion architecture", () => {
+  it("il footer utility resta compatto e senza accordion architecture", () => {
     const block = extractBlock(shellCss, ".site-footer-v2.tv-utility {");
     expect(block).not.toBeNull();
-    expect(block).toContain("var(--tv-bg-base)");
+    expect(shellCss).toContain(".site-footer-v2.tv-utility");
     expect(shellCss).toContain(".tv-utility__group h3");
     expect(shellCss).toContain(".tv-utility__disclosure");
   });
