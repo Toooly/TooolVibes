@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const commandBarCss = readFileSync(resolve(process.cwd(), "styles/command-bar.css"), "utf8");
+const tokensCss = readFileSync(resolve(process.cwd(), "styles/tokens.css"), "utf8");
 const mobileTopCss = readFileSync(resolve(process.cwd(), "styles/mobile-top-bar.css"), "utf8");
 const mobileBottomCss = readFileSync(
   resolve(process.cwd(), "styles/mobile-bottom-nav.css"),
@@ -26,6 +27,22 @@ const bottomNavSrc = readFileSync(
   resolve(process.cwd(), "components/layout/mobile-bottom-nav.tsx"),
   "utf8",
 );
+const chromeViewportSrc = readFileSync(
+  resolve(process.cwd(), "components/layout/chrome-viewport.tsx"),
+  "utf8",
+);
+const commandBarSrc = readFileSync(
+  resolve(process.cwd(), "components/layout/command-bar.tsx"),
+  "utf8",
+);
+const mobileTopSrc = readFileSync(
+  resolve(process.cwd(), "components/layout/mobile-top-bar.tsx"),
+  "utf8",
+);
+const marketingChromeSrc = readFileSync(
+  resolve(process.cwd(), "components/layout/marketing-chrome.tsx"),
+  "utf8",
+);
 const secondaryCss = readFileSync(
   resolve(process.cwd(), "styles/secondary-pages.css"),
   "utf8",
@@ -38,9 +55,21 @@ describe("v3.1 responsive contract", () => {
     expect(mobileBottomCss).toMatch(
       /@media \(min-width: 1280px\)[\s\S]*?\.mobile-bottom-shell \{[\s\S]*?display:\s*none/,
     );
-    expect(bottomNavSrc).toContain('(min-width: 1280px)');
+    expect(chromeViewportSrc).toContain(
+      'export const CHROME_DESKTOP_MEDIA_QUERY = "(min-width: 1280px)"',
+    );
+    expect(bottomNavSrc).toContain("CHROME_DESKTOP_MEDIA_QUERY");
+    expect(commandBarSrc).toContain('if (viewport === "mobile")');
+    expect(mobileTopSrc).toContain('if (viewport === "desktop")');
+    expect(marketingChromeSrc).toContain("ChromeViewportProvider");
     expect(battleSrc).toContain('export const COMPARE_DESKTOP_MEDIA_QUERY = "(min-width: 1280px)"');
     expect(commandBarCss).not.toMatch(/@media \(max-width: 1180px\)[\s\S]*?\.command-bar__nav/);
+  });
+
+  it("desktop chrome zeros --tv-bottom-nav-total without requiring the nav portal", () => {
+    expect(tokensCss).toMatch(
+      /@media \(min-width: 1280px\)[\s\S]*?:root \{[\s\S]*?--tv-bottom-nav-total:\s*var\(--tv-bottom-nav-total-desktop/,
+    );
   });
 
   it("archive 3-col and tool-detail desktop gutter wait for chrome 1280", () => {

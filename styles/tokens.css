@@ -1343,3 +1343,9 @@
     --mobile-content-max: 24.5rem;
   }
 }
+
+@media (min-width: 1280px) {
+  :root {
+    --tv-bottom-nav-total: var(--tv-bottom-nav-total-desktop);
+  }
+}

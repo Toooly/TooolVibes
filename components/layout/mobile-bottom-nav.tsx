@@ -15,6 +15,10 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transitions";
 
 import { cn } from "@/lib/utils";
+import {
+  CHROME_DESKTOP_MEDIA_QUERY,
+  useChromeViewport,
+} from "@/components/layout/chrome-viewport";
 import { isAuthenticatedNavActive } from "@/lib/navigation/account-primary-nav";
 import {
   useAuthenticatedNavItems,
@@ -37,6 +41,7 @@ const PAUSE_EXPAND_MS = 900;
 
 export function MobileBottomNav() {
   const preferReducedMotion = useReducedMotion();
+  const viewport = useChromeViewport();
   const pathname = usePathname();
   const search = useLocationSearch();
   const navItems = useAuthenticatedNavItems("bottom-nav");
@@ -71,7 +76,7 @@ export function MobileBottomNav() {
     const root = document.documentElement;
     const isDesktop =
       typeof window.matchMedia === "function" &&
-      window.matchMedia("(min-width: 1280px)").matches;
+      window.matchMedia(CHROME_DESKTOP_MEDIA_QUERY).matches;
     const navHidden = (pathname ?? "").startsWith("/admin");
     if (isDesktop || navHidden) {
       root.style.setProperty("--tv-bottom-nav-total", "0px");
@@ -101,6 +106,7 @@ export function MobileBottomNav() {
 
   useEffect(() => {
     if (!mounted) return;
+    if (viewport === "desktop") return;
     if (typeof window === "undefined") return;
 
     const isEditableTarget = (target: EventTarget | null) => {
@@ -204,7 +210,7 @@ export function MobileBottomNav() {
         window.clearTimeout(pauseTimer.current);
       }
     };
-  }, [mounted, isOverlayOpen, isCommandOpen]);
+  }, [mounted, viewport, isOverlayOpen, isCommandOpen]);
 
   useEffect(() => {
     if (isOverlayOpen || isCommandOpen) {
@@ -215,7 +221,7 @@ export function MobileBottomNav() {
     }
   }, [isOverlayOpen, isCommandOpen]);
 
-  if (!mounted || (pathname ?? "").startsWith("/admin")) {
+  if (!mounted || viewport === "desktop" || (pathname ?? "").startsWith("/admin")) {
     return null;
   }
 

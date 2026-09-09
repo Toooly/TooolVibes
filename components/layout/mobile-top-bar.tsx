@@ -16,6 +16,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
+import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -61,6 +62,11 @@ export function MobileTopBar() {
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
   const heroSearchVisible = useMobileUIStore((state) => state.heroSearchVisible);
   const suppressSearch = isHome && heroSearchVisible;
+  const viewport = useChromeViewport();
+
+  if (viewport === "desktop") {
+    return null;
+  }
 
   return (
     <header

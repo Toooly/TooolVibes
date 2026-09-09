@@ -25,6 +25,7 @@ import { Search } from "lucide-react";
 import { MusicToggleButton } from "@/components/app/music-toggle-button";
 import { SoundToggleButton } from "@/components/app/sound-toggle-button";
 import { BrandLogo } from "./brand-logo";
+import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
 import { useAuthenticatedNavItems } from "@/components/layout/use-authenticated-nav-items";
 import { isAuthenticatedNavActive } from "@/lib/navigation/account-primary-nav";
@@ -63,6 +64,11 @@ export function CommandBar() {
   const isHome = pathname === "/";
   const heroSearchVisible = useMobileUIStore((state) => state.heroSearchVisible);
   const suppressSearch = isHome && heroSearchVisible;
+  const viewport = useChromeViewport();
+
+  if (viewport === "mobile") {
+    return null;
+  }
 
   return (
     <header
