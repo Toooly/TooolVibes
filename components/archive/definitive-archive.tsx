@@ -272,11 +272,8 @@ export function DefinitiveArchive({
           <div className="ar4-intro__copy">
             <p className="ar4-intro__eyebrow">
               <span aria-hidden="true" className="ar4-intro__eyebrow-dot" />
-              <span className="ar4-intro__eyebrow-desktop">
-                Catalogo · {totalTools} tool in {totalGroups} categorie
-              </span>
-              <span className="ar4-intro__eyebrow-mobile">
-                {totalTools} tool · {totalGroups} categorie
+              <span className="ar4-intro__eyebrow-copy">
+                <span className="ar4-intro__eyebrow-lead">Catalogo · </span>{totalTools} tool<span className="ar4-intro__eyebrow-in"> in </span><span className="ar4-intro__eyebrow-sep"> · </span>{totalGroups} categorie
               </span>
             </p>
             <h1 id="ar4-intro-title" className="ar4-intro__title">
@@ -321,24 +318,12 @@ export function DefinitiveArchive({
             {/* Dati sintetici — Tool nel catalogo / Categorie / mobile compact */}
             <ul className="ar4-intro__data" aria-label="Dati catalogo">
               <li>
-                <span className="ar4-intro__data-desktop">
-                  <strong>{String(totalTools).padStart(2, "0")}</strong>
-                  <em>{totalTools === 1 ? "Tool nel catalogo" : "Tool nel catalogo"}</em>
-                </span>
-                <span className="ar4-intro__data-mobile">
-                  <strong>{totalTools}</strong>
-                  <em>tool</em>
-                </span>
+                <strong>{String(totalTools).padStart(2, "0")}</strong>
+                <em>Tool nel catalogo</em>
               </li>
               <li>
-                <span className="ar4-intro__data-desktop">
-                  <strong>{String(totalGroups).padStart(2, "0")}</strong>
-                  <em>Categorie</em>
-                </span>
-                <span className="ar4-intro__data-mobile">
-                  <strong>{totalGroups}</strong>
-                  <em>categorie</em>
-                </span>
+                <strong>{String(totalGroups).padStart(2, "0")}</strong>
+                <em>Categorie</em>
               </li>
             </ul>
           </div>

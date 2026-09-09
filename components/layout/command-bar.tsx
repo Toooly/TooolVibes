@@ -75,9 +75,6 @@ export function CommandBar() {
       role="banner"
       className="command-bar"
     >
-      {/* Top scan line — a horizontal signal trace that pulses on mount */}
-      <div aria-hidden="true" className="command-bar__scanline" />
-
       <div className="command-bar__inner">
         {/* Left: brand mark */}
         <CommandBarBrand />
@@ -146,9 +143,6 @@ export function CommandBar() {
           />
         </div>
       </div>
-
-      {/* Bottom border with subtle scan trace */}
-      <div aria-hidden="true" className="command-bar__bottom-border" />
     </header>
   );
 }

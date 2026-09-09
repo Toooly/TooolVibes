@@ -168,10 +168,6 @@
   text-overflow: ellipsis;
 }
 
-/* Scan line removed in calibration */
-.mobile-top-bar__scanline { display: none; }
-
-
 .mobile-top-bar__account-menu {
   position: relative;
 }

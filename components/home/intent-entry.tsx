@@ -93,8 +93,7 @@ export function IntentEntry() {
             aria-describedby="home-intent-hint"
           />
           <button type="submit">
-            <span className="def-intent__submit-desktop">Cerca nel catalogo</span>
-            <span className="def-intent__submit-mobile">Cerca</span>
+            Cerca<span className="def-intent__submit-rest"> nel catalogo</span>
           </button>
         </div>
       </form>

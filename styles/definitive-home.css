@@ -2151,8 +2151,7 @@
 
 
 .def-intent { display: grid; gap: var(--tv-space-component-md); width: 100%; margin-top: var(--tv-space-group-sm); }
-.def-intent__submit-mobile { display: none; }
-.def-intent__submit-desktop { display: inline; }
+.def-intent__submit-rest { display: inline; }
 .def-intent__label {
   display: block;
   font-size: 12px;
@@ -2510,8 +2509,7 @@
     min-height: 56px;
   }
 
-  .def-intent__submit-desktop { display: none; }
-  .def-intent__submit-mobile { display: inline; }
+  .def-intent__submit-rest { display: none; }
 
   .def-cockpit__journey-kicker {
     display: none;

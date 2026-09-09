@@ -73,7 +73,6 @@ export function MobileTopBar() {
       role="banner"
       className={cn("mobile-top-bar", isHome && "mobile-top-bar--home")}
     >
-      <div aria-hidden="true" className="mobile-top-bar__scanline" />
       <div className="mobile-top-bar__inner">
         <Link
           href="/"

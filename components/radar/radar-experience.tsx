@@ -505,22 +505,8 @@ export function RadarExperience({
         <header className="tv-radar__header">
           <div className="tv-radar__header-copy">
             <p className="tv-radar__eyebrow">
-              {/* V2 §6 + closure check: le varianti desktop/mobile
-                  sono puramente visuali (CSS swap @ 47.99rem). Solo
-                  una label canonica è esposta all'accessibility tree
-                  (sr-only) per evitare doppia lettura e hydration
-                  mismatch. */}
-              <span
-                className="tv-radar__eyebrow-desktop"
-                aria-hidden="true"
-              >
-                Segnali da Product Hunt · dati reali
-              </span>
-              <span
-                className="tv-radar__eyebrow-mobile"
-                aria-hidden="true"
-              >
-                Product Hunt · dati reali
+              <span className="tv-radar__eyebrow-visual" aria-hidden="true">
+                <span className="tv-radar__eyebrow-lead">Segnali da </span>Product Hunt · dati reali
               </span>
               <span className="sr-only">
                 Segnali da Product Hunt · dati reali

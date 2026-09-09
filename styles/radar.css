@@ -1258,12 +1258,10 @@
    - Mappa central count
    ============================================================ */
 
-/* — Hero eyebrow split — */
-.tv-radar__eyebrow-desktop { display: inline; }
-.tv-radar__eyebrow-mobile { display: none; }
+/* — Hero eyebrow density fragment — */
+.tv-radar__eyebrow-visual { display: inline; }
 @media (max-width: 47.99rem) {
-  .tv-radar__eyebrow-desktop { display: none; }
-  .tv-radar__eyebrow-mobile { display: inline; }
+  .tv-radar__eyebrow-lead { display: none; }
 }
 
 /* — Hero H1: usa classe .tv-radar__title — */

@@ -292,18 +292,17 @@ describe("RadarExperience", () => {
     expect(results.violations).toEqual([]);
   });
 
-  it("rende eyebrow desktop su desktop e eyebrow mobile su mobile", async () => {
+  it("rende una sola eyebrow visuale con densità CSS, senza copia duplicata", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
     const { container } = renderRadar();
     await screen.findAllByText(/Alpha Tool/);
 
-    // Default = desktop
-    const desktopEyebrow = container.querySelector(
-      ".tv-radar__eyebrow-desktop",
-    );
-    const mobileEyebrow = container.querySelector(".tv-radar__eyebrow-mobile");
-    expect(desktopEyebrow?.textContent).toContain("Segnali da Product Hunt");
-    expect(mobileEyebrow?.textContent).toContain("Product Hunt · dati reali");
+    const visual = container.querySelector(".tv-radar__eyebrow-visual");
+    expect(visual?.getAttribute("aria-hidden")).toBe("true");
+    expect(visual?.textContent).toContain("Segnali da Product Hunt");
+    expect(visual?.textContent).toContain("Product Hunt · dati reali");
+    expect(container.querySelector(".tv-radar__eyebrow-desktop")).toBeNull();
+    expect(container.querySelector(".tv-radar__eyebrow-mobile")).toBeNull();
   });
 
   it("W11-T6 T7 T20 Catalogo facet Tutti | Radar is present and is not Segnale", async () => {
@@ -331,29 +330,14 @@ describe("RadarExperience", () => {
     const { container } = renderRadar();
     await screen.findAllByText(/Alpha Tool/);
 
-    // Le varianti visuali (desktop + mobile) devono essere
-    // marcate aria-hidden per evitare che lo screen reader legga
-    // entrambe quando la CSS ne mostra solo una.
-    const desktopEyebrow = container.querySelector(
-      ".tv-radar__eyebrow-desktop",
-    );
-    const mobileEyebrow = container.querySelector(".tv-radar__eyebrow-mobile");
-    expect(desktopEyebrow?.getAttribute("aria-hidden")).toBe("true");
-    expect(mobileEyebrow?.getAttribute("aria-hidden")).toBe("true");
+    const visual = container.querySelector(".tv-radar__eyebrow-visual");
+    expect(visual?.getAttribute("aria-hidden")).toBe("true");
 
-    // Esiste una sola label canonica accessibile (sr-only) per
-    // entrambi i viewport.
-    const srOnly = container.querySelector(".sr-only");
+    const srOnly = container.querySelector(".tv-radar__eyebrow .sr-only");
     expect(srOnly?.textContent).toContain("Segnali da Product Hunt");
+    expect(srOnly?.getAttribute("aria-hidden")).not.toBe("true");
 
-    // Il DOM contiene entrambe le varianti (per il CSS swap) ma
-    // l'accessibility tree ne espone solo una canonica + 2
-    // aria-hidden. Niente "doppia eyebrow" logica.
     const eyebrowParagraph = container.querySelector(".tv-radar__eyebrow");
-    // Il sr-only contiene il testo canonico; le varianti desktop
-    // e mobile contengono varianti compatte. Conta quante
-    // occorrenze del testo canonico "Segnali da Product Hunt"
-    // appaiono nel textContent "visibile" agli screen reader.
     const ariaVisibleText = Array.from(
       eyebrowParagraph?.querySelectorAll("span") ?? [],
     )

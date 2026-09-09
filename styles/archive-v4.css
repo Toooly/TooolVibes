@@ -2050,12 +2050,12 @@ a.archive-v4-card:focus-visible {
   border: 0;
 }
 
-/* — Hero eyebrow split — */
-.ar4-intro__eyebrow-desktop { display: inline; }
-.ar4-intro__eyebrow-mobile { display: none; }
+/* — Hero eyebrow density fragments — */
+.ar4-intro__eyebrow-sep { display: none; }
 @media (max-width: 47.99rem) {
-  .ar4-intro__eyebrow-desktop { display: none; }
-  .ar4-intro__eyebrow-mobile { display: inline; }
+  .ar4-intro__eyebrow-lead,
+  .ar4-intro__eyebrow-in { display: none; }
+  .ar4-intro__eyebrow-sep { display: inline; }
 }
 
 /* — Hero search clear button — */
@@ -2119,13 +2119,6 @@ a.archive-v4-card:focus-visible {
   font-size: 12px;
   font-weight: 500;
   color: var(--tv-ink-inverted-muted);
-}
-.ar4-intro__data-desktop { display: flex; flex-direction: column; gap: 2px; }
-.ar4-intro__data-mobile { display: none; }
-@media (max-width: 47.99rem) {
-  .ar4-intro__data-desktop { display: none; }
-  .ar4-intro__data-mobile { display: flex; flex-direction: column; gap: 2px; }
-  .ar4-intro__data-mobile strong { font-size: 16px; }
 }
 
 /* — Categorie section — */

@@ -183,4 +183,16 @@ describe("D1 exclusive chrome at 1280", () => {
       document.querySelector(".command-bar__search")?.classList.contains("is-hero-suppressed"),
     ).toBe(true);
   });
+
+  it("does not mount empty scanline or bottom-border decorative nodes", () => {
+    render(
+      <>
+        <CommandBar />
+        <MobileTopBar />
+      </>,
+    );
+    expect(document.querySelector(".command-bar__scanline")).toBeNull();
+    expect(document.querySelector(".command-bar__bottom-border")).toBeNull();
+    expect(document.querySelector(".mobile-top-bar__scanline")).toBeNull();
+  });
 });
