@@ -92,6 +92,16 @@ describe("CollectionsIndex", () => {
     expect(screen.getByText("Le altre raccolte restano nel tuo spazio.")).toBeTruthy();
   });
 
+  it("omits the index instead of inventing an empty collections state", () => {
+    const { container } = render(
+      <AccountPreviewProvider value={guestValue()}>
+        <CollectionsIndex collections={[]} />
+      </AccountPreviewProvider>,
+    );
+    expect(container.firstChild).toBeNull();
+    expect(container.textContent).toBe("");
+  });
+
   it("does not unlock gated groups for guests and shows them to members", () => {
     const { rerender } = render(
       <AccountPreviewProvider value={guestValue()}>

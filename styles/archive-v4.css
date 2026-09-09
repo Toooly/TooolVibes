@@ -2263,15 +2263,15 @@ a.archive-v4-card:focus-visible {
   margin: 6px 0 0;
 }
 
-/* — Empty state V2 (title + body + dual CTA) — */
+/* — Empty state V2 (title + body + one recovery) — */
 .ar4-grid__empty {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: clamp(32px, 4vw, 48px) clamp(20px, 2.6vw, 40px);
   text-align: center;
-  background: var(--tv-surface-elevated);
-  border: 1px dashed var(--tv-border-interactive);
+  background: var(--tv-grammar-resource-surface);
+  border: 1px solid var(--tv-grammar-resource-edge);
   border-radius: 24px;
   align-items: center;
   max-width: 720px;

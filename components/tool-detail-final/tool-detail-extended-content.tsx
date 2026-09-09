@@ -9,7 +9,7 @@ import { deriveScoreDimensions } from "@/lib/data/tool-detail-derivation";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { cn } from "@/lib/utils";
 
-import { ToolDetailInformation } from "./tool-detail-information";
+import { hasToolDetailInformation, ToolDetailInformation } from "./tool-detail-information";
 
 type ToolDetailExtendedContentProps = {
   tool: ToolPublicView;
@@ -143,11 +143,13 @@ export function ToolDetailExtendedContent({
     });
   }
 
-  panels.push({
-    id: "specs",
-    title: "Dati tecnici",
-    content: <ToolDetailInformation tool={tool} embedded />,
-  });
+  if (hasToolDetailInformation(tool)) {
+    panels.push({
+      id: "specs",
+      title: "Dati tecnici",
+      content: <ToolDetailInformation tool={tool} embedded />,
+    });
+  }
 
   if (experiences) {
     panels.push({

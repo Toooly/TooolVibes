@@ -1414,6 +1414,32 @@
   text-transform: uppercase;
 }
 
+.resource-inventory__stamp {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.9rem 0.95rem;
+  border: 1px solid var(--tv-grammar-resource-edge);
+  border-radius: var(--tv-radius-card);
+  background: var(--tv-grammar-resource-surface);
+}
+
+.resource-inventory__stamp-mark {
+  color: var(--tv-grammar-resource-premium);
+  font-family: var(--tv-font-data);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: var(--tv-kicker-tracking);
+  text-transform: uppercase;
+}
+
+.resource-inventory__stamp-copy {
+  margin: 0;
+  color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-ui);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
 .resource-inventory__row {
   display: grid;
   grid-template-columns: auto 1fr auto;

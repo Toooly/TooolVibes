@@ -567,27 +567,6 @@ export function DefinitiveArchive({
                 >
                   Reimposta i filtri
                 </button>
-                {query.trim().length > 0 ? (
-                  <button
-                    type="button"
-                    className="ar4-grid__empty-cta ar4-grid__empty-cta--secondary"
-                    onClick={() => {
-                      setQuery("");
-                      setActiveGroup("all");
-                      setActiveLevel("all");
-                    }}
-                  >
-                    Mostra tutti i tool
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="ar4-grid__empty-cta ar4-grid__empty-cta--secondary"
-                    onClick={() => setActiveGroup("all")}
-                  >
-                    Mostra tutti i tool
-                  </button>
-                )}
               </div>
             </div>
           ) : (

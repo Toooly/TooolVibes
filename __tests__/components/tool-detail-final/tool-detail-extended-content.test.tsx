@@ -116,4 +116,25 @@ describe("ToolDetailExtendedContent public markdown", () => {
     expect(text).toContain("Verifica sul sito ufficiale.");
     expect(text).not.toContain("CTA e stati");
   });
+
+  it("omits Dati tecnici when the tool has no technical fields", () => {
+    const { container } = render(
+      <ToolDetailExtendedContent
+        tool={makeTool({
+          categoryLabel: "",
+          levelLabel: null,
+          domain: "",
+          publishedAt: "",
+          readingTime: null,
+          tags: [],
+          extendedContent: null,
+        })}
+      />,
+    );
+    const text = container.textContent ?? "";
+    expect(text).not.toContain("Dati tecnici");
+    expect(text).not.toContain("Non specificato");
+    expect(text).not.toContain("Nessun tag associato");
+    expect(text).not.toContain("Data non disponibile");
+  });
 });

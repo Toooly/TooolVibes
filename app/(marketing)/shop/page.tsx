@@ -21,8 +21,6 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Lo Shop TooolVibes è in preparazione. Il prodotto editoriale resta nel Catalogo e nelle Raccolte.",
 });
 
-const SCARCITY_BADGE = "In preparazione";
-
 const CARDS = [
   {
     title: "Stato attuale",
@@ -42,12 +40,6 @@ const CARDS = [
     icon: <Sparkles className="size-4" aria-hidden="true" />,
     example: "Fino ad allora non trovi link esterni, cataloghi fittizi o inviti all'acquisto.",
   },
-] as const;
-
-const INVENTORY = [
-  { title: "Prodotti pubblicati", value: "0", caption: "Nessun catalogo finto" },
-  { title: "Risorse in lavorazione", value: "0", caption: "Solo se verificabili" },
-  { title: "Periodo di apertura", value: "Non annunciato", caption: "Nessuna data pubblica" },
 ] as const;
 
 export default function ShopPage() {
@@ -76,13 +68,7 @@ export default function ShopPage() {
             </Link>
           </>
         }
-        signature={
-          <InventoryPanel
-            badge={SCARCITY_BADGE}
-            items={INVENTORY}
-            status="Nessun acquisto attivo"
-          />
-        }
+        signature={<InventoryPanel />}
       />
 
       <SecondarySection
@@ -150,83 +136,16 @@ export default function ShopPage() {
   );
 }
 
-import type { ReactNode } from "react";
-
-function InventoryPanel({
-  badge,
-  items,
-  status,
-}: {
-  badge: string;
-  items: ReadonlyArray<{ title: string; value: string; caption: string }>;
-  status: string;
-}) {
-  const [head, ...rest] = items;
+function InventoryPanel() {
   return (
     <div className="resource-inventory">
-      <div className="resource-inventory__status">
-        <div>
-          <p className="resource-inventory__kicker">Stato dello Shop</p>
-          <p className="resource-inventory__title">{status}</p>
-        </div>
-        <span className="resource-inventory__badge">{badge}</span>
-      </div>
-      {head ? (
-        <InventoryRow index={1} label={head.title} value={head.value} caption={head.caption} highlight />
-      ) : null}
-      {rest.map((item, idx) => (
-        <InventoryRow
-          key={item.title}
-          index={idx + 2}
-          label={item.title}
-          value={item.value}
-          caption={item.caption}
-        />
-      ))}
-    </div>
-  );
-}
-
-function InventoryRow({
-  index,
-  label,
-  value,
-  caption,
-  highlight = false,
-}: {
-  index: ReactNode;
-  label: string;
-  value: string;
-  caption: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="resource-inventory__row" data-highlight={highlight ? "true" : "false"}>
-      <span className="resource-inventory__index">{index}</span>
-      <span style={{ display: "grid", gap: "0.1rem" }}>
-        <strong
-          style={{
-            color: "var(--tv-ink-primary)",
-            fontFamily: "var(--tv-font-ui)",
-            fontSize: "0.85rem",
-            fontWeight: 600,
-            lineHeight: 1.2,
-          }}
-        >
-          {label}
-        </strong>
-        <span
-          style={{
-            color: "var(--tv-ink-secondary)",
-            fontFamily: "var(--tv-font-ui)",
-            fontSize: "0.75rem",
-            lineHeight: 1.4,
-          }}
-        >
-          {caption}
+      <p className="resource-inventory__stamp">
+        <span className="resource-inventory__stamp-mark">In preparazione</span>
+        <span className="resource-inventory__stamp-copy">
+          Nessun prodotto, prezzo o checkout. Catalogo e Raccolte restano
+          disponibili.
         </span>
-      </span>
-      <span className="resource-inventory__value">{value}</span>
+      </p>
     </div>
   );
 }

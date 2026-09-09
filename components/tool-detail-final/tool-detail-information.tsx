@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { formatItalianDate } from "@/lib/utils";
 
@@ -11,50 +13,64 @@ type ToolDetailInformationProps = {
   embedded?: boolean;
 };
 
+export function hasToolDetailInformation(tool: ToolPublicView): boolean {
+  return (
+    Boolean(tool.categoryLabel) ||
+    Boolean(tool.levelLabel) ||
+    Boolean(tool.domain) ||
+    Boolean(tool.publishedAt) ||
+    Boolean(tool.readingTime) ||
+    tool.tags.length > 0
+  );
+}
+
+function informationRows(tool: ToolPublicView): Array<{ dt: string; dd: ReactNode }> {
+  const rows: Array<{ dt: string; dd: ReactNode }> = [];
+  if (tool.categoryLabel) {
+    rows.push({ dt: "Categoria", dd: tool.categoryLabel });
+  }
+  if (tool.levelLabel) {
+    rows.push({ dt: "Livello", dd: tool.levelLabel });
+  }
+  if (tool.domain) {
+    rows.push({ dt: "Dominio", dd: tool.domain });
+  }
+  if (tool.publishedAt) {
+    rows.push({ dt: "Pubblicato", dd: formatItalianDate(tool.publishedAt) });
+  }
+  if (tool.readingTime) {
+    rows.push({ dt: "Analisi", dd: tool.readingTime });
+  }
+  if (tool.tags.length > 0) {
+    rows.push({
+      dt: "Tag",
+      dd: (
+        <ul>
+          {tool.tags.map((t) => (
+            <li key={t}>#{t}</li>
+          ))}
+        </ul>
+      ),
+    });
+  }
+  return rows;
+}
+
 export function ToolDetailInformation({
   tool,
   embedded = false,
 }: ToolDetailInformationProps) {
-  const formattedPublishedAt = tool.publishedAt
-    ? formatItalianDate(tool.publishedAt)
-    : "Data non disponibile";
+  const rows = informationRows(tool);
+  if (rows.length === 0) return null;
 
   const grid = (
     <dl className="td-final-information__grid" id={embedded ? "td-final-information" : undefined}>
-      <div className="td-final-information__row">
-        <dt>Categoria</dt>
-        <dd>{tool.categoryLabel}</dd>
-      </div>
-      <div className="td-final-information__row">
-        <dt>Livello</dt>
-        <dd>{tool.levelLabel ?? "Non specificato"}</dd>
-      </div>
-      <div className="td-final-information__row">
-        <dt>Dominio</dt>
-        <dd>{tool.domain}</dd>
-      </div>
-      <div className="td-final-information__row">
-        <dt>Pubblicato</dt>
-        <dd>{formattedPublishedAt}</dd>
-      </div>
-      <div className="td-final-information__row">
-        <dt>Analisi</dt>
-        <dd>{tool.readingTime ?? "Non disponibile"}</dd>
-      </div>
-      <div className="td-final-information__row">
-        <dt>Tag</dt>
-        <dd>
-          {tool.tags.length > 0 ? (
-            <ul>
-              {tool.tags.map((t) => (
-                <li key={t}>#{t}</li>
-              ))}
-            </ul>
-          ) : (
-            <span className="is-empty">Nessun tag associato</span>
-          )}
-        </dd>
-      </div>
+      {rows.map((row) => (
+        <div className="td-final-information__row" key={row.dt}>
+          <dt>{row.dt}</dt>
+          <dd>{row.dd}</dd>
+        </div>
+      ))}
     </dl>
   );
 

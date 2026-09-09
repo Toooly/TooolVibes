@@ -15,6 +15,17 @@ export function GuideArticleEnd({
 }: GuideArticleEndProps) {
   const safeRelated = relatedPosts.filter((p) => p.slug !== currentSlug).slice(0, 3);
 
+  if (safeRelated.length === 0) {
+    return (
+      <nav className="guides-article__end" aria-label="Altre guide">
+        <Link href="/posts" className="guides-end__cta">
+          Tutte le guide
+          <span aria-hidden>→</span>
+        </Link>
+      </nav>
+    );
+  }
+
   return (
     <section className="guides-article__end" aria-labelledby="guide-article-end-title">
       <div>
@@ -31,18 +42,11 @@ export function GuideArticleEnd({
         </p>
       </div>
 
-      {safeRelated.length > 0 ? (
-        <div className="guides-article__end-grid">
-          {safeRelated.map((p) => (
-            <GuideCard key={p.slug} post={p} variant="default" />
-          ))}
-        </div>
-      ) : (
-        <p className="guides-article__end-dek">
-          Stiamo preparando i prossimi pezzi. Nel frattempo, apri la libreria
-          completa per scegliere un altro punto di ingresso.
-        </p>
-      )}
+      <div className="guides-article__end-grid">
+        {safeRelated.map((post) => (
+          <GuideCard key={post.slug} post={post} variant="default" />
+        ))}
+      </div>
 
       <div
         style={{
