@@ -1390,12 +1390,24 @@
 
 /* Saved state: cyan border + saved-flag color (in addition to is-saved badge) */
 .ar4-card[data-saved] {
-  border-color: color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-cyan) 12%, transparent);
+  border-color: var(--tv-grammar-personal-border);
+  box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
 }
 
 .ar4-card[data-saved]:not(.is-promoted) {
-  background: color-mix(in srgb, var(--tv-accent-cyan) 5%, var(--tv-bg-base));
+  background: var(--tv-grammar-personal-wash);
+}
+
+.ar4-card[data-saved]::before {
+  content: "";
+  position: absolute;
+  top: 0.85rem;
+  left: 0;
+  width: 2px;
+  height: 1.15rem;
+  background: var(--tv-grammar-personal-remembered-marker);
+  border-radius: 0 1px 1px 0;
+  pointer-events: none;
 }
 
 /* Selected (compare) state — already defined; ensure no glow-only reliance */
@@ -1985,7 +1997,7 @@
 }
 
 [data-saved] {
-  border-color: color-mix(in srgb, var(--tv-accent-cyan) 40%, transparent);
+  border-color: var(--tv-grammar-personal-border);
 }
 
 .archive-v4-card:focus-within,
@@ -2690,5 +2702,44 @@ a.archive-v4-card:focus-visible {
 
   .ar4-card__desc {
     -webkit-line-clamp: 2;
+  }
+}
+
+/* V3.1 graphic language — EDITORIAL MARK (brass rail) + MEMORY MARK */
+.ar4-card:has(.ar4-card__status--editorial)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0.85rem;
+  width: 2.35rem;
+  height: 2px;
+  background: var(--tv-grammar-editorial-rail);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:has(.ar4-card__status--editorial):hover,
+  .ar4-card:has(.ar4-card__status--editorial).is-hover {
+    border-color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 40%, var(--tv-grammar-resource-edge));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ar4-card[data-saved] .toggle-chip-glow.is-fresh::after {
+    content: "";
+    position: absolute;
+    inset: auto auto 0 0;
+    width: 0.45rem;
+    height: 2px;
+    background: var(--tv-grammar-personal-remembered-marker);
+    transform-origin: left center;
+    pointer-events: none;
+    animation: tv-gl-mark-settle var(--tv-duration-slow) var(--tv-easing-decelerate) 1 both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card[data-saved] .toggle-chip-glow.is-fresh::after {
+    animation: none;
   }
 }

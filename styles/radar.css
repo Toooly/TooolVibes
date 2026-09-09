@@ -1304,6 +1304,7 @@ h1.tv-radar__title,
 
 /* — Status bar compatta (fonte · periodo · stato) — */
 .tv-radar-status-bar {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1761,5 +1762,50 @@ h1.tv-radar__title,
   .tv-radar__controls {
     margin-bottom: var(--tv-space-px-4);
     padding-block: var(--tv-space-px-3);
+  }
+}
+
+/* V3.1 graphic language — SIGNAL TRACE (localized cyan, not a full glow).
+   Green remains live status. Cyan is signal activity. */
+.tv-radar-page[data-state="stale"] .tv-radar-status-bar {
+  box-shadow: inset 2px 0 0 color-mix(in srgb, var(--tv-grammar-signal-trace) 32%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tv-radar[data-refreshing="true"] .tv-radar-status-bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 18%;
+    height: 64%;
+    width: 2px;
+    background: var(--tv-grammar-signal-accent);
+    transform-origin: top;
+    pointer-events: none;
+    animation: tv-gl-trace-draw var(--tv-duration-route) var(--tv-easing-decelerate) 1 both;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tv-radar-table__row:hover,
+  .tv-radar-index__row:hover {
+    box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
+  }
+
+  .tv-radar-node:hover .tv-radar-signal-identity {
+    border-color: var(--tv-grammar-signal-trace);
+  }
+}
+
+.tv-radar-table__row:focus-visible,
+.tv-radar-index__row:focus-visible {
+  box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-radar[data-refreshing="true"] .tv-radar-status-bar::after {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

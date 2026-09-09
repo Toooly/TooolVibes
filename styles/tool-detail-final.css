@@ -1869,3 +1869,21 @@
     flex: 0 0 calc(100% - 2.5rem);
   }
 }
+
+/* V3.1 graphic language — editorial rail on the full score instrument only */
+.td-final-score:not(.td-final-score--compact)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  width: 2.35rem;
+  height: 2px;
+  background: var(--tv-grammar-editorial-rail);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .td-final-score:not(.td-final-score--compact):hover {
+    border-color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 46%, var(--tv-border-subtle));
+  }
+}

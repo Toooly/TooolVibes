@@ -673,3 +673,34 @@
     transition: none;
   }
 }
+
+/* V3.1 graphic language — family-aware focus. Keep 2px solid outline. */
+.marketing-shell .tv-radar-page :where(a, button):focus-visible,
+.marketing-shell .tv-home-radar--snapshot :where(a, button):focus-visible {
+  outline-color: var(--tv-grammar-signal-focus);
+}
+
+.marketing-shell .cx-card-v4:focus-visible,
+.marketing-shell .cx-stack-flow-v4 :where(a, button):focus-visible,
+.marketing-shell .tv-workflow-card:focus-visible {
+  outline-color: var(--tv-grammar-workflow-focus);
+}
+
+.marketing-shell .ar4-card[data-saved] :where(a, button):focus-visible,
+.marketing-shell .shortlist-final-surface :where(a, button):focus-visible {
+  outline-color: var(--tv-grammar-personal-focus);
+}
+
+.marketing-shell .def-editorial :where(a, button):focus-visible {
+  outline-color: var(--tv-grammar-editorial-focus);
+}
+
+.marketing-shell .def-editorial__pod-card:focus-visible {
+  outline-color: var(--tv-grammar-editorial-focus-dark);
+}
+
+.marketing-shell .tv-compare-dock[data-ready] :where(a, button):focus-visible,
+.marketing-shell .compare-workbench-chrome__cta--primary:focus-visible,
+.marketing-shell .compare-workbench-identity__decide:focus-visible {
+  outline-color: var(--tv-grammar-activation-focus);
+}

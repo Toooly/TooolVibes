@@ -356,3 +356,43 @@
     animation: none;
   }
 }
+
+/* ============================================================
+   V3.1 GRAPHIC INTERACTION LANGUAGE
+   Motion is information. One-shot 120–280ms. No loops except
+   genuine loading/refreshing/live. Pseudos are decorative.
+   DISCOVERY → signal trace
+   WORKFLOW → connector
+   CANDIDATE → memory mark
+   EDITORIAL JUDGMENT → editorial mark
+   DECISION → decision mark → memory
+   ============================================================ */
+
+@keyframes tv-gl-trace-draw {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes tv-gl-mark-settle {
+  from {
+    opacity: 0;
+    transform: scaleX(0.35);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-radar[data-refreshing="true"] .tv-radar-status-bar::after,
+  .ar4-card[data-saved]::before {
+    animation: none;
+  }
+}

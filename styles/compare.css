@@ -2024,3 +2024,17 @@ html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
     transition: none;
   }
 }
+
+/* V3.1 graphic language — DECISION MARK → MEMORY */
+.tv-compare-dock[data-ready] .tv-compare-dock__inner {
+  box-shadow: inset 2px 0 0 var(--tv-grammar-activation);
+}
+
+.compare-workbench-chrome[data-compare-workbench-state="closed"] {
+  box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
+}
+
+.compare-workbench-chrome__cta--primary:focus-visible,
+.compare-workbench-identity__decide:focus-visible {
+  outline-color: var(--tv-grammar-activation-focus);
+}

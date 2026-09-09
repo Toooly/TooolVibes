@@ -521,7 +521,9 @@
   .tv-compare-dock[data-ready] .tv-compare-dock__cta,
   .tv-member-gate__card,
   .ar4-sheet__panel,
-  .ar4-sheet__backdrop {
+  .ar4-sheet__backdrop,
+  .tv-radar[data-refreshing="true"] .tv-radar-status-bar::after,
+  .ar4-card[data-saved] .toggle-chip-glow.is-fresh::after {
     animation: none;
   }
 }

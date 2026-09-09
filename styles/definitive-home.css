@@ -1118,8 +1118,15 @@
 }
 
 .def-editorial__pod-card:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--tv-focus-ring);
+  outline: 2px solid var(--tv-grammar-editorial-focus-dark);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .def-editorial__pod-card:hover {
+    border-color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 36%, var(--tv-border-subtle));
+  }
 }
 
 /* v4: Rank #1 — winner treatment, gold signal, TALLEST */
@@ -1153,7 +1160,7 @@
 }
 
 .def-editorial__pod-card--rank-2::after {
-  background: var(--tv-grammar-signal-trace);
+  background: var(--tv-grammar-editorial-edge);
 }
 
 @media (max-width: 429px) {
@@ -2902,9 +2909,33 @@
 }
 
 .tv-workflow-card__flow li {
+  position: relative;
   display: grid;
   gap: 0.2rem;
   min-width: 0;
+}
+
+.tv-workflow-card__flow li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  right: -0.2rem;
+  width: 0.4rem;
+  height: 1px;
+  background: var(--tv-grammar-workflow-border);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tv-workflow-card__flow li:hover b,
+  .tv-workflow-card__flow li:focus-within b {
+    color: var(--tv-grammar-workflow-structure);
+  }
+
+  .tv-workflow-card__flow li:hover:not(:last-child)::after,
+  .tv-workflow-card__flow li:focus-within:not(:last-child)::after {
+    background: var(--tv-grammar-workflow-structure);
+  }
 }
 
 .tv-workflow-card__flow b {
@@ -3203,4 +3234,15 @@
 
 .tv-discovery-stage .def-start__panel {
   padding: var(--tv-rhythm-related-lg) 0 0;
+}
+
+/* V3.1 graphic language — home binds without changing frozen composition */
+@media (hover: hover) and (pointer: fine) {
+  .tv-home-radar__launch:hover {
+    box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
+  }
+}
+
+.tv-home-radar__launch:focus-visible {
+  box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
 }

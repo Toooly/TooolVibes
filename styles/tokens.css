@@ -1255,6 +1255,14 @@
   --tv-grammar-personal-remembered-edge: color-mix(in srgb, var(--tv-color-violet-300) 48%, transparent);
   --tv-grammar-personal-remembered-marker: var(--tv-color-violet-300);
 
+  /* V3.1 graphic language — family-aware focus (AA pairs, not glow-only). */
+  --tv-grammar-signal-focus: var(--tv-accent-cyan-on-dark);
+  --tv-grammar-workflow-focus: var(--tv-accent-brand-aa);
+  --tv-grammar-personal-focus: var(--tv-grammar-personal-accent-strong);
+  --tv-grammar-editorial-focus: var(--tv-accent-gold-on-ivory);
+  --tv-grammar-editorial-focus-dark: var(--tv-accent-gold-on-dark);
+  --tv-grammar-activation-focus: var(--tv-accent-gold-on-dark);
+
   /* ACTION / SELECTED / COMMERCIAL */
   --tv-grammar-activation: var(--tv-activation-strong);
   --tv-grammar-activation-ink: var(--tv-activation-strong-ink);

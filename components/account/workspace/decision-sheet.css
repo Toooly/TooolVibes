@@ -88,6 +88,11 @@
 .tv-decision-sheet__outcome[data-active="true"] {
   border-color: color-mix(in srgb, var(--tv-accent-brand) 46%, var(--tv-border-subtle));
   background: color-mix(in srgb, var(--tv-accent-brand) 18%, transparent);
+  box-shadow: inset 2px 0 0 var(--tv-grammar-selected);
+}
+
+.tv-decision-sheet__confirm:focus-visible {
+  outline-color: var(--tv-grammar-activation-focus);
 }
 
 .tv-decision-sheet__outcome:focus-visible,
