@@ -5130,3 +5130,27 @@
     padding-inline: var(--tv-gutter-tablet);
   }
 }
+
+/* ===== V3.2 P6 — content rail parity with catalog: the gutter lives on the
+   content container, so text aligns at container + gutter (80px @1440).
+   Mobile/tablet insets are unchanged (wrapper padding is zeroed, the inner
+   carries the full 20/24/32 ladder). ===== */
+.cx-index {
+  padding-inline: 0;
+}
+
+.cx-index__inner {
+  padding-inline: var(--tv-gutter-mobile);
+}
+
+@media (min-width: 48rem) {
+  .cx-index__inner {
+    padding-inline: var(--tv-gutter-tablet);
+  }
+}
+
+@media (min-width: 1280px) {
+  .cx-index__inner {
+    padding-inline: var(--tv-gutter-desktop);
+  }
+}

@@ -692,6 +692,7 @@
 
 .tv-app__canvas {
   width: min(100%, 80rem);
+  margin-inline: auto;
   padding: 1.15rem var(--tv-gutter-mobile) 2rem;
 }
 
@@ -2544,7 +2545,8 @@
 
 @media (min-width: 1280px) {
   .tv-app__canvas {
-    width: min(100%, 88rem);
+    width: min(100%, var(--tv-container-uw));
+    margin-inline: auto;
     padding: 1.85rem 2rem 3rem;
   }
   .tv-home {
