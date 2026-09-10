@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
@@ -19,25 +19,22 @@ import { useAdvertisingConsent } from "@/components/ads/advertising-consent-prov
  *
  * Accessibility:
  *  - `role="dialog"` (non-modal) with an accessible name;
- *  - receives initial focus when it appears;
  *  - accept and reject controls have equal visual prominence;
- *  - fully keyboard operable.
+ *  - fully keyboard operable via natural tab order.
  */
 export function ConsentBanner() {
   const { state, grantAll, denyNonNecessary, openSettings } =
     useAdvertisingConsent();
-  const regionRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (state === "unknown" && mounted) {
-      regionRef.current?.focus();
-    }
-  }, [state, mounted]);
+  /* v3.2: no auto-focus. The banner is a NON-modal surface; stealing the
+     initial focus breaks the skip-link-first keyboard contract on every
+     fresh page load. Keyboard users reach the banner through natural tab
+     order (it is portalled as the last body child). */
 
   if (!mounted || state !== "unknown") {
     return null;
@@ -45,7 +42,6 @@ export function ConsentBanner() {
 
   return createPortal(
     <div
-      ref={regionRef}
       role="dialog"
       aria-modal="false"
       aria-label="Preferenze pubblicitarie"

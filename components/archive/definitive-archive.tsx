@@ -20,6 +20,7 @@
  */
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import {
   Search,
   SlidersHorizontal,
@@ -773,7 +774,13 @@ function FilterSheet({
     };
   }, [onClose, returnFocusRef]);
 
-  return (
+  /* Portal to document.body: the sheet is a fixed overlay and must escape
+     main#main-content's stacking context (relative z-10). Rendered in-tree,
+     the compare dock (z-40) and the mobile bottom nav (z-50) sit ABOVE the
+     sheet and intercept taps on its lower controls (v3.2 P1 fix). */
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
       id="ar4-filter-sheet"
       className="ar4-sheet"
@@ -1002,7 +1009,8 @@ function FilterSheet({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

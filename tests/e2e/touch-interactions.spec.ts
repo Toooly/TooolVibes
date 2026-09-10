@@ -66,6 +66,42 @@ test.describe("touch interaction contract (390)", () => {
     }
   });
 
+  test("CATALOG filter sheet opens above persistent chrome and closes cleanly", async ({
+    page,
+  }) => {
+    await page.goto("/archivio", { waitUntil: "domcontentloaded" });
+    await dismissConsentIfPresent(page);
+
+    // Put one tool in compare so the session dock is floating.
+    const card = page.locator(".ar4-card").first();
+    await card.getByRole("button", { name: /Aggiungi .* al confronto/ }).first().tap();
+
+    const trigger = page.getByRole("button", { name: /Apri filtri catalogo/i });
+    await trigger.tap();
+    const sheet = page.locator("#ar4-filter-sheet");
+    await expect(sheet).toBeVisible();
+
+    // Regression (v3.2 P1): the sheet is portalled to body and must NOT be
+    // intercepted by the compare dock or bottom nav. Hit-test the lowest
+    // group toggle through the viewport.
+    const gruppo = sheet.getByRole("button", { name: "Livello" });
+    await expect(gruppo).toBeVisible();
+    await gruppo.tap();
+    await expect(gruppo).toHaveAttribute("aria-expanded", "true");
+
+    // Apply a level filter and confirm the sheet closes and chips appear.
+    await sheet.getByRole("button", { name: "Principiante" }).tap();
+    await sheet.getByRole("button", { name: /Mostra \d+ risultati/i }).tap();
+    await expect(sheet).toHaveCount(0);
+    await expect(page.locator(".ar4-applied")).toBeVisible();
+
+    await page.getByRole("button", { name: /Reimposta/i }).first().tap();
+    await expect(page.locator(".ar4-applied")).toHaveCount(0);
+
+    // Cleanup compare selection.
+    await card.getByRole("button", { name: /Rimuovi .* dal confronto|Togli/i }).first().tap();
+  });
+
   test("CATALOG save and compare toggles are independent of card navigation", async ({
     page,
   }) => {
