@@ -2124,6 +2124,8 @@
   text-decoration: none;
   color: var(--tv-ink-inverted-primary);
   transition: border-color var(--tv-duration-base) var(--tv-easing-standard);
+;
+  border-top: 2px solid var(--tv-color-violet-500);
 }
 
 .cx-related-card:hover {

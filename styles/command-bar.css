@@ -21,6 +21,21 @@
   width: 100%;
 }
 
+/* Loop node — the logo interlace riding the wave edge. */
+.command-bar::before {
+  content: "";
+  position: absolute;
+  left: clamp(20px, 4vw, 72px);
+  bottom: -3.5px;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid color-mix(in srgb, var(--tv-accent-brand) 75%, transparent);
+  border-radius: 50%;
+  background: var(--tv-bg-base);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Signal-wave edge — the logo gold→cyan trace crossing the chrome. */
 .command-bar::after {
   content: "";

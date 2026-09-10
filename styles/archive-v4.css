@@ -2872,6 +2872,18 @@ a.archive-v4-card:focus-visible {
   pointer-events: none;
   z-index: 0;
 }
+/* Editorial hierarchy: the first three results read as a podium index,
+   the rest recede into scanning texture. */
+.ar4-grid .ar4-card:nth-child(2)::before,
+.ar4-grid .ar4-card:nth-child(3)::before,
+.ar4-grid .ar4-card:nth-child(4)::before {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tv-ink-inverted-primary);
+}
+.ar4-grid .ar4-card:nth-child(n+5)::before {
+  opacity: 0.55;
+}
 .ar4-card {
   transition: box-shadow var(--tv-duration-base) var(--tv-easing-standard);
 }

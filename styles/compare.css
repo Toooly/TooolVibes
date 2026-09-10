@@ -2045,3 +2045,14 @@ html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
 .compare-workbench-identity__decide:focus-visible {
   outline-color: var(--tv-grammar-activation-focus);
 }
+
+/* ─── V3.2 Visual Excellence — DECISION voice on the empty state ───
+   The entry point to the comparison narrative carries the brass
+   judgment rail: candidates → differences → decision → memory. */
+.compare-workbench-chrome--empty {
+  border-top: 2px solid var(--tv-accent-gold);
+  padding-top: calc(var(--tv-space-5, 1.25rem) + 2px);
+}
+.compare-workbench-chrome--empty h2 {
+  color: var(--tv-accent-gold);
+}

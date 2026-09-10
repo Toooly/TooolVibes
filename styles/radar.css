@@ -1786,3 +1786,9 @@ h1.tv-radar__title,
     transform: none;
   }
 }
+
+/* V3.2 — signal trace under each radar node label (WAVE, strongest here). */
+.tv-radar-node__label {
+  padding-bottom: 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent);
+}
