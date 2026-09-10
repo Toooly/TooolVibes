@@ -455,6 +455,26 @@
   color: var(--tv-ink-primary);
 }
 
+@media (max-width: 47.99rem) {
+  .tv-consent-banner {
+    padding: 0.6rem 0.85rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+  }
+  .tv-consent-banner__inner {
+    gap: 0.4rem;
+  }
+  .tv-consent-banner__title {
+    font-size: 0.8125rem;
+  }
+  .tv-consent-banner__body {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+  .tv-consent-banner__actions {
+    gap: 0.4rem;
+  }
+}
+
+
 .tv-consent-dialog__scrim {
   position: fixed;
   inset: 0;

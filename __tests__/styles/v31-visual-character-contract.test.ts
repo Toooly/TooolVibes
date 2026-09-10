@@ -15,6 +15,7 @@ const footerTsx = readFileSync(
   resolve(process.cwd(), "components/layout/site-footer-v2.tsx"),
   "utf8",
 );
+const globalsCss = readFileSync(resolve(process.cwd(), "app/globals.css"), "utf8");
 
 describe("V3.1 visual character restore", () => {
   it("loads after member-experience so chapter materials can win", () => {
@@ -38,5 +39,14 @@ describe("V3.1 visual character restore", () => {
     expect(characterCss).toContain("var(--tv-surface-inverted)");
     expect(footerTsx).toContain("tv-launchpad__signature");
     expect(footerTsx).toContain("BrandLogo");
+  });
+
+  it("hides the skip link with clip, not transform", () => {
+    const skip = globalsCss.slice(
+      globalsCss.indexOf(".skip-link {"),
+      globalsCss.indexOf(".skip-link:focus"),
+    );
+    expect(skip).toContain("clip-path: inset(50%)");
+    expect(skip).not.toContain("translateY(-160%)");
   });
 });
