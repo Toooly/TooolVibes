@@ -170,6 +170,15 @@ export default defineConfig({
           },
           dependencies: ["gate-setup"],
         },
+        {
+          name: "touch-390",
+          testMatch: /touch-interactions\.spec\.ts/,
+          use: {
+            ...devices["iPhone 13"],
+            storageState: gateStorageState,
+          },
+          dependencies: ["gate-setup"],
+        },
         ...visualProjects,
         typographyProject,
       ],

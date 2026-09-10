@@ -12,6 +12,11 @@ import { useAdvertisingConsent } from "@/components/ads/advertising-consent-prov
  * The banner is portalled to `document.body` with a high z-index so it can
  * never be hidden below the app's own portalled mobile bottom navigation.
  *
+ * P0 occlusion contract (v3.2): on mobile the banner is a COMPACT bar
+ * (~120px). It must never swallow a large share of the viewport, because
+ * every pixel it covers is a pixel where catalog cards and CTAs silently
+ * refuse taps. One body line + two equal CTAs + inline settings link.
+ *
  * Accessibility:
  *  - `role="dialog"` (non-modal) with an accessible name;
  *  - receives initial focus when it appears;
@@ -47,12 +52,19 @@ export function ConsentBanner() {
       tabIndex={-1}
       className="tv-consent-banner"
     >
+      <h2 className="sr-only">Rispettiamo la tua privacy</h2>
       <div className="tv-consent-banner__inner">
-        <h2 className="tv-consent-banner__title">Rispettiamo la tua privacy</h2>
         <p className="tv-consent-banner__body">
-          Usiamo cookie tecnici per far funzionare il sito. Per vedere anche
-          gli spazi pubblicitari TinyAdz, scegli Accetta tutto. Puoi cambiare
-          idea in qualsiasi momento.
+          Cookie tecnici per far funzionare il sito; con il tuo consenso,
+          anche gli spazi TinyAdz. Cambia scelta quando vuoi:{" "}
+          <button
+            type="button"
+            onClick={openSettings}
+            className="tv-consent-banner__settings-link"
+          >
+            Personalizza
+          </button>
+          .
         </p>
         <div className="tv-consent-banner__actions">
           <button
@@ -68,13 +80,6 @@ export function ConsentBanner() {
             className="tv-consent-banner__cta"
           >
             Rifiuta non necessari
-          </button>
-          <button
-            type="button"
-            onClick={openSettings}
-            className="tv-consent-banner__ghost"
-          >
-            Personalizza
           </button>
         </div>
       </div>

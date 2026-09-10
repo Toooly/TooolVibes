@@ -979,6 +979,10 @@
   gap: 10px 12px;
   margin-top: auto;
   min-width: 0;
+  /* v3.2 tap contract: the rail is a reserved cluster, not a tap shield.
+     Empty rail space must fall through to the stretched card link —
+     otherwise the bottom strip of every card becomes a tap black hole. */
+  pointer-events: none;
 }
 
 .ar4-card__open {
@@ -1017,6 +1021,7 @@
   flex: 0 1 auto;
   min-width: 0;
   margin-left: auto;
+  pointer-events: none;
 }
 
 .ar4-card__state-flags {
@@ -1025,6 +1030,7 @@
   align-items: center;
   gap: 6px;
   min-width: 0;
+  pointer-events: none;
 }
 
 .ar4-card__toggles {
