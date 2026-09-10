@@ -2791,3 +2791,40 @@ a.archive-v4-card:focus-visible {
   .ar4-goals__inner,
   .ar4-applied { padding-inline: var(--tv-gutter-desktop); }
 }
+
+/* ============================================================
+   V3.2 MAIN PASS — catalog lead row (composition break, CSS-only)
+   First result renders as a full-width horizontal editorial row so
+   the grid never reads as an undifferentiated dark-card stack.
+   Stretched-link + action rail contracts are untouched.
+   ============================================================ */
+@media (min-width: 1280px) {
+  .ar4-grid__list > li:first-child {
+    grid-column: 1 / -1;
+  }
+  .ar4-grid__list > li:first-child .ar4-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-areas:
+      "top triage"
+      "desc actions";
+    gap: var(--tv-rhythm-related-lg) clamp(1.5rem, 3vw, 3rem);
+    align-items: center;
+    border-top: 2px solid var(--tv-accent-gold);
+  }
+  .ar4-grid__list > li:first-child .ar4-card__top { grid-area: top; }
+  .ar4-grid__list > li:first-child .ar4-card__desc { grid-area: desc; }
+  .ar4-grid__list > li:first-child .ar4-card__triage { grid-area: triage; }
+  .ar4-grid__list > li:first-child .ar4-card__actions { grid-area: actions; justify-content: flex-end; }
+  .ar4-grid__list > li:first-child .ar4-card__name-text {
+    font-size: 1.35rem;
+  }
+}
+@media (min-width: 600px) and (max-width: 1279px) {
+  .ar4-grid__list > li:first-child {
+    grid-column: 1 / -1;
+  }
+  .ar4-grid__list > li:first-child .ar4-card {
+    border-top: 2px solid var(--tv-accent-gold);
+  }
+}
