@@ -26,7 +26,7 @@ type DefinitiveHomeProps = {
   stacks?: HomeStackPreview[];
 };
 
-function Cockpit({ toolCount }: { toolCount: number }) {
+function Cockpit({ toolCount, stackCount }: { toolCount: number; stackCount: number }) {
   const eyebrowDesktop =
     toolCount > 0
       ? `Per chi costruisce prodotti digitali · ${toolCount} tool nel catalogo`
@@ -59,6 +59,29 @@ function Cockpit({ toolCount }: { toolCount: number }) {
             </span>
           </p>
           {toolCount > 0 ? <IntentEntry /> : null}
+          <dl className="def-cockpit__system" aria-label="TooolVibes in numeri">
+            <div className="def-cockpit__system-node">
+              <dd className="def-cockpit__system-value">{toolCount}</dd>
+              <dt className="def-cockpit__system-label">
+                <Link href="/archivio">Tool in catalogo</Link>
+              </dt>
+            </div>
+            <div className="def-cockpit__system-node">
+              <dd className="def-cockpit__system-value">{stackCount}</dd>
+              <dt className="def-cockpit__system-label">
+                <Link href="/collections">Stack curati</Link>
+              </dt>
+            </div>
+            <div className="def-cockpit__system-node def-cockpit__system-node--live">
+              <dd className="def-cockpit__system-value">
+                <span className="def-cockpit__system-pulse" aria-hidden="true" />
+                Live
+              </dd>
+              <dt className="def-cockpit__system-label">
+                <Link href="/radar">Segnali Radar</Link>
+              </dt>
+            </div>
+          </dl>
         </div>
       </div>
     </section>
@@ -102,7 +125,7 @@ export function DefinitiveHome({
           </a>
         </p>
       ) : null}
-      <Cockpit toolCount={tools.length} />
+      <Cockpit toolCount={tools.length} stackCount={stacks.length} />
       <StartHere focusTool={focusTool} tools={tools} stacks={stacks} />
       <TinyAdzInlineSlot placement="home-editorial" />
       <Method />

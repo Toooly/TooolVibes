@@ -3266,3 +3266,90 @@
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
 }
+
+/* ============================================================
+   V3.2 MAIN PASS — home product layer (H1 system strip, H2 lens voice)
+   ============================================================ */
+
+/* H1 — cockpit system strip: real counts as second hero layer. */
+.def-cockpit__system {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tv-rhythm-related-lg) clamp(1.5rem, 4vw, 3rem);
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  padding: 0;
+}
+.def-cockpit__system-node {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  gap: 0.15rem 0.6rem;
+  margin: 0;
+  padding-left: clamp(1rem, 2vw, 1.5rem);
+  border-left: 1px solid var(--tv-border-subtle);
+}
+.def-cockpit__system-node:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.def-cockpit__system-value {
+  margin: 0;
+  font-family: var(--tv-font-display);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--tv-ink-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.def-cockpit__system-label {
+  margin: 0;
+  font-size: var(--tv-text-label);
+  color: var(--tv-ink-muted-aa);
+}
+.def-cockpit__system-label a {
+  color: inherit;
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.def-cockpit__system-label a:hover,
+.def-cockpit__system-label a:focus-visible {
+  color: var(--tv-ink-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.def-cockpit__system-pulse {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--tv-grammar-radar-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-grammar-radar-accent) 25%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .def-cockpit__system-pulse {
+    animation: def-system-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes def-system-pulse {
+    50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--tv-grammar-radar-accent) 12%, transparent); }
+  }
+}
+
+/* H2 — lens voice: active tab marker + note take the lens color. */
+.tv-discovery-stage[data-mode="tool"] .def-start__tab.is-active {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 60%, transparent);
+}
+.tv-discovery-stage[data-mode="stack"] .def-start__tab.is-active {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-grammar-stack-node) 60%, transparent);
+}
+.tv-discovery-stage[data-mode="radar"] .def-start__tab.is-active {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-grammar-radar-accent) 60%, transparent);
+}
+.def-start__lens-note {
+  margin: var(--tv-rhythm-related) 0 0;
+  font-size: var(--tv-text-body-sm);
+  color: var(--tv-ink-muted-aa);
+  max-width: 62ch;
+}

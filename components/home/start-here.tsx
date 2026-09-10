@@ -137,6 +137,13 @@ export function StartHere({
             );
           })}
         </div>
+        <p className="def-start__lens-note" aria-live="polite">
+          {tab === "tool"
+            ? "La scelta della redazione, aggiornata ogni settimana."
+            : tab === "stack"
+              ? "Percorsi pronti: tool che lavorano insieme, dal primo setup al risultato."
+              : "Segnali freschi dal Product Hunt, riletti ogni giorno dalla redazione."}
+        </p>
       </header>
 
       <div className="tv-discovery-stage__frame">
