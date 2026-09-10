@@ -686,3 +686,20 @@
 .marketing-shell .compare-workbench-identity__decide:focus-visible {
   outline-color: var(--tv-grammar-activation-focus);
 }
+
+
+/* ===========================================================================
+   V3.2 P7 — rail alignment (tags)
+   Desktop: page padding collapses to 0 so the map cards sit on the 1344
+   container edge (frame pattern); interior pad 32 -> text on the canonical
+   80 rail @1440 / 320 @1920.
+   =========================================================================== */
+@media (min-width: 80rem) {
+  .tags-route {
+    padding-inline: 0;
+  }
+
+  .tags-route > section {
+    padding-inline: var(--tv-gutter-desktop);
+  }
+}

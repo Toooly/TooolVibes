@@ -252,7 +252,7 @@ img {
 
 @layer components {
   .page-shell {
-    @apply relative mx-auto w-full max-w-[84rem] px-5 sm:px-8 lg:px-10;
+    @apply relative mx-auto w-full max-w-[84rem] px-5 sm:px-6 lg:px-8;
   }
 
   html[data-motion-ready="true"] [data-motion-observed="true"] {
@@ -6863,7 +6863,7 @@ img {
   }
 
   .page-shell {
-    padding-inline: 0.75rem;
+    padding-inline: var(--tv-gutter-mobile);
   }
 
   [data-sonner-toaster] {

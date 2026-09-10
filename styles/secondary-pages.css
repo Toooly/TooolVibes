@@ -237,7 +237,7 @@
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-ui);
-  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-size: var(--tv-text-h2);
   font-weight: var(--tv-weight-bold);
   letter-spacing: -0.01em;
   line-height: var(--tv-leading-display);
@@ -322,7 +322,7 @@
   margin: 0;
   color: inherit;
   font-family: var(--tv-font-ui);
-  font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+  font-size: var(--tv-text-h2);
   font-weight: var(--tv-weight-bold);
   letter-spacing: -0.01em;
   line-height: var(--tv-leading-display);
@@ -884,7 +884,7 @@
   max-width: min(100%, 36ch);
   color: var(--tv-ink-inverted);
   font-family: var(--tv-font-ui);
-  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  font-size: var(--tv-text-h2);
   font-weight: var(--tv-weight-bold);
   letter-spacing: -0.015em;
   line-height: var(--tv-leading-display);
@@ -1492,5 +1492,36 @@
 @media (max-width: 47.99rem) {
   .legal-page.page-shell {
     padding-inline: var(--tv-gutter-mobile);
+  }
+}
+
+
+/* ===========================================================================
+   V3.2 P7 — rail alignment (secondary family)
+   Desktop: page padding collapses to 0 so hero/section cards sit on the
+   1344 container edge (frame pattern); interior pad 32 -> text on the
+   canonical 80 rail @1440 / 320 @1920. Tablet rides the 24 gutter.
+   =========================================================================== */
+@media (min-width: 48rem) {
+  .secondary-page {
+    padding-inline: var(--tv-gutter-tablet);
+  }
+
+  .legal-page.page-shell {
+    padding-inline: var(--tv-gutter-tablet);
+  }
+}
+
+@media (min-width: 80rem) {
+  .secondary-page {
+    padding-inline: 0;
+  }
+
+  .secondary-page__stack > * {
+    padding-inline: var(--tv-gutter-desktop);
+  }
+
+  .legal-page.page-shell {
+    padding-inline: var(--tv-gutter-desktop);
   }
 }

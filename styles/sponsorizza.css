@@ -129,7 +129,7 @@
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-ui);
-  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  font-size: var(--tv-text-h1);
   font-weight: var(--tv-weight-bold);
   letter-spacing: -0.02em;
   line-height: 1.02;
@@ -341,7 +341,7 @@
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-ui);
-  font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+  font-size: var(--tv-text-h2);
   font-weight: var(--tv-weight-bold);
   letter-spacing: -0.015em;
   line-height: var(--tv-leading-tight);
@@ -633,7 +633,7 @@
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-ui);
-  font-size: clamp(1.45rem, 2.6vw, 1.95rem);
+  font-size: var(--tv-text-h2);
   font-weight: var(--tv-weight-bold);
   letter-spacing: -0.015em;
   line-height: var(--tv-leading-tight);
@@ -1020,7 +1020,7 @@
   margin: 0;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
-  font-size: clamp(1.85rem, 4vw, 2.85rem);
+  font-size: var(--tv-text-h2);
   font-weight: var(--tv-weight-regular);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -1388,5 +1388,39 @@
 @media (prefers-reduced-motion: reduce) {
   .sponsorizza-partners__card::before {
     animation: none;
+  }
+}
+
+
+/* ===========================================================================
+   V3.2 P7 — rail alignment (sponsorizza)
+   Desktop: page padding collapses to 0 so the hero card sits on the 1344
+   container edge (frame pattern); interior pad 32 -> text on the canonical
+   80 rail @1440 / 320 @1920. Mobile: hero text rides the 20 gutter like
+   the secondary heroes (padding-inline 0).
+   =========================================================================== */
+@media (max-width: 47.99rem) {
+  .sponsorizza-hero {
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 48rem) {
+  .sponsorizza-page {
+    padding-inline: var(--tv-gutter-tablet);
+  }
+
+  .sponsorizza-hero {
+    padding-inline: var(--tv-gutter-tablet);
+  }
+}
+
+@media (min-width: 80rem) {
+  .sponsorizza-page {
+    padding-inline: 0;
+  }
+
+  .sponsorizza-page > * {
+    padding-inline: var(--tv-gutter-desktop);
   }
 }

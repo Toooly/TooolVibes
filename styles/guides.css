@@ -39,7 +39,8 @@
   gap: clamp(1.25rem, 2.6vw, 2rem);
   padding-block: clamp(1.25rem, 2.6vw, 2.25rem);
   padding-inline: var(--guides-pad-x);
-  width: 100%;
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
 }
 
 .guides-eyebrow {
@@ -480,7 +481,7 @@
 .guides-feature__title {
   font-family: var(--tv-font-display);
   font-weight: 400;
-  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+  font-size: var(--tv-text-h2);
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--guides-text);
@@ -851,7 +852,7 @@
 .guides-section__title {
   font-family: var(--tv-font-ui);
   font-weight: 700;
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-size: var(--tv-text-h2);
   line-height: 1.1;
   letter-spacing: 0;
   color: inherit;
@@ -976,7 +977,8 @@
   gap: clamp(1.25rem, 2.4vw, 2rem);
   padding-block: clamp(1.5rem, 3vw, 2.5rem);
   padding-inline: var(--guides-pad-x);
-  width: 100%;
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
 }
 
 .guides-article__hero {
@@ -1951,7 +1953,7 @@
   }
 
   .guides-article__hero-h1 {
-    font-size: clamp(1.7rem, 9vw, 2.4rem);
+    font-size: var(--tv-text-h1);
   }
 
   .guides-toc {
@@ -2190,4 +2192,31 @@
 .guides-end__cta:focus-visible {
   border-color: color-mix(in srgb, currentColor 40%, transparent);
   outline: none;
+}
+
+
+/* ===========================================================================
+   V3.2 P7 — container + rail alignment (posts family)
+   Desktop: section cards sit on the 1344 container edge (frame pattern),
+   interior pad 32 -> text on the canonical 80 rail @1440 / 320 @1920.
+   =========================================================================== */
+@media (min-width: 48rem) {
+  .guides-page,
+  .guides-article {
+    --guides-pad-x: var(--tv-gutter-tablet);
+  }
+}
+
+@media (min-width: 80rem) {
+  .guides-page,
+  .guides-article {
+    --guides-pad-x: 0;
+  }
+
+  .guides-section,
+  .guides-masthead,
+  .guides-article__hero,
+  .guides-feature__body {
+    padding-inline: var(--tv-gutter-desktop);
+  }
 }

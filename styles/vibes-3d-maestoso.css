@@ -350,6 +350,20 @@
   padding-inline: var(--tv-gutter-mobile);
 }
 
+/* V3.2 P7 — chi-siamo rides the canonical gutter ladder (20/24/32)
+   so section text lands on the 80 rail @1440 / 320 @1920. */
+@media (min-width: 48rem) {
+  .v-about-page.page-shell {
+    padding-inline: var(--tv-gutter-tablet);
+  }
+}
+
+@media (min-width: 80rem) {
+  .v-about-page.page-shell {
+    padding-inline: var(--tv-gutter-desktop);
+  }
+}
+
 .v-about-services-more {
   margin-top: 0.5rem;
 }
