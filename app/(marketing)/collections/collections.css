@@ -559,7 +559,7 @@
   width: 100%;
   background: var(--tv-grammar-workflow-field);
   color: var(--tv-ink-primary);
-  padding: clamp(2.5rem, 4.4vw, 4.5rem) clamp(1rem, 4vw, 3rem) 6rem;
+  padding: clamp(2.5rem, 4.4vw, 4.5rem) var(--tv-gutter-desktop) 6rem;
 }
 
 .cx-index__inner {
@@ -731,9 +731,9 @@
 
 .cx-index__section-title h2 {
   font-family: var(--tv-font-ui);
-  font-weight: 400;
-  font-size: clamp(1.45rem, 2.2vw, 1.85rem);
-  line-height: 1;
+  font-weight: var(--tv-weight-bold);
+  font-size: var(--tv-text-h2);
+  line-height: var(--tv-leading-display);
   margin: 0;
   color: var(--tv-ink-primary);
 }
@@ -997,7 +997,7 @@
 .cx-detail {
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
-  padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3rem) 6rem;
+  padding: clamp(2rem, 4vw, 3.5rem) var(--tv-gutter-desktop) 6rem;
   display: grid;
   gap: clamp(2rem, 3.2vw, 2.6rem);
 }
@@ -2258,7 +2258,7 @@
   }
 
   .cx-index__title {
-    font-size: clamp(2rem, 9vw, 2.6rem);
+    font-size: var(--tv-text-h1);
   }
 
   .cx-index__grid {
@@ -2864,7 +2864,7 @@
 .cx-detail-v4 {
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
-  padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3rem) 6rem;
+  padding: clamp(2rem, 4vw, 3.5rem) var(--tv-gutter-desktop) 6rem;
   display: flex;
   flex-direction: column;
   gap: clamp(2.5rem, 5vw, 4rem);
@@ -2949,7 +2949,7 @@
 
 .cx-detail-hero-v4__title {
   font-family: var(--tv-font-family-display);
-  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-size: var(--tv-text-h1);
   line-height: 1.0;
   /* Anton only ships 400 — hierarchy comes from size/tracking/lh */
   font-weight: 400;
@@ -5119,5 +5119,14 @@
 
   .cx-detail-hero-v4__decision-value {
     font-size: 0.82rem;
+  }
+}
+
+
+/* ===== V3.2 P5 — gutter ladder tablet step (mobile handled by ≤47.99rem blocks) ===== */
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .cx-index,
+  .cx-detail-v4 {
+    padding-inline: var(--tv-gutter-tablet);
   }
 }

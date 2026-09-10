@@ -1260,7 +1260,7 @@ h1.tv-radar__title,
 @media (max-width: 47.99rem) {
   h1.tv-radar__title,
   .tv-radar__title {
-    font-size: clamp(1.5rem, 8vw, 2.4rem);
+    font-size: var(--tv-text-h1);
     letter-spacing: -0.02em;
   }
 }
@@ -1719,7 +1719,7 @@ h1.tv-radar__title,
 
   h1.tv-radar__title,
   .tv-radar__title {
-    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+    font-size: var(--tv-text-h1);
     max-width: 18ch;
   }
 
