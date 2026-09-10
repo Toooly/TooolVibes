@@ -1,0 +1,174 @@
+/* ============================================================
+   SPIKE — Prose UI × TooolVibes EDITORIAL theme adapter (dev-only)
+   Scope: .tv-prose-ui-theme (always combined with .prose-ui).
+   No :root, no hex, no !important. Later import beats :root ties.
+   Family: EDITORIAL (ivory / graphite / brass / restrained purple).
+   ============================================================ */
+
+.tv-prose-ui-theme {
+  /* ---- core voice ---- */
+  --p-font-family: var(--tv-font-ui);
+  --p-font-family-heading: var(--tv-font-ui);
+  --p-font-family-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --p-font-size: 1.05rem;
+  --p-font-height: 1.8;
+  --p-font-size-sm: 0.9375rem;
+  --p-font-height-sm: 1.6;
+  --p-font-weight-normal: 400;
+  --p-font-weight-medium: 600;
+  --p-font-weight-semi-bold: 700;
+  --p-font-weight-bold: 700;
+  --p-border-radius: var(--tv-radius-md);
+
+  /* ---- ink on ivory ---- */
+  --p-color-text: var(--tv-ink-inverted-secondary);
+  --p-color-text-strong: var(--tv-ink-inverted-primary);
+  --p-color-text-muted: var(--tv-ink-inverted-muted);
+  --p-color-text-xmuted: color-mix(in srgb, var(--tv-ink-inverted-muted) 72%, transparent);
+  --p-color-text-accent: var(--tv-accent-brand-pressed);
+  --p-color-bg: transparent;
+  --p-color-bg-surface1: color-mix(in srgb, var(--tv-ink-inverted-primary) 4%, transparent);
+  --p-color-bg-surface2: color-mix(in srgb, var(--tv-ink-inverted-primary) 7%, transparent);
+  --p-color-border: color-mix(in srgb, var(--tv-ink-inverted-primary) 14%, transparent);
+  --p-color-border-subtle: color-mix(in srgb, var(--tv-ink-inverted-primary) 8%, transparent);
+
+  /* ---- rhythm: editorial, airier than doc defaults ---- */
+  --p-content-gap: 1.55rem;
+  --p-content-gap-cluster: 0.7rem;
+  --p-content-gap-heading: 2.6rem;
+
+  /* ---- headings: Manrope 700, no doc-site semibold ---- */
+  --p-h2-font-family: var(--tv-font-ui);
+  --p-h2-font-size: 1.65rem;
+  --p-h2-font-weight: 700;
+  --p-h2-letter-spacing: -0.015em;
+  --p-h2-line-height: 1.25;
+  --p-h2-color: var(--tv-ink-inverted-primary);
+  --p-h3-font-family: var(--tv-font-ui);
+  --p-h3-font-size: 1.22rem;
+  --p-h3-font-weight: 700;
+  --p-h3-letter-spacing: -0.01em;
+  --p-h3-line-height: 1.32;
+  --p-h3-color: var(--tv-ink-inverted-primary);
+
+  /* ---- links: editorial, brand-pressed, calm until hover ---- */
+  --p-link-text-color: var(--tv-ink-inverted-link);
+  --p-link-text-decoration-color: color-mix(in srgb, var(--tv-accent-brand-pressed) 38%, transparent);
+  --p-link-text-decoration-line: underline;
+  --p-link-text-decoration-style: solid;
+  --p-link-font-weight: 600;
+
+  /* ---- tables: editorial ledger, not admin grid ---- */
+  --p-table-font-size: 0.95rem;
+  --p-table-font-height: 1.6;
+  --p-table-font-weight: 400;
+  --p-table-th-color-text: var(--tv-ink-inverted-primary);
+  --p-table-th-font-size: 0.82rem;
+  --p-table-th-font-height: 1.5;
+  --p-table-th-font-weight: 700;
+  --p-table-border-color: var(--p-color-border);
+
+  /* ---- callouts: TV semantic washes (tip=brass, warning=amber, info=violet, note=graphite) ---- */
+  --p-callout-font-size: 0.95rem;
+  --p-callout-font-height: 1.62;
+  --p-callout-font-weight: 400;
+  --p-callout-note-color-bg: color-mix(in srgb, var(--tv-ink-inverted-primary) 5%, transparent);
+  --p-callout-note-color-text: var(--tv-ink-inverted-primary);
+  --p-callout-info-color-bg: color-mix(in srgb, var(--tv-accent-brand) 8%, transparent);
+  --p-callout-info-color-text: var(--tv-ink-inverted-primary);
+  --p-callout-warning-color-bg: var(--tv-status-warning-soft-bg);
+  --p-callout-warning-color-text: var(--tv-status-warning-soft-text);
+  /* NOTE: Prose UI maps variant "tip" onto the success token pair. */
+  --p-callout-success-color-bg: color-mix(in srgb, var(--tv-color-gold-500) 14%, transparent);
+  --p-callout-success-color-text: var(--tv-ink-inverted-primary);
+  --p-callout-danger-color-bg: color-mix(in srgb, var(--tv-status-danger) 8%, transparent);
+  --p-callout-danger-color-text: var(--tv-ink-inverted-primary);
+
+  /* ---- blockquote: warm shift, sized-up, non-italic lede voice ---- */
+  --p-blockquote-color-text: var(--tv-ink-inverted-primary);
+  --p-blockquote-font-size: 1.12rem;
+  --p-blockquote-font-height: 1.65;
+  --p-blockquote-font-style: normal;
+  --p-blockquote-font-weight: 500;
+
+  /* ---- editorial resource card: quiet ledger object ---- */
+  --p-card-color-bg: color-mix(in srgb, var(--tv-ink-inverted-primary) 3%, transparent);
+  --p-card-color-border: color-mix(in srgb, var(--tv-ink-inverted-primary) 14%, transparent);
+  --p-card-color-text: var(--tv-ink-inverted-primary);
+
+  /* ---- inline code: mono chip, restrained ---- */
+  --p-inline-code-color-bg: color-mix(in srgb, var(--tv-ink-inverted-primary) 7%, transparent);
+  --p-inline-code-font-size: 0.925rem; /* ≈0.88em @16px; rem form satisfies the 12px-floor contract */
+  --p-inline-code-font-height: inherit;
+  --p-inline-code-font-weight: 500;
+  --p-inline-code-letter-spacing: 0;
+}
+
+/* ---- blockquote editorial identity: brass rail + oversized mark + warm shift.
+   Prose owns the primitive (.blockquote class); TV owns the voice. ---- */
+.tv-prose-ui-theme.prose-ui .blockquote {
+  position: relative;
+  border-left: 3px solid var(--tv-color-gold-700);
+  border-radius: 0 var(--tv-radius-md) var(--tv-radius-md) 0;
+  background: color-mix(in srgb, var(--tv-color-gold-500) 8%, transparent);
+  padding: 1rem 1.25rem 1rem 3.25rem;
+}
+.tv-prose-ui-theme.prose-ui .blockquote::before {
+  content: "\201C";
+  position: absolute;
+  left: 0.9rem;
+  top: 0.35rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--tv-color-gold-700);
+  pointer-events: none;
+}
+
+/* ---- table containment: internal scroll on small canvas, Prose keeps cells.
+   Mirrors the current guides contract (no document overflow ever). ---- */
+.tv-prose-ui-theme .tv-hybrid-md table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+.tv-prose-ui-theme .tv-hybrid-md thead th {
+  letter-spacing: 0.02em;
+}
+
+/* ---- editorial hr: short rule with brass center tick ---- */
+.tv-prose-ui-theme.prose-ui hr {
+  border: 0;
+  border-top: 1px solid var(--p-color-border);
+  margin-inline: auto;
+  max-width: 12rem;
+}
+
+/* ---- hybrid canvas: ivory article card owned by TV, prose owned by Prose ---- */
+.tv-hybrid-canvas {
+  background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
+  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-primary) 10%, transparent);
+  border-radius: var(--tv-radius-lg, 16px);
+  padding: clamp(1.5rem, 2.4vw, 2.4rem);
+  max-width: 100%;
+}
+.tv-hybrid-canvas > .tv-hybrid-md {
+  max-width: 64ch;
+  margin-inline: auto;
+}
+
+/* ---- base copy: Prose styles per-component primitives only; the hybrid
+   container sets the editorial body voice explicitly (inherits nothing). ---- */
+.tv-prose-ui-theme.prose-ui {
+  font-family: var(--tv-font-ui);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--tv-ink-inverted-secondary);
+}
+.tv-prose-ui-theme.prose-ui .tv-hybrid-md {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.tv-prose-ui-theme.prose-ui strong {
+  color: var(--tv-ink-inverted-primary);
+}
