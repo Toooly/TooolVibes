@@ -2556,7 +2556,7 @@ a.archive-v4-card:focus-visible {
   min-height: 44px;
   border-radius: 999px;
   background: rgba(18, 13, 46, 0.92);
-  color: #f4f1ff;
+  color: var(--tv-color-violet-50);
   pointer-events: auto;
 }
 

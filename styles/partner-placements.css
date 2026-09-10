@@ -2932,15 +2932,15 @@
 /* ---- Partner atmosphere (edge + ambient only; plates untouched) ---- */
 /* Taylora — lavender / violet */
 [data-partner-theme="gold-cyan"] {
-  --partner-accent-primary: #b794f6;
-  --partner-accent-primary-ivory: #7c3aed;
-  --partner-accent-secondary: #8b5cf6;
+  --partner-accent-primary: var(--tv-color-violet-300);
+  --partner-accent-primary-ivory: var(--tv-color-violet-600);
+  --partner-accent-secondary: var(--tv-color-violet-400);
 }
 
 [data-partner-theme="gold-cyan"].partner-luminous {
-  --partner-aurora-a: #d8b4fe;
-  --partner-aurora-b: #a78bfa;
-  --partner-aurora-comet: #f5e1ff;
+  --partner-aurora-a: var(--tv-color-violet-200);
+  --partner-aurora-b: var(--tv-color-violet-300);
+  --partner-aurora-comet: var(--tv-color-violet-100);
   --partner-luminous-a: var(--partner-aurora-a);
   --partner-luminous-b: var(--partner-aurora-b);
 }
@@ -2991,7 +2991,7 @@
   max-height: var(--partner-plate-max-h, none);
   margin-inline: auto;
   overflow: hidden;
-  background: #0a0e1a;
+  background: var(--tv-color-surface-raised);
 }
 
 /* Density caps: width tracks max-height so the 2/1 box never clips identity */
@@ -3026,7 +3026,7 @@
   position: relative;
   min-height: 0;
   overflow: hidden;
-  background: #0a0e1a;
+  background: var(--tv-color-surface-raised);
   border-radius: inherit;
   display: grid;
   place-items: center;
@@ -3150,7 +3150,7 @@
   place-items: center;
   overflow: hidden;
   padding-block: 0.35rem;
-  background: #0a0e1a;
+  background: var(--tv-color-surface-raised);
 }
 
 .partner-pe--ribbon .partner-brand-plate--ribbon,

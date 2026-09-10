@@ -23477,8 +23477,8 @@ img {
     overflow: hidden;
     min-height: 100svh;
     padding: clamp(6.2rem, 9vw, 8.4rem) clamp(1rem, 4.8vw, 5.8rem) 8.5rem;
-    background: #06060E;
-    color: #f8f4ff;
+    background: var(--tv-bg-base);
+    color: var(--tv-ink-primary);
   }
 }
 

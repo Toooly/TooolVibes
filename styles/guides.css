@@ -128,7 +128,7 @@
   background:
     radial-gradient(ellipse 80% 60% at 0% 0%, rgba(106, 60, 255, 0.16), transparent 60%),
     radial-gradient(ellipse 60% 50% at 100% 100%, rgba(43, 208, 255, 0.10), transparent 60%),
-    linear-gradient(180deg, #0c0820 0%, #060414 100%);
+    linear-gradient(180deg, var(--tv-color-surface-raised) 0%, var(--tv-color-surface-base) 100%);
   color: var(--guides-text-on-dark);
   box-shadow: var(--guides-shadow-ink);
   isolation: isolate;
@@ -172,7 +172,7 @@
 
 .guides-masthead__title em {
   font-style: normal;
-  background: linear-gradient(120deg, #d6c2ff 10%, #76e1ff 70%, #76e1ff 100%);
+  background: linear-gradient(120deg, var(--tv-color-violet-200) 10%, var(--tv-color-cyan-300) 70%, var(--tv-color-cyan-300) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -372,7 +372,7 @@
   overflow: hidden;
   background:
     radial-gradient(ellipse 100% 80% at 0% 0%, rgba(106, 60, 255, 0.10), transparent 60%),
-    linear-gradient(180deg, #fdfaf3 0%, #f6f0e3 100%);
+    linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
   border: 1px solid var(--guides-rule);
   box-shadow: var(--guides-shadow-soft);
   isolation: isolate;
@@ -389,7 +389,7 @@
 .guides-feature__cover {
   position: relative;
   min-height: 14rem;
-  background: linear-gradient(135deg, #1a1230 0%, #2a1954 50%, #6a3cff 100%);
+  background: linear-gradient(135deg, var(--tv-color-violet-900) 0%, var(--tv-color-violet-800) 50%, var(--tv-color-violet-500) 100%);
   overflow: hidden;
   isolation: isolate;
 }
@@ -630,7 +630,7 @@
   gap: 0.9rem;
   padding: clamp(1.05rem, 1.6vw, 1.4rem);
   border-radius: var(--guides-radius-lg);
-  background: linear-gradient(180deg, #fbf9f5 0%, #f3eee5 100%);
+  background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
   border: 1px solid var(--guides-rule);
   box-shadow: var(--guides-shadow-soft);
   text-decoration: none;
@@ -748,7 +748,7 @@
 
 .guides-card__chip--tool {
   background: rgba(43, 208, 255, 0.12);
-  color: #0a6b80;
+  color: var(--tv-color-cyan-700);
 }
 
 .guides-card__chip--accent {
@@ -818,7 +818,7 @@
   gap: clamp(1rem, 2vw, 1.5rem);
   padding: clamp(1.4rem, 2.6vw, 2.1rem);
   border-radius: var(--guides-radius-xl);
-  background: linear-gradient(180deg, #fbf9f5 0%, #f3eee5 100%);
+  background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
   border: 1px solid var(--guides-rule);
   box-shadow: var(--guides-shadow-soft);
   color: var(--guides-text);
@@ -827,7 +827,7 @@
 .guides-section--ink {
   background:
     radial-gradient(ellipse 80% 60% at 0% 0%, rgba(106, 60, 255, 0.18), transparent 60%),
-    linear-gradient(180deg, #0a0814 0%, #060410 100%);
+    linear-gradient(180deg, var(--tv-color-surface-raised) 0%, var(--tv-color-surface-base) 100%);
   color: var(--guides-text-on-dark);
   border-color: rgba(255, 255, 255, 0.06);
   box-shadow: var(--guides-shadow-ink);
@@ -864,7 +864,7 @@
 }
 
 .guides-section--ink .guides-section__title em {
-  background: linear-gradient(120deg, #d6c2ff, #76e1ff);
+  background: linear-gradient(120deg, var(--tv-color-violet-200), var(--tv-color-cyan-300));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -988,7 +988,7 @@
   background:
     radial-gradient(ellipse 80% 60% at 0% 0%, rgba(106, 60, 255, 0.18), transparent 60%),
     radial-gradient(ellipse 60% 50% at 100% 100%, rgba(43, 208, 255, 0.10), transparent 60%),
-    linear-gradient(180deg, #0a0814 0%, #06040e 100%);
+    linear-gradient(180deg, var(--tv-color-surface-raised) 0%, var(--tv-color-surface-base) 100%);
   color: var(--guides-text-on-dark);
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: var(--guides-shadow-ink);
@@ -1039,7 +1039,7 @@
 .guides-article__hero-meta .pill--accent {
   background: rgba(118, 225, 255, 0.16);
   border-color: rgba(118, 225, 255, 0.32);
-  color: #d6f4ff;
+  color: var(--tv-color-cyan-300);
 }
 
 .guides-article__hero-h1 {
@@ -1159,7 +1159,7 @@
 .guides-article__body {
   padding: clamp(1.5rem, 2.4vw, 2.4rem);
   border-radius: var(--guides-radius-xl);
-  background: linear-gradient(180deg, #fbf9f5 0%, #f5efe2 100%);
+  background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
   border: 1px solid var(--guides-rule);
   box-shadow: var(--guides-shadow-soft);
   max-width: 100%;
@@ -1241,8 +1241,8 @@
 }
 
 .guides-article__body > .editorial-markdown pre {
-  background: #0a0814;
-  color: #fbf9f5;
+  background: var(--tv-color-surface-raised);
+  color: var(--tv-color-ink-200);
   border-radius: 16px;
   padding: 1rem 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -1304,7 +1304,7 @@
   gap: 0.85rem;
   padding: 1.2rem 1.2rem;
   border-radius: var(--guides-radius-lg);
-  background: linear-gradient(180deg, #fbf9f5 0%, #f3eee5 100%);
+  background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
   border: 1px solid var(--guides-rule);
   box-shadow: var(--guides-shadow-soft);
   max-height: calc(100dvh - 7rem);
@@ -1330,7 +1330,7 @@
   display: block;
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #6a3cff 0%, #2bd0ff 100%);
+  background: linear-gradient(90deg, var(--tv-color-violet-500) 0%, var(--tv-color-cyan-400) 100%);
   transition: width 200ms linear;
 }
 
@@ -1414,7 +1414,7 @@
 .guides-rail__card {
   padding: 1.1rem 1.2rem;
   border-radius: var(--guides-radius-lg);
-  background: linear-gradient(180deg, #fbf9f5 0%, #f3eee5 100%);
+  background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
   border: 1px solid var(--guides-rule);
   box-shadow: var(--guides-shadow-soft);
   display: flex;
@@ -1522,7 +1522,7 @@
 .guides-rail__cta:hover,
 .guides-rail__cta:focus-visible {
   background: var(--guides-text);
-  color: #fbf9f5;
+  color: var(--tv-color-ink-200);
   border-color: var(--guides-text);
   outline: none;
 }
@@ -1542,7 +1542,7 @@
 
 .guides-rail__cta--ink {
   background: var(--guides-text);
-  color: #fbf9f5;
+  color: var(--tv-color-ink-200);
   border-color: var(--guides-text);
 }
 
@@ -1628,7 +1628,7 @@
 
 .guides-callout--tip .guides-callout__glyph {
   background: rgba(43, 208, 255, 0.18);
-  color: #0a6b80;
+  color: var(--tv-color-cyan-700);
 }
 
 .guides-callout--warning {
@@ -1638,7 +1638,7 @@
 
 .guides-callout--warning .guides-callout__glyph {
   background: rgba(212, 177, 101, 0.22);
-  color: #6f4717;
+  color: var(--tv-color-gold-700);
 }
 
 .guides-callout--pro {
@@ -1652,14 +1652,14 @@
 }
 
 .guides-callout--decision {
-  background: linear-gradient(180deg, #0a0814 0%, #06040e 100%);
+  background: linear-gradient(180deg, var(--tv-color-surface-raised) 0%, var(--tv-color-surface-base) 100%);
   border-color: rgba(255, 255, 255, 0.10);
   color: var(--guides-text-on-dark);
 }
 
 .guides-callout--decision .guides-callout__glyph {
-  background: linear-gradient(135deg, #c0b2ff 0%, #76e1ff 100%);
-  color: #0b0820;
+  background: linear-gradient(135deg, var(--tv-color-violet-200) 0%, var(--tv-color-cyan-300) 100%);
+  color: var(--tv-color-violet-900);
 }
 
 .guides-callout--decision .guides-callout__title {
@@ -1755,7 +1755,7 @@
   border-radius: var(--guides-radius-xl);
   background:
     radial-gradient(ellipse 60% 80% at 100% 0%, rgba(118, 225, 255, 0.18), transparent 60%),
-    linear-gradient(180deg, #0a0814 0%, #06040e 100%);
+    linear-gradient(180deg, var(--tv-color-surface-raised) 0%, var(--tv-color-surface-base) 100%);
   color: var(--guides-text-on-dark);
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: var(--guides-shadow-ink);
@@ -1784,7 +1784,7 @@
 }
 
 .guides-article__end-title em {
-  background: linear-gradient(120deg, #d6c2ff, #76e1ff);
+  background: linear-gradient(120deg, var(--tv-color-violet-200), var(--tv-color-cyan-300));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

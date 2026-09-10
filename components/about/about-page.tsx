@@ -84,7 +84,7 @@ export function AboutPage() {
           status="Team operativo"
           density="hero"
         />
-        <h1 className="mt-5 max-w-[14ch] text-balance text-[clamp(2.35rem,9vw,5.15rem)] font-semibold leading-[0.96] text-[var(--tv-ink-primary)]">
+        <h1 className="v-about-identity__title mt-5 max-w-[16ch] text-balance">
           Persone vere, prodotti digitali vivi.
         </h1>
       </header>
@@ -104,7 +104,7 @@ export function AboutPage() {
             <h2 className="mt-4 max-w-[14ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]">
               Dal caos al sistema.
             </h2>
-            <p className="mt-5 max-w-[34rem] text-[0.98rem] leading-7 text-[var(--tv-grammar-institutional-ink-secondary)]">
+            <p className="mt-5 max-w-[34rem] text-[length:var(--tv-text-body)] leading-[var(--tv-leading-body)] text-[var(--tv-grammar-institutional-ink-secondary)]">
               {servicesIntroCopy}
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
@@ -155,7 +155,7 @@ export function AboutPage() {
             <ShieldCheck className="mr-1 inline size-3.5" aria-hidden="true" />
             Una community che costruisce
           </PremiumBadge>
-          <p className="mt-3 max-w-[48rem] text-[1rem] leading-7 text-[var(--tv-ink-secondary)]">
+          <p className="mt-3 max-w-[48rem] text-[length:var(--tv-text-body)] leading-[var(--tv-leading-body)] text-[var(--tv-ink-secondary)]">
             {communityCopy}
           </p>
         </div>
