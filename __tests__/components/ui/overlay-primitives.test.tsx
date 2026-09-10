@@ -309,7 +309,7 @@ describe("overlay portal host contract", () => {
 
     // Same jsdom limitation as the Drawer nesting test: the Sheet's own
     // close control is used for deterministic topmost dismissal.
-    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    fireEvent.click(screen.getByRole("button", { name: "Chiudi" }));
     await waitFor(() => {
       expect(screen.queryByRole("dialog", { name: "Sheet interna" })).toBeNull();
     });

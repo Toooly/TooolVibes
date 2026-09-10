@@ -137,7 +137,7 @@
   font-family: var(--tv-font-family-display);
   font-style: normal;
   font-weight: 400;
-  font-size: var(--tv-type-display-xl);
+  font-size: var(--tv-text-h1);
   line-height: var(--tv-type-leading-display);
   letter-spacing: var(--tv-tracking-tight);
   color: var(--tv-ink-primary);
@@ -677,7 +677,7 @@
 .def-editorial__spot-name {
   font-family: var(--tv-font-family-ui);
   font-weight: 700;
-  font-size: clamp(1.75rem, 3vw, 2.4rem);
+  font-size: var(--tv-text-h3);
   line-height: 1.05;
   letter-spacing: -0.02em;
   text-transform: none;
@@ -686,7 +686,7 @@
 }
 
 @media (max-width: 429px) {
-  .def-editorial__spot-name { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+  .def-editorial__spot-name { font-size: var(--tv-text-h3); }
 }
 
 .def-editorial__spot-cat {
@@ -1428,7 +1428,7 @@
 }
 
 .def-method__head {
-  max-width: 1280px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto 20px;
   display: flex;
   flex-direction: column;
@@ -1436,7 +1436,7 @@
 }
 
 .def-method .def-cockpit__journey {
-  max-width: 1280px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
 }
 
@@ -1466,7 +1466,7 @@
   margin: 0;
   max-width: 42rem;
   color: var(--tv-ink-secondary);
-  font-size: 0.95rem;
+  font-size: var(--tv-text-body-sm);
   line-height: 1.55;
 }
 
@@ -1642,9 +1642,9 @@
 }
 
 .def-home__sponsor-frame {
-  /* Partner Experience V3: the stage runs wider than the reading grid so
-     the section reads as a scene change, not as another content card. */
-  width: min(100%, 1440px);
+  /* Partner Experience V3: the stage reads as a scene change via its shell
+     surface, while staying on the site container invariant. */
+  width: min(100%, var(--tv-container-uw));
   margin: 0 auto;
   display: grid;
   gap: 12px;
@@ -1870,7 +1870,7 @@
   gap: clamp(1.5rem, 3vw, 2.75rem);
 }
 .def-cockpit__title {
-  font-size: clamp(2.15rem, 5.2vw, 4.15rem);
+  font-size: var(--tv-text-h1);
   line-height: 0.98;
   letter-spacing: -0.035em;
   max-width: 20ch;
@@ -2033,7 +2033,7 @@
 }
 .tv-home-radar__launch-rank {
   font-family: var(--tv-font-family-display, "Anton", sans-serif);
-  font-size: 0.95rem;
+  font-size: var(--tv-text-body-sm);
   letter-spacing: 0.04em;
   color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 90%, white);
 }
@@ -2258,14 +2258,14 @@
 }
 .def-stacks {
   padding: var(--tv-space-section-sm) var(--tv-gutter-mobile) var(--tv-space-section-sm);
-  max-width: 1120px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
 }
 .def-stacks__head { display: grid; gap: 8px; margin-bottom: 20px; }
 .def-stacks__lede {
   margin: 0 0 16px;
   color: var(--tv-ink-secondary, rgba(255,255,255,0.72));
-  font-size: 0.95rem;
+  font-size: var(--tv-text-body-sm);
   line-height: 1.5;
 }
 .def-stacks__eyebrow {
@@ -2356,7 +2356,7 @@
   display: grid;
   gap: 14px;
   width: 100%;
-  max-width: 1120px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: var(--tv-space-section-sm) var(--tv-gutter-mobile) 16px;
 }
@@ -2443,7 +2443,7 @@
 }
 .def-start__radar {
   width: 100%;
-  max-width: 1120px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: 0 var(--tv-gutter-mobile) var(--tv-space-section-sm);
 }
@@ -2554,7 +2554,7 @@
   }
 
   .def-cockpit__title {
-    font-size: var(--tv-type-display-xl);
+    font-size: var(--tv-text-h1);
     line-height: var(--tv-type-leading-display);
   }
 
@@ -3117,13 +3117,13 @@
 
 .def-method__title {
   font-family: var(--tv-type-ui);
-  font-size: var(--tv-type-h2);
+  font-size: var(--tv-text-h2);
   line-height: var(--tv-type-leading-heading);
 }
 
 .def-start__title {
   font-family: var(--tv-type-ui);
-  font-size: var(--tv-type-h2);
+  font-size: var(--tv-text-h2);
   line-height: var(--tv-type-leading-heading);
 }
 
@@ -3231,7 +3231,7 @@
 }
 
 .tv-discovery-stage .def-start__panel {
-  padding: var(--tv-rhythm-related-lg) 0 0;
+  padding: var(--tv-rhythm-related-lg) clamp(20px, 3.4vw, 44px) 0;
 }
 
 /* V3.1 graphic language — home binds without changing frozen composition */
@@ -3243,4 +3243,26 @@
 
 .tv-home-radar__launch:focus-visible {
   box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
+}
+
+/* ============================================================
+   V3.2 desktop composition — one container invariant.
+   Discovery frame, section heads, method journey and sponsor
+   stage all align to the site container so desktop reads as a
+   composed page instead of stretched, left-anchored bands.
+   ============================================================ */
+.tv-discovery-stage__frame {
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
+}
+
+.tv-discovery-stage .def-editorial__inner,
+.tv-discovery-stage .def-stacks {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.def-home__sponsor-opportunity {
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
 }
