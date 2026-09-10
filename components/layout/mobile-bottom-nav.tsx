@@ -19,7 +19,7 @@ import {
   CHROME_DESKTOP_MEDIA_QUERY,
   useChromeViewport,
 } from "@/components/layout/chrome-viewport";
-import { isAuthenticatedNavActive } from "@/lib/navigation/account-primary-nav";
+import { isAuthenticatedNavActive, navFamilyForHref } from "@/lib/navigation/account-primary-nav";
 import {
   useAuthenticatedNavItems,
   useLocationSearch,
@@ -274,6 +274,7 @@ export function MobileBottomNav() {
                     : undefined
                 }
                 className={cn("mobile-bottom-item", isActive && "is-active")}
+                data-family={navFamilyForHref(item.href)}
               >
                 <span className="mobile-bottom-item__icon-wrap">
                   {isActive ? (

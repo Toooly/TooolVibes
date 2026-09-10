@@ -244,3 +244,26 @@ html[data-tv-bottom-nav="hidden"] {
     transition: none !important;
   }
 }
+
+/* V3.2 — family route marker mirrors desktop chrome. */
+.mobile-bottom-item {
+  position: relative;
+}
+.mobile-bottom-item.is-active::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: calc(50% - 16px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tv-accent-gold);
+  z-index: 3;
+}
+.mobile-bottom-item.is-active[data-family="resource"]::after { background: var(--tv-ink-primary); }
+.mobile-bottom-item.is-active[data-family="workflow"]::after { background: var(--tv-color-violet-300); }
+.mobile-bottom-item.is-active[data-family="signal"]::after { background: var(--tv-color-cyan-500); }
+.mobile-bottom-item.is-active[data-family="personal"]::after { background: var(--tv-grammar-personal-accent); }
+.mobile-bottom-item.is-active[data-family="decision"]::after { background: var(--tv-activation-strong); }
+.mobile-bottom-item.is-active[data-family="commercial"]::after { background: var(--tv-accent-gold); }
+.mobile-bottom-item.is-active[data-family="institutional"]::after { background: var(--tv-ink-muted-aa); }

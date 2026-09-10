@@ -37,6 +37,38 @@ export function applyAuthenticatedPrimaryNav(
   });
 }
 
+export type NavFamily =
+  | "editorial"
+  | "resource"
+  | "workflow"
+  | "signal"
+  | "personal"
+  | "decision"
+  | "commercial"
+  | "institutional";
+
+/** Route family for chrome accents (dot markers). Brand-wide, no product logic. */
+export function navFamilyForHref(href: string): NavFamily {
+  const path = href.split("?")[0];
+  if (path === "/") return "editorial";
+  if (path.startsWith("/archivio") || path.startsWith("/toools")) return "resource";
+  if (path.startsWith("/collections")) return "workflow";
+  if (path.startsWith("/radar")) return "signal";
+  if (path.startsWith("/posts")) return "editorial";
+  if (path.startsWith("/compare")) return "decision";
+  if (path.startsWith("/shortlist") || path.startsWith("/account")) return "personal";
+  if (path.startsWith("/sponsorizza") || path.startsWith("/shop")) return "commercial";
+  if (
+    path.startsWith("/chi-siamo") ||
+    path.startsWith("/metodo") ||
+    path.startsWith("/privacy") ||
+    path.startsWith("/termini") ||
+    path.startsWith("/cookie")
+  )
+    return "institutional";
+  return "editorial";
+}
+
 export function isAuthenticatedNavActive(
   pathname: string | null,
   search: string,

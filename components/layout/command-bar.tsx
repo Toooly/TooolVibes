@@ -28,7 +28,7 @@ import { BrandLogo } from "./brand-logo";
 import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
 import { useAuthenticatedNavItems } from "@/components/layout/use-authenticated-nav-items";
-import { isAuthenticatedNavActive } from "@/lib/navigation/account-primary-nav";
+import { isAuthenticatedNavActive, navFamilyForHref } from "@/lib/navigation/account-primary-nav";
 import { useLocationSearch } from "@/components/layout/use-authenticated-nav-items";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
@@ -93,6 +93,7 @@ export function CommandBar() {
                 href={item.href}
                 prefetch={false}
                 className={`command-bar__nav-item ${active ? "is-active" : ""}`}
+                data-family={navFamilyForHref(item.href)}
                 aria-current={active ? "page" : undefined}
               >
                 <span className="command-bar__nav-glyph">

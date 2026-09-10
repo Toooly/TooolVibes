@@ -409,3 +409,25 @@
   overflow: hidden;
   border-width: 0;
 }
+
+/* V3.2 — family route marker: small accent dot on the active item. */
+.command-bar__nav-item {
+  position: relative;
+}
+.command-bar__nav-item.is-active::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tv-accent-gold);
+}
+.command-bar__nav-item.is-active[data-family="resource"]::after { background: var(--tv-ink-primary); }
+.command-bar__nav-item.is-active[data-family="workflow"]::after { background: var(--tv-color-violet-300); }
+.command-bar__nav-item.is-active[data-family="signal"]::after { background: var(--tv-color-cyan-500); }
+.command-bar__nav-item.is-active[data-family="personal"]::after { background: var(--tv-grammar-personal-accent); }
+.command-bar__nav-item.is-active[data-family="decision"]::after { background: var(--tv-activation-strong); }
+.command-bar__nav-item.is-active[data-family="commercial"]::after { background: var(--tv-accent-gold); }
+.command-bar__nav-item.is-active[data-family="institutional"]::after { background: var(--tv-ink-muted-aa); }
