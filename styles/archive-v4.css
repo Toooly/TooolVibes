@@ -115,7 +115,7 @@
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 28px;
-  max-width: 1560px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: clamp(44px, 5vw, 64px) clamp(20px, 2.6vw, 40px) clamp(36px, 4vw, 52px);
   align-items: start;
@@ -159,7 +159,7 @@
 .ar4-intro__title {
   font-family: var(--tv-font-family-display, "Anton", sans-serif);
   font-weight: var(--tv-weight-regular);
-  font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+  font-size: var(--tv-text-h1);
   line-height: var(--tv-leading-display);
   letter-spacing: var(--tv-tracking-tight);
   text-transform: none;
@@ -172,7 +172,7 @@
 }
 
 .ar4-intro__lede {
-  font-size: 15px;
+  font-size: clamp(1rem, 1.3vw, 1.125rem);
   font-weight: 450;
   line-height: 1.55;
   color: var(--tv-ink-inverted-muted);
@@ -286,7 +286,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 1560px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: 10px clamp(20px, 2.6vw, 40px);
   overflow-x: auto;
@@ -372,7 +372,7 @@
 }
 
 .ar4-ivory__inner {
-  max-width: 1560px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: clamp(28px, 3vw, 40px) clamp(20px, 2.6vw, 40px);
 }
@@ -399,7 +399,7 @@
 
 .ar4-ivory__title {
   font-family: var(--tv-font-ui);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   font-size: var(--tv-text-h2);
   line-height: var(--tv-leading-display);
   letter-spacing: 0;
@@ -583,7 +583,7 @@
 }
 
 .ar4-grid__inner {
-  max-width: 1560px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: clamp(32px, 4vw, 56px) clamp(20px, 2.6vw, 40px);
 }
@@ -615,7 +615,7 @@
 
 .ar4-grid__title {
   font-family: var(--tv-font-ui);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   font-size: var(--tv-text-h2);
   line-height: var(--tv-leading-display);
   letter-spacing: 0;
@@ -2126,7 +2126,7 @@ a.archive-v4-card:focus-visible {
   padding: clamp(24px, 3vw, 36px) 0;
 }
 .ar4-categories__inner {
-  max-width: 1560px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: 0 clamp(20px, 2.6vw, 40px);
   display: flex;
@@ -2146,7 +2146,7 @@ a.archive-v4-card:focus-visible {
 }
 .ar4-categories__title {
   font-family: var(--tv-font-ui);
-  font-weight: var(--tv-weight-regular);
+  font-weight: var(--tv-weight-bold);
   font-size: var(--tv-text-h2);
   line-height: var(--tv-leading-display);
   color: var(--tv-ink-primary);
@@ -2597,7 +2597,7 @@ a.archive-v4-card:focus-visible {
   padding: 0 16px 8px;
 }
 .ar4-goals__inner {
-  max-width: 1120px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   display: grid;
   gap: 10px;
@@ -2616,7 +2616,7 @@ a.archive-v4-card:focus-visible {
 
 
 .ar4-applied {
-  max-width: 1120px;
+  max-width: var(--tv-container-uw);
   margin: 0 auto;
   padding: 0 var(--tv-gutter-mobile) 12px;
   display: grid;
@@ -2754,4 +2754,40 @@ a.archive-v4-card:focus-visible {
   .ar4-card[data-saved] .toggle-chip-glow.is-fresh::after {
     animation: none;
   }
+}
+
+/* ============================================================
+   V3.2 — container & axis binds (rail parity with shell/home/tool)
+   ============================================================ */
+.ar4-intro__inner,
+.ar4-filters__inner,
+.ar4-ivory__inner,
+.ar4-grid__inner,
+.ar4-categories__inner,
+.ar4-goals__inner,
+.ar4-applied {
+  max-width: var(--tv-container-uw);
+  padding-inline: var(--tv-gutter-mobile);
+}
+
+.ar4-goals { padding-inline: 0; }
+
+@media (min-width: 768px) {
+  .ar4-intro__inner,
+  .ar4-filters__inner,
+  .ar4-ivory__inner,
+  .ar4-grid__inner,
+  .ar4-categories__inner,
+  .ar4-goals__inner,
+  .ar4-applied { padding-inline: var(--tv-gutter-tablet); }
+}
+
+@media (min-width: 1280px) {
+  .ar4-intro__inner,
+  .ar4-filters__inner,
+  .ar4-ivory__inner,
+  .ar4-grid__inner,
+  .ar4-categories__inner,
+  .ar4-goals__inner,
+  .ar4-applied { padding-inline: var(--tv-gutter-desktop); }
 }
