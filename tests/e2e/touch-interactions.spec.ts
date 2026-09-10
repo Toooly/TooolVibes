@@ -45,24 +45,28 @@ test.describe("touch interaction contract (390)", () => {
     const href = await card.locator(".ar4-card__name-link").getAttribute("href");
     expect(href).toMatch(/^\/toools\//);
 
-    const box = await card.boundingBox();
-    if (!box) throw new Error("catalog card has no bounding box");
-
     // Three zones: title, body middle, and the previously-dead action rail
-    // strip (left of the toggles). All must navigate.
-    const zones: [string, number, number][] = [
-      ["title", box.x + box.width * 0.35, box.y + 24],
-      ["body", box.x + box.width * 0.5, box.y + box.height * 0.5],
-      ["rail-empty", box.x + 30, box.y + box.height - 22],
-    ];
+    // strip (left of the toggles). All must navigate. The box is re-measured
+    // per zone: layout settles (images, entrance motion, scroll restore)
+    // between taps, and stale coordinates would miss the card.
+    const zoneOf = (label: string, box: { x: number; y: number; width: number; height: number }) => {
+      if (label === "title") return [box.x + box.width * 0.35, box.y + 24] as const;
+      if (label === "body") return [box.x + box.width * 0.5, box.y + box.height * 0.5] as const;
+      return [box.x + 30, box.y + box.height - 22] as const;
+    };
 
-    for (const [label, x, y] of zones) {
+    for (const label of ["title", "body", "rail-empty"] as const) {
+      const liveCard = page.locator(".ar4-card").first();
+      await liveCard.waitFor({ state: "visible" });
+      await page.waitForTimeout(400);
+      const box = await liveCard.boundingBox();
+      if (!box) throw new Error("catalog card has no bounding box");
+      const [x, y] = zoneOf(label, box);
       await page.touchscreen.tap(x, y);
       await expect(page, `${label} tap did not open the tool detail`).toHaveURL(
         /\/toools\//,
       );
       await page.goBack({ waitUntil: "domcontentloaded" });
-      await page.locator(".ar4-card").first().waitFor({ state: "visible" });
     }
   });
 

@@ -49,7 +49,10 @@ export default async function MarketingLayout({
   });
 
   if (!isGateOpen) {
-    return <>{children}</>;
+    // v3.2 P1: children (footer consent link, embeds) assume the consent
+    // context even when the product gate is closed (E2E/prerender). The
+    // banner, dialog and lifecycle stay inside the open branch.
+    return <AdvertisingConsentProvider>{children}</AdvertisingConsentProvider>;
   }
 
   const renderNowMs = Date.now();

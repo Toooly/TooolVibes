@@ -1712,7 +1712,7 @@
    judgment / data / relations read as distinct layers instead of a
    wall of dark panels. Action surface and IA are untouched.
    ============================================================ */
-.td-final-brief.tv-emphasis--decision {
+.td-final-page .td-final-brief {
   background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
   border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
   color: var(--tv-ink-inverted-primary);
