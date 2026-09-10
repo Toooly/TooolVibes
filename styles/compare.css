@@ -1793,7 +1793,9 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: var(--tv-bottom-nav-total, 0px);
+  /* v3.2 P8: 8px breathing room above the bottom nav (token tracks 65px,
+     measured nav runs ~6px taller) so the dock card never tucks under it. */
+  bottom: calc(var(--tv-bottom-nav-total, 0px) + 8px);
   z-index: var(--tv-z-dock, 40);
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
   pointer-events: none;
