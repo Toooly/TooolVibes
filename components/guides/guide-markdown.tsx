@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
@@ -15,27 +14,8 @@ type GuideMarkdownProps = {
   content: string;
   onHeadings?: (headings: Array<{ id: string; text: string; level: 2 | 3 }>) => void;
   className?: string;
-  /**
-   * SPIKE SEAM (dev-only evaluation surface). Optional presentation overrides.
-   * All default to the production rendering — existing call sites are unaffected.
-   */
-  /** Replaces the per-part body wrapper class (default: editorial-markdown …). */
-  bodyClassName?: string;
-  /** Added to rendered <blockquote> elements (default: undefined = bare). */
-  blockquoteClassName?: string;
-  /**
-   * Replaces the ::: callout renderer. Receives (kind, title, bodyMarkdown, key)
-   * and must render the body markdown itself if needed. Default: GuideCallout.
-   */
-  calloutRenderer?: (
-    kind: "tip" | "warning" | "pro" | "decision",
-    title: string | undefined,
-    bodyMarkdown: string,
-    key: string,
-  ) => React.ReactNode;
 };
 
-/** Shared with dev-only evaluation surfaces (spike). Do not loosen. */
 const sanitizeSchema = {
   ...defaultSchema,
   tagNames: [
@@ -80,7 +60,6 @@ const sanitizeSchema = {
   },
 };
 
-export { sanitizeSchema as guideSanitizeSchema };
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -152,9 +131,6 @@ export function GuideMarkdown({
   content,
   onHeadings,
   className,
-  bodyClassName = "editorial-markdown inside-ivory inside-light-surface",
-  blockquoteClassName,
-  calloutRenderer,
 }: GuideMarkdownProps) {
   const { processed, callouts, takeaways } = preprocessContent(content);
   const usedIds = new Set<string>();
@@ -205,7 +181,7 @@ export function GuideMarkdown({
           return (
             <div
               key={`md-${idx}`}
-              className={bodyClassName}
+              className="editorial-markdown inside-ivory inside-light-surface"
             >
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -241,11 +217,6 @@ export function GuideMarkdown({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img alt={alt ?? ""} loading="lazy" {...props} />
                   ),
-                  blockquote: ({ children, ...props }) => (
-                    <blockquote className={blockquoteClassName} {...props}>
-                      {children}
-                    </blockquote>
-                  ),
                 }}
               >
                 {part.value}
@@ -260,13 +231,6 @@ export function GuideMarkdown({
           const idxNum = Number(calloutMatch[1]);
           const c = callouts[idxNum];
           if (!c) return null;
-          if (calloutRenderer) {
-            return (
-              <Fragment key={part.value}>
-                {calloutRenderer(c.kind, c.title, c.body, part.value)}
-              </Fragment>
-            );
-          }
           return (
             <GuideCallout key={part.value} kind={c.kind} title={c.title}>
               <ReactMarkdown

@@ -1183,28 +1183,32 @@
   text-wrap: balance;
 }
 
-.guides-article__body > .editorial-markdown h2 {
+.guides-article__body .editorial-markdown h2 {
   font-size: clamp(1.4rem, 2.2vw, 1.85rem);
   line-height: 1.12;
   margin-top: clamp(1.8rem, 3vw, 2.6rem);
+  margin-bottom: 1rem;
   padding-top: 0.4rem;
   border-top: 1px solid var(--guides-rule);
   scroll-margin-top: 6rem;
 }
 
-.guides-article__body > .editorial-markdown h3 {
+.guides-article__body .editorial-markdown h3 {
   font-size: clamp(1.12rem, 1.4vw, 1.3rem);
   line-height: 1.18;
   margin-top: clamp(1.4rem, 2.4vw, 1.8rem);
+  margin-bottom: 0.65rem;
   scroll-margin-top: 6rem;
 }
 
-.guides-article__body > .editorial-markdown p {
+.guides-article__body .editorial-markdown p {
   color: var(--guides-text);
   line-height: 1.78;
+  margin-top: 0;
+  margin-bottom: 1.15rem;
 }
 
-.guides-article__body > .editorial-markdown a {
+.guides-article__body .editorial-markdown a {
   color: var(--guides-accent-strong);
   text-decoration: underline;
   text-decoration-thickness: 0.06em;
@@ -1212,12 +1216,25 @@
   font-weight: 600;
 }
 
-.guides-article__body > .editorial-markdown :is(ul, ol) {
+.guides-article__body .editorial-markdown a:focus-visible {
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
+  border-radius: 6px;
+}
+
+.guides-article__body .editorial-markdown :is(ul, ol) {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.55rem;
+  margin-top: 0;
   margin-left: 0;
+  margin-bottom: 1.15rem;
   padding-left: 1.1rem;
+}
+
+.guides-article__body .editorial-markdown li > :is(ul, ol) {
+  margin-top: 0.55rem;
+  margin-bottom: 0.25rem;
 }
 
 .guides-article__body > .editorial-markdown li {
@@ -1225,13 +1242,31 @@
   line-height: 1.65;
 }
 
-.guides-article__body > .editorial-markdown blockquote {
-  border-left: 3px solid var(--guides-accent);
-  border-radius: 0 14px 14px 0;
-  background: rgba(106, 60, 255, 0.06);
-  color: var(--guides-text);
-  padding: 0.85rem 1.1rem;
-  font-style: italic;
+.guides-article__body .editorial-markdown blockquote {
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 1.6rem;
+  border-left: 3px solid var(--tv-color-gold-700);
+  border-radius: 0 var(--tv-radius-md) var(--tv-radius-md) 0;
+  background: color-mix(in srgb, var(--tv-color-gold-500) 8%, transparent);
+  color: var(--tv-ink-inverted-primary);
+  font-size: 1.06rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.66;
+  padding: 1rem 1.25rem 1rem 3rem;
+}
+
+.guides-article__body .editorial-markdown blockquote::before {
+  content: "\201C";
+  position: absolute;
+  left: 0.85rem;
+  top: 0.3rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--tv-color-gold-700);
+  pointer-events: none;
 }
 
 .guides-article__body > .editorial-markdown code {
@@ -1251,7 +1286,7 @@
   overflow-x: auto;
 }
 
-.guides-article__body > .editorial-markdown table {
+.guides-article__body .editorial-markdown table {
   display: block;
   width: 100%;
   overflow-x: auto;
@@ -1260,6 +1295,8 @@
   border: 1px solid var(--guides-rule);
   background: rgba(255, 255, 255, 0.6);
   font-size: 0.92rem;
+  margin-top: 0;
+  margin-bottom: 1.6rem;
 }
 
 .guides-article__body > .editorial-markdown th,
@@ -1290,11 +1327,19 @@
   margin-bottom: 0.35rem;
 }
 
-.guides-article__body > .editorial-markdown hr {
+.guides-article__body .editorial-markdown hr {
   border: 0;
   border-top: 1px solid var(--guides-rule);
-  margin: 2rem auto;
+  margin: 2.25rem auto;
   max-width: 12rem;
+}
+
+.guides-article__body .editorial-markdown hr::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  margin: -2px auto 0;
+  border-top: 2px solid var(--tv-color-gold-700);
 }
 
 /* ---------- TOC (sticky) ------------------------------------------------ */
@@ -1582,7 +1627,7 @@
   border-radius: var(--guides-radius-md);
   border: 1px solid var(--guides-rule);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 100%);
-  margin-block: 1.2rem;
+  margin-block: 1.6rem;
   max-width: 64ch;
   margin-inline: auto;
 }
