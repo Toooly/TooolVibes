@@ -1705,3 +1705,25 @@
     border-color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 46%, var(--tv-border-subtle));
   }
 }
+
+/* ============================================================
+   V3.2 MAIN PASS — judgment layer (ivory verdict card)
+   "In breve" renders as the editorial judgment voice so identity /
+   judgment / data / relations read as distinct layers instead of a
+   wall of dark panels. Action surface and IA are untouched.
+   ============================================================ */
+.td-final-brief.tv-emphasis--decision {
+  background: linear-gradient(180deg, var(--tv-color-ink-200) 0%, color-mix(in srgb, var(--tv-color-ink-200) 92%, var(--tv-color-ink-300)) 100%);
+  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
+  color: var(--tv-ink-inverted-primary);
+}
+.td-final-brief__eyebrow {
+  color: var(--tv-color-gold-700);
+}
+.td-final-brief dt {
+  color: var(--tv-ink-inverted-muted);
+}
+.td-final-brief dd {
+  color: var(--tv-ink-inverted-primary);
+  line-height: var(--tv-leading-body);
+}
