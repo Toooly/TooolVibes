@@ -799,20 +799,60 @@
   gap: var(--tv-rhythm-group-lg);
 }
 
-.tv-utility__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tv-rhythm-related-lg);
+.tv-utility__identity {
+  display: grid;
+  gap: var(--tv-rhythm-related);
 }
 
 .tv-utility__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.tv-utility__wordmark {
   font-family: var(--tv-font-ui);
   font-size: var(--tv-type-meta);
   font-weight: 800;
   letter-spacing: 0.14em;
   color: var(--tv-ink-primary);
-  text-decoration: none;
+}
+
+.tv-utility__summary {
+  margin: 0;
+  max-width: 34ch;
+  font-size: var(--tv-type-body);
+  line-height: var(--tv-type-leading-body);
+  color: var(--tv-ink-secondary);
+}
+
+.tv-utility__contact-block {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+}
+
+.tv-utility__contact-title {
+  margin: 0;
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-type-meta);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
+}
+
+.tv-utility__contact-copy {
+  margin: 0 0 0.4rem;
+  font-size: var(--tv-type-body);
+  color: var(--tv-ink-secondary);
+  max-width: 30ch;
+}
+
+.tv-utility__contact {
+  justify-self: start;
 }
 
 .tv-utility__contact {
@@ -970,3 +1010,38 @@
 .site-footer-v2.tv-launchpad summary {
   color: inherit;
 }
+
+/* ============================================================
+   V3.2 MAIN PASS — footer rails + launchpad family tiles
+   ============================================================ */
+
+/* Utility footer: canonical content rails on desktop/tablet. */
+@media (min-width: 48rem) and (max-width: 1279px) {
+  .site-footer-v2.tv-utility .site-footer-v2__shell {
+    padding-inline: var(--tv-gutter-tablet);
+  }
+}
+@media (min-width: 1280px) {
+  .site-footer-v2.tv-utility .site-footer-v2__shell {
+    padding-inline: var(--tv-gutter-desktop);
+    grid-template-columns: 1.15fr 1.5fr 0.85fr;
+    grid-template-areas:
+      "identity nav contact"
+      "legal legal legal"
+      "disclosure disclosure disclosure";
+    column-gap: var(--tv-rhythm-group-lg);
+  }
+  .site-footer-v2.tv-utility .tv-utility__identity { grid-area: identity; }
+  .site-footer-v2.tv-utility .tv-utility__nav { grid-area: nav; }
+  .site-footer-v2.tv-utility .tv-utility__contact-block { grid-area: contact; }
+  .site-footer-v2.tv-utility .tv-utility__legal { grid-area: legal; }
+  .site-footer-v2.tv-utility .tv-utility__disclosure { grid-area: disclosure; }
+}
+
+/* Launchpad footer rides the home flagship axis (frame edge). */
+@media (min-width: 1280px) {
+  .site-footer-v2.tv-launchpad .tv-launchpad__shell {
+    padding-inline: 0;
+  }
+}
+

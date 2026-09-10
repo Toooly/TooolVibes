@@ -47,8 +47,22 @@ export function SiteFooterV2() {
   return (
     <footer className="site-footer-v2 tv-utility relative mt-auto">
       <div className="tv-utility__shell site-footer-v2__shell">
-        <div className="tv-utility__head">
-          <Link href="/" className="tv-utility__brand">TOOOLVIBES</Link>
+        <div className="tv-utility__identity">
+          <Link href="/" className="tv-utility__brand">
+            <BrandLogo size={36} fallback="png" />
+            <span className="tv-utility__wordmark">TOOOLVIBES</span>
+          </Link>
+          <p className="tv-utility__summary">
+            Il sistema per scoprire tool AI, SaaS e no-code.
+            Trova, confronta e costruisci la lista giusta per te.
+          </p>
+        </div>
+
+        <div className="tv-utility__contact-block">
+          <p className="tv-utility__contact-title">Parliamone</p>
+          <p className="tv-utility__contact-copy">
+            Un tool da segnalare, una correzione, una proposta.
+          </p>
           <a
             href={contactEmailDestination.href}
             className="tv-utility__contact"

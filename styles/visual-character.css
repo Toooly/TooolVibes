@@ -348,6 +348,7 @@
 }
 
 .tv-utility__brand,
+.tv-utility__wordmark,
 .tv-utility__contact,
 .tv-utility__link,
 .tv-utility__group h3 {
@@ -368,6 +369,10 @@
 .tv-utility__link:hover,
 .tv-utility__link:focus-visible {
   color: var(--tv-ink-inverted-primary);
+}
+.site-footer-v2.tv-utility .tv-utility__summary,
+.site-footer-v2.tv-utility .tv-utility__contact-copy {
+  color: var(--tv-ink-inverted-secondary);
 }
 .tv-utility__legal,
 .tv-utility__disclosure,
@@ -511,4 +516,18 @@
 /* 8. Cream-to-cream chapter seam */
 .def-start.tv-discovery-stage {
   border-top: 1px solid color-mix(in srgb, var(--tv-ink-inverted-primary) 10%, transparent);
+}
+
+/* Launchpad tiles: family rails, not identical black boxes (v3.2 main). */
+.site-footer-v2.tv-launchpad .tv-launchpad__tile {
+  border-top: 2px solid var(--tv-border-subtle);
+}
+.site-footer-v2.tv-launchpad .tv-launchpad__tile--discover {
+  border-top-color: var(--tv-grammar-radar-accent);
+}
+.site-footer-v2.tv-launchpad .tv-launchpad__tile--build {
+  border-top-color: var(--tv-grammar-stack-node);
+}
+.site-footer-v2.tv-launchpad .tv-launchpad__tile--decide {
+  border-top-color: var(--tv-grammar-personal-accent);
 }
