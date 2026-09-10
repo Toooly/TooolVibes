@@ -865,6 +865,11 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 0.25rem;
+  /* v3.2 P1: the wrap overlaps the book cover link — only the buttons take taps. */
+  pointer-events: none;
+}
+
+.shortlist-final-surface .mobile-library-book__remove-wrap .mobile-library-book__remove {
   pointer-events: auto;
 }
 

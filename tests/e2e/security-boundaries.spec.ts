@@ -35,7 +35,7 @@ test.describe("release security boundaries", () => {
         maxRedirects: 0,
       });
       expect([307, 308]).toContain(admin.status());
-      expect(new URL(admin.headers().location).pathname).toBe("/admin/login");
+      expect(new URL(admin.headers().location).pathname).toBe("/admin-login");
 
       const gated = await anonymous.get("/archivio", { maxRedirects: 0 });
       expect([307, 308]).toContain(gated.status());

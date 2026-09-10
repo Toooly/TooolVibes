@@ -2,10 +2,10 @@ import { expect, test } from "./fixtures/release-fixture";
 
 const coreRoutes = [
   { path: "/", title: /TooolVibes/i },
-  { path: "/archivio", title: /Archivio tool/i },
+  { path: "/archivio", title: /Catalogo di tool AI/i },
   { path: "/toools/blink", title: /Blink/i },
   { path: "/shortlist", title: /Salvati/i },
-  { path: "/compare", title: /Confronto tool/i },
+  { path: "/compare", title: /Confronta tool AI/i },
   { path: "/radar", title: /Radar/i },
   { path: "/account", title: /Account/i },
 ] as const;
