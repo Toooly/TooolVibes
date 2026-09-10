@@ -15,3 +15,16 @@
 - E2E: baseline public 9/9; gated chromium 11/12 (3 stale specs fixed; `/` coming-soon + archivio-redirect limits are architectural, documented); shell-390 2/2 PASS. touch-390 blocked by environmental renderer crash (proven on pristine v3.1 baseline; behaviors covered by matrices).
 - Gates: check:styles, lint:ci, tsc, vitest 2926, build plain + E2E-env — all green.
 - Evidence: `.tmp-qa/v32/shots/after-main/` (contact sheets 390/768/1440/1920), `pairs/` (10 before/after), responsive matrix 180/180 ox=0.
+
+## V3.2 RELEASE (v3.2.0 → 88b103a)
+- Final polish: catalog podium indexing (01-03 strong / 04+ subdued), chrome loop node, collections workflow rails, radar signal trace (verified on 5 live nodes in prod), compare brass decision voice. Shortlist/account audited already family-correct.
+- Gates: check:styles ✓ lint:ci ✓ tsc ✓ vitest 2926 ✓ build 151 ✓ E2E baseline 9/9 ✓ shell-390 2/2 ✓ (touch-390 environmentally blocked, documented). Responsive 180/180 ox=0. Interaction regression 9/9.
+- Released: push 9dafa03..88b103a, Cloudflare worker tooolvibes version 8214f525-0e49-433f-b5bc-28aa9a464da4, prod SHA verified 88b103a stable at T+60s/T+120s/final. Production smoke 22/22 (390+1440, 11 routes): H1 correct, ox=0, banner 1, footer present, 0 page errors, 0 first-party 4xx/5xx. Guest interactions: card tap→detail, save toggle, radar live nodes OK.
+- Tag v3.2.0 → 88b103a pushed. RELEASE FROZEN.
+
+## V3.3 BACKLOG (non-blocking)
+- Radar feed data quality: consumer Apple products + 'Dato non disponibile' placeholders in live data.
+- 17 dead `.guides-article__body > .editorial-markdown` selectors (wire-up vs delete).
+- Archivio soft-gate question: anonymous /archivio serves catalog with gate=1 (product decision).
+- vibes-3d-maestoso dead weight (214 unused classes).
+- touch-390 Playwright runner renderer crash (environmental — bisect-proven on pristine v3.1).
