@@ -453,7 +453,7 @@
     font-size: clamp(3rem, 4.5vw, 4.5rem);
   }
   .td-final-score--compact .td-final-score__number {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 }
 
@@ -470,8 +470,11 @@
 }
 
 .td-final-score--compact .td-final-score__number {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   line-height: 1;
+  font-family: var(--tv-font-family-display);
+  font-weight: var(--tv-font-weight-display, 400);
+  letter-spacing: 0.01em;
 }
 
 .td-final-score--compact .td-final-score__number--status {

@@ -3353,3 +3353,81 @@
   color: var(--tv-ink-muted-aa);
   max-width: 62ch;
 }
+
+/* ═══ V3.2 VISUAL EXCELLENCE — Hero Decision Scope ═══
+   Desktop counterweight built from logo primitives (loop/wave/tile).
+   Left = proposition copy, right = the product system as instrument. */
+.def-cockpit__scope {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .def-cockpit__inner {
+    max-width: var(--tv-container-uw);
+    grid-template-columns: minmax(0, 1fr) minmax(380px, 480px);
+    column-gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+  .def-cockpit__hero {
+    min-height: 0;
+  }
+  .def-cockpit__scope {
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+  .def-cockpit__title {
+    max-width: 16ch;
+  }
+}
+@media (min-width: 1920px) {
+  .def-cockpit__scope {
+    transform: scale(1.08);
+    transform-origin: center;
+  }
+}
+
+.def-scope {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.def-scope text {
+  font-family: var(--tv-font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.def-scope__tag--brass {
+  letter-spacing: 0.18em;
+}
+.def-scope__tag--top {
+  opacity: 0.9;
+}
+
+/* signal draw-in — explains the wave crossing the system */
+.def-scope__wave {
+  stroke-dasharray: 460;
+  stroke-dashoffset: 460;
+  animation: def-scope-draw 1.6s ease-out 0.3s forwards;
+}
+@keyframes def-scope-draw {
+  to { stroke-dashoffset: 0; }
+}
+.def-scope__pulse {
+  animation: def-scope-pulse 3.2s ease-in-out 2s infinite;
+  transform-origin: 240px 316px;
+}
+@keyframes def-scope-pulse {
+  0%, 100% { r: 5; opacity: 1; }
+  50% { r: 6.5; opacity: 0.8; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .def-scope__wave {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .def-scope__pulse {
+    animation: none;
+  }
+}

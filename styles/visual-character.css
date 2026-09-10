@@ -286,8 +286,8 @@
   color: var(--tv-ink-inverted-primary);
 }
 .tv-launchpad__tile {
-  background: var(--tv-surface-raised);
-  border: 1px solid var(--tv-border-subtle);
+  background: transparent;
+  border: 0;
   color: var(--tv-ink-primary);
 }
 .tv-launchpad__tile p {
@@ -297,10 +297,10 @@
 .tv-launchpad__tile--build p { color: var(--tv-grammar-stack-node) !important; }
 .tv-launchpad__tile--decide p { color: var(--tv-grammar-personal-accent) !important; }
 .tv-launchpad__tile a {
-  color: var(--tv-ink-primary) !important;
+  color: var(--tv-ink-inverted-primary) !important;
 }
 .tv-launchpad__tile a:hover {
-  color: var(--tv-accent-cyan-on-dark) !important;
+  color: var(--tv-accent-violet-on-ivory) !important;
 }
 .tv-launchpad__contact p,
 .tv-launchpad__legal a,

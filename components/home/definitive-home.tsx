@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { DecisionJourney } from "@/components/home/decision-journey";
+import { HeroDecisionScope } from "@/components/home/hero-decision-scope";
 import { IntentEntry } from "@/components/home/intent-entry";
 import {
   StartHere,
@@ -26,7 +27,15 @@ type DefinitiveHomeProps = {
   stacks?: HomeStackPreview[];
 };
 
-function Cockpit({ toolCount, stackCount }: { toolCount: number; stackCount: number }) {
+function Cockpit({
+  toolCount,
+  stackCount,
+  tools,
+}: {
+  toolCount: number;
+  stackCount: number;
+  tools: ToolPublicView[];
+}) {
   const eyebrowDesktop =
     toolCount > 0
       ? `Per chi costruisce prodotti digitali · ${toolCount} tool nel catalogo`
@@ -83,6 +92,9 @@ function Cockpit({ toolCount, stackCount }: { toolCount: number; stackCount: num
             </div>
           </dl>
         </div>
+        <div className="def-cockpit__scope" aria-hidden="true">
+          <HeroDecisionScope tools={tools} />
+        </div>
       </div>
     </section>
   );
@@ -125,7 +137,7 @@ export function DefinitiveHome({
           </a>
         </p>
       ) : null}
-      <Cockpit toolCount={tools.length} stackCount={stacks.length} />
+      <Cockpit toolCount={tools.length} stackCount={stacks.length} tools={tools} />
       <StartHere focusTool={focusTool} tools={tools} stacks={stacks} />
       <TinyAdzInlineSlot placement="home-editorial" />
       <Method />

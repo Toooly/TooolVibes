@@ -151,23 +151,31 @@ function LaunchpadFooter({
         <p className="tv-launchpad__signature" aria-hidden="true">TOOOLVIBES</p>
         <h2 className="tv-launchpad__title">Dove vuoi andare adesso?</h2>
 
-        <ul className="tv-launchpad__destinations">
-          <li className="tv-launchpad__tile tv-launchpad__tile--discover">
-            <p>Scopri</p>
-            <Link href="/archivio">Catalogo</Link>
-            <Link href="/radar">Radar</Link>
-          </li>
-          <li className="tv-launchpad__tile tv-launchpad__tile--build">
-            <p>Costruisci</p>
-            <Link href="/collections">Raccolte</Link>
-            <Link href="/posts">Guide</Link>
-          </li>
-          <li className="tv-launchpad__tile tv-launchpad__tile--decide">
-            <p>Decidi</p>
-            <Link href="/compare">Confronto</Link>
-            <Link href="/shortlist">Salvati</Link>
-          </li>
-        </ul>
+        <nav className="tv-launchpad__map" aria-label="Mappa del prodotto">
+          <p className="tv-launchpad__map-caption" aria-hidden="true">
+            Scopri <span /> Costruisci <span /> Decidi
+          </p>
+          <ul className="tv-launchpad__destinations">
+            <li className="tv-launchpad__tile tv-launchpad__tile--discover">
+              <span className="tv-launchpad__node" aria-hidden="true" />
+              <p>Scopri</p>
+              <Link href="/archivio">Catalogo <span aria-hidden="true">→</span></Link>
+              <Link href="/radar">Radar <span aria-hidden="true">→</span></Link>
+            </li>
+            <li className="tv-launchpad__tile tv-launchpad__tile--build">
+              <span className="tv-launchpad__node" aria-hidden="true" />
+              <p>Costruisci</p>
+              <Link href="/collections">Raccolte <span aria-hidden="true">→</span></Link>
+              <Link href="/posts">Guide <span aria-hidden="true">→</span></Link>
+            </li>
+            <li className="tv-launchpad__tile tv-launchpad__tile--decide">
+              <span className="tv-launchpad__node" aria-hidden="true" />
+              <p>Decidi</p>
+              <Link href="/compare">Confronto <span aria-hidden="true">→</span></Link>
+              <Link href="/shortlist">Salvati <span aria-hidden="true">→</span></Link>
+            </li>
+          </ul>
+        </nav>
 
         <section className="tv-launchpad__contact" aria-labelledby="tv-launchpad-contact">
           <h3 id="tv-launchpad-contact">Parliamone</h3>

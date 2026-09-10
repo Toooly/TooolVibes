@@ -664,19 +664,48 @@
 
 .tv-launchpad__destinations {
   display: grid;
-  gap: var(--tv-rhythm-related-lg);
+  gap: var(--tv-rhythm-related-lg) var(--tv-rhythm-section);
   list-style: none;
   margin: 0;
   padding: 0;
+  position: relative;
+}
+
+/* Product-map rail — one wave crossing the three stations. */
+.tv-launchpad__destinations::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  right: 6px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent),
+    color-mix(in srgb, var(--tv-ink-primary) 18%, transparent) 50%,
+    color-mix(in srgb, var(--tv-accent-violet-on-ivory) 45%, transparent));
+}
+
+.tv-launchpad__map-caption {
+  display: none;
 }
 
 .tv-launchpad__tile {
   display: grid;
-  gap: 0.35rem;
-  padding: var(--tv-rhythm-related-lg);
-  background: var(--tv-surface-raised);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-feature);
+  gap: 0.45rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.tv-launchpad__node {
+  display: block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--tv-ink-primary);
+  margin-bottom: 0.9rem;
+  box-shadow: 0 0 0 4px var(--tv-surface-inverted, transparent);
 }
 
 .tv-launchpad__tile p {
@@ -691,11 +720,37 @@
 .tv-launchpad__tile--build p { color: var(--tv-grammar-stack-node); }
 .tv-launchpad__tile--decide p { color: var(--tv-grammar-personal-accent); }
 
+.tv-launchpad__tile--discover .tv-launchpad__node { background: var(--tv-grammar-radar-accent); }
+.tv-launchpad__tile--build .tv-launchpad__node { background: var(--tv-grammar-stack-node); }
+.tv-launchpad__tile--decide .tv-launchpad__node { background: var(--tv-grammar-personal-accent); }
+
+@media (min-width: 64rem) {
+  .tv-launchpad__destinations {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--tv-rhythm-section);
+  }
+  .tv-launchpad__map-caption {
+    display: none;
+  }
+}
+
 .tv-launchpad__tile a {
   color: var(--tv-ink-primary);
   text-decoration: none;
-  font-size: var(--tv-type-body);
+  font-size: 1.25rem;
   font-weight: var(--tv-weight-semibold);
+  justify-self: start;
+  padding-block: 0.4rem;
+}
+
+.tv-launchpad__tile a span {
+  display: inline-block;
+  margin-left: 0.35rem;
+  transition: transform var(--tv-duration-base) var(--tv-easing-standard);
+}
+
+.tv-launchpad__tile a:hover span {
+  transform: translateX(4px);
 }
 
 .tv-launchpad__tile a:hover {
@@ -788,6 +843,26 @@
   background: var(--tv-bg-base) !important;
   color: var(--tv-ink-primary) !important;
   border-top: 1px solid var(--tv-border-subtle) !important;
+  position: relative;
+}
+
+/* Wave-edge bookend — the same gold→cyan trace that crosses the chrome
+   closes the page on internal routes. */
+.tv-utility::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--tv-accent-gold) 40%, transparent) 18%,
+    color-mix(in srgb, var(--tv-accent-brand) 45%, transparent) 50%,
+    color-mix(in srgb, var(--tv-accent-cyan) 40%, transparent) 82%,
+    transparent 100%);
+  opacity: 0.5;
 }
 
 .site-footer-v2.tv-utility :is(h2, h3, a, p, summary) {
@@ -893,6 +968,10 @@
   text-transform: uppercase;
   color: var(--tv-ink-muted-aa);
 }
+
+/* Family voice: Esplora leans signal-cyan, TooolVibes leans brand-violet. */
+.tv-utility__group:first-child h3 { color: var(--tv-accent-cyan); }
+.tv-utility__group:last-child h3 { color: var(--tv-color-violet-300); }
 
 .tv-utility__group ul {
   display: flex;

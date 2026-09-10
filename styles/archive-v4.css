@@ -2574,14 +2574,40 @@ a.archive-v4-card:focus-visible {
   gap: 6px;
   margin-top: 8px;
 }
-.ar4-card__skill,
-.ar4-card__score {
+.ar4-card__skill {
   display: inline-flex;
   margin-right: 8px;
   font-size: 12px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--tv-ink-muted);
+}
+.ar4-card__score {
+  display: inline-flex;
+  margin-right: 8px;
+  font-family: var(--tv-font-family-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--tv-ink-inverted-primary);
+}
+
+/* V3.2 editorial judgment signal: the score numeral is the product voice,
+   the level stays a quiet annotation. (Restores the 22px numeral the
+   late layer had flattened to 12px.) */
+.ar4-card__score strong {
+  font-family: var(--tv-font-data);
+  font-size: 21px;
+  line-height: 0.9;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--tv-ink-inverted-primary);
+}
+.ar4-card__score em {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--tv-ink-inverted-muted);
 }
 .ar4-card__best {
   margin: 0;
@@ -2827,4 +2853,28 @@ a.archive-v4-card:focus-visible {
   .ar4-grid__list > li:first-child .ar4-card {
     border-top: 2px solid var(--tv-accent-gold);
   }
+}
+
+/* ═══ V3.2 VISUAL EXCELLENCE — catalog editorial system ═══ */
+.ar4-grid {
+  counter-reset: ar4-index;
+}
+.ar4-card:not(.ar4-card--lead)::before {
+  counter-increment: ar4-index;
+  content: counter(ar4-index, decimal-leading-zero);
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-family: var(--tv-font-family-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--tv-ink-inverted-muted) 55%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+.ar4-card {
+  transition: box-shadow var(--tv-duration-base) var(--tv-easing-standard);
+}
+.ar4-card:hover {
+  box-shadow: inset 2px 0 0 var(--tv-accent-brand);
 }

@@ -13,12 +13,29 @@
  */
 
 .command-bar {
-  background: var(--tv-bg-base);
-  border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-color-violet-900) 14%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 100%);
+  border-bottom: 1px solid color-mix(in srgb, var(--tv-accent-brand) 22%, transparent);
   position: sticky;
   top: 0;
   z-index: var(--tv-z-nav);
   width: 100%;
+}
+
+/* Signal-wave edge — the logo gold→cyan trace crossing the chrome. */
+.command-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--tv-accent-gold) 55%, transparent) 22%,
+    var(--tv-accent-brand) 50%,
+    color-mix(in srgb, var(--tv-accent-cyan) 45%, transparent) 78%,
+    transparent 100%);
 }
 
 @media (max-width: 1279px) {
@@ -125,9 +142,9 @@
   border-radius: var(--tv-radius-card);
   text-decoration: none;
   color: var(--tv-ink-secondary);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: color var(--tv-duration-base) var(--tv-easing-standard);
   isolation: isolate;
@@ -138,8 +155,8 @@
   .command-bar__nav { gap: 2px; padding: 4px; }
   .command-bar__nav-item {
     gap: 6px;
-    font-size: 12px;
-    padding: 9px 10px;
+    font-size: 13px;
+    padding: 9px 13px;
     min-height: 42px;
   }
 }
@@ -417,11 +434,11 @@
 .command-bar__nav-item.is-active::after {
   content: "";
   position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+  bottom: 2px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  border-radius: 2px;
   background: var(--tv-accent-gold);
 }
 .command-bar__nav-item.is-active[data-family="resource"]::after { background: var(--tv-ink-primary); }
