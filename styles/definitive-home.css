@@ -3519,6 +3519,21 @@
   font-size: var(--tv-type-meta);
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  border-top: 1px solid transparent;
+  transition: color var(--tv-duration-base) var(--tv-easing-standard),
+    border-color var(--tv-duration-base) var(--tv-easing-standard);
+}
+html[data-tv-home-story="enter"] .def-cockpit {
+  opacity: 0.78;
+  transition: opacity var(--tv-duration-base) var(--tv-easing-standard);
+}
+html[data-tv-home-story="enter"] .def-cockpit__explore {
+  color: var(--tv-ink-primary);
+  border-top-color: var(--tv-grammar-editorial-rail);
+}
+html[data-tv-home-story="enter"] #explore {
+  outline: 1px solid color-mix(in srgb, var(--tv-grammar-editorial-brass) 35%, transparent);
+  outline-offset: calc(-1 * var(--tv-space-2));
 }
 
 .def-cockpit__explore span {
@@ -3818,5 +3833,74 @@
     transition: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+.def-decision__stage {
+  display: grid;
+  gap: var(--tv-rhythm-group);
+}
+.def-decision__path {
+  display: block;
+  height: 2px;
+  background: var(--tv-border-subtle);
+  overflow: hidden;
+}
+.def-decision__path-fill {
+  display: block;
+  height: 100%;
+  width: calc(var(--decision-progress, 0) * 100%);
+  background: var(--tv-grammar-editorial-rail);
+}
+.def-decision__node[data-state="idle"] {
+  opacity: 0.42;
+}
+.def-decision__node[data-state="active"] {
+  opacity: 1;
+}
+.def-decision__node[data-state="done"] {
+  opacity: 0.78;
+}
+.def-decision__candidate--lead {
+  box-shadow: inset 0 0 0 1px var(--tv-grammar-editorial-brass);
+}
+.def-decision__choice,
+.def-decision__memory {
+  margin: 0;
+  font-size: var(--tv-type-lead);
+  color: var(--tv-ink-secondary);
+}
+.def-decision__memory {
+  padding-inline-start: var(--tv-rhythm-related);
+  border-inline-start: 2px solid var(--tv-grammar-personal-remembered-edge);
+}
+.def-start {
+  scroll-margin-top: var(--tv-header-height-mobile);
+}
+@media (min-width: 1024px) {
+  .def-start {
+    scroll-margin-top: var(--tv-header-height);
+  }
+  .def-decision {
+    min-height: 160vh;
+  }
+  .def-decision[data-reduced] {
+    min-height: 0;
+  }
+  .def-decision__stage {
+    position: sticky;
+    top: var(--tv-header-height);
+    padding-bottom: var(--tv-rhythm-group);
+    background: var(--tv-bg-base);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .def-decision {
+    min-height: 0;
+  }
+  html[data-tv-home-story="enter"] .def-cockpit,
+  html[data-tv-home-story="enter"] #explore {
+    outline: none;
+    opacity: 1;
   }
 }

@@ -19,6 +19,8 @@ import {
 } from "@/components/monetization/partner-placements";
 import { resolvePublicMonetizationPlacement } from "@/lib/monetization/placements";
 import { useCommercialNow } from "@/components/monetization/commercial-clock";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import type { MouseEvent } from "react";
 
 export { formatHomeAnalysisTime, type HomeStackPreview } from "@/components/home/start-here";
 
@@ -36,6 +38,26 @@ const HERO_DESTINATIONS = [
   { href: "/radar", label: "Radar", hint: "Segnali" },
   { href: "/posts", label: "Guide", hint: "Leggi" },
 ] as const;
+
+function ExploreCue() {
+  const reduced = useReducedMotion();
+  function onExplore(event: MouseEvent<HTMLAnchorElement>) {
+    const target = document.getElementById("explore");
+    if (!target) return;
+    event.preventDefault();
+    document.documentElement.dataset.tvHomeStory = "enter";
+    target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    window.setTimeout(() => {
+      delete document.documentElement.dataset.tvHomeStory;
+    }, reduced ? 0 : 720);
+  }
+  return (
+    <a className="def-cockpit__explore" href="#explore" onClick={onExplore}>
+      Esplora TooolVibes
+      <span aria-hidden="true">↓</span>
+    </a>
+  );
+}
 
 function Cockpit({
   toolCount,
@@ -123,10 +145,7 @@ function Cockpit({
           <HeroDecisionScope tools={tools} />
         </div>
       </div>
-      <a className="def-cockpit__explore" href="#explore">
-        Esplora TooolVibes
-        <span aria-hidden="true">↓</span>
-      </a>
+      <ExploreCue />
     </section>
   );
 }
