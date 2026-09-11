@@ -675,7 +675,7 @@ export function HomeRadarPreview() {
       <p className="tv-home-radar__pulse tv-home-radar__rail" aria-label="Sintesi segnali di oggi">
         <span>
           <strong className="tv-home-radar__pulse-value">
-            {model.signalCount ?? (isLoading ? "…" : "—")}
+            {model.signalCount ?? (isLoading ? "…" : "0")}
           </strong>
           <span className="tv-home-radar__pulse-label"> segnali</span>
         </span>
@@ -753,7 +753,7 @@ export function HomeRadarPreview() {
         className="tv-home-radar__cta"
         aria-label="Apri il Radar completo dei nuovi lanci"
       >
-        Apri il Radar completo
+        Apri Radar
         <ArrowRight size={16} aria-hidden="true" />
       </Link>
     </div>

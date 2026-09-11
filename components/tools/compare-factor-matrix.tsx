@@ -66,6 +66,7 @@ function DesktopFactorMatrix({
     () => new Map(verdict.scores.map(({ tool, score }) => [tool.slug, score])),
     [verdict],
   );
+  const [diffOnly, setDiffOnly] = useState(false);
   const factors = useMemo(() => {
     const all = tools.flatMap((t) => t.weightedDimensions ?? []);
     const seen = new Set<string>();
@@ -88,6 +89,17 @@ function DesktopFactorMatrix({
     }
     return result;
   }, [tools]);
+  const visibleFactors = useMemo(() => {
+    if (!diffOnly) return factors;
+    return factors.filter((factor) => {
+      const values = tools.map(
+        (tool) =>
+          tool.weightedDimensions?.find((dim) => dim.key === factor.key)?.value ??
+          null,
+      );
+      return new Set(values.map(String)).size > 1;
+    });
+  }, [diffOnly, factors, tools]);
 
   if (tools.length < MIN_COMPARE_TOOLS) return null;
 
@@ -118,6 +130,24 @@ function DesktopFactorMatrix({
         <div>
           <span>Fattori per l&apos;obiettivo</span>
           <small>Una riga per ogni dimensione decisionale.</small>
+        </div>
+        <div className="compare-factor-matrix__mode" role="group" aria-label="Visibilità fattori">
+          <button
+            type="button"
+            className="compare-factor-matrix__mode-btn"
+            aria-pressed={!diffOnly}
+            onClick={() => setDiffOnly(false)}
+          >
+            Tutto
+          </button>
+          <button
+            type="button"
+            className="compare-factor-matrix__mode-btn"
+            aria-pressed={diffOnly}
+            onClick={() => setDiffOnly(true)}
+          >
+            Solo differenze
+          </button>
         </div>
       </div>
 
@@ -173,7 +203,7 @@ function DesktopFactorMatrix({
         className="compare-factor-matrix__rows"
         data-scrollable={tools.length >= 5 ? "true" : undefined}
       >
-        {factors.map((factor, rowIndex) => {
+        {visibleFactors.map((factor, rowIndex) => {
           const isPrimary = factor.isPrimary;
           const pct = Math.round(factor.weight * 100);
           const helper = isPrimary

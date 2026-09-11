@@ -579,7 +579,11 @@ export function DefinitiveArchive({
                 {visibleFiltered.map((tool, idx) => (
                   <Fragment key={tool.slug}>
                     <li>
-                      <ArchiveV4ToolCard tool={tool} rank={idx + 1} />
+                      <ArchiveV4ToolCard
+                        tool={tool}
+                        rank={idx + 1}
+                        className={idx < 3 ? "ar4-card--lead" : "ar4-card--rest"}
+                      />
                     </li>
                     {partnerInsert &&
                     !hasActiveFilter &&

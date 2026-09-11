@@ -2890,3 +2890,14 @@ a.archive-v4-card:focus-visible {
 .ar4-card:hover {
   box-shadow: inset 2px 0 0 var(--tv-accent-brand);
 }
+
+.ar4-card--lead {
+  padding: var(--tv-card-padding-lg);
+}
+.ar4-card--lead .ar4-card__name {
+  font-size: var(--tv-type-h3);
+}
+.ar4-card--rest .ar4-card__name {
+  font-size: var(--tv-type-body);
+  font-weight: 700;
+}
