@@ -647,11 +647,8 @@
 @media (max-width: 1279px) {
   .tv-launchpad .site-footer-v2__shell,
   .tv-launchpad__shell {
-    padding-block-end: calc(
-      var(--tv-rhythm-section) +
-      var(--tv-bottom-nav-total, 4.0625rem) +
-      env(safe-area-inset-bottom)
-    );
+    padding-block-end: var(--tv-rhythm-section);
+    /* Core Footer owns --tv-bottom-nav-total on every public route. */
   }
 }
 
@@ -885,6 +882,14 @@
   gap: 0.7rem;
   text-decoration: none;
   width: fit-content;
+}
+
+.tv-utility__mark {
+  margin: 0;
+  font-family: var(--tv-font-ui);
+  font-size: var(--tv-type-meta);
+  letter-spacing: 0.12em;
+  color: var(--tv-ink-muted-aa);
 }
 
 .tv-utility__wordmark {

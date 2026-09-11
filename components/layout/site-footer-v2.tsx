@@ -35,15 +35,33 @@ export function SiteFooterV2() {
   const pathname = usePathname() ?? "/";
   const isHome = pathname === "/";
 
-  if (isHome) {
-    return (
-      <LaunchpadFooter
+  return (
+    <>
+      {isHome ? <LaunchpadPreFooter /> : null}
+      <CoreFooter
         year={year}
+        productLinks={productLinks}
+        companyLinks={companyLinks}
         legalLinks={legalLinks}
+        pathname={pathname}
       />
-    );
-  }
+    </>
+  );
+}
 
+function CoreFooter({
+  year,
+  productLinks,
+  companyLinks,
+  legalLinks,
+  pathname,
+}: {
+  year: number;
+  productLinks: ReturnType<typeof useNavItems>;
+  companyLinks: ReturnType<typeof useNavItems>;
+  legalLinks: ReturnType<typeof useNavItems>;
+  pathname: string;
+}) {
   return (
     <footer className="site-footer-v2 tv-utility relative mt-auto">
       <div className="tv-utility__shell site-footer-v2__shell">
@@ -59,7 +77,7 @@ export function SiteFooterV2() {
         </div>
 
         <div className="tv-utility__contact-block">
-          <p className="tv-utility__contact-title">Parliamone</p>
+          <h3 className="tv-utility__contact-title">Parliamone</h3>
           <p className="tv-utility__contact-copy">
             Un tool da segnalare, una correzione, una proposta.
           </p>
@@ -129,27 +147,22 @@ export function SiteFooterV2() {
             valutazioni editoriali.
           </p>
         </details>
+        <p className="tv-utility__mark">TOOOLVIBES · {year}</p>
       </div>
     </footer>
   );
 }
 
-function LaunchpadFooter({
-  year,
-  legalLinks,
-}: {
-  year: number;
-  legalLinks: ReturnType<typeof useNavItems>;
-}) {
+function LaunchpadPreFooter() {
   return (
-    <footer className="site-footer-v2 tv-launchpad relative mt-auto">
+    <section className="site-footer-v2 tv-launchpad relative" aria-labelledby="tv-launchpad-title">
       <div className="tv-launchpad__shell site-footer-v2__shell">
         <Link href="/" className="tv-launchpad__brand">
           <BrandLogo size={40} fallback="png" />
           <span className="tv-launchpad__wordmark">TOOOLVIBES</span>
         </Link>
         <p className="tv-launchpad__signature" aria-hidden="true">TOOOLVIBES</p>
-        <h2 className="tv-launchpad__title">Dove vuoi andare adesso?</h2>
+        <h2 id="tv-launchpad-title" className="tv-launchpad__title">Dove vuoi andare adesso?</h2>
 
         <nav className="tv-launchpad__map" aria-label="Mappa del prodotto">
           <p className="tv-launchpad__map-caption" aria-hidden="true">
@@ -176,41 +189,7 @@ function LaunchpadFooter({
             </li>
           </ul>
         </nav>
-
-        <section className="tv-launchpad__contact" aria-labelledby="tv-launchpad-contact">
-          <h3 id="tv-launchpad-contact">Parliamone</h3>
-          <p>
-            Hai un tool da segnalare, una correzione o una proposta?
-          </p>
-          <a href={contactEmailDestination.href} className="site-footer-v2__contact">
-            <Mail size={16} aria-hidden="true" />
-            Scrivici
-          </a>
-        </section>
-
-        <div className="tv-launchpad__legal site-footer-v2__legal-row">
-          {legalLinks.map((link) => (
-            <Link
-              key={link.id}
-              href={link.href}
-              className="site-footer-v2__legal-link"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <ConsentFooterLink />
-        </div>
-
-        <p className="tv-launchpad__mark">TOOOLVIBES · {year}</p>
-
-        <details className="tv-launchpad__disclosure">
-          <summary>Trasparenza e affiliazioni</summary>
-          <p className="site-footer-v2__disclosure">
-            Alcuni link su TooolVibes sono link affiliati. Se acquisti tramite questi collegamenti, potremmo ricevere una commissione, senza costi aggiuntivi per te. Le partnership commerciali non determinano le valutazioni editoriali.
-          </p>
-        </details>
-
       </div>
-    </footer>
+    </section>
   );
 }
