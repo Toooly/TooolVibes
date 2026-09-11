@@ -3454,7 +3454,7 @@
 .def-cockpit__title-quiet {
   display: block;
   font-family: var(--tv-type-ui);
-  font-size: 0.42em;
+  font-size: var(--tv-type-h3);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -3489,7 +3489,7 @@
 }
 
 .def-cockpit__dest-hint {
-  font-size: 0.65em;
+  font-size: var(--tv-type-meta);
   letter-spacing: 0.14em;
   color: var(--tv-ink-muted-aa);
   text-transform: uppercase;
