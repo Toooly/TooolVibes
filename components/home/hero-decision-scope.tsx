@@ -6,8 +6,8 @@ import type { ToolPublicView } from "@/lib/data/tool-public-view";
  *   1. LOOP   — interlaced candidate orbits (the TOOOL "oo")
  *   2. WAVE    — gold→cyan signal trace
  *   3. TILE    — rounded identity squares
- * Communicates SCOPRI → VALUTA → CONFRONTA → DECIDI → RICORDA
- * as one instrument, not a dashboard screenshot.
+ * Product instrument: candidates, signal, compare axis, memory.
+ * Lifecycle copy lives in the Decision System, not here.
  * Decorative: aria-hidden, no interactive elements.
  */
 export function HeroDecisionScope({
@@ -96,7 +96,6 @@ export function HeroDecisionScope({
       {/* comparison axis */}
       <line x1="40" y1="316" x2="440" y2="316" stroke="rgba(244,240,231,0.14)" strokeWidth="1" />
       <line x1="40" y1="316" x2="240" y2="316" stroke="#6a3cff" strokeWidth="2" className="def-scope__axis" />
-      <text x="40" y="300" className="def-scope__tag" fill="rgba(244,240,231,0.55)">CONFRONTA</text>
 
       {/* decision node */}
       <circle cx="240" cy="316" r="5" fill="#f3bf4c" className="def-scope__pulse" />
@@ -105,7 +104,6 @@ export function HeroDecisionScope({
         fill="#f3bf4c"
         transform="rotate(90 240 316)"
       />
-      <text x="258" y="341" className="def-scope__tag def-scope__tag--brass" fill="#f3bf4c">DECIDI</text>
 
       {/* memory rail */}
       <line x1="60" y1="392" x2="420" y2="392" stroke="rgba(244,240,231,0.12)" strokeWidth="1" />
@@ -119,11 +117,8 @@ export function HeroDecisionScope({
           strokeWidth="1"
         />
       ))}
-      <text x="60" y="376" className="def-scope__tag" fill="rgba(244,240,231,0.55)">RICORDA</text>
-      <text x="348" y="376" className="def-scope__tag" fill="rgba(244,240,231,0.55)">SALVATI</text>
 
       {/* frame annotation */}
-      <text x="24" y="24" className="def-scope__tag def-scope__tag--top" fill="rgba(244,240,231,0.4)">SCOPRI · VALUTA</text>
     </svg>
   );
 }

@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
-import { HomeRadarPreview } from "@/components/radar/radar-experience";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 
@@ -30,14 +29,6 @@ export type HomeStackPreview = {
   cost?: string | null;
   stages?: HomeStackStage[];
 };
-
-const START_TABS = [
-  { id: "tool", label: "TOOL" },
-  { id: "stack", label: "STACK" },
-  { id: "radar", label: "RADAR" },
-] as const;
-
-type StartTabId = (typeof START_TABS)[number]["id"];
 
 function hasAffiliateSignal(href: string | null | undefined) {
   if (!href) return false;
@@ -70,113 +61,30 @@ function initialFor(name: string) {
 export function StartHere({
   focusTool,
   tools,
-  stacks,
 }: {
   focusTool: ToolPublicView | null;
   tools: ToolPublicView[];
-  stacks: HomeStackPreview[];
+  stacks?: HomeStackPreview[];
 }) {
-  const [tab, setTab] = useState<StartTabId>("tool");
-  const [hasSwitched, setHasSwitched] = useState(false);
-  const tabRefs = useRef<Partial<Record<StartTabId, HTMLButtonElement | null>>>({});
-
-  function selectTab(next: StartTabId, focus = false) {
-    if (next !== tab) setHasSwitched(true);
-    setTab(next);
-    if (focus) tabRefs.current[next]?.focus();
-  }
-
-  function onTabsKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    const index = START_TABS.findIndex((item) => item.id === tab);
-    let next = index;
-    if (event.key === "ArrowRight") next = (index + 1) % START_TABS.length;
-    else if (event.key === "ArrowLeft") next = (index - 1 + START_TABS.length) % START_TABS.length;
-    else if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = START_TABS.length - 1;
-    else return;
-    event.preventDefault();
-    selectTab(START_TABS[next].id, true);
-  }
-
   return (
     <section
+      id="explore"
       className="def-start tv-discovery-stage"
       aria-labelledby="def-start-title"
-      data-mode={tab}
-      data-switched={hasSwitched ? "" : undefined}
+      data-mode="tool"
     >
       <header className="def-start__head tv-discovery-stage__head">
+        <p className="def-start__kicker">Editorial Selection</p>
         <h2 id="def-start-title" className="def-start__title">
-          Da dove partire?
+          Selezione editoriale TooolVibes
         </h2>
-        <div
-          className="def-start__tabs tv-discovery-stage__switch"
-          role="tablist"
-          aria-label="Da dove partire"
-          onKeyDown={onTabsKeyDown}
-        >
-          {START_TABS.map((item) => {
-            const selected = item.id === tab;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className={`def-start__tab${selected ? " is-active" : ""}`}
-                role="tab"
-                id={`def-start-tab-${item.id}`}
-                aria-selected={selected}
-                aria-controls={`def-start-panel-${item.id}`}
-                tabIndex={selected ? 0 : -1}
-                ref={(node) => {
-                  tabRefs.current[item.id] = node;
-                }}
-                onClick={() => selectTab(item.id)}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-        <p className="def-start__lens-note" aria-live="polite">
-          {tab === "tool"
-            ? "La scelta della redazione, aggiornata ogni settimana."
-            : tab === "stack"
-              ? "Percorsi pronti: tool che lavorano insieme, dal primo setup al risultato."
-              : "Segnali freschi dal Product Hunt, riletti ogni giorno dalla redazione."}
+        <p className="def-start__lens-note">
+          Una copertina e due conferme. Non tre card uguali.
         </p>
       </header>
-
       <div className="tv-discovery-stage__frame">
-        <div
-          className="def-start__panel"
-          role="tabpanel"
-          id="def-start-panel-tool"
-          aria-labelledby="def-start-tab-tool"
-          hidden={tab !== "tool"}
-        >
+        <div className="def-start__panel" id="def-start-panel-tool">
           <IvoryEditorial focusTool={focusTool} tools={tools} />
-        </div>
-
-        <div
-          className="def-start__panel"
-          role="tabpanel"
-          id="def-start-panel-stack"
-          aria-labelledby="def-start-tab-stack"
-          hidden={tab !== "stack"}
-        >
-          <HomeStacks stacks={stacks} />
-        </div>
-
-        <div
-          className="def-start__panel"
-          role="tabpanel"
-          id="def-start-panel-radar"
-          aria-labelledby="def-start-tab-radar"
-          hidden={tab !== "radar"}
-        >
-          <div className="def-start__radar">
-            <HomeRadarPreview />
-          </div>
         </div>
       </div>
     </section>
@@ -463,7 +371,7 @@ function DeckCard({
   );
 }
 
-function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
+export function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
   const scrollerRef = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
 

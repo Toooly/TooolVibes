@@ -54,11 +54,14 @@ describe("v3.1 hidden-dom contract", () => {
     expect(radarCss).toContain(".tv-radar__eyebrow-lead { display: none; }");
   });
 
-  it("preserves product-intent home lede variants and start-here tab panels", () => {
+  it("preserves product-intent home lede variants and linear Home chapters", () => {
     expect(homeSrc).toContain("def-cockpit__lede-desktop");
     expect(homeSrc).toContain("def-cockpit__lede-mobile");
-    expect(startHereSrc).toContain('hidden={tab !== "tool"}');
-    expect(startHereSrc).toContain('hidden={tab !== "stack"}');
-    expect(startHereSrc).toContain('hidden={tab !== "radar"}');
+    expect(homeSrc).toContain("def-cockpit__explore");
+    expect(startHereSrc).toContain('id="explore"');
+    expect(startHereSrc).toContain("Selezione editoriale TooolVibes");
+    expect(homeSrc).toContain("DecisionSystem");
+    expect(homeSrc).toContain("RadarTeaser");
+    expect(homeSrc).toContain("CollectionsTeaser");
   });
 });
