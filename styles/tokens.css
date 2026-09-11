@@ -1164,20 +1164,33 @@
   --tv-type-data: var(--tv-font-family-mono);
   --tv-type-mono: var(--tv-font-family-mono);
 
-  /* ~390px targets: display 48–52, h1 38–42, h2 30–32, h3 22–24,
-     body-lg ~19, body ~17, meta 13–14, button 16–17. */
-  --tv-type-display-xl: clamp(3rem, 4vw + 1.55rem, 5rem);
-  --tv-type-h1: clamp(2.375rem, 2.4vw + 1.5rem, 3.75rem);
-  --tv-type-h2: clamp(1.875rem, 1.6vw + 1.25rem, 2.75rem);
-  --tv-type-h3: clamp(1.375rem, 0.8vw + 1.1rem, 1.75rem);
-  --tv-type-body-lg: 1.1875rem;
-  --tv-type-body: 1.0625rem;
-  --tv-type-meta: 0.8125rem;
+  /* Master Spec V1 — typography is navigation.
+     Hero 48–64 / 80–112. H1 40–52 / 56–80. H2 32–40 / 40–56.
+     H3 22–28 / 24–32. Lead 18–20 / 20–24. Body 16.5–18 / 17–19. Meta 12–14. */
+  --tv-type-hero: clamp(3rem, 5vw + 1.2rem, 7rem);
+  --tv-type-display-xl: var(--tv-type-hero);
+  --tv-type-h1: clamp(2.5rem, 3.2vw + 1.55rem, 5rem);
+  --tv-type-h2: clamp(2rem, 2.1vw + 1.4rem, 3.5rem);
+  --tv-type-h3: clamp(1.375rem, 0.75vw + 1.12rem, 2rem);
+  --tv-type-lead: clamp(1.125rem, 0.45vw + 1.02rem, 1.5rem);
+  --tv-type-body-lg: var(--tv-type-lead);
+  --tv-type-body: clamp(1.03125rem, 0.18vw + 0.99rem, 1.1875rem);
+  --tv-type-meta: clamp(0.75rem, 0.15vw + 0.72rem, 0.875rem);
   --tv-type-button: 1rem;
-  --tv-type-leading-display: 1.08;
-  --tv-type-leading-heading: 1.18;
-  --tv-type-leading-body: 1.5;
+  --tv-type-leading-display: 1.06;
+  --tv-type-leading-heading: 1.16;
+  --tv-type-leading-body: 1.55;
   --tv-type-leading-meta: 1.35;
+  --tv-type-weight-h3: 800;
+
+  --tv-text-hero: var(--tv-type-hero);
+  --tv-text-editorial-hero: var(--tv-type-hero);
+  --tv-text-h1: var(--tv-type-h1);
+  --tv-text-h2: var(--tv-type-h2);
+  --tv-text-h3: var(--tv-type-h3);
+  --tv-text-body-lg: var(--tv-type-lead);
+  --tv-text-body: var(--tv-type-body);
+  --tv-text-metadata: var(--tv-type-meta);
 
   /* --- Spatial rhythm --- */
   --tv-rhythm-related: var(--tv-space-px-3);
@@ -1304,6 +1317,17 @@
   --tv-grammar-resource-ink: var(--tv-grammar-commercial-ink);
   --tv-grammar-resource-label: var(--tv-grammar-commercial-label);
   --tv-grammar-resource-premium: var(--tv-accent-brand);
+  --tv-grammar-personal-edge: var(--tv-grammar-personal-remembered-edge);
+  --tv-grammar-decision-selected: var(--tv-grammar-selected);
+  --tv-grammar-decision-action: var(--tv-grammar-activation);
+  --tv-surface-canvas: var(--tv-bg-base);
+  --tv-surface-field: var(--tv-surface-raised);
+  --tv-surface-object: var(--tv-surface-elevated);
+  --tv-surface-rail: transparent;
+  --tv-surface-panel: var(--tv-surface-raised);
+  --tv-radius-object: var(--tv-radius-feature);
+  --tv-radius-rail: 0;
+
 
   /* Signal search primitive */
   --tv-signal-rest-border: var(--tv-border-default);

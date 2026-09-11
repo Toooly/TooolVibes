@@ -540,3 +540,113 @@
   }
 }
 
+
+/* ============================================================
+   MASTER SPEC V1 — TYPE + SURFACE CONSTITUTION
+   Semantic HTML stays correct. Attention levels are tokenized.
+   ============================================================ */
+
+.tv-type-hero {
+  font-family: var(--tv-type-display);
+  font-size: var(--tv-type-hero);
+  font-weight: var(--tv-weight-regular);
+  line-height: var(--tv-type-leading-display);
+  letter-spacing: var(--tv-tracking-tight);
+  color: var(--tv-ink-primary);
+}
+
+.tv-type-h1 {
+  font-family: var(--tv-type-display);
+  font-size: var(--tv-type-h1);
+  font-weight: var(--tv-weight-regular);
+  line-height: var(--tv-type-leading-display);
+  letter-spacing: var(--tv-tracking-tight);
+  color: var(--tv-ink-primary);
+}
+
+.tv-type-h2 {
+  font-family: var(--tv-type-ui);
+  font-size: var(--tv-type-h2);
+  font-weight: 800;
+  line-height: var(--tv-type-leading-heading);
+  color: var(--tv-ink-primary);
+}
+
+.tv-type-h3 {
+  font-family: var(--tv-type-ui);
+  font-size: var(--tv-type-h3);
+  font-weight: var(--tv-type-weight-h3);
+  line-height: var(--tv-type-leading-heading);
+  color: var(--tv-ink-primary);
+}
+
+.tv-type-lead {
+  font-family: var(--tv-type-ui);
+  font-size: var(--tv-type-lead);
+  font-weight: var(--tv-weight-regular);
+  line-height: var(--tv-type-leading-body);
+  color: var(--tv-ink-secondary);
+}
+
+.tv-type-body {
+  font-family: var(--tv-type-ui);
+  font-size: var(--tv-type-body);
+  line-height: var(--tv-type-leading-body);
+  color: var(--tv-ink-secondary);
+}
+
+.tv-type-meta {
+  font-family: var(--tv-type-ui);
+  font-size: var(--tv-type-meta);
+  line-height: var(--tv-type-leading-meta);
+  color: var(--tv-ink-muted-aa);
+}
+
+.tv-type-data {
+  font-family: var(--tv-type-data);
+  font-size: var(--tv-type-meta);
+  line-height: var(--tv-type-leading-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+.tv-canvas {
+  background: var(--tv-surface-canvas);
+  color: var(--tv-ink-primary);
+}
+
+.tv-field {
+  background: var(--tv-surface-field);
+}
+
+.tv-object {
+  background: var(--tv-surface-object);
+  border-radius: var(--tv-radius-object);
+}
+
+.tv-rail {
+  background: var(--tv-surface-rail);
+  border-radius: var(--tv-radius-rail);
+}
+
+.tv-panel {
+  background: var(--tv-surface-panel);
+  border-radius: var(--tv-radius-panel);
+}
+
+.tv-overlay {
+  background: var(--tv-surface-overlay);
+}
+
+.tv-sys-section__title {
+  font-size: var(--tv-type-h2);
+  font-family: var(--tv-type-ui);
+  font-weight: 800;
+}
+
+.tv-sys-section__lede {
+  font-size: var(--tv-type-lead);
+}
+
+.tv-sys-prose {
+  font-size: var(--tv-type-body);
+}
