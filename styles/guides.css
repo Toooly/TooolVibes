@@ -44,7 +44,7 @@
 }
 
 .guides-eyebrow {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -59,7 +59,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -100,7 +100,7 @@
 }
 
 .guides-meta {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -195,7 +195,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem 0.6rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -286,7 +286,7 @@
 }
 
 .guides-hud-card__label {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -323,7 +323,7 @@
 }
 
 .guides-hud-card--stats p:first-child {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -351,7 +351,7 @@
   gap: 0.35rem;
   padding: 0.32rem 0.6rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -462,7 +462,7 @@
   background: rgba(255, 255, 255, 0.10);
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: var(--guides-text-on-dark);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -476,7 +476,7 @@
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.18);
   color: var(--guides-text-on-dark);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -539,7 +539,7 @@
   align-items: center;
   gap: 0.5rem 0.9rem;
   color: var(--guides-text-muted);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
 }
@@ -668,7 +668,7 @@
   border-radius: 999px;
   background: var(--guides-accent-soft);
   color: var(--guides-accent-strong);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -679,7 +679,7 @@
   align-items: center;
   gap: 0.35rem;
   color: var(--guides-text-muted);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -745,7 +745,7 @@
   border-radius: 999px;
   background: rgba(18, 13, 47, 0.05);
   color: var(--guides-text-soft);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -768,7 +768,7 @@
   gap: 0.5rem 0.9rem;
   padding-top: 0.6rem;
   border-top: 1px solid var(--guides-rule);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   color: var(--guides-text-muted);
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -963,7 +963,7 @@
 }
 
 .guides-filter__chip__count {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1026,7 +1026,7 @@
   gap: 0.4rem 0.6rem;
   align-items: center;
   color: var(--guides-text-on-dark-muted);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1102,7 +1102,7 @@
 }
 
 .guides-article__hero-stat .label {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1323,7 +1323,7 @@
 }
 
 .guides-article__body > .editorial-markdown .guides-h2-deck {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1364,7 +1364,7 @@
 }
 
 .guides-toc__title {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1442,7 +1442,7 @@
   gap: 0.4rem;
   padding: 0.55rem 0.8rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   text-decoration: none;
   color: var(--guides-text);
@@ -1476,7 +1476,7 @@
 }
 
 .guides-rail__label {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1530,7 +1530,7 @@
 }
 
 .guides-rail__list li a .kicker {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1562,7 +1562,7 @@
   gap: 0.4rem;
   padding: 0.55rem 0.85rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   text-decoration: none;
   border: 1px solid var(--guides-rule-strong);
@@ -1657,7 +1657,7 @@
 }
 
 .guides-callout__title {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1736,7 +1736,7 @@
 }
 
 .guides-takeaways__title {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1931,7 +1931,7 @@
 
 .guides-section__meta {
   margin: 0.5rem 0 0;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.45;
 }
 
@@ -1955,7 +1955,7 @@
 }
 
 .guides-article__end-card .label {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1999,7 +1999,7 @@
 @media (max-width: 47.99rem) {
   .guides-article__hero-meta .pill {
     padding: 0.35rem 0.6rem;
-    font-size: 0.78rem;
+    font-size: var(--tv-text-xs);
   }
 
   .guides-article__hero-h1 {
@@ -2022,7 +2022,7 @@
   margin: 0;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
