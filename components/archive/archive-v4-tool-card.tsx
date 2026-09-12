@@ -16,7 +16,7 @@
  */
 
 import Link from "next/link";
-import { useState } from "react";
+import { type MouseEvent, useState } from "react";
 import { Star } from "lucide-react";
 
 import {
@@ -79,6 +79,34 @@ function ArchiveV4ToolCard({
   const showRank = isSelected && typeof rank === "number" && !personalWord;
   const [hover, setHover] = useState(false);
 
+  // iOS Safari can miss hit-testing the stretched ::after card link, so the
+  // whole card must still activate. Keep the anchor for semantics/SEO and, when
+  // the tap did not already land on the link or on an in-card control
+  // (save / compare / overflow), forward it to that anchor.
+  const handleCardActivate = (event: MouseEvent<HTMLElement>) => {
+    if (event.defaultPrevented) return;
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+    const target = event.target as HTMLElement | null;
+    if (
+      target?.closest(
+        "a, button, input, select, textarea, [role='button'], [role='link']",
+      )
+    ) {
+      return;
+    }
+    event.currentTarget
+      .querySelector<HTMLAnchorElement>(".ar4-card__name-link")
+      ?.click();
+  };
+
   // Avatar fallback (icon URL via Google s2)
   const iconUrl = tool.domain
     ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(tool.domain)}&sz=128`
@@ -135,6 +163,7 @@ function ArchiveV4ToolCard({
       )}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={handleCardActivate}
       data-density={density}
       data-promoted={isPromoted || undefined}
       data-selected={isSelected || undefined}

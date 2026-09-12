@@ -1402,3 +1402,27 @@
     --tv-bottom-nav-total: var(--tv-bottom-nav-total-desktop);
   }
 }
+
+/* ============================================================
+   NON-color-mix() FALLBACK — engine robustness
+   On engines without color-mix() the family surface tokens above
+   resolve to an invalid value; a background using them then falls
+   back to transparent and light foreground text lands on the ivory
+   page canvas (unreadable). Pin opaque equivalents so every dark
+   family surface stays dark even without color-mix support.
+   ============================================================ */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  :root {
+    --tv-activation-surface: #31291c;
+    --tv-activation-surface-elevated: #3c3222;
+    --tv-grammar-editorial-surface-dark: #212123;
+    --tv-grammar-stack-surface: #180d3c;
+    --tv-grammar-stack-surface-raised: #23154d;
+    --tv-grammar-personal-wash: #252130;
+    --tv-grammar-workflow-field: #1f0e4e;
+    --tv-grammar-commercial-field: #444145;
+    --tv-grammar-commercial-surface: #1a1a1c;
+    --tv-grammar-institutional-wash: #1c1c1f;
+    --tv-grammar-resource-surface: #232325;
+  }
+}
