@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useOnceInView } from "@/lib/motion/use-once-in-view";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
@@ -66,12 +67,15 @@ export function StartHere({
   tools: ToolPublicView[];
   stacks?: HomeStackPreview[];
 }) {
+  const { ref, hasBeenVisible } = useOnceInView<HTMLElement>({ threshold: 0.22 });
   return (
     <section
+      ref={ref}
       id="explore"
       className="def-start tv-discovery-stage"
       aria-labelledby="def-start-title"
       data-mode="tool"
+      data-assembled={hasBeenVisible ? "" : undefined}
     >
       <header className="def-start__head tv-discovery-stage__head">
         <p className="def-start__kicker">Editorial Selection</p>

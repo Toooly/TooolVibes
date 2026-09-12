@@ -88,7 +88,7 @@ function Cockpit({
             className="def-cockpit__title tv-type-hero"
             aria-label="Scegli il tool giusto. Ricordati perché."
           >
-            <span className="def-cockpit__title-display">Scegli il tool giusto.</span>
+            <span className="def-cockpit__title-display">Scegli il tool giusto.</span>{" "}
             <span className="def-cockpit__title-quiet">Ricordati perché.</span>
           </h1>
           <p className="def-cockpit__lede tv-type-lead">
