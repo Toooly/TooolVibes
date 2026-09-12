@@ -1517,10 +1517,11 @@ h1.tv-radar__title,
 /* — Provenance accordion (V2 §19) — */
 .tv-radar-provenance {
   margin-top: var(--tv-space-component-lg);
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-panel);
-  background: var(--tv-surface-tier-1);
+  padding: clamp(0.85rem, 1.6vw, 1.15rem) 0 0;
+  border: 0;
+  border-top: 1px solid var(--tv-border-subtle);
+  border-radius: 0;
+  background: transparent;
 }
 .tv-radar-provenance__title {
   margin: 0;
