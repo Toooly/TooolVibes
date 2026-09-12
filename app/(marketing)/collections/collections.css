@@ -613,7 +613,7 @@
   font-style: normal;
   /* Index title sits on dark base — use on-dark accent */
   color: var(--tv-accent-violet-on-dark);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-grammar-workflow-accent) 28%, transparent), transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-grammar-workflow-accent) 16%, transparent), transparent);
   padding: 0 0.1em;
   border-radius: 0.18rem;
 }

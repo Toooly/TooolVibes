@@ -1516,7 +1516,7 @@ img {
   }
 
   .premium-badge-dark {
-    color: var(--accent-strong);
+    color: var(--tv-accent-violet-on-ivory);
     border-color: rgba(76, 55, 166, 0.16);
     background: rgba(255, 255, 255, 0.72);
   }

@@ -869,6 +869,17 @@
   z-index: -1;
 }
 
+.affiliates-intro__contact .secondary-card__cta--ghost {
+  color: var(--tv-ink-inverted-primary);
+  border-color: var(--tv-border-inverted-interactive);
+}
+.affiliates-intro__contact .secondary-card__cta--ghost:hover,
+.affiliates-intro__contact .secondary-card__cta--ghost:focus-visible {
+  background: var(--tv-color-white-pure);
+  border-color: var(--tv-border-inverted-strong);
+  color: var(--tv-ink-inverted-primary);
+}
+
 .affiliates-intro > * {
   position: relative;
   z-index: 1;
@@ -1188,7 +1199,7 @@
 }
 
 .legal-page__body a {
-  color: var(--tv-accent-brand-aa);
+  color: var(--tv-accent-violet-on-dark);
   font-weight: var(--tv-weight-semibold);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
@@ -1196,7 +1207,7 @@
 }
 
 .legal-page__body a:hover {
-  color: var(--tv-accent-brand-hover);
+  color: var(--tv-color-violet-300);
 }
 
 .legal-page__body em {
@@ -1426,7 +1437,7 @@
 .secondary-hero--dark,
 .resource-page,
 .secondary-hero__signature {
-  --tv-grammar-resource-premium: var(--tv-accent-violet-on-dark);
+  --tv-grammar-resource-premium: var(--tv-color-violet-300);
 }
 
 .resource-inventory__stamp-mark {
