@@ -79,6 +79,10 @@
   color: rgba(190, 178, 255, 0.82);
 }
 
+.guides-masthead .guides-kicker {
+  color: var(--tv-accent-violet-on-dark);
+}
+
 .guides-kicker--mute {
   color: var(--guides-text-muted);
 }
@@ -963,7 +967,8 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.6;
+  opacity: 1;
+  color: var(--guides-text-soft);
 }
 
 .guides-filter__chip[aria-pressed="true"] .guides-filter__chip__count {
@@ -2264,4 +2269,13 @@
   .guides-feature__body {
     padding-inline: var(--tv-gutter-desktop);
   }
+}
+
+
+/* Inline sponsor opportunity inside dark editorial article. */
+.internal-editorial-page__sponsor-opportunity .partner-placement__opportunity {
+  color: var(--tv-ink-secondary);
+}
+.internal-editorial-page__sponsor-opportunity .partner-placement__opportunity:hover {
+  color: var(--tv-accent-violet-on-dark);
 }

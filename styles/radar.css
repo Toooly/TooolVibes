@@ -1551,7 +1551,7 @@ h1.tv-radar__title,
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--tv-accent-primary);
+  color: var(--tv-accent-violet-on-dark);
   font-family: var(--tv-font-family-ui);
   font-size: 0.9rem;
   font-weight: 600;

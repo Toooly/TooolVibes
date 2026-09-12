@@ -4439,3 +4439,32 @@ canvas {
   }
 
 }
+
+
+/* ============================================================
+   About — ivory feature / CTA cards: bind text to the ivory
+   surface so inherited dark-surface ink cannot disappear.
+   ============================================================ */
+.v-about-feature-card,
+.v-about-cta-section {
+  color: var(--tv-ink-inverted-secondary);
+}
+.v-about-feature-card :is(h1, h2, h3, h4, strong, .font-semibold),
+.v-about-cta-section :is(h1, h2, h3, h4, strong, .font-semibold) {
+  color: var(--tv-ink-inverted-primary);
+}
+.v-about-feature-card :is(p, li, span),
+.v-about-cta-section :is(p, li) {
+  color: var(--tv-ink-inverted-secondary);
+}
+.v-about-feature-icon {
+  color: var(--tv-accent-violet-on-ivory);
+}
+
+
+/* About CTA sits on ivory: the accent badge needs the ivory-side violet. */
+.v-about-cta-section .premium-badge-accent {
+  color: var(--tv-accent-violet-on-ivory);
+  background: var(--tv-accent-violet-soft-on-ivory);
+  border-color: color-mix(in srgb, var(--tv-accent-violet-on-ivory) 28%, transparent);
+}

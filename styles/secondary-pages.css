@@ -1423,6 +1423,12 @@
   background: var(--tv-grammar-resource-surface);
 }
 
+.secondary-hero--dark,
+.resource-page,
+.secondary-hero__signature {
+  --tv-grammar-resource-premium: var(--tv-accent-violet-on-dark);
+}
+
 .resource-inventory__stamp-mark {
   color: var(--tv-grammar-resource-premium);
   font-family: var(--tv-font-data);

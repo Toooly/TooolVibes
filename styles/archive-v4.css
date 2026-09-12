@@ -2513,14 +2513,14 @@ a.archive-v4-card:focus-visible {
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-label);
   font-weight: 600;
-  color: var(--tv-accent-cyan-on-ivory);
+  color: var(--tv-accent-cyan-on-dark);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   transition: color var(--tv-duration-base) var(--tv-easing-standard);
 }
 
 .archive-method-band__link:hover {
-  color: var(--tv-accent-cyan-pressed);
+  color: var(--tv-color-cyan-300);
 }
 
 .archive-method-band__link:focus-visible {
@@ -2590,7 +2590,7 @@ a.archive-v4-card:focus-visible {
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 
 /* V3.2 editorial judgment signal: the score numeral is the product voice,
@@ -2602,12 +2602,12 @@ a.archive-v4-card:focus-visible {
   line-height: 0.9;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 .ar4-card__score em {
   font-style: normal;
   font-size: 12px;
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-muted-aa);
 }
 .ar4-card__best {
   margin: 0;

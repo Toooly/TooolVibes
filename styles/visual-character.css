@@ -337,9 +337,9 @@
 .tv-launchpad__tile p {
   color: var(--tv-ink-muted-aa);
 }
-.tv-launchpad__tile--discover p { color: var(--tv-grammar-radar-accent) !important; }
-.tv-launchpad__tile--build p { color: var(--tv-grammar-stack-node) !important; }
-.tv-launchpad__tile--decide p { color: var(--tv-grammar-personal-accent) !important; }
+.tv-launchpad__tile--discover p { color: var(--tv-accent-cyan-on-ivory) !important; }
+.tv-launchpad__tile--build p { color: var(--tv-accent-violet-on-ivory) !important; }
+.tv-launchpad__tile--decide p { color: var(--tv-color-violet-700) !important; }
 .tv-launchpad__tile a {
   color: var(--tv-ink-inverted-primary) !important;
 }
@@ -539,7 +539,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-size: 0.75rem;
-  color: var(--tv-grammar-commercial-label);
+  color: var(--tv-ink-secondary);
 }
 
 /* 6. Editorial ranking hierarchy */
@@ -577,4 +577,46 @@
 }
 .site-footer-v2.tv-launchpad .tv-launchpad__tile--decide {
   border-top-color: var(--tv-grammar-personal-accent);
+}
+
+/* ============================================================
+   TOUCH TARGET FLOOR — standalone interactive controls
+   WCAG 2.5.8 (minimum) + TooolVibes 44px comfort floor.
+   Inline sentence links keep their natural box.
+   ============================================================ */
+.tv-decision-track__node,
+.guides-section__foot-link,
+.tv-consent-banner__settings-link,
+.tv-radar-provenance__title,
+.tv-radar-provenance__link,
+.partner-placement__opportunity,
+.tv-utility__brand {
+  min-height: var(--tv-button-min-height-touch);
+}
+.tv-decision-track__node {
+  min-width: var(--tv-button-min-height-touch);
+}
+.guides-section__foot-link,
+.tv-consent-banner__settings-link,
+.tv-radar-provenance__title,
+.tv-radar-provenance__link,
+.partner-placement__opportunity,
+.tv-utility__brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tv-launchpad__brand,
+.def-stacks__more,
+.archive-method-band__link,
+.td-final-decision-nav__link,
+.td-final-alternatives__compare-link,
+.partner-placement__action--primary {
+  min-height: var(--tv-button-min-height-touch);
+  display: inline-flex;
+  align-items: center;
+}
+
+.ar4-mobile-bar__sort-select {
+  min-height: var(--tv-button-min-height-touch);
 }

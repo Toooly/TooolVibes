@@ -2617,7 +2617,7 @@
   margin-right: 0.5rem;
   font-family: var(--tv-type-mono);
   font-size: var(--tv-type-meta);
-  color: var(--tv-grammar-selected);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .tv-decision-track__panel a {

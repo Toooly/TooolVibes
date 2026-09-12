@@ -1721,7 +1721,7 @@
   color: var(--tv-ink-inverted-primary);
 }
 .td-final-brief__eyebrow {
-  color: var(--tv-color-gold-700);
+  color: var(--tv-accent-gold-on-ivory);
 }
 .td-final-brief dt {
   color: var(--tv-ink-inverted-muted);

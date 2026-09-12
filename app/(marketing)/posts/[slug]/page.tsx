@@ -205,14 +205,14 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
             flexWrap: "wrap",
             gap: "0.4rem 0.6rem",
             alignItems: "center",
-            color: "var(--guides-text-muted)",
+            color: "var(--guides-text-on-dark-muted)",
             fontSize: "0.78rem",
             fontWeight: 600,
             letterSpacing: "0.04em",
             padding: "0 0.25rem",
           }}
         >
-          <Link href="/posts" style={{ color: "var(--guides-accent-strong)", textDecoration: "none" }}>
+          <Link href="/posts" style={{ color: "var(--tv-accent-violet-on-dark)", textDecoration: "none" }}>
             ← Tutte le guide
           </Link>
           <span aria-hidden>·</span>
