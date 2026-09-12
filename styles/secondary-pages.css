@@ -45,7 +45,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--tv-border-subtle);
-  border-radius: clamp(1.25rem, 2.4vw, 2rem);
+  border-radius: var(--tv-radius-modal);
   padding: clamp(1.5rem, 4vw, 3rem);
   box-shadow: var(--tv-elevation-raised);
 }
@@ -283,7 +283,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--tv-border-subtle);
-  border-radius: clamp(1.25rem, 2.4vw, 2rem);
+  border-radius: var(--tv-radius-modal);
   padding: clamp(1.75rem, 4vw, 3rem);
   box-shadow: var(--tv-elevation-raised);
 }
@@ -842,7 +842,7 @@
   gap: clamp(0.85rem, 1.6vw, 1.15rem);
   padding: clamp(1.25rem, 2.5vw, 1.85rem);
   border: 1px solid var(--tv-border-inverted-subtle);
-  border-radius: clamp(1.25rem, 2.4vw, 2rem);
+  border-radius: var(--tv-radius-modal);
   background: var(--tv-surface-inverted);
   color: var(--tv-ink-inverted);
   box-shadow: var(--tv-elevation-raised);
