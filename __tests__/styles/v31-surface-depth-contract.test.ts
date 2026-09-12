@@ -111,10 +111,11 @@ describe("V3.1 family surfaces", () => {
     );
   });
 
-  it("editorial decision nav and podium use dark editorial cloth + brass rail", () => {
+  it("editorial decision nav is a light orientation rail; podium keeps dark cloth + brass rail", () => {
     const nav = extractBlock(toolCss, ".td-final-decision-nav {");
-    expect(nav).toContain("var(--tv-grammar-editorial-surface-dark)");
-    expect(nav).toContain("var(--tv-grammar-editorial-rail)");
+    expect(nav).toContain("border-top: 1px solid var(--tv-border-subtle)");
+    expect(nav).toContain("background: transparent");
+    expect(nav).not.toContain("var(--tv-grammar-editorial-surface-dark)");
     const pod = extractBlock(homeCss, ".def-editorial__pod-card {");
     expect(pod).toContain("var(--tv-grammar-editorial-surface-dark)");
     expect(extractBlock(homeCss, ".def-editorial__pod-card--rank-1 {")).not.toContain(

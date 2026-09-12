@@ -33,19 +33,15 @@ export function SiteFooterV2() {
   const companyLinks = useNavItems("footer-v2-company");
   const legalLinks = useNavItems("footer-v2-legal");
   const pathname = usePathname() ?? "/";
-  const isHome = pathname === "/";
 
   return (
-    <>
-      {isHome ? <LaunchpadPreFooter /> : null}
-      <CoreFooter
-        year={year}
-        productLinks={productLinks}
-        companyLinks={companyLinks}
-        legalLinks={legalLinks}
-        pathname={pathname}
-      />
-    </>
+    <CoreFooter
+      year={year}
+      productLinks={productLinks}
+      companyLinks={companyLinks}
+      legalLinks={legalLinks}
+      pathname={pathname}
+    />
   );
 }
 
@@ -63,7 +59,8 @@ function CoreFooter({
   pathname: string;
 }) {
   return (
-    <footer className="site-footer-v2 tv-utility relative mt-auto">
+    <footer className="site-footer-v2 tv-utility tv-launchpad relative mt-auto">
+      <LaunchpadMap />
       <div className="tv-utility__shell site-footer-v2__shell">
         <div className="tv-utility__identity">
           <Link href="/" className="tv-utility__brand">
@@ -153,14 +150,10 @@ function CoreFooter({
   );
 }
 
-function LaunchpadPreFooter() {
+function LaunchpadMap() {
   return (
-    <section className="site-footer-v2 tv-launchpad relative" aria-labelledby="tv-launchpad-title">
-      <div className="tv-launchpad__shell site-footer-v2__shell">
-        <Link href="/" className="tv-launchpad__brand">
-          <BrandLogo size={40} fallback="png" />
-          <span className="tv-launchpad__wordmark">TOOOLVIBES</span>
-        </Link>
+    <section className="tv-launchpad__shell" aria-labelledby="tv-launchpad-title">
+      <div>
         <p className="tv-launchpad__signature" aria-hidden="true">TOOOLVIBES</p>
         <h2 id="tv-launchpad-title" className="tv-launchpad__title">Dove vuoi andare adesso?</h2>
 

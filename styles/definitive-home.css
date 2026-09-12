@@ -3134,11 +3134,13 @@ html[data-tv-home-story="enter"] .def-start__kicker {
 }
 
 .def-decision__sticky {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--tv-rhythm-group);
   position: sticky;
   top: var(--tv-header-height-mobile);
   z-index: 1;
+  min-height: calc(100svh - var(--tv-header-height-mobile));
   padding-bottom: var(--tv-rhythm-related-lg);
   background: var(--tv-bg-base);
 }
@@ -3164,7 +3166,9 @@ html[data-tv-home-story="enter"] .def-start__kicker {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--tv-rhythm-related-lg);
+  align-content: center;
   align-items: stretch;
+  flex: 1;
 }
 
 .def-decision__object {
@@ -3380,73 +3384,73 @@ html[data-tv-home-story="enter"] .def-start__kicker {
 
 .def-decision__runway {
   display: grid;
-  grid-template-rows: repeat(5, minmax(38vh, 1fr));
-  min-height: 190vh;
+  grid-template-rows: repeat(5, minmax(34vh, 1fr));
+  min-height: 170vh;
   pointer-events: none;
 }
 
 .def-decision__beat {
-  min-height: 38vh;
+  min-height: 34vh;
 }
 
-.def-radar-teaser {
-  background: var(--tv-grammar-signal-surface);
-  color: var(--tv-grammar-signal-ink);
-}
-
-.def-radar-teaser__title,
-.def-radar-teaser__lede,
-.def-radar-teaser__kicker {
-  color: inherit;
+.def-radar-teaser,
+.def-stack-teaser {
+  background: var(--tv-bg-base);
+  color: var(--tv-home-dark-fg);
+  border-top: 1px solid var(--tv-home-dark-border);
 }
 
 .def-radar-teaser__kicker {
   color: var(--tv-grammar-signal-accent);
 }
 
-.def-stack-teaser {
-  background: var(--tv-grammar-workflow-field);
+.def-radar-teaser__title,
+.def-radar-teaser__lede {
+  color: var(--tv-home-dark-fg);
+}
+
+.def-radar-teaser__lede {
+  color: var(--tv-home-dark-fg-secondary);
 }
 
 .def-stack-teaser__kicker {
   color: var(--tv-grammar-workflow-accent);
 }
 
-.def-stack-teaser__title,
+.def-stack-teaser__title {
+  color: var(--tv-home-dark-fg);
+}
+
 .def-stack-teaser__lede {
-  color: var(--tv-grammar-workflow-ink);
+  color: var(--tv-home-dark-fg-secondary);
 }
 
-.def-stack-teaser__assembly {
-  list-style: none;
-  margin: 0 0 var(--tv-rhythm-group);
+/* Radar preview belongs to the Home: drop the standalone panel chrome and the
+   duplicated eyebrow/headline, keep the live status and the truthful list. */
+.def-radar-teaser .tv-home-radar {
   padding: 0;
-  display: grid;
-  gap: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-.def-stack-teaser__assembly li {
-  display: grid;
-  gap: 0.2rem;
-  padding: var(--tv-rhythm-related-lg) 0;
-  border-top: 1px solid var(--tv-grammar-workflow-border);
+.def-radar-teaser .tv-home-radar__header {
+  align-items: center;
 }
 
-.def-stack-teaser__assembly span {
-  font-size: var(--tv-type-meta);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--tv-grammar-workflow-accent);
+.def-radar-teaser .tv-home-radar__header-main {
+  display: none;
 }
 
-.def-stack-teaser__assembly strong {
-  font-size: var(--tv-type-h3);
+.def-radar-teaser .tv-home-radar .tv-radar-instrument {
+  display: none;
 }
 
-.def-stack-teaser__assembly em {
-  font-style: normal;
-  color: var(--tv-grammar-workflow-muted);
-}
+
+
+
+
 
 .def-home__sponsor {
   padding-block: var(--tv-rhythm-section);
@@ -3466,16 +3470,7 @@ html[data-tv-home-story="enter"] .def-start__kicker {
     display: block;
   }
 
-  .def-stack-teaser__assembly {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--tv-rhythm-related-lg);
-  }
 
-  .def-stack-teaser__assembly li {
-    border-top: 0;
-    border-left: 1px solid var(--tv-grammar-workflow-border);
-    padding-inline: var(--tv-rhythm-related-lg);
-  }
 }
 
 @media (max-width: 767px) {

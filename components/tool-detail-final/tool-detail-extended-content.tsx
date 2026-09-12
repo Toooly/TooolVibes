@@ -165,7 +165,6 @@ export function ToolDetailExtendedContent({
       className="td-final-deepen"
       aria-labelledby="td-final-approfondisci-title"
     >
-      <p className="td-final-section-eyebrow">Approfondisci</p>
       <h2 id="td-final-approfondisci-title" className="td-final-section-title">
         Approfondisci
       </h2>

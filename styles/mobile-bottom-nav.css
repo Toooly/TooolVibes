@@ -16,7 +16,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0 12px calc(env(safe-area-inset-bottom) + 8px);
+  padding: 0 10px calc(env(safe-area-inset-bottom) + 6px);
   pointer-events: none;
   display: block;
 }
@@ -33,7 +33,7 @@
   background: var(--tv-bg-base);
   border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
   border-radius: var(--tv-radius-modal);
-  box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 6px 18px -18px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   isolation: isolate;
 }

@@ -33,8 +33,8 @@ type DefinitiveHomeProps = {
 
 const HERO_DESTINATIONS = [
   { href: "/archivio", label: "Catalogo", hint: "Scopri" },
-  { href: "/compare", label: "Confronta", hint: "Decidi", primary: true },
-  { href: "/collections", label: "Stack", hint: "Costruisci" },
+  { href: "/compare", label: "Confronto", hint: "Decidi", primary: true },
+  { href: "/collections", label: "Raccolte", hint: "Costruisci" },
   { href: "/radar", label: "Radar", hint: "Segnali" },
   { href: "/posts", label: "Guide", hint: "Leggi" },
 ] as const;

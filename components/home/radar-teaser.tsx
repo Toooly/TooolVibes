@@ -10,11 +10,11 @@ export function RadarTeaser() {
       ref={ref}
       className="def-radar-teaser"
       aria-labelledby="def-radar-teaser-title"
-      data-tv-surface="signal"
+      data-tv-surface="dark"
       data-assembled={hasBeenVisible ? "" : undefined}
     >
       <header className="def-radar-teaser__head">
-        <p className="def-radar-teaser__kicker">Signal</p>
+        <p className="def-radar-teaser__kicker">Radar</p>
         <h2 id="def-radar-teaser-title" className="def-radar-teaser__title">
           Intelligenza live, anche quando i segnali sono pochi.
         </h2>
