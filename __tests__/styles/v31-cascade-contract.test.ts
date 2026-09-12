@@ -31,7 +31,9 @@ describe("V3.1 cascade ownership", () => {
     );
     expect(intro).toContain("var(--tv-font-ui)");
     expect(intro).toContain("var(--tv-weight-bold)");
-    expect(intro).toContain("text-transform: uppercase");
+    // Final convergence: the Compare H1 speaks in the shared sentence-case
+    // display voice, not the legacy all-caps treatment.
+    expect(intro).not.toContain("text-transform: uppercase");
     expect(publicRoutes).not.toContain(".compare-space-page h1");
     expect(publicRoutes).not.toContain(".catalog-discovery__copy h1");
     expect(publicRoutes).not.toContain(".tool-detail-title");
