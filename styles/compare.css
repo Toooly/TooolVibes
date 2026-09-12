@@ -52,7 +52,6 @@
   font-weight: var(--tv-weight-bold);
   letter-spacing: var(--tv-tracking-tight);
   line-height: var(--tv-leading-display);
-  text-transform: uppercase;
   text-wrap: balance;
 }
 
@@ -1048,7 +1047,6 @@
     min-width: 0;
     max-width: 100%;
     overflow-x: visible;
-    border-radius: 0.6rem;
     padding: 0.75rem;
   }
 
@@ -1059,16 +1057,11 @@
     padding-bottom: 0.25rem;
   }
 
-  .compare-objective__chip-label {
-    border-radius: 0.4rem;
-  }
-
   .compare-objective__explain {
     min-width: 0;
     max-width: 100%;
     overflow: hidden;
     margin-top: 0.5rem;
-    border-radius: 0.4rem;
     padding: 0.55rem 0.65rem;
   }
 
