@@ -45,11 +45,29 @@ function ExploreCue() {
     const target = document.getElementById("explore");
     if (!target) return;
     event.preventDefault();
-    document.documentElement.dataset.tvHomeStory = "enter";
+    const root = document.documentElement;
+    root.dataset.tvHomeStory = "enter";
     target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
-    window.setTimeout(() => {
-      delete document.documentElement.dataset.tvHomeStory;
-    }, reduced ? 0 : 720);
+    if (reduced) {
+      delete root.dataset.tvHomeStory;
+      return;
+    }
+    const clear = () => {
+      delete root.dataset.tvHomeStory;
+    };
+    if (typeof IntersectionObserver === "undefined") {
+      target.addEventListener("scrollend", clear, { once: true });
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        clear();
+        io.disconnect();
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(target);
   }
   return (
     <a className="def-cockpit__explore" href="#explore" onClick={onExplore}>
@@ -73,7 +91,7 @@ function Cockpit({
       ? `Per chi costruisce prodotti digitali · ${toolCount} tool nel catalogo`
       : "Per chi costruisce prodotti digitali";
   return (
-    <section className="def-cockpit" aria-labelledby="def-cockpit-title">
+    <section className="def-cockpit" aria-labelledby="def-cockpit-title" data-tv-surface="ivory">
       <div aria-hidden="true" className="def-cockpit__bg">
         <span className="tv-brand-cartograph" />
       </div>

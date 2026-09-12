@@ -10,6 +10,7 @@ export function RadarTeaser() {
       ref={ref}
       className="def-radar-teaser"
       aria-labelledby="def-radar-teaser-title"
+      data-tv-surface="signal"
       data-assembled={hasBeenVisible ? "" : undefined}
     >
       <header className="def-radar-teaser__head">

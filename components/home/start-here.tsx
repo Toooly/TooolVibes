@@ -75,6 +75,7 @@ export function StartHere({
       className="def-start tv-discovery-stage"
       aria-labelledby="def-start-title"
       data-mode="tool"
+      data-tv-surface="ivory"
       data-assembled={hasBeenVisible ? "" : undefined}
     >
       <header className="def-start__head tv-discovery-stage__head">

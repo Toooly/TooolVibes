@@ -36,7 +36,6 @@
 
 .def-home {
   background: var(--tv-grammar-discovery-surface);
-  color: var(--tv-grammar-discovery-ink);
 }
 
 /* HERO / DISCOVERY — light product identity */
@@ -75,7 +74,52 @@
 }
 .def-cockpit__inner { z-index: 1; }
 .def-cockpit__title {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-home-ivory-fg);
+}
+.def-cockpit__title-quiet {
+  color: var(--tv-home-ivory-fg-secondary);
+}
+.def-cockpit__dest {
+  color: var(--tv-home-ivory-fg);
+  border-color: var(--tv-home-ivory-border);
+}
+.def-cockpit__dest-hint {
+  color: var(--tv-home-ivory-fg-muted);
+}
+.def-cockpit__dest--primary {
+  background: var(--tv-home-accent-surface);
+  color: var(--tv-home-accent-fg);
+  border-color: transparent;
+}
+.def-cockpit__dest--primary .def-cockpit__dest-hint {
+  color: inherit;
+  opacity: 1;
+}
+@media (max-width: 767px) {
+  .def-cockpit__dest,
+  .def-cockpit__dest--primary {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    border-radius: 0;
+    color: var(--tv-home-ivory-fg);
+  }
+  .def-cockpit__dest--primary {
+    color: var(--tv-home-ivory-accent);
+    font-weight: 800;
+  }
+  .def-intent__chips a,
+  .def-intent__more {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+.def-cockpit__explore {
+  color: var(--tv-home-ivory-fg-secondary);
+}
+.def-start__lens-note {
+  color: var(--tv-home-ivory-fg-muted);
 }
 .def-cockpit__lede,
 .def-cockpit__lede-desktop,
@@ -426,9 +470,12 @@
   .def-cockpit::before {
     right: -0.38em;
     top: -0.06em;
-    font-size: 7.75rem;
+    font-size: 6.5rem;
     letter-spacing: -0.1em;
-    color: color-mix(in srgb, var(--tv-accent-brand) 8%, transparent);
+    color: color-mix(in srgb, var(--tv-accent-brand) 5%, transparent);
+  }
+  .def-cockpit__bg .tv-brand-cartograph {
+    opacity: 0.18;
   }
 }
 

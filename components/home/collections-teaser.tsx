@@ -14,6 +14,7 @@ export function CollectionsTeaser({ stacks }: { stacks: HomeStackPreview[] }) {
       ref={ref}
       className="def-stack-teaser"
       aria-labelledby="def-stack-teaser-title"
+      data-tv-surface="workflow"
       data-assembled={hasBeenVisible ? "" : undefined}
     >
       <header className="def-stack-teaser__head">

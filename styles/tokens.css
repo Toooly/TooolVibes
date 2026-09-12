@@ -1280,6 +1280,28 @@
   /* Color fields — chapter canvases, not locked brand/canvas. */
   --tv-grammar-discovery-surface: var(--tv-surface-inverted);
   --tv-grammar-discovery-ink: var(--tv-ink-inverted-primary);
+  --tv-grammar-discovery-ink-secondary: var(--tv-ink-inverted-secondary);
+  --tv-grammar-discovery-ink-muted: var(--tv-ink-inverted-muted);
+  --tv-grammar-discovery-border: var(--tv-border-inverted-default);
+  --tv-grammar-discovery-interactive: var(--tv-border-inverted-interactive);
+  --tv-grammar-discovery-accent: var(--tv-accent-violet-on-ivory);
+
+  --tv-home-ivory-fg: var(--tv-ink-inverted-primary);
+  --tv-home-ivory-fg-secondary: var(--tv-ink-inverted-secondary);
+  --tv-home-ivory-fg-muted: var(--tv-ink-inverted-muted);
+  --tv-home-ivory-border: var(--tv-border-inverted-default);
+  --tv-home-ivory-interactive: var(--tv-border-inverted-interactive);
+  --tv-home-ivory-accent: var(--tv-accent-violet-on-ivory);
+
+  --tv-home-dark-fg: var(--tv-ink-primary);
+  --tv-home-dark-fg-secondary: var(--tv-ink-secondary);
+  --tv-home-dark-fg-muted: var(--tv-ink-muted-aa);
+  --tv-home-dark-border: var(--tv-border-subtle);
+  --tv-home-dark-interactive: var(--tv-border-interactive);
+  --tv-home-dark-accent: var(--tv-accent-gold-on-dark);
+
+  --tv-home-accent-fg: var(--tv-grammar-activation-ink);
+  --tv-home-accent-surface: var(--tv-grammar-activation);
   --tv-grammar-workflow-field: color-mix(in srgb, var(--tv-color-violet-900) 72%, #12081f);
   --tv-grammar-commercial-field: color-mix(in srgb, var(--tv-surface-inverted) 22%, #121018);
 

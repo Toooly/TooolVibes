@@ -22,59 +22,86 @@ const STAGE_HREF = {
   ricorda: "/shortlist",
 } as const;
 
-function stageFromProgress(progress: number): DecisionLifecycleStage {
-  const index = Math.min(
-    DECISION_LIFECYCLE.length - 1,
-    Math.floor(progress * DECISION_LIFECYCLE.length),
-  );
-  return DECISION_LIFECYCLE[index];
+function documentOffsetTop(el: HTMLElement) {
+  let y = 0;
+  let node: HTMLElement | null = el;
+  while (node) {
+    y += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
+  return y;
 }
 
-function useDecisionProgress(reduced: boolean) {
-  const trackRef = useRef<HTMLElement | null>(null);
-  const [progress, setProgress] = useState(reduced ? 1 : 0);
+function useDecisionNarrative(reduced: boolean) {
+  const rootRef = useRef<HTMLElement | null>(null);
+  const [stage, setStage] = useState<DecisionLifecycleStage>(reduced ? "ricorda" : "scopri");
 
   useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
     if (reduced) {
-      setProgress(1);
+      root.style.setProperty("--decision-progress", "1");
+      setStage("ricorda");
       return;
     }
 
-    const el = trackRef.current;
-    if (!el) return;
-
+    const beats = Array.from(root.querySelectorAll<HTMLElement>("[data-beat]"));
+    let origin = 0;
+    let span = 1;
+    let beatTops: number[] = [];
     let frame = 0;
-    const measure = () => {
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      const desktop =
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(min-width: 1024px)").matches;
-      if (desktop) {
-        const usable = Math.max(rect.height - vh, 1);
-        setProgress(Math.min(1, Math.max(0, -rect.top / usable)));
-        return;
-      }
-      const start = vh * 0.82;
-      const span = Math.max(rect.height - vh * 0.28, 1);
-      setProgress(Math.min(1, Math.max(0, (start - rect.top) / span)));
+    const layout = () => {
+      origin = documentOffsetTop(root);
+      span = Math.max(root.offsetHeight - (window.innerHeight || 1), 1);
+      beatTops = beats.map(documentOffsetTop);
     };
+    const paint = () => {
+      const progress = Math.min(1, Math.max(0, (window.scrollY - origin) / span));
+      root.style.setProperty("--decision-progress", progress.toFixed(4));
+      const focus = window.scrollY + (window.innerHeight || 1) * 0.5;
+      let idx = 0;
+      for (let i = 0; i < beatTops.length; i += 1) {
+        if (focus >= beatTops[i]) idx = i;
+      }
+      const next = DECISION_LIFECYCLE[idx] ?? "scopri";
+      setStage((prev) => (prev === next ? prev : next));
+    };
+    layout();
+    paint();
     const onScroll = () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(measure);
+      frame = requestAnimationFrame(paint);
     };
-
-    measure();
+    const onResize = () => {
+      layout();
+      paint();
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, [reduced]);
 
-  return { trackRef, progress };
+  return { rootRef, stage };
+}
+
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function scoreLabelFor(tool: ToolPublicView | null) {
+  if (!tool) return "—";
+  const score = computeEditorialScore(tool);
+  return score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
 }
 
 export function DecisionSystem({ tools }: { tools: ToolPublicView[] }) {
@@ -84,122 +111,106 @@ export function DecisionSystem({ tools }: { tools: ToolPublicView[] }) {
     setMounted(true);
   }, []);
   const reduced = mounted && reducedPref;
-  const { trackRef, progress } = useDecisionProgress(reduced);
-  const stage = reduced ? "ricorda" : stageFromProgress(progress);
+  const { rootRef, stage } = useDecisionNarrative(reduced);
   const stageIndex = DECISION_LIFECYCLE.indexOf(stage);
   const left = tools[0] ?? null;
   const right = tools[1] ?? null;
-  const showCompare = Boolean(left && right && stageIndex >= 2);
-  const showMemory = stageIndex >= 4;
 
   return (
     <section
-      ref={trackRef}
+      ref={rootRef}
       className="def-decision"
       aria-labelledby="def-decision-title"
       data-stage={stage}
+      data-tv-surface="dark"
       data-reduced={reduced ? "" : undefined}
-      style={{ ["--decision-progress" as string]: String(progress) }}
     >
-      <div className="def-decision__stage">
-        <header className="def-decision__head">
-          <p className="def-decision__kicker">TooolVibes Decision System</p>
-          <h2 id="def-decision-title" className="def-decision__title">
-            Scopri, valuta, confronta, decidi, ricorda.
-          </h2>
-          <p className="def-decision__lede">
-            Cinque tappe distinte. Scegliere e ricordare il motivo non sono la stessa cosa.
-          </p>
-        </header>
+      <header className="def-decision__head">
+        <p className="def-decision__kicker">TooolVibes Decision System</p>
+        <h2 id="def-decision-title" className="def-decision__title">
+          Scopri, valuta, confronta, decidi, ricorda.
+        </h2>
+        <p className="def-decision__lede">
+          Cinque tappe distinte. Scegliere e ricordare il motivo non sono la stessa cosa.
+        </p>
+      </header>
 
+      <div className="def-decision__sticky">
         <div className="def-decision__path" aria-hidden="true">
           <span className="def-decision__path-fill" />
         </div>
 
-        <ol className="def-decision__timeline" aria-label="Ciclo di decisione">
+        <div className="def-decision__story" aria-label="Trasformazione del candidato">
+          <CandidateObject tool={left} role="a" />
+          <p className="def-decision__vs" aria-hidden="true">
+            VS
+          </p>
+          <CandidateObject tool={right} role="b" />
+          <p className="def-decision__memory">
+            Ricorda il motivo. Tra tre mesi la scheda vince sul ricordo.
+          </p>
+        </div>
+
+        <ol className="def-decision__rail" aria-label="Ciclo di decisione">
           {DECISION_LIFECYCLE.map((item, index) => {
             const state =
               index < stageIndex ? "done" : index === stageIndex ? "active" : "idle";
             return (
-              <li
-                key={item}
-                className="def-decision__node"
-                data-step={item}
-                data-state={state}
-              >
+              <li key={item} data-step={item} data-state={state}>
                 <span className="def-decision__index tv-type-data" aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <strong>{DECISION_LIFECYCLE_LABELS[item]}</strong>
-                <p>{DECISION_LIFECYCLE_COPY[item]}</p>
-                {state !== "idle" ? (
-                  <Link href={STAGE_HREF[item]}>Apri {DECISION_LIFECYCLE_LABELS[item]}</Link>
-                ) : null}
               </li>
             );
           })}
         </ol>
 
-        {showCompare && left && right ? (
-          <div className="def-decision__compare" aria-label="Anteprima confronto">
-            <p className="def-decision__compare-kicker">Durante Confronta</p>
-            <div className="def-decision__compare-grid">
-              <CompareTeaserColumn tool={left} lead={stageIndex >= 3} />
-              <p className="def-decision__vs" aria-hidden="true">VS</p>
-              <CompareTeaserColumn tool={right} lead={false} />
-            </div>
-            {stageIndex >= 3 ? (
-              <p className="def-decision__choice">
-                Una scelta è un trade-off visibile, non una lista più lunga.
-              </p>
-            ) : null}
-            <Link href="/compare" className="def-decision__compare-cta">
-              Apri il confronto
-            </Link>
-          </div>
-        ) : null}
+        <p className="def-decision__copy" aria-live="polite">
+          {DECISION_LIFECYCLE_COPY[stage]}
+        </p>
 
-        {showMemory ? (
-          <p className="def-decision__memory">
-            Ricorda il motivo. Tra tre mesi la scheda vince sul ricordo.
-          </p>
-        ) : null}
+        <p className="def-decision__choice">
+          Una scelta è un trade-off visibile, non una lista più lunga.
+        </p>
 
-        <DecisionJourney />
+        <Link href={STAGE_HREF[stage]} className="def-decision__compare-cta">
+          {stageIndex >= 2 ? "Apri il confronto" : `Apri ${DECISION_LIFECYCLE_LABELS[stage]}`}
+        </Link>
       </div>
+
+      <div className="def-decision__runway" aria-hidden="true">
+        {DECISION_LIFECYCLE.map((item) => (
+          <div key={item} className="def-decision__beat" data-beat={item} />
+        ))}
+      </div>
+
+      <DecisionJourney />
     </section>
   );
 }
 
-function CompareTeaserColumn({
+function CandidateObject({
   tool,
-  lead,
+  role,
 }: {
-  tool: ToolPublicView;
-  lead: boolean;
+  tool: ToolPublicView | null;
+  role: "a" | "b";
 }) {
-  const score = computeEditorialScore(tool);
-  const scoreLabel =
-    score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
+  const name = tool?.name ?? (role === "a" ? "Candidato" : "Alternativa");
+  const meta = tool?.levelLabel ?? tool?.categoryLabel ?? "Catalogo";
   return (
-    <article
-      className={lead ? "def-decision__candidate def-decision__candidate--lead" : "def-decision__candidate"}
-    >
-      <h3>{tool.name}</h3>
-      <dl>
-        <div>
-          <dt>Valutazione</dt>
-          <dd className="tv-type-data">{scoreLabel}</dd>
-        </div>
-        <div>
-          <dt>Ideale per</dt>
-          <dd>{tool.levelLabel ?? tool.categoryLabel}</dd>
-        </div>
-        <div>
-          <dt>Categoria</dt>
-          <dd>{tool.categoryLabel}</dd>
-        </div>
-      </dl>
+    <article className={`def-decision__object def-decision__object--${role}`}>
+      <span className="def-decision__object-mark" aria-hidden="true">
+        {initials(name)}
+      </span>
+      <h3>{name}</h3>
+      <p className="def-decision__object-meta">{meta}</p>
+      <p className="def-decision__object-score">
+        <span className="tv-type-data">{scoreLabelFor(tool)}</span>
+        <span>valutazione</span>
+      </p>
+      <p className="def-decision__object-why">Perché: resta la scheda, non l&apos;impressione.</p>
     </article>
   );
 }
