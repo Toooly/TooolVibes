@@ -878,8 +878,9 @@
 .ar4-card__category {
   font-family: var(--tv-font-family-ui);
   font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
   color: var(--tv-ink-muted-aa);
   margin: 4px 0 0;
 }
@@ -2631,8 +2632,9 @@ a.archive-v4-card:focus-visible {
 .ar4-goals__label {
   margin: 0;
   font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 .ar4-goals__chips {
   display: flex;
