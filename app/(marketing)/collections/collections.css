@@ -528,8 +528,8 @@
    ==================================================================== */
 
 .cx-root {
-  --cx-card-radius: 1.75rem;
-  --cx-card-radius-lg: 2.25rem;
+  --cx-card-radius: var(--tv-radius-modal);
+  --cx-card-radius-lg: var(--tv-radius-modal);
   --cx-stage-pad: 1.25rem;
   --cx-rail: rgba(255, 255, 255, 0.10);
   --cx-rail-strong: rgba(255, 255, 255, 0.18);
@@ -552,7 +552,7 @@
      still inherit these from `.cx-root` below). Converging on
      semantic tokens where the variable was purely a re-alias. */
   --cx-border: var(--tv-border-subtle);
-  --cx-card-radius: 1.75rem;
+  --cx-card-radius: var(--tv-radius-modal);
   --cx-soft-2: rgba(255, 255, 255, 0.07);
 
   position: relative;
@@ -2120,7 +2120,7 @@
   padding: 1rem 1.1rem;
   background: var(--tv-surface-inverted);
   border: 1px solid var(--cx-border);
-  border-radius: 0.85rem;
+  border-radius: var(--tv-radius-modal);
   text-decoration: none;
   color: var(--tv-ink-inverted-primary);
   transition: border-color var(--tv-duration-base) var(--tv-easing-standard);
@@ -2478,9 +2478,9 @@
 
 .cx-card-v4__group {
   font-size: 0.75rem;
-  font-weight: 650;
-  text-transform: uppercase;
-  letter-spacing: 0.13em;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.02em;
   color: var(--cx-accent);
   line-height: 1;
 }
@@ -2488,8 +2488,8 @@
 .cx-card-v4__area {
   font-size: 0.75rem;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.11em;
+  text-transform: none;
+  letter-spacing: 0.02em;
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.7));
   line-height: 1;
 }
@@ -2639,7 +2639,7 @@
   }
 
   .cx-card-v4__stack-item:is(:hover, :focus-within) .cx-card-v4__stack-name {
-    font-weight: 650;
+    font-weight: 700;
   }
 }
 
@@ -2665,7 +2665,7 @@
   margin-left: auto;
   font-size: 0.75rem;
   color: var(--tv-ink-muted-aa, rgba(255, 255, 255, 0.5));
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.1em;
   font-weight: 500;
   white-space: nowrap;
@@ -2938,7 +2938,7 @@
 
 .cx-detail-hero-v4__group {
   color: var(--cx-accent);
-  font-weight: 650;
+  font-weight: 700;
 }
 
 .cx-detail-hero-v4__dot {
@@ -2995,8 +2995,8 @@
   border-radius: 999px;
   font-size: 0.75rem;
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.78));
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  text-transform: none;
+  letter-spacing: 0.01em;
   font-weight: 500;
 }
 
@@ -3019,7 +3019,7 @@
 
 .cx-detail-hero-v4__stack-label {
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -3082,7 +3082,7 @@
   font-variant-numeric: tabular-nums;
   font-size: 0.75rem;
   color: var(--tv-grammar-workflow-accent);
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: 0.06em;
 }
 
@@ -3213,7 +3213,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -3316,7 +3316,7 @@
   .cx-stack-flow-v4__item:hover .cx-stack-flow-v4__stage-label,
   .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__stage-label {
     color: var(--tv-grammar-workflow-ink);
-    font-weight: 650;
+    font-weight: 700;
   }
 }
 
@@ -3327,7 +3327,7 @@
 
 .cx-stack-flow-v4__item:focus-within .cx-stack-flow-v4__stage-label {
   color: var(--tv-grammar-workflow-ink);
-  font-weight: 650;
+  font-weight: 700;
 }
 
 .cx-stack-flow-v4__num {
@@ -3354,7 +3354,7 @@
 .cx-stack-flow-v4__stage-label {
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.12em;
   color: var(--tv-ink-muted-aa, rgba(255, 255, 255, 0.55));
 }
@@ -3422,7 +3422,7 @@
 .cx-stack-flow-v4__flow-key {
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.1em;
   color: var(--tv-ink-muted-aa, rgba(255, 255, 255, 0.5));
 }
@@ -3502,7 +3502,7 @@
   display: inline-block;
   margin-right: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--cx-accent);
@@ -3538,7 +3538,7 @@
 
 .cx-stack-flow-v4__sub-label {
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.7));
@@ -3666,7 +3666,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -3733,7 +3733,7 @@
 .cx-variant-paths-v4__tab-label {
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-weight: 650;
+  font-weight: 700;
 }
 
 .cx-variant-paths-v4__tab-count {
@@ -3880,7 +3880,7 @@
 
 .cx-decision-notes-v4__eyebrow {
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -3939,7 +3939,7 @@
 
 .cx-decision-notes-v4__group-title {
   font-size: 0.85rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--tv-ink-primary);
@@ -3979,7 +3979,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -4083,7 +4083,7 @@
 
 .cx-anti-rec-v4__eyebrow {
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -4128,7 +4128,7 @@
 
 .cx-anti-rec-v4__instead-label {
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--cx-accent);
@@ -4206,7 +4206,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -4294,7 +4294,7 @@
 
 .cx-next-step-v4__eyebrow {
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--cx-accent);
@@ -4352,7 +4352,7 @@
 
 .cx-next-step-v4__card-eyebrow {
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--cx-accent);
@@ -4784,7 +4784,7 @@
   border: 1px solid color-mix(in srgb, var(--tv-border-subtle, #333) 90%, transparent);
   color: var(--tv-ink-secondary, #b8b3a8);
   font-size: 0.75rem;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-decoration: none;
   text-transform: uppercase;
