@@ -174,7 +174,7 @@ export function CollectionCardV4({
       )}
 
       {/* LAYER 3 — DECISION (signal + CTA) */}
-      <footer className="cx-card-v4__foot">
+      <div className="cx-card-v4__foot">
         {signal && <p className="cx-card-v4__signal">{signal}</p>}
 
         <Link
@@ -188,7 +188,7 @@ export function CollectionCardV4({
             aria-hidden="true"
           />
         </Link>
-      </footer>
+      </div>
     </article>
   );
 }

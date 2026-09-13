@@ -287,6 +287,14 @@
   background: var(--tv-grammar-commercial-field);
   padding-block: var(--tv-rhythm-section);
 }
+/* Final micro-polish: keep the Collections -> Partner handoff intentional on
+   desktop instead of a second full section padding stacked on top. */
+@media (min-width: 768px) {
+  .def-home__sponsor,
+  .def-home__sponsor.tv-partner-signal {
+    padding-top: clamp(2.5rem, 4vw, 3.5rem);
+  }
+}
 .tv-partner-signal__shell {
   background: var(--tv-grammar-commercial-shell);
   box-shadow: inset 0 0 0 1px var(--tv-grammar-commercial-border);

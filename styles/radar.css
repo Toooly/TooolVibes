@@ -1411,7 +1411,7 @@ h1.tv-radar__title,
   text-align: center;
   color: var(--tv-ink-muted-aa);
   font-family: var(--tv-font-family-mono);
-  font-size: 0.8rem;
+  font-size: var(--tv-text-xs);
   letter-spacing: 0.05em;
 }
 .tv-radar-instrument__count strong {
@@ -1490,7 +1490,7 @@ h1.tv-radar__title,
   border-radius: var(--tv-radius-pill);
   border: 1px solid transparent;
   font-family: var(--tv-font-family-ui);
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   font-weight: 600;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -1544,7 +1544,7 @@ h1.tv-radar__title,
 .tv-radar-provenance__body {
   margin: 0 0 0.6rem;
   color: var(--tv-ink-secondary);
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   line-height: 1.5;
   max-width: 50rem;
 }
@@ -1554,7 +1554,7 @@ h1.tv-radar__title,
   gap: 0.4rem;
   color: var(--tv-accent-violet-on-dark);
   font-family: var(--tv-font-family-ui);
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   font-weight: 600;
   text-decoration: none;
 }
@@ -1793,3 +1793,6 @@ h1.tv-radar__title,
   padding-bottom: 4px;
   border-bottom: 1px solid color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent);
 }
+
+/* Final micro-polish: display wrapping */
+.tv-radar__title { text-wrap: balance; }

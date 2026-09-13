@@ -2072,3 +2072,16 @@ html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
   color: var(--tv-button-activation-text);
   border-color: transparent;
 }
+
+/* Final micro-polish: single bottom reservation on mobile compare.
+   Previously the arena and the page each reserved the bottom-nav clearance,
+   stacking ~210px of flat space before the footer. */
+@media (max-width: 47.99rem) {
+  .mobile-compare-arena {
+    padding-bottom: 1rem;
+  }
+  .tool-battle-page {
+    padding-bottom: calc(var(--tv-bottom-nav-total, 5.5rem) + 0.5rem);
+  }
+}
+

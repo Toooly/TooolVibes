@@ -27401,7 +27401,9 @@ img {
 /* Mobile compare arena/table final pass: keep the ring readable and the matrix off the bottom nav. */
 @media (max-width: 767px) {
   .mobile-compare-arena {
-    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)) !important;
+    /* The compare page already reserves the bottom-nav clearance; the arena
+       must not stack a second reservation (was ~210px of flat space). */
+    padding-bottom: 1rem !important;
   }
 
   .mobile-compare-arena__stage {

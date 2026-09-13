@@ -804,7 +804,7 @@
   align-items: start;
   color: var(--tv-ink-secondary);
   font-family: var(--tv-font-family-ui);
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   line-height: 1.5;
 }
 
@@ -1542,3 +1542,6 @@
     padding-inline: var(--tv-gutter-desktop);
   }
 }
+
+/* Final micro-polish: display wrapping */
+.secondary-hero__title { text-wrap: balance; }

@@ -1544,7 +1544,7 @@
   min-height: 44px;
   background: var(--tv-surface-elevated);
   border: 1px solid var(--tv-border-interactive);
-  border-radius: 0.5625rem;
+  border-radius: 0.5rem;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-ui);
   font-size: 12px;
@@ -2903,3 +2903,6 @@ a.archive-v4-card:focus-visible {
   font-size: var(--tv-type-body);
   font-weight: 700;
 }
+
+/* Final micro-polish: display wrapping */
+.ar4-intro__title { text-wrap: balance; }

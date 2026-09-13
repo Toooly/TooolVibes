@@ -179,7 +179,7 @@
   background: transparent;
   padding: 0.12rem 0 0.12rem 0.75rem;
   color: var(--tv-ink-inverted-secondary);
-  font-size: 0.8rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.4;
 }
 
@@ -897,7 +897,7 @@
 }
 
 .cx-card__meta dd {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.4;
   color: var(--tv-ink-inverted-primary);
   margin: 0;
@@ -935,7 +935,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   color: var(--tv-accent-cyan);
   text-decoration: none;
@@ -963,12 +963,12 @@
 
 .cx-card--lead .cx-card__flow {
   padding: 0.85rem 1.4rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
 }
 
 .cx-card--lead .cx-card__flow-step {
   padding: 0.4rem 0.65rem 0.4rem 0.4rem;
-  font-size: 0.8rem;
+  font-size: var(--tv-text-xs);
 }
 
 .cx-card--lead .cx-card__flow-step-no {
@@ -1260,7 +1260,7 @@
 }
 
 .cx-stack__lede {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   line-height: 1.55;
   color: var(--tv-ink-inverted-secondary);
   margin: 0;
@@ -1299,7 +1299,7 @@
   border-radius: 0.55rem;
   background: var(--tv-accent-violet-on-ivory);
   color: var(--tv-ink-on-brand);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 800;
   letter-spacing: 0;
   z-index: 1;
@@ -1435,7 +1435,7 @@
 }
 
 .cx-stack__node-flow dd {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.4;
   margin: 0;
   color: var(--tv-ink-inverted-primary);
@@ -1494,7 +1494,7 @@
   border-radius: 0.5rem;
   background: var(--cx-soft-2);
   color: var(--tv-ink-inverted-primary);
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -1576,7 +1576,7 @@
 }
 
 .cx-stack__subgroup-card-tool {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   font-weight: 700;
   color: var(--tv-ink-inverted-primary);
   text-decoration: none;
@@ -1591,7 +1591,7 @@
 }
 
 .cx-stack__subgroup-card-note {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.5;
   color: var(--tv-ink-inverted-secondary);
   margin: 0;
@@ -1653,7 +1653,7 @@
 }
 
 .cx-variants__lede {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   line-height: 1.55;
   color: var(--tv-ink-inverted-secondary);
   margin: 0;
@@ -1752,7 +1752,7 @@
   background: var(--cx-soft-2);
   border: 1px solid var(--cx-border-strong);
   border-radius: 0.5rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 600;
   color: var(--tv-ink-inverted-primary);
   text-decoration: none;
@@ -1803,7 +1803,7 @@
   list-style: none;
   display: grid;
   gap: 0.3rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.4;
   color: var(--tv-ink-inverted-primary);
 }
@@ -1903,7 +1903,7 @@
 }
 
 .cx-decision__lede {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   line-height: 1.55;
   color: var(--tv-ink-inverted-secondary);
   margin: 0;
@@ -2160,7 +2160,7 @@
 }
 
 .cx-related-card-promise {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   line-height: 1.45;
   color: var(--tv-ink-inverted-secondary);
   margin: 0;
@@ -2510,7 +2510,7 @@
 
 .cx-card-v4__count-num {
   font-family: var(--tv-font-data);
-  font-size: 0.8rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   color: inherit;
   font-variant-numeric: tabular-nums;
@@ -2695,7 +2695,7 @@
 }
 
 .cx-card-v4__signal {
-  font-size: 0.8rem;
+  font-size: var(--tv-text-xs);
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.72));
   margin: 0;
   font-variant-numeric: tabular-nums;
@@ -2712,7 +2712,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
+  font-size: var(--tv-text-xs);
   font-weight: 560;
   color: var(--tv-button-activation-text);
   text-decoration: none;
@@ -2795,7 +2795,7 @@
   background: var(--tv-button-activation-bg);
   border-color: var(--tv-button-activation-bg);
   color: var(--tv-button-activation-text);
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   padding: 0.55rem 1rem;
 }
 
@@ -3333,7 +3333,7 @@
 .cx-stack-flow-v4__num {
   font-family: var(--tv-font-data);
   font-variant-numeric: tabular-nums;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   color: var(--tv-grammar-workflow-accent);
 }
@@ -3458,7 +3458,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 510;
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.72));
   cursor: pointer;
@@ -3539,7 +3539,6 @@
 .cx-stack-flow-v4__sub-label {
   font-size: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.7));
   margin: 0;
@@ -3592,7 +3591,7 @@
 }
 
 .cx-stack-flow-v4__optional-skip {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   color: var(--tv-ink-muted-aa, rgba(255, 255, 255, 0.55));
   margin: 0;
   font-style: italic;
@@ -3640,7 +3639,7 @@
 }
 
 .cx-stack-flow-v4__alternative-replaces {
-  font-size: 0.8rem;
+  font-size: var(--tv-text-xs);
   color: var(--tv-ink-muted-aa, rgba(255, 255, 255, 0.55));
   margin: 0;
 }
@@ -3749,7 +3748,7 @@
 }
 
 .cx-variant-paths-v4__variant-gains {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   color: var(--tv-ink-secondary, rgba(255, 255, 255, 0.72));
   margin: 0;
   font-weight: 500;
@@ -3771,7 +3770,7 @@
 }
 
 .cx-variant-paths-v4__variant-tool-name {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   font-weight: 510;
   color: var(--cx-accent);
   text-decoration: none;
@@ -3821,7 +3820,7 @@
 }
 
 .cx-variant-paths-v4__path-label {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -3857,7 +3856,7 @@
 }
 
 .cx-variant-paths-v4__path-tool-name {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   font-weight: 510;
   color: var(--cx-accent);
   text-decoration: none;
@@ -3940,7 +3939,6 @@
 .cx-decision-notes-v4__group-title {
   font-size: 0.85rem;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--tv-ink-primary);
   margin: 0;
@@ -4057,7 +4055,7 @@
 }
 
 .cx-scenario-v4__disclaimer {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   color: var(--tv-ink-muted-aa, rgba(255, 255, 255, 0.5));
   font-style: italic;
   margin: 0;
@@ -4156,7 +4154,7 @@
   padding: 0.6rem 0.8rem;
   background: color-mix(in srgb, var(--tv-bg-base) 80%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 10px;
+  border-radius: 8px;
   text-decoration: none;
   color: var(--tv-ink-primary);
   transition: border-color 180ms ease;
@@ -4252,7 +4250,7 @@
   padding: 0.65rem 0.9rem;
   background: color-mix(in srgb, var(--tv-bg-base) 80%, transparent);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 10px;
+  border-radius: 8px;
   text-decoration: none;
   color: var(--tv-ink-primary);
   transition: border-color 180ms ease;
@@ -4265,7 +4263,7 @@
 }
 
 .cx-guide-bridge-v4__slug {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
   font-weight: 510;
   color: var(--cx-accent);
   text-transform: capitalize;
@@ -4338,7 +4336,7 @@
     color-mix(in srgb, var(--tv-bg-base) 92%, var(--cx-accent) 8%),
     var(--tv-bg-base));
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 14px;
+  border-radius: 12px;
   text-decoration: none;
   color: var(--tv-ink-primary);
   transition: border-color 200ms ease, transform 200ms ease;
@@ -4397,7 +4395,7 @@
 }
 
 .cx-next-step-v4__card-signal {
-  font-size: 0.78rem;
+  font-size: var(--tv-text-xs);
   color: var(--tv-ink-muted-aa, rgba(255, 255, 255, 0.55));
   font-variant-numeric: tabular-nums;
   margin: 0;
@@ -4969,7 +4967,7 @@
 
 .cx-index .tv-member-gate__body,
 .cx-detail-v4 .tv-member-gate__body {
-  font-size: 0.9rem;
+  font-size: var(--tv-text-sm);
 }
 
 .cx-index .tv-member-gate__locked,
@@ -5156,3 +5154,10 @@
     padding-inline: var(--tv-gutter-desktop);
   }
 }
+
+/* Final micro-polish: display wrapping */
+.cx-index__lede-block h2,
+.cx-index__section-title h2,
+.cx-stack-flow-v4__title,
+.cx-decision-notes-v4__title,
+.cx-variant-paths-v4__title { text-wrap: balance; }
