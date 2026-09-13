@@ -3705,3 +3705,149 @@ html[data-tv-home-story="enter"] .def-start__kicker {
   }
 }
 
+
+/* ============================================================
+   MOBILE DECISION — natural vertical narrative (no sticky, no runway)
+   Desktop keeps the pinned storytelling above.
+   ============================================================ */
+.def-decision__stages {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.def-decision__compare-cta--mobile {
+  display: none;
+}
+.def-decision__stage {
+  position: relative;
+  display: grid;
+  gap: var(--tv-rhythm-related);
+  padding: var(--tv-rhythm-related-lg) 0 var(--tv-rhythm-related-lg) 2.5rem;
+}
+.def-decision__stage-line {
+  position: absolute;
+  left: 0.9rem;
+  top: 2.5rem;
+  bottom: 0;
+  width: 1px;
+  background: var(--tv-home-dark-border);
+}
+.def-decision__stage:last-child .def-decision__stage-line {
+  display: none;
+}
+.def-decision__stage-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.def-decision__stage-index {
+  color: var(--tv-grammar-editorial-brass);
+}
+.def-decision__stage-head strong {
+  font-size: var(--tv-type-h3);
+  color: var(--tv-home-dark-fg);
+}
+.def-decision__stage-objects {
+  display: grid;
+  gap: var(--tv-rhythm-related);
+}
+.def-decision__stage-object {
+  position: relative;
+  display: grid;
+  gap: 0.2rem;
+  padding: var(--tv-rhythm-related-lg);
+  border: 1px solid var(--tv-home-dark-border);
+  border-radius: var(--tv-radius-lg);
+  background: var(--tv-surface-field);
+  color: var(--tv-home-dark-fg);
+}
+.def-decision__stage-object h3 {
+  margin: 0;
+  font-size: var(--tv-type-h3);
+  color: var(--tv-home-dark-fg);
+}
+.def-decision__stage-meta,
+.def-decision__stage-why {
+  margin: 0;
+  font-size: var(--tv-type-body);
+  color: var(--tv-home-dark-fg-secondary);
+}
+.def-decision__stage-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: var(--tv-type-meta);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tv-home-dark-fg-secondary);
+}
+.def-decision__stage-score .tv-type-data {
+  font-size: var(--tv-type-h3);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--tv-home-dark-accent);
+}
+.def-decision__stage-why {
+  color: var(--tv-home-dark-fg);
+}
+.def-decision__stage-object.is-alternative {
+  background: transparent;
+}
+.def-decision__stage-object.is-lead {
+  border-color: var(--tv-grammar-editorial-brass);
+}
+.def-decision__stage-object.is-memory {
+  border-inline-start: 2px solid var(--tv-grammar-personal-remembered-edge);
+}
+.def-decision__stage-copy {
+  margin: 0;
+  font-size: var(--tv-type-body);
+  color: var(--tv-home-dark-fg-secondary);
+}
+/* Progressive reveal only when JS enhanced the list (no-JS stays visible). */
+.def-decision__stages[data-enhanced] .def-decision__stage-object {
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity var(--tv-duration-slow) var(--tv-easing-standard),
+    transform var(--tv-duration-slow) var(--tv-easing-standard);
+}
+.def-decision__stages[data-enhanced] .def-decision__stage[data-seen] .def-decision__stage-object {
+  opacity: 1;
+  transform: none;
+}
+.def-decision__stages[data-enhanced] .def-decision__stage-object.is-recede {
+  opacity: 0.68;
+}
+
+@media (max-width: 767px) {
+  .def-decision__sticky {
+    display: none;
+  }
+  .def-decision__runway {
+    display: none;
+  }
+  .def-decision__stages {
+    display: grid;
+  }
+  .def-decision__compare-cta--mobile {
+    display: inline-flex;
+    margin-top: var(--tv-rhythm-related-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .def-decision__stages,
+  .def-decision__compare-cta--mobile {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .def-decision__stages[data-enhanced] .def-decision__stage-object {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

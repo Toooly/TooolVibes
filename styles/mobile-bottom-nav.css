@@ -31,9 +31,9 @@
   display: block;
   height: var(--tv-bottom-nav-inner);
   background: var(--tv-bg-base);
-  border: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
-  border-radius: var(--tv-radius-modal);
-  box-shadow: 0 6px 18px -18px rgba(0, 0, 0, 0.5);
+  border: 1px solid color-mix(in srgb, var(--tv-border-subtle) 70%, transparent);
+  border-radius: var(--tv-radius-lg);
+  box-shadow: 0 2px 10px -14px rgba(0, 0, 0, 0.45);
   overflow: hidden;
   isolation: isolate;
 }
@@ -60,10 +60,10 @@
   text-decoration: none;
   color: var(--tv-ink-secondary);
   font-size: var(--tv-text-xs);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  padding: 6px 4px;
+  padding: 4px 4px;
   min-height: var(--tv-bottom-nav-inner);
   -webkit-tap-highlight-color: transparent;
   isolation: isolate;

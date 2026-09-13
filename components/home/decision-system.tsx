@@ -40,7 +40,14 @@ function useDecisionNarrative(reduced: boolean) {
     const root = rootRef.current;
     if (!root) return;
 
-    if (reduced) {
+    // Mobile uses a natural vertical narrative (no pinned stage, no runway),
+    // so the scroll-driven stage/runway model is desktop-only.
+    const isMobile =
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(max-width: 767px)").matches;
+
+    if (reduced || isMobile) {
       root.style.setProperty("--decision-progress", "1");
       setStage("ricorda");
       return;
@@ -89,6 +96,33 @@ function useDecisionNarrative(reduced: boolean) {
   return { rootRef, stage };
 }
 
+function useMobileStageReveal() {
+  const listRef = useRef<HTMLOListElement | null>(null);
+  useEffect(() => {
+    const root = listRef.current;
+    if (!root) return;
+    root.setAttribute("data-enhanced", "");
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-panel]"));
+    if (typeof IntersectionObserver === "undefined") {
+      panels.forEach((panel) => panel.setAttribute("data-seen", ""));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.setAttribute("data-seen", "");
+          io.unobserve(entry.target);
+        }
+      },
+      { rootMargin: "0px 0px -18% 0px", threshold: 0.2 },
+    );
+    panels.forEach((panel) => io.observe(panel));
+    return () => io.disconnect();
+  }, []);
+  return listRef;
+}
+
 function initials(name: string) {
   return name
     .split(/\s+/)
@@ -104,6 +138,13 @@ function scoreLabelFor(tool: ToolPublicView | null) {
   return score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
 }
 
+function toolName(tool: ToolPublicView | null, fallback: string) {
+  return tool?.name ?? fallback;
+}
+function toolMeta(tool: ToolPublicView | null) {
+  return tool?.levelLabel ?? tool?.categoryLabel ?? "Catalogo";
+}
+
 export function DecisionSystem({ tools }: { tools: ToolPublicView[] }) {
   const reducedPref = useReducedMotion();
   const [mounted, setMounted] = useState(false);
@@ -112,6 +153,7 @@ export function DecisionSystem({ tools }: { tools: ToolPublicView[] }) {
   }, []);
   const reduced = mounted && reducedPref;
   const { rootRef, stage } = useDecisionNarrative(reduced);
+  const listRef = useMobileStageReveal();
   const stageIndex = DECISION_LIFECYCLE.indexOf(stage);
   const left = tools[0] ?? null;
   const right = tools[1] ?? null;
@@ -135,6 +177,7 @@ export function DecisionSystem({ tools }: { tools: ToolPublicView[] }) {
         </p>
       </header>
 
+      {/* Desktop: pinned scroll storytelling */}
       <div className="def-decision__sticky">
         <div className="def-decision__path" aria-hidden="true">
           <span className="def-decision__path-fill" />
@@ -178,6 +221,81 @@ export function DecisionSystem({ tools }: { tools: ToolPublicView[] }) {
           {stageIndex >= 2 ? "Apri il confronto" : `Apri ${DECISION_LIFECYCLE_LABELS[stage]}`}
         </Link>
       </div>
+
+      {/* Mobile: natural vertical narrative with object continuity */}
+      <ol
+        ref={listRef}
+        className="def-decision__stages"
+        aria-label="Il percorso di decisione"
+      >
+        {DECISION_LIFECYCLE.map((item, index) => {
+          const showB = index >= 2;
+          const lead = index >= 3;
+          const memory = index === 4;
+          const showScore = index >= 1;
+          return (
+            <li key={item} className="def-decision__stage" data-panel={item}>
+              <span className="def-decision__stage-line" aria-hidden="true" />
+              <div className="def-decision__stage-head">
+                <span className="def-decision__stage-index tv-type-data" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <strong>{DECISION_LIFECYCLE_LABELS[item]}</strong>
+              </div>
+              <div className="def-decision__stage-objects">
+                <article
+                  className={[
+                    "def-decision__stage-object",
+                    lead ? "is-lead" : "",
+                    memory ? "is-memory" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <span className="def-decision__object-mark" aria-hidden="true">
+                    {initials(toolName(left, "Candidato"))}
+                  </span>
+                  <h3>{toolName(left, "Candidato")}</h3>
+                  <p className="def-decision__stage-meta">{toolMeta(left)}</p>
+                  {showScore ? (
+                    <p className="def-decision__stage-score">
+                      <span className="tv-type-data">{scoreLabelFor(left)}</span>
+                      <span>valutazione</span>
+                    </p>
+                  ) : null}
+                  {memory ? (
+                    <p className="def-decision__stage-why">
+                      Perché: resta la scheda, non l&apos;impressione.
+                    </p>
+                  ) : null}
+                </article>
+                {showB ? (
+                  <article
+                    className={[
+                      "def-decision__stage-object",
+                      "is-alternative",
+                      lead ? "is-recede" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    <span className="def-decision__object-mark" aria-hidden="true">
+                      {initials(toolName(right, "Alternativa"))}
+                    </span>
+                    <h3>{toolName(right, "Alternativa")}</h3>
+                    <p className="def-decision__stage-meta">{toolMeta(right)}</p>
+                  </article>
+                ) : null}
+              </div>
+              <p className="def-decision__stage-copy">{DECISION_LIFECYCLE_COPY[item]}</p>
+            </li>
+          );
+        })}
+      </ol>
+
+      <Link href="/compare" className="def-decision__compare-cta def-decision__compare-cta--mobile">
+        Apri il confronto
+      </Link>
 
       <div className="def-decision__runway" aria-hidden="true">
         {DECISION_LIFECYCLE.map((item) => (
