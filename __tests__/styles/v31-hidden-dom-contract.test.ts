@@ -33,7 +33,7 @@ describe("v3.1 hidden-dom contract", () => {
     );
     expect(intentSrc).not.toContain("def-intent__submit-desktop");
     expect(intentSrc).not.toContain("def-intent__submit-mobile");
-    expect(homeCss).toContain(".def-intent__submit-rest { display: none; }");
+    expect(homeCss).toMatch(/\.def-intent__submit-rest\s*\{\s*display:\s*none;/);
   });
 
   it("collapses archive eyebrow and data copy-swaps without dead mobile twins", () => {
@@ -54,14 +54,11 @@ describe("v3.1 hidden-dom contract", () => {
     expect(radarCss).toContain(".tv-radar__eyebrow-lead { display: none; }");
   });
 
-  it("preserves product-intent home lede variants and linear Home chapters", () => {
+  it("preserves product-intent home lede variants and start-here tab panels", () => {
     expect(homeSrc).toContain("def-cockpit__lede-desktop");
     expect(homeSrc).toContain("def-cockpit__lede-mobile");
-    expect(homeSrc).toContain("def-cockpit__explore");
-    expect(startHereSrc).toContain('id="explore"');
-    expect(startHereSrc).toContain("Selezione editoriale TooolVibes");
-    expect(homeSrc).toContain("DecisionSystem");
-    expect(homeSrc).toContain("RadarTeaser");
-    expect(homeSrc).toContain("CollectionsTeaser");
+    expect(startHereSrc).toContain('hidden={tab !== "tool"}');
+    expect(startHereSrc).toContain('hidden={tab !== "stack"}');
+    expect(startHereSrc).toContain('hidden={tab !== "radar"}');
   });
 });

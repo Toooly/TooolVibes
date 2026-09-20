@@ -68,8 +68,8 @@ function CoreFooter({
             <span className="tv-utility__wordmark">TOOOLVIBES</span>
           </Link>
           <p className="tv-utility__summary">
-            Il sistema per scoprire tool AI, SaaS e no-code.
-            Trova, confronta e costruisci la lista giusta per te.
+            Il sistema decisionale per scegliere software con criterio,
+            non l&apos;ennesima directory di tool.
           </p>
         </div>
 

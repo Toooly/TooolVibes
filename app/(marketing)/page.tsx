@@ -21,13 +21,13 @@ export async function generateMetadata() {
   }
 
   return createPublicPageMetadata({
-    title: "Scegli il tuo stack",
+    title: "Scegli il tool giusto. Ricorda perché.",
     description:
-      "Il workspace decisionale per chi costruisce prodotti digitali: confronta tool AI, SaaS e no-code, scegli il tuo stack e conserva il motivo di ogni scelta.",
+      "Scopri tool AI, SaaS e no-code selezionati, confronta alternative e trade-off, costruisci il tuo stack e conserva il motivo di ogni scelta.",
     path: "/",
-    openGraphTitle: "TooolVibes · Scegli il tuo stack con criterio",
+    openGraphTitle: "TooolVibes · Il sistema decisionale per scegliere software con criterio",
     openGraphDescription:
-      "Un sistema decisionale per tool AI, SaaS e no-code: esplora alternative, confronta trade-off e salva decisioni motivate.",
+      "TooolVibes è il sistema decisionale per scegliere software con criterio, non l'ennesima directory di tool.",
   });
 }
 

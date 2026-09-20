@@ -9,7 +9,7 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Scopri il team TooolVibes, il metodo e i servizi digitali che offriamo a founder, creator e team.",
   path: "/chi-siamo",
   openGraphDescription:
-    "Il team TooolVibes, il metodo e i servizi digitali per costruire prodotti piu chiari e vivi.",
+    "Il team TooolVibes, il metodo e i servizi digitali per costruire prodotti più chiari e vivi.",
 });
 
 export default function ChiSiamoPage() {

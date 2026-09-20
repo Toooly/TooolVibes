@@ -27,14 +27,14 @@ describe("Home metadata — no duplicate brand", () => {
 
   it("sets the bare title without a leading brand token", () => {
     const src = read(HOME_PAGE);
-    expect(src).toMatch(/title: "Scegli il tuo stack"/);
+    expect(src).toMatch(/title: "Scegli il tool giusto. Ricorda perché."/);
     expect(src).not.toMatch(/title: "TooolVibes \|/);
     expect(src).not.toMatch(/title: "TooolVibes/);
   });
 
   it("keeps OG and Twitter titles brand-coherent", () => {
     const src = read(HOME_PAGE);
-    expect(src).toMatch(/openGraphTitle: "TooolVibes · Scegli il tuo stack con criterio"/);
+    expect(src).toMatch(/openGraphTitle: "TooolVibes · Il sistema decisionale per scegliere software con criterio"/);
   });
 
   it("root layout applies the %s | TooolVibes template exactly once", () => {
