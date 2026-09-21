@@ -120,3 +120,61 @@ Local only: `artifacts/visual-system-2026-09-22/`. Not committed.
 ## N. Final commit SHA
 
 `28a6a195a118b5976d2c13d9f0a766ceb7dffccc`
+
+## FINAL VISUAL RELEASE EVIDENCE
+
+Verified on HEAD `d3e56f9` (visual implementation `28a6a19`). Not deployed.
+
+### Commands
+
+| Check | Result |
+|---|---|
+| git status | clean tracked tree; only pre-existing untracked artifacts |
+| typecheck `tsc --noEmit` | PASS |
+| lint `eslint . --max-warnings=0` | PASS |
+| production build | PASS — 151 pages, SHA `d3e56f9a2dfcfb6264888139b1b5cdbfc5f64059` |
+| tests | PASS — 132 (visual-system, chrome, ads, magic-link, decision sheet, salvati) |
+
+Screenshots were taken one browser process at a time against `next dev` of this HEAD (workspace QA is 404 in production). Viewport shots, not full-page, so Chromium did not crash.
+
+### Viewport matrix
+
+| Width | Surfaces |
+|---|---|
+| 390 | Home TOOL, STACK, RADAR, footer, Catalogue, tool detail, Guides list, Guide top + mid, Collections list, Collection top + mid, Auth, Spazio, Salvati, Decisioni, decision sheet, Stack, Settings, Partner |
+| 430 | Home TOOL, Guide mid, Auth |
+| 768 | Home, Catalogue, Guide mid, Collection, Auth, Salvati |
+| 1280 | Home, Catalogue, tool detail, Guide mid, Collection, Auth, footer |
+| 1440 | Home TOOL / STACK / RADAR, Catalogue, tool detail, Guides, Guide mid, Collections, Collection, Auth, footer, Spazio, decision sheet |
+
+48 route shots plus a partner recapture. Files: `artifacts/visual-evidence-2026-09-22/` (local, not committed).
+
+### Inspection
+
+- Body overflow 0 on every shot.
+- TOOL / STACK / RADAR tabs are one 3-column grid. Computed columns 109.3px. Active TOOL glow is gold (`--tv-glow-gold`). A 5px rect delta appeared only mid-transition; settled widths match.
+- Footer headings were not `rgb(8, 8, 10)`.
+- At scroll end on Auth, Privacy/Termini sit above the nav (bottom 618 vs nav 786). A short-page first paint can place the footer wordmark in the nav band until scroll. Not a new hole.
+- Guide cream column remains, framed by the night shell. Not removed.
+- Decision sheet opens from the QA harness: Scelto / Scartato / Rimandato and reason chips. Not a generic unstyled form.
+- Partner Experience renders as `.partner-placement` (483px), not a bare iframe.
+- After consent, no `PUBBLICITÀ` text and no ad slot height. Real TinyAdz fill was not painted. That remains vendor-side.
+- Magic-link HTML was reviewed in `lib/auth/magic-link-email.ts`: one gold CTA, escaped fallback URL, no unsupported layout CSS. Not opened in a mail client.
+
+### Issues found
+
+No concrete visual defect that required a code change in this pass.
+
+### Issues fixed
+
+None. Verification only.
+
+### Remaining visual issues
+
+- Short pages can show the footer wordmark against the bottom nav until the user scrolls. Legal links clear at scroll end.
+- Logged-in shots use `/dev/workspace-qa`, not a production magic-link session.
+- TinyAdz campaign fill is still external.
+- Historical route CSS remains; the late visual layer unifies the visible grammar rather than deleting every old rule.
+
+Visual implementation commit: `28a6a19`  
+Evidence base HEAD: `d3e56f9`
