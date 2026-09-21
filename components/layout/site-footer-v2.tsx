@@ -33,34 +33,14 @@ export function SiteFooterV2() {
   const companyLinks = useNavItems("footer-v2-company");
   const legalLinks = useNavItems("footer-v2-legal");
   const pathname = usePathname() ?? "/";
+  const isHome = pathname === "/";
+
+  if (isHome) {
+    return <LaunchpadFooter year={year} legalLinks={legalLinks} />;
+  }
 
   return (
-    <CoreFooter
-      year={year}
-      productLinks={productLinks}
-      companyLinks={companyLinks}
-      legalLinks={legalLinks}
-      pathname={pathname}
-    />
-  );
-}
-
-function CoreFooter({
-  year,
-  productLinks,
-  companyLinks,
-  legalLinks,
-  pathname,
-}: {
-  year: number;
-  productLinks: ReturnType<typeof useNavItems>;
-  companyLinks: ReturnType<typeof useNavItems>;
-  legalLinks: ReturnType<typeof useNavItems>;
-  pathname: string;
-}) {
-  return (
-    <footer className="site-footer-v2 tv-utility tv-launchpad relative mt-auto">
-      <LaunchpadMap />
+    <footer className="site-footer-v2 tv-utility relative mt-auto">
       <div className="tv-utility__shell site-footer-v2__shell">
         <div className="tv-utility__identity">
           <Link href="/" className="tv-utility__brand">
@@ -150,12 +130,27 @@ function CoreFooter({
   );
 }
 
-function LaunchpadMap() {
+function LaunchpadFooter({
+  year,
+  legalLinks,
+}: {
+  year: number;
+  legalLinks: ReturnType<typeof useNavItems>;
+}) {
   return (
-    <section className="tv-launchpad__shell" aria-labelledby="tv-launchpad-title">
-      <div>
-        <p className="tv-launchpad__signature" aria-hidden="true">TOOOLVIBES</p>
-        <h2 id="tv-launchpad-title" className="tv-launchpad__title">Continua da qui.</h2>
+    <footer className="site-footer-v2 tv-launchpad relative mt-auto">
+      <div className="tv-launchpad__shell site-footer-v2__shell">
+        <div>
+        <Link href="/" className="tv-launchpad__brand">
+          <BrandLogo size={40} fallback="png" />
+          <span className="tv-launchpad__wordmark">TOOOLVIBES</span>
+        </Link>
+        <p className="tv-launchpad__signature" aria-hidden="true">
+          TOOOLVIBES
+        </p>
+        <h2 id="tv-launchpad-title" className="tv-launchpad__title">
+          Continua da qui.
+        </h2>
 
         <nav className="tv-launchpad__map" aria-label="Mappa del prodotto">
           <p className="tv-launchpad__map-caption" aria-hidden="true">
@@ -165,24 +160,71 @@ function LaunchpadMap() {
             <li className="tv-launchpad__tile tv-launchpad__tile--discover">
               <span className="tv-launchpad__node" aria-hidden="true" />
               <p>Scopri</p>
-              <Link href="/archivio">Catalogo <span aria-hidden="true">→</span></Link>
-              <Link href="/radar">Radar <span aria-hidden="true">→</span></Link>
+              <Link href="/archivio">
+                Catalogo <span aria-hidden="true">→</span>
+              </Link>
+              <Link href="/radar">
+                Radar <span aria-hidden="true">→</span>
+              </Link>
             </li>
             <li className="tv-launchpad__tile tv-launchpad__tile--build">
               <span className="tv-launchpad__node" aria-hidden="true" />
               <p>Costruisci</p>
-              <Link href="/collections">Raccolte <span aria-hidden="true">→</span></Link>
-              <Link href="/posts">Guide <span aria-hidden="true">→</span></Link>
+              <Link href="/collections">
+                Raccolte <span aria-hidden="true">→</span>
+              </Link>
+              <Link href="/posts">
+                Guide <span aria-hidden="true">→</span>
+              </Link>
             </li>
             <li className="tv-launchpad__tile tv-launchpad__tile--decide">
               <span className="tv-launchpad__node" aria-hidden="true" />
               <p>Decidi</p>
-              <Link href="/compare">Confronto <span aria-hidden="true">→</span></Link>
-              <Link href="/shortlist">Salvati <span aria-hidden="true">→</span></Link>
+              <Link href="/compare">
+                Confronto <span aria-hidden="true">→</span>
+              </Link>
+              <Link href="/shortlist">
+                Salvati <span aria-hidden="true">→</span>
+              </Link>
             </li>
           </ul>
         </nav>
+
+        <section className="tv-launchpad__contact" aria-labelledby="tv-launchpad-contact">
+          <h3 id="tv-launchpad-contact">Parliamone</h3>
+          <p>Un tool da segnalare, una correzione, una proposta.</p>
+          <a href={contactEmailDestination.href} className="site-footer-v2__contact">
+            <Mail size={16} aria-hidden="true" />
+            Scrivici
+          </a>
+        </section>
+
+        <div className="tv-launchpad__legal site-footer-v2__legal-row">
+          {legalLinks.map((link) => (
+            <Link
+              key={link.id}
+              href={link.href}
+              className="site-footer-v2__legal-link"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <ConsentFooterLink />
+        </div>
+
+        <p className="tv-launchpad__mark">TOOOLVIBES · {year}</p>
+
+        <details className="tv-launchpad__disclosure">
+          <summary>Trasparenza e affiliazioni</summary>
+          <p className="site-footer-v2__disclosure">
+            Alcuni link su TooolVibes sono link affiliati. Se acquisti tramite
+            questi collegamenti, potremmo ricevere una commissione, senza costi
+            aggiuntivi per te. Le partnership commerciali non determinano le
+            valutazioni editoriali.
+          </p>
+        </details>
+        </div>
       </div>
-    </section>
+    </footer>
   );
 }

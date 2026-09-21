@@ -26,7 +26,7 @@
 .command-bar::before {
   content: "";
   position: absolute;
-  left: clamp(20px, 4vw, 72px);
+  left: var(--tv-home-gutter-desktop);
   bottom: -3.5px;
   width: 7px;
   height: 7px;
@@ -66,13 +66,13 @@
   height: 84px;
   max-width: 1560px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 var(--tv-home-gutter-desktop);
 }
 
 @media (max-width: 1535px) {
   .command-bar__inner {
     height: var(--tv-header-height);
-    padding: 0 24px;
+    padding: 0 var(--tv-home-gutter-desktop);
     gap: 16px;
   }
 }

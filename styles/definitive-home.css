@@ -17,13 +17,6 @@
  * yellow=action, brass=editorial, cyan=live signal.
  */
 
-.def-cockpit__bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background: radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--tv-accent-primary) 10%, transparent) 0%, transparent 36%), radial-gradient(circle at 88% 100%, color-mix(in srgb, var(--tv-accent-cyan) 6%, transparent) 0%, transparent 36%);
-}
 .def-cockpit__eyebrow {
   display: inline-flex;
   align-items: center;
@@ -65,10 +58,10 @@
   width: 100%;
   background: transparent;
   color: var(--tv-ink-primary);
-  border-bottom: 1px solid color-mix(in srgb, var(--tv-ink-muted-aa) 25%, transparent);
-  padding: clamp(48px, 5.4vw, 76px) clamp(20px, 2.6vw, 40px);
-  isolation: isolate;
-  overflow: hidden;
+  border-bottom: 0;
+  padding: 0;
+  isolation: auto;
+  overflow: visible;
 }
 .def-editorial__inner {
   position: relative;
@@ -125,7 +118,7 @@
   width: 64px;
   height: 64px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--tv-accent-violet-on-ivory) 10%, var(--tv-surface-inverted));
+  background: color-mix(in srgb, var(--tv-accent-brand) 16%, var(--tv-surface-raised));
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -184,9 +177,9 @@
   grid-template-rows: auto auto auto 1fr;
   gap: 8px;
   padding: 16px 14px 14px;
-  border: 1px solid var(--tv-border-inverted);
+  border: 1px solid var(--tv-border-subtle);
   border-radius: 16px;
-  background: color-mix(in srgb, var(--tv-surface-inverted) 96%, #000 4%);
+  background: var(--tv-surface-raised);
   text-decoration: none;
   color: var(--tv-ink-primary);
   transition: transform var(--tv-duration-base) var(--tv-easing-standard), border-color var(--tv-duration-base) var(--tv-easing-standard);
@@ -201,7 +194,7 @@
   height: 36px;
   place-items: center;
   border-radius: 10px;
-  border: 1px solid var(--tv-border-inverted);
+  border: 1px solid var(--tv-border-subtle);
   background: var(--tv-surface-elevated);
   overflow: hidden;
   font-family: var(--tv-font-family-display);
@@ -234,7 +227,7 @@
   padding: 4px 10px;
   border-radius: 999px;
   background: var(--tv-surface-elevated);
-  border: 1px solid var(--tv-border-inverted);
+  border: 1px solid var(--tv-border-subtle);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -580,8 +573,8 @@
 .def-cockpit {
   position: relative;
   width: 100%;
-  background: var(--tv-bg-base);
-  border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
+  background: transparent;
+  border-bottom: 0;
   isolation: isolate;
   overflow: hidden;
 }
@@ -1009,11 +1002,8 @@
   max-width: 100%;
   --tv-home-axis: var(--tv-home-gutter);
 }
-.def-cockpit__inner, .def-start, .def-method, .def-home__sponsor, .tv-partner-signal {
+.def-cockpit, .def-start, .def-method, .def-home__sponsor, .tv-partner-signal {
   padding-inline: var(--tv-home-axis);
-}
-.def-cockpit__bg .tv-brand-cartograph {
-  opacity: 0.28;
 }
 .tv-signal-search {
   position: relative;
@@ -1071,7 +1061,7 @@
   transition: border-color var(--tv-duration-fast) var(--tv-easing-standard), border-style var(--tv-duration-fast) var(--tv-easing-standard);
 }
 .tv-discovery-stage {
-  background: var(--tv-bg-base);
+  background: transparent;
 }
 .tv-discovery-stage__head {
   display: flex;
@@ -1099,8 +1089,8 @@
 .tv-discovery-stage[data-mode="tool"] .tv-discovery-stage__frame,
 .tv-discovery-stage[data-mode="stack"] .tv-discovery-stage__frame,
 .tv-discovery-stage[data-mode="radar"] .tv-discovery-stage__frame {
-  background: var(--tv-surface-raised);
-  border: 1px solid var(--tv-grammar-editorial-border);
+  background: transparent;
+  border: 0;
 }
 .tv-discovery-stage .def-start .def-editorial, .tv-discovery-stage .def-start .def-stacks {
   background: transparent;
@@ -1442,15 +1432,14 @@
   min-width: 0;
 }
 .tv-discovery-stage .def-start__panel {
-  padding: var(--tv-rhythm-related-lg) var(--tv-space-component-lg) 0;
+  padding: var(--tv-rhythm-related-lg) 0 0;
 }
 .tv-home-radar__launch:focus-visible {
   box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
 }
 .tv-discovery-stage__frame {
-  border-radius: var(--tv-radius-feature);
-  overflow: clip;
-  transition: background-color var(--tv-motion-base) var(--tv-easing-standard), border-color var(--tv-motion-base) var(--tv-easing-standard);
+  border-radius: 0;
+  overflow: visible;
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
 }
@@ -1581,15 +1570,15 @@
 }
 .def-home__sponsor {
   width: 100%;
-  background: #1c1916;
-  color: var(--tv-surface-inverted);
+  background: transparent;
+  color: var(--tv-ink-primary);
   padding-block: var(--tv-rhythm-section);
 }
 .def-start {
   scroll-margin-top: var(--tv-header-height-mobile);
   display: flex;
   flex-direction: column;
-  background: var(--tv-bg-base);
+  background: transparent;
 }
 @media (max-width: 1279px) and (min-width: 900px) {
   .def-cockpit__inner {
@@ -1608,7 +1597,7 @@
     width: 100%;
   }
   .def-editorial {
-    padding-inline: var(--tv-gutter-mobile);
+    padding-inline: 0;
     max-width: 100%;
   }
   .def-editorial__spot-lede {
@@ -2005,16 +1994,6 @@
 }
 
 @media (min-width: 1920px) {
-  .def-cockpit__scope {
-    transform: scale(1.08);
-    transform-origin: center;
-  }
-  .def-home {
-    --tv-home-axis: clamp(2.5rem, 5.5vw, 7rem);
-  }
-  .def-cockpit__inner {
-    max-width: min(92rem, calc(100% - 2 * var(--tv-home-axis)));
-  }
   .def-cockpit__title {
     font-size: var(--tv-type-hero);
   }

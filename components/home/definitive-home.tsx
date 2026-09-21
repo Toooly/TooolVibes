@@ -42,9 +42,6 @@ function Cockpit({
       : "Per chi costruisce prodotti digitali";
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
-      <div aria-hidden="true" className="def-cockpit__bg">
-        <span className="tv-brand-cartograph" />
-      </div>
       <div className="def-cockpit__inner">
         <div className="def-cockpit__hero">
           <p className="def-cockpit__eyebrow">

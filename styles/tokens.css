@@ -1201,7 +1201,7 @@
 
   /* Home axis — 20px on 390. Do not change --tv-gutter-mobile. */
   --tv-home-gutter: var(--tv-space-px-5);
-  --tv-home-gutter-desktop: var(--tv-space-px-8);
+  --tv-home-gutter-desktop: var(--tv-space-px-12);
 
   /* TOOL / EDITORIAL — warm cream, charcoal, brass */
   --tv-grammar-editorial-surface: var(--tv-surface-inverted);

@@ -632,7 +632,7 @@
 
 
 .tv-launchpad {
-  background: var(--tv-bg-base);
+  background: transparent;
   color: var(--tv-ink-primary);
   border-top: 1px solid var(--tv-border-subtle);
 }
@@ -649,9 +649,13 @@
 
 @media (max-width: 1279px) {
   .tv-launchpad .site-footer-v2__shell,
-  .tv-launchpad__shell {
-    padding-block-end: var(--tv-rhythm-section);
-    /* Core Footer owns --tv-bottom-nav-total on every public route. */
+  .site-footer-v2.tv-launchpad .tv-launchpad__shell,
+  .site-footer-v2.tv-utility .site-footer-v2__shell {
+    padding-block-end: calc(
+      var(--tv-rhythm-section) +
+      var(--tv-bottom-nav-total, 4.0625rem) +
+      env(safe-area-inset-bottom)
+    );
   }
 }
 
@@ -665,7 +669,8 @@
 
 .tv-launchpad__destinations {
   display: grid;
-  gap: var(--tv-rhythm-related-lg) var(--tv-rhythm-section);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--tv-rhythm-related-lg);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -706,7 +711,7 @@
   border-radius: 50%;
   background: var(--tv-ink-primary);
   margin-bottom: 0.9rem;
-  box-shadow: 0 0 0 4px var(--tv-surface-inverted, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--tv-color-violet-900) 58%, var(--tv-bg-base));
 }
 
 .tv-launchpad__tile p {
@@ -742,6 +747,12 @@
   font-weight: var(--tv-weight-semibold);
   justify-self: start;
   padding-block: 0.4rem;
+}
+@media (max-width: 47.99rem) {
+  .tv-launchpad__tile a {
+    font-size: var(--tv-type-body);
+    padding-block: 0.25rem;
+  }
 }
 
 .tv-launchpad__tile a span {
@@ -841,7 +852,7 @@
    ============================================================ */
 
 .site-footer-v2.tv-utility {
-  background: var(--tv-bg-base) !important;
+  background: transparent !important;
   color: var(--tv-ink-primary) !important;
   border-top: 1px solid var(--tv-border-subtle) !important;
   position: relative;
@@ -1080,7 +1091,7 @@
 }
 
 .site-footer-v2.tv-launchpad {
-  background: var(--tv-bg-base) !important;
+  background: transparent !important;
   color: var(--tv-ink-primary) !important;
   border-top: 1px solid var(--tv-border-subtle) !important;
 }
@@ -1129,6 +1140,8 @@
 .tv-launchpad__shell > div {
   width: min(100%, var(--tv-container-uw));
   margin-inline: auto;
+  display: grid;
+  gap: var(--tv-rhythm-group);
 }
 
 @media (min-width: 1280px) {

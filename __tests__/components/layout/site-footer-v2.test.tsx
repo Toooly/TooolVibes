@@ -203,20 +203,34 @@ describe("SiteFooterV2 — Home launchpad", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Continua da qui." })).toBeTruthy();
-    expect(screen.getAllByRole("link", { name: "Catalogo" })[0].getAttribute("href")).toBe("/archivio");
-    expect(screen.getAllByRole("link", { name: "Radar" })[0].getAttribute("href")).toBe("/radar");
-    expect(screen.getAllByRole("link", { name: "Raccolte" })[0].getAttribute("href")).toBe("/collections");
-    expect(screen.getAllByRole("link", { name: "Guide" })[0].getAttribute("href")).toBe("/posts");
-    expect(screen.getAllByRole("link", { name: "Confronto" })[0].getAttribute("href")).toBe("/compare");
-    expect(screen.getAllByRole("link", { name: "Salvati" })[0].getAttribute("href")).toBe("/shortlist");
+    expect(screen.getByRole("link", { name: "Catalogo" }).getAttribute("href")).toBe("/archivio");
+    expect(screen.getByRole("link", { name: "Radar" }).getAttribute("href")).toBe("/radar");
+    expect(screen.getByRole("link", { name: "Raccolte" }).getAttribute("href")).toBe("/collections");
+    expect(screen.getByRole("link", { name: "Guide" }).getAttribute("href")).toBe("/posts");
+    expect(screen.getByRole("link", { name: "Confronto" }).getAttribute("href")).toBe("/compare");
+    expect(screen.getByRole("link", { name: "Salvati" }).getAttribute("href")).toBe("/shortlist");
     expect(screen.getByRole("heading", { name: "Parliamone" })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Scrivici/ }).getAttribute("href")).toBe(
       "mailto:hello@tooolvibes.com",
     );
     expect(screen.getByText("Trasparenza e affiliazioni")).toBeTruthy();
     expect(screen.getByText(/TOOOLVIBES ·/)).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "TooolVibes" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Chi siamo" })).toBeTruthy();
-    expect(screen.getAllByRole("link", { name: "Catalogo" }).length).toBeGreaterThan(1);
+    expect(screen.queryByRole("heading", { name: "Esplora" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "TooolVibes" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Privacy" })).toBeTruthy();
+  });
+});
+
+describe("SiteFooterV2 — exclusive variants", () => {
+  it("non-Home does not render the launchpad map", () => {
+    pathnameState.current = "/archivio";
+    render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
+
+    expect(screen.queryByRole("heading", { name: "Continua da qui." })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Esplora" })).toBeTruthy();
   });
 });
