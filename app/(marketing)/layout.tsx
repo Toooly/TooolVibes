@@ -58,7 +58,7 @@ export default async function MarketingLayout({
   const renderNowMs = Date.now();
 
   return (
-    <div className="marketing-shell relative isolate overflow-x-clip" style={{ background: "var(--tv-bg-base)" }}>
+    <div className="marketing-shell relative isolate overflow-x-clip">
       <a href="#main-content" className="skip-link">
         Salta al contenuto
       </a>

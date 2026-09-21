@@ -282,9 +282,8 @@ export function DefinitiveArchive({
             </h1>
             <CatalogoFacetHead active="tutti" />
             <p className="ar4-intro__lede">
-              Cerca per nome o categoria, applica i filtri e restringi la selezione.
-              Apri le schede, salva i candidati e confronta quelli più adatti al tuo
-              caso d&apos;uso.
+              Cerca, filtra, apri le schede. Poi salva e confronta i candidati
+              più adatti al tuo caso d&apos;uso.
             </p>
           </div>
 

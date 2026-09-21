@@ -49,7 +49,7 @@ describe("CollectionsIndex", () => {
       </AccountPreviewProvider>,
     );
 
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/percorso/i);
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/Raccolta/i);
     expect(screen.getByLabelText("A colpo d'occhio").textContent).toContain("2 raccolte");
     expect(screen.getByLabelText("A colpo d'occhio").textContent).toContain("tool nello stack");
     expect(screen.getByLabelText("A colpo d'occhio").textContent).not.toContain("CORE");

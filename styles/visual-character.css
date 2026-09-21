@@ -29,190 +29,122 @@
 }
 
 /* ============================================================
-   HOME — chapter rhythm
-   ivory discovery → midnight signal → ivory editorial
-   → indigo workflow → commercial → ivory brand ending
+   HOME — one family
+   Ivory discovery paper. Accents only: brass editorial, violet
+   decision, yellow action, cyan live. Radar canvas is the
+   instrument, not a chapter. Method graphite lives in
+   definitive-home.css.
    ============================================================ */
 
 .def-home {
-  background: var(--tv-grammar-discovery-surface);
+  background: transparent;
 }
 
-/* HERO / DISCOVERY — light product identity */
 .def-cockpit {
-  background:
-    radial-gradient(ellipse at 0% -10%, color-mix(in srgb, var(--tv-accent-brand) 14%, transparent) 0%, transparent 42%),
-    radial-gradient(ellipse at 100% 110%, color-mix(in srgb, var(--tv-accent-gold) 12%, transparent) 0%, transparent 46%),
-    var(--tv-grammar-discovery-surface);
+  background: transparent;
   border-bottom: 0;
   color: var(--tv-grammar-discovery-ink);
 }
+
 .def-cockpit__bg {
   background:
-    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--tv-accent-brand) 16%, transparent) 0%, transparent 36%),
-    radial-gradient(circle at 88% 100%, color-mix(in srgb, var(--tv-accent-gold) 10%, transparent) 0%, transparent 36%);
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--tv-accent-brand) 10%, transparent) 0%, transparent 36%),
+    radial-gradient(circle at 88% 100%, color-mix(in srgb, var(--tv-accent-gold) 8%, transparent) 0%, transparent 36%);
 }
+
 .def-cockpit__bg .tv-brand-cartograph {
-  opacity: 0.42;
-  background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--tv-accent-brand) 22%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--tv-accent-cyan) 16%, transparent) 1px, transparent 1px);
+  opacity: 0.28;
 }
-.def-cockpit::before {
-  content: "TOOOL";
-  position: absolute;
-  right: -0.12em;
-  top: 8%;
-  z-index: 0;
-  font-family: var(--tv-font-family-display);
-  font-size: clamp(6rem, 22vw, 16rem);
-  line-height: 0.72;
-  letter-spacing: -0.08em;
-  color: color-mix(in srgb, var(--tv-accent-brand) 10%, transparent);
-  pointer-events: none;
-  user-select: none;
-}
+
 .def-cockpit__inner { z-index: 1; }
+
 .def-cockpit__title {
   color: var(--tv-home-ivory-fg);
 }
-.def-cockpit__title-quiet {
-  color: var(--tv-home-ivory-fg-secondary);
-}
-.def-cockpit__dest {
-  color: var(--tv-home-ivory-fg);
-  border-color: var(--tv-home-ivory-border);
-}
-.def-cockpit__dest-hint {
-  color: var(--tv-home-ivory-fg-muted);
-}
-.def-cockpit__dest--primary {
-  background: var(--tv-home-accent-surface);
-  color: var(--tv-home-accent-fg);
-  border-color: transparent;
-}
-.def-cockpit__dest--primary .def-cockpit__dest-hint {
-  color: inherit;
-  opacity: 1;
-}
-@media (max-width: 767px) {
-  .def-cockpit__dest,
-  .def-cockpit__dest--primary {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    border-radius: 0;
-    color: var(--tv-home-ivory-fg);
-  }
-  .def-cockpit__dest--primary {
-    color: var(--tv-home-ivory-accent);
-    font-weight: 800;
-  }
-  .def-intent__chips a,
-  .def-intent__more {
-    background: transparent;
-    border-color: transparent;
-    box-shadow: none;
-  }
-}
-.def-cockpit__explore {
-  color: var(--tv-home-ivory-fg-secondary);
-}
-.def-start__lens-note {
-  color: var(--tv-home-ivory-fg-muted);
-}
+
 .def-cockpit__lede,
 .def-cockpit__lede-desktop,
 .def-cockpit__lede-mobile {
   color: var(--tv-ink-inverted-secondary);
 }
+
 .def-cockpit__eyebrow {
   color: var(--tv-ink-inverted-muted);
   background: color-mix(in srgb, var(--tv-surface-inverted-raised) 80%, transparent);
   border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 14%, transparent);
 }
+
 .def-cockpit__eyebrow-dot {
-  background: var(--tv-accent-brand);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--tv-accent-brand) 55%, transparent);
+  background: var(--tv-accent-cyan);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--tv-accent-cyan) 55%, transparent);
 }
+
 .def-intent__label,
 .def-intent__hint {
   color: var(--tv-ink-inverted-muted);
 }
+
 .def-intent__chips a,
 .def-intent__more {
   color: var(--tv-ink-inverted-primary);
   border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 16%, transparent);
   background: color-mix(in srgb, var(--tv-surface-inverted-raised) 70%, transparent);
 }
+
 .def-intent__chips a:hover,
 .def-intent__more:hover {
   border-color: color-mix(in srgb, var(--tv-accent-brand) 40%, transparent);
 }
-/* Search remains a localized dark instrument on the light field */
+
 .def-intent__field.tv-signal-search {
   background: var(--tv-surface-raised);
   color: var(--tv-ink-primary);
   border-color: color-mix(in srgb, var(--tv-accent-brand) 28%, var(--tv-border-default));
-  box-shadow: 0 12px 32px color-mix(in srgb, var(--tv-accent-brand) 12%, transparent);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--tv-accent-brand) 10%, transparent);
+  min-height: 52px;
 }
 
-/* START-HERE — ivory stage, family frames */
 .def-start.tv-discovery-stage {
   background: var(--tv-grammar-discovery-surface);
   color: var(--tv-grammar-discovery-ink);
-  padding-block: var(--tv-rhythm-section);
 }
+
 .def-start__title {
   color: var(--tv-ink-inverted-primary);
 }
+
 .def-start__tabs.tv-discovery-stage__switch {
   background: color-mix(in srgb, var(--tv-ink-inverted-primary) 6%, var(--tv-surface-inverted));
   border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
 }
+
 .def-start__tab {
   color: var(--tv-ink-inverted-secondary);
 }
+
 .def-start__tab.is-active {
   color: var(--tv-ink-inverted-primary);
   background: var(--tv-grammar-selected-wash);
 }
 
-/* TOOL frame already ivory — restore brass rail + oversized ranks */
-.tv-discovery-stage[data-mode="tool"] .tv-discovery-stage__frame {
-  box-shadow: inset 3px 0 0 var(--tv-grammar-editorial-rail);
-}
-.def-editorial__pod-stage::before {
-  display: block;
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 1px;
-  background: var(--tv-grammar-editorial-rail);
-  pointer-events: none;
-}
-.def-editorial__pod-rank {
-  font-size: clamp(2.4rem, 6vw, 4.25rem);
-  line-height: 0.8;
-  letter-spacing: -0.06em;
-  color: var(--tv-grammar-editorial-brass);
-  font-family: var(--tv-font-data);
-}
-.def-editorial__spot-eyebrow {
-  letter-spacing: 0.16em;
+.tv-home-radar.tv-home-radar--snapshot {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
 }
 
-/* STACK / WORKFLOW — indigo field */
-.tv-discovery-stage[data-mode="stack"] .tv-discovery-stage__frame {
-  background: var(--tv-grammar-workflow-field);
-  border-color: var(--tv-grammar-workflow-border);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tv-grammar-workflow-accent) 28%, transparent);
+.tv-home-radar.tv-home-radar--snapshot .tv-radar-instrument {
+  border-color: var(--tv-grammar-signal-border);
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--tv-grammar-signal-accent) 10%, transparent), transparent 58%),
+    var(--tv-grammar-radar-canvas);
 }
-.tv-workflow-card__flow {
+
+.tv-workflow-card__flow li {
   position: relative;
 }
+
 .tv-workflow-card__flow li:not(:last-child)::after {
   content: "";
   position: absolute;
@@ -224,83 +156,13 @@
   opacity: 0.7;
 }
 
-/* RADAR HOME — midnight signal, not generic charcoal */
-.tv-discovery-stage[data-mode="radar"] .tv-discovery-stage__frame {
-  background:
-    radial-gradient(circle at 80% 12%, color-mix(in srgb, var(--tv-grammar-signal-accent) 16%, transparent), transparent 42%),
-    var(--tv-grammar-radar-canvas);
-  border-color: var(--tv-grammar-signal-border);
-  color: var(--tv-grammar-signal-ink);
-}
-.tv-home-radar.tv-home-radar--snapshot {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  padding: 0;
-}
-.tv-home-radar.tv-home-radar--snapshot .tv-radar-instrument {
-  border-color: var(--tv-grammar-signal-border);
-  background:
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--tv-grammar-signal-accent) 10%, transparent), transparent 58%),
-    var(--tv-grammar-radar-canvas);
-}
-
-/* METHOD / LIFECYCLE — workflow color moment */
-.def-method {
-  background:
-    radial-gradient(ellipse at 0% 50%, color-mix(in srgb, var(--tv-color-violet-400) 16%, transparent), transparent 46%),
-    var(--tv-grammar-workflow-field);
-  border-bottom: 0;
-  color: var(--tv-ink-primary);
-  padding-block: var(--tv-rhythm-section);
-}
-.def-method__title,
-.def-method__lede {
-  color: var(--tv-ink-primary);
-}
-.tv-decision-track__rail {
-  position: relative;
-}
-.tv-decision-track__rail::before {
-  content: "";
-  position: absolute;
-  left: 0.7rem;
-  right: 0.7rem;
-  top: 0.7rem;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--tv-grammar-workflow-accent),
-    var(--tv-accent-brand),
-    var(--tv-grammar-activation)
-  );
-  opacity: 0.55;
-  pointer-events: none;
-}
-.tv-decision-track__dot {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-grammar-workflow-field) 88%, transparent);
-}
-
-/* PARTNER — commercial field, not page charcoal */
-.def-home__sponsor,
-.def-home__sponsor.tv-partner-signal {
-  background: var(--tv-grammar-commercial-field);
-  padding-block: var(--tv-rhythm-section);
-}
-/* Final micro-polish: keep the Collections -> Partner handoff intentional on
-   desktop instead of a second full section padding stacked on top. */
-@media (min-width: 768px) {
-  .def-home__sponsor,
-  .def-home__sponsor.tv-partner-signal {
-    padding-top: clamp(2.5rem, 4vw, 3.5rem);
+@media (max-width: 767px) {
+  .def-intent__chips a,
+  .def-intent__more {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
-}
-.tv-partner-signal__shell {
-  background: var(--tv-grammar-commercial-shell);
-  box-shadow: inset 0 0 0 1px var(--tv-grammar-commercial-border);
-}
-.def-home__sponsor-opportunity .partner-placement__opportunity {
-  color: var(--tv-ink-primary);
 }
 
 /* ============================================================
@@ -332,9 +194,6 @@
 }
 
 .tv-launchpad__title {
-  font-family: var(--tv-font-family-display);
-  font-size: clamp(2rem, 4.4vw, 3.4rem);
-  line-height: 0.95;
   color: var(--tv-ink-inverted-primary);
 }
 .tv-launchpad__tile {
@@ -390,13 +249,7 @@
   color: var(--tv-ink-inverted-primary);
 }
 .tv-launchpad__signature {
-  margin: 0;
-  font-family: var(--tv-font-family-display);
-  font-size: clamp(3.2rem, 12vw, 8.5rem);
-  line-height: 0.78;
-  letter-spacing: -0.06em;
-  color: color-mix(in srgb, var(--tv-accent-brand) 18%, var(--tv-ink-inverted-primary));
-  pointer-events: none;
+  display: none;
 }
 
 .tv-utility__brand,
@@ -439,27 +292,21 @@
 /* ============================================================
    FAMILY ROUTES — canvases only, no IA change
    ============================================================ */
-.ar4-shell {
-  background:
-    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--tv-surface-inverted) 8%, transparent), transparent 36%),
-    var(--tv-bg-base);
-}
-.cx-index {
-  background: var(--tv-grammar-workflow-field);
-}
-.tv-radar-page {
-  background: var(--tv-grammar-radar-canvas);
-}
-.shortlist-final-surface {
-  background:
-    radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--tv-grammar-personal-accent) 10%, transparent), transparent 40%),
-    var(--tv-bg-base);
+.ar4-shell,
+.cx-index,
+.tv-radar-page,
+.shortlist-final-surface,
+.archive-final-surface,
+.mobile-collections,
+.tool-battle-page,
+.td-final-page,
+.v-auth-page {
+  background: transparent;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .def-cockpit::before {
-    display: none;
-  }
+.tv-home-radar--snapshot .tv-radar-instrument,
+.tv-radar-instrument {
+  background: var(--tv-grammar-radar-canvas);
 }
 
 /* Skip-link must never inherit footer/link color rules if it is in-flow. */
@@ -470,17 +317,9 @@
   clip-path: inset(50%);
 }
 
-/* 5. Hero ghost wordmark — intentional mobile crop */
 @media (max-width: 47.99rem) {
   .def-cockpit {
     overflow: hidden;
-  }
-  .def-cockpit::before {
-    right: -0.38em;
-    top: -0.06em;
-    font-size: 6.5rem;
-    letter-spacing: -0.1em;
-    color: color-mix(in srgb, var(--tv-accent-brand) 5%, transparent);
   }
   .def-cockpit__bg .tv-brand-cartograph {
     opacity: 0.18;
@@ -493,18 +332,6 @@
   .site-footer-v2.tv-launchpad .tv-launchpad__shell {
     position: relative;
     overflow: hidden;
-  }
-  .tv-launchpad__signature {
-    position: absolute;
-    right: -0.08em;
-    bottom: calc(var(--tv-bottom-nav-total, 4.0625rem) + 0.15rem);
-    z-index: 0;
-    font-size: 5.1rem;
-    line-height: 0.68;
-    letter-spacing: -0.08em;
-    color: color-mix(in srgb, var(--tv-accent-brand) 22%, var(--tv-ink-inverted-primary));
-    opacity: 0.2;
-    pointer-events: none;
   }
   .tv-launchpad__brand,
   .tv-launchpad__title,
@@ -551,12 +378,8 @@
 }
 
 /* 6. Editorial ranking hierarchy */
-.def-editorial__pod-card--rank-1 .def-editorial__pod-rank {
-  font-size: clamp(2.8rem, 7vw, 4.6rem);
-}
 .def-editorial__pod-card--rank-2 .def-editorial__pod-rank,
 .def-editorial__pod-card--rank-3 .def-editorial__pod-rank {
-  font-size: clamp(1.7rem, 4.4vw, 2.6rem);
   color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 72%, var(--tv-ink-primary));
 }
 .def-editorial__pod-card--rank-2 {
@@ -627,4 +450,17 @@
 
 .ar4-mobile-bar__sort-select {
   min-height: var(--tv-button-min-height-touch);
+}
+
+/* Paper ink for route mastheads sitting on the public habitat. */
+.tv-radar__eyebrow,
+.tv-radar-index__header p,
+.cx-index__meta,
+.cx-index__lede-block p,
+.cx-index__section-title p,
+.mobile-collections__header p,
+.tool-battle-page__lede,
+.tool-battle-page__eyebrow,
+.tool-battle-page__steps {
+  color: var(--tv-ink-inverted-secondary);
 }

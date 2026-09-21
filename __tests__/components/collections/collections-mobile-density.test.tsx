@@ -41,9 +41,9 @@ describe("collections mobile density — index", () => {
       </AccountPreviewProvider>,
     );
 
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/percorso/i);
-    expect(container.querySelector(".cx-index__lede-lead")?.textContent).toMatch(/stack operativi/i);
-    expect(container.querySelector(".cx-index__lede-extra")?.textContent).toMatch(/Non un elenco/i);
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/Raccolta/i);
+    expect(container.querySelector(".cx-index__lede-lead")?.textContent).toMatch(/uno stack/i);
+    expect(container.querySelector(".cx-index__lede-extra")?.textContent).toMatch(/Catalogo/i);
     expect(screen.getByLabelText("A colpo d'occhio")).toBeTruthy();
 
     const how = screen.getByText("Come funzionano le Raccolte?").closest("details");

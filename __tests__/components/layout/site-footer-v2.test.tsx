@@ -202,7 +202,7 @@ describe("SiteFooterV2 — Home launchpad", () => {
       </AdvertisingConsentProvider>,
     );
 
-    expect(screen.getByRole("heading", { name: "Dove vuoi andare adesso?" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Continua da qui." })).toBeTruthy();
     expect(screen.getAllByRole("link", { name: "Catalogo" })[0].getAttribute("href")).toBe("/archivio");
     expect(screen.getAllByRole("link", { name: "Radar" })[0].getAttribute("href")).toBe("/radar");
     expect(screen.getAllByRole("link", { name: "Raccolte" })[0].getAttribute("href")).toBe("/collections");

@@ -65,7 +65,7 @@ function Cockpit({
               scelta.
             </span>
             <span className="def-cockpit__lede-mobile">
-              Trova e confronta il software giusto per quello che devi fare.
+              Confronta alternative e tieni il motivo di ogni scelta.
             </span>
           </p>
           {toolCount > 0 ? <IntentEntry /> : null}
@@ -73,13 +73,13 @@ function Cockpit({
             <div className="def-cockpit__system-node">
               <dd className="def-cockpit__system-value">{toolCount}</dd>
               <dt className="def-cockpit__system-label">
-                <Link href="/archivio">Tool in catalogo</Link>
+                <Link href="/archivio">Catalogo</Link>
               </dt>
             </div>
             <div className="def-cockpit__system-node">
               <dd className="def-cockpit__system-value">{stackCount}</dd>
               <dt className="def-cockpit__system-label">
-                <Link href="/collections">Raccolte curate</Link>
+                <Link href="/collections">Raccolte</Link>
               </dt>
             </div>
             <div className="def-cockpit__system-node def-cockpit__system-node--live">
@@ -88,7 +88,7 @@ function Cockpit({
                 Live
               </dd>
               <dt className="def-cockpit__system-label">
-                <Link href="/radar">Segnali Radar</Link>
+                <Link href="/radar">Radar</Link>
               </dt>
             </div>
           </dl>
@@ -106,10 +106,10 @@ function Method() {
     <section className="def-method" aria-labelledby="def-method-title">
       <header className="def-method__head">
         <h2 id="def-method-title" className="def-method__title">
-          Dal primo confronto a una scelta motivata.
+          Cinque tappe. Una decisione che tieni.
         </h2>
         <p className="def-method__lede">
-          Cinque tappe. Una sola attiva.{" "}
+          Quella giusta per dove sei adesso.{" "}
           <Link href="/metodo">Come valutiamo</Link>
         </p>
       </header>

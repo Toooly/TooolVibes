@@ -155,7 +155,7 @@ function LaunchpadMap() {
     <section className="tv-launchpad__shell" aria-labelledby="tv-launchpad-title">
       <div>
         <p className="tv-launchpad__signature" aria-hidden="true">TOOOLVIBES</p>
-        <h2 id="tv-launchpad-title" className="tv-launchpad__title">Dove vuoi andare adesso?</h2>
+        <h2 id="tv-launchpad-title" className="tv-launchpad__title">Continua da qui.</h2>
 
         <nav className="tv-launchpad__map" aria-label="Mappa del prodotto">
           <p className="tv-launchpad__map-caption" aria-hidden="true">

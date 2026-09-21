@@ -75,7 +75,7 @@ export function IntentEntry() {
           Cosa vuoi fare?
         </label>
         <p className="def-intent__hint" id="home-intent-hint">
-          Filtra il catalogo per obiettivo, nome o categoria. Non interpreta frasi libere.
+          Cerca per obiettivo, nome o categoria.
         </p>
         <div
           ref={fieldRef}

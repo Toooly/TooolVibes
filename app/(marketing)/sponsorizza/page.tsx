@@ -35,7 +35,7 @@ export const metadata: Metadata = createPublicPageMetadata({
     "Porta il tuo tool davanti a founder, product manager e professionisti che stanno attivamente confrontando tool su TooolVibes. Partner Experience: Spotlight, Catalog Insert, Contextual Experience e Collection Partner.",
   path: "/sponsorizza",
   openGraphDescription:
-    "TooolVibes Partner Experience: racconti di prodotto contestuali, indipendenza editoriale garantita, audience in decision mode.",
+    "TooolVibes Partner Experience: racconti di prodotto contestuali, indipendenza editoriale, davanti a chi sta già decidendo.",
 });
 
 const SPONSOR_EMAIL =

@@ -179,7 +179,7 @@ describe("RadarExperience", () => {
     // viene presentato come live.
     expect(await screen.findByText("QA FIXTURE")).toBeTruthy();
     expect(
-      screen.getByText("Segnali organizzati per periodo. Nessun dato simulato."),
+      screen.getByText("Lanci ordinati per periodo. Mappa o elenco."),
     ).toBeTruthy();
     expect(screen.queryByText("LIVE")).toBeNull();
     expect(screen.queryByText("Dati aggiornati")).toBeNull();
@@ -299,7 +299,7 @@ describe("RadarExperience", () => {
 
     const visual = container.querySelector(".tv-radar__eyebrow-visual");
     expect(visual?.getAttribute("aria-hidden")).toBe("true");
-    expect(visual?.textContent).toContain("Segnali da Product Hunt");
+    expect(visual?.textContent).toContain("Fonte Product Hunt");
     expect(visual?.textContent).toContain("Product Hunt · dati reali");
     expect(container.querySelector(".tv-radar__eyebrow-desktop")).toBeNull();
     expect(container.querySelector(".tv-radar__eyebrow-mobile")).toBeNull();
@@ -334,7 +334,7 @@ describe("RadarExperience", () => {
     expect(visual?.getAttribute("aria-hidden")).toBe("true");
 
     const srOnly = container.querySelector(".tv-radar__eyebrow .sr-only");
-    expect(srOnly?.textContent).toContain("Segnali da Product Hunt");
+    expect(srOnly?.textContent).toContain("Fonte Product Hunt");
     expect(srOnly?.getAttribute("aria-hidden")).not.toBe("true");
 
     const eyebrowParagraph = container.querySelector(".tv-radar__eyebrow");
@@ -344,7 +344,7 @@ describe("RadarExperience", () => {
       .filter((el) => el.getAttribute("aria-hidden") !== "true")
       .map((el) => el.textContent ?? "")
       .join(" ");
-    const canonicalMatches = (ariaVisibleText.match(/Segnali da Product Hunt/g) ?? []).length;
+    const canonicalMatches = (ariaVisibleText.match(/Fonte Product Hunt/g) ?? []).length;
     expect(canonicalMatches).toBe(1);
   });
 });

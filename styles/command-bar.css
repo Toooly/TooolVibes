@@ -14,6 +14,7 @@
 
 .command-bar {
   background: linear-gradient(180deg, color-mix(in srgb, var(--tv-color-violet-900) 14%, var(--tv-bg-base)) 0%, var(--tv-bg-base) 100%);
+  color: var(--tv-ink-primary);
   border-bottom: 1px solid color-mix(in srgb, var(--tv-accent-brand) 22%, transparent);
   position: sticky;
   top: 0;

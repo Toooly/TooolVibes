@@ -19,10 +19,10 @@ import "@/styles/archive-v4.css";
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Catalogo di tool AI, SaaS e no-code",
   description:
-    "Esplora il catalogo TooolVibes: cerca e filtra tool AI, SaaS e no-code, salva i candidati e confronta le alternative per il tuo stack.",
+    "Cerca e filtra tool AI, SaaS e no-code, salva i candidati e confronta le alternative per il tuo stack.",
   path: "/archivio",
   openGraphDescription:
-    "Cerca, filtra e confronta tool AI, SaaS e no-code. Riduci le alternative e trova i candidati giusti per il tuo stack.",
+    "Cerca, filtra e confronta tool AI, SaaS e no-code. Riduci le alternative e trova i candidati da valutare.",
 });
 
 type ArchiveSearchParams = {

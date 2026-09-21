@@ -69,7 +69,8 @@ describe("V3 signal color law", () => {
     const ranks = extractBlock(radarCss, ".tv-radar-index__rank,\n.tv-radar-table__rank {");
     expect(ranks).toContain("var(--tv-grammar-signal-accent)");
     expect(ranks).not.toContain("var(--tv-accent-brand)");
-    expect(extractBlock(radarCss, ".tv-radar-page {")).toContain(
+    expect(extractBlock(radarCss, ".tv-radar-page {")).toContain("transparent");
+    expect(extractBlock(radarCss, ".tv-radar-instrument {")).toContain(
       "var(--tv-grammar-signal-surface)",
     );
   });

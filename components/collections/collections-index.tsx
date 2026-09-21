@@ -70,24 +70,22 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           <div>
             <span className="cx-index__eyebrow">
               <span className="cx-index__eyebrow-dot" aria-hidden="true" />
-              Percorsi
+              Raccolte
             </span>
             <h1 className="cx-index__title">
-              Scegli il <em>percorso</em>, non un altro elenco di tool.
+              Scegli una <em>Raccolta</em>. Lo stack è già deciso.
             </h1>
           </div>
           <div>
             <p className="cx-index__lede">
               <span className="cx-index__lede-lead">
-                Le <strong>raccolte TooolVibes</strong> sono stack operativi: tool,
-                ruoli e ordine di lavoro già decisi per un risultato preciso.
+                Ogni <strong>Raccolta</strong> è uno stack: tool, ruoli e ordine di
+                lavoro per un risultato preciso.
               </span>
               <span className="cx-index__lede-extra">
                 {" "}
-                Non un elenco di preferiti. Non una lista della spesa.
-                {" "}
-                Se cerchi un singolo tool, vai su <Link href="/archivio">Catalogo</Link>.
-                Se vuoi studiarne uno in profondità, le <Link href="/posts">Guide</Link>.
+                Se cerchi un singolo tool, vai al <Link href="/archivio">Catalogo</Link>.
+                Se vuoi approfondire, apri le <Link href="/posts">Guide</Link>.
               </span>
             </p>
             <div className="cx-index__meta" aria-label="A colpo d'occhio">

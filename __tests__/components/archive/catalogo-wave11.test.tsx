@@ -97,7 +97,7 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
   it("W11-T20 radar page title is not Segnale", () => {
     const page = readSource("app/(marketing)/radar/page.tsx");
     expect(page).not.toMatch(/title:\s*"Segnale"/);
-    expect(page).toContain('title: "Radar Product Hunt"');
+    expect(page).toContain('title: "Radar: lanci da seguire"');
     const experience = readSource("components/radar/radar-experience.tsx");
     expect(experience).toContain("CatalogoFacetHead");
     expect(experience).not.toMatch(/<h1[^>]*>\s*Segnale/);

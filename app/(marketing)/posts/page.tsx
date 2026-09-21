@@ -20,7 +20,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 export const metadata = createPublicPageMetadata({
   title: "Guide per decidere i tool",
   description:
-    "Guide editoriali verticali su tool AI, SaaS, produttività e business. Scritte per chi deve decidere, non per riempire una SERP.",
+    "Guide editoriali su tool AI, SaaS e flussi di lavoro. Scritte per chi deve scegliere.",
   path: "/posts",
 });
 

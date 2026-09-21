@@ -39,7 +39,7 @@ export const DISCOVERY_INTENTS: readonly DiscoveryIntent[] = [
   },
   {
     id: "automate",
-    label: "Automatizzare un workflow",
+    label: "Automatizzare un flusso",
     shortLabel: "Automazioni",
     group: "automation",
     href: catalogHref({ group: "automation" }),

@@ -7,10 +7,11 @@
  */
 
 .tv-radar-page {
-  /* Header is sticky in-flow; shell already fills 100svh. */
+  /* Header is sticky in-flow; paper is the marketing-shell habitat.
+     The instrument keeps --tv-grammar-signal-surface. */
   min-height: 100%;
-  background: var(--tv-grammar-signal-surface);
-  color: var(--tv-grammar-signal-ink);
+  background: transparent;
+  color: var(--tv-ink-inverted-primary);
 }
 
 .tv-radar {
@@ -1251,7 +1252,7 @@ h1.tv-radar__title,
   letter-spacing: var(--tv-tracking-tight);
   text-transform: none;
   margin: 0;
-  color: var(--tv-ink-primary);
+  color: var(--tv-ink-inverted-primary);
   font-size: var(--tv-text-h1);
   max-width: 24ch;
   overflow-wrap: anywhere;
@@ -1269,12 +1270,12 @@ h1.tv-radar__title,
 .tv-radar__provenance {
   margin: var(--tv-space-component-md) 0 0;
   max-width: 38rem;
-  color: var(--tv-ink-muted-aa);
+  color: var(--tv-ink-inverted-muted);
   font-size: var(--tv-text-body-sm);
   line-height: var(--tv-leading-relaxed);
 }
 .tv-radar__provenance > span {
-  color: var(--tv-ink-secondary);
+  color: var(--tv-ink-inverted-secondary);
   font-weight: var(--tv-weight-semibold);
 }
 

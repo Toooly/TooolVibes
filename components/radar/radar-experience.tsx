@@ -506,10 +506,10 @@ export function RadarExperience({
           <div className="tv-radar__header-copy">
             <p className="tv-radar__eyebrow">
               <span className="tv-radar__eyebrow-visual" aria-hidden="true">
-                <span className="tv-radar__eyebrow-lead">Segnali da </span>Product Hunt · dati reali
+                <span className="tv-radar__eyebrow-lead">Fonte </span>Product Hunt · dati reali
               </span>
               <span className="sr-only">
-                Segnali da Product Hunt · dati reali
+                Fonte Product Hunt · dati reali
               </span>
             </p>
             <h1 id="tv-radar-title" className="tv-radar__title">
@@ -517,7 +517,7 @@ export function RadarExperience({
             </h1>
             <CatalogoFacetHead active="radar" />
             <p className="tv-radar__lede">
-              Segnali organizzati per periodo. Nessun dato simulato.
+              Lanci ordinati per periodo. Mappa o elenco.
             </p>
           </div>
         </header>

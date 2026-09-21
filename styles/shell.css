@@ -1,7 +1,7 @@
 /*
  * Canonical public shell owner.
- * This file is loaded after legacy route styles so the shared chrome has one
- * stable, dark-first contract across every public page.
+ * Public habitat is one ivory paper. Dark lives on objects (chrome, cards,
+ * instruments), not as competing page rooms.
  */
 @import "./brand-primitives.css";
 
@@ -10,8 +10,11 @@
   display: flex;
   flex-direction: column;
   min-height: 100svh;
-  background: var(--tv-bg-base) !important;
-  color: var(--tv-ink-primary);
+  background:
+    radial-gradient(ellipse at 8% -12%, color-mix(in srgb, var(--tv-accent-gold) 9%, transparent) 0%, transparent 44%),
+    radial-gradient(ellipse at 96% 108%, color-mix(in srgb, var(--tv-accent-brand) 8%, transparent) 0%, transparent 52%),
+    var(--tv-grammar-discovery-surface) !important;
+  color: var(--tv-ink-inverted-primary);
   font-family: var(--tv-font-family-ui);
 }
 
@@ -458,10 +461,9 @@
 }
 
 /* Canonical public-shell contract: opaque, editorial and interaction-honest. */
-.marketing-shell,
 .marketing-shell > main {
-  background: var(--tv-bg-base);
-  color: var(--tv-ink-primary);
+  background: transparent;
+  color: inherit;
 }
 
 .marketing-shell :where(a, button, [role="link"], [role="button"]):focus-visible {
@@ -656,6 +658,7 @@
   margin: 0;
   font-family: var(--tv-type-ui);
   font-size: var(--tv-type-h2);
+  font-weight: 700;
   line-height: var(--tv-type-leading-heading);
 }
 
@@ -1122,10 +1125,14 @@
   .site-footer-v2.tv-utility .tv-utility__disclosure { grid-area: disclosure; }
 }
 
-/* Launchpad footer rides the home flagship axis (frame edge). */
+.tv-launchpad__shell > div {
+  width: min(100%, var(--tv-container-uw));
+  margin-inline: auto;
+}
+
 @media (min-width: 1280px) {
   .site-footer-v2.tv-launchpad .tv-launchpad__shell {
-    padding-inline: 0;
+    padding-inline: var(--tv-gutter-desktop);
   }
 }
 

@@ -5,19 +5,16 @@ import { radarDesktopVisual } from "@/lib/radar/radar-view-config";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 /**
- * SEO Radar V2 (2026-08-03).
- *
- * Source title "Radar Product Hunt" — il layout globale applica il
- * template `%s | TooolVibes` quindi il title finale sarà
- * "Radar Product Hunt | TooolVibes" senza duplicare il brand.
+ * SEO Radar. Title is the product noun + job, not the source brand.
+ * Root layout applies `%s | TooolVibes`.
  */
 export const metadata: Metadata = createPublicPageMetadata({
-  title: "Radar Product Hunt",
+  title: "Radar: lanci da seguire",
   description:
-    "Segui i lanci di Product Hunt, organizzati per periodo. Consulta la mappa o l'elenco e individua i segnali da approfondire.",
+    "Lanci reali, ordinati per periodo. Consulta la mappa o l'elenco e individua i segnali da approfondire.",
   path: "/radar",
   openGraphDescription:
-    "Lanci reali organizzati per periodo, con mappa, elenco e collegamento alla fonte. Nessun dato simulato.",
+    "Lanci reali organizzati per periodo, con mappa, elenco e collegamento alla fonte.",
 });
 
 export default function RadarPage() {

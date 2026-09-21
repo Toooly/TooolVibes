@@ -53,7 +53,7 @@ const TRACK_STEPS = [
     index: "04",
     label: "Decidi",
     title: "Scegli con un motivo",
-    copy: "Una decisione è: questo tool, invece di quelli, perché. La shortlist resta il tavolo di lavoro, non il verdetto.",
+    copy: "Una decisione è: questo tool, invece di quelli, perché. I Salvati restano il tavolo di lavoro, non il verdetto.",
     href: "/compare",
     cta: "Apri il confronto",
   },
@@ -88,7 +88,7 @@ const PRINCIPLES = [
   },
   {
     title: "Criteri, non metriche",
-    copy: "Il nostro verdotto nasce da criteri editoriali, non da punteggi sintetici: il numero non sostituisce il motivo.",
+    copy: "Il nostro verdetto nasce da criteri editoriali, non da punteggi sintetici: il numero non sostituisce il motivo.",
     icon: <Gauge className="size-4" aria-hidden="true" />,
     bullets: [
       "Giudizi editoriali indipendenti.",

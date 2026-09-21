@@ -22,7 +22,7 @@
 .tool-battle-page {
   min-height: 0;
   padding-top: clamp(var(--tv-space-5), 3vw, var(--tv-space-8));
-  background: color-mix(in srgb, var(--tv-bg-base) 96%, black);
+  background: transparent;
 }
 
 .tool-battle-page__intro {
@@ -46,7 +46,7 @@
 .tool-battle-page .tool-battle-page__intro h1 {
   max-inline-size: 22ch;
   margin: 0;
-  color: var(--tv-grammar-personal-ink);
+  color: var(--tv-ink-inverted-primary);
   font-family: var(--tv-font-ui);
   font-size: var(--tv-text-h1);
   font-weight: var(--tv-weight-bold);

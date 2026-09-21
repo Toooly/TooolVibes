@@ -11,7 +11,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Tag e categorie del catalogo",
-  description: "Esplora i tool TooolVibes per tag, categoria e scenario d'uso.",
+  description: "Esplora i tool TooolVibes per tag, categoria e caso d'uso.",
   path: "/tags",
 });
 

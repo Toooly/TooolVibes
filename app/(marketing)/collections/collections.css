@@ -29,8 +29,8 @@
   margin-inline: auto;
   overflow: visible;
   padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3rem) 7rem;
-  background: var(--tv-bg-base);
-  color: var(--tv-ink-primary);
+  background: transparent;
+  color: var(--tv-ink-inverted-primary);
 }
 
 .mobile-collections__header {
@@ -64,7 +64,7 @@
   grid-area: title;
   max-width: none;
   margin: 0.55rem 0 0;
-  color: var(--tv-ink-primary);
+  color: var(--tv-ink-inverted-primary);
   font-family: var(--tv-font-family-display);
   font-weight: var(--tv-weight-regular);
   font-size: clamp(3.2rem, 4.2vw, 4rem);
@@ -551,14 +551,14 @@
   /* Local re-aliases for active index rules (legacy V1/V2/V3 styles
      still inherit these from `.cx-root` below). Converging on
      semantic tokens where the variable was purely a re-alias. */
-  --cx-border: var(--tv-border-subtle);
+  --cx-border: var(--tv-border-inverted-default);
   --cx-card-radius: var(--tv-radius-modal);
-  --cx-soft-2: rgba(255, 255, 255, 0.07);
+  --cx-soft-2: color-mix(in srgb, var(--tv-ink-inverted-primary) 7%, transparent);
 
   position: relative;
   width: 100%;
-  background: var(--tv-grammar-workflow-field);
-  color: var(--tv-ink-primary);
+  background: transparent;
+  color: var(--tv-ink-inverted-primary);
   padding: clamp(2.5rem, 4.4vw, 4.5rem) var(--tv-gutter-desktop) 6rem;
 }
 
@@ -604,15 +604,14 @@
   font-size: var(--tv-text-h1);
   line-height: var(--tv-leading-display);
   letter-spacing: -0.01em;
-  color: var(--tv-ink-primary);
+  color: var(--tv-ink-inverted-primary);
   max-width: 18ch;
   margin: 0;
 }
 
 .cx-index__title em {
   font-style: normal;
-  /* Index title sits on dark base — use on-dark accent */
-  color: var(--tv-accent-violet-on-dark);
+  color: var(--tv-accent-violet-on-ivory);
   background: linear-gradient(180deg, color-mix(in srgb, var(--tv-grammar-workflow-accent) 16%, transparent), transparent);
   padding: 0 0.1em;
   border-radius: 0.18rem;
@@ -621,13 +620,13 @@
 .cx-index__lede {
   font-size: 0.98rem;
   line-height: 1.62;
-  color: var(--tv-ink-secondary);
+  color: var(--tv-ink-inverted-secondary);
   max-width: 32rem;
   margin: 0;
 }
 
 .cx-index__lede strong {
-  color: var(--tv-ink-primary);
+  color: var(--tv-ink-inverted-primary);
   font-weight: 600;
 }
 

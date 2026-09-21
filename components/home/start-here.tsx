@@ -332,7 +332,7 @@ function EditorialDeck({ tools }: { tools: ToolPublicView[] }) {
         <p className="def-editorial__pod-eyebrow">{isPodium ? "Valutazioni editoriali" : "Dal catalogo"}</p>
         <p className="def-editorial__pod-subtitle">
           {isPodium
-            ? "Copertina editoriale, non una classifica di mercato."
+            ? "Tre schede lette dalla redazione."
             : "Tre tool da esplorare."}
         </p>
       </div>
@@ -490,7 +490,7 @@ function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
   return (
     <div className="def-stacks tv-stack-mode">
       <p className="def-stacks__lede">
-        Workflow operativi: sequenza, esito, tempo e costo.
+        Stack già montati: ordine, esito, tempo e costo.
       </p>
       {stacks.length > 0 ? (
         <div

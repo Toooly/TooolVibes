@@ -392,7 +392,7 @@ function MobileLibraryHero({
           <p>
             {totalCount > 0
               ? `${totalCount} candidati. Salvare non è decidere.`
-              : "La shortlist è il tavolo di lavoro. La decisione è il motivo della scelta."}
+              : "I Salvati sono il tavolo di lavoro. La decisione è il motivo della scelta."}
           </p>
         </div>
       </div>
@@ -690,7 +690,7 @@ function MobileNoteSheet({
             </div>
 
             <div className="mt-4">
-              <p className="editorial-label">Stato nella shortlist</p>
+              <p className="editorial-label">Stato nei Salvati</p>
               <div className="mt-3">
                 <ShortlistStageToggle slug={slug} />
               </div>
@@ -901,9 +901,9 @@ function MobileLibraryEmpty({
       <div className="mobile-library-empty__content">
         <span className="mobile-library-empty__kicker">Salvati</span>
         <h1 id="mobile-library-empty-title">
-          Salva i tool che stai considerando.
+          Niente di salvato, ancora.
         </h1>
-        <p>La shortlist è un tavolo di lavoro, non una decisione.</p>
+        <p>Salva i candidati. La decisione arriva dopo, con un motivo.</p>
       </div>
       {starterTools.length > 0 ? (
         <div

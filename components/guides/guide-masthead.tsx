@@ -23,12 +23,10 @@ export function GuideMasthead({
       <div className="guides-masthead__lede">
         <p className="guides-kicker">Sezione Guide · TooolVibes</p>
         <h1 id="guides-masthead-title" className="guides-masthead__title">
-          Guide scritte per <em>decidere</em>, non per riempire una SERP.
+          Guide scritte per <em>decidere</em>.
         </h1>
         <p className="guides-masthead__dek">
-          Letture lunghe, verticali, riscritte da zero per chi deve scegliere
-          un tool o impostare un flusso. Ogni guida ha una tesi, una struttura
-          e un parere — non una lista di funzioni.
+          Letture lunghe su un tool o un flusso. Tesi, struttura, parere.
         </p>
 
         <div className="guides-masthead__meta" aria-label="Cosa contiene la sezione">

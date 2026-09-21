@@ -157,12 +157,12 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Salva i tool che stai considerando.",
+        name: "Niente di salvato, ancora.",
       }),
     ).toBeTruthy();
     expect(
       screen.getByRole("region", {
-        name: "Salva i tool che stai considerando.",
+        name: "Niente di salvato, ancora.",
       }),
     ).toBeTruthy();
     expect(screen.getByRole("link", { name: /Esplora catalogo/i })).toBeTruthy();
