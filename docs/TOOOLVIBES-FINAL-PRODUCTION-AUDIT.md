@@ -1,9 +1,9 @@
 # TooolVibes final production audit
 
 Date: 21 September 2026  
-Branch: `main` (uncommitted work landed in the commits that follow this file)  
+Branch: `main`  
 HEAD at start of pass: `ea42458` (`fix(ui): one public layer without stacked footers`)  
-Final commit SHA: _filled after git commit_
+Final commit SHA: `42634fa67aa10dad06870e80f40ec15bfb95ed91`
 
 This is a consolidation pass, not a redesign. Identity preserved. System fixed.
 
@@ -258,7 +258,7 @@ Do **not** call OAuth “production ready”. Magic-link + guest merge + public 
 
 ## X. Exact final commit SHA
 
-_Filled in the follow-up docs commit after `git rev-parse HEAD`._
+`42634fa67aa10dad06870e80f40ec15bfb95ed91`
 
 ## Y. Exact manual external actions required
 
