@@ -119,4 +119,4 @@ Local only: `artifacts/visual-system-2026-09-22/`. Not committed.
 
 ## N. Final commit SHA
 
-Filled after the visual-system commit.
+`28a6a195a118b5976d2c13d9f0a766ceb7dffccc`
