@@ -72,7 +72,7 @@
    ============================================================ */
 .archive-final-surface {
   background: transparent;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 
 .ar4-shell {
@@ -103,8 +103,8 @@
    2. COMPACT INTRO (dark Command Center)
    ============================================================ */
 .ar4-intro {
-  background: var(--tv-surface-inverted);
-  color: var(--tv-ink-inverted-primary);
+  background: transparent;
+  color: var(--tv-ink-primary);
   position: relative;
   overflow: hidden;
 }
@@ -161,7 +161,7 @@
   line-height: var(--tv-leading-display);
   letter-spacing: var(--tv-tracking-tight);
   text-transform: none;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   margin: 0 0 10px;
 }
 
@@ -173,7 +173,7 @@
   font-size: clamp(1rem, 1.3vw, 1.125rem);
   font-weight: 450;
   line-height: 1.55;
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 520px;
 }

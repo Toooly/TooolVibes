@@ -29,21 +29,19 @@
 }
 
 /* ============================================================
-   HOME — one family
-   Ivory discovery paper. Accents only: brass editorial, violet
-   decision, yellow action, cyan live. Radar canvas is the
-   instrument, not a chapter. Method graphite lives in
-   definitive-home.css.
+   HOME — same night as the public habitat.
+   Ivory is ink. Discovery-surface stays a token, not a page fill.
    ============================================================ */
 
 .def-home {
   background: transparent;
+  --tv-public-paper: var(--tv-grammar-discovery-surface);
 }
 
 .def-cockpit {
   background: transparent;
   border-bottom: 0;
-  color: var(--tv-grammar-discovery-ink);
+  color: var(--tv-ink-primary);
 }
 
 .def-cockpit__bg {
@@ -59,19 +57,19 @@
 .def-cockpit__inner { z-index: 1; }
 
 .def-cockpit__title {
-  color: var(--tv-home-ivory-fg);
+  color: var(--tv-ink-primary);
 }
 
 .def-cockpit__lede,
 .def-cockpit__lede-desktop,
 .def-cockpit__lede-mobile {
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
 }
 
 .def-cockpit__eyebrow {
-  color: var(--tv-ink-inverted-muted);
-  background: color-mix(in srgb, var(--tv-surface-inverted-raised) 80%, transparent);
-  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 14%, transparent);
+  color: var(--tv-ink-secondary);
+  background: color-mix(in srgb, var(--tv-surface-raised) 80%, transparent);
+  border-color: color-mix(in srgb, var(--tv-ink-primary) 14%, transparent);
 }
 
 .def-cockpit__eyebrow-dot {
@@ -81,14 +79,14 @@
 
 .def-intent__label,
 .def-intent__hint {
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-muted-aa);
 }
 
 .def-intent__chips a,
 .def-intent__more {
-  color: var(--tv-ink-inverted-primary);
-  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 16%, transparent);
-  background: color-mix(in srgb, var(--tv-surface-inverted-raised) 70%, transparent);
+  color: var(--tv-ink-primary);
+  border-color: color-mix(in srgb, var(--tv-ink-primary) 16%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-raised) 70%, transparent);
 }
 
 .def-intent__chips a:hover,
@@ -105,25 +103,25 @@
 }
 
 .def-start.tv-discovery-stage {
-  background: var(--tv-grammar-discovery-surface);
-  color: var(--tv-grammar-discovery-ink);
+  background: transparent;
+  color: var(--tv-ink-primary);
 }
 
 .def-start__title {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 
 .def-start__tabs.tv-discovery-stage__switch {
-  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 6%, var(--tv-surface-inverted));
-  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
+  background: color-mix(in srgb, var(--tv-ink-primary) 6%, var(--tv-surface-raised));
+  border-color: color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
 }
 
 .def-start__tab {
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
 }
 
 .def-start__tab.is-active {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   background: var(--tv-grammar-selected-wash);
 }
 
@@ -166,13 +164,13 @@
 }
 
 /* ============================================================
-   FOOTER — ivory band restored; dark tiles as contrast objects
+   FOOTER — continues the night; ivory is ink (surface-inverted)
    ============================================================ */
 .site-footer-v2.tv-launchpad,
 .site-footer-v2.tv-utility {
-  background: var(--tv-surface-inverted) !important;
-  color: var(--tv-ink-inverted-secondary) !important;
-  border-top: 1px solid var(--tv-border-inverted) !important;
+  background: transparent !important;
+  color: var(--tv-ink-secondary) !important;
+  border-top: 1px solid var(--tv-border-subtle) !important;
 }
 
 .site-footer-v2.tv-launchpad .site-footer-v2__shell,
@@ -181,7 +179,7 @@
 .tv-launchpad .site-footer-v2__shell,
 .tv-launchpad__shell {
   background: transparent !important;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 
 .site-footer-v2.tv-launchpad h2,
@@ -190,11 +188,11 @@
 .site-footer-v2.tv-launchpad p,
 .site-footer-v2.tv-launchpad summary,
 .site-footer-v2.tv-utility :is(h2, h3, a, p, summary) {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 
 .tv-launchpad__title {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 .tv-launchpad__tile {
   background: transparent;
@@ -204,38 +202,38 @@
 .tv-launchpad__tile p {
   color: var(--tv-ink-muted-aa);
 }
-.tv-launchpad__tile--discover p { color: var(--tv-accent-cyan-on-ivory) !important; }
-.tv-launchpad__tile--build p { color: var(--tv-accent-violet-on-ivory) !important; }
-.tv-launchpad__tile--decide p { color: var(--tv-color-violet-700) !important; }
+.tv-launchpad__tile--discover p { color: var(--tv-accent-cyan-on-dark) !important; }
+.tv-launchpad__tile--build p { color: var(--tv-accent-violet-on-dark) !important; }
+.tv-launchpad__tile--decide p { color: var(--tv-color-violet-300) !important; }
 .tv-launchpad__tile a {
-  color: var(--tv-ink-inverted-primary) !important;
+  color: var(--tv-surface-inverted) !important;
 }
 .tv-launchpad__tile a:hover {
-  color: var(--tv-accent-violet-on-ivory) !important;
+  color: var(--tv-accent-gold) !important;
 }
 .tv-launchpad__contact p,
 .tv-launchpad__legal a,
 .tv-launchpad__disclosure summary,
 .tv-launchpad__mark {
-  color: var(--tv-ink-inverted-secondary) !important;
+  color: var(--tv-ink-secondary) !important;
 }
 .site-footer-v2.tv-launchpad .site-footer-v2__contact {
-  color: var(--tv-ink-inverted-primary) !important;
+  color: var(--tv-surface-inverted) !important;
   border: 1px solid color-mix(in srgb, var(--tv-accent-brand) 40%, transparent);
   background: color-mix(in srgb, var(--tv-accent-brand) 8%, transparent);
 }
 .site-footer-v2.tv-launchpad .site-footer-v2__legal-link,
 .site-footer-v2.tv-launchpad .site-footer-v2__disclosure {
-  color: var(--tv-ink-inverted-secondary) !important;
+  color: var(--tv-ink-secondary) !important;
 }
 
 
-.tv-launchpad__wordmark {
+ .tv-launchpad__wordmark {
   font-family: var(--tv-font-family-ui);
   font-weight: 800;
   letter-spacing: 0.14em;
   font-size: 0.78rem;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 .tv-workflow-card__flow li {
   position: relative;
@@ -246,7 +244,7 @@
   align-items: center;
   gap: 0.85rem;
   text-decoration: none;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 .tv-launchpad__signature {
   display: none;
@@ -257,36 +255,36 @@
 .tv-utility__contact,
 .tv-utility__link,
 .tv-utility__group h3 {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 .tv-utility__contact {
-  border-color: color-mix(in srgb, var(--tv-ink-inverted-primary) 22%, transparent);
-  color: var(--tv-ink-inverted-primary);
+  border-color: color-mix(in srgb, var(--tv-surface-inverted) 22%, transparent);
+  color: var(--tv-surface-inverted);
 }
 .tv-utility__contact:hover,
 .tv-utility__contact:focus-visible {
   border-color: var(--tv-accent-brand);
   color: var(--tv-accent-brand);
 }
-.tv-utility__link {
-  color: var(--tv-ink-inverted-secondary);
+ .tv-utility__link {
+  color: var(--tv-ink-secondary);
 }
 .tv-utility__link:hover,
 .tv-utility__link:focus-visible {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 .site-footer-v2.tv-utility .tv-utility__summary,
 .site-footer-v2.tv-utility .tv-utility__contact-copy {
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
 }
 .tv-utility__legal,
 .tv-utility__disclosure,
 .tv-utility__disclosure-body {
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-muted-aa);
 }
 .tv-utility__legal :is(a, button):hover,
 .tv-utility__legal :is(a, button):focus-visible {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-surface-inverted);
 }
 
 /* ============================================================
@@ -393,7 +391,7 @@
 
 /* 8. Cream-to-cream chapter seam */
 .def-start.tv-discovery-stage {
-  border-top: 1px solid color-mix(in srgb, var(--tv-ink-inverted-primary) 10%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 10%, transparent);
 }
 
 /* Launchpad tiles: family rails, not identical black boxes (v3.2 main). */
@@ -452,15 +450,44 @@
   min-height: var(--tv-button-min-height-touch);
 }
 
-/* Paper ink for route mastheads sitting on the public habitat. */
-.tv-radar__eyebrow,
-.tv-radar-index__header p,
-.cx-index__meta,
-.cx-index__lede-block p,
-.cx-index__section-title p,
-.mobile-collections__header p,
-.tool-battle-page__lede,
-.tool-battle-page__eyebrow,
-.tool-battle-page__steps {
-  color: var(--tv-ink-inverted-secondary);
+/* Habitat layers: cartograph (orientation) + logo ghost (brand memory). */
+.marketing-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--tv-accent-cyan) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--tv-accent-brand) 14%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 0%, #000 8%, transparent 68%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 8%, transparent 68%);
+}
+.marketing-shell::after {
+  content: "";
+  position: absolute;
+  top: 4.75rem;
+  right: clamp(-4rem, -6vw, -1rem);
+  width: min(42vw, 28rem);
+  height: min(42vw, 28rem);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.11;
+  background: url("/brand/tooolvibes-logo.png") center / contain no-repeat;
+  filter: saturate(1.2);
+}
+@media (max-width: 47.99rem) {
+  .marketing-shell::after {
+    top: 3.75rem;
+    right: -3rem;
+    width: 15rem;
+    height: 15rem;
+    opacity: 0.08;
+  }
+  .marketing-shell::before {
+    opacity: 0.14;
+    background-size: 36px 36px;
+  }
 }

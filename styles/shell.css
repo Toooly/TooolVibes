@@ -1,7 +1,7 @@
 /*
  * Canonical public shell owner.
- * Public habitat is one ivory paper. Dark lives on objects (chrome, cards,
- * instruments), not as competing page rooms.
+ * Public habitat is the logo night field: indigo, gold, cyan.
+ * Ivory is ink, never paper. Objects sit on the same night.
  */
 @import "./brand-primitives.css";
 
@@ -11,10 +11,11 @@
   flex-direction: column;
   min-height: 100svh;
   background:
-    radial-gradient(ellipse at 8% -12%, color-mix(in srgb, var(--tv-accent-gold) 9%, transparent) 0%, transparent 44%),
-    radial-gradient(ellipse at 96% 108%, color-mix(in srgb, var(--tv-accent-brand) 8%, transparent) 0%, transparent 52%),
-    var(--tv-grammar-discovery-surface) !important;
-  color: var(--tv-ink-inverted-primary);
+    radial-gradient(ellipse 90% 55% at 8% -10%, color-mix(in srgb, var(--tv-accent-gold) 18%, transparent), transparent 52%),
+    radial-gradient(ellipse 70% 60% at 92% 6%, color-mix(in srgb, var(--tv-accent-cyan) 14%, transparent), transparent 48%),
+    radial-gradient(ellipse 80% 70% at 48% 0%, color-mix(in srgb, var(--tv-accent-brand) 24%, transparent), transparent 58%),
+    color-mix(in srgb, var(--tv-color-violet-900) 58%, var(--tv-bg-base)) !important;
+  color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-ui);
 }
 
@@ -68,9 +69,9 @@
 
 .site-footer-v2 {
   margin-top: 0 !important;
-  border-top: 1px solid var(--tv-border-inverted) !important;
-  background: var(--tv-surface-inverted) !important;
-  color: var(--tv-ink-inverted-secondary) !important;
+  border-top: 1px solid var(--tv-border-subtle) !important;
+  background: transparent !important;
+  color: var(--tv-ink-secondary) !important;
 }
 
 .site-footer-v2__shell {

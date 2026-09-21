@@ -30,7 +30,7 @@
   overflow: visible;
   padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3rem) 7rem;
   background: transparent;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 
 .mobile-collections__header {
@@ -64,7 +64,7 @@
   grid-area: title;
   max-width: none;
   margin: 0.55rem 0 0;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-display);
   font-weight: var(--tv-weight-regular);
   font-size: clamp(3.2rem, 4.2vw, 4rem);
@@ -137,7 +137,7 @@
 .mobile-collections__hero-title {
   max-width: 12ch;
   margin-top: 1rem;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   font-size: var(--tv-text-h1);
   line-height: var(--tv-leading-display);
 }
@@ -161,7 +161,7 @@
 .mobile-collections__hero-desc {
   max-width: 38rem;
   margin-top: 1rem;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   font-size: 1rem;
   line-height: 1.65;
 }
@@ -178,7 +178,7 @@
   border-radius: 0;
   background: transparent;
   padding: 0.12rem 0 0.12rem 0.75rem;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   font-size: var(--tv-text-xs);
   line-height: 1.4;
 }
@@ -263,7 +263,7 @@
 }
 
 .mobile-collections__item-desc {
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
 }
 
 .mobile-collections__item-arrow {
@@ -551,14 +551,14 @@
   /* Local re-aliases for active index rules (legacy V1/V2/V3 styles
      still inherit these from `.cx-root` below). Converging on
      semantic tokens where the variable was purely a re-alias. */
-  --cx-border: var(--tv-border-inverted-default);
+  --cx-border: var(--tv-border-subtle);
   --cx-card-radius: var(--tv-radius-modal);
   --cx-soft-2: color-mix(in srgb, var(--tv-ink-inverted-primary) 7%, transparent);
 
   position: relative;
   width: 100%;
   background: transparent;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   padding: clamp(2.5rem, 4.4vw, 4.5rem) var(--tv-gutter-desktop) 6rem;
 }
 
@@ -604,14 +604,14 @@
   font-size: var(--tv-text-h1);
   line-height: var(--tv-leading-display);
   letter-spacing: -0.01em;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   max-width: 18ch;
   margin: 0;
 }
 
 .cx-index__title em {
   font-style: normal;
-  color: var(--tv-accent-violet-on-ivory);
+  color: var(--tv-accent-violet-on-dark);
   background: linear-gradient(180deg, color-mix(in srgb, var(--tv-grammar-workflow-accent) 16%, transparent), transparent);
   padding: 0 0.1em;
   border-radius: 0.18rem;
@@ -620,13 +620,13 @@
 .cx-index__lede {
   font-size: 0.98rem;
   line-height: 1.62;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   max-width: 32rem;
   margin: 0;
 }
 
 .cx-index__lede strong {
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   font-weight: 600;
 }
 
@@ -682,7 +682,7 @@
   font-size: 0.94rem;
   line-height: 1.62;
   margin: 0;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   max-width: 48ch;
 }
 
@@ -825,7 +825,7 @@
 .cx-card__promise {
   font-size: 0.86rem;
   line-height: 1.55;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 32ch;
 }
@@ -1097,7 +1097,7 @@
 .cx-hero__promise {
   font-size: clamp(1rem, 1.4vw, 1.18rem);
   line-height: 1.5;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 42ch;
 }
@@ -1261,7 +1261,7 @@
 .cx-stack__lede {
   font-size: var(--tv-text-sm);
   line-height: 1.55;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 56ch;
 }
@@ -1403,7 +1403,7 @@
 .cx-stack__node-why {
   font-size: 0.85rem;
   line-height: 1.55;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
 }
 
@@ -1549,7 +1549,7 @@
 .cx-stack__subgroup-pill--alternative {
   background: color-mix(in srgb, var(--tv-accent-violet-on-ivory) 12%, transparent);
   border-color: color-mix(in srgb, var(--tv-accent-violet-on-ivory) 28%, transparent);
-  color: var(--tv-accent-violet-on-ivory);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .cx-stack__subgroup-grid {
@@ -1592,14 +1592,14 @@
 .cx-stack__subgroup-card-note {
   font-size: var(--tv-text-xs);
   line-height: 1.5;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
 }
 
 .cx-stack__subgroup-card-when {
   font-size: 0.75rem;
   line-height: 1.45;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
 }
 
@@ -1654,7 +1654,7 @@
 .cx-variants__lede {
   font-size: var(--tv-text-sm);
   line-height: 1.55;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 56ch;
 }
@@ -1677,7 +1677,7 @@
   padding: 0.45rem 0.95rem;
   border: 0;
   background: transparent;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -1732,7 +1732,7 @@
 .cx-variants__panel-desc {
   font-size: 0.85rem;
   line-height: 1.55;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 56ch;
 }
@@ -1853,7 +1853,7 @@
 .cx-variants__path-desc {
   font-size: 0.82rem;
   line-height: 1.5;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
 }
 
@@ -1904,7 +1904,7 @@
 .cx-decision__lede {
   font-size: var(--tv-text-sm);
   line-height: 1.55;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 60ch;
 }
@@ -2142,11 +2142,11 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   /* Principle card sits on ivory surface — use on-ivory workflow structure */
-  color: var(--tv-accent-violet-on-ivory);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .cx-related-card-eyebrow--collection {
-  color: var(--tv-accent-violet-on-ivory);
+  color: var(--tv-accent-violet-on-dark);
 }
 
 .cx-related-card-title {
@@ -2161,7 +2161,7 @@
 .cx-related-card-promise {
   font-size: var(--tv-text-xs);
   line-height: 1.45;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 38ch;
 }
@@ -4502,7 +4502,7 @@
 .cx-index__group-lede {
   font-size: 0.92rem;
   line-height: 1.55;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   margin: 0;
   max-width: 48ch;
 }

@@ -11,7 +11,7 @@
      The instrument keeps --tv-grammar-signal-surface. */
   min-height: 100%;
   background: transparent;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
 }
 
 .tv-radar {
@@ -1252,7 +1252,7 @@ h1.tv-radar__title,
   letter-spacing: var(--tv-tracking-tight);
   text-transform: none;
   margin: 0;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   font-size: var(--tv-text-h1);
   max-width: 24ch;
   overflow-wrap: anywhere;
@@ -1270,12 +1270,12 @@ h1.tv-radar__title,
 .tv-radar__provenance {
   margin: var(--tv-space-component-md) 0 0;
   max-width: 38rem;
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-muted-aa);
   font-size: var(--tv-text-body-sm);
   line-height: var(--tv-leading-relaxed);
 }
 .tv-radar__provenance > span {
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   font-weight: var(--tv-weight-semibold);
 }
 

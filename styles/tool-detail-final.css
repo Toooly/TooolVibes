@@ -27,7 +27,7 @@
   margin-inline: auto;
   padding-block: var(--tv-space-6) var(--tv-space-24);
   padding-inline: var(--tv-gutter-mobile);
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   overflow-x: hidden;
 }
 
