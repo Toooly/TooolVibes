@@ -2,8 +2,10 @@
 
 Date: 21 September 2026  
 Branch: `main`  
-HEAD at start of pass: `ea42458` (`fix(ui): one public layer without stacked footers`)  
-Final commit SHA: `42634fa67aa10dad06870e80f40ec15bfb95ed91`
+Implementation commit: `42634fa67aa10dad06870e80f40ec15bfb95ed91` (`fix(ui): production pass for shell, ads, auth, and surfaces`)  
+Docs commit that recorded that SHA: `5c297de5a0d794c554696ee63f55903e69fa52c4`  
+HEAD at the start of this release-candidate verification: `5c297de`  
+HEAD at the start of the implementation pass: `ea42458`
 
 This is a consolidation pass, not a redesign. Identity preserved. System fixed.
 
@@ -256,9 +258,14 @@ Genuine external blockers only for “not done”:
 
 Do **not** call OAuth “production ready”. Magic-link + guest merge + public chrome **are** ready pending the dashboard paste and Resend env already used in production.
 
-## X. Exact final commit SHA
+## X. Exact commits
 
-`42634fa67aa10dad06870e80f40ec15bfb95ed91`
+| Role | SHA |
+|---|---|
+| Implementation | `42634fa67aa10dad06870e80f40ec15bfb95ed91` |
+| Docs SHA record (verification base) | `5c297de5a0d794c554696ee63f55903e69fa52c4` |
+
+`5c297de` changes only this audit file. It does not change product code.
 
 ## Y. Exact manual external actions required
 
@@ -283,3 +290,77 @@ Do **not** call OAuth “production ready”. Magic-link + guest merge + public 
 | Desktop stretched mobile | Not observed at 1280+ |
 | Mobile stack collide | Vertical flex |
 | Build / tsc / lint / critical tests | Pass |
+
+## RELEASE CANDIDATE STATUS
+
+Verified on repository HEAD `5c297de` (product code = `42634fa`). Standalone production build of that HEAD, gate off, port 3010. Not deployed.
+
+| Check | Result |
+|---|---|
+| Build | **PASS** — `npm run build` baked `TOOOLVIBES_RELEASE_SHA=5c297de5a0d794c554696ee63f55903e69fa52c4`, 151 pages |
+| Typecheck | **PASS** — `tsc --noEmit` |
+| Lint | **PASS** — `eslint . --max-warnings=0` |
+| Relevant tests | **PASS** — 545 tests / 75 files (shell, ads, account, auth, guest merge, tool detail, collections, catalog, home) |
+| Responsive QA | **PASS** — Chromium and WebKit, instant scroll to document end |
+| Auth code flow | **PASS** (code) — providers empty when GoTrue says off; callback `verifyOtp` unit-tested |
+| Guest persistence | **PASS** (logic) — `guest-account-merge-contract` 31 tests. No live inbox session. |
+| TinyAdz frontend fallback | **PASS** |
+| OAuth providers | **EXTERNAL** — production and local `/api/auth/config` both return `providers: []`. GoTrue `external.google/apple/github` are false. |
+| TinyAdz real fill | **EXTERNAL** |
+
+### Responsive matrix
+
+Viewports: 375×812, 390×844, 430×932, 768×1024, 1280×800, 1440×900, 1728×1117.
+
+Routes sampled: `/`, `/archivio`, `/toools/blink`, `/radar`, `/collections`, `/collections/ai-stack-solo-founders`, `/posts`, `/posts/omi-app-ai`, `/shortlist`, `/compare`, `/account`, `/metodo`.
+
+- Body overflow: 0
+- Bottom nav present below 1280, absent at 1280+
+- At scroll end, visible footer links/headings are not under the nav
+- Footer h3 computed color `rgb(244, 240, 231)` (ivory), not `rgb(8, 8, 10)`
+- No visible `PUBBLICITÀ` label and no filled-state ad gap
+- Home TOOL / STACK / RADAR switch with overflow 0
+- Catalog card readable (`AgentX`, `Ideale per: Creare agenti AI specializzati`)
+- CompareDock after adding Blink: 74px, above nav, no overlap
+- Guide with a live compare: dock stays compact; the only layout-box intersection was `aria-hidden` locked copy, not painted reading text
+- Collection section nav (after account hydration): `position: sticky`, scroller `overflow-x: auto`, list wider than scroller, body overflow 0
+- Auth title `Entra nel tuo spazio`; no Google/Apple/GitHub buttons; form does not intersect the nav (Chromium and WebKit)
+
+### Auth
+
+- Google OFF => no Google button. Confirmed in the browser and in `oauth-buttons` tests.
+- Apple OFF => no Apple button.
+- GitHub OFF => no GitHub button.
+- Magic-link request schema rejects unknown keys (400). With local GoTrue down (`127.0.0.1:54321` connection refused) a valid email returns **503** `Accesso email non disponibile in questo momento` (fail closed). Callback exchange is covered by `__tests__/lib/auth/complete-auth-callback.test.ts` (`token_hash` + `type=email` => `verifyOtp`).
+- **Limitation:** no mailbox was used. Production email delivery was not sent from this machine.
+
+### Guest -> account
+
+`mergeGuestWorkspaceContribution` tests cover saved union, compare cap/account-first, and newer decision timestamps. Account attach orchestration tests passed. A browser login through a delivered magic link was **not** run, because local GoTrue/Mailpit are down and a production inbox send was not attempted.
+
+### TinyAdz
+
+**A. Frontend:** consent denied/unknown/disabled/missing site id renders nothing. Waiting and empty states are `height: 0`. Fill requires `iframe.inlined-ta-ad` ≥ 32px before the label appears. Timeout leaves the host mounted but collapsed. Archive waiting state is a probe, not a grid row. Script unavailable follows the same no-fill collapse. Unit tests: `__tests__/components/ads/tinyadz-inline-slot.test.tsx` (20).
+
+**B. Vendor fill:** not proven in this pass. No campaign creative was painted. Treat real fill as an external dashboard check, not a frontend bug.
+
+### Magic-link templates
+
+`supabase/templates/magic-link.html`, `.txt`, and `.subject.txt` match the live Resend module. One CTA. Callback shape is `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email` (`&amp;` in HTML). No script URLs. These files are **not** the live send path until pasted in the Supabase dashboard. Live send is `lib/auth/magic-link-email.ts` via Resend.
+
+### Logged-in surfaces
+
+`/dev/workspace-qa` returns 404 on the production standalone server (by design). No authenticated browser session was created. Usability of Spazio / Salvati / Decisioni and the decision sheet (focus, escape, internal scroll, bottom offset `--tv-bottom-nav-total`, safe-area padding) is **PASS via component tests**, not a live login.
+
+### Exact manual actions still required
+
+1. Supabase → Authentication → Providers: enable Google, Apple, and/or GitHub only after the matching console credentials exist. Until then the UI correctly shows none.
+2. Add `https://tooolvibes.eu/auth/callback` to Supabase redirect URLs if it is not already there. Set Site URL to that origin so `{{ .SiteURL }}` is production-safe.
+3. Optional: paste `supabase/templates/magic-link.*` into Supabase → Authentication → Email Templates → Magic Link. Required only for the native mailer. Resend does not read those files.
+4. After deploy, send one real magic link and open it once. This pass did not.
+5. TinyAdz dashboard: confirm site id and that a campaign can fill. Empty fill must stay collapsed; that part is already in the frontend.
+6. Do not treat OAuth or vendor fill as done.
+
+### Deployment
+
+Not deployed from this verification.
