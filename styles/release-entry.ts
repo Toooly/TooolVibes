@@ -20,3 +20,4 @@ import "@/styles/partner-placements.css";
 import "@/styles/premium-motion.css";
 import "@/styles/member-experience.css";
 import "@/styles/visual-character.css";
+import "@/styles/visual-system.css";

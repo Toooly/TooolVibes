@@ -489,9 +489,6 @@ function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
 
   return (
     <div className="def-stacks tv-stack-mode">
-      <p className="def-stacks__lede">
-        Stack già montati: ordine, esito, tempo e costo.
-      </p>
       {stacks.length > 0 ? (
         <div
           className="tv-workflow-deck"

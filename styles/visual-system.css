@@ -1,0 +1,178 @@
+/* Final visual system. Loaded last. Unifies rhythm, cards, glow, and motion.
+   Does not own layout reservation, nav geometry, or ad collapse. */
+
+:root {
+  --tv-glow-gold: 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 55%, transparent),
+    0 10px 28px color-mix(in srgb, var(--tv-accent-gold) 16%, transparent);
+  --tv-glow-cyan: 0 0 0 1px color-mix(in srgb, var(--tv-grammar-radar-accent) 50%, transparent),
+    0 10px 28px color-mix(in srgb, var(--tv-grammar-radar-accent) 14%, transparent);
+  --tv-glow-violet: 0 0 0 1px color-mix(in srgb, var(--tv-accent-brand) 48%, transparent),
+    0 10px 28px color-mix(in srgb, var(--tv-accent-brand) 14%, transparent);
+  --tv-border-system: color-mix(in srgb, var(--tv-ink-primary) 14%, transparent);
+  --tv-radius-system: 1rem;
+  --tv-motion-ui: 180ms;
+  --tv-motion-panel: 320ms;
+}
+
+.tv-discovery-stage .def-start__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 22.5rem);
+  gap: 6px;
+}
+
+.tv-discovery-stage .def-start__tab {
+  width: 100%;
+  min-height: 2.75rem;
+  padding-inline: 8px;
+  transition:
+    color var(--tv-motion-ui) var(--tv-easing-standard),
+    background-color var(--tv-motion-ui) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
+    transform var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+.tv-discovery-stage[data-mode="tool"] .def-start__tab.is-active,
+.tv-discovery-stage[data-mode="tool"] .def-start__tab[aria-selected="true"] {
+  box-shadow: var(--tv-glow-gold);
+}
+
+.tv-discovery-stage[data-mode="stack"] .def-start__tab.is-active,
+.tv-discovery-stage[data-mode="stack"] .def-start__tab[aria-selected="true"] {
+  box-shadow: var(--tv-glow-violet);
+}
+
+.tv-discovery-stage[data-mode="radar"] .def-start__tab.is-active,
+.tv-discovery-stage[data-mode="radar"] .def-start__tab[aria-selected="true"] {
+  box-shadow: var(--tv-glow-cyan);
+}
+
+.def-start__panel {
+  animation: tv-system-panel-in var(--tv-motion-panel) var(--tv-easing-decelerate);
+}
+
+@keyframes tv-system-panel-in {
+  from { opacity: 0.72; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.tv-workflow-card,
+.ar4-card,
+.partner-placement,
+.v-auth-page .v-auth-card,
+.tv-lib-row {
+  border-radius: var(--tv-radius-system);
+  border-color: var(--tv-border-system);
+}
+
+.tv-workflow-card,
+.ar4-card,
+.tv-home-radar__launch {
+  transition:
+    border-color var(--tv-motion-ui) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
+    transform var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tv-workflow-card:hover,
+  .ar4-card:hover,
+  .tv-home-radar__launch:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.def-editorial__spot-cta--primary,
+.tv-home-radar--snapshot .tv-home-radar__cta,
+.td-final-cta--primary {
+  transition:
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
+    filter var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+.def-editorial__spot-cta--primary:hover,
+.def-editorial__spot-cta--primary:focus-visible,
+.td-final-cta--primary:hover,
+.td-final-cta--primary:focus-visible {
+  box-shadow: var(--tv-glow-gold);
+}
+
+.tv-home-radar__launch {
+  align-items: center;
+  border-color: var(--tv-border-system);
+}
+
+.tv-home-radar__launch-rank,
+.tv-home-radar__launch-metrics {
+  font-variant-numeric: tabular-nums;
+}
+
+.tv-home-radar__status[data-state="live"]::before,
+.tv-home-radar--snapshot .tv-home-radar__status[data-state="ok"] {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-grammar-radar-accent) 22%, transparent);
+}
+
+.partner-placement {
+  border: 1px solid var(--tv-border-system);
+  background: color-mix(in srgb, var(--tv-surface-raised) 88%, transparent);
+}
+
+.site-footer-v2.tv-utility .tv-utility__shell {
+  gap: 1.25rem;
+}
+
+.site-footer-v2.tv-utility .tv-utility__summary {
+  max-width: 36ch;
+  line-height: 1.45;
+}
+
+.site-footer-v2.tv-utility .tv-utility__group h3,
+.site-footer-v2.tv-utility .tv-utility__contact-title {
+  letter-spacing: 0.08em;
+}
+
+.v-auth-page .v-auth-card {
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--tv-surface-raised) 92%, #120c22);
+  box-shadow: var(--tv-glow-violet);
+  padding: 1.5rem 1.25rem;
+}
+
+.v-auth-page .v-auth-tab[aria-selected="true"],
+.v-auth-page .v-auth-tab.is-active {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 55%, transparent);
+}
+
+.tv-space-switch {
+  display: flex;
+  gap: 6px;
+}
+
+.tv-space-switch a,
+.tv-space-switch button {
+  min-height: 2.75rem;
+  border-radius: 999px;
+  transition: box-shadow var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+.tv-space-switch .is-current {
+  box-shadow: var(--tv-glow-violet);
+}
+
+.mobile-bottom-item.is-active .mobile-bottom-item__glyph {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--tv-accent-brand) 45%, transparent));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .def-start__panel,
+  .tv-workflow-card,
+  .ar4-card,
+  .tv-home-radar__launch,
+  .def-editorial__spot-cta--primary,
+  .td-final-cta--primary,
+  .tv-discovery-stage .def-start__tab {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}
