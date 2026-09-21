@@ -4,6 +4,7 @@ import {
   OAUTH_PROVIDERS,
   oauthRedirectTo,
   parseEnabledOAuthProviders,
+  readOAuthProviderList,
 } from "@/lib/auth/oauth-providers";
 
 describe("oauth providers", () => {
@@ -29,5 +30,15 @@ describe("oauth providers", () => {
       }),
     ).toEqual(["google"]);
     expect(parseEnabledOAuthProviders(null)).toEqual([]);
+  });
+
+  it("does not invent Google when the config list is empty or unknown", () => {
+    expect(readOAuthProviderList(undefined)).toEqual([]);
+    expect(readOAuthProviderList([])).toEqual([]);
+    expect(readOAuthProviderList(["not-a-provider"])).toEqual([]);
+    expect(readOAuthProviderList(["github", "google", "nope"])).toEqual([
+      "github",
+      "google",
+    ]);
   });
 });

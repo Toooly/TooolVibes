@@ -19,6 +19,14 @@ export function oauthRedirectTo() {
   return `${window.location.origin}/auth/callback`;
 }
 
+export function readOAuthProviderList(value: unknown): OAuthProviderId[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (item): item is OAuthProviderId =>
+      typeof item === "string" && isOAuthProviderId(item),
+  );
+}
+
 export function parseEnabledOAuthProviders(
   external: Record<string, unknown> | null | undefined,
 ): OAuthProviderId[] {

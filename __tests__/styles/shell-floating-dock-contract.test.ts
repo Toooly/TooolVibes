@@ -20,6 +20,10 @@ const tokensCss = readFileSync(
   resolve(process.cwd(), "styles/tokens.css"),
   "utf8",
 );
+const mobileBottomNavCss = readFileSync(
+  resolve(process.cwd(), "styles/mobile-bottom-nav.css"),
+  "utf8",
+);
 
 /** Estrae il blocco `{ ... }` che segue la prima occorrenza di `selector`. */
 function extractBlock(source: string, selector: string): string | null {
@@ -102,13 +106,18 @@ describe("B37 globals.css — contract geometrico della shell mobile", () => {
   });
 
   it("la bottom nav consuma i token shell nella regola base", () => {
-    const nav = extractBlock(globalsCss, ".mobile-bottom-motion {");
-    expect(nav).not.toBeNull();
-    expect(nav).toContain("left: var(--tv-shell-nav-inset-left)");
-    expect(nav).toContain("right: var(--tv-shell-nav-inset-right)");
-    expect(nav).toContain("bottom: var(--tv-shell-nav-inset-bottom)");
-    // Nessuna geometria letterale duplicata nella regola base.
-    expect(nav).not.toContain("env(safe-area-inset-bottom");
+    const shell = extractBlock(mobileBottomNavCss, ".mobile-bottom-shell {");
+    expect(shell).not.toBeNull();
+    expect(shell).toContain("position: fixed");
+    expect(shell).toContain("left: var(--tv-shell-nav-inset-left)");
+    expect(shell).toContain("right: var(--tv-shell-nav-inset-right)");
+    expect(shell).toContain("bottom: 0");
+    const motion = extractBlock(globalsCss, ".mobile-bottom-motion {");
+    expect(motion).not.toBeNull();
+    expect(motion).toContain("animation:");
+    expect(motion).not.toContain("left:");
+    expect(motion).not.toContain("right:");
+    expect(motion).not.toContain("bottom:");
   });
 
   it("lo stato overlay del dock è dichiarato e privo di !important", () => {

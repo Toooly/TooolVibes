@@ -4702,7 +4702,6 @@
   .cx-detail-v4 {
     overflow-x: clip;
     padding-inline: var(--tv-gutter-mobile);
-    padding-bottom: 5.5rem;
   }
 
   .cx-stack-flow-v4__list,
@@ -4729,17 +4728,6 @@
     grid-template-columns: 1fr;
   }
 
-  .cx-section-nav {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .cx-section-nav ol {
-    flex-wrap: nowrap;
-    width: max-content;
-    max-width: none;
-  }
-
   .cx-detail-hero-v4,
   .cx-stack-flow-v4,
   .cx-variant-paths-v4,
@@ -4755,22 +4743,49 @@
 /* ── MVP 1.0 — Collection section journey map ── */
 .cx-section-nav {
   position: sticky;
-  top: 4.5rem;
+  top: var(--tv-header-height-mobile, 4.875rem);
   z-index: 20;
   margin: 0 auto;
-  max-width: var(--cx-detail-max, 72rem);
-  padding: 0.55rem 1rem;
+  width: 100%;
+  min-width: 0;
+  max-width: min(100%, var(--cx-detail-max, 72rem));
+  padding: 0.55rem 0;
   background: color-mix(in srgb, var(--tv-bg-base, #0c0d10) 88%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid color-mix(in srgb, var(--cx-accent, #6366f1) 22%, transparent);
+  overflow: hidden;
+}
+.cx-section-nav__scroller {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-inline: 1rem;
 }
 .cx-section-nav ol {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.35rem 0.45rem;
   list-style: none;
   margin: 0;
   padding: 0;
+  width: max-content;
+  max-width: none;
+}
+@media (min-width: 48rem) {
+  .cx-section-nav {
+    top: var(--tv-header-height, 5.25rem);
+  }
+  .cx-section-nav__scroller {
+    overflow-x: visible;
+  }
+  .cx-section-nav ol {
+    flex-wrap: wrap;
+    width: auto;
+    max-width: none;
+  }
 }
 .cx-section-nav a {
   display: inline-flex;
@@ -4795,7 +4810,9 @@
 }
 @media (max-width: 639px) {
   .cx-section-nav {
-    top: 3.5rem;
+    top: var(--tv-header-height-mobile, 4.875rem);
+  }
+  .cx-section-nav__scroller {
     padding-inline: 0.75rem;
   }
   .cx-section-nav a {

@@ -33,6 +33,15 @@ function MarkdownBody({ content }: { content: string }) {
   );
 }
 
+function isGenericPricingDisclaimer(body: string) {
+  const text = body.replace(/[`*_>#-]/g, " ").replace(/\s+/g, " ").trim();
+  if (!text) return true;
+  return (
+    /^Piani e condizioni possono cambiare/i.test(text) &&
+    text.length < 180
+  );
+}
+
 /**
  * Approfondisci — progressive disclosure of extended editorial content.
  * Snapshot-only headings (Ideale per / Meno adatto / Verdetto) and
@@ -127,7 +136,7 @@ export function ToolDetailExtendedContent({
     });
   }
 
-  if (parsed.byId.pricing) {
+  if (parsed.byId.pricing && !isGenericPricingDisclaimer(parsed.byId.pricing)) {
     panels.push({
       id: "pricing",
       title: "Pricing",

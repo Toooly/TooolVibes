@@ -13,6 +13,14 @@ import {
 } from "@/lib/product/decision-lifecycle";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
+const DECISION_LIFECYCLE_CTAS: Record<DecisionLifecycleStage, string> = {
+  scopri: "Apri il catalogo",
+  valuta: "Apri il catalogo",
+  confronta: "Apri il confronto",
+  decidi: "Apri le decisioni",
+  ricorda: "Apri i salvati",
+};
+
 export function DecisionJourney() {
   const compareCount = useToolWorkspaceStore((s) => s.compareSlugs.length);
   const savedCount = useToolWorkspaceStore((s) => s.savedSlugs.length);
@@ -79,7 +87,7 @@ export function DecisionJourney() {
           {DECISION_LIFECYCLE_COPY[activeId]}
         </p>
         <Link href={DECISION_LIFECYCLE_HREFS[activeId]}>
-          Continua da {DECISION_LIFECYCLE_LABELS[activeId]}
+          {DECISION_LIFECYCLE_CTAS[activeId]}
         </Link>
       </div>
     </div>

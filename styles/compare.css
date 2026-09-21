@@ -331,7 +331,7 @@
     padding:
       0
       var(--tv-gutter-mobile)
-      calc(var(--tv-bottom-nav-total, 5.5rem) + var(--tv-space-8));
+      var(--tv-space-8);
   }
 
   .mobile-compare-arena.mobile-compare-arena--onboarding .mobile-compare-arena__empty {
@@ -1244,7 +1244,7 @@
 
   .mobile-compare-arena,
   .tool-battle-page {
-    padding-bottom: calc(var(--tv-bottom-nav-total, 5.5rem) + env(safe-area-inset-bottom) + 2rem);
+    padding-bottom: 2rem;
   }
 }
 
@@ -1814,6 +1814,34 @@
   background: var(--tv-surface-floating);
   border: 1px solid var(--tv-border-default);
 }
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__inner {
+  min-height: 44px;
+  padding-block: 6px;
+}
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__list {
+  display: none;
+}
+.tv-compare-dock__toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.tv-compare-dock__toggle:focus-visible {
+  outline: 2px solid var(--tv-accent-brand-aa);
+  outline-offset: 2px;
+}
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__toggle svg {
+  transform: rotate(180deg);
+}
 .tv-compare-dock__count {
   margin: 0;
   font-variant-numeric: tabular-nums;
@@ -1880,18 +1908,12 @@
   .tv-compare-dock { bottom: 16px; }
 }
 html:has(.tv-consent-banner) .tv-compare-dock {
-  bottom: calc(var(--tv-bottom-nav-total, 0px) + 10rem);
+  bottom: calc(var(--tv-bottom-nav-total, 0px) + env(safe-area-inset-bottom, 0px) + var(--tv-consent-banner-height, 7.5rem) + 8px);
 }
 @media (min-width: 1280px) {
   html:has(.tv-consent-banner) .tv-compare-dock {
-    bottom: calc(16px + 10rem);
+    bottom: calc(16px + var(--tv-consent-banner-height, 7.5rem));
   }
-}
-html:has([data-compare-dock]) main#main-content {
-  padding-bottom: 88px;
-}
-html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
-  padding-bottom: calc(88px + 10rem);
 }
 @media (prefers-reduced-motion: reduce) {
   .tv-compare-dock { transition: none; }
@@ -2081,7 +2103,7 @@ html:has(.tv-consent-banner):has([data-compare-dock]) main#main-content {
     padding-bottom: 1rem;
   }
   .tool-battle-page {
-    padding-bottom: calc(var(--tv-bottom-nav-total, 5.5rem) + 0.5rem);
+    padding-bottom: 1rem;
   }
 }
 

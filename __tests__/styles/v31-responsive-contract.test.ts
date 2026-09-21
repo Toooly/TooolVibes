@@ -84,15 +84,9 @@ describe("v3.1 responsive contract", () => {
     );
   });
 
-  it("footer reserves --tv-bottom-nav-total through 1279 including utility and launchpad", () => {
+  it("footer reserves --tv-bottom-nav-total through 1279 in one shell rule", () => {
     expect(shellCss).toMatch(
-      /@media \(min-width: 48rem\) and \(max-width: 1279px\)[\s\S]*?\.site-footer-v2__shell \{[\s\S]*?--tv-bottom-nav-total/,
-    );
-    expect(shellCss).toMatch(
-      /@media \(min-width: 48rem\) and \(max-width: 1279px\)[\s\S]*?\.site-footer-v2\.tv-utility[\s\S]*?--tv-bottom-nav-total/,
-    );
-    expect(shellCss).toMatch(
-      /@media \(max-width: 1279px\)[\s\S]*?\.tv-launchpad \.site-footer-v2__shell[\s\S]*?--tv-bottom-nav-total/,
+      /@media \(max-width: 1279px\)[\s\S]*?\.site-footer-v2 \.site-footer-v2__shell[\s\S]*?--tv-rhythm-section[\s\S]*?--tv-bottom-nav-total[\s\S]*?--tv-tray-height[\s\S]*?env\(safe-area-inset-bottom\)/,
     );
   });
 

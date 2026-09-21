@@ -48,9 +48,8 @@ html {
 }
 
 html, body {
-  /* Bottom padding for the route is computed per-page from
-     --tv-bottom-nav-total + --tv-tray-height in the route-owned stylesheet. */
-  scroll-padding-bottom: var(--tv-bottom-nav-total);
+  /* Fixed-surface contract: keep in-page anchors clear of bottom nav, tray, and iOS home indicator. */
+  scroll-padding-bottom: calc(var(--tv-bottom-nav-total) + var(--tv-tray-height, 0px) + env(safe-area-inset-bottom, 0px));
 }
 
 body {
@@ -92,7 +91,6 @@ small {
 
 .marketing-shell {
   position: relative;
-  z-index: 2;
 }
 
 .marketing-shell > main,
@@ -320,11 +318,6 @@ img {
 
   .mobile-bottom-motion {
     animation: tv-bottom-nav-in 520ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
-    /* B37/MOB-701: unica geometria safe-area della bottom nav, token-driven
-       (styles/tokens.css). Non duplicare left/right/bottom altrove. */
-    left: var(--tv-shell-nav-inset-left);
-    right: var(--tv-shell-nav-inset-right);
-    bottom: var(--tv-shell-nav-inset-bottom);
     transform: none;
     will-change: opacity;
   }
@@ -15774,9 +15767,7 @@ img {
   }
 
   .mobile-bottom-motion {
-    position: fixed !important;
-    /* B37/MOB-701: left/right/bottom derivano dalla regola base token-driven;
-       qui restano solo i vincoli di stacking/compositing. */
+    /* Geometry is owned by .mobile-bottom-shell; keep compositing only. */
     transform: none !important;
     backface-visibility: hidden;
   }

@@ -22,8 +22,9 @@
  * The two commercial units MUST NEVER be visually adjacent. A minimum of one
  * FULL SEMANTIC CONTENT SECTION (a real `<section>` carrying its own
  * `aria-labelledby`) must always sit between the TinyAdz mount and the
- * direct sponsor mount on the same route. When TinyAdz has no fill its
- * shell collapses to `null`; if a sponsor mount is allowed to sit directly
+ * direct sponsor mount on the same route. When TinyAdz has no fill (or
+ * the vendor does not paint within the wait window) the slot unmounts to
+ * `null` and consumes no layout; if a sponsor mount is allowed to sit directly
  * above or below the TinyAdz mount, the sponsor will appear to "replace"
  * the ad when the ad is blank. The separation section fixes that by
  * giving both units their own editorial runway and reinforcing the

@@ -3,7 +3,7 @@
 /**
  * TooolVibes — Tool Detail FINAL — Action Surface
  *
- * Public actions: Confronta (primary yellow), Salva (tertiary), Visita (outline).
+ * Public actions: Confronta (primary) → Visita (secondary) → Salva (icon/cluster).
  * Speed 2 overflow/hold still opens stack actions for logged-in workspace.
  * Namespace: .td-final-*
  */
@@ -83,6 +83,17 @@ export function ToolDetailActionSurface({
         <span>{compareRank > 0 ? "In confronto" : "Confronta"}</span>
       </button>
 
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
+        className="td-final-cta--secondary"
+        aria-label={`Visita il sito ufficiale di ${name}`}
+      >
+        <span>Visita</span>
+        <ExternalLink size={15} aria-hidden="true" />
+      </a>
+
       <div className="td-final-save-cluster">
         <button
           type="button"
@@ -105,17 +116,6 @@ export function ToolDetailActionSurface({
           triggerClassName="td-final-save-more"
         />
       </div>
-
-      <a
-        href={externalUrl}
-        target="_blank"
-        rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
-        className="td-final-cta--secondary"
-        aria-label={`Visita il sito ufficiale di ${name}`}
-      >
-        <span>Visita</span>
-        <ExternalLink size={15} aria-hidden="true" />
-      </a>
 
       {isAffiliateLink ? (
         <span className="td-final-affiliate-note">

@@ -50,7 +50,7 @@ export function deriveScoreDimensions(tool: ToolPublicView): { label: string; va
     }));
 }
 
-export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView): string {
+export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView): string | null {
   const sharedGroups = alt.filterGroups.filter((g) => current.filterGroups.includes(g));
   const differentGroup = alt.filterGroups.find((g) => !current.filterGroups.includes(g));
   const sharedTags = alt.tags.filter((t) => current.tags.includes(t));
@@ -66,20 +66,14 @@ export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView
   if (differentGroup) {
     return `Approccio diverso su ${differentGroup.replaceAll("-", " ")} rispetto a ${current.name}.`;
   }
-  if (alt.toolOfWeek) {
-    return `Profilo in evidenza in un contesto alternativo, con focus su casi d'uso complementari.`;
-  }
-  if (alt.featured) {
-    return `Stessa categoria, in evidenza per il suo taglio più verticale.`;
-  }
-  return `Profilo complementare a ${current.name} nella stessa categoria.`;
+  return null;
 }
 
 /**
  * Derive a concise essential-difference label for the comparison table.
- * Returns a short phrase that captures how `alt` differs from `current`.
+ * Returns a short unique-fact phrase, or null when there is no real difference.
  */
-export function deriveEssentialDifference(current: ToolPublicView, alt: ToolPublicView): string {
+export function deriveEssentialDifference(current: ToolPublicView, alt: ToolPublicView): string | null {
   const diffGroups = alt.filterGroups.filter((g) => !current.filterGroups.includes(g));
 
   if (alt.level === "expert" && current.level !== "expert") return "Più avanzato";
@@ -87,13 +81,11 @@ export function deriveEssentialDifference(current: ToolPublicView, alt: ToolPubl
   if (diffGroups.length > 0) {
     return diffGroups[0].replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
   }
-  if (alt.toolOfWeek) return "In evidenza";
-  if (alt.featured) return "In evidenza";
   if (alt.tags.length > 0 && current.tags.length > 0) {
     const unique = alt.tags.filter((t) => !current.tags.includes(t));
     if (unique.length > 0) return unique[0];
   }
-  return alt.categoryLabel || "Complementare";
+  return null;
 }
 
 // Re-export under the old name to keep page imports stable

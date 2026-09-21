@@ -86,7 +86,7 @@ export default async function ArchivePage({
             />
           ) : null
         }
-        adInsert={<TinyAdzInlineSlot placement="archive-feed" />}
+        adInsert={<TinyAdzInlineSlot placement="archive-feed" asGridItem />}
       />
 
       {/*

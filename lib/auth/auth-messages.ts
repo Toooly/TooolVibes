@@ -36,7 +36,7 @@ export function mapAuthProviderError(
         detail.includes("conflict") ||
         detail.includes("taken")))
   ) {
-    return "Questa email è già collegata a un account TooolVibes. Entra con il link email, poi collega Google dalle impostazioni.";
+    return "Questa email è già collegata a un account TooolVibes. Entra con il link email, poi collega un account dalle impostazioni.";
   }
 
   if (

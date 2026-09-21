@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, render } from "@testing-library/react";
+import { act, cleanup, render, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 let pathnameMock: string = "/";
@@ -28,6 +28,33 @@ function stubEnv(overrides: Record<string, string | undefined> = {}) {
   vi.stubEnv(TINYADZ_SITE_ID_ENV, overrides.siteId ?? SITE_ID);
 }
 
+function mockIframeRect(iframe: HTMLIFrameElement, height: number) {
+  iframe.getBoundingClientRect = () =>
+    ({
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      right: 300,
+      bottom: height,
+      width: 300,
+      height,
+      toJSON() {
+        return {};
+      },
+    }) as DOMRect;
+}
+
+function insertInlinedAd(container: HTMLElement, height: number) {
+  const host = container.querySelector(CONTAINER_SELECTOR);
+  expect(host).toBeTruthy();
+  const iframe = document.createElement("iframe");
+  iframe.className = "inlined-ta-ad";
+  mockIframeRect(iframe, height);
+  host?.appendChild(iframe);
+  return iframe;
+}
+
 describe("TinyAdzInlineSlot gating", () => {
   beforeEach(() => {
     pathnameMock = "/";
@@ -36,6 +63,7 @@ describe("TinyAdzInlineSlot gating", () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllEnvs();
     cleanup();
   });
@@ -53,9 +81,12 @@ describe("TinyAdzInlineSlot gating", () => {
     expect(container.querySelector(CONTAINER_SELECTOR)).toBeNull();
   });
 
-  it("renders one container when consent is granted", () => {
+  it("renders a waiting host when consent is granted", () => {
     const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
     expect(container.querySelectorAll(CONTAINER_SELECTOR).length).toBe(1);
+    expect(container.querySelector("[data-tinyadz-state='waiting']")).toBeTruthy();
+    expect(container.querySelector(".tinyadz-inline-slot__label")).toBeNull();
+    expect(container.textContent ?? "").not.toContain("Pubblicità");
   });
 
   it("returns null when TinyAdz is disabled", () => {
@@ -91,6 +122,7 @@ describe("TinyAdzInlineSlot contract", () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllEnvs();
     cleanup();
   });
@@ -102,13 +134,42 @@ describe("TinyAdzInlineSlot contract", () => {
     expect(slot?.hasAttribute("ta-ad-container")).toBe(true);
   });
 
-  it("renders an accessible advertising label", () => {
+  it("does not show the advertising label for a 0-height iframe.inlined-ta-ad", async () => {
     const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
-    const aside = container.querySelector("aside[aria-label='Pubblicità']");
-    expect(aside).toBeTruthy();
-    expect(container.querySelector(".tinyadz-inline-slot__label")?.textContent).toBe(
-      "Pubblicità",
-    );
+    insertInlinedAd(container, 0);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(container.querySelector("aside[aria-label='Pubblicità']")).toBeNull();
+    expect(container.querySelector(".tinyadz-inline-slot__label")).toBeNull();
+    expect(container.textContent ?? "").not.toContain("Pubblicità");
+    expect(container.querySelector("[data-tinyadz-state='waiting']")).toBeTruthy();
+  });
+
+  it("shows the advertising label when iframe.inlined-ta-ad paints at least 32px", async () => {
+    const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
+    expect(container.querySelector("aside[aria-label='Pubblicità']")).toBeNull();
+    insertInlinedAd(container, 32);
+    await waitFor(() => {
+      expect(container.querySelector("aside[aria-label='Pubblicità']")).toBeTruthy();
+      expect(container.querySelector(".tinyadz-inline-slot__label")?.textContent).toBe(
+        "Pubblicità",
+      );
+    });
+  });
+
+  it("keeps the empty host mounted after timeout", () => {
+    vi.useFakeTimers();
+    const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
+    expect(container.querySelector(CONTAINER_SELECTOR)).toBeTruthy();
+    act(() => {
+      vi.advanceTimersByTime(8000);
+    });
+    expect(container.querySelector("[data-tinyadz-state='empty']")).toBeTruthy();
+    expect(container.querySelector(CONTAINER_SELECTOR)).toBeTruthy();
+    expect(container.querySelector("aside")).toBeTruthy();
+    expect(container.querySelector(".tinyadz-inline-slot__label")).toBeNull();
+    expect(container.textContent ?? "").not.toContain("Pubblicità");
   });
 
   it("exposes a stable placement data attribute", () => {
@@ -120,6 +181,40 @@ describe("TinyAdzInlineSlot contract", () => {
   it("renders no script element at all", () => {
     const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
     expect(container.querySelector("script")).toBeNull();
+  });
+});
+
+describe("TinyAdzInlineSlot asGridItem", () => {
+  beforeEach(() => {
+    pathnameMock = "/archivio";
+    consentMock = "granted";
+    stubEnv();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
+    cleanup();
+  });
+
+  it("waiting is a probe, not a grid list item", () => {
+    const { container } = render(
+      <TinyAdzInlineSlot placement="archive-feed" asGridItem />,
+    );
+    expect(container.querySelector("li.ar4-grid__item--ad")).toBeNull();
+    expect(container.querySelector(".tinyadz-inline-slot--probe")).toBeTruthy();
+    expect(container.querySelector("[data-tinyadz-state='waiting']")).toBeTruthy();
+  });
+
+  it("filled is a grid list item", async () => {
+    const { container } = render(
+      <TinyAdzInlineSlot placement="archive-feed" asGridItem />,
+    );
+    insertInlinedAd(container, 40);
+    await waitFor(() => {
+      expect(container.querySelector("li.ar4-grid__item--ad")).toBeTruthy();
+      expect(container.querySelector(".tinyadz-inline-slot--probe")).toBeNull();
+    });
   });
 });
 
@@ -139,6 +234,7 @@ describe("TinyAdzInlineSlot curated placements", () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllEnvs();
     cleanup();
   });

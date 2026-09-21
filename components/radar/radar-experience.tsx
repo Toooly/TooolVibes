@@ -661,34 +661,19 @@ export function HomeRadarPreview() {
     >
       <header className="tv-home-radar__header">
         <div className="tv-home-radar__header-main">
-          <p className="tv-home-radar__eyebrow">Radar · ora</p>
           <h2 id="tv-home-radar-title">Cosa sta emergendo adesso</h2>
         </div>
-        <span className="tv-home-radar__status" data-state={model.state}>
-          <span aria-hidden="true" />
-          {model.statusLabel}
+        <span className="tv-home-radar__status" data-state={model.state} aria-hidden="true">
+          <span />
         </span>
       </header>
 
-      <p className="tv-home-radar__pulse tv-home-radar__rail" aria-label="Sintesi segnali di oggi">
-        <span>
-          <strong className="tv-home-radar__pulse-value">
-            {model.signalCount ?? (isLoading ? "…" : "0")}
-          </strong>
-          <span className="tv-home-radar__pulse-label"> segnali</span>
-        </span>
-        <span>
-          <span className="tv-home-radar__pulse-label">Aggiornato </span>
-          <strong className="tv-home-radar__pulse-value tv-home-radar__pulse-value--sm">
-            {model.updatedAtLabel}
-          </strong>
-        </span>
-        <span>
-          <span className="tv-home-radar__pulse-label">Fonte </span>
-          <strong className="tv-home-radar__pulse-value tv-home-radar__pulse-value--sm">
-            Product Hunt
-          </strong>
-        </span>
+      <p className="tv-home-radar__meta-line" aria-label="Sintesi segnali di oggi">
+        {model.signalCount ?? (isLoading ? "…" : "0")} segnali
+        {" · "}
+        Product Hunt
+        {" · "}
+        aggiornato {model.updatedAtLabel}
       </p>
 
       {top.length > 0 ? (

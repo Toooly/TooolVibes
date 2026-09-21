@@ -1,41 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
 import {
-  isOAuthProviderId,
   oauthProviderLabel,
   type OAuthProviderId,
 } from "@/lib/auth/oauth-providers";
+import { useEnabledOAuthProviders } from "@/lib/auth/use-enabled-oauth-providers";
 
 export function AccountIdentitiesSection() {
   const account = useAccount();
-  const [enabled, setEnabled] = useState<OAuthProviderId[]>(["google"]);
+  const enabled = useEnabledOAuthProviders();
   const [busy, setBusy] = useState<OAuthProviderId | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    void fetch("/api/auth/config", { cache: "no-store" })
-      .then((response) => (response.ok ? response.json() : { providers: [] }))
-      .then((payload: { providers?: unknown }) => {
-        if (!active) return;
-        const list = Array.isArray(payload.providers)
-          ? payload.providers.filter(
-              (value): value is OAuthProviderId =>
-                typeof value === "string" && isOAuthProviderId(value),
-            )
-          : [];
-        setEnabled(["google", ...list.filter((id) => id !== "google")]);
-      })
-      .catch(() => {
-        if (active) setEnabled(["google"]);
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const linked = useMemo(() => {
     const ids = new Set(

@@ -191,15 +191,17 @@
   gap: 10px;
   padding: 0 14px;
   height: 48px;
-  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 34%, transparent);
+  background: var(--tv-surface-elevated);
+  border: 1px solid var(--tv-border-interactive);
   border-radius: 12px;
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-primary);
 }
 
 .ar4-intro__search:focus-within {
   border-color: var(--tv-accent-primary);
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
+  outline: 2px solid var(--tv-accent-primary);
+  outline-offset: 2px;
 }
 
 .ar4-intro__search input {
@@ -209,20 +211,20 @@
   outline: 0;
   font-size: 14px;
   font-weight: 450;
-  color: var(--tv-ink-inverted-primary);
+  color: var(--tv-ink-primary);
   min-width: 0;
 }
 
-.ar4-intro__search input::placeholder { color: var(--tv-ink-inverted-muted); }
+.ar4-intro__search input::placeholder { color: var(--tv-ink-muted-aa); }
 
 .ar4-intro__search kbd {
   font-family: var(--tv-font-family-mono);
   font-size: 12px;
   padding: 2px 6px;
-  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tv-ink-inverted-muted) 20%, transparent);
+  background: color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-ink-muted) 20%, transparent);
   border-radius: 0.3125rem;
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-muted);
   flex-shrink: 0;
 }
 
@@ -1238,8 +1240,8 @@
    ============================================================ */
 @media (max-width: 767px) {
   .ar4-card.is-promoted {
-    padding: 12px;
-    gap: 8px;
+    padding: 10px;
+    gap: 6px;
     min-height: 0;
   }
 
@@ -1333,8 +1335,8 @@
    ============================================================ */
 @media (max-width: 767px) {
   .ar4-card:not(.is-promoted) {
-    padding: 12px;
-    gap: 8px;
+    padding: 10px;
+    gap: 6px;
     min-height: 0;
   }
   .ar4-card:not(.is-promoted) .ar4-card__top {
@@ -1373,7 +1375,7 @@
   .ar4-card:not(.is-promoted) .ar4-card__desc {
     font-size: 14px;
     line-height: 1.5;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
   }
   .ar4-card:not(.is-promoted) .ar4-card__open {
     min-height: 44px;
@@ -1952,20 +1954,12 @@
    AND the mobile bottom navigation, with safe area inset. */
 @media (max-width: 1279px) {
   .ar4-shell {
-    padding-bottom: calc(var(--tv-tray-height, 0px) + var(--tv-space-5));
+    padding-bottom: var(--tv-space-5);
   }
 }
 
 @media (min-width: 1280px) {
   .ar4-shell { padding-bottom: 0; }
-}
-
-/* When the tray is NOT in the DOM at all (0 selected), shrink the bottom
-   padding so there's no extra empty space below the last content card. */
-@media (max-width: 767px) {
-  .ar4-shell:not(:has(.ar4-tray)) {
-    padding-bottom: var(--tv-space-3);
-  }
 }
 
 
@@ -2064,8 +2058,8 @@ a.archive-v4-card:focus-visible {
   width: 26px;
   height: 26px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 10%, transparent);
-  color: var(--tv-ink-inverted-muted);
+  background: color-mix(in srgb, var(--tv-ink-primary) 8%, transparent);
+  color: var(--tv-ink-secondary);
   border: 0;
   cursor: pointer;
   flex-shrink: 0;
@@ -2073,8 +2067,8 @@ a.archive-v4-card:focus-visible {
   transition: background 200ms ease, color 200ms ease;
 }
 .ar4-intro__search-clear:hover {
-  background: color-mix(in srgb, var(--tv-ink-inverted-primary) 18%, transparent);
-  color: var(--tv-ink-inverted-primary);
+  background: color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
+  color: var(--tv-ink-primary);
 }
 
 /* — Hero search helper — */
@@ -2082,7 +2076,7 @@ a.archive-v4-card:focus-visible {
   font-family: var(--tv-font-family-ui);
   font-size: 12px;
   font-weight: 500;
-  color: var(--tv-ink-inverted-muted);
+  color: var(--tv-ink-secondary);
   margin: -6px 4px 0;
   line-height: 1.4;
 }
@@ -2694,8 +2688,8 @@ a.archive-v4-card:focus-visible {
   .ar4-card:not(.is-promoted),
   .ar4-card.is-reduced,
   .ar4-card[data-density="compact"] {
-    padding: 12px;
-    gap: 8px;
+    padding: 10px;
+    gap: 6px;
     min-height: 0;
   }
 
@@ -2715,7 +2709,7 @@ a.archive-v4-card:focus-visible {
 
   .ar4-card__best {
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -2729,7 +2723,7 @@ a.archive-v4-card:focus-visible {
   }
 
   .ar4-card__desc {
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
   }
 }
 
@@ -2858,32 +2852,7 @@ a.archive-v4-card:focus-visible {
 
 /* ═══ V3.2 VISUAL EXCELLENCE — catalog editorial system ═══ */
 .ar4-grid {
-  counter-reset: ar4-index;
-}
-.ar4-card:not(.ar4-card--lead)::before {
-  counter-increment: ar4-index;
-  content: counter(ar4-index, decimal-leading-zero);
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  font-family: var(--tv-font-family-mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--tv-ink-inverted-muted) 55%, transparent);
-  pointer-events: none;
-  z-index: 0;
-}
-/* Editorial hierarchy: the first three results read as a podium index,
-   the rest recede into scanning texture. */
-.ar4-grid .ar4-card:nth-child(2)::before,
-.ar4-grid .ar4-card:nth-child(3)::before,
-.ar4-grid .ar4-card:nth-child(4)::before {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--tv-ink-inverted-primary);
-}
-.ar4-grid .ar4-card:nth-child(n+5)::before {
-  opacity: 0.55;
+  counter-reset: none;
 }
 .ar4-card {
   transition: box-shadow var(--tv-duration-base) var(--tv-easing-standard);

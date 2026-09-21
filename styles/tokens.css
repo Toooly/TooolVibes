@@ -800,7 +800,7 @@
      MobileBottomNav publishes --tv-bottom-nav-total.
      Comparison Tray publishes --tv-tray-height.
      Routes consume both for their padding-bottom. */
-  --tv-bottom-nav-total: 4.0625rem; /* ~65px = nav 3.55 + safe-area padding 6 + extra */
+  --tv-bottom-nav-total: 3.625rem; /* 58px = expanded inner 52 + padding 6; safe-area added by CSS consumers */
   /* V3 chrome geometry: --tv-bottom-nav-total is the ONLY layout reservation
      (footer shell padding). Inner heights below are visual chrome metrics.
      --bottom-nav-height stays chrome-geometry only (FAB dock inset + legacy

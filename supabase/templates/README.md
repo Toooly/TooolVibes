@@ -1,6 +1,10 @@
 # Supabase Auth email templates
 
-These files are the branded TooolVibes copy for Supabase Auth.
+These files are the branded TooolVibes copy to paste into the Supabase dashboard.
+They are **not live** until pasted there. The live magic-link send path is Resend
+via `/api/auth/magic-link` (`lib/auth/magic-link-email.ts`).
+
+See `docs/auth/magic-link-email.md`.
 
 Apply them in Supabase Dashboard:
 

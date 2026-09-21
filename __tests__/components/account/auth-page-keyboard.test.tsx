@@ -197,4 +197,14 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
 
     await expectNoAxeViolations(container);
   });
+
+  it("does not advertise OAuth providers by name", () => {
+    render(<AuthPage />);
+    expect(screen.queryByText(/Google, Apple, GitHub/)).toBeNull();
+    expect(
+      screen.getByText(
+        "Un link alla tua email, oppure un account se disponibile. Niente password.",
+      ),
+    ).toBeTruthy();
+  });
 });

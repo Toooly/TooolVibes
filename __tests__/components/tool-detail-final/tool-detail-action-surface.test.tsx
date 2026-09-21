@@ -194,7 +194,7 @@ describe("ToolDetailActionSurface personal workspace", () => {
 });
 
 describe("ToolDetailActionSurface public CTA order", () => {
-  it("orders Confronta before Salva, then Visita", () => {
+  it("orders Confronta, then Visita, then Salva", () => {
     renderSurface();
 
     const group = screen.getByRole("group", { name: "Azioni scheda" });
@@ -202,12 +202,12 @@ describe("ToolDetailActionSurface public CTA order", () => {
 
     expect(kids[0]?.className).toContain("td-final-cta--primary");
     expect(kids[0]?.textContent).toContain("Confronta");
-    expect(kids[1]?.className).toContain("td-final-save-cluster");
-    expect(kids[1]?.textContent).toContain("Salva");
-    expect(kids[2]?.className).toContain("td-final-cta--secondary");
-    expect(kids[2]?.className).not.toContain("td-final-cta--primary");
-    expect(kids[2]?.className).not.toContain("is-ready");
-    expect(kids[2]?.getAttribute("href")).toBe("https://cursor.com");
+    expect(kids[1]?.className).toContain("td-final-cta--secondary");
+    expect(kids[1]?.className).not.toContain("td-final-cta--primary");
+    expect(kids[1]?.className).not.toContain("is-ready");
+    expect(kids[1]?.getAttribute("href")).toBe("https://cursor.com");
+    expect(kids[2]?.className).toContain("td-final-save-cluster");
+    expect(kids[2]?.textContent).toContain("Salva");
   });
 
   it("keeps Visita outline/secondary and Confronta as the yellow primary", () => {

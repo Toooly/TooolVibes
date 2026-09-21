@@ -12,6 +12,11 @@ import {
   rateLimitResponseHeaders,
 } from "@/lib/security/distributed-state";
 import { magicLinkRateLimitPolicies } from "@/lib/security/rate-limit-policies";
+import {
+  MAGIC_LINK_EMAIL_SUBJECT,
+  getMagicLinkHtml,
+  getMagicLinkText,
+} from "@/lib/auth/magic-link-email";
 
 const metadataValueSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 const magicLinkRequestSchema = z
@@ -103,40 +108,6 @@ function getAuthCallbackUrl(callbackOrigin: string, tokenHash: string) {
   return url.toString();
 }
 
-function getSignupHtml(confirmUrl: string) {
-  return `
-    <h2>Pronto per diventare un TooolViber?</h2>
-
-    <p>
-      Conferma la tua email e collega il tuo spazio TooolVibes:
-      shortlist, confronti e tool salvati resteranno agganciati al tuo account.
-    </p>
-
-    <p>
-      <a href="${confirmUrl}">
-        Conferma e apri TooolVibes
-      </a>
-    </p>
-
-    <p>Se il pulsante non funziona, copia e incolla questo link nel browser:</p>
-
-    <p>${confirmUrl}</p>
-
-    <p>Se non hai richiesto tu questa email, puoi ignorarla.</p>
-  `;
-}
-
-function getSignupText(confirmUrl: string) {
-  return [
-    "Pronto per diventare un TooolViber?",
-    "",
-    "Conferma la tua email e collega il tuo spazio TooolVibes: shortlist, confronti e tool salvati resteranno agganciati al tuo account.",
-    "",
-    `Conferma e apri TooolVibes: ${confirmUrl}`,
-    "",
-    "Se non hai richiesto tu questa email, puoi ignorarla.",
-  ].join("\n");
-}
 
 function projectRefFromUrl(url: string | undefined) {
   if (!url) return undefined;
@@ -536,17 +507,17 @@ export async function POST(request: Request) {
   const confirmUrl = getAuthCallbackUrl(callbackOrigin, hashedToken);
   const result = await sendEmail({
     to: email,
-    subject: "Entra in TooolVibes",
-    html: getSignupHtml(confirmUrl),
-    text: getSignupText(confirmUrl),
+    subject: MAGIC_LINK_EMAIL_SUBJECT,
+    html: getMagicLinkHtml(confirmUrl),
+    text: getMagicLinkText(confirmUrl),
   });
 
   if (!result.sent) {
     const deliveredLocally = await deliverLocalAuthEmail({
       to: email,
-      subject: "Entra in TooolVibes",
-      html: getSignupHtml(confirmUrl),
-      text: getSignupText(confirmUrl),
+      subject: MAGIC_LINK_EMAIL_SUBJECT,
+      html: getMagicLinkHtml(confirmUrl),
+      text: getMagicLinkText(confirmUrl),
     });
     if (!deliveredLocally) {
       const message =

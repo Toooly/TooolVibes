@@ -53,19 +53,21 @@ export function CollectionSectionNavV4({ items }: Props) {
 
   return (
     <nav className="cx-section-nav" aria-label="Sezioni della raccolta">
-      <ol>
-        {safe.map((item) => (
-          <li key={item.id}>
-            <a
-              href={`#${item.id}`}
-              aria-current={active === item.id ? "true" : undefined}
-              className={active === item.id ? "is-active" : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ol>
+      <div className="cx-section-nav__scroller">
+        <ol>
+          {safe.map((item) => (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                aria-current={active === item.id ? "true" : undefined}
+                className={active === item.id ? "is-active" : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
     </nav>
   );
 }

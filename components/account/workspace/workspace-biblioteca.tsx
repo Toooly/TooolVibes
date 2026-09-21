@@ -302,6 +302,8 @@ function LibraryRow({
   const stackLine = formatStackContext(item.stackNames);
   const descriptor = catalogItem.shortDescription?.trim() || catalogItem.categoryLabel;
   const primary = item.primaryAction;
+  const statusLabel = item.reviewDue ? "Da rivedere" : item.compact.label;
+  const noteExcerpt = item.note ? excerptPrivateNote(item.note, 80) : null;
 
   function handlePrimary() {
     if (primary.kind === "rivedi" || primary.kind === "valuta") {
@@ -328,18 +330,12 @@ function LibraryRow({
         </Link>
         {descriptor ? <p className="tv-lib-desc">{descriptor}</p> : null}
         <p className="tv-lib-meta">
-          <WorkspaceChip tone={relationshipTone(item)}>{item.compact.label}</WorkspaceChip>
-          {item.reviewDue ? <WorkspaceChip tone="revisit">Da rivedere</WorkspaceChip> : null}
-          {item.inCompare ? <WorkspaceChip tone="top">Nel confronto</WorkspaceChip> : null}
-          {stackLine ? <WorkspaceChip tone="stack">{stackLine}</WorkspaceChip> : null}
-          {revisitLine ? <span>{revisitLine}</span> : null}
-          {formatWorkspaceDate(item.updatedAt) ? (
-            <span>{formatWorkspaceDate(item.updatedAt)}</span>
-          ) : null}
-          {item.pinned ? <WorkspaceChip tone="pin">Fisso</WorkspaceChip> : null}
-          {item.note ? (
-            <span title={excerptPrivateNote(item.note, 80) ?? undefined}>
-              <WorkspaceChip tone="note">Nota</WorkspaceChip>
+          <WorkspaceChip tone={item.reviewDue ? "revisit" : relationshipTone(item)}>
+            {statusLabel}
+          </WorkspaceChip>
+          {noteExcerpt ? (
+            <span className="tv-lib-note-excerpt" title={noteExcerpt}>
+              {noteExcerpt}
             </span>
           ) : null}
         </p>
@@ -368,6 +364,23 @@ function LibraryRow({
         <details className="tv-lib-menu">
           <summary aria-label={`Azioni per ${name}`}>⋯</summary>
           <div className="tv-lib-menu__panel">
+            {item.inCompare ? (
+              <span className="tv-lib-action tv-lib-action--status">Nel confronto</span>
+            ) : null}
+            {stackLine ? (
+              <span className="tv-lib-action tv-lib-action--status">{stackLine}</span>
+            ) : null}
+            {revisitLine ? (
+              <span className="tv-lib-action tv-lib-action--status">{revisitLine}</span>
+            ) : null}
+            {formatWorkspaceDate(item.updatedAt) ? (
+              <span className="tv-lib-action tv-lib-action--status">
+                {formatWorkspaceDate(item.updatedAt)}
+              </span>
+            ) : null}
+            {item.pinned ? (
+              <span className="tv-lib-action tv-lib-action--status">Fisso</span>
+            ) : null}
             <Link className="tv-lib-action" href={`/toools/${item.slug}`}>
               Apri
             </Link>

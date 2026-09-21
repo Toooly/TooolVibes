@@ -3,54 +3,59 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Entra in TooolVibes</title>
   </head>
-  <body style="margin:0; background:#080512; color:#f8f5ff; font-family:Inter, Arial, sans-serif;">
-    <div style="display:none; max-height:0; overflow:hidden; opacity:0;">
-      Conferma l'accesso e ritrova la tua selezione TooolVibes.
+  <body style="margin:0;padding:0;background:#08080a;color:#f4f0e7;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+      Conferma la tua email per ritrovare Salvati, confronti e decisioni nel tuo spazio.
     </div>
-
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#080512; margin:0; padding:32px 16px;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#08080a;margin:0;padding:32px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px; overflow:hidden; border:1px solid rgba(255,255,255,0.14); border-radius:28px; background:linear-gradient(145deg,#151029 0%,#0c0719 58%,#111f37 100%);">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#08080a;">
             <tr>
-              <td style="padding:32px 28px 12px;">
-                <p style="margin:0 0 18px; color:#6ee7ff; font-size:12px; font-weight:800; letter-spacing:0.22em; text-transform:uppercase;">
-                  TOOOLVIBES
-                </p>
-                <h1 style="margin:0; color:#ffffff; font-size:34px; line-height:1.05; letter-spacing:-0.02em;">
-                  Pronto per entrare in TooolVibes?
+              <td style="padding:8px 8px 20px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f4f0e7;">
+                TooolVibes
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 8px 8px;font-family:Arial,Helvetica,sans-serif;">
+                <h1 style="margin:0;font-size:28px;line-height:1.15;color:#fffdf8;font-weight:700;">
+                  Entra in TooolVibes
                 </h1>
-                <p style="margin:18px 0 0; color:rgba(248,245,255,0.76); font-size:16px; line-height:1.65;">
-                  Premi il pulsante qui sotto per confermare l'accesso e collegare shortlist, compare e tool salvati al tuo account.
+                <p style="margin:16px 0 0;font-size:16px;line-height:1.6;color:#c2beb5;">
+                  Conferma la tua email per ritrovare Salvati, confronti e decisioni nel tuo spazio.
                 </p>
               </td>
             </tr>
-
             <tr>
-              <td style="padding:14px 28px 8px;">
-                <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email" style="display:block; border-radius:999px; background:linear-gradient(135deg,#7c4dff 0%,#39d2f6 100%); color:#ffffff; font-size:16px; font-weight:900; line-height:52px; text-align:center; text-decoration:none; box-shadow:0 18px 44px rgba(57,210,246,0.22);">
-                  Conferma e apri TooolVibes
-                </a>
+              <td style="padding:24px 8px;">
+                <table role="presentation" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="center" bgcolor="#c9a227" style="border-radius:8px;background:#c9a227;">
+                      <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:14px 28px;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:1.2;color:#08080a;text-decoration:none;">
+                        Conferma e apri TooolVibes
+                      </a>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
-
             <tr>
-              <td style="padding:18px 28px 30px;">
-                <p style="margin:0; color:rgba(248,245,255,0.58); font-size:13px; line-height:1.7;">
-                  Se il pulsante non funziona, copia e incolla questo link nel browser:
-                </p>
-                <p style="margin:10px 0 0; word-break:break-all; color:#9ddcff; font-size:12px; line-height:1.6;">
-                  {{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email
-                </p>
+              <td style="padding:8px 8px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.65;color:#8d8981;">
+                <p style="margin:0;">Questo link è valido una sola volta e scade a breve.</p>
+                <p style="margin:14px 0 0;">Se il pulsante non funziona, copia e incolla questo link nel browser:</p>
+                <p style="margin:10px 0 0;word-break:break-all;color:#c2beb5;">{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&amp;type=email</p>
+                <p style="margin:18px 0 0;">Se non hai richiesto tu questa email, puoi ignorarla.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 8px 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#55524d;">
+                TOOOLVIBES
               </td>
             </tr>
           </table>
-
-          <p style="max-width:520px; margin:18px auto 0; color:rgba(248,245,255,0.5); font-size:12px; line-height:1.6; text-align:center;">
-            Hai ricevuto questa email per accedere a TooolVibes con {{ .Email }}. Se non sei stato tu, puoi ignorarla.
-          </p>
         </td>
       </tr>
     </table>

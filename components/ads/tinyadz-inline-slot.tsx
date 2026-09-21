@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
@@ -12,24 +13,33 @@ import {
 } from "@/lib/ads/tinyadz-config";
 import "./tinyadz-inline-slot.css";
 
+const FILL_TIMEOUT_MS = 8000;
+const MIN_FILL_PX = 32;
+
+type FillState = "waiting" | "filled" | "empty";
+
+function paintedFillPx(root: Element): number {
+  const iframe = root.querySelector("iframe.inlined-ta-ad");
+  if (!iframe) return 0;
+  return iframe.getBoundingClientRect().height;
+}
+
 /**
  * TinyAdz manual inline slot for curated page placements.
  *
- * This component only renders the TinyAdz inline container agreement:
+ * Renders the TinyAdz inline container agreement:
  *
  *    <div ta-ad-container="" />
  *
- * It renders NO script (the TinyAdzLoader owns the single script node), keeps
- * a single canonical consent state (consumed from AdvertisingConsentProvider),
- * and returns `null` whenever TinyAdz is disabled, the site id is missing,
- * advertising consent is not explicitly granted, or the pathname is excluded.
- *
- * Because it returns nothing unless the ad may actually run, there is no blank
- * advertising gap before consent.
+ * No script (TinyAdzLoader owns the single script node). Returns null when
+ * TinyAdz is disabled, the site id is missing, advertising consent is not
+ * granted, or the pathname is excluded. An empty vendor fill keeps the host
+ * mounted at height 0 so a late fill can still paint.
  */
 export function TinyAdzInlineSlot({
   placement,
-}: Readonly<{ placement: string }>) {
+  asGridItem = false,
+}: Readonly<{ placement: string; asGridItem?: boolean }>) {
   const pathname = usePathname();
   const { state: consent } = useAdvertisingConsent();
   const config = readTinyAdzConfig({
@@ -37,24 +47,101 @@ export function TinyAdzInlineSlot({
     [TINYADZ_SITE_ID_ENV]: process.env.NEXT_PUBLIC_TINYADZ_SITE_ID,
     [TINYADZ_TEST_MODE_ENV]: process.env.NEXT_PUBLIC_TINYADZ_TEST_MODE,
   });
+  const hostRef = useRef<HTMLElement | null>(null);
+  const [fillState, setFillState] = useState<FillState>("waiting");
 
-  if (
+  const gated =
     !config.enabled ||
     !config.siteId ||
     consent !== "granted" ||
-    !isTinyAdzEligiblePath(pathname)
-  ) {
+    !isTinyAdzEligiblePath(pathname);
+
+  useEffect(() => {
+    if (gated) return;
+    const host = hostRef.current;
+    if (!host) return;
+
+    let resizeObserver: ResizeObserver | null = null;
+    let mutationObserver: MutationObserver | null = null;
+    let timer = 0;
+
+    const observePainted = () => {
+      if (typeof ResizeObserver === "undefined") return;
+      if (!resizeObserver) {
+        resizeObserver = new ResizeObserver(() => {
+          detect();
+        });
+      }
+      resizeObserver.observe(host);
+      host.querySelectorAll("iframe.inlined-ta-ad").forEach((frame) => {
+        resizeObserver?.observe(frame);
+      });
+    };
+
+    const detect = () => {
+      if (paintedFillPx(host) >= MIN_FILL_PX) {
+        setFillState("filled");
+        mutationObserver?.disconnect();
+        resizeObserver?.disconnect();
+        window.clearTimeout(timer);
+        return true;
+      }
+      observePainted();
+      return false;
+    };
+
+    if (detect()) return;
+
+    mutationObserver = new MutationObserver(() => {
+      detect();
+    });
+    mutationObserver.observe(host, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+
+    timer = window.setTimeout(() => {
+      setFillState((current) => (current === "waiting" ? "empty" : current));
+    }, FILL_TIMEOUT_MS);
+
+    return () => {
+      mutationObserver?.disconnect();
+      resizeObserver?.disconnect();
+      window.clearTimeout(timer);
+    };
+  }, [gated]);
+
+  if (gated) {
     return null;
   }
 
-  return (
+  const slot = (
     <aside
-      aria-label="Pubblicità"
+      ref={hostRef}
+      aria-label={fillState === "filled" ? "Pubblicità" : undefined}
+      aria-hidden={fillState !== "filled"}
       className="tinyadz-inline-slot"
       data-tinyadz-placement={placement}
+      data-tinyadz-state={fillState}
     >
-      <p className="tinyadz-inline-slot__label">Pubblicità</p>
+      {fillState === "filled" ? (
+        <p className="tinyadz-inline-slot__label">Pubblicità</p>
+      ) : null}
       <div ta-ad-container="" />
     </aside>
   );
+
+  if (asGridItem) {
+    if (fillState !== "filled") {
+      return (
+        <div className="tinyadz-inline-slot--probe" aria-hidden="true">
+          {slot}
+        </div>
+      );
+    }
+    return <li className="ar4-grid__item--ad">{slot}</li>;
+  }
+
+  return slot;
 }

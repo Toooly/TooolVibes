@@ -1,8 +1,13 @@
 Entra in TooolVibes
 
-Conferma l'accesso e ritrova la selezione che hai iniziato a costruire.
+Conferma la tua email per ritrovare Salvati, confronti e decisioni nel tuo spazio.
 
-Apri questo link per completare l'accesso:
+Conferma e apri TooolVibes:
 {{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=email
 
+Questo link è valido una sola volta e scade a breve.
+Se il pulsante non funziona, copia e incolla il link nel browser.
+
 Se non hai richiesto tu questa email, puoi ignorarla.
+
+TOOOLVIBES

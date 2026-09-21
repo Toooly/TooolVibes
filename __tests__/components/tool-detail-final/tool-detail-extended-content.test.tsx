@@ -137,4 +137,25 @@ describe("ToolDetailExtendedContent public markdown", () => {
     expect(text).not.toContain("Nessun tag associato");
     expect(text).not.toContain("Data non disponibile");
   });
+
+  it("omits a Pricing accordion when the body is only the generic disclaimer", () => {
+    const { container } = render(
+      <ToolDetailExtendedContent
+        tool={makeTool({
+          extendedContent: [
+            "## Overview approfondita",
+            "Testo pubblico della scheda.",
+            "## Pricing",
+            "`Piani e condizioni possono cambiare. Verifica i dettagli aggiornati sul sito ufficiale prima di scegliere.`",
+          ].join("\n\n"),
+        })}
+      />,
+    );
+    const summaries = Array.from(container.querySelectorAll("summary")).map(
+      (node) => node.textContent?.trim(),
+    );
+    expect(summaries).not.toContain("Pricing");
+    expect(container.textContent).not.toContain("Piani e condizioni possono cambiare");
+  });
+
 });

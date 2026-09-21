@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
@@ -26,10 +26,38 @@ export function ConsentBanner() {
   const { state, grantAll, denyNonNecessary, openSettings } =
     useAdvertisingConsent();
   const [mounted, setMounted] = useState(false);
+  const bannerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    if (!mounted || state !== "unknown") {
+      root.style.setProperty("--tv-consent-banner-height", "0px");
+      return () => {
+        root.style.setProperty("--tv-consent-banner-height", "0px");
+      };
+    }
+
+    const publish = () => {
+      const height = bannerRef.current?.offsetHeight ?? 0;
+      root.style.setProperty("--tv-consent-banner-height", `${height}px`);
+    };
+
+    publish();
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(publish);
+    if (bannerRef.current && observer) observer.observe(bannerRef.current);
+    window.addEventListener("resize", publish);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", publish);
+      root.style.setProperty("--tv-consent-banner-height", "0px");
+    };
+  }, [mounted, state]);
 
   /* v3.2: no auto-focus. The banner is a NON-modal surface; stealing the
      initial focus breaks the skip-link-first keyboard contract on every
@@ -42,6 +70,7 @@ export function ConsentBanner() {
 
   return createPortal(
     <div
+      ref={bannerRef}
       role="dialog"
       aria-modal="false"
       aria-label="Preferenze pubblicitarie"

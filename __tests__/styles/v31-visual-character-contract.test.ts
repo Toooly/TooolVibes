@@ -16,6 +16,7 @@ const footerTsx = readFileSync(
   "utf8",
 );
 const globalsCss = readFileSync(resolve(process.cwd(), "app/globals.css"), "utf8");
+const shellCss = readFileSync(resolve(process.cwd(), "styles/shell.css"), "utf8");
 
 describe("V3.1 visual character restore", () => {
   it("loads after member-experience so chapter materials can win", () => {
@@ -35,10 +36,11 @@ describe("V3.1 visual character restore", () => {
   });
 
   it("restores ivory footer presence without dropping nav reservation", () => {
-    expect(characterCss).toContain(".site-footer-v2.tv-launchpad");
+    expect(characterCss).toContain(".site-footer-v2.tv-utility");
     expect(characterCss).toContain("var(--tv-surface-inverted)");
-    expect(footerTsx).toContain("tv-launchpad__signature");
+    expect(footerTsx).toContain("tv-utility");
     expect(footerTsx).toContain("BrandLogo");
+    expect(footerTsx).not.toContain("tv-launchpad__signature");
   });
 
   it("hides the skip link with clip, not transform", () => {
@@ -48,5 +50,14 @@ describe("V3.1 visual character restore", () => {
     );
     expect(skip).toContain("clip-path: inset(50%)");
     expect(skip).not.toContain("translateY(-160%)");
+  });
+
+  it("does not force inverted ink on utility footer headings", () => {
+    const heading = shellCss.slice(
+      shellCss.indexOf(".site-footer-v2 h3 {"),
+      shellCss.indexOf(".site-footer-v2__links"),
+    );
+    expect(heading).toContain("var(--tv-ink-primary)");
+    expect(heading).not.toContain("var(--tv-ink-inverted)");
   });
 });

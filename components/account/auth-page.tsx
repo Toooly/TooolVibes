@@ -134,7 +134,7 @@ export function AuthPage() {
                 ? "Due minuti. Poi salvati, confronti e motivazioni restano con te."
                 : activeTab === "recover"
                   ? "Stesso accesso sicuro, sullo stesso spazio."
-                  : "Google, Apple, GitHub — oppure un link alla tua email. Niente password."}
+                  : "Un link alla tua email, oppure un account se disponibile. Niente password."}
             </p>
           </div>
 

@@ -80,12 +80,16 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
                   {alt.name}
                 </Link>
               </span>
-              <span className="td-final-alt-cell td-final-alt-cell--reason">
-                {why}
-              </span>
-              <span className="td-final-alt-cell td-final-alt-cell--difference">
-                {difference}
-              </span>
+              {why ? (
+                <span className="td-final-alt-cell td-final-alt-cell--reason">
+                  {why}
+                </span>
+              ) : null}
+              {difference ? (
+                <span className="td-final-alt-cell td-final-alt-cell--difference">
+                  {difference}
+                </span>
+              ) : null}
               <span className="td-final-alt-cell td-final-alt-cell--score">
                 {assessment.value !== null ? (
                   <>

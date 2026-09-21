@@ -145,8 +145,17 @@ describe("magic-link route diagnostics", () => {
       options: { redirect_to: "https://tooolvibes.eu/auth/callback" },
     });
     expect(email.send).toHaveBeenCalled();
-    const sent = vi.mocked(email.send).mock.calls[0][0] as { html: string };
-    expect(sent.html).toContain("/auth/callback?token_hash=hash-token-value&type=email");
+    const sent = vi.mocked(email.send).mock.calls[0][0] as {
+      subject: string;
+      html: string;
+      text: string;
+    };
+    expect(sent.subject).toBe("Entra in TooolVibes");
+    expect(sent.html).toContain("Conferma e apri TooolVibes");
+    expect(sent.html).toContain("token_hash=hash-token-value&amp;type=email");
+    expect(sent.text).toContain("/auth/callback?token_hash=hash-token-value&type=email");
+    expect(sent.html.toLowerCase()).not.toContain("password");
+    expect(sent.text.toLowerCase()).not.toContain("password");
     expect(JSON.stringify(json)).not.toContain("hash-token-value");
   });
 

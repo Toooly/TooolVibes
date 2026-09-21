@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildAlternativeWhy,
   deriveEditorialScore,
+  deriveEssentialDifference,
   deriveScoreDimensions,
   deriveTrend,
   deriveVotes,
@@ -153,7 +154,7 @@ describe("buildAlternativeWhy", () => {
     expect(why).toMatch(/avanzata|stretto/i);
   });
 
-  it("falls back to a default when no clear differentiator", () => {
+  it("omits generic complementary copy when there is no real difference", () => {
     const current = makeTool({ name: "Blink" });
     const alt = makeTool({
       slug: "same",
@@ -165,6 +166,71 @@ describe("buildAlternativeWhy", () => {
       featured: false,
     });
     const why = buildAlternativeWhy(current, alt);
-    expect(why).toContain("Blink");
+    expect(why).toBeNull();
+  });
+});
+
+describe("deriveEssentialDifference", () => {
+  it("returns a unique level or group fact", () => {
+    const current = makeTool({ name: "Blink", level: "intermediate" });
+    const expert = makeTool({ slug: "vibecode", name: "VibeCode", level: "expert" });
+    expect(deriveEssentialDifference(current, expert)).toBe("Più avanzato");
+
+    const beginner = makeTool({ slug: "easy", name: "Easy", level: "beginner" });
+    expect(deriveEssentialDifference(current, beginner)).toBe("Più accessibile");
+
+    const grouped = makeTool({
+      slug: "nocode",
+      name: "NoCode",
+      filterGroups: ["no-code"],
+      level: current.level,
+    });
+    expect(deriveEssentialDifference(current, grouped)).toBe("No Code");
+  });
+
+  it("returns a unique tag when that is the only fact", () => {
+    const current = makeTool({
+      name: "Blink",
+      filterGroups: ["vibe-coding"],
+      tags: ["vibe coding"],
+      level: "featured",
+    });
+    const alt = makeTool({
+      slug: "other",
+      name: "Other",
+      filterGroups: ["vibe-coding"],
+      tags: ["vibe coding", "prototype"],
+      level: "featured",
+      toolOfWeek: false,
+      featured: false,
+    });
+    expect(deriveEssentialDifference(current, alt)).toBe("prototype");
+  });
+
+  it("returns null instead of fake Complementare or In evidenza copy", () => {
+    const current = makeTool({ name: "Blink" });
+    const featuredOnly = makeTool({
+      slug: "same",
+      name: "Same",
+      filterGroups: current.filterGroups,
+      tags: current.tags,
+      level: current.level,
+      toolOfWeek: true,
+      featured: true,
+      categoryLabel: "Vibe coding / builder app AI",
+    });
+    expect(deriveEssentialDifference(current, featuredOnly)).toBeNull();
+
+    const noFact = makeTool({
+      slug: "blank",
+      name: "Blank",
+      filterGroups: ["vibe-coding"],
+      tags: [],
+      level: null,
+      toolOfWeek: false,
+      featured: false,
+      categoryLabel: "",
+    });
+    expect(deriveEssentialDifference(current, noFact)).toBeNull();
   });
 });

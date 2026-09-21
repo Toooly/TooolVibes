@@ -193,8 +193,8 @@ describe("V3 utility footer — architettura compatta", () => {
   });
 });
 
-describe("SiteFooterV2 — Home launchpad", () => {
-  it("renders destination tiles and progressive affiliate disclosure", () => {
+describe("SiteFooterV2 — Home uses the utility footer", () => {
+  it("renders Esplora/TooolVibes and not the launchpad title", () => {
     pathnameState.current = "/";
     render(
       <AdvertisingConsentProvider>
@@ -202,34 +202,39 @@ describe("SiteFooterV2 — Home launchpad", () => {
       </AdvertisingConsentProvider>,
     );
 
-    expect(screen.getByRole("heading", { name: "Continua da qui." })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Catalogo" }).getAttribute("href")).toBe("/archivio");
-    expect(screen.getByRole("link", { name: "Radar" }).getAttribute("href")).toBe("/radar");
-    expect(screen.getByRole("link", { name: "Raccolte" }).getAttribute("href")).toBe("/collections");
-    expect(screen.getByRole("link", { name: "Guide" }).getAttribute("href")).toBe("/posts");
-    expect(screen.getByRole("link", { name: "Confronto" }).getAttribute("href")).toBe("/compare");
-    expect(screen.getByRole("link", { name: "Salvati" }).getAttribute("href")).toBe("/shortlist");
+    expect(screen.queryByRole("heading", { name: "Continua da qui." })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Esplora" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "TooolVibes" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Parliamone" })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Scrivici/ }).getAttribute("href")).toBe(
       "mailto:hello@tooolvibes.com",
     );
     expect(screen.getByText("Trasparenza e affiliazioni")).toBeTruthy();
     expect(screen.getByText(/TOOOLVIBES ·/)).toBeTruthy();
-    expect(screen.queryByRole("heading", { name: "Esplora" })).toBeNull();
-    expect(screen.queryByRole("heading", { name: "TooolVibes" })).toBeNull();
     expect(screen.getByRole("link", { name: "Privacy" })).toBeTruthy();
   });
 });
 
 describe("SiteFooterV2 — exclusive variants", () => {
-  it("non-Home does not render the launchpad map", () => {
-    pathnameState.current = "/archivio";
-    render(
+  it("home and non-home both render the utility footer", () => {
+    pathnameState.current = "/";
+    const home = render(
       <AdvertisingConsentProvider>
         <SiteFooterV2 />
       </AdvertisingConsentProvider>,
     );
+    expect(home.container.querySelector("footer")?.className).toContain("tv-utility");
+    expect(screen.queryByRole("heading", { name: "Continua da qui." })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Esplora" })).toBeTruthy();
+    home.unmount();
 
+    pathnameState.current = "/archivio";
+    const inner = render(
+      <AdvertisingConsentProvider>
+        <SiteFooterV2 />
+      </AdvertisingConsentProvider>,
+    );
+    expect(inner.container.querySelector("footer")?.className).toContain("tv-utility");
     expect(screen.queryByRole("heading", { name: "Continua da qui." })).toBeNull();
     expect(screen.getByRole("heading", { name: "Esplora" })).toBeTruthy();
   });

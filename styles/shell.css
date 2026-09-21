@@ -109,7 +109,7 @@
 
 .site-footer-v2 h3 {
   margin-bottom: var(--tv-space-4);
-  color: var(--tv-ink-inverted) !important;
+  color: var(--tv-ink-primary) !important;
   font-family: var(--tv-font-family-display);
   font-size: var(--tv-text-label);
   font-weight: var(--tv-weight-bold);
@@ -271,13 +271,7 @@
 
 @media (max-width: 47.99rem) {
   .site-footer-v2__shell {
-    padding-block:
-      var(--tv-space-5)
-      calc(
-        var(--tv-bottom-nav-total, 4.0625rem) +
-        env(safe-area-inset-bottom) +
-        var(--tv-space-5)
-      );
+    padding-block-start: var(--tv-space-5);
     padding-inline: var(--tv-gutter-mobile);
   }
 
@@ -347,19 +341,9 @@
   }
 }
 
-@media (min-width: 48rem) and (max-width: 1279px) {
-  .site-footer-v2__shell {
-    padding-block-end: calc(
-      var(--tv-bottom-nav-total, 4.0625rem) +
-      env(safe-area-inset-bottom) +
-      var(--tv-space-5)
-    );
-  }
-}
-
 @media (min-width: 1280px) {
   .site-footer-v2__shell {
-    padding-block-end: calc(var(--tv-space-16) + env(safe-area-inset-bottom));
+    padding-block-end: calc(var(--tv-space-16) + var(--tv-tray-height, 0px));
   }
 }
 
@@ -648,12 +632,14 @@
 }
 
 @media (max-width: 1279px) {
+  .site-footer-v2 .site-footer-v2__shell,
   .tv-launchpad .site-footer-v2__shell,
   .site-footer-v2.tv-launchpad .tv-launchpad__shell,
   .site-footer-v2.tv-utility .site-footer-v2__shell {
     padding-block-end: calc(
       var(--tv-rhythm-section) +
-      var(--tv-bottom-nav-total, 4.0625rem) +
+      var(--tv-bottom-nav-total) +
+      var(--tv-tray-height, 0px) +
       env(safe-area-inset-bottom)
     );
   }
@@ -877,8 +863,12 @@
   opacity: 0.5;
 }
 
-.site-footer-v2.tv-utility :is(h2, h3, a, p, summary) {
-  color: inherit;
+.site-footer-v2.tv-utility :is(h2, h3) {
+  color: var(--tv-ink-muted-aa);
+}
+
+.site-footer-v2.tv-utility :is(a, p, summary) {
+  color: var(--tv-ink-primary);
 }
 
 .site-footer-v2.tv-utility .site-footer-v2__shell {
@@ -1063,17 +1053,13 @@
 @media (min-width: 48rem) and (max-width: 1279px) {
   .site-footer-v2.tv-utility .site-footer-v2__shell {
     padding-block-start: var(--tv-space-10);
-    padding-block-end: calc(
-      var(--tv-bottom-nav-total, 4.0625rem) +
-      env(safe-area-inset-bottom) +
-      var(--tv-space-8)
-    );
   }
 }
 
 @media (min-width: 1280px) {
   .site-footer-v2.tv-utility .site-footer-v2__shell {
-    padding-block: var(--tv-space-10) var(--tv-space-8);
+    padding-block-start: var(--tv-space-10);
+    padding-block-end: calc(var(--tv-space-8) + var(--tv-tray-height, 0px));
   }
 
   .tv-utility__nav {

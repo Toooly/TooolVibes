@@ -43,14 +43,6 @@
   }
 }
 
-/* dynamic bottom padding owned by fixed-surface contract */
-@media (max-width: 767px) {
-  .td-final-page {
-    padding-bottom: calc(
-      var(--tv-bottom-nav-total, 4.0625rem) + var(--tv-tray-height, 0px)
-    );
-  }
-}
 
 /* ============================================================
    A. HERO — Identity + Action Surface

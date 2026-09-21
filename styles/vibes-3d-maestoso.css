@@ -1423,10 +1423,6 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - var(--tv-header-height, 5rem));
-  min-height: calc(100dvh - var(--tv-header-height, 5rem));
-  padding: var(--tv-space-layout-md) var(--tv-gutter-mobile);
-  overflow: hidden;
 }
 .v-auth-page-bg {
   position: absolute;
@@ -1900,11 +1896,6 @@ canvas {
 @media (max-width: 767px) {
   .v-auth-page {
     align-items: flex-start;
-    padding:
-      1.25rem
-      1rem
-      calc(var(--tv-bottom-nav-total, 5.5rem) + 2rem);
-    overflow: visible;
   }
 
   .v-auth-container--split {

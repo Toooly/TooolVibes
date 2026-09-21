@@ -17,12 +17,7 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
     firstListItemOrSentence(markdown.byId.fit) ||
     tool.useCases[0] ||
     null;
-  const tradeOff =
-    tool.highlights.find((item) => item && item !== fit) ??
-    (tool.whyItMatters && tool.whyItMatters !== fit ? tool.whyItMatters : null) ??
-    extractMarkdownTradeOff(markdown.byId.verdict) ??
-    firstListItemOrSentence(markdown.byId.strengths) ??
-    null;
+  const tradeOff = extractMarkdownTradeOff(markdown.byId.verdict);
   const verdict =
     tool.editorialNote?.trim() ||
     tool.editorialReview?.trim() ||

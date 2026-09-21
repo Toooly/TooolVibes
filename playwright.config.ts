@@ -171,6 +171,46 @@ export default defineConfig({
           dependencies: ["gate-setup"],
         },
         {
+          name: "overflow-375",
+          testMatch: /horizontal-overflow\.spec\.ts/,
+          use: {
+            ...devices["Desktop Chrome"],
+            viewport: { width: 375, height: 812 },
+            storageState: gateStorageState,
+          },
+          dependencies: ["gate-setup"],
+        },
+        {
+          name: "overflow-768",
+          testMatch: /horizontal-overflow\.spec\.ts/,
+          use: {
+            ...devices["Desktop Chrome"],
+            viewport: { width: 768, height: 1024 },
+            storageState: gateStorageState,
+          },
+          dependencies: ["gate-setup"],
+        },
+        {
+          name: "overflow-1280",
+          testMatch: /horizontal-overflow\.spec\.ts/,
+          use: {
+            ...devices["Desktop Chrome"],
+            viewport: { width: 1280, height: 800 },
+            storageState: gateStorageState,
+          },
+          dependencies: ["gate-setup"],
+        },
+        {
+          name: "overflow-1440",
+          testMatch: /horizontal-overflow\.spec\.ts/,
+          use: {
+            ...devices["Desktop Chrome"],
+            viewport: { width: 1440, height: 900 },
+            storageState: gateStorageState,
+          },
+          dependencies: ["gate-setup"],
+        },
+        {
           name: "touch-390",
           testMatch: /touch-interactions\.spec\.ts/,
           use: {

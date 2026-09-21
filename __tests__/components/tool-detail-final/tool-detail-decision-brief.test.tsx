@@ -52,7 +52,7 @@ function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
 }
 
 describe("ToolDetailDecisionBrief", () => {
-  it("renders In breve with Ideale per, Trade-off, and Verdetto", () => {
+  it("renders In breve with Ideale per and Verdetto, omitting junk highlight trade-offs", () => {
     const { container } = render(<ToolDetailDecisionBrief tool={makeTool()} />);
 
     expect(screen.getByText("In breve")).toBeTruthy();
@@ -60,10 +60,31 @@ describe("ToolDetailDecisionBrief", () => {
     const dts = Array.from(container.querySelectorAll("dt")).map(
       (node) => node.textContent?.trim(),
     );
-    expect(dts).toEqual(["Ideale per", "Trade-off", "Verdetto"]);
+    expect(dts).toEqual(["Ideale per", "Verdetto"]);
     expect(screen.getByText("Validare MVP.")).toBeTruthy();
-    expect(screen.getByText("Dal prompt all'app")).toBeTruthy();
+    expect(screen.queryByText("Dal prompt all'app")).toBeNull();
+    expect(screen.queryByText("Trade-off")).toBeNull();
     expect(screen.getByText("Solido per MVP.")).toBeTruthy();
+  });
+
+  it("renders Trade-off only from an editorial tension, not highlights", () => {
+    const { container } = render(
+      <ToolDetailDecisionBrief
+        tool={makeTool({
+          extendedContent: [
+            "## Verdetto editoriale",
+            "**Cosa ci convince:** Solido per MVP.",
+            "**Trade-off da considerare:** Veloce sul prototipo, debole in produzione.",
+          ].join("\n\n"),
+        })}
+      />,
+    );
+    const dts = Array.from(container.querySelectorAll("dt")).map(
+      (node) => node.textContent?.trim(),
+    );
+    expect(dts).toContain("Trade-off");
+    expect(screen.getByText("Veloce sul prototipo, debole in produzione.")).toBeTruthy();
+    expect(screen.queryByText("Dal prompt all'app")).toBeNull();
   });
 
   it("does not surface Non fa per te se in the default brief", () => {

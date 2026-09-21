@@ -255,9 +255,9 @@ export function DefinitiveArchive({
         ? "1 tool trovato"
         : `${sortedFiltered.length} tool trovati`;
 
-  const gridSupporting = !hasActiveFilter
-    ? `${totalTools === 1 ? "1 tool" : `${totalTools} tool`} nel catalogo`
-    : `${sortedFiltered.length} risultati su ${totalTools}`;
+  const gridSupporting = hasActiveFilter
+    ? `${sortedFiltered.length} risultati su ${totalTools}`
+    : null;
 
   function resetAll() {
     setActiveGroup("all");
@@ -315,17 +315,7 @@ export function DefinitiveArchive({
               </p>
             ) : null}
 
-            {/* Dati sintetici — Tool nel catalogo / Categorie / mobile compact */}
-            <ul className="ar4-intro__data" aria-label="Dati catalogo">
-              <li>
-                <strong>{String(totalTools).padStart(2, "0")}</strong>
-                <em>Tool nel catalogo</em>
-              </li>
-              <li>
-                <strong>{String(totalGroups).padStart(2, "0")}</strong>
-                <em>Categorie</em>
-              </li>
-            </ul>
+            {/* Counts live in the intro eyebrow only. */}
           </div>
         </div>
       </section>
@@ -528,13 +518,14 @@ export function DefinitiveArchive({
         <div className="ar4-grid__inner">
           <header className="ar4-grid__head">
             <div>
-              <p className="ar4-grid__eyebrow">Catalogo</p>
               <h2 id="ar4-grid-title" className="ar4-grid__title">
                 {gridH2}
               </h2>
-              <p className="ar4-grid__supporting" aria-live="polite" aria-atomic="true">
-                {gridSupporting}
-              </p>
+              {gridSupporting ? (
+                <p className="ar4-grid__supporting" aria-live="polite" aria-atomic="true">
+                  {gridSupporting}
+                </p>
+              ) : null}
             </div>
           </header>
 
@@ -598,12 +589,7 @@ export function DefinitiveArchive({
                     !hasActiveFilter &&
                     sortKey === "name-asc" &&
                     idx === TINYADZ_INSERT_AFTER - 1 ? (
-                      <li
-                        key="tinyadz-catalog-insert"
-                        className="ar4-grid__item--ad"
-                      >
-                        {adInsert}
-                      </li>
+                      <Fragment key="tinyadz-catalog-insert">{adInsert}</Fragment>
                     ) : null}
                   </Fragment>
                 ))}

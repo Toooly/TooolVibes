@@ -209,7 +209,7 @@ function AuthSheetForm({
         </button>
       ) : null}
       <p className="tv-auth-sheet__footnote">
-        Un click con Google, oppure un link. Niente password.
+        Un link alla tua email, oppure un account se disponibile. Niente password.
       </p>
     </div>
   );
