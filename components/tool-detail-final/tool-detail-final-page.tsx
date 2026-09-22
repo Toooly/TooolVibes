@@ -149,8 +149,8 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           </div>
         </section>
 
-        <ToolDetailDecisionBrief tool={tool} />
         <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
+        <ToolDetailDecisionBrief tool={tool} />
         <ToolDetailExtendedContent
           tool={tool}
           experiences={

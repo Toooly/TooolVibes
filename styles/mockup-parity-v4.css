@@ -1,0 +1,130 @@
+/* V4 literal reconstruction — component trees copied from the final mockups.
+   Mobile only (<=899px). Desktop presentation is untouched. */
+
+@media (max-width: 899px) {
+  /* ---------- 01 HOME: hero/search/tabs/card regions, catalogue list below fold ---------- */
+  .def-latest { margin-top: 170px !important; }
+  .def-editorial__spotlight { padding: 12px !important; }
+  .def-editorial__spot-head { margin-top: 4px !important; }
+  .def-editorial__spot-lede { margin-top: 4px !important; }
+  .tv-featured-tool__meta { margin-top: 6px !important; }
+  .def-editorial__spot-actions { margin-top: 8px !important; }
+
+  /* ---------- 02 CATALOGUE: two-line title, chip rail, row = avatar+score left / text right ---------- */
+  .ar4-intro__title { font-size: 2.5rem !important; max-width: 12ch !important; line-height: 1.02 !important; }
+  .ar4-intro__inner { padding-top: 0 !important; }
+  .ar4-intro__panel { margin-top: 2px !important; }
+  .ar4-categories { margin-top: 10px !important; }
+  .ar4-grid, .ar4-grid__list { margin-top: 14px !important; }
+  .ar4-shell .ar4-card { grid-template-columns: 56px minmax(0, 1fr) !important; grid-template-rows: auto auto auto !important; column-gap: 10px !important; row-gap: 2px !important; }
+  .ar4-shell .ar4-card__top { display: contents !important; }
+  .ar4-shell .ar4-card__avatar { grid-column: 1 !important; grid-row: 1 !important; }
+  .ar4-shell .ar4-card__identity { grid-column: 2 !important; grid-row: 1 !important; }
+  .ar4-shell .ar4-card__triage { display: contents !important; }
+  .ar4-shell .ar4-card__score { grid-column: 1 !important; grid-row: 2 !important; align-self: start !important; }
+  .ar4-shell .ar4-card__best { grid-column: 2 !important; grid-row: 2 !important; }
+  .ar4-shell .ar4-card__desc { display: none !important; }
+  .ar4-shell .ar4-card__actions { grid-column: 2 !important; grid-row: 3 !important; }
+
+  /* ---------- 03 TOOL DETAIL: compact identity block ---------- */
+  .td-final-hero { padding-top: 0 !important; margin-top: -12px !important; }
+  .td-final-hero > *:first-child { margin-top: 0 !important; }
+
+  /* ---------- 04 GUIDES: featured card leaves the first viewport; chips then compact rows ---------- */
+  .guides-section--ink { display: none !important; }
+  .guides-section { padding-top: 6px !important; }
+  .guides-filter { margin-top: 8px !important; }
+  .guides-grid { grid-template-columns: 1fr !important; gap: 10px !important; margin-top: 12px !important; }
+  .guides-grid .guides-card { display: grid !important; grid-template-columns: 76px minmax(0, 1fr) !important; gap: 10px !important; padding: 12px !important; align-items: start !important; }
+  .guides-grid .guides-card__media, .guides-grid .guides-card__thumb { width: 76px !important; height: 76px !important; border-radius: 10px !important; }
+  .guides-grid .guides-card__title { font-size: 1rem !important; }
+
+  /* ---------- 05 GUIDE ARTICLE: product media region, dark index, cream body below it ---------- */
+  .guides-article__hero-media { height: 150px !important; margin-top: 8px !important; }
+  .guides-article__dark-meta .guides-article__byline { display: none !important; }
+  .guides-article__body { margin-top: 16px !important; }
+
+  /* ---------- 06 COLLECTION: compact numbered stages ---------- */
+  .cx-stack-flow-v4__stage > p, .cx-stack-flow-v4__stage > ul { display: none !important; }
+  .cx-stack-flow-v4__list { gap: 8px !important; }
+  .cx-stack-flow-v4__item { min-height: 0 !important; padding-block: 6px !important; }
+
+  /* ---------- 07 RADAR: no facet, no status bar chrome, compact meta line ---------- */
+  .tv-radar__header .catalogo-facet { display: none !important; }
+  .tv-radar__eyebrow { display: none !important; }
+  .tv-radar__status-bar, .tv-radar-status-bar { display: none !important; }
+  .tv-radar__controls { display: none !important; }
+  .tv-radar__title { font-size: 2.5rem !important; max-width: 12ch !important; line-height: 1.02 !important; }
+  .tv-radar__lede { font-size: 0.8rem !important; margin-top: 4px !important; }
+
+  /* ---------- 08 SPAZIO / 09 DECISIONI: compact rows ---------- */
+  .tv-app__pagehead { margin-top: -62px !important; }
+  .tv-mod { padding: 10px 12px !important; }
+  .tv-home-title { font-size: 1rem !important; }
+  .tv-lib-row { padding: 8px 10px !important; min-height: 0 !important; }
+
+  /* ---------- 10 DECISION SHEET: compact cream modal, dark page visible around ---------- */
+  .tv-decision-sheet {
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    max-height: 66vh !important;
+    border-radius: 22px !important;
+    overflow: auto !important;
+  }
+
+  /* ---------- 11 AUTH: identity/heading/collapsed provider area/divider/email row ---------- */
+  .v-auth-page .v-auth-header { margin-top: -30px !important; }
+  .v-auth-page .v-auth-form-wrapper { border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent) !important; padding-top: 12px !important; margin-top: 12px !important; }
+
+  /* ---------- 13 FOOTER: compact columns and legal row ---------- */
+  .site-footer-v2 .tv-utility__identity { margin-bottom: 4px !important; }
+  .site-footer-v2 .tv-utility__summary { margin-top: 2px !important; }
+  .site-footer-v2 .tv-utility__nav { margin-top: 2px !important; }
+  .site-footer-v2 .tv-utility__legal { margin-top: 2px !important; }
+}
+
+@media (max-width: 899px) {
+  /* 02 catalogue: chips visible, mockup spacing */
+  .ar4-categories { display: block !important; margin-top: 44px !important; }
+  .ar4-categories__chips { margin-top: 0 !important; }
+  .ar4-intro__panel { margin-top: 33px !important; }
+  .ar4-grid, .ar4-grid__list { margin-top: 22px !important; }
+
+  /* 03 tool: identity first, then category */
+  .td-final-hero { display: flex !important; flex-direction: column !important; }
+  .td-final-hero__name { order: -1 !important; }
+
+  /* 05 article: pull hero up, index open and body at mockup fold */
+  .guides-article__hero { margin-top: -121px !important; }
+
+  /* 06 collection: hero up 35 */
+  .cx-detail-hero-v4 { margin-top: -79px !important; }
+
+  /* 08 spazio: header up 20 */
+  .tv-app__pagehead { margin-top: -82px !important; }
+
+  /* 09 decisioni: rows down 44 */
+  .tv-decisioni__list, [class*="decisioni"] ul, .tv-app__page > ul { margin-top: 44px !important; }
+}
+
+@media (max-width: 899px) {
+  /* 05 article: TOC index moves into the dark hero, above the cream reading surface */
+  .guides-article__layout { display: flex !important; flex-direction: column !important; }
+  .guides-article__rail { order: -1 !important; margin: 6px 0 10px !important; }
+  .guides-toc { background: transparent !important; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent) !important; border-radius: 16px !important; padding: 12px 14px !important; }
+  .guides-toc__title { font-size: 0.85rem !important; }
+  .guides-toc__list { display: block !important; gap: 0 !important; }
+}
+
+@media (max-width: 899px) {
+  .ar4-intro__facet { display: none !important; }
+  .ar4-categories { margin: 24px 0 0 !important; }
+  .ar4-grid, .ar4-grid__list { margin-top: 16px !important; }
+  .td-final-hero__inner > :first-child { display: none !important; }
+  .guides-article__dark-meta { display: none !important; }
+  .guides-article__rail { margin: 2px 0 8px !important; }
+  .guides-toc { padding: 10px 12px !important; }
+  .guides-article__body { margin-top: 4px !important; }
+}
