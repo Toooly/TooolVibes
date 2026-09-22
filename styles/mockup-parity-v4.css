@@ -169,3 +169,18 @@
   /* 04: third row closes the first viewport, as in the mockup */
   .guides-grid .guides-card:nth-child(4) { margin-top: 300px !important; }
 }
+
+@media (max-width: 899px) {
+  /* 04 V4.2: featured cream card between filter rail and a below-fold list */
+  [data-desktop-featured] { display: none !important; }
+  [data-mobile-featured] .guides-section--ink { display: block !important; }
+  .guides-grid__featured { display: block; margin: 10px 0 0; }
+  .guides-grid__featured .guides-feature { padding: 12px !important; }
+  .guides-grid__featured .guides-feature__title { font-size: 1.2rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+  .guides-grid__featured .guides-feature__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+  .guides-grid { margin-top: 340px !important; }
+  .guides-grid .guides-card:nth-child(4) { margin-top: 0 !important; }
+}
+@media (min-width: 900px) {
+  .guides-grid__featured, [data-mobile-featured] { display: none !important; }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import type { EditorialPostRecord } from "@/lib/types/article";
 
@@ -18,6 +18,7 @@ type GuideGridSectionProps = {
   items: GuideGridItem[];
   topics: Array<{ label: string; count: number }>;
   initialVisible?: number;
+  featured?: ReactNode;
 };
 
 const DEFAULT_INITIAL = 6;
@@ -26,6 +27,7 @@ export function GuideGridSection({
   items,
   topics,
   initialVisible = DEFAULT_INITIAL,
+  featured = null,
 }: GuideGridSectionProps) {
   const [active, setActive] = useState<string>("Tutte");
   const [expanded, setExpanded] = useState(false);
@@ -80,6 +82,12 @@ export function GuideGridSection({
             </button>
           ))}
         </div>
+
+      {featured ? (
+        <div className="guides-grid__featured" data-mobile-featured>
+          {featured}
+        </div>
+      ) : null}
 
       <div className="guides-grid" id="guides-grid-list">
         {visible.length === 0 ? (

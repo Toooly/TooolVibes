@@ -111,6 +111,16 @@ export default async function PostsPage() {
 
   const readingTime = Math.max(1, Math.round(totalReadingMinutes / Math.max(1, items.length)));
 
+  const featuredSection = featureCandidate ? (
+    <GuideFeaturedSection
+      post={featureCandidate}
+      topicLabel={featureTopic}
+      toolName={featureTool?.name ?? null}
+      toolHref={featureToolHref}
+      readingMinutes={featureMinutes}
+    />
+  ) : null;
+
   return (
     <div className="guides-page">
       <GuideMasthead
@@ -120,20 +130,17 @@ export default async function PostsPage() {
         totalCollections={collections.length}
       />
 
-      {featureCandidate ? (
-        <GuideFeaturedSection
-          post={featureCandidate}
-          topicLabel={featureTopic}
-          toolName={featureTool?.name ?? null}
-          toolHref={featureToolHref}
-          readingMinutes={featureMinutes}
-        />
+      {featuredSection ? (
+        <div data-desktop-featured>{featuredSection}</div>
       ) : null}
 
       <GuideGridSection
         items={itemsSorted}
         topics={topics}
         initialVisible={9}
+        featured={
+          featuredSection ? <div data-mobile-featured>{featuredSection}</div> : null
+        }
       />
 
       <section
