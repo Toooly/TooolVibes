@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { MemberPreviewGate } from "@/components/account/member-preview-gate";
 import { GuideMarkdown } from "@/components/guides/guide-markdown";
+import { HeaderAccountControl } from "@/components/layout/header-account-control";
 import { GuideArticleToc } from "@/components/guides/guide-article-toc";
 import { GuideArticleHero } from "@/components/guides/guide-article-hero";
 import { GuideArticleEnd } from "@/components/guides/guide-article-end";
@@ -118,7 +119,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
     .split("\n")
     .filter((line) => line.startsWith("### "))
     .map((line) => line.replace(/^###\s+/, "").trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .slice(0, 5);
   const kindLabel = kindLabels[post.kind];
   const canonicalUrl = `${siteConfig.url}/posts/${post.slug}`;
   const subjectDirectoryTool = getDirectoryToolBySlug(post.tool_slug ?? post.slug);
@@ -285,6 +287,18 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
         ) : null}
 
         <div className="guides-article__layout">
+          <div className="guides-article-mobileheader">
+            <Link href="/posts" className="guides-article-mobileheader__back">
+              ← Tutte le guide
+            </Link>
+            <HeaderAccountControl
+              linkClassName="guides-article-mobileheader__account"
+              menuClassName="guides-article-mobileheader__menu"
+              panelClassName="guides-article-mobileheader__panel"
+              showLabel={false}
+            />
+          </div>
+
           <div className="guides-article__main">
             {isAuthoredPost ? (
               <article

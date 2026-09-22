@@ -593,3 +593,47 @@
   .ar4-shell .ar4-card__toggles > span { position: static !important; }
   .ar4-shell .ar4-card { position: relative !important; }
 }
+
+@media (max-width: 899px) {
+  /* ============ batch-2 V1 ============ */
+  /* 04: every row one cream card with the full anatomy, 156px tall */
+  .guides-grid .guides-card, .guides-grid__featured .guides-card {
+    height: 156px !important;
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+    padding: 12px !important;
+    overflow: hidden !important;
+  }
+  .guides-grid .guides-card__thumb, .guides-grid__featured .guides-card__thumb { width: 92px !important; height: 132px !important; }
+  .guides-grid .guides-card__title, .guides-grid__featured .guides-card__title { font-size: 0.95rem !important; -webkit-line-clamp: 2 !important; }
+  .guides-grid .guides-card__dek, .guides-grid__featured .guides-card__dek { font-size: 0.78rem !important; -webkit-line-clamp: 2 !important; }
+
+  /* 05: detail header, shell-integrated hero, media frame, compact index */
+  body:has(.guides-article) .mobile-top-bar { display: none !important; }
+  .guides-article-mobileheader {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 48px; padding: 0 16px;
+    background: color-mix(in srgb, #241a4a 88%, transparent);
+    position: sticky; top: 0; z-index: 45;
+  }
+  .guides-article-mobileheader__back { color: var(--tv-ink-primary); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+  .guides-article-mobileheader__account { display: grid; place-items: center; width: 36px; height: 36px; }
+  .guides-article__hero { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; padding-inline: 16px !important; padding-top: 10px !important; }
+  .guides-article__hero-media { height: 200px !important; border-radius: 16px !important; background: linear-gradient(160deg, #2a1b52, #14102a) !important; display: grid !important; place-items: center !important; }
+  .guides-article__hero-media-copy { display: none !important; }
+  .guides-article__hero-media-mark { width: 56px !important; height: 56px !important; }
+  .guides-article__hero-index { padding: 12px 14px !important; border-radius: 14px !important; }
+  .guides-article__hero-index ol { display: grid !important; gap: 0 !important; padding-left: 16px !important; }
+  .guides-article__hero-index li { padding: 7px 0 !important; border-bottom: 1px solid color-mix(in srgb, var(--tv-ink-primary) 8%, transparent) !important; font-size: 0.82rem !important; line-height: 1.3 !important; }
+  .guides-article__hero-index li:last-child { border-bottom: 0 !important; }
+
+  /* 06: route strip, compact workflow rows behind the existing details accordion */
+  body:has(.cx-shell) .mobile-top-bar__route { display: none !important; }
+  .cx-stack-flow-v4__item { min-height: 0 !important; }
+  .cx-stack-flow-v4__row { display: block !important; }
+  .cx-stack-flow-v4__why, .cx-stack-flow-v4__flow { display: none !important; }
+  .cx-stack-flow-v4__body { padding: 4px 0 !important; }
+  .cx-stack-flow-v4__stage { padding: 6px 0 !important; }
+  .cx-stack-flow-v4__list { gap: 10px !important; }
+  .cx-stack-flow-v4__details { margin-top: 6px !important; }
+  .cx-section-nav { min-height: 40px !important; }
+}

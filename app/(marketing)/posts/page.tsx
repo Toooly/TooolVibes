@@ -64,6 +64,8 @@ export default async function PostsPage() {
     : 0;
   const featureToolHref = featureTool ? `/toools/${featureTool.slug}` : null;
 
+  const GM_TOPIC_ORDER = ["Tutte", "Scrittura", "Agenti AI", "SEO & content"];
+
   // All guides as grid items.
   const hostFromTool = (tool: { urls?: { website?: string | null } } | null | undefined): string | null => {
     const site = tool?.urls?.website;
@@ -144,6 +146,13 @@ export default async function PostsPage() {
     />
   ) : null;
 
+  const orderedTopics = [...topics].sort((a, b) => {
+    const ia = GM_TOPIC_ORDER.indexOf(a.label);
+    const ib = GM_TOPIC_ORDER.indexOf(b.label);
+    if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    return 0;
+  });
+
   return (
     <div className="guides-page">
       <GuideMasthead
@@ -159,7 +168,7 @@ export default async function PostsPage() {
 
       <GuideGridSection
         items={itemsSorted}
-        topics={topics}
+        topics={orderedTopics}
         initialVisible={9}
         featured={
           featuredRowItem ? (
