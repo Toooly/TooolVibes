@@ -164,3 +164,8 @@
   .guides-grid .guides-card { height: 130px !important; padding: 10px !important; grid-template-columns: 74px minmax(0, 1fr) !important; }
   .guides-grid .guides-card__topline { height: 110px !important; }
 }
+
+@media (max-width: 899px) {
+  /* 04: third row closes the first viewport, as in the mockup */
+  .guides-grid .guides-card:nth-child(4) { margin-top: 300px !important; }
+}
