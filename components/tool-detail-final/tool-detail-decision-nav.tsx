@@ -24,6 +24,18 @@ export function ToolDetailDecisionNav({
           Panoramica
         </a>
       ) : null}
+      {showDeepen ? (
+        <a className="td-final-decision-nav__link" href="#td-final-approfondisci">
+          <Layers3 size={13} aria-hidden="true" style={{ marginRight: 4 }} />
+          Pro e contro
+        </a>
+      ) : null}
+      {showDeepen ? (
+        <a className="td-final-decision-nav__link" href="#td-final-approfondisci">
+          <Layers3 size={13} aria-hidden="true" style={{ marginRight: 4 }} />
+          Prezzi
+        </a>
+      ) : null}
       {showAlternatives ? (
         <a className="td-final-decision-nav__link" href="#td-final-alternatives">
           <Wrench size={13} aria-hidden="true" style={{ marginRight: 4 }} />

@@ -38,7 +38,7 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
       aria-labelledby="td-final-brief-heading"
     >
       <p id="td-final-brief-heading" className="td-final-brief__eyebrow">
-        In breve
+        In sintesi
       </p>
       <dl>
         {rows.map((row) => (

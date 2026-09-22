@@ -366,3 +366,44 @@
   .td-final-brief li, .td-final-brief [class*="bullet"] { color: #8fd6a8 !important; }
   .td-final-decision-nav a, .td-final-decision-nav button { min-height: 36px !important; }
 }
+
+@media (max-width: 899px) {
+  /* ============ batch-1 V3 ============ */
+  /* 01 HOME */
+  .mobile-top-bar { background: color-mix(in srgb, #241a4a 88%, transparent) !important; }
+  .def-cockpit__lede { font-size: 0.72rem !important; line-height: 1.35 !important; }
+  .def-cockpit { margin-bottom: 8px !important; }
+  .def-intent { margin-top: 20px !important; }
+  .def-intent__field { height: 48px !important; min-height: 48px !important; border-color: rgba(139, 108, 255, 0.45) !important; }
+  .tv-discovery-stage .def-start__tabs { height: 44px !important; margin-top: 10px !important; }
+  .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #5a35f0 !important; }
+  .def-editorial__spotlight { margin-top: 10px !important; padding: 14px !important; }
+  .def-editorial__spot-avatar, .def-editorial__spot-mark { width: 64px !important; height: 64px !important; border-radius: 16px !important; }
+  .def-editorial__spot-lede { color: #e4def2 !important; }
+  .def-editorial__spot-cta--primary { min-height: 44px !important; }
+  .def-editorial__spot-disclosure, .def-editorial__spot-affiliate { display: none !important; }
+
+  /* 02 CATALOGUE */
+  body:has(.ar4-shell) [class*="route-strip"] { display: none !important; }
+  .ar4-intro__inner { padding-top: 0 !important; }
+  .ar4-intro__panel { margin-top: 24px !important; }
+  .ar4-categories { margin-top: 24px !important; }
+  .ar4-grid, .ar4-grid__list { margin-top: 8px !important; padding-top: 0 !important; }
+  .ar4-shell .ar4-card { position: relative !important; min-height: 124px !important; padding-right: 56px !important; }
+  .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
+  .ar4-shell .ar4-card__actions { position: absolute !important; top: 10px !important; right: 10px !important; margin: 0 !important; }
+
+  /* 03 TOOL DETAIL: coherent identity grid (undo the earlier nth-child hack) */
+  .td-final-hero__inner > :first-child { grid-template-columns: 64px minmax(0, 1fr) !important; column-gap: 12px !important; }
+  .td-final-hero__identity { display: grid !important; grid-template-columns: 64px minmax(0, 1fr) !important; column-gap: 14px !important; row-gap: 6px !important; }
+  .td-final-hero__breadcrumb { grid-column: 1 / -1 !important; }
+  .td-final-hero__row { display: contents !important; }
+  .td-final-hero__avatar { grid-column: 1 !important; grid-row: 2 !important; width: 64px !important; height: 64px !important; border-radius: 16px !important; }
+  .td-final-hero__name { grid-column: 2 !important; grid-row: 2 !important; align-self: center !important; }
+  .td-final-hero__chips { grid-column: 2 !important; grid-row: 3 !important; }
+  .td-final-hero__chips > * { background: transparent !important; color: var(--tv-ink-secondary) !important; padding: 0 !important; font-size: 0.8rem !important; }
+  .td-final-hero__deck { grid-column: 1 / -1 !important; grid-row: 4 !important; display: -webkit-box !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+  .td-final-hero__facts { grid-column: 1 / -1 !important; grid-row: 5 !important; display: flex !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; }
+  .td-final-scope, .td-final-actions { margin-top: 4px !important; }
+  .td-final-decision-nav__link { min-height: 36px !important; }
+}
