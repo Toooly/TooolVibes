@@ -431,3 +431,32 @@
   .td-final-brief__points li { display: flex !important; gap: 8px !important; align-items: flex-start !important; color: #d9d3e8 !important; }
   .td-final-brief__points li::before { content: "✓" !important; color: #8fd6a8 !important; font-weight: 700 !important; }
 }
+
+@media (max-width: 899px) {
+  /* ============ batch-1 V5 micro-closure ============ */
+  /* 01: recommendation card presence */
+  .def-editorial__spotlight { padding: 16px !important; }
+  .def-editorial__spot-head { margin-top: 6px !important; }
+  .def-editorial__spot-lede { margin-top: 8px !important; }
+  .tv-featured-tool__meta { margin-top: 8px !important; }
+  .def-editorial__spot-actions { margin-top: 12px !important; }
+
+  /* 02: natural rhythm compaction */
+  .ar4-intro__panel { margin-top: 14px !important; }
+  .ar4-categories { margin-top: 12px !important; padding: 0 !important; }
+  .ar4-grid { margin-top: 10px !important; }
+  /* flat bookmark inside the card, upper-right */
+  .ar4-shell .ar4-card__toggles > *, .ar4-shell .ar4-card__actions [class*="selection-chip"] {
+    background: transparent !important; border: 0 !important; box-shadow: none !important;
+    width: 28px !important; height: 28px !important; min-height: 28px !important;
+  }
+
+  /* 03: score anatomy, category quiet, overflow out of the primary row, tab fit, fold */
+  .td-final-score__denom { display: none !important; }
+  .td-final-score::before { content: "★ " !important; color: #f3bf4c !important; }
+  .td-final-hero__chips > * { border: 0 !important; background: transparent !important; color: var(--tv-ink-secondary) !important; }
+  .td-final-save-cluster > :nth-child(2) { display: none !important; }
+  .td-final-decision-nav__link { padding: 0 8px !important; font-size: 0.78rem !important; min-height: 34px !important; }
+  .td-final-decision-nav { overflow-x: auto !important; }
+  .td-final-brief dl { margin-top: 20px !important; }
+}
