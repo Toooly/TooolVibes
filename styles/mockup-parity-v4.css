@@ -542,3 +542,16 @@
   .td-final-brief__points { margin-bottom: 104px !important; }
   .td-final-brief dl { margin-top: 88px !important; }
 }
+
+@media (max-width: 899px) {
+  /* V7 final: pin the real save chip to the card's upper-right corner */
+  .ar4-shell .ar4-card { position: relative !important; }
+  .ar4-shell .ar4-card [class*="selection-chip"] {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    left: auto !important;
+    bottom: auto !important;
+  }
+  .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
+}
