@@ -134,7 +134,7 @@ describe("WorkspaceDecisions dest — Wave 8 redirect", () => {
     navRuntime.search = "view=decisioni&focus=meku";
     render(createElement(WorkspaceShell));
     expect(document.querySelector("[data-decision-sheet]")).toBeTruthy();
-    expect(screen.getByRole("dialog", { name: "Meku" })).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Valuta Meku" })).toBeTruthy();
   });
 
 });

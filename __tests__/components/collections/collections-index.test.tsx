@@ -49,18 +49,10 @@ describe("CollectionsIndex", () => {
       </AccountPreviewProvider>,
     );
 
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/Raccolta/i);
-    expect(screen.getByLabelText("A colpo d'occhio").textContent).toContain("2 raccolte");
-    expect(screen.getByLabelText("A colpo d'occhio").textContent).toContain("tool nello stack");
-    expect(screen.getByLabelText("A colpo d'occhio").textContent).not.toContain("CORE");
-    expect(screen.queryByText(/Verificato agosto 2026/)).toBeNull();
-
-    const how = screen.getByText("Come funzionano le Raccolte?").closest("details");
-    expect(how).toBeTruthy();
-    expect(how?.hasAttribute("open")).toBe(false);
-    expect(how?.textContent).toContain("Le raccolte non sono guide né confronti.");
-    expect(how?.textContent).toContain("CORE / OPT / ALT");
-    expect(how?.querySelector(".cx-index__compare-strip")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Raccolte");
+    expect(screen.getByText("Stack completi per risultati concreti.")).toBeTruthy();
+    expect(screen.queryByText("Come funzionano le Raccolte?")).toBeNull();
+    expect(screen.queryByLabelText("A colpo d'occhio")).toBeNull();
   });
 
   it("puts the featured collection before gated groups and keeps one card CTA", () => {
@@ -70,23 +62,17 @@ describe("CollectionsIndex", () => {
       </AccountPreviewProvider>,
     );
 
-    const featured = container.querySelector(".cx-index__start");
+    const featured = container.querySelector(".cx-index__grid--lead");
     const gate = container.querySelector(".tv-member-gate");
-    const how = container.querySelector(".cx-index__how");
     expect(featured).toBeTruthy();
     expect(gate).toBeTruthy();
-    expect(how).toBeTruthy();
-    expect(
-      (how?.compareDocumentPosition(featured as Node) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
     expect(
       (featured?.compareDocumentPosition(gate as Node) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
 
-    expect(screen.getByRole("heading", { name: "In evidenza" })).toBeTruthy();
     expect(
       container.querySelector(".cx-card-v4--featured .cx-card-v4__cta")?.textContent,
-    ).toContain("Apri la raccolta");
+    ).toContain("Usa questa raccolta");
 
     expect(screen.getByText("Essenziali per design sprint").closest(".tv-member-gate__locked")).toBeTruthy();
     expect(screen.getByText("Le altre raccolte restano nel tuo spazio.")).toBeTruthy();
@@ -116,6 +102,6 @@ describe("CollectionsIndex", () => {
       </AccountPreviewProvider>,
     );
     expect(screen.queryByText("Essenziali per design sprint")?.closest(".tv-member-gate__locked")).toBeNull();
-    expect(screen.getByRole("heading", { name: /Costruisci/ })).toBeTruthy();
+    expect(screen.getAllByText("Usa questa raccolta").length).toBeGreaterThan(0);
   });
 });

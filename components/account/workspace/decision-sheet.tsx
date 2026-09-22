@@ -221,9 +221,8 @@ export function DecisionSheet({
               size="xl"
             />
             <div className="tv-decision-sheet__identity">
-              <p className="tv-decision-sheet__kicker">Decidi</p>
               <SheetTitle id={titleId} className="tv-decision-sheet__title">
-                {toolName}
+                Valuta {toolName}
               </SheetTitle>
               <SheetDescription className="sr-only">
                 Scegli un esito e conferma. Il contesto extra è facoltativo.
@@ -270,8 +269,8 @@ export function DecisionSheet({
               </div>
             ) : null}
 
-            <div className="tv-decision-sheet__field" role="group" aria-label="Perché lo scegli">
-              <span className="tv-decision-sheet__field-label">Perché lo scegli</span>
+            <div className="tv-decision-sheet__field" role="group" aria-label="Perché questa decisione?">
+              <span className="tv-decision-sheet__field-label">Perché questa decisione?</span>
               <div className="tv-decision-sheet__chips">
                 {DECISION_REASON_CHIPS.map((chip) => {
                   const active = reasonChips.includes(chip.id);
@@ -303,7 +302,7 @@ export function DecisionSheet({
               aria-expanded={deepOpen}
               onClick={() => setDeepOpen((value) => !value)}
             >
-              {deepOpen ? "Nascondi contesto" : "Aggiungi perché"}
+              {deepOpen ? "Nascondi dettagli" : "Aggiungi dettagli"}
             </button>
 
             {deepOpen ? (
@@ -390,11 +389,18 @@ export function DecisionSheet({
             ) : null}
             <button
               type="button"
+              className="tv-decision-sheet__cancel"
+              onClick={() => onOpenChange(false)}
+            >
+              Annulla
+            </button>
+            <button
+              type="button"
               className="tv-decision-sheet__confirm"
               disabled={submitting}
               onClick={handleConfirm}
             >
-              Conferma
+              Salva decisione
             </button>
           </footer>
         </SheetContent>

@@ -200,11 +200,9 @@ describe("Catalogo — compressed mobile discovery", () => {
     );
 
     expect(screen.queryByText(/Valutazione editoriale/)).toBeNull();
-    expect(screen.getByText("8.4 · Intermedio")).toBeTruthy();
+    expect(screen.getByText("★ 8.4")).toBeTruthy();
     expect(screen.getByText("Ideale per: Prototipi con AI")).toBeTruthy();
-    expect(document.querySelector(".ar4-card__diff")?.textContent).toBe(
-      "Differenziatore unico",
-    );
+    expect(document.querySelector(".ar4-card__diff")).toBeNull();
   });
 
   it("keeps the mobile density, stretched-link, and gutter contracts", () => {

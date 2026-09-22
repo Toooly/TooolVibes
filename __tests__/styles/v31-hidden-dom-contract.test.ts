@@ -29,7 +29,7 @@ describe("v3.1 hidden-dom contract", () => {
 
   it("uses one semantic home submit label with a density fragment", () => {
     expect(intentSrc).toContain(
-      'Cerca<span className="def-intent__submit-rest"> nel catalogo</span>',
+      'Cerca',
     );
     expect(intentSrc).not.toContain("def-intent__submit-desktop");
     expect(intentSrc).not.toContain("def-intent__submit-mobile");

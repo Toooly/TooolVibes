@@ -71,7 +71,15 @@ function WorkspacePageHead({
   view: WorkspaceView;
 }) {
   if (surface === "settings") return null;
-  if (view === "riprendi") return null;
+  if (view === "riprendi") {
+    return (
+      <header className="tv-app__pagehead">
+        <p className="tv-app__page-kicker">Spazio</p>
+        <h1 className="tv-app__page-title">Bentornato</h1>
+        <p className="tv-app__page-lede">Cosa vuoi fare oggi?</p>
+      </header>
+    );
+  }
   return (
     <header className="tv-app__pagehead">
       <p className="tv-app__page-kicker">{WORKSPACE_VIEW_KICKERS[view]}</p>

@@ -102,7 +102,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
     const email = screen.getByLabelText("Email");
     expect(email.className).toContain("tv-kbd-input");
 
-    const submit = screen.getByRole("button", { name: /Inviami il link/ });
+    const submit = screen.getByRole("button", { name: /Invia link/ });
     expect(submit.className).toContain("tv-kbd-sheet__footer");
 
     vi.spyOn(email, "getBoundingClientRect").mockReturnValue({
@@ -131,7 +131,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
   it("register: tutti i campi hanno lo zoom guard e il submit resta sticky", () => {
     render(<AuthPage />);
 
-    fireEvent.click(screen.getByRole("tab", { name: "Crea spazio" }));
+    fireEvent.click(screen.getByRole("button", { name: "Crea un account" }));
 
     for (const label of ["Nome", "Cognome", "Email"]) {
       const field = screen.getByLabelText(label);
@@ -168,10 +168,10 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
 
       const email = screen.getByLabelText("Email") as HTMLInputElement;
       expect(email.disabled).toBe(false);
-      const submit = screen.getByRole("button", { name: /Inviami il link/ });
+      const submit = screen.getByRole("button", { name: /Invia link/ });
       expect(submit.className).toContain("tv-kbd-sheet__footer");
       // Recovery: tab switch e link footer restano nel DOM.
-      expect(screen.getByRole("tab", { name: "Crea spazio" })).toBeTruthy();
+      expect(screen.getByRole("button", { name: "Crea un account" })).toBeTruthy();
     }
   });
 
@@ -182,7 +182,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
     expect(email.getAttribute("autocomplete")).toBe("email");
     expect(email.getAttribute("type")).toBe("email");
 
-    fireEvent.click(screen.getByRole("tab", { name: "Crea spazio" }));
+    fireEvent.click(screen.getByRole("button", { name: "Crea un account" }));
 
     expect(screen.getByLabelText("Nome").getAttribute("autocomplete")).toBe(
       "given-name",
@@ -203,7 +203,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
     expect(screen.queryByText(/Google, Apple, GitHub/)).toBeNull();
     expect(
       screen.getByText(
-        "Un link alla tua email, oppure un account se disponibile. Niente password.",
+        "Il tuo spazio per salvare, confrontare e ricordare le tue decisioni.",
       ),
     ).toBeTruthy();
   });

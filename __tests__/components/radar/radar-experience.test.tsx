@@ -124,7 +124,7 @@ describe("RadarExperience", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Segui i lanci. Individua i segnali da approfondire.",
+        name: "Cosa sta emergendo adesso",
       }),
     ).toBeTruthy();
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -179,7 +179,7 @@ describe("RadarExperience", () => {
     // viene presentato come live.
     expect(await screen.findByText("QA FIXTURE")).toBeTruthy();
     expect(
-      screen.getByText("Lanci ordinati per periodo. Mappa o elenco."),
+      screen.getByText("I tool più discussi, in crescita ora."),
     ).toBeTruthy();
     expect(screen.queryByText("LIVE")).toBeNull();
     expect(screen.queryByText("Dati aggiornati")).toBeNull();
@@ -319,7 +319,7 @@ describe("RadarExperience", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Segui i lanci. Individua i segnali da approfondire.",
+        name: "Cosa sta emergendo adesso",
       }),
     ).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Segnale" })).toBeNull();

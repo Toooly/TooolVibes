@@ -7,7 +7,6 @@ import {
   getCollectionAudienceDescription,
   getCollectionCoreSlots,
   getCollectionCostLabel,
-  getCollectionDifficultyShort,
   getCollectionSetupLabel,
 } from "@/lib/collections/helpers";
 import {
@@ -35,7 +34,7 @@ function cx(...classes: Array<string | false | null | undefined>) {
  *                     stage labels (matches Card V4.1 stack preview
  *                     but more prominent). Hidden on small screens
  *                     where CollectionStackFlowV4 repeats the sequence.
- *   3. DECISION    — cost · setup · difficulty · verified,
+ *   3. DECISION    — cost · setup · tool count,
  *                     compact 1-line strip
  *   4. ACTIONS     — primary stack CTA + demoted catalog link
  *
@@ -59,8 +58,7 @@ export function CollectionDetailHeroV4({
 
   const cost = getCollectionCostLabel(collection);
   const setup = getCollectionSetupLabel(collection);
-  const difficulty = getCollectionDifficultyShort(collection);
-  const verified = collection.stack_meta?.last_verified;
+  const toolCount = collection.included_tools.length;
   const job = collection.stack_meta?.job_to_be_done;
   const stage = collection.stack_meta?.user_stage;
 
@@ -180,24 +178,12 @@ export function CollectionDetailHeroV4({
               <span className="cx-detail-hero-v4__decision-value">{setup}</span>
             </div>
           )}
-          {difficulty && (
-            <div className="cx-detail-hero-v4__decision-item">
-              <span className="cx-detail-hero-v4__decision-label">
-                Difficoltà
-              </span>
-              <span className="cx-detail-hero-v4__decision-value">
-                {difficulty}
-              </span>
-            </div>
-          )}
-          {verified && (
-            <div className="cx-detail-hero-v4__decision-item">
-              <span className="cx-detail-hero-v4__decision-label">
-                Verificato
-              </span>
-              <span className="cx-detail-hero-v4__decision-value">{verified}</span>
-            </div>
-          )}
+          <div className="cx-detail-hero-v4__decision-item">
+            <span className="cx-detail-hero-v4__decision-label">Tool</span>
+            <span className="cx-detail-hero-v4__decision-value">
+              {toolCount}
+            </span>
+          </div>
         </div>
 
         {/* ZONE 4 — ACTIONS */}

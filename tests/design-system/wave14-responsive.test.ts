@@ -54,8 +54,8 @@ describe("Wave 14 — responsive contracts", () => {
   it("W14-T7 DecisionSheet Fast/Deep semantics stay in place", () => {
     const sheet = read("components/account/workspace/decision-sheet.tsx");
     expect(sheet).toContain('aria-label="Esito"');
-    expect(sheet).toContain("Aggiungi perché");
-    expect(sheet).toContain("Conferma");
+    expect(sheet).toContain("Aggiungi dettagli");
+    expect(sheet).toContain("Salva decisione");
     expect(sheet).toContain("commitWorkspaceDecision");
     expect(sheet).toContain('role="radiogroup"');
   });

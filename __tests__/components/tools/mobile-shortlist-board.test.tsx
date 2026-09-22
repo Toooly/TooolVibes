@@ -307,7 +307,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     const decision = document.querySelector("[data-decision-sheet]");
     expect(decision).toBeInstanceOf(HTMLElement);
     fireEvent.click(
-      within(decision as HTMLElement).getByRole("button", { name: "Conferma" }),
+      within(decision as HTMLElement).getByRole("button", { name: "Salva decisione" }),
     );
 
     expect(readPersistedWorkspace().toolStates.alpha.decision?.outcome).toBe(

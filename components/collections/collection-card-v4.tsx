@@ -180,9 +180,9 @@ export function CollectionCardV4({
         <Link
           href={`/collections/${collection.slug}`}
           className="cx-card-v4__cta"
-          aria-label={`Apri la raccolta ${collection.title}`}
+          aria-label={`Usa questa raccolta ${collection.title}`}
         >
-          <span>Apri la raccolta</span>
+          <span>Usa questa raccolta</span>
           <ArrowRight
             className="cx-card-v4__cta-arrow size-3.5"
             aria-hidden="true"

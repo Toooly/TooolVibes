@@ -213,7 +213,7 @@ export function GuideCard({
         {post.dek ? <p className="guides-card__dek">{post.dek}</p> : null}
         <div className="guides-card__foot">
           <span>Pubblicata {publishedLabel}</span>
-          <span className="guides-card__cta">Apri</span>
+          <span className="guides-card__cta">Leggi la guida</span>
         </div>
       </Link>
     );
@@ -252,7 +252,7 @@ export function GuideCard({
       </div>
       <div className="guides-card__foot">
         <span>{resolvedTopic}</span>
-        <span className="guides-card__cta">Leggi</span>
+        <span className="guides-card__cta">Leggi la guida</span>
       </div>
     </Link>
   );

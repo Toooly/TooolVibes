@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CornerDownRight, GitBranch, GitMerge } from "lucide-react";
+import { ArrowRight, CornerDownRight, GitMerge } from "lucide-react";
 
 import type { CuratedCollection } from "@/lib/types/collection";
 import { getCollectionCoreSlots } from "@/lib/collections/helpers";
@@ -42,16 +42,15 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
       aria-labelledby="cx-stack-flow-title"
     >
       <header className="cx-stack-flow-v4__head">
-        <span className="cx-stack-flow-v4__eyebrow">
-          <GitBranch className="size-3.5" aria-hidden="true" />
+        <h2 id="cx-stack-flow-title" className="sr-only">
           Lo stack, in ordine
-        </span>
-        <h2 id="cx-stack-flow-title" className="cx-stack-flow-v4__title">
-          Come funziona, in pratica
         </h2>
-        {collection.rationale && (
-          <p className="cx-stack-flow-v4__lede">{collection.rationale}</p>
-        )}
+        {collection.rationale ? (
+          <details className="cx-stack-flow-v4__why">
+            <summary>Perché questa raccolta</summary>
+            <p className="cx-stack-flow-v4__lede">{collection.rationale}</p>
+          </details>
+        ) : null}
       </header>
 
       <ol className="cx-stack-flow-v4__list" aria-label="Stack CORE in ordine">

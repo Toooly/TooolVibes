@@ -101,45 +101,32 @@ function makeTool(slug: string, name: string): ToolPublicView {
 
 const tools = [makeTool("blink", "Blink"), makeTool("vibecode", "VibeCode"), makeTool("weweb", "WeWeb")];
 
-describe("DefinitiveHome — podio geometria (Stato B)", () => {
+describe("DefinitiveHome — Ultime dal catalogo", () => {
   afterEach(cleanup);
 
-  it("mostra 'Tre tool da esplorare' senza rank/score quando meno di 3 tool sono valutati", () => {
+  it("mostra 'Ultime dal catalogo' con una riga per tool e Vedi tutte", () => {
     render(
       <AdvertisingConsentProvider>
         <DefinitiveHome tools={tools} />
       </AdvertisingConsentProvider>,
     );
 
-    expect(screen.getByText("Dal catalogo")).toBeTruthy();
-    expect(screen.getByText("Tre tool da esplorare.")).toBeTruthy();
+    expect(screen.getByText("Ultime dal catalogo")).toBeTruthy();
+    expect(screen.getByText("Vedi tutte")).toBeTruthy();
 
-    // Nessun punteggio numerico e nessuna posizione/rank.
-    expect(document.querySelector(".def-editorial__pod-rank")).toBeNull();
-    expect(document.querySelector(".def-editorial__pod-score")).toBeNull();
-
-    // Nessuna dichiarazione di classifica.
-    expect(document.querySelector(".def-editorial__pod-eyebrow")?.textContent).not.toContain("Classifica");
+    const rows = document.querySelectorAll(".def-latest__item");
+    expect(rows.length).toBe(3);
+    expect(document.querySelectorAll(".def-latest__name").length).toBe(3);
   });
 
-  it("dispone i tre tool nella geometria da podio (stage + tre cellule)", () => {
+  it("non mostra piu il podio legacy", () => {
     render(
       <AdvertisingConsentProvider>
         <DefinitiveHome tools={tools} />
       </AdvertisingConsentProvider>,
     );
 
-    const stage = document.querySelector(".def-editorial__pod-stage");
-    expect(stage).not.toBeNull();
-
-    const cells = document.querySelectorAll(".def-editorial__pod-cell");
-    expect(cells.length).toBe(3);
-
-    expect(document.querySelector(".def-editorial__pod-cell--first")).not.toBeNull();
-    expect(document.querySelector(".def-editorial__pod-cell--second")).not.toBeNull();
-    expect(document.querySelector(".def-editorial__pod-cell--third")).not.toBeNull();
-
-    // Tre card esplorative presenti.
-    expect(document.querySelectorAll(".def-editorial__exploratory-card").length).toBe(3);
+    expect(document.querySelector(".def-editorial__pod-stage")).toBeNull();
+    expect(document.querySelector(".def-editorial__exploratory-card")).toBeNull();
   });
 });

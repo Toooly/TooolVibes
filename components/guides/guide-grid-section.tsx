@@ -47,22 +47,6 @@ export function GuideGridSection({
       className="guides-section"
       aria-labelledby="guides-all-title"
     >
-      <div className="guides-section__head">
-        <div className="guides-section__head-row">
-          <div>
-            <p className="guides-kicker guides-kicker--mute">
-              Tutte le guide
-            </p>
-            <h2 id="guides-all-title" className="guides-section__title">
-              <em>Letture</em> organizzate per area.
-            </h2>
-          </div>
-          <p className="guides-section__dek">
-            Ogni guida appartiene a un&apos;area tematica. Filtra per trovare
-            il punto di ingresso più vicino al tuo problema di oggi.
-          </p>
-        </div>
-
         <div className="guides-filter" role="tablist" aria-label="Filtra per area">
           <button
             type="button"
@@ -96,7 +80,6 @@ export function GuideGridSection({
             </button>
           ))}
         </div>
-      </div>
 
       <div className="guides-grid" id="guides-grid-list">
         {visible.length === 0 ? (

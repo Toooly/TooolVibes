@@ -513,11 +513,11 @@ export function RadarExperience({
               </span>
             </p>
             <h1 id="tv-radar-title" className="tv-radar__title">
-              Segui i lanci. Individua i segnali da approfondire.
+              Cosa sta emergendo adesso
             </h1>
             <CatalogoFacetHead active="radar" />
             <p className="tv-radar__lede">
-              Lanci ordinati per periodo. Mappa o elenco.
+              I tool più discussi, in crescita ora.
             </p>
           </div>
         </header>

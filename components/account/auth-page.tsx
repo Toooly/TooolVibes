@@ -1,9 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { motion } from "motion/react";
-import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { layoutMarkerTransition } from "@/lib/motion/transitions";
 import { isAuthFailureMessage } from "@/lib/auth/auth-messages";
 import { useAccount } from "./account-provider";
 import { OAuthButtons } from "./oauth-buttons";
@@ -19,7 +16,7 @@ import {
 import { useAccountOnlineStatus } from "./panel/use-account-online-status";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
-type AuthTab = "login" | "register" | "recover";
+type AuthTab = "login" | "register";
 
 /* B59: ultimo magic link inviato con successo (cella link-pending). */
 type PendingMagicLink = {
@@ -29,7 +26,6 @@ type PendingMagicLink = {
 
 export function AuthPage() {
   const account = useAccount();
-  const preferReducedMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState<AuthTab>("login");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -66,12 +62,6 @@ export function AuthPage() {
     const result = await account.sendMagicLink(normalizedEmail, metadata);
     setPendingLink(result.ok ? { email: normalizedEmail, metadata } : null);
   };
-
-  const tabs: { key: AuthTab; label: string; icon: React.ComponentType<{ size?: number }> }[] = [
-    { key: "login", label: "Accedi", icon: Mail },
-    { key: "register", label: "Crea spazio", icon: User },
-    { key: "recover", label: "Recupera", icon: RotateCcw },
-  ];
 
   /* B59: cella state matrix per la superficie auth (offline, auth non
      disponibile, link pending). Con flag OFF tutto resta come prima. */
@@ -125,49 +115,18 @@ export function AuthPage() {
             <h1 className="v-auth-title">
               {activeTab === "register"
                 ? "Crea il tuo spazio"
-                : activeTab === "recover"
-                  ? "Rientra nel tuo spazio"
-                  : "Entra in TooolVibes"}
+                : "Entra in TooolVibes"}
             </h1>
             <p className="v-auth-subtitle">
               {activeTab === "register"
                 ? "Due minuti. Poi salvati, confronti e motivazioni restano con te."
-                : activeTab === "recover"
-                  ? "Stesso accesso sicuro, sullo stesso spazio."
-                  : "Un link alla tua email, oppure un account se disponibile. Niente password."}
+                : "Il tuo spazio per salvare, confrontare e ricordare le tue decisioni."}
             </p>
-          </div>
-
-          {/* Tabs */}
-          <div className="v-auth-tabs" role="tablist">
-            {tabs.map((tab) => {
-              const isActive = activeTab === tab.key;
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.key}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`v-auth-tab ${isActive ? "is-active" : ""}`}
-                >
-                  <Icon size={14} />
-                  <span>{tab.label}</span>
-                  {isActive && (
-                    <motion.span
-                      className="v-auth-tab-indicator"
-                      layoutId="auth-tab-indicator"
-                      transition={layoutMarkerTransition({ preferReducedMotion })}
-                    />
-                  )}
-                </button>
-              );
-            })}
           </div>
 
           {/* Content */}
           <div className="v-auth-form-wrapper">
-              {account.signInWithOAuth && activeTab !== "recover" ? (
+              {account.signInWithOAuth ? (
                 <OAuthButtons
                   disabled={account.isSendingLink}
                   onSelect={(provider) => {
@@ -222,7 +181,7 @@ export function AuthPage() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="nome@email.com"
+                      placeholder="Inserisci la tua email"
                       autoComplete="email"
                       autoCapitalize="none"
                       spellCheck={false}
@@ -268,15 +227,10 @@ export function AuthPage() {
                       <User size={16} />
                       Crea lo spazio
                     </>
-                  ) : activeTab === "recover" ? (
-                    <>
-                      <RotateCcw size={16} />
-                      Invia link di recupero
-                    </>
                   ) : (
                     <>
                       <Mail size={16} />
-                      Inviami il link
+                      Invia link
                     </>
                   )}
                 </button>
@@ -285,10 +239,8 @@ export function AuthPage() {
               {/* Info */}
               <p className="v-auth-info">
                 {activeTab === "login"
-                  ? "Apri la mail, clicca il link, sei dentro. Niente password da ricordare."
-                  : activeTab === "recover"
-                    ? "Se questa email ha già uno spazio, ricevi un nuovo link di accesso."
-                    : "Ti arriva una mail di conferma. I salvati di questo browser restano con te."}
+                  ? "Ti invieremo un link sicuro per accedere."
+                  : "Ti arriva una mail di conferma. I salvati di questo browser restano con te."}
               </p>
             </div>
 
@@ -352,7 +304,7 @@ export function AuthPage() {
                 className="v-auth-link"
                 onClick={() => setActiveTab(activeTab === "register" ? "login" : "register")}
               >
-                {activeTab === "register" ? "Accedi" : "Crea spazio"}
+                {activeTab === "register" ? "Accedi" : "Crea un account"}
               </button>
             </p>
           </div>

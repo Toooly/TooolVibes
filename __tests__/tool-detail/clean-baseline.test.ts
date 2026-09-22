@@ -224,10 +224,10 @@ describe("Tool Detail clean baseline — fixed-surface contract", () => {
     expect(read(GLOBALS)).toMatch(/scroll-padding-top/);
   });
 
-  it("the route consumes --tv-bottom-nav-total and --tv-tray-height for padding-bottom", () => {
+  it("leaves page-level bottom reservation to the footer shell", () => {
     const css = read(TOOL_DETAIL_FINAL_CSS);
-    expect(css).toMatch(/var\(--tv-bottom-nav-total/);
-    expect(css).toMatch(/var\(--tv-tray-height/);
+    const page = css.slice(css.indexOf(".td-final-page {"), css.indexOf(".td-final-page__") + 1);
+    expect(page).not.toMatch(/--tv-(bottom-nav-total|tray-height)/);
   });
 });
 

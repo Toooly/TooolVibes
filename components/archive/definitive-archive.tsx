@@ -281,10 +281,6 @@ export function DefinitiveArchive({
               Trova i tool da valutare.
             </h1>
             <CatalogoFacetHead active="tutti" />
-            <p className="ar4-intro__lede">
-              Cerca, filtra, apri le schede. Poi salva e confronta i candidati
-              più adatti al tuo caso d&apos;uso.
-            </p>
           </div>
 
           <div className="ar4-intro__panel">
@@ -323,16 +319,6 @@ export function DefinitiveArchive({
       {/* ═══ 2. CATEGORIE — chip rail con expand/collapse ═══ */}
       <section className="ar4-categories" aria-labelledby="ar4-categories-title">
         <div className="ar4-categories__inner">
-          <div className="ar4-categories__head">
-            <p className="ar4-categories__eyebrow">Categorie</p>
-            <h2 id="ar4-categories-title" className="ar4-categories__title">
-              Esplora per categoria
-            </h2>
-            <p className="ar4-categories__body">
-              Scegli un&apos;area per restringere subito il catalogo.
-            </p>
-          </div>
-
           <div className="ar4-categories__chips" role="group" aria-label="Categorie del catalogo">
             <button
               type="button"
@@ -341,7 +327,7 @@ export function DefinitiveArchive({
               aria-pressed={activeGroup === "all"}
               aria-label="Mostra i tool di tutte le categorie"
             >
-              Tutti <em>{totalTools}</em>
+              Tutte <em>({totalTools})</em>
             </button>
             {visibleCategoryGroups.map((g) => (
               <button

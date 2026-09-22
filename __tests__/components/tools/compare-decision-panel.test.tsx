@@ -196,7 +196,7 @@ function confirmDecision(outcome?: "Scelto" | "Scartato" | "Rimandato") {
   if (outcome) {
     fireEvent.click(within(sheet).getByRole("radio", { name: outcome }));
   }
-  fireEvent.click(within(sheet).getByRole("button", { name: "Conferma" }));
+  fireEvent.click(within(sheet).getByRole("button", { name: "Salva decisione" }));
 }
 
 let desktopViewport = false;

@@ -19,7 +19,7 @@ describe("magic-link email module", () => {
     expect(MAGIC_LINK_EMAIL_CTA).toBe("Conferma e apri TooolVibes");
     expect(html).toContain(MAGIC_LINK_EMAIL_CTA);
     expect(html).toContain("Entra in TooolVibes");
-    expect(html).toContain("#c9a227");
+    expect(html).toContain("#e4b23c");
     expect(html).toContain("#08080a");
     expect(html.toLowerCase()).not.toContain("password");
     expect(text.toLowerCase()).not.toContain("password");

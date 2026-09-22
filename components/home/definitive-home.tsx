@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
-import { DecisionJourney } from "@/components/home/decision-journey";
 import { HeroDecisionScope } from "@/components/home/hero-decision-scope";
 import { IntentEntry } from "@/components/home/intent-entry";
 import {
@@ -29,25 +26,15 @@ type DefinitiveHomeProps = {
 
 function Cockpit({
   toolCount,
-  stackCount,
   tools,
 }: {
   toolCount: number;
-  stackCount: number;
   tools: ToolPublicView[];
 }) {
-  const eyebrowDesktop =
-    toolCount > 0
-      ? `Per chi costruisce prodotti digitali · ${toolCount} tool nel catalogo`
-      : "Per chi costruisce prodotti digitali";
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div className="def-cockpit__inner">
         <div className="def-cockpit__hero">
-          <p className="def-cockpit__eyebrow">
-            <span className="def-cockpit__eyebrow-dot" aria-hidden="true" />
-            <span className="def-cockpit__eyebrow-desktop">{eyebrowDesktop}</span>
-          </p>
           <h1
             id="def-cockpit-title"
             className="def-cockpit__title"
@@ -57,60 +44,20 @@ function Cockpit({
           </h1>
           <p className="def-cockpit__lede">
             <span className="def-cockpit__lede-desktop">
-              Scopri tool AI, SaaS e no-code selezionati, confronta alternative
-              e trade-off, costruisci il tuo stack e conserva il motivo di ogni
-              scelta.
+              Recensioni indipendenti, confronti chiari e guide pratiche sul
+              tuo lavoro con l&apos;AI.
             </span>
             <span className="def-cockpit__lede-mobile">
-              Confronta alternative e tieni il motivo di ogni scelta.
+              Recensioni indipendenti, confronti chiari e guide pratiche sul
+              tuo lavoro con l&apos;AI.
             </span>
           </p>
           {toolCount > 0 ? <IntentEntry /> : null}
-          <dl className="def-cockpit__system" aria-label="TooolVibes in numeri">
-            <div className="def-cockpit__system-node">
-              <dd className="def-cockpit__system-value">{toolCount}</dd>
-              <dt className="def-cockpit__system-label">
-                <Link href="/archivio">Catalogo</Link>
-              </dt>
-            </div>
-            <div className="def-cockpit__system-node">
-              <dd className="def-cockpit__system-value">{stackCount}</dd>
-              <dt className="def-cockpit__system-label">
-                <Link href="/collections">Raccolte</Link>
-              </dt>
-            </div>
-            <div className="def-cockpit__system-node def-cockpit__system-node--live">
-              <dd className="def-cockpit__system-value">
-                <span className="def-cockpit__system-pulse" aria-hidden="true" />
-                Live
-              </dd>
-              <dt className="def-cockpit__system-label">
-                <Link href="/radar">Radar</Link>
-              </dt>
-            </div>
-          </dl>
         </div>
         <div className="def-cockpit__scope" aria-hidden="true">
           <HeroDecisionScope tools={tools} />
         </div>
       </div>
-    </section>
-  );
-}
-
-function Method() {
-  return (
-    <section className="def-method" aria-labelledby="def-method-title">
-      <header className="def-method__head">
-        <h2 id="def-method-title" className="def-method__title">
-          Cinque tappe. Una decisione che tieni.
-        </h2>
-        <p className="def-method__lede">
-          Quella giusta per dove sei adesso.{" "}
-          <Link href="/metodo">Come valutiamo</Link>
-        </p>
-      </header>
-      <DecisionJourney />
     </section>
   );
 }
@@ -135,10 +82,9 @@ export function DefinitiveHome({
           </a>
         </p>
       ) : null}
-      <Cockpit toolCount={tools.length} stackCount={stacks.length} tools={tools} />
+      <Cockpit toolCount={tools.length} tools={tools} />
       <StartHere focusTool={focusTool} tools={tools} stacks={stacks} />
       <TinyAdzInlineSlot placement="home-editorial" />
-      <Method />
       <SponsorSection placementKey="home-featured-tool" />
     </div>
   );

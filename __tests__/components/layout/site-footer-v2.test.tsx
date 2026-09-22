@@ -205,7 +205,7 @@ describe("SiteFooterV2 — Home uses the utility footer", () => {
     expect(screen.queryByRole("heading", { name: "Continua da qui." })).toBeNull();
     expect(screen.getByRole("heading", { name: "Esplora" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "TooolVibes" })).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Parliamone" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Scrivici/ })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Scrivici/ }).getAttribute("href")).toBe(
       "mailto:hello@tooolvibes.com",
     );

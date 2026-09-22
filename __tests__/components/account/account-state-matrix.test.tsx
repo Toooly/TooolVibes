@@ -853,7 +853,7 @@ describe("B59 AuthPage — magic link pending / error / offline", () => {
     accountRuntime.value = account;
     const { container } = render(<AuthPage />);
 
-    fireEvent.change(screen.getByPlaceholderText("nome@email.com"), {
+    fireEvent.change(screen.getByPlaceholderText("Inserisci la tua email"), {
       target: { value: "mario@example.com" },
     });
     fireEvent.submit(container.querySelector("form.v-auth-form") as HTMLFormElement);
@@ -887,7 +887,7 @@ describe("B59 AuthPage — magic link pending / error / offline", () => {
     accountRuntime.value = account;
     const { container } = render(<AuthPage />);
 
-    fireEvent.change(screen.getByPlaceholderText("nome@email.com"), {
+    fireEvent.change(screen.getByPlaceholderText("Inserisci la tua email"), {
       target: { value: "mario@example.com" },
     });
     fireEvent.submit(container.querySelector("form.v-auth-form") as HTMLFormElement);

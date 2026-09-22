@@ -1,8 +1,5 @@
-import Link from "next/link";
-import { BookOpenText, GitBranch, ShieldAlert, Wrench, Sparkles, Cog, TrendingUp } from "lucide-react";
-
 import type { CuratedCollection } from "@/lib/types/collection";
-import { collectionVisualIdentity, type CxVisualIdentity, cxGroupOrder, pickFeaturedCollection } from "@/lib/collections/visual-identity";
+import { pickFeaturedCollection } from "@/lib/collections/visual-identity";
 
 import { MemberPreviewGate } from "@/components/account/member-preview-gate";
 import { CollectionCardV4 } from "./collection-card-v4";
@@ -11,240 +8,45 @@ type CollectionsIndexProps = {
   collections: CuratedCollection[];
 };
 
-type GroupKey = CxVisualIdentity["group"];
-
-const GROUP_LABELS: Record<GroupKey, { label: string; icon: React.ReactNode }> = {
-  build: {
-    label: "Costruisci",
-    icon: <Wrench className="size-3.5" aria-hidden="true" />,
-  },
-  create: {
-    label: "Crea",
-    icon: <Sparkles className="size-3.5" aria-hidden="true" />,
-  },
-  operate: {
-    label: "Gestisci",
-    icon: <Cog className="size-3.5" aria-hidden="true" />,
-  },
-  grow: {
-    label: "Cresci",
-    icon: <TrendingUp className="size-3.5" aria-hidden="true" />,
-  },
-};
-
-
 export function CollectionsIndex({ collections }: CollectionsIndexProps) {
   if (collections.length === 0) {
     return null;
   }
 
-  // Lead selection is deterministic and explicit (visual-identity.featured).
-  // Does NOT depend on collections[0].
   const lead = pickFeaturedCollection(collections);
   const rest = lead
     ? collections.filter((c) => c.slug !== lead.slug)
     : collections;
-
-  const totalTools = collections.reduce(
-    (acc, c) => acc + c.included_tools.length,
-    0,
-  );
-
-  // Group the remaining by visual-identity.group.
-  const groups: Record<GroupKey, CuratedCollection[]> = {
-    build: [],
-    create: [],
-    operate: [],
-    grow: [],
-  };
-  for (const collection of rest) {
-    const identity = collectionVisualIdentity[collection.slug];
-    const group: GroupKey = identity?.group ?? "build";
-    groups[group].push(collection);
-  }
 
   return (
     <div className="cx-index">
       <div className="cx-index__inner">
         <header className="cx-index__masthead motion-reveal">
           <div>
-            <span className="cx-index__eyebrow">
-              <span className="cx-index__eyebrow-dot" aria-hidden="true" />
-              Raccolte
-            </span>
-            <h1 className="cx-index__title">
-              Scegli una <em>Raccolta</em>. Lo stack è già deciso.
-            </h1>
+            <h1 className="cx-index__title">Raccolte</h1>
           </div>
           <div>
-            <p className="cx-index__lede">
-              <span className="cx-index__lede-lead">
-                Ogni <strong>Raccolta</strong> è uno stack: tool, ruoli e ordine di
-                lavoro per un risultato preciso.
-              </span>
-              <span className="cx-index__lede-extra">
-                {" "}
-                Se cerchi un singolo tool, vai al <Link href="/archivio">Catalogo</Link>.
-                Se vuoi approfondire, apri le <Link href="/posts">Guide</Link>.
-              </span>
-            </p>
-            <div className="cx-index__meta" aria-label="A colpo d'occhio">
-              <span>
-                <span className="cx-index__meta-divider" aria-hidden="true" />
-                {collections.length} raccolte
-              </span>
-              <span>
-                <span className="cx-index__meta-divider" aria-hidden="true" />
-                {totalTools} tool nello stack
-              </span>
-            </div>
+            <p className="cx-index__lede">Stack completi per risultati concreti.</p>
           </div>
         </header>
 
-        <details className="cx-index__how motion-reveal">
-          <summary className="cx-index__how-summary">
-            Come funzionano le Raccolte?
-          </summary>
-          <div className="cx-index__how-panel">
-            <section className="cx-index__discover">
-              <div className="cx-index__lede-block">
-                <h2>Le raccolte non sono guide né confronti.</h2>
-                <p>
-                  Ogni raccolta ti dice quale software combinare, in che ordine, per
-                  quale risultato. Include varianti LEAN quando esistono, alternative
-                  oneste invece di duplicati, e una sezione esplicita su quando
-                  <em> non </em> è la raccolta giusta per te.
-                </p>
-                <dl className="cx-index__compare-strip" aria-label="Differenza tra superfici">
-                  <div>
-                    <dt>Catalogo</dt>
-                    <dd>Scopri tool singoli</dd>
-                  </div>
-                  <div>
-                    <dt>Guide</dt>
-                    <dd>Approfondisci un tool</dd>
-                  </div>
-                  <div>
-                    <dt>Raccolte</dt>
-                    <dd>Assembla uno stack</dd>
-                  </div>
-                  <div>
-                    <dt>Confronto</dt>
-                    <dd>Scegli tra 2 o 3 candidati</dd>
-                  </div>
-                </dl>
-              </div>
-            </section>
-
-            <section
-              aria-labelledby="cx-principles-heading"
-              className="cx-index__principles"
-            >
-              <div className="cx-index__section-title">
-                <h2 id="cx-principles-heading">Come leggere una raccolta</h2>
-                <p className="cx-index__section-kicker">Tre cose da cercare sempre</p>
-              </div>
-              <div className="cx-index__principles-grid motion-stagger">
-                <PrincipleCard
-                  icon={<GitBranch className="size-4" aria-hidden="true" />}
-                  eyebrow="Il flusso"
-                  body="Ogni CORE è uno stadio del flusso, in ordine. Non sono sei card isolate: si parlano."
-                />
-                <PrincipleCard
-                  icon={<BookOpenText className="size-4" aria-hidden="true" />}
-                  eyebrow="CORE / OPT / ALT"
-                  body="CORE è lo stack. OPT aggiungi solo se serve. ALT è quando sostituisci, non quando aggiungi."
-                />
-                <PrincipleCard
-                  icon={<ShieldAlert className="size-4" aria-hidden="true" />}
-                  eyebrow="Quando non è per te"
-                  body="Ogni raccolta dichiara apertamente quando è la risposta sbagliata. Vale la pena leggerlo."
-                />
-              </div>
-            </section>
+        {lead ? (
+          <div className="cx-index__grid cx-index__grid--lead motion-reveal">
+            <CollectionCardV4 collection={lead} featured />
           </div>
-        </details>
-
-        {lead && (
-          <section
-            aria-labelledby="cx-start-here-heading"
-            className="cx-index__start motion-reveal"
-          >
-            <div className="cx-index__section-title">
-              <h2 id="cx-start-here-heading">In evidenza</h2>
-              <p className="cx-index__section-kicker">La raccolta da cui partire oggi</p>
-            </div>
-            <div className="cx-index__grid cx-index__grid--lead">
-              <CollectionCardV4 collection={lead} featured />
-            </div>
-          </section>
-        )}
+        ) : null}
 
         <MemberPreviewGate
           title="Continua nel tuo spazio"
           body="Le altre raccolte restano nel tuo spazio."
         >
-        {cxGroupOrder.map((groupKey) => {
-          const items = groups[groupKey];
-          if (items.length === 0) return null;
-          const meta = GROUP_LABELS[groupKey];
-          return (
-            <section
-              key={groupKey}
-              aria-labelledby={`cx-group-${groupKey}-heading`}
-              className="cx-index__group"
-              data-cx-group={groupKey}
-            >
-              <div className="cx-index__group-header">
-                <h2
-                  id={`cx-group-${groupKey}-heading`}
-                  className="cx-index__group-title"
-                >
-                  <span className="cx-index__group-eyebrow" aria-hidden="true">
-                    {meta.icon}
-                  </span>
-                  {meta.label}
-                </h2>
-              </div>
-              <div className="cx-index__grid cx-index__grid--group motion-stagger">
-                {items.map((collection) => (
-                  <CollectionCardV4
-                    key={collection.slug}
-                    collection={collection}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
+          <div className="cx-index__grid cx-index__grid--group motion-stagger">
+            {rest.map((collection) => (
+              <CollectionCardV4 key={collection.slug} collection={collection} />
+            ))}
+          </div>
         </MemberPreviewGate>
       </div>
-    </div>
-  );
-}
-
-
-function PrincipleCard({
-  icon,
-  eyebrow,
-  body,
-}: {
-  icon: React.ReactNode;
-  eyebrow: string;
-  body: string;
-}) {
-  return (
-    <div className="cx-related-card">
-      <span
-        className="cx-related-card-eyebrow"
-        style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}
-      >
-        {icon}
-        {eyebrow}
-      </span>
-      <p className="cx-related-card-promise" style={{ maxWidth: "none" }}>
-        {body}
-      </p>
     </div>
   );
 }

@@ -160,7 +160,7 @@ function confirm(outcome?: "Scelto" | "Scartato" | "Rimandato") {
   if (outcome) {
     fireEvent.click(scope.getByRole("radio", { name: outcome }));
   }
-  fireEvent.click(scope.getByRole("button", { name: "Conferma" }));
+  fireEvent.click(scope.getByRole("button", { name: "Salva decisione" }));
 }
 
 beforeAll(() => {
@@ -222,7 +222,7 @@ describe("DecisionSheet — Wave 8", () => {
   it("W8-T3/T4/T6/T8 Fast Conferma with no Deep fields writes one decided event and closes", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(SheetHarness));
-    expect((screen.getByRole("button", { name: "Conferma" }) as HTMLButtonElement).disabled).toBe(false);
+    expect((screen.getByRole("button", { name: "Salva decisione" }) as HTMLButtonElement).disabled).toBe(false);
     confirm();
     const state = getCanonicalToolWorkspaceState();
     expect(state.events.filter((event) => event.type === "decided")).toHaveLength(1);
@@ -253,11 +253,11 @@ describe("DecisionSheet — Wave 8", () => {
     expect(getCanonicalToolWorkspaceState().events.at(-1)?.alternatives).toEqual([]);
   });
 
-  it("W8-T7 Deep expands in place via Aggiungi perché", () => {
+  it("W8-T7 Deep expands in place via Aggiungi dettagli", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(SheetHarness));
     expect(screen.queryByLabelText("Perché")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Aggiungi perché" }));
+    fireEvent.click(screen.getByRole("button", { name: "Aggiungi dettagli" }));
     expect(screen.getByLabelText("Perché")).toBeTruthy();
     expect(screen.getByRole("radio", { name: "Scelto" }).getAttribute("aria-checked")).toBe(
       "true",
@@ -267,7 +267,7 @@ describe("DecisionSheet — Wave 8", () => {
   it("W8-T8/T9/T10 Deep fields are optional and land when present", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(SheetHarness));
-    fireEvent.click(screen.getByRole("button", { name: "Aggiungi perché" }));
+    fireEvent.click(screen.getByRole("button", { name: "Aggiungi dettagli" }));
     fireEvent.change(screen.getByLabelText("Perché"), {
       target: { value: "Per il daily coding" },
     });
@@ -358,7 +358,7 @@ describe("DecisionSheet — Wave 8", () => {
   it("W8-T19 double Conferma still writes one event", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(SheetHarness));
-    const button = screen.getByRole("button", { name: "Conferma" });
+    const button = screen.getByRole("button", { name: "Salva decisione" });
     fireEvent.click(button);
     fireEvent.click(button);
     expect(
@@ -373,10 +373,10 @@ describe("DecisionSheet — Wave 8", () => {
       throw new Error("persist");
     });
     render(createElement(SheetHarness));
-    fireEvent.click(screen.getByRole("button", { name: "Conferma" }));
+    fireEvent.click(screen.getByRole("button", { name: "Salva decisione" }));
     expect(sheetNode()).toBeTruthy();
     expect(screen.getByRole("alert").textContent).toMatch(/Riprova/);
-    fireEvent.click(screen.getByRole("button", { name: "Conferma" }));
+    fireEvent.click(screen.getByRole("button", { name: "Salva decisione" }));
     expect(
       getCanonicalToolWorkspaceState().events.filter((event) => event.type === "decided"),
     ).toHaveLength(1);
@@ -405,9 +405,9 @@ describe("DecisionSheet — Wave 8", () => {
   it("W8-T24/T25 the sheet has an accessible name, Conferma is a button, Escape closes", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(SheetHarness));
-    const dialog = screen.getByRole("dialog", { name: "Cursor" });
+    const dialog = screen.getByRole("dialog", { name: "Valuta Cursor" });
     expect(dialog).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Conferma" }).tagName).toBe("BUTTON");
+    expect(screen.getByRole("button", { name: "Salva decisione" }).tagName).toBe("BUTTON");
     fireEvent.keyDown(dialog, { key: "Escape" });
     expect(sheetNode()).toBeNull();
   });

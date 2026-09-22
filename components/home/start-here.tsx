@@ -272,187 +272,65 @@ function IvoryEditorial({
           </div>
         </article>
 
-        <EditorialDeck tools={tools} />
+        <LatestFromCatalog tools={tools} />
       </div>
     </div>
   );
 }
 
-function EditorialDeck({ tools }: { tools: ToolPublicView[] }) {
-  const evaluated = tools
-    .map((tool) => ({
-      tool,
-      score: computeEditorialScore({ publicTool: tool.publicTool, cautions: tool.cautions }),
-    }))
-    .filter((item) => item.score.status === "assessed" && item.score.value !== null)
-    .sort((left, right) => (right.score.value ?? 0) - (left.score.value ?? 0))
-    .map((item) => item.tool);
-  const isPodium = evaluated.length >= 3;
-  const top3 = isPodium ? evaluated.slice(0, 3) : tools.slice(0, 3);
-  const [active, setActive] = useState(0);
-  const scrollerRef = useRef<HTMLUListElement>(null);
-
-  useEffect(() => {
-    const root = scrollerRef.current;
-    if (!root) return;
-    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-deck-card]"));
-    if (cards.length === 0) return;
-    if (typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (!visible) return;
-        const index = cards.indexOf(visible.target as HTMLElement);
-        if (index >= 0) setActive(index);
-      },
-      { root, threshold: 0.6 },
-    );
-    cards.forEach((card) => observer.observe(card));
-    return () => observer.disconnect();
-  }, [top3.length]);
-
-  function scrollToIndex(index: number) {
-    const root = scrollerRef.current;
-    const card = root?.querySelectorAll<HTMLElement>("[data-deck-card]")[index];
-    card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
-  }
-
-  if (top3.length === 0) return null;
-
+function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
+  const latest = tools.slice(0, 4);
+  if (latest.length === 0) return null;
   return (
-    <div
-      className="tv-editorial-deck def-editorial__podium"
-      role="region"
-      aria-roledescription="carousel"
-      aria-label={isPodium ? "Valutazioni editoriali" : "Tre tool da esplorare"}
-    >
-      <div className="def-editorial__pod-head-row">
-        <p className="def-editorial__pod-eyebrow">{isPodium ? "Valutazioni editoriali" : "Dal catalogo"}</p>
-        <p className="def-editorial__pod-subtitle">
-          {isPodium
-            ? "Tre schede lette dalla redazione."
-            : "Tre tool da esplorare."}
-        </p>
+    <section className="def-latest" aria-labelledby="def-latest-title">
+      <div className="def-latest__head">
+        <h3 id="def-latest-title" className="def-latest__title">
+          Ultime dal catalogo
+        </h3>
+        <Link href="/archivio" className="def-latest__more">
+          Vedi tutte
+          <ArrowRight size={13} aria-hidden="true" />
+        </Link>
       </div>
-      <div className="tv-editorial-deck__controls">
-        <button
-          type="button"
-          className="tv-editorial-deck__nav"
-          aria-label="Scheda precedente"
-          onClick={() => scrollToIndex(Math.max(0, active - 1))}
-          disabled={active === 0}
-        >
-          <ChevronLeft size={16} aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          className="tv-editorial-deck__nav"
-          aria-label="Scheda successiva"
-          onClick={() => scrollToIndex(Math.min(top3.length - 1, active + 1))}
-          disabled={active === top3.length - 1}
-        >
-          <ChevronRight size={16} aria-hidden="true" />
-        </button>
-      </div>
-      <ul ref={scrollerRef} className="tv-editorial-deck__track def-editorial__pod-stage">
-        {top3.map((tool, index) => (
-          <li
-            key={tool.slug}
-            className={`tv-editorial-deck__cell def-editorial__pod-cell${index === 0 ? " def-editorial__pod-cell--first" : index === 1 ? " def-editorial__pod-cell--second" : " def-editorial__pod-cell--third"}${index === active ? " is-active" : ""}`}
-            data-deck-card=""
-          >
-            {isPodium ? (
-              <DeckCard tool={tool} rank={index + 1} active={index === active} />
-            ) : (
-              <ExploratoryCard tool={tool} active={index === active} />
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function ExploratoryCard({
-  tool,
-  active,
-}: {
-  tool: ToolPublicView;
-  active: boolean;
-}) {
-  const iconUrl = iconUrlFor(tool);
-  const initial = initialFor(tool.name);
-  return (
-    <Link
-      href={`/toools/${tool.slug}`}
-      className={`def-editorial__exploratory-card tv-editorial-deck__card${active ? " is-active" : ""}`}
-      aria-label={`Apri la scheda di ${tool.name}`}
-    >
-      <span className="def-editorial__exploratory-avatar" aria-hidden="true">
-        {iconUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={iconUrl} alt="" loading="lazy" decoding="async" />
-        ) : (
-          <span>{initial}</span>
-        )}
-      </span>
-      <span className="def-editorial__exploratory-name">{tool.name}</span>
-      <span className="def-editorial__exploratory-cat">{tool.categoryLabel}</span>
-      <span className="def-editorial__exploratory-pill">
-        {computeEditorialScore({ publicTool: tool.publicTool }).status === "assessed"
-          ? "Valutato"
-          : "In valutazione"}
-      </span>
-    </Link>
-  );
-}
-
-function DeckCard({
-  tool,
-  rank,
-  active,
-}: {
-  tool: ToolPublicView;
-  rank: number;
-  active: boolean;
-}) {
-  const score = computeEditorialScore(tool);
-  const rationale = truncate(tool.tldr || tool.shortDescription || "", rank === 1 ? 110 : 72);
-  const iconUrl = iconUrlFor(tool);
-  const initial = initialFor(tool.name);
-
-  return (
-    <Link
-      href={`/toools/${tool.slug}`}
-      className={`def-editorial__pod-card def-editorial__pod-card--rank-${rank} tv-editorial-deck__card${active ? " is-active is-revealed" : " is-revealed"}`}
-      data-rank={rank}
-      aria-label={`Apri la scheda di ${tool.name}`}
-    >
-      <span className="def-editorial__pod-rank tv-featured-tool__mono" aria-label={`Posizione editoriale ${rank}`}>
-        {String(rank).padStart(2, "0")}
-      </span>
-      <span className="def-editorial__pod-avatar" aria-hidden="true">
-        {iconUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={iconUrl} alt="" loading="eager" decoding="async" />
-        ) : (
-          <span>{initial}</span>
-        )}
-      </span>
-      <span className="def-editorial__pod-name">{tool.name}</span>
-      <span className="def-editorial__pod-cat">{tool.categoryLabel}</span>
-      {rationale ? <span className="def-editorial__pod-rationale">{rationale}</span> : null}
-      <span className="def-editorial__pod-score">
-        <span className="def-editorial__pod-score-num tv-featured-tool__mono">
-          {score.value !== null ? score.value.toFixed(1) : "—"}
-        </span>
-        <span className="def-editorial__pod-score-max">
-          {score.value !== null ? "/ 10" : "da valutare"}
-        </span>
-      </span>
-    </Link>
+      <ol className="def-latest__list">
+        {latest.map((tool, index) => {
+          const score = computeEditorialScore(tool);
+          const iconUrl = iconUrlFor(tool);
+          const initial = initialFor(tool.name);
+          const desc = truncate(tool.tldr || tool.shortDescription || "", 72);
+          return (
+            <li key={tool.slug} className="def-latest__item">
+              <Link
+                href={`/toools/${tool.slug}`}
+                className="def-latest__link"
+                aria-label={`Apri ${tool.name}`}
+              >
+                <span className="def-latest__rank tv-featured-tool__mono" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="def-latest__avatar" aria-hidden="true">
+                  {iconUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+                  ) : (
+                    <span>{initial}</span>
+                  )}
+                </span>
+                <span className="def-latest__body">
+                  <span className="def-latest__name">{tool.name}</span>
+                  {desc ? <span className="def-latest__desc">{desc}</span> : null}
+                </span>
+                <span className="def-latest__score tv-featured-tool__mono">
+                  {score.status === "assessed" && score.value !== null
+                    ? score.value.toFixed(1)
+                    : "—"}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
   );
 }
 

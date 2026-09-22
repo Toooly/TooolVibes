@@ -41,13 +41,9 @@ describe("collections mobile density — index", () => {
       </AccountPreviewProvider>,
     );
 
-    expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/Raccolta/i);
-    expect(container.querySelector(".cx-index__lede-lead")?.textContent).toMatch(/uno stack/i);
-    expect(container.querySelector(".cx-index__lede-extra")?.textContent).toMatch(/Catalogo/i);
-    expect(screen.getByLabelText("A colpo d'occhio")).toBeTruthy();
-
-    const how = screen.getByText("Come funzionano le Raccolte?").closest("details");
-    expect(how?.hasAttribute("open")).toBe(false);
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Raccolte");
+    expect(container.querySelector(".cx-index__lede")?.textContent).toMatch(/Stack completi/i);
+    expect(screen.queryByText("Come funzionano le Raccolte?")).toBeNull();
   });
 
   it("keeps featured collection CTA out of activation yellow", () => {
@@ -58,20 +54,20 @@ describe("collections mobile density — index", () => {
     );
 
     const cta = container.querySelector(".cx-card-v4--featured .cx-card-v4__cta");
-    expect(cta?.textContent).toContain("Apri la raccolta");
+    expect(cta?.textContent).toContain("Usa questa raccolta");
     expect(cta?.className).not.toMatch(/activation|yellow/i);
   });
 });
 
 describe("collections mobile density — detail", () => {
-  it("keeps outcome, target, four metrics and the primary stack CTA", () => {
+  it("keeps outcome, target, three metrics and the primary stack CTA", () => {
     const collection = makeCollection();
     const { container } = render(<CollectionDetailHeroV4 collection={collection} />);
 
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(collection.title);
     expect(screen.getByText("Dall'idea al primo prodotto vendibile")).toBeTruthy();
     expect(screen.getByText("Per founder indipendenti e builder snelli")).toBeTruthy();
-    expect(container.querySelectorAll(".cx-detail-hero-v4__decision-item")).toHaveLength(4);
+    expect(container.querySelectorAll(".cx-detail-hero-v4__decision-item")).toHaveLength(3);
 
     const primary = screen.getByRole("link", { name: /Avvia questa raccolta/ });
     expect(primary.className).toContain("cx-detail-hero-v4__cta--primary");

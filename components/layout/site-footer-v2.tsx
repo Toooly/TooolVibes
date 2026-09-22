@@ -46,13 +46,6 @@ export function SiteFooterV2() {
             Il sistema decisionale per scegliere software con criterio,
             non l&apos;ennesima directory di tool.
           </p>
-        </div>
-
-        <div className="tv-utility__contact-block">
-          <h3 className="tv-utility__contact-title">Parliamone</h3>
-          <p className="tv-utility__contact-copy">
-            Un tool da segnalare, una correzione, una proposta.
-          </p>
           <a
             href={contactEmailDestination.href}
             className="tv-utility__contact"

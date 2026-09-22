@@ -27,7 +27,6 @@ import {
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
-import { skillLevelLabel } from "@/lib/product/skill-level";
 import { cn } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { SaveOverflow } from "@/components/tools/save-overflow";
@@ -126,8 +125,6 @@ function ArchiveV4ToolCard({
   // Tier-based badge only if the caller passed a tier (preserved for
   // backwards-compat with surfaces that still use a Decision Desk).
   const showTierBadge = isPromoted && promotedTier !== undefined;
-
-  const skill = reduced ? null : skillLevelLabel(tool.level, tool.levelLabel);
   const bestFor = reduced
     ? null
     : (tool.idealUseCase?.trim() || tool.useCases[0] || null);
@@ -139,14 +136,10 @@ function ArchiveV4ToolCard({
     : computeEditorialScore({ publicTool: tool.publicTool, cautions: tool.cautions });
   const showScore =
     editorialScore?.status === "assessed" && editorialScore.value !== null;
-  const scoreLine = [
+  const scoreLine =
     showScore && editorialScore?.value != null
-      ? editorialScore.value.toFixed(1)
-      : null,
-    skill,
-  ]
-    .filter((part): part is string => Boolean(part))
-    .join(" · ");
+      ? `★ ${editorialScore.value.toFixed(1)}`
+      : null;
   const tierLabel = effectiveTier ? TIER_LABEL[effectiveTier] : null;
 
   return (
@@ -233,9 +226,6 @@ function ArchiveV4ToolCard({
         <div className="ar4-card__triage">
           {scoreLine ? <span className="ar4-card__score">{scoreLine}</span> : null}
           {bestFor ? <p className="ar4-card__best">Ideale per: {bestFor}</p> : null}
-          {differentiator ? (
-            <p className="ar4-card__diff">{differentiator}</p>
-          ) : null}
         </div>
       ) : null}
 

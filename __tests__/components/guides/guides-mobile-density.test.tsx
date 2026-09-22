@@ -86,7 +86,7 @@ describe("guides mobile density — index", () => {
     expect(head?.textContent).toMatch(/da cui partire/i);
   });
 
-  it("keeps masthead stats and in-page CTA in the document for desktop", () => {
+  it("keeps the masthead title in the document for desktop", () => {
     render(
       <GuideMasthead
         totalGuides={12}
@@ -97,8 +97,7 @@ describe("guides mobile density — index", () => {
     );
 
     expect(screen.getByRole("heading", { level: 1 })).toBeTruthy();
-    expect(screen.getByLabelText("Cosa contiene la sezione")).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Inizia dalla guida in evidenza/i })).toBeTruthy();
+    expect(screen.getByText(/Guide scritte per/i)).toBeTruthy();
   });
 
   it("makes grid cards a single link with an accessible name instead of an extra Leggi control", () => {
@@ -110,7 +109,7 @@ describe("guides mobile density — index", () => {
     const link = screen.getByRole("link", { name: `Leggi la guida: ${post.title}` });
     expect(link.getAttribute("href")).toBe("/posts/frase-ai");
     expect(container.querySelectorAll("a")).toHaveLength(1);
-    expect(container.querySelector(".guides-card__cta")?.textContent).toBe("Leggi");
+    expect(container.querySelector(".guides-card__cta")?.textContent).toBe("Leggi la guida");
     expect(container.querySelector(".guides-card__dek")).toBeTruthy();
   });
 });
