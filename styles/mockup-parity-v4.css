@@ -250,3 +250,36 @@
   }
   .guides-filter__chip__count { font-size: 0.75rem !important; opacity: 0.75; }
 }
+
+@media (max-width: 899px) {
+  /* 04 GOLDEN MASTER: hero integrated with the violet shell, solid title */
+  .guides-masthead { background: transparent !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important; padding-top: 4px !important; }
+  .guides-masthead::before { display: none !important; }
+  .guides-masthead__title { background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; color: #f6f1e8 !important; -webkit-text-fill-color: #f6f1e8 !important; }
+  .guides-masthead__dek { color: #b9b2c9 !important; }
+
+  /* clean pill labels (counts must not widen the pills) */
+  .guides-filter__chip__count { display: none !important; }
+  .guides-filter__chip { padding: 0 16px !important; }
+
+  /* one cream container per row — text side included (fixes dark right region) */
+  .guides-grid .guides-card,
+  .guides-grid__featured .guides-card {
+    background: #f6f1e8 !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(20, 16, 40, 0.06) !important;
+  }
+  .guides-grid .guides-card__title,
+  .guides-grid__featured .guides-card__title { color: #17131f !important; }
+  .guides-grid .guides-card__dek,
+  .guides-grid__featured .guides-card__dek { color: #4d4860 !important; }
+  .guides-grid .guides-card__read,
+  .guides-grid__featured .guides-card__read { color: #5a5470 !important; }
+
+  /* active bottom-nav item reads as active, like the reference */
+  .mobile-bottom-item.is-active .mobile-bottom-item__glyph {
+    background: color-mix(in srgb, #8b6cff 30%, transparent);
+    border-radius: 12px;
+    box-shadow: 0 0 10px color-mix(in srgb, #8b6cff 40%, transparent);
+  }
+}
