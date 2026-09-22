@@ -348,7 +348,8 @@
 
 @media (max-width: 899px) {
   /* batch-1 v2 — 01 home */
-  .def-start__head { display: none !important; }
+  .def-start__head { min-height: 0 !important; height: auto !important; margin: 0 !important; padding: 0 !important; }
+  .def-start__head > * { display: none !important; }
   .def-intent__field input { background: transparent !important; border: 0 !important; box-shadow: none !important; }
   .def-cockpit__lede { -webkit-line-clamp: unset !important; display: block !important; font-size: 0.78rem !important; }
   .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #6b46ff !important; color: #ffffff !important; }
