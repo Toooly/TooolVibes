@@ -22,3 +22,4 @@ import "@/styles/member-experience.css";
 import "@/styles/visual-character.css";
 import "@/styles/visual-system.css";
 import "@/styles/mockup-parity.css";
+import "@/styles/mockup-parity-v3.css";

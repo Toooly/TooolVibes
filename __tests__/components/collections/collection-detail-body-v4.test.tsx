@@ -91,7 +91,9 @@ describe("CollectionDetailBodyV4", () => {
       "#cx-detail-stack",
     );
     expect(screen.getByText("Lo stack completo resta nel tuo spazio.")).toBeTruthy();
-    expect(document.getElementById("cx-detail-stack")?.closest(".tv-member-gate__locked")).toBeTruthy();
+    // V3 mockup parity: the stack preview stays visible; the gate locks the depth below it.
+    expect(document.getElementById("cx-detail-stack")?.closest(".tv-member-gate__locked")).toBeNull();
+    expect(document.getElementById("cx-detail-variants")?.closest(".tv-member-gate__locked")).toBeTruthy();
   });
 
   it("shows stack flow by default for members while depth stays closed", () => {

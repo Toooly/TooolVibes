@@ -131,6 +131,7 @@ describe("release design token contract", () => {
       "@/styles/visual-character.css",
       "@/styles/visual-system.css",
       "@/styles/mockup-parity.css",
+      "@/styles/mockup-parity-v3.css",
     ]);
   });
 });

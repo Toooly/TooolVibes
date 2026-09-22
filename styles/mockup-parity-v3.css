@@ -1,0 +1,112 @@
+/* V3 compositional reconstruction — decisive mobile geometry.
+   Loaded after every other sheet. Targets measured from the final mockups. */
+
+@media (max-width: 899px) {
+  /* HOME — title 77, search ~250, tabs 343, card 403 */
+  .def-cockpit__inner { padding-top: 16px !important; }
+  .def-cockpit__title { font-size: 2.5rem !important; line-height: 1.02 !important; margin: 0 !important; }
+  .def-cockpit__lede { margin: 8px 0 0 !important; font-size: 0.88rem !important; }
+  .def-intent { margin-top: 10px !important; }
+  .def-intent__field { min-height: 44px !important; height: 44px !important; }
+  .def-start { padding-top: 0 !important; margin-top: -34px !important; }
+  .def-start__head { margin-bottom: 6px !important; }
+  .tv-discovery-stage .def-start__tabs { height: 40px !important; min-height: 40px !important; }
+  .def-start__panel { margin-top: 4px !important; }
+  .def-editorial__spotlight { padding: 14px !important; }
+  .def-editorial__spot-avatar { width: 36px !important; height: 36px !important; }
+  .def-editorial__spot-lede { -webkit-line-clamp: 2 !important; font-size: 0.8rem !important; }
+  .tv-featured-tool__meta { font-size: 0.75rem !important; gap: 10px !important; }
+  .def-editorial__spot-actions { margin-top: 10px !important; gap: 8px !important; }
+  .def-editorial__spot-cta--primary, .def-editorial__spot-cta--ghost { min-height: 40px !important; }
+  .def-editorial__spot-disclosure { margin-top: 6px !important; }
+  .def-editorial__spot-body { gap: 6px !important; }
+  .tv-featured-tool__meta { flex-wrap: nowrap !important; white-space: nowrap !important; }
+  .tv-featured-tool__meta span { display: inline-flex !important; align-items: baseline !important; gap: 4px !important; }
+  .def-editorial__spot-cta--primary, .def-editorial__spot-cta--ghost { height: 40px !important; }
+  .def-editorial__spot-head { gap: 8px !important; }
+
+  /* CATALOGUE — title 34 top ~55, search ~170, chips ~238, row 132 */
+  .ar4-intro__title { font-size: 2.125rem !important; }
+  .ar4-intro { padding-top: 0 !important; }
+  .ar4-intro__inner { padding-top: 0 !important; gap: 4px !important; }
+  .ar4-intro__copy { gap: 2px !important; }
+  .ar4-intro__title { margin: 0 !important; }
+  .catalogo-facet { min-height: 32px !important; margin: 2px 0 !important; }
+  .ar4-intro__eyebrow { display: none !important; }
+  .ar4-intro { margin-top: -30px !important; }
+  .ar4-intro__panel { margin-top: 62px !important; }
+  .ar4-intro__search { min-height: 44px !important; height: 44px !important; }
+  .ar4-categories { margin-top: 8px !important; padding-top: 0 !important; }
+  .ar4-categories__chips { gap: 6px !important; margin-top: 0 !important; }
+  .ar4-shell .ar4-card { min-height: 132px !important; }
+
+  /* GUIDES — title 34 top ~58 */
+  .guides-masthead { padding-top: 0 !important; margin-top: -18px !important; }
+  .guides-masthead__title { font-size: 2.125rem !important; }
+  .guides-section { padding-top: 12px !important; }
+
+  /* GUIDE ARTICLE — compact hero, body ~475 */
+  .guides-article { padding-top: 0 !important; }
+  .guides-article__hero { padding-top: 0 !important; margin-top: 4px !important; margin-bottom: 12px !important; }
+  .guides-article h1, .guides-article__title { font-size: 2.125rem !important; margin-top: 6px !important; }
+  .guides-article__body { margin-top: 12px !important; }
+  .guides-article__breadcrumb { margin: 0 !important; }
+  .guides-article__hero-meta { margin: 2px 0 4px !important; }
+  .guides-article__hero-h1 { font-size: 2.125rem !important; margin-top: 4px !important; }
+  .guides-article__hero-dek { margin-top: 4px !important; }
+  .guides-article__hero-main { gap: 2px !important; }
+  .guides-article__hero { margin-top: -70px !important; }
+
+  /* COLLECTION — CTA ~343, stages right after tabs */
+  .cx-detail-hero-v4 { padding-top: 8px !important; margin-top: -44px !important; }
+  .cx-detail-hero-v4 h1, .cx-detail-hero-v4__title { font-size: 2.125rem !important; }
+  .cx-detail-hero-v4__audience, .cx-detail-hero-v4__target { display: none !important; }
+  .cx-detail-hero-v4__promise { margin-top: 6px !important; -webkit-line-clamp: 2 !important; }
+  .cx-detail-hero-v4__decision { margin-top: 10px !important; }
+  .cx-detail-hero-v4__actions { margin-top: 10px !important; }
+  .cx-detail-hero-v4 > * { gap: 4px !important; }
+  .cx-detail-hero-v4__decision-item { padding: 6px 8px !important; }
+  .cx-detail-hero-v4__eyebrow { margin: 0 !important; }
+  .cx-section-nav { margin-top: 8px !important; }
+  .cx-stack-flow-v4 { margin-top: 10px !important; }
+  .tv-member-gate { margin: 8px 0 !important; }
+  .tv-member-gate__locked { max-height: 132px !important; }
+
+  /* RADAR — title 34, controls hidden, compact rows */
+  .tv-radar__title { font-size: 2.125rem !important; }
+  .tv-radar__controls { display: none !important; }
+  .tv-radar__header { padding-top: 4px !important; }
+
+  /* WORKSPACE — compact */
+  .tv-app__pagehead { padding-top: 0 !important; margin-top: 4px !important; }
+  .tv-mod { padding: 14px !important; }
+  .tv-lib-row { padding: 10px 12px !important; }
+
+  /* DECISION SHEET — compact cream panel with dark context */
+  .tv-decision-sheet { max-height: 78vh !important; }
+  .tv-decision-sheet__header { padding: 12px 14px 0 !important; }
+  .tv-decision-sheet__body { padding: 10px 14px !important; }
+  .tv-decision-sheet__footer { padding: 10px 14px 12px !important; }
+
+  /* AUTH — title ~84, inline email row */
+  .v-auth-page .v-auth-card { padding: 16px 14px !important; }
+  .v-auth-page .v-auth-title { font-size: 1.5rem !important; margin-top: 0 !important; }
+  .v-auth-page .v-auth-brand { margin: -10px 0 0 !important; }
+  .v-auth-page .v-auth-header { gap: 2px !important; }
+  .v-auth-page .v-auth-subtitle { font-size: 0.82rem !important; }
+  .v-auth-page form { display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 8px !important; }
+  .v-auth-page form input.v-auth-input { flex: 1 1 140px !important; min-height: 44px !important; }
+  .v-auth-page form button[type="submit"] { flex: 0 0 auto !important; width: auto !important; padding-inline: 16px !important; min-height: 44px !important; }
+  .v-auth-page form label, .v-auth-page form .v-auth-consent { flex: 1 0 100% !important; }
+  .v-auth-page .v-auth-info { margin-top: 8px !important; font-size: 0.78rem !important; }
+
+  /* FOOTER — ~500 total */
+  .site-footer-v2 .site-footer-v2__shell { padding-block: 14px 20px !important; gap: 8px !important; }
+  .site-footer-v2 .tv-utility__identity { gap: 6px !important; }
+  .site-footer-v2 .tv-utility__summary { font-size: 0.78rem !important; max-width: 28ch !important; }
+  .site-footer-v2 .tv-utility__nav { gap: 16px !important; }
+  .site-footer-v2 .tv-utility__group ul { gap: 3px !important; }
+  .site-footer-v2 .tv-utility__link { font-size: 0.78rem !important; }
+  .site-footer-v2 .tv-utility__legal { margin-top: 0 !important; gap: 6px 10px !important; }
+  .site-footer-v2 .tv-utility__mark { margin-top: 2px !important; }
+}

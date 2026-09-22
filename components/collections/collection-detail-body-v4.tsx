@@ -80,10 +80,6 @@ export function CollectionDetailBodyV4({
       <JsonLd data={structuredData} />
       <div className="cx-detail-v4" data-cx-accent={accent}>
         <CollectionDetailHeroV4 collection={collection} />
-        <MemberPreviewGate
-          title="Continua nel tuo spazio"
-          body="Lo stack completo resta nel tuo spazio."
-        >
         <CollectionSectionNavV4
           items={[
             { id: "cx-detail-stack", label: "Stack" },
@@ -106,6 +102,10 @@ export function CollectionDetailBodyV4({
           ]}
         />
         <CollectionStackFlowV4 collection={collection} />
+        <MemberPreviewGate
+          title="Continua nel tuo spazio"
+          body="Lo stack completo resta nel tuo spazio."
+        >
         <CollectionVariantPathsV4 collection={collection} />
         <CollectionDecisionNotesV4 collection={collection} />
         <CollectionScenarioV4 collection={collection} />

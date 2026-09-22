@@ -318,3 +318,109 @@
     transition: none;
   }
 }
+
+/* ============================================================
+   V3 compositional reconstruction — mobile parity geometry.
+   Targets measured from the final mockup panels at 390 width.
+   ============================================================ */
+@media (max-width: 899px) {
+  /* 01 HOME — hero compaction: title top ~77, search ~44, tabs ~343, card ~403 */
+  .def-cockpit__inner { padding-top: 20px; }
+  .def-cockpit__title { line-height: 1.02; margin: 0; }
+  .def-cockpit__lede { margin: 10px 0 0; }
+  .def-cockpit__lede-desktop { display: none; }
+  .def-cockpit__lede-mobile { display: inline; }
+  .def-intent { margin-top: 14px; }
+  .def-intent__field { min-height: 44px; }
+  .def-intent__field input { font-size: 14px; }
+  .def-intent__field button { min-height: 36px; font-size: 13px; padding-inline: 14px; }
+  .def-start { padding-top: 10px; }
+  .def-start__head { margin-bottom: 8px; }
+  .def-start__title { font-size: 1.25rem; margin: 0; }
+  .tv-discovery-stage .def-start__tabs { min-height: 40px; }
+  .def-editorial__spotlight { padding: 14px; }
+  .def-editorial__spot-lede { font-size: 13px; }
+  .tv-featured-tool__meta { gap: 10px; }
+  .def-editorial__spot-cta--primary { min-height: 40px; }
+  .def-editorial__spot-actions { gap: 8px; }
+  .def-latest { margin-top: 16px; }
+  .def-latest__link { padding: 8px 10px; }
+
+  /* 02 CATALOGUE — title 34px top ~55, search ~170, chips ~238, row pitch ~145 */
+  .ar4-intro__title { font-size: 2.125rem; }
+  .ar4-intro__inner { padding-top: 16px; }
+  .ar4-intro__panel { margin-top: 10px; }
+  .ar4-intro__search { min-height: 44px; }
+  .ar4-categories { margin-top: 12px; }
+  .ar4-categories__chips { gap: 6px; }
+  .ar4-shell .ar4-card { min-height: 132px; padding: 14px 16px; }
+
+  /* 03 TOOL — compact modules, action row ~321, nav ~400 */
+  .td-final-hero { padding-top: 8px; }
+  .td-final-hero__title, .td-final-title { font-size: 1.75rem; }
+  .td-final-actions { margin-top: 12px; }
+  .td-final-decision-nav, .td-final-nav { margin-top: 12px; }
+  .td-final-brief, .td-final-decision-brief { padding: 14px; margin-top: 12px; }
+  .td-final-deepen { margin-top: 12px; }
+
+  /* 04 GUIDES — title 34px, top ~58 */
+  .guides-masthead { padding-top: 14px; }
+  .guides-masthead__title { font-size: 2.125rem; }
+  .guides-section { padding-top: 16px; }
+
+  /* 05 GUIDE ARTICLE — title ~102, body ~475 */
+  .guides-article__hero, .guide-article-hero { padding-top: 12px; }
+  .guides-article__title, .guide-article-hero__title { font-size: 2.125rem; }
+  .guides-article__hero { margin-bottom: 14px; }
+  .guides-article__body { margin-top: 14px; }
+
+  /* 06 COLLECTION — CTA ~343, first stage ~489 */
+  .cx-detail-hero-v4 { padding-top: 16px; }
+  .cx-detail-hero-v4__title { font-size: 2.125rem; }
+  .cx-detail-hero-v4__promise { margin-top: 8px; }
+  .cx-detail-hero-v4__decision { margin-top: 12px; }
+  .cx-detail-hero-v4__actions { margin-top: 14px; }
+  .cx-detail-hero-v4__gate, .cx-detail-hero-v4__stack { margin-top: 10px; }
+  .cx-section-nav { margin-top: 10px; }
+  .cx-stack-flow-v4 { margin-top: 12px; }
+
+  /* 07 RADAR — title 34, compact rows pitch ~98 */
+  .tv-radar__title { font-size: 2.125rem; }
+  .tv-radar__lede { margin-top: 6px; }
+  .tv-radar__controls { display: none; }
+  .tv-radar__row, .tv-radar__signal { min-height: 86px; }
+
+  /* 08 SPAZIO / 09 DECISIONI — compact modules and rows */
+  .tv-app__pagehead { padding-top: 6px; }
+  .tv-mod { padding: 14px; }
+  .tv-home-title { font-size: 1.05rem; margin: 0 0 6px; }
+  .tv-home-copy { font-size: 0.82rem; }
+  .tv-lib-row { padding: 10px 12px; }
+
+  /* 10 DECISION SHEET — compact cream sheet, dark context visible */
+  .tv-decision-sheet { max-height: 78vh; border-radius: 22px 22px 0 0; }
+  .tv-decision-sheet__body { padding: 12px 14px; gap: 10px; }
+  .tv-decision-sheet__header { padding: 14px 14px 0; }
+  .tv-decision-sheet__footer { padding: 10px 14px 14px; }
+
+  /* 11 AUTH — title ~84, inline email row ~368, link ~466 */
+  .v-auth-page .v-auth-card { padding: 18px 16px; }
+  .v-auth-page .v-auth-title { font-size: 1.5rem; }
+  .v-auth-page .v-auth-subtitle { margin-top: 6px; font-size: 0.85rem; }
+  .v-auth-page .v-auth-form { display: flex; flex-wrap: wrap; gap: 8px; }
+  .v-auth-page .v-auth-form > .v-auth-field,
+  .v-auth-page .v-auth-form > .v-auth-input-wrap { flex: 1 1 100%; }
+  .v-auth-page .v-auth-form input.v-auth-input { flex: 1 1 auto; min-height: 44px; }
+  .v-auth-page .v-auth-form .v-auth-btn-primary { flex: 0 0 auto; min-height: 44px; width: auto; padding-inline: 18px; }
+  .v-auth-page .v-auth-info { margin-top: 10px; font-size: 0.78rem; }
+  .v-auth-page .v-auth-footer { margin-top: 12px; }
+
+  /* 13 FOOTER — total ~500: tight shell, columns from ~206, legal ~463 */
+  .site-footer-v2 .site-footer-v2__shell { padding-block: 26px 34px; gap: 14px; }
+  .site-footer-v2 .tv-utility__summary { font-size: 0.8rem; max-width: 30ch; }
+  .site-footer-v2 .tv-utility__nav { gap: 18px; }
+  .site-footer-v2 .tv-utility__group ul { gap: 4px; }
+  .site-footer-v2 .tv-utility__link { font-size: 0.8rem; }
+  .site-footer-v2 .tv-utility__legal { gap: 8px 12px; margin-top: 4px; }
+  .site-footer-v2 .tv-utility__mark { margin-top: 4px; }
+}

@@ -280,7 +280,6 @@ export function DefinitiveArchive({
             <h1 id="ar4-intro-title" className="ar4-intro__title">
               Trova i tool da valutare.
             </h1>
-            <CatalogoFacetHead active="tutti" />
           </div>
 
           <div className="ar4-intro__panel">
@@ -313,6 +312,7 @@ export function DefinitiveArchive({
 
             {/* Counts live in the intro eyebrow only. */}
           </div>
+          <CatalogoFacetHead active="tutti" className="ar4-intro__facet" />
         </div>
       </section>
 

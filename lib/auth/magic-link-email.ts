@@ -24,12 +24,12 @@ export function getMagicLinkHtml(confirmUrl: string): string {
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
       Conferma la tua email per ritrovare Salvati, confronti e decisioni nel tuo spazio.
     </div>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#07060d;margin:0;padding:28px 16px;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#07060d;margin:0;padding:18px 12px;">
       <tr>
         <td align="center">
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#120c22;border:1px solid #2a2440;border-radius:18px;">
             <tr>
-              <td style="padding:28px 28px 0;font-family:Arial,Helvetica,sans-serif;">
+              <td style="padding:20px 20px 0;font-family:Arial,Helvetica,sans-serif;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td style="font-size:13px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#f6f1e8;">
@@ -43,21 +43,21 @@ export function getMagicLinkHtml(confirmUrl: string): string {
               </td>
             </tr>
             <tr>
-              <td style="padding:22px 28px 0;font-family:Arial,Helvetica,sans-serif;">
-                <h1 style="margin:0;font-size:34px;line-height:1.1;color:#ffffff;font-weight:700;letter-spacing:-0.01em;">
+              <td style="padding:16px 20px 0;font-family:Arial,Helvetica,sans-serif;">
+                <h1 style="margin:0;font-size:30px;line-height:1.1;color:#ffffff;font-weight:700;letter-spacing:-0.01em;">
                   Entra in TooolVibes
                 </h1>
-                <p style="margin:14px 0 0;font-size:16px;line-height:1.55;color:#c9c3d9;">
+                <p style="margin:10px 0 0;font-size:15px;line-height:1.55;color:#c9c3d9;">
                   Conferma la tua email per ritrovare Salvati, confronti e decisioni nel tuo spazio.
                 </p>
               </td>
             </tr>
             <tr>
-              <td style="padding:24px 28px 0;">
+              <td style="padding:18px 20px 0;">
                 <table role="presentation" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="center" bgcolor="#e4b23c" style="border-radius:10px;background:#e4b23c;">
-                      <a href="${safeUrl}" style="display:inline-block;padding:15px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:1.2;color:#141218;text-decoration:none;">
+                      <a href="${safeUrl}" style="display:inline-block;padding:13px 20px;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:1.2;color:#141218;text-decoration:none;">
                         ${MAGIC_LINK_EMAIL_CTA} &rarr;
                       </a>
                     </td>
@@ -66,7 +66,7 @@ export function getMagicLinkHtml(confirmUrl: string): string {
               </td>
             </tr>
             <tr>
-              <td style="padding:18px 28px 0;font-family:Arial,Helvetica,sans-serif;">
+              <td style="padding:12px 20px 0;font-family:Arial,Helvetica,sans-serif;">
                 <table role="presentation" cellspacing="0" cellpadding="0">
                   <tr>
                     <td valign="top" style="padding-right:10px;">
@@ -80,7 +80,7 @@ export function getMagicLinkHtml(confirmUrl: string): string {
               </td>
             </tr>
             <tr>
-              <td style="padding:22px 28px 0;">
+              <td style="padding:14px 20px 0;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td style="border-top:1px solid #2a2440;font-size:0;line-height:0;">&nbsp;</td>
@@ -89,7 +89,7 @@ export function getMagicLinkHtml(confirmUrl: string): string {
               </td>
             </tr>
             <tr>
-              <td style="padding:20px 28px 0;font-family:Arial,Helvetica,sans-serif;">
+              <td style="padding:14px 20px 0;font-family:Arial,Helvetica,sans-serif;">
                 <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#8d86a8;">
                   Se il pulsante non funziona
                 </p>
@@ -102,12 +102,12 @@ export function getMagicLinkHtml(confirmUrl: string): string {
               </td>
             </tr>
             <tr>
-              <td style="padding:18px 28px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#8d86a8;">
+              <td style="padding:12px 20px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:#8d86a8;">
                 Se non hai richiesto tu questa email, puoi ignorarla.
               </td>
             </tr>
             <tr>
-              <td style="padding:26px 28px 28px;font-family:Arial,Helvetica,sans-serif;">
+              <td style="padding:18px 20px 20px;font-family:Arial,Helvetica,sans-serif;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#f6f1e8;">
