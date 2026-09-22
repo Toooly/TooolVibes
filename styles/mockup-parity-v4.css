@@ -345,3 +345,23 @@
   .td-final-affiliate-note { display: none !important; }
   .td-final-save-cluster { flex: 0 0 auto !important; }
 }
+
+@media (max-width: 899px) {
+  /* batch-1 v2 — 01 home */
+  .def-start__head { display: none !important; }
+  .def-intent__field input { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+  .def-cockpit__lede { -webkit-line-clamp: unset !important; display: block !important; font-size: 0.78rem !important; }
+  .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #6b46ff !important; color: #ffffff !important; }
+  .def-editorial__spot-avatar { width: 56px !important; height: 56px !important; border-radius: 14px !important; }
+  .def-editorial__spot-lede { color: #d9d3e8 !important; }
+
+  /* batch-1 v2 — 02 catalogue */
+  .ar4-mobile-bar { display: none !important; }
+  .ar4-intro { margin-top: 0 !important; }
+  .ar4-intro__inner { padding-top: 6px !important; }
+  .ar4-shell .ar4-card { min-height: 120px !important; }
+
+  /* batch-1 v2 — 03 tool detail */
+  .td-final-brief li, .td-final-brief [class*="bullet"] { color: #8fd6a8 !important; }
+  .td-final-decision-nav a, .td-final-decision-nav button { min-height: 36px !important; }
+}
