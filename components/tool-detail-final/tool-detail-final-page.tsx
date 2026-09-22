@@ -11,6 +11,7 @@ import {
 } from "@/lib/seo/metadata";
 
 import Link from "next/link";
+import { Search } from "lucide-react";
 
 import { HeaderAccountControl } from "@/components/layout/header-account-control";
 
@@ -148,6 +149,9 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             ← Torna al catalogo
           </Link>
           <div className="td-final-mobileheader__actions">
+            <Link href="/archivio" className="td-final-mobileheader__search" aria-label="Cerca nel catalogo">
+              <Search size={16} aria-hidden="true" />
+            </Link>
             <HeaderAccountControl linkClassName="td-final-mobileheader__back" menuClassName="td-final-mobileheader__menu" panelClassName="td-final-mobileheader__panel" />
           </div>
         </div>
