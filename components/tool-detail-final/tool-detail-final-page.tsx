@@ -10,6 +10,10 @@ import {
   defaultSocialImage,
 } from "@/lib/seo/metadata";
 
+import Link from "next/link";
+
+import { HeaderAccountControl } from "@/components/layout/header-account-control";
+
 import { ToolDetailHero } from "./tool-detail-hero";
 import { ToolDetailDecisionBrief } from "./tool-detail-decision-brief";
 import { ToolDetailExtendedContent } from "./tool-detail-extended-content";
@@ -139,6 +143,14 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
     <>
       <JsonLd data={toolStructuredData} />
       <div className="td-final-page">
+        <div className="td-final-mobileheader">
+          <Link href="/archivio" className="td-final-mobileheader__back">
+            ← Torna al catalogo
+          </Link>
+          <div className="td-final-mobileheader__actions">
+            <HeaderAccountControl />
+          </div>
+        </div>
         <section
           id="td-final-overview"
           className="td-final-hero"

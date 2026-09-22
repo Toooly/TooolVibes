@@ -460,3 +460,44 @@
   .td-final-decision-nav { overflow-x: auto !important; }
   .td-final-brief dl { margin-top: 20px !important; }
 }
+
+@media (max-width: 899px) {
+  /* ============ batch-1 V6 pixel-closure ============ */
+  /* 01 subtitle measure + card presence */
+  .def-cockpit__lede { font-size: 0.8125rem !important; line-height: 1.3 !important; letter-spacing: -0.01em !important; }
+  .def-editorial__spotlight { padding: 18px !important; }
+  .def-editorial__spot-lede { margin-top: 10px !important; }
+  .tv-featured-tool__meta { margin-top: 10px !important; }
+  .def-editorial__spot-actions { margin-top: 14px !important; }
+
+  /* 02 rail->list and visible compact bookmark */
+  .ar4-intro { padding-bottom: 0 !important; }
+  .ar4-grid { margin-top: 0 !important; }
+  .ar4-grid__list { margin-top: 0 !important; padding-top: 0 !important; }
+  .ar4-shell .ar4-card__toggles > *, .ar4-shell .ar4-card__actions [class*="selection-chip"] {
+    width: 26px !important; height: 26px !important; min-height: 26px !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(205, 185, 255, 0.38) !important;
+    background: rgba(205, 185, 255, 0.10) !important;
+    color: #cdb9ff !important;
+  }
+
+  /* 03: real detail header; quieter category; 4-col tabs; analysis below fold */
+  .td-final-mobileheader {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 48px; padding: 0 16px;
+    background: color-mix(in srgb, #241a4a 88%, transparent);
+    position: sticky; top: 0; z-index: 45;
+  }
+  .td-final-mobileheader__back { color: var(--tv-ink-primary); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+  .td-final-mobileheader__actions { display: flex; align-items: center; gap: 8px; }
+  body:has(.td-final-page) .mobile-top-bar { display: none !important; }
+  .td-final-hero__chips > * { text-transform: none !important; font-size: 0.8rem !important; letter-spacing: 0 !important; font-weight: 400 !important; }
+  .td-final-decision-nav { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 4px !important; overflow: visible !important; }
+  .td-final-decision-nav__link { justify-content: center !important; padding: 0 4px !important; font-size: 0.75rem !important; min-height: 34px !important; white-space: nowrap !important; }
+  .td-final-brief__points { margin-bottom: 48px !important; }
+  .td-final-brief dl { margin-top: 48px !important; }
+}
+@media (min-width: 900px) {
+  .td-final-mobileheader { display: none !important; }
+}
