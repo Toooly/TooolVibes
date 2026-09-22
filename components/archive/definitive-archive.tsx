@@ -371,30 +371,6 @@ export function DefinitiveArchive({
         </div>
       </section>
 
-      <section className="ar4-goals" aria-label="Obiettivi">
-        <div className="ar4-goals__inner">
-          <p className="ar4-goals__label">Cosa vuoi fare?</p>
-          <div className="ar4-goals__chips">
-            {DISCOVERY_INTENTS.map((intent) => {
-              const pressed = intent.group
-                ? activeGroup === intent.group
-                : Boolean(intent.query && query === intent.query);
-              return (
-                <button
-                  key={intent.id}
-                  type="button"
-                  className={cn("ar4-chip", pressed && "is-active")}
-                  aria-pressed={pressed}
-                  onClick={() => applyDiscoveryIntent(intent, setActiveGroup, setQuery)}
-                >
-                  {intent.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* ═══ 3a. DESKTOP FILTRI + ORDINAMENTO (>= 768px) ═══ */}
       <section className="ar4-filters" aria-label="Filtri catalogo">
         <div className="ar4-filters__inner">
