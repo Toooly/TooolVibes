@@ -283,3 +283,55 @@
     box-shadow: 0 0 10px color-mix(in srgb, #8b6cff 40%, transparent);
   }
 }
+
+/* ============================================================
+   VISION HANDOFF — BATCH 1 (01 Home, 02 Catalogue, 03 Tool Detail)
+   Itemized deltas from the vision review. Mobile only.
+   ============================================================ */
+@media (max-width: 899px) {
+  /* Shared canonical mobile header: integrated with the violet shell, not a black bar */
+  .mobile-top-bar { background: color-mix(in srgb, #18122c 94%, transparent) !important; border-bottom: 0 !important; }
+
+  /* 01 HOME ---------------------------------------------------- */
+  .def-cockpit__lede { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; font-size: 0.85rem !important; }
+  .def-intent__field {
+    background: rgba(139, 108, 255, 0.16) !important;
+    border: 1px solid rgba(139, 108, 255, 0.35) !important;
+    border-radius: 14px !important;
+  }
+  .def-intent__field button {
+    width: 34px !important; height: 34px !important; min-height: 34px !important;
+    border-radius: 999px !important; padding: 0 !important;
+    background: #cdb9ff !important; color: #1a1030 !important;
+    display: grid !important; place-items: center !important;
+  }
+  .tv-discovery-stage .def-start__tabs { background: color-mix(in srgb, #221a44 85%, transparent) !important; }
+  .tv-discovery-stage .def-start__tab[aria-selected="true"] {
+    background: #cdb9ff !important; color: #1a1030 !important; box-shadow: none !important;
+  }
+  .def-editorial__spotlight { padding: 12px !important; }
+  .def-editorial__spot-head { margin-top: 2px !important; }
+  .def-editorial__spot-lede { margin-top: 4px !important; }
+  .tv-featured-tool__meta { margin-top: 4px !important; }
+  .def-editorial__spot-actions { margin-top: 6px !important; }
+
+  /* 02 CATALOGUE ---------------------------------------------- */
+  .ar4-intro__search { background: rgba(139, 108, 255, 0.16) !important; border: 1px solid rgba(139, 108, 255, 0.35) !important; border-radius: 14px !important; }
+  .ar4-categories__chips { flex-wrap: nowrap !important; overflow-x: auto !important; height: 44px !important; min-height: 44px !important; gap: 8px !important; scrollbar-width: none; }
+  .ar4-categories__chips::-webkit-scrollbar { display: none; }
+  .ar4-chip { border-radius: 999px !important; border: 1px solid rgba(255, 255, 255, 0.16) !important; background: rgba(255, 255, 255, 0.05) !important; color: var(--tv-ink-primary) !important; min-height: 34px !important; padding: 0 14px !important; flex: 0 0 auto !important; font-size: 0.8rem !important; }
+  .ar4-chip[aria-pressed="true"], .ar4-chip[data-active="true"], .ar4-chip.is-active { background: #cdb9ff !important; color: #1a1030 !important; border-color: transparent !important; }
+  .ar4-grid__head, .ar4-grid__list-head { display: none !important; }
+
+  /* 03 TOOL DETAIL -------------------------------------------- */
+  /* Restore the identity block (was hidden by an earlier rule) as the mockup header */
+  .td-final-hero__inner > :first-child { display: grid !important; }
+  .td-final-hero__inner > :first-child { grid-template-columns: 64px minmax(0, 1fr) !important; column-gap: 12px !important; row-gap: 2px !important; align-items: center !important; }
+  .td-final-hero__identity > :first-child { grid-column: 1 !important; grid-row: 1 / span 3 !important; width: 56px !important; height: 56px !important; border-radius: 14px !important; }
+  .td-final-hero__identity > :nth-child(2), .td-final-hero__name { grid-column: 2 !important; grid-row: 1 !important; }
+  .td-final-hero__identity > :nth-child(3) { grid-column: 2 !important; grid-row: 2 !important; }
+  .td-final-score { color: #f3bf4c !important; }
+  .td-final-decision-nav [class*="item"], .td-final-decision-nav a, .td-final-decision-nav button { border-radius: 999px !important; }
+  .td-final-decision-nav [aria-current="true"], .td-final-decision-nav .is-active { background: #cdb9ff !important; color: #1a1030 !important; }
+  .td-final-brief p { display: -webkit-box !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+}

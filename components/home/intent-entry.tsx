@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
@@ -82,7 +82,9 @@ export function IntentEntry() {
             autoComplete="off"
             aria-label="Cerca tool, categorie, use case"
           />
-          <button type="submit">Cerca</button>
+          <button type="submit" aria-label="Cerca">
+            <ArrowRight size={16} aria-hidden="true" />
+          </button>
         </div>
       </form>
     </div>
