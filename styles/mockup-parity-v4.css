@@ -184,3 +184,10 @@
 @media (min-width: 900px) {
   .guides-grid__featured, [data-mobile-featured] { display: none !important; }
 }
+
+@media (max-width: 899px) {
+  /* 04 V4.3: root cause — legacy ivory gradient on the grid section painted a cream slab.
+     The section goes back to the dark shell; only the featured editorial card paints cream. */
+  #guides-all { background-image: none !important; background-color: transparent !important; }
+  .guides-grid__featured .guides-feature { background: #f6f1e8 !important; border-radius: 16px !important; }
+}
