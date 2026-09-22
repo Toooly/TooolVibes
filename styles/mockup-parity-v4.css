@@ -407,3 +407,27 @@
   .td-final-scope, .td-final-actions { margin-top: 4px !important; }
   .td-final-decision-nav__link { min-height: 36px !important; }
 }
+
+@media (max-width: 899px) {
+  /* ============ batch-1 V4 ============ */
+  /* 02: real strip class; tight rail->list; bookmark contained in the card */
+  body:has(.ar4-shell) .mobile-top-bar__route,
+  body:has(.td-final-page) .mobile-top-bar__route { display: none !important; }
+  .ar4-grid { margin-top: 10px !important; }
+  .ar4-grid__list { margin-top: 0 !important; }
+  .ar4-shell .ar4-card { overflow: hidden !important; }
+  .ar4-shell .ar4-card__actions { top: 12px !important; right: 12px !important; }
+
+  /* 03: Golden Master component order inside the identity grid */
+  .td-final-hero__facts { grid-row: 4 !important; }
+  .td-final-hero__deck { grid-row: 5 !important; }
+  .td-final-hero__identity > .td-final-actions { grid-column: 1 / -1 !important; grid-row: 6 !important; position: static !important; margin-top: 6px !important; }
+  /* four tabs fit at 390 without clipping */
+  .td-final-decision-nav { gap: 4px !important; }
+  .td-final-decision-nav__link { padding: 0 10px !important; font-size: 0.8rem !important; white-space: nowrap !important; }
+  /* In sintesi points */
+  .td-final-brief__summary { margin: 6px 0 8px !important; }
+  .td-final-brief__points { list-style: none !important; margin: 0 0 10px !important; padding: 0 !important; display: grid !important; gap: 6px !important; }
+  .td-final-brief__points li { display: flex !important; gap: 8px !important; align-items: flex-start !important; color: #d9d3e8 !important; }
+  .td-final-brief__points li::before { content: "✓" !important; color: #8fd6a8 !important; font-weight: 700 !important; }
+}

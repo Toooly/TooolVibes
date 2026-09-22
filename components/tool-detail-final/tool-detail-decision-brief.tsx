@@ -24,6 +24,13 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
     extractMarkdownVerdict(markdown.byId.verdict) ||
     null;
 
+  const strengths = (markdown.byId.strengths ?? "")
+    .split("\n")
+    .map((line) => line.replace(/^\s*[-*]\s*/, "").replace(/\*\*/g, "").trim())
+    .filter((line) => line.length > 2)
+    .slice(0, 3);
+  const briefSummary = (tool.whyItMatters ?? "").trim() || (verdict ?? "");
+
   const rows = [
     fit ? { dt: "Ideale per", dd: fit } : null,
     tradeOff ? { dt: "Trade-off", dd: tradeOff } : null,
@@ -40,6 +47,16 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
       <p id="td-final-brief-heading" className="td-final-brief__eyebrow">
         In sintesi
       </p>
+      {briefSummary ? (
+        <p className="td-final-brief__summary">{briefSummary}</p>
+      ) : null}
+      {strengths.length > 0 ? (
+        <ul className="td-final-brief__points">
+          {strengths.map((point) => (
+            <li key={point}>{point}</li>
+          ))}
+        </ul>
+      ) : null}
       <dl>
         {rows.map((row) => (
           <div key={row.dt}>
