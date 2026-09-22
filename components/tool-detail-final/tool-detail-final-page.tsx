@@ -148,7 +148,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             ← Torna al catalogo
           </Link>
           <div className="td-final-mobileheader__actions">
-            <HeaderAccountControl />
+            <HeaderAccountControl linkClassName="td-final-mobileheader__back" menuClassName="td-final-mobileheader__menu" panelClassName="td-final-mobileheader__panel" />
           </div>
         </div>
         <section
