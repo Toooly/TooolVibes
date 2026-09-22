@@ -162,3 +162,69 @@ Worker version: `3b57492f-9e80-4639-86cd-1b143e922e76`
 | Overflow | 0 on all sampled routes |
 | Empty `PUBBLICITÀ` | none |
 | Page errors | one transient 403 not reproducible on networkidle |
+
+## STRICT VISUAL RECONSTRUCTION PASS (22 Sep 2026)
+
+Method: the five final mockup boards were OCR-extracted with macOS Vision (`/tmp/ocr/mockups/*.tsv`) to obtain the literal target text per numbered panel. Each production route was then DOM-extracted and checked programmatically: every target string must be present, every legacy string must be gone. Verification: `42656e8`. Screenshots: `artifacts/final-mockup-parity/390-rc2-*.png`, `1440-rc2-*.png`.
+
+Limitation, stated plainly: this environment cannot return image pixels to the model, so the side-by-side was done on extracted text and structure, not on rendered pixels. A human should still open the screenshots and the mockup PNGs next to each other for the final aesthetic sign-off. What is proven below is that the composition and copy now match the mockup panels.
+
+### 01 Home TOOL — PASS (structure + copy)
+Present: `Recensioni indipendenti, confronti chiari e guide pratiche sul tuo lavoro con l'AI.` · `Cerca tool, categorie, use case...` · TOOL/STACK/RADAR pill · `Scelta della redazione` · score row · `Apri Blink` · `Sito` · `Ultime dal catalogo` + `Vedi tutte`
+Removed: intent chips, `Cosa vuoi fare?`, system counters, entire Method section (`Cinque tappe`, `Come valutiamo`), `Valutazioni editoriali` carousel
+Residual: partner label reads `Partner Experience · Sponsorizzato` (mockup: `PARTNER DI TOOLVIBES`); social icons absent (no real profile URLs in the registry)
+
+### 02 Catalogue — PASS (structure + copy)
+Present: `Trova i tool da valutare.` · search · `Tutte (30)` + category chips · cards with name, category, `★ 8.0`, `Ideale per ...`
+Removed: intro lede, `Esplora per categoria` head block, description lines, level suffix in cards, `Tutti` label
+Residual: `Tutti | Radar` facet kept as product navigation
+
+### 03 Tool detail — PASS (structure + copy)
+CTA order Confronta (gold) → Visita → Salva; `In sintesi` brief. (Tool detail was already rebuilt in the previous pass; this pass kept it.)
+
+### 04 Guide list — PASS (structure + copy)
+Present: `Guide scritte per decidere.` · `Letture lunghe su un tool o un flusso. Tesi, struttura, parere.` · cream cards · `Leggi la guida`
+Removed: `Sezione Guide` kicker, masthead stats, `Letture organizzate per area` head, `Tutte le guide` kicker, `Apri` CTA
+
+### 05 Guide article — PASS (structure + copy)
+Cream reading column at 66ch framed by the night shell; breadcrumb, byline, takeaways, TOC unchanged from the previous pass.
+
+### 06 Collection — PASS (structure + copy)
+Present: `Avvia questa raccolta` · 3 hero metrics (Costo / Setup / Tool) · section nav (Stack, Varianti, Decisioni, Scenario, Quando no, Guide) · numbered stages · `Perché questa raccolta` (collapsed)
+Removed: `Come funziona, in pratica` heading and visible rationale wall, Difficoltà/Verificato metrics
+
+### 07 Radar — PASS (structure + copy)
+`Cosa sta emergendo adesso` · `I tool più discussi, in crescita ora.` · cyan ranked rows. Home preview already matched.
+
+### 08 Spazio — PASS (structure + copy)
+`Bentornato` · `Cosa vuoi fare oggi?` head added; resume-first modules unchanged.
+
+### 09 Decisions — PASS (structure + copy)
+List, chips and rows unchanged; sheet renamed per mockup.
+
+### 10 Decision sheet — PASS (structure + copy)
+`Valuta {tool}` · `Perché questa decisione?` · reason chips · `Nota privata` · `Annulla` / `Salva decisione` · cream sheet over dark app.
+
+### 11 Auth — PASS (structure + copy)
+`Entra in TooolVibes` · `Il tuo spazio per salvare, confrontare e ricordare le tue decisioni.` · providers only when enabled · `Inserisci la tua email` · `Invia link` · `Ti invieremo un link sicuro per accedere.` · `Crea un account`
+Removed: Accedi/Crea spazio/Recupera tab pills, old subtitle, aside manifesto
+
+### 12 Magic-link email — PASS (structure + copy)
+`TooolVibes` · `Better tools / Brighter builders` · `Entra in TooolVibes` · gold `Conferma e apri TooolVibes` · one-time notice · `Se il pulsante non funziona` · fallback URL · `Se non hai richiesto tu questa email, puoi ignorarla.` · footer with `Strumenti per chi costruisce il domani` and `Il tuo spazio, idee più lontane.` Dark composition per the dedicated email mockup; dashboard template synced.
+
+### 13 Footer — PASS (structure + copy)
+Identity + summary + `Scrivici` · Esplora / TooolVibes columns · legal + `Trasparenza e affiliazioni` + mark. Removed: `Parliamone` block. Social icons omitted (no registry URLs).
+
+## Verification for this pass
+
+| Check | Result |
+|---|---|
+| tsc | PASS |
+| eslint `.` | PASS |
+| build | PASS |
+| tests | PASS — 2952 passed, 36 skipped, 0 failed |
+| overflow | 0 on all sampled routes at 390 and 1440 |
+| legacy strings | programmatically absent |
+| mockup strings | programmatically present |
+
+Commit: `42656e8`. Not deployed.
