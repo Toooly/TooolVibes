@@ -114,6 +114,11 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   }
 
   const isAuthoredPost = Boolean(post.content_markdown);
+  const serverHeadings = (post.content_markdown ?? "")
+    .split("\n")
+    .filter((line) => line.startsWith("### "))
+    .map((line) => line.replace(/^###\s+/, "").trim())
+    .filter(Boolean);
   const kindLabel = kindLabels[post.kind];
   const canonicalUrl = `${siteConfig.url}/posts/${post.slug}`;
   const subjectDirectoryTool = getDirectoryToolBySlug(post.tool_slug ?? post.slug);
@@ -253,6 +258,17 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               <span className="guides-article__hero-media-topic">{topicLabel}</span>
             </span>
           </div>
+        ) : null}
+
+        {isAuthoredPost && serverHeadings.length > 0 ? (
+          <nav className="guides-article__hero-index" aria-label="In questa guida">
+            <p className="guides-article__hero-index-title">In questa guida</p>
+            <ol>
+              {serverHeadings.map((heading) => (
+                <li key={heading}>{heading}</li>
+              ))}
+            </ol>
+          </nav>
         ) : null}
 
         {isAuthoredPost ? (

@@ -140,3 +140,20 @@
   /* 05: cream reading surface starts below the first viewport, as in the mockup */
   .guides-article__body { margin-top: 220px !important; }
 }
+
+@media (max-width: 899px) {
+  /* 04: row = filled topic block left, compact text right */
+  .guides-grid .guides-card { display: grid !important; grid-template-columns: 74px minmax(0,1fr) !important; grid-template-rows: auto 1fr !important; gap: 4px 10px !important; padding: 8px 10px !important; height: 112px !important; }
+  .guides-grid .guides-card__topline { grid-column: 1 !important; grid-row: 1 / span 2 !important; height: 96px !important; border-radius: 10px !important; background: linear-gradient(160deg, #2a1b52, #14102a) !important; flex-direction: column !important; justify-content: flex-end !important; align-items: flex-start !important; padding: 6px !important; gap: 2px !important; }
+  .guides-grid .guides-card__topic { background: transparent !important; color: #e9e2ff !important; font-size: 0.62rem !important; }
+  .guides-grid .guides-card__read { color: #b9aee6 !important; font-size: 0.6rem !important; }
+  .guides-grid .guides-card__title { grid-column: 2 !important; grid-row: 1 !important; font-size: 0.92rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+  .guides-grid .guides-card__dek { display: none !important; }
+
+  /* 05: dark meta pills and rail CTA; dark index box */
+  .guides-article__hero-meta .pill { background: color-mix(in srgb, var(--tv-ink-primary) 8%, transparent) !important; color: var(--tv-ink-primary) !important; }
+  .guides-rail__cta { background: transparent !important; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 14%, transparent) !important; color: var(--tv-ink-primary) !important; }
+  .guides-article__hero-index { display: block; margin: 8px 0 4px; padding: 12px 14px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent); }
+  .guides-article__hero-index-title { margin: 0 0 6px; font-size: 0.85rem; font-weight: 700; color: var(--tv-ink-primary); }
+  .guides-article__hero-index ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--tv-ink-secondary); font-size: 0.82rem; }
+}
