@@ -21,7 +21,7 @@ export function ToolDetailDecisionNav({
       {showDeepen ? (
         <a className="td-final-decision-nav__link" href="#td-final-approfondisci">
           <Layers3 size={13} aria-hidden="true" style={{ marginRight: 4 }} />
-          Approfondisci
+          Panoramica
         </a>
       ) : null}
       {showAlternatives ? (
