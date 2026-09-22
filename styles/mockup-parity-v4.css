@@ -584,3 +584,12 @@
   /* V7 final fix: make the card the containing block for the absolute save chip */
   .ar4-shell .ar4-card__actions { position: static !important; }
 }
+
+@media (max-width: 899px) {
+  /* V7: card is the containing block for the absolute save chip */
+  .ar4-shell .ar4-card__actions,
+  .ar4-shell .ar4-card__control-rail,
+  .ar4-shell .ar4-card__toggles,
+  .ar4-shell .ar4-card__toggles > span { position: static !important; }
+  .ar4-shell .ar4-card { position: relative !important; }
+}
