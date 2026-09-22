@@ -1,8 +1,5 @@
 .v-auth-page {
-  --tv-auth-page-pad-bottom: calc(
-    2rem + var(--tv-bottom-nav-total, 3.625rem) + var(--tv-tray-height, 0px) +
-      env(safe-area-inset-bottom, 0px)
-  );
+  --tv-auth-page-pad-bottom: 2rem;
   min-height: auto;
   overflow: visible;
   padding: clamp(2rem, 4vw, 3.5rem) 1rem var(--tv-auth-page-pad-bottom);

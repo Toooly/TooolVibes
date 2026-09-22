@@ -84,10 +84,11 @@ describe("v3.1 responsive contract", () => {
     );
   });
 
-  it("footer reserves --tv-bottom-nav-total through 1279 in one shell rule", () => {
+  it("mobile shell scrollport ends above the fixed nav band", () => {
     expect(shellCss).toMatch(
-      /@media \(max-width: 1279px\)[\s\S]*?\.site-footer-v2 \.site-footer-v2__shell[\s\S]*?--tv-rhythm-section[\s\S]*?--tv-bottom-nav-total[\s\S]*?--tv-tray-height[\s\S]*?env\(safe-area-inset-bottom\)/,
+      /@media \(max-width: 1279px\)[\s\S]*?\.marketing-shell \{[\s\S]*?100dvh - var\(--tv-bottom-nav-total, 3\.625rem\) - var\(--tv-tray-height, 0px\)/,
     );
+    expect(shellCss).toMatch(/env\(safe-area-inset-bottom, 0px\)/);
   });
 
   it("radar labels wrap and compare H1 drops 22ch under mobile chrome", () => {

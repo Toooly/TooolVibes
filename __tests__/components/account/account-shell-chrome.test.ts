@@ -40,9 +40,8 @@ describe("authenticated account shell", () => {
 
   it("keeps auth page clear of the public bottom nav", () => {
     expect(css).toMatch(/--tv-auth-page-pad-bottom/);
-    expect(css).toMatch(
-      /2rem \+ var\(--tv-bottom-nav-total, 3\.625rem\)/,
-    );
+    expect(css).toMatch(/--tv-auth-page-pad-bottom:\s*2rem/);
+    expect(css).not.toMatch(/--tv-auth-page-pad-bottom:[^;]*--tv-bottom-nav-total/);
     const authPage = css.slice(
       css.indexOf(".v-auth-page {"),
       css.indexOf(".v-auth-container--split"),

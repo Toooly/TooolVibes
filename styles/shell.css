@@ -26,11 +26,34 @@
 }
 
 /* Sticky footer: main grows, footer pins to the viewport bottom on short
-   pages and follows content immediately on long pages. The fixed
-   MobileBottomNav reservation lives ONLY in the footer shell padding
-   (--tv-bottom-nav-total), never in main or route wrappers. */
+   pages and follows content immediately on long pages. Below 1280 the
+   shell scrollport ends above the fixed nav, dock and safe area, so
+   footer content cannot enter that band at any scroll position. */
 .marketing-shell > main {
   flex: 1 1 auto;
+}
+
+.marketing-shell > footer {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1279px) {
+  .marketing-shell {
+    box-sizing: border-box;
+    height: calc(
+      100dvh - var(--tv-bottom-nav-total, 3.625rem) - var(--tv-tray-height, 0px) -
+        env(safe-area-inset-bottom, 0px)
+    );
+    max-height: calc(
+      100dvh - var(--tv-bottom-nav-total, 3.625rem) - var(--tv-tray-height, 0px) -
+        env(safe-area-inset-bottom, 0px)
+    );
+    min-height: 0;
+    overflow-x: clip;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scroll-padding-bottom: 1rem;
+  }
 }
 
 .mobile-bottom-link__icon-wrap {
@@ -636,12 +659,7 @@
   .tv-launchpad .site-footer-v2__shell,
   .site-footer-v2.tv-launchpad .tv-launchpad__shell,
   .site-footer-v2.tv-utility .site-footer-v2__shell {
-    padding-block-end: calc(
-      var(--tv-rhythm-section) +
-      var(--tv-bottom-nav-total) +
-      var(--tv-tray-height, 0px) +
-      env(safe-area-inset-bottom)
-    );
+    padding-block-end: var(--tv-space-8);
   }
 }
 
@@ -1033,6 +1051,10 @@
 .tv-utility__disclosure {
   font-size: var(--tv-type-meta);
   color: var(--tv-ink-muted-aa);
+}
+
+.tv-utility__disclosure:not([open]) > :not(summary) {
+  display: none;
 }
 
 .tv-utility__disclosure summary {
