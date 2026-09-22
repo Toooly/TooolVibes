@@ -52,10 +52,10 @@ function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
 }
 
 describe("ToolDetailDecisionBrief", () => {
-  it("renders In breve with Ideale per and Verdetto, omitting junk highlight trade-offs", () => {
+  it("renders In sintesi with Ideale per and Verdetto, omitting junk highlight trade-offs", () => {
     const { container } = render(<ToolDetailDecisionBrief tool={makeTool()} />);
 
-    expect(screen.getByText("In breve")).toBeTruthy();
+    expect(screen.getByText("In sintesi")).toBeTruthy();
     expect(container.querySelector(".tv-emphasis--decision")).toBeTruthy();
     const dts = Array.from(container.querySelectorAll("dt")).map(
       (node) => node.textContent?.trim(),

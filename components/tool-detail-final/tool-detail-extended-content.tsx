@@ -181,6 +181,7 @@ export function ToolDetailExtendedContent({
         {panels.map((panel) => (
           <details
             key={panel.id}
+            id={`td-final-${panel.id}`}
             className="td-final-deepen__item"
             name="td-final-approfondisci"
           >

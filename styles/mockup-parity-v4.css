@@ -371,7 +371,7 @@
   /* ============ batch-1 V3 ============ */
   /* 01 HOME */
   .mobile-top-bar { background: color-mix(in srgb, #241a4a 88%, transparent) !important; }
-  .def-cockpit__lede { font-size: 0.72rem !important; line-height: 1.35 !important; }
+  .def-cockpit__lede { font-size: 0.75rem !important; line-height: 1.35 !important; }
   .def-cockpit { margin-bottom: 8px !important; }
   .def-intent { margin-top: 20px !important; }
   .def-intent__field { height: 48px !important; min-height: 48px !important; border-color: rgba(139, 108, 255, 0.45) !important; }

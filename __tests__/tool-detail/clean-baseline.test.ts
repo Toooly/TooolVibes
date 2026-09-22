@@ -194,13 +194,22 @@ describe("Tool Detail clean baseline — owner tree", () => {
   it("the decision nav links only to unique, rendered section targets", () => {
     const nav = read(path.join(TOOL_DETAIL_DIR, "tool-detail-decision-nav.tsx"));
     const page = read(path.join(TOOL_DETAIL_DIR, "tool-detail-final-page.tsx"));
+    const extended = read(path.join(TOOL_DETAIL_DIR, "tool-detail-extended-content.tsx"));
     const hrefs = Array.from(nav.matchAll(/href="(#[^"]+)"/g), (match) => match[1]);
 
     expect(new Set(hrefs).size).toBe(hrefs.length);
     expect(nav).not.toMatch(/aria-current=/);
     expect(nav).not.toMatch(/#td-final-use-cases/);
     expect(nav).not.toMatch(/#td-final-signal/);
-    expect(nav).toMatch(/#td-final-approfondisci/);
+    expect(hrefs).toEqual([
+      "#td-final-overview",
+      "#td-final-pros-limits",
+      "#td-final-pricing",
+      "#td-final-alternatives",
+    ]);
+    expect(extended).toMatch(/id=\{`td-final-\$\{panel\.id\}`\}/);
+    expect(extended).toMatch(/"pros-limits"/);
+    expect(extended).toMatch(/"pricing"/);
     expect(page).toMatch(/id="td-final-overview"/);
     expect(page).toMatch(/showAlternatives=\{relatedTools\.length > 0\}/);
   });
