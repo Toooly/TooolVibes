@@ -335,3 +335,13 @@
   .td-final-decision-nav [aria-current="true"], .td-final-decision-nav .is-active { background: #cdb9ff !important; color: #1a1030 !important; }
   .td-final-brief p { display: -webkit-box !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
 }
+
+@media (max-width: 899px) {
+  /* batch-1 follow-up: catalogue rail closes the gap, tool actions become one compact row */
+  .ar4-categories__disclosure { display: none !important; }
+  .ar4-categories { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+  .ar4-grid, .ar4-grid__list { margin-top: 12px !important; }
+  .td-final-actions { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: center !important; gap: 8px !important; }
+  .td-final-affiliate-note { display: none !important; }
+  .td-final-save-cluster { flex: 0 0 auto !important; }
+}
