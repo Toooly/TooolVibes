@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { GuideMasthead } from "@/components/guides/guide-masthead";
+import { GuideCard } from "@/components/guides/guide-card";
 import { GuideFeaturedSection } from "@/components/guides/guide-featured-section";
 import {
   GuideGridSection,
@@ -64,6 +65,16 @@ export default async function PostsPage() {
   const featureToolHref = featureTool ? `/toools/${featureTool.slug}` : null;
 
   // All guides as grid items.
+  const hostFromTool = (tool: { urls?: { website?: string | null } } | null | undefined): string | null => {
+    const site = tool?.urls?.website;
+    if (!site) return null;
+    try {
+      return new URL(site).hostname;
+    } catch {
+      return null;
+    }
+  };
+
   const items: GuideGridItem[] = guides.map((post) => {
     const topic = getGuideTopic(post);
     const tool = post.tool_slug ? toolBySlug.get(post.tool_slug) : null;
@@ -73,6 +84,7 @@ export default async function PostsPage() {
       toolName: tool?.name ?? null,
       toolHref: tool ? `/toools/${tool.slug}` : null,
       readingMinutes: estimateReadingMinutes(post.content_markdown),
+      toolDomain: hostFromTool(tool),
     };
   });
 
@@ -111,6 +123,17 @@ export default async function PostsPage() {
 
   const readingTime = Math.max(1, Math.round(totalReadingMinutes / Math.max(1, items.length)));
 
+  const featuredRowItem: GuideGridItem | null = featureCandidate
+    ? {
+        post: featureCandidate,
+        topic: featureTopic,
+        toolName: featureTool?.name ?? null,
+        toolHref: featureToolHref,
+        readingMinutes: featureMinutes,
+        toolDomain: hostFromTool(featureTool),
+      }
+    : null;
+
   const featuredSection = featureCandidate ? (
     <GuideFeaturedSection
       post={featureCandidate}
@@ -139,7 +162,18 @@ export default async function PostsPage() {
         topics={topics}
         initialVisible={9}
         featured={
-          featuredSection ? <div data-mobile-featured>{featuredSection}</div> : null
+          featuredRowItem ? (
+            <div data-mobile-featured>
+              <GuideCard
+                post={featuredRowItem.post}
+                topic={featuredRowItem.topic}
+                toolName={featuredRowItem.toolName ?? null}
+                toolHref={featuredRowItem.toolHref ?? null}
+                readMinutes={featuredRowItem.readingMinutes}
+                thumbDomain={featuredRowItem.toolDomain ?? null}
+              />
+            </div>
+          ) : null
         }
       />
 

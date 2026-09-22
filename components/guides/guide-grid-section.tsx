@@ -12,6 +12,7 @@ export type GuideGridItem = {
   toolName?: string | null;
   toolHref?: string | null;
   readingMinutes: number;
+  toolDomain?: string | null;
 };
 
 type GuideGridSectionProps = {
@@ -111,6 +112,7 @@ export function GuideGridSection({
               toolName={item.toolName ?? null}
               toolHref={item.toolHref ?? null}
               readMinutes={item.readingMinutes}
+              thumbDomain={item.toolDomain ?? null}
             />
           ))
         )}

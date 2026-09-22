@@ -10,6 +10,8 @@ type GuideCardProps = {
   variant?: GuideCardVariant;
   topic?: string;
   toolName?: string | null;
+  /** Hostname used for the legitimate tool favicon thumbnail on mobile rows. */
+  thumbDomain?: string | null;
   toolHref?: string | null;
   readMinutes?: number | null;
   className?: string;
@@ -59,6 +61,7 @@ export function GuideCard({
   variant = "default",
   topic,
   toolName,
+  thumbDomain = null,
   toolHref,
   readMinutes,
   className,
@@ -200,6 +203,12 @@ export function GuideCard({
           .join(" ")}
         aria-label={`Leggi la guida: ${post.title}`}
       >
+        <span className={["guides-card__thumb", thumbDomain ? null : "guides-card__thumb--glyph"].filter(Boolean).join(" ")} aria-hidden="true">
+          {thumbDomain ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(thumbDomain)}&sz=128`} alt="" loading="lazy" decoding="async" />
+          ) : null}
+        </span>
         <div className="guides-card__topline">
           <span
             className="guides-card__topic"
@@ -227,6 +236,12 @@ export function GuideCard({
         .join(" ")}
       aria-label={`Leggi la guida: ${post.title}`}
     >
+        <span className={["guides-card__thumb", thumbDomain ? null : "guides-card__thumb--glyph"].filter(Boolean).join(" ")} aria-hidden="true">
+          {thumbDomain ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(thumbDomain)}&sz=128`} alt="" loading="lazy" decoding="async" />
+          ) : null}
+        </span>
       <div className="guides-card__topline">
         <span
           className="guides-card__topic"
