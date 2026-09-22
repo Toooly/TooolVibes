@@ -579,3 +579,8 @@
     font-size: 0 !important;
   }
 }
+
+@media (max-width: 899px) {
+  /* V7 final fix: make the card the containing block for the absolute save chip */
+  .ar4-shell .ar4-card__actions { position: static !important; }
+}
