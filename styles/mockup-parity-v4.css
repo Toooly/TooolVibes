@@ -637,3 +637,17 @@
   .cx-stack-flow-v4__details { margin-top: 6px !important; }
   .cx-section-nav { min-height: 40px !important; }
 }
+
+@media (max-width: 899px) {
+  /* batch-2 V1 follow-up */
+  .guides-article__hero { margin-top: 0 !important; }
+  .guides-article__layout { margin-top: 0 !important; }
+  .cx-stack-flow-v4__item { padding: 6px 0 !important; }
+  .cx-stack-flow-v4__node { margin-bottom: 2px !important; }
+  .cx-stack-flow-v4__stage-head { padding: 2px 0 !important; }
+  .cx-stack-flow-v4__tool { font-size: 0.95rem !important; }
+  .cx-stack-flow-v4__role { font-size: 0.9rem !important; margin: 2px 0 !important; }
+  .cx-stack-flow-v4__details { margin-top: 4px !important; }
+  .cx-stack-flow-v4__details-summary { min-height: 32px !important; }
+  .cx-stack-flow-v4__body { display: flex !important; flex-direction: column !important; gap: 4px !important; }
+}
