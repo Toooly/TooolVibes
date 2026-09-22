@@ -56,6 +56,9 @@
   .guides-article__hero-dek { margin-top: 4px !important; }
   .guides-article__hero-main { gap: 2px !important; }
   .guides-article__hero { margin-top: -70px !important; }
+  .guides-article__hero-media { height: 168px !important; margin: 10px 0 0 !important; }
+  .guides-article__dark-meta { margin-top: 10px !important; }
+  .guides-article__dark-meta .guides-article__byline { margin: 0 0 6px !important; }
 
   /* COLLECTION — CTA ~343, stages right after tabs */
   .cx-detail-hero-v4 { padding-top: 8px !important; margin-top: -44px !important; }
@@ -63,12 +66,15 @@
   .cx-detail-hero-v4__audience, .cx-detail-hero-v4__target { display: none !important; }
   .cx-detail-hero-v4__promise { margin-top: 6px !important; -webkit-line-clamp: 2 !important; }
   .cx-detail-hero-v4__decision { margin-top: 10px !important; }
-  .cx-detail-hero-v4__actions { margin-top: 10px !important; }
+  .cx-detail-hero-v4__actions { margin-top: 10px !important; margin-bottom: 0 !important; }
+  .cx-detail-hero-v4 { padding-bottom: 6px !important; }
   .cx-detail-hero-v4 > * { gap: 4px !important; }
   .cx-detail-hero-v4__decision-item { padding: 6px 8px !important; }
   .cx-detail-hero-v4__eyebrow { margin: 0 !important; }
-  .cx-section-nav { margin-top: 8px !important; }
-  .cx-stack-flow-v4 { margin-top: 10px !important; }
+  .cx-section-nav { margin: 4px 0 !important; min-height: 40px !important; }
+  .cx-stack-flow-v4 { margin-block: 0 !important; padding-top: 0 !important; }
+  .cx-stack-flow-v4__item { padding-top: 2px !important; }
+  .cx-stack-flow-v4__why { margin: 10px 0 0 !important; order: 2; }
   .tv-member-gate { margin: 8px 0 !important; }
   .tv-member-gate__locked { max-height: 132px !important; }
 
@@ -109,4 +115,69 @@
   .site-footer-v2 .tv-utility__link { font-size: 0.78rem !important; }
   .site-footer-v2 .tv-utility__legal { margin-top: 0 !important; gap: 6px 10px !important; }
   .site-footer-v2 .tv-utility__mark { margin-top: 2px !important; }
+}
+
+/* 05 media surface — dark framed, legitimate tool asset */
+@media (max-width: 899px) {
+  .guides-article__hero-media {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
+    background:
+      radial-gradient(120% 140% at 85% 20%, rgba(139, 108, 255, 0.18), transparent 60%),
+      linear-gradient(180deg, #120e22 0%, #0b0817 100%);
+  }
+  .guides-article__hero-media-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--tv-ink-primary) 8%, transparent);
+  }
+  .guides-article__hero-media-mark img { width: 100%; height: 100%; object-fit: contain; }
+  .guides-article__hero-media-copy { display: grid; gap: 2px; }
+  .guides-article__hero-media-name { font-weight: 700; color: var(--tv-ink-primary); font-size: 0.95rem; }
+  .guides-article__hero-media-topic { color: var(--tv-ink-muted-aa); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .guides-article__dark-meta .guides-article__takeaways,
+  .guides-article__dark-meta details { background: transparent; }
+}
+
+/* Closure adjustments (04/06) — explicit, loaded last */
+@media (max-width: 899px) {
+  .guides-filter {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    gap: 6px !important;
+    scrollbar-width: none;
+  }
+  .guides-filter__chip { flex: 0 0 auto !important; min-height: 36px !important; font-size: 0.8rem !important; }
+  .guides-section--ink { margin-bottom: 210px !important; }
+  .cx-section-nav { min-height: 40px !important; margin-block: 4px !important; }
+  .cx-stack-flow-v4 { margin-block: 0 !important; padding-top: 0 !important; }
+  .cx-detail-hero-v4 { padding-bottom: 6px !important; }
+  .cx-detail-hero-v4__actions { margin-bottom: 0 !important; }
+}
+
+@media (max-width: 899px) {
+  .cx-detail-hero-v4 { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+  .cx-section-nav { margin: 2px 0 !important; }
+  .cx-stack-flow-v4__head { display: none; }
+}
+
+@media (max-width: 899px) {
+  .cx-stack-flow-v4__list { margin-top: 0 !important; padding-top: 0 !important; gap: 10px !important; }
+  .cx-stack-flow-v4__item { margin-top: 0 !important; }
+  .cx-stack-flow-v4__stage { padding-top: 10px !important; }
+}
+
+@media (max-width: 899px) {
+  .cx-detail-v4 { row-gap: 6px !important; }
 }

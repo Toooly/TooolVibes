@@ -45,12 +45,6 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
         <h2 id="cx-stack-flow-title" className="sr-only">
           Lo stack, in ordine
         </h2>
-        {collection.rationale ? (
-          <details className="cx-stack-flow-v4__why">
-            <summary>Perché questa raccolta</summary>
-            <p className="cx-stack-flow-v4__lede">{collection.rationale}</p>
-          </details>
-        ) : null}
       </header>
 
       <ol className="cx-stack-flow-v4__list" aria-label="Stack CORE in ordine">
@@ -214,6 +208,12 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
           );
         })}
       </ol>
+      {collection.rationale ? (
+          <details className="cx-stack-flow-v4__why">
+            <summary>Perché questa raccolta</summary>
+            <p className="cx-stack-flow-v4__lede">{collection.rationale}</p>
+          </details>
+        ) : null}
 
       {optionals.length > 0 && (
         <div className="cx-stack-flow-v4__optional">

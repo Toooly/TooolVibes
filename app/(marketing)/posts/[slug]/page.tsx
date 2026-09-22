@@ -101,8 +101,16 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
 
   let tool: Awaited<ReturnType<typeof getToolBySlug>> = null;
 
+  let toolWebsiteHost = "";
   if (post.tool_slug) {
     tool = await getToolBySlug(post.tool_slug);
+    if (tool?.urls.website) {
+      try {
+        toolWebsiteHost = new URL(tool.urls.website).hostname;
+      } catch {
+        toolWebsiteHost = "";
+      }
+    }
   }
 
   const isAuthoredPost = Boolean(post.content_markdown);
@@ -227,6 +235,39 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
           topicLabel={topicLabel}
         />
 
+        {tool ? (
+          <div className="guides-article__hero-media" aria-hidden="true">
+            <span className="guides-article__hero-media-mark">
+              {toolWebsiteHost ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(toolWebsiteHost)}&sz=128`}
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                />
+              ) : null}
+            </span>
+            <span className="guides-article__hero-media-copy">
+              <span className="guides-article__hero-media-name">{tool.name}</span>
+              <span className="guides-article__hero-media-topic">{topicLabel}</span>
+            </span>
+          </div>
+        ) : null}
+
+        {isAuthoredPost ? (
+          <div className="guides-article__dark-meta">
+            <GuideByline
+              author={post.author_name}
+              publishedAt={post.published_at}
+              updatedAt={post.updated_at}
+              readingMinutes={readingMinutes}
+            />
+
+            <GuideTakeawaysDisclosure items={post.highlights} />
+          </div>
+        ) : null}
+
         <div className="guides-article__layout">
           <div className="guides-article__main">
             {isAuthoredPost ? (
@@ -235,15 +276,6 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                 data-guides-article-body
                 aria-labelledby="guide-article-title"
               >
-                <GuideByline
-                  author={post.author_name}
-                  publishedAt={post.published_at}
-                  updatedAt={post.updated_at}
-                  readingMinutes={readingMinutes}
-                />
-
-                <GuideTakeawaysDisclosure items={post.highlights} />
-
                 <MemberPreviewGate
                   title="Continua nel tuo spazio"
                   body="Il resto della guida resta nel tuo spazio, insieme alle decisioni e alle note sul tool."
