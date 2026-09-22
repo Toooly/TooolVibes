@@ -157,3 +157,10 @@
   .guides-article__hero-index-title { margin: 0 0 6px; font-size: 0.85rem; font-weight: 700; color: var(--tv-ink-primary); }
   .guides-article__hero-index ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--tv-ink-secondary); font-size: 0.82rem; }
 }
+
+@media (max-width: 899px) {
+  /* 04 final: three ~130px rows with media blocks, as the mockup */
+  .guides-grid { margin-top: 11px !important; gap: 16px !important; }
+  .guides-grid .guides-card { height: 130px !important; padding: 10px !important; grid-template-columns: 74px minmax(0, 1fr) !important; }
+  .guides-grid .guides-card__topline { height: 110px !important; }
+}
