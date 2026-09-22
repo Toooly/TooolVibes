@@ -106,7 +106,7 @@ export function CollectionNextStepV4({
               )}
 
               <span className="cx-next-step-v4__card-cta">
-                <span>Apri la raccolta</span>
+                <span>Usa questa raccolta</span>
                 <ArrowRight
                   className="size-3.5"
                   aria-hidden="true"
