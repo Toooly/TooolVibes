@@ -27,18 +27,18 @@ export function getMagicLinkHtml(confirmUrl: string): string {
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#08080a;margin:0;padding:28px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#120c22;border:1px solid #2a2440;border-radius:16px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#ffffff;border:1px solid #e6e1d8;border-radius:16px;">
             <tr>
-              <td style="padding:28px 28px 8px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f4f0e7;">
+              <td style="padding:28px 28px 8px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#08080a;">
                 TooolVibes
               </td>
             </tr>
             <tr>
               <td style="padding:8px 28px 0;font-family:Arial,Helvetica,sans-serif;">
-                <h1 style="margin:0;font-size:32px;line-height:1.12;color:#fffdf8;font-weight:700;">
+                <h1 style="margin:0;font-size:32px;line-height:1.12;color:#08080a;font-weight:700;">
                   Entra in TooolVibes
                 </h1>
-                <p style="margin:14px 0 0;font-size:16px;line-height:1.55;color:#c2beb5;">
+                <p style="margin:14px 0 0;font-size:16px;line-height:1.55;color:#3d3a36;">
                   Conferma la tua email per ritrovare Salvati, confronti e decisioni nel tuo spazio.
                 </p>
               </td>
@@ -57,7 +57,7 @@ export function getMagicLinkHtml(confirmUrl: string): string {
               </td>
             </tr>
             <tr>
-              <td style="padding:8px 28px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#c2beb5;">
+              <td style="padding:8px 28px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#3d3a36;">
                 Questo link è valido una sola volta e scade a breve.
               </td>
             </tr>
@@ -66,10 +66,10 @@ export function getMagicLinkHtml(confirmUrl: string): string {
                 <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8d8981;">
                   Se il pulsante non funziona
                 </p>
-                <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#c2beb5;">
+                <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#3d3a36;">
                   Copia e incolla questo link nel browser:
                 </p>
-                <p style="margin:0;padding:12px 14px;border:1px solid #2a2440;border-radius:10px;background:#08080a;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;word-break:break-all;color:#d7c6ff;">
+                <p style="margin:0;padding:12px 14px;border:1px solid #2a2440;border-radius:10px;background:#f6f1e8;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;word-break:break-all;color:#3b2d78;">
                   ${safeUrl}
                 </p>
               </td>
@@ -81,7 +81,7 @@ export function getMagicLinkHtml(confirmUrl: string): string {
             </tr>
             <tr>
               <td style="padding:28px;font-family:Arial,Helvetica,sans-serif;">
-                <p style="margin:0;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#f4f0e7;">TooolVibes</p>
+                <p style="margin:0;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#08080a;">TooolVibes</p>
                 <p style="margin:6px 0 0;font-size:13px;line-height:1.45;color:#8d8981;">tooolvibes.eu</p>
               </td>
             </tr>

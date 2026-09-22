@@ -87,7 +87,7 @@ describe("CollectionDetailBodyV4", () => {
     );
 
     expect(document.querySelector('script[type="application/ld+json"]')).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Apri lo stack/ }).getAttribute("href")).toBe(
+    expect(screen.getByRole("link", { name: /Avvia questa raccolta/ }).getAttribute("href")).toBe(
       "#cx-detail-stack",
     );
     expect(screen.getByText("Lo stack completo resta nel tuo spazio.")).toBeTruthy();

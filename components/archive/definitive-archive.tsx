@@ -278,7 +278,7 @@ export function DefinitiveArchive({
               </span>
             </p>
             <h1 id="ar4-intro-title" className="ar4-intro__title">
-              Riduci le alternative. Trova i tool da valutare.
+              Trova i tool da valutare.
             </h1>
             <CatalogoFacetHead active="tutti" />
             <p className="ar4-intro__lede">

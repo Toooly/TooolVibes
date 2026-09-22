@@ -127,7 +127,7 @@ export function AuthPage() {
                 ? "Crea il tuo spazio"
                 : activeTab === "recover"
                   ? "Rientra nel tuo spazio"
-                  : "Entra nel tuo spazio"}
+                  : "Entra in TooolVibes"}
             </h1>
             <p className="v-auth-subtitle">
               {activeTab === "register"

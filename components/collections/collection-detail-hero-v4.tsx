@@ -209,7 +209,7 @@ export function CollectionDetailHeroV4({
               "cx-detail-hero-v4__cta--primary",
             )}
           >
-            <span>Apri lo stack</span>
+            <span>Avvia questa raccolta</span>
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
           <Link href="/archivio" className="cx-detail-hero-v4__catalog">

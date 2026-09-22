@@ -64,7 +64,7 @@ describe("collections mobile density — index", () => {
 });
 
 describe("collections mobile density — detail", () => {
-  it("keeps outcome, target, four metrics and a non-yellow stack CTA", () => {
+  it("keeps outcome, target, four metrics and the primary stack CTA", () => {
     const collection = makeCollection();
     const { container } = render(<CollectionDetailHeroV4 collection={collection} />);
 
@@ -73,7 +73,7 @@ describe("collections mobile density — detail", () => {
     expect(screen.getByText("Per founder indipendenti e builder snelli")).toBeTruthy();
     expect(container.querySelectorAll(".cx-detail-hero-v4__decision-item")).toHaveLength(4);
 
-    const primary = screen.getByRole("link", { name: /Apri lo stack/ });
+    const primary = screen.getByRole("link", { name: /Avvia questa raccolta/ });
     expect(primary.className).toContain("cx-detail-hero-v4__cta--primary");
     expect(primary.className).not.toMatch(/activation|yellow/i);
     expect(container.querySelector(".cx-detail-hero-v4__stack")).toBeTruthy();
