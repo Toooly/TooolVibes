@@ -145,4 +145,20 @@ Test updates made to follow the mockup presentation: three collection assertions
 - Google / Apple / GitHub still disabled in production GoTrue.
 - TinyAdz real fill is vendor-side.
 
-Final commit SHA: filled after commit.
+Final deployed SHA: `6153bf787bc0e215d2f21414a5369c4d33c84fed`  
+Production URL: https://tooolvibes.eu  
+Worker version: `3b57492f-9e80-4639-86cd-1b143e922e76`
+
+## Production smoke
+
+| Check | Result |
+|---|---|
+| `/api/release` sha | `6153bf7...` matches deployed HEAD |
+| Home tabs (390) | 3 equal columns, pill container radius 999px |
+| Home CTA | gold `rgb(243, 191, 76)` |
+| Catalogue card (390) | 144px scan row |
+| Auth | title "Entra in TooolVibes", gold submit `rgb(228, 178, 60)`, 350px centered card, 0 providers rendered |
+| Guide | cream body `rgb(246, 241, 232)`, 664px measure |
+| Overflow | 0 on all sampled routes |
+| Empty `PUBBLICITÀ` | none |
+| Page errors | one transient 403 not reproducible on networkidle |
