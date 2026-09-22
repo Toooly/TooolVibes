@@ -228,3 +228,70 @@ Identity + summary + `Scrivici` · Esplora / TooolVibes columns · legal + `Tras
 | mockup strings | programmatically present |
 
 Commit: `42656e8`. Not deployed.
+
+## FINAL PARITY EVIDENCE, PREVIEW AND PRODUCTION (22 Sep 2026)
+
+### Method
+`artifacts/final-mockup-parity/` contains a capture-and-compare pipeline:
+
+- `capture.mjs` — 13 implementation shots at 390×844@2x (Home TOOL/STACK/RADAR, Catalogue, Tool detail, Guides list, Guide article, Collections, Collection, Auth, Footer, Email rendered from the live module, logged-in workspace harness)
+- `compare.py` — crops the 7+6 panels from the reference board `00_00_34`, trims the phone screen box, fits both to 390×844, produces overlay/diff pairs and a contact sheet, and registers matched text anchors
+- `pairs/<name>/{mockup,implementation,overlay,diff}.png` for all 13 surfaces, plus `FINAL-MOCKUP-PARITY-CONTACT-SHEET.png`
+- `FINAL-MOCKUP-PARITY-METRICS.json` — registration residuals, edge similarity, text-line counts per surface
+
+### Registration where anchors matched
+
+| Surface | RMS x / y | Notes |
+|---|---|---|
+| 01 Home TOOL | 0.000 / 0.006 | 4 anchors, edge similarity 0.678 |
+| 02 Catalogue | 0.088 / 0.222 | anchors polluted by dynamic names, see copy check |
+| 05 Guide article | 0.002 / 0.041 | |
+| 06 Collection | 0.002 / 0.041 | |
+| 12 Email | 0.029 / 0.082 | rendered from the live module |
+| 13 Footer | 0.028 / 0.194 | mobile board footer reference |
+
+Surfaces 03, 07, 08, 09, 10, 11 carry too few stable anchors for global registration because the mockups show dynamic data (for example Notion AI, which is not in the catalogue) or because logged-in surfaces only exist behind the dev harness. Those were verified by structural anchors (section order, block count) and copy checks instead. Stated as a limitation, not as a pass on pixels.
+
+### Legacy audit
+A DOM check across the seven public routes now returns **zero** legacy strings (`Cosa vuoi fare?`, `Cinque tappe`, `Valutazioni editoriali`, `Apri la raccolta`, `Come funzionano le Raccolte?`, `Sezione Guide`, `Segui i lanci`, `Tutti i tool` heading). Two residual legacy elements were found during preview QA and fixed: the catalogue `ar4-goals` block (commit `ae3a2fd`) and the collection next-step `Apri la raccolta` CTA (commit `0727feb`).
+
+### Preview
+Built with `npm run build:cloudflare` and uploaded with `opennextjs-cloudflare upload`.
+
+- Preview `6ecf53ff` (sha `ae3a2fd`) failed the legacy gate on `Apri la raccolta`
+- After the fix: preview `f335b0eb` (sha `0727feb7`)
+- Preview QA: **45/45 PASS** — 390 / 430 / 768 / 1280 / 1440 × 9 routes, checking status, horizontal overflow, navigation by breakpoint, legacy strings, footer heading contrast, `PUBBLICITÀ`, and font load
+
+### Production
+Deployed with `npm run cloudflare:deploy`.
+
+- Worker version `229104bb-c5a9-4b6a-aa2d-6d2a03a0b4a2`
+- `/api/release` sha `0727feb7af205bd598e0a7e32a4418596cd96ed7`
+- Production smoke: **27/27 PASS** — 390 / 768 / 1440 × 9 routes, overflow 0, no legacy strings, no dark-on-dark footer headings, no empty `PUBBLICITÀ`
+- Production screenshots: `artifacts/final-mockup-parity/production/` (390 and 1440 for Home, Catalogue, Tool detail, Guides, Collection, Auth)
+
+### Per-surface status
+
+| # | Surface | Status | Basis |
+|---|---|---|---|
+| 01 | Home TOOL | PASS | registration RMS y 0.006 + copy + legacy zero |
+| 02 | Catalogue | PASS | copy + legacy zero + structural anchors |
+| 03 | Tool detail | PASS | structure + copy (prev. pass) |
+| 04 | Guide list | PASS | structure + copy + legacy zero |
+| 05 | Guide article | PASS | registration RMS 0.002 / 0.041 |
+| 06 | Collection | PASS | registration RMS 0.002 / 0.041 |
+| 07 | Radar | PASS | structure + copy; live feed requires Product Hunt |
+| 08 | Spazio | PASS | harness structure + copy |
+| 09 | Decisions | PASS | harness structure + copy |
+| 10 | Decision sheet | PASS | harness structure + copy |
+| 11 | Auth | PASS | structure + copy; providers gated by GoTrue |
+| 12 | Email | PASS | registration RMS 0.029 / 0.082 |
+| 13 | Footer | PASS | registration RMS 0.028 / 0.194 |
+
+### Honest caveats
+- This environment cannot feed image pixels back to the model, so no human-visual side-by-side was performed by the agent. The contact sheet exists for that final human check.
+- Dynamic data legitimately differs (Radar live feed, tool examples, counts).
+- Logged-in surfaces were verified through the workspace harness, not a production session.
+- Social icons from the mockup footer are not rendered because the navigation registry has no real profile URLs.
+- OAuth providers remain disabled in production GoTrue; the UI correctly renders the email-only composition.
+- TinyAdz real campaign fill remains vendor-side; the no-fill fallback is verified.
