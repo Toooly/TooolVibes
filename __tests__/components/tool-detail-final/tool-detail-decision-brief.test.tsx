@@ -64,7 +64,7 @@ describe("ToolDetailDecisionBrief", () => {
     expect(screen.getByText("Validare MVP.")).toBeTruthy();
     expect(screen.queryByText("Dal prompt all'app")).toBeNull();
     expect(screen.queryByText("Trade-off")).toBeNull();
-    expect(screen.getByText("Solido per MVP.")).toBeTruthy();
+    expect(screen.getAllByText("Solido per MVP.").length).toBeGreaterThan(0);
   });
 
   it("renders Trade-off only from an editorial tension, not highlights", () => {
