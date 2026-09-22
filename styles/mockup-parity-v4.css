@@ -128,3 +128,15 @@
   .guides-toc { padding: 10px 12px !important; }
   .guides-article__body { margin-top: 4px !important; }
 }
+
+@media (max-width: 899px) {
+  /* 04: compact cream rows, one third of the viewport */
+  .guides-grid { gap: 8px !important; }
+  .guides-grid .guides-card { padding: 8px 10px !important; grid-template-columns: 100px minmax(0, 1fr) !important; gap: 10px !important; }
+  .guides-grid .guides-card__media, .guides-grid .guides-card__thumb { width: 100px !important; height: 100px !important; }
+  .guides-grid .guides-card__title { font-size: 0.95rem !important; }
+  .guides-grid .guides-card__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+
+  /* 05: cream reading surface starts below the first viewport, as in the mockup */
+  .guides-article__body { margin-top: 220px !important; }
+}
