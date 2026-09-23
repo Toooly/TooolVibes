@@ -264,8 +264,10 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
           <nav className="guides-article__hero-index" aria-label="In questa guida">
             <p className="guides-article__hero-index-title">In questa guida</p>
             <ol>
-              {serverHeadings.map((heading) => (
-                <li key={heading}>{heading}</li>
+              {serverHeadings.slice(0, 5).map((heading, index) => (
+                <li key={heading}>
+                  {index + 1}. {heading}
+                </li>
               ))}
             </ol>
           </nav>

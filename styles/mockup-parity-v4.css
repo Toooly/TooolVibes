@@ -35,8 +35,8 @@
   .guides-section { padding-top: 6px !important; }
   .guides-filter { margin-top: 8px !important; }
   .guides-grid { grid-template-columns: 1fr !important; gap: 10px !important; margin-top: 12px !important; }
-  .guides-grid .guides-card { display: grid !important; grid-template-columns: 76px minmax(0, 1fr) !important; gap: 10px !important; padding: 12px !important; align-items: start !important; }
-  .guides-grid .guides-card__media, .guides-grid .guides-card__thumb { width: 76px !important; height: 76px !important; border-radius: 10px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__title { font-size: 1rem !important; }
 
   /* ---------- 05 GUIDE ARTICLE: product media region, dark index, cream body below it ---------- */
@@ -132,19 +132,19 @@
 @media (max-width: 899px) {
   /* 04: compact cream rows, one third of the viewport */
   .guides-grid { gap: 10px !important; margin-top: 62px !important; }
-  .guides-grid .guides-card { padding: 8px 10px !important; grid-template-columns: 100px minmax(0, 1fr) !important; gap: 10px !important; }
-  .guides-grid .guides-card__media, .guides-grid .guides-card__thumb { width: 100px !important; height: 100px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__title { font-size: 0.95rem !important; }
   .guides-grid .guides-card__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
 
   /* 05: cream reading surface starts below the first viewport, as in the mockup */
-  .guides-article__body { margin-top: 220px !important; }
+  /* superseded — no fold hacks */
 }
 
 @media (max-width: 899px) {
   /* 04: row = filled topic block left, compact text right */
-  .guides-grid .guides-card { display: grid !important; grid-template-columns: 74px minmax(0,1fr) !important; grid-template-rows: auto 1fr !important; gap: 4px 10px !important; padding: 8px 10px !important; height: 96px !important; }
-  .guides-grid .guides-card__topline { grid-column: 1 !important; grid-row: 1 / span 2 !important; height: 80px !important; border-radius: 10px !important; background: linear-gradient(160deg, #2a1b52, #14102a) !important; flex-direction: column !important; justify-content: flex-end !important; align-items: flex-start !important; padding: 6px !important; gap: 2px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__topic { background: transparent !important; color: #e9e2ff !important; font-size: 0.75rem !important; }
   .guides-grid .guides-card__read { color: #b9aee6 !important; font-size: 0.75rem !important; }
   .guides-grid .guides-card__title { grid-column: 2 !important; grid-row: 1 !important; font-size: 0.92rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
@@ -161,13 +161,13 @@
 @media (max-width: 899px) {
   /* 04 final: three ~130px rows with media blocks, as the mockup */
   .guides-grid { margin-top: 11px !important; gap: 16px !important; }
-  .guides-grid .guides-card { height: 130px !important; padding: 10px !important; grid-template-columns: 74px minmax(0, 1fr) !important; }
-  .guides-grid .guides-card__topline { height: 110px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
 }
 
 @media (max-width: 899px) {
   /* 04: third row closes the first viewport, as in the mockup */
-  .guides-grid .guides-card:nth-child(4) { margin-top: 300px !important; }
+  /* superseded — no fold hacks */
 }
 
 @media (max-width: 899px) {
@@ -175,11 +175,11 @@
   [data-desktop-featured] { display: none !important; }
   [data-mobile-featured] .guides-section--ink { display: block !important; }
   .guides-grid__featured { display: block; margin: 10px 0 0; }
-  .guides-grid__featured .guides-feature { padding: 12px !important; }
+  /* keep */
   .guides-grid__featured .guides-feature__title { font-size: 1.2rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
   .guides-grid__featured .guides-feature__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-  .guides-grid { margin-top: 340px !important; }
-  .guides-grid .guides-card:nth-child(4) { margin-top: 0 !important; }
+  /* superseded — no fold hacks */
+  /* superseded — no fold hacks */
 }
 @media (min-width: 900px) {
   .guides-grid__featured, [data-mobile-featured] { display: none !important; }
@@ -206,16 +206,18 @@
     column-gap: 12px !important;
     row-gap: 3px !important;
     padding: 10px !important;
-    height: 132px !important;
+    height: auto !important;
+    min-height: 132px !important;
     align-items: start !important;
     overflow: hidden !important;
   }
   .guides-grid .guides-card__thumb,
   .guides-grid__featured .guides-card__thumb {
     grid-column: 1 !important;
-    grid-row: 1 / span 3 !important;
+    grid-row: 1 !important;
+    align-self: start !important;
     width: 88px !important;
-    height: 112px !important;
+    height: 88px !important;
     border-radius: 12px !important;
     overflow: hidden !important;
     background: linear-gradient(160deg, #2a1b52, #14102a) !important;
@@ -224,7 +226,11 @@
   }
   .guides-card__thumb img { width: 44px !important; height: 44px !important; object-fit: contain !important; border-radius: 10px !important; }
   .guides-grid .guides-card__topline,
-  .guides-grid__featured .guides-card__topline { grid-column: 2 !important; grid-row: 1 !important; display: flex !important; align-items: center !important; gap: 6px !important; }
+  .guides-grid__featured .guides-card__topline { grid-column: 2 !important; grid-row: 1 !important; display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 4px 8px !important; min-width: 0 !important; }
+  .guides-grid .guides-card__topic,
+  .guides-grid__featured .guides-card__topic { font-size: 0.62rem !important; letter-spacing: 0.08em !important; white-space: nowrap !important; }
+  .guides-grid .guides-card__read,
+  .guides-grid__featured .guides-card__read { font-size: 0.62rem !important; white-space: nowrap !important; }
   .guides-grid .guides-card__title,
   .guides-grid__featured .guides-card__title { grid-column: 2 !important; grid-row: 2 !important; font-size: 0.95rem !important; line-height: 1.25 !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
   .guides-grid .guides-card__dek,
@@ -592,4 +598,29 @@
   .ar4-shell .ar4-card__toggles,
   .ar4-shell .ar4-card__toggles > span { position: static !important; }
   .ar4-shell .ar4-card { position: relative !important; }
+}
+
+/* GM-08 (fresh branch): spazio mobile — hide interior pill nav, compact resume */
+@media (max-width: 47.99rem) {
+  [data-account-surface="workspace"] .tv-space-switch { display: none; }
+  [data-account-surface="workspace"] .tv-app__pagehead { margin-bottom: 0.6rem; }
+  [data-account-surface="workspace"] .tv-app__pagehead .tv-app__page-title { font-size: 1.9rem; }
+  [data-account-surface="workspace"] .tv-app__pagehead .tv-app__page-kicker { display: none; }
+  [data-account-surface="workspace"] .tv-home { gap: 0.7rem; }
+  [data-account-surface="workspace"] .tv-home .tv-home__resume { padding: 1rem 1.05rem; }
+  [data-account-surface="workspace"] .tv-home .tv-mod:not(.tv-mod--resume) {
+    position: relative; padding: 1rem 2.4rem 1rem 1.05rem;
+  }
+  [data-account-surface="workspace"] .tv-home .tv-mod:not(.tv-mod--resume)::after {
+    content: ""; position: absolute; right: 1rem; top: 50%;
+    width: 0.55rem; height: 0.55rem;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: translateY(-70%) rotate(-45deg); opacity: 0.55;
+  }
+  [data-account-surface="workspace"] .tv-home .tv-mod:not(.tv-mod--resume) .tv-home-copy { margin-bottom: 0; }
+}
+
+/* GM-09 (fresh branch): decisioni mobile — hide interior pill nav (bottom nav owns it) */
+@media (max-width: 47.99rem) {
+  [data-account-surface="workspace"] .tv-space-switch { display: none; }
 }

@@ -249,3 +249,35 @@
   color: var(--tv-ink-secondary);
   background: transparent;
 }
+
+/* GM-10 (canonical): compact cream modal — title row, 3 outcome pills, visible chips */
+@media (max-width: 47.99rem) {
+  .tv-decision-sheet[data-side="bottom"] {
+    inset-inline: 12px;
+    bottom: 12px;
+    top: auto;
+    transform: none;
+    max-height: 66dvh;
+    border-radius: 22px;
+  }
+  .tv-decision-sheet {
+    overflow-y: auto;
+  }
+  .tv-decision-sheet__outcomes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .tv-decision-sheet__outcome {
+    min-height: 44px;
+    justify-content: center;
+  }
+  .tv-decision-sheet__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .tv-decision-sheet__chip {
+    min-height: 40px;
+  }
+}

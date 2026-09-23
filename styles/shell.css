@@ -1158,3 +1158,34 @@
   }
 }
 
+
+/* GM-13 (canonical): footer — two-column Esplora/TooolVibes grids, compact legal */
+@media (max-width: 47.99rem) {
+  .site-footer-v2.tv-utility .tv-utility__nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem 1.5rem;
+    align-items: start;
+  }
+  .site-footer-v2.tv-utility .tv-utility__group ul {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.1rem 1rem;
+  }
+  .site-footer-v2.tv-utility .tv-utility__link {
+    min-height: 0;
+    padding-block: 0.28rem;
+    font-size: 0.92rem;
+  }
+  .site-footer-v2.tv-utility .tv-utility__legal {
+    gap: 0.2rem 0.9rem;
+  }
+  .site-footer-v2.tv-utility .tv-utility__legal :is(a, button) {
+    min-height: 0;
+    padding-block: 0.2rem;
+  }
+  .site-footer-v2.tv-utility .tv-utility__disclosure summary {
+    min-height: 0;
+    padding-block: 0.3rem;
+  }
+}

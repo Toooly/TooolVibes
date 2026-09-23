@@ -4481,3 +4481,30 @@ html[data-tv-reduce-motion="true"] .tv-lib--empty {
     max-width: 44rem;
   }
 }
+
+/* GM-11 (canonical): login email row — pill with inline gold submit */
+@media (max-width: 47.99rem) {
+  .v-auth-input-wrap--inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--tv-input-border);
+    border-radius: 999px;
+    padding: 0.3rem 0.3rem 0.3rem 0.9rem;
+    background: var(--tv-input-bg);
+  }
+  .v-auth-input-wrap--inline .v-auth-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .v-auth-btn-primary--inline {
+    border-radius: 999px;
+    min-height: 44px;
+    padding-inline: 1.1rem;
+    white-space: nowrap;
+    flex: none;
+  }
+}

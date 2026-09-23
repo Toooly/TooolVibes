@@ -174,7 +174,7 @@ export function AuthPage() {
                 {/* Email */}
                 <div className="v-auth-field">
                   <label htmlFor="auth-email">Email</label>
-                  <div className="v-auth-input-wrap">
+                  <div className="v-auth-input-wrap v-auth-input-wrap--inline">
                     <Mail size={16} className="v-auth-input-icon" />
                     <input
                       id="auth-email"
@@ -189,6 +189,25 @@ export function AuthPage() {
                       className="v-auth-input tv-kbd-input"
                       aria-invalid={Boolean(emailError)}
                     />
+                    {activeTab === "login" ? (
+                      <button
+                        type="submit"
+                        disabled={account.isSendingLink}
+                        className="v-auth-btn-primary v-auth-btn-primary--inline tv-kbd-sheet__footer"
+                      >
+                        {account.isSendingLink ? (
+                          <>
+                            <Sparkles size={16} className="v-auth-spin" />
+                            Invio in corso...
+                          </>
+                        ) : (
+                          <>
+                            <Mail size={16} />
+                            Invia link
+                          </>
+                        )}
+                      </button>
+                    ) : null}
                   </div>
                   {emailError ? (
                     <p className="v-auth-message v-auth-message--error" role="alert">{emailError}</p>
@@ -211,10 +230,11 @@ export function AuthPage() {
                   </label>
                 )}
 
-                {/* Submit */}
+                {/* Submit (register only — login submits inline in the email row) */}
+                {activeTab === "register" ? (
                 <button
                   type="submit"
-                  disabled={account.isSendingLink || (activeTab === "register" && !agreed)}
+                  disabled={account.isSendingLink || !agreed}
                   className="v-auth-btn-primary tv-kbd-sheet__footer"
                 >
                   {account.isSendingLink ? (
@@ -234,6 +254,7 @@ export function AuthPage() {
                     </>
                   )}
                 </button>
+                ) : null}
               </form>
 
               {/* Info */}
