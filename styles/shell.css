@@ -1216,3 +1216,21 @@
     padding-block: 0.3rem;
   }
 }
+
+/* ===== Footer link contrast — useful text must be immediately readable ===== */
+.tv-utility__link {
+  color: var(--tv-ink-primary, #f4f0e7);
+}
+.tv-utility__legal {
+  color: var(--tv-ink-secondary, #c2beb5);
+}
+.tv-utility__legal :is(a, button) {
+  color: var(--tv-ink-secondary, #c2beb5);
+}
+.tv-utility__legal :is(a, button):hover,
+.tv-utility__legal :is(a, button):focus-visible {
+  color: var(--tv-ink-primary, #f4f0e7);
+}
+.tv-utility__group h3 {
+  color: var(--tv-ink-secondary, #c2beb5);
+}
