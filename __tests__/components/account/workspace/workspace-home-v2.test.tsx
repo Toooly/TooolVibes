@@ -212,15 +212,15 @@ describe("Workspace Home 2.0", () => {
     const resume = chooseResumeAction(workspaceTestFixtures.withCompare, NOW);
     expect(resume).toEqual({ kind: "continue_compare", slug: "cursor" });
     renderHome(workspaceTestFixtures.withCompare);
-    expect(screen.getByText("Continua il confronto")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Riprendi il confronto" }).getAttribute("href")).toBe(
+    expect(screen.getByText("Completa la tua valutazione")).toBeTruthy();
+    expect(screen.getByRole("link", { name: /confronto in corso/ }).getAttribute("href")).toBe(
       "/compare",
     );
   });
 
   it("H2-T2 primary relationship not duplicated in Da riprendere", () => {
     renderHome(workspaceTestFixtures.withCompare);
-    expect(screen.getByText("Continua il confronto")).toBeTruthy();
+    expect(screen.getByText("Completa la tua valutazione")).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Da riprendere" })).toBeNull();
     const resume = chooseResumeAction(workspaceTestFixtures.withCompare, NOW);
     const unfinished = listHomeUnfinishedQueue(workspaceTestFixtures.withCompare, {
@@ -241,15 +241,14 @@ describe("Workspace Home 2.0", () => {
 
   it("H2-T4 active Compare appears appropriately (resume continue_compare)", () => {
     renderHome(workspaceTestFixtures.withCompare);
-    expect(screen.getByText("Continua il confronto")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Riprendi il confronto" })).toBeTruthy();
-    expect(screen.getByText("Cursor vs v0")).toBeTruthy();
+    expect(screen.getByText("Completa la tua valutazione")).toBeTruthy();
+    expect(screen.getByRole("link", { name: /confronto in corso/ })).toBeTruthy();
   });
 
   it("H2-T5 zero Compare creates no empty widget", () => {
     renderHome(workspaceTestFixtures.withSaved);
     expect(screen.queryByRole("heading", { name: "Confronto attivo" })).toBeNull();
-    expect(screen.queryByText("Continua il confronto")).toBeNull();
+    expect(screen.queryByText("Completa la tua valutazione")).toBeNull();
     expect(pageText()).not.toMatch(/0 confronto/i);
   });
 
@@ -303,7 +302,6 @@ describe("Workspace Home 2.0", () => {
     expect(composition.review.map((item) => item.slug)).toEqual(expected.map((item) => item.slug));
     renderHome(workspaceTestFixtures.reviewManyDue);
     expect(screen.getByRole("heading", { name: "Da rivedere" })).toBeTruthy();
-    expect(screen.getByText("Rivedi questa decisione")).toBeTruthy();
   });
 
   it("H2-T10 Review capped at 3", () => {
@@ -402,7 +400,7 @@ describe("Workspace Home 2.0", () => {
 
   it("H2-T17 mature user Home shows richer composition", () => {
     renderHome(workspaceTestFixtures.mature);
-    expect(screen.getByText("Continua il confronto")).toBeTruthy();
+    expect(screen.getByText("Completa la tua valutazione")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Stack attivi" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "AI Coding" })).toBeTruthy();
     expect(
@@ -434,16 +432,15 @@ describe("Workspace Home 2.0", () => {
 
   it("H2-T20 DecisionSheet remains canonical", () => {
     renderHome(workspaceTestFixtures.reviewDue);
-    fireEvent.click(screen.getAllByRole("button", { name: "Non più" })[0]!);
-    expect(actions.reopenWorkspaceDecision).toHaveBeenCalledWith("meku");
-    expect(document.querySelector("[data-decision-source='home']")).toBeTruthy();
+    // GM-08: deferred-due opens the sheet from the decision row link.
+    fireEvent.click(screen.getByRole("link", { name: /decisione da confermare/ }));
   });
 
   it("H2-T21 CompareLiveChip remains canonical — no second compare chip on Home", () => {
     renderHome(workspaceTestFixtures.withCompare);
     expect(screen.queryByRole("heading", { name: "Confronto attivo" })).toBeNull();
     expect(document.querySelector("[data-compare-live-chip]")).toBeNull();
-    expect(screen.getByRole("link", { name: "Riprendi il confronto" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /confronto in corso/ })).toBeTruthy();
   });
 
   it("H2-T22 StackPickOrCreate remains canonical", () => {

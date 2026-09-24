@@ -249,3 +249,116 @@
   color: var(--tv-ink-secondary);
   background: transparent;
 }
+
+/* GM-10 (canonical): compact cream modal — dark page visible around it.
+   Cream card, controlled height, content-driven. Title row + 3 outcome pills +
+   reason chips + note + revisit + two-column actions. */
+.tv-decision-sheet[data-side="bottom"] {
+  background: var(--tv-color-ink-100, #f4f0e7);
+  color: #1c1626;
+  border: 0;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__title {
+  color: #1c1626;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__field-label {
+  color: #5c554b;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__chip {
+  border-color: rgba(28, 22, 38, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+  color: #1c1626;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__chip[data-active="true"] {
+  border-color: #1c1626;
+  background: #fff;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__outcome {
+  border-color: rgba(28, 22, 38, 0.22);
+  color: #1c1626;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__outcome[data-active="true"] {
+  border-color: #1c1626;
+  background: #fff;
+  box-shadow: none;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__input {
+  border-color: rgba(28, 22, 38, 0.22);
+  background: #fff;
+  color: #1c1626;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__input::placeholder {
+  color: #8a8478;
+}
+.tv-decision-sheet[data-side="bottom"] .selection-chip {
+  border-color: rgba(28, 22, 38, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+  color: #1c1626;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__cancel {
+  border: 1px solid rgba(28, 22, 38, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  color: #1c1626;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__close {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(28, 22, 38, 0.08);
+  color: #1c1626;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 0.6rem;
+  align-items: center;
+  background: transparent;
+}
+.tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__cancel {
+  min-height: 2.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (max-width: 47.99rem) {
+  .tv-decision-sheet[data-side="bottom"] {
+    inset-inline: 12px;
+    bottom: 12px;
+    top: auto;
+    transform: none;
+    max-height: 66dvh;
+    border-radius: 22px;
+  }
+  .tv-decision-sheet {
+    overflow-y: auto;
+  }
+  .tv-decision-sheet__outcomes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .tv-decision-sheet__outcome {
+    min-height: 44px;
+    justify-content: center;
+  }
+  .tv-decision-sheet__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .tv-decision-sheet__chip {
+    min-height: 40px;
+  }
+}

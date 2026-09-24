@@ -1,13 +1,12 @@
 # TooolVibes final production audit
 
-Date: 21 September 2026  
-Branch: `main`  
-Implementation commit: `42634fa67aa10dad06870e80f40ec15bfb95ed91` (`fix(ui): production pass for shell, ads, auth, and surfaces`)  
-Docs commit that recorded that SHA: `5c297de5a0d794c554696ee63f55903e69fa52c4`  
-HEAD at the start of this release-candidate verification: `5c297de`  
-HEAD at the start of the implementation pass: `ea42458`
+Date: 23 September 2026
+Branch: `golden-master-reconstruction-final-2026-09-23`
+Implementation commit: `42d61287840f4270843568718f4f67cdabf1c7f2` (`feat(ui): golden master visual convergence pass 01/04/05/08-13`)
+Baseline: `e4708aa` app code + `048d799` tooling-only cherry-pick (`e295176`); rejected UI lineage explicitly excluded
+Prior audit (21 Sep 2026, `main` @ `42634fa`): superseded for presentation; shell/auth/merge contracts re-verified below
 
-This is a consolidation pass, not a redesign. Identity preserved. System fixed.
+This is a consolidation pass, not a redesign. Identity preserved. System fixed. No deploy from this agent.
 
 ## A. Executive summary
 
@@ -225,24 +224,25 @@ Decision sheet focus trap was already `ui/sheet`. Not re-audited with a keyboard
 
 | Check | Result |
 |---|---|
-| `npx tsc --noEmit` | pass |
-| eslint on touched TS/TSX | 0 errors |
-| `npm run build` (`scripts/next-release-build.mjs`) | pass (151 pages) |
-| vitest scoped | 734 passed |
+| `npx tsc --noEmit` | pass (23 Sep 2026, HEAD `42d6128`) |
+| `npm run lint` (`eslint .`) | pass, 0 errors, 1 warning (unused `fs` in `scripts/ui-workstation/playwright-mcp-stdio.mjs`) |
+| `npm run build` (`scripts/next-release-build.mjs`) | pass (23 Sep 2026, HEAD `42d6128`) |
+| vitest scoped (auth P0) | 46 passed (keyboard, oauth-buttons, callback, guest merge) |
+| vitest scoped (shell/ads/chrome) | 73 passed (dock, tinyadz, marketing-chrome, exclusive-chrome, shell contracts, footer) |
+| vitest scoped (surfaces) | 46 passed (home track, tool-detail x3, derivation, collections density, biblioteca, shell-chrome) |
 
 ## V. Before / after screenshot gallery
 
 Before: product-owner PDF pack (52 mobile shots, 21 Sep 2026) — evidence of overlap, empty ads, launchpad footer, desktop-on-mobile stacks.
 
-After (local, not committed binaries): `artifacts/final-production-pass-2026-09-21/`
+After (23 Sep 2026, HEAD `42d6128`, dev server :3030, viewport 390x844, viewed as real pixels):
 
-Notable:
-
-- `375-home-top.png` / `390-home-stack.png` — hero preserved; STACK vertical
-- `390-home-footer.png` — utility footer, no Continua da qui
-- `390-account.png` — compact auth, no invented providers
-- `390-compare-dock-collapsed.png` — compact dock above nav
-- `390-guide-mid.png` — cream article, no labeled empty ad
+- Home hero preserved: condensed display H1, lede, search, TOOL/STACK/RADAR tabs, SCELTA DELLA REDAZIONE card, gold 8.0 score row, 4-tab bottom nav, no content in nav band
+- Guides list: cream cards with favicon thumbs, topic pills + read time, filter chips (Tutte/Scrittura/SEO & content)
+- Compare: empty state "Servono due strumenti", temporary-workbench copy, CTAs Aggiungi da Salvati / Apri il catalogo
+- Auth (`/account` guest): compact card, conditional OAuth (none shown when GoTrue disables all), inline email + Invia link row, no nav overlap
+- Horizontal overflow: 0 (`body.scrollWidth <= viewport`) on home, archivio, radar, posts, collections, compare, shortlist, account
+- Evidence pairs 01-13 + contact sheet: `artifacts/final-visual-golden-master/` (committed in `42d6128`)
 
 ## W. Remaining known issues
 
@@ -254,7 +254,7 @@ Genuine external blockers only for “not done”:
 4. Launchpad CSS leftover in `shell.css` (unused).
 5. Salvati kebab still mixes a few status rows with actions (P2, not overlapping content).
 6. Auth page still double-reserves nav (page pad + footer pad) — extra space, not overlap.
-7. Local `next dev` on `:3000` was a stale webpack cache; restart it before using it as evidence.
+7. Dev-server CSS staleness (23 Sep 2026): a long-running `next dev --port 3030` served unstyled HTML until restarted; after restart all routes render styled with 0 overflow. Prefer a fresh dev server or standalone build for visual evidence.
 
 Do **not** call OAuth “production ready”. Magic-link + guest merge + public chrome **are** ready pending the dashboard paste and Resend env already used in production.
 
@@ -262,10 +262,12 @@ Do **not** call OAuth “production ready”. Magic-link + guest merge + public 
 
 | Role | SHA |
 |---|---|
-| Implementation | `42634fa67aa10dad06870e80f40ec15bfb95ed91` |
-| Docs SHA record (verification base) | `5c297de5a0d794c554696ee63f55903e69fa52c4` |
+| Implementation (this branch) | `42d61287840f4270843568718f4f67cdabf1c7f2` |
+| Baseline app code | `e4708aa` |
+| Tooling-only cherry-pick | `048d799` (verified: no product UI) |
+| Prior production pass (`main`, superseded for presentation) | `42634fa67aa10dad06870e80f40ec15bfb95ed91` |
 
-`5c297de` changes only this audit file. It does not change product code.
+Working tree clean except preserved untracked dirs (artifacts, audits, .slim, after-p3). This audit file is the only tracked change pending commit.
 
 ## Y. Exact manual external actions required
 
@@ -293,7 +295,7 @@ Do **not** call OAuth “production ready”. Magic-link + guest merge + public 
 
 ## RELEASE CANDIDATE STATUS
 
-Verified on repository HEAD `5c297de` (product code = `42634fa`). Standalone production build of that HEAD, gate off, port 3010. Not deployed.
+Verified on branch HEAD `42d6128` (golden-master reconstruction). Dev server :3030, viewport 390x844, real-pixel review. Not deployed.
 
 | Check | Result |
 |---|---|

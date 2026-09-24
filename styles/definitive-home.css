@@ -2200,3 +2200,53 @@
     background: none;
   }
 }
+
+/* GM-01 (canonical): flat editorial on night — gold eyebrow, mono score row */
+@media (max-width: 47.99rem) {
+  .def-editorial__spotlight {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding-inline: 1rem;
+  }
+  .def-editorial__spot-eyebrow {
+    color: var(--tv-button-activation-bg, #e4b23c);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .tv-featured-tool__meta {
+    display: flex;
+    gap: 2rem;
+    align-items: baseline;
+  }
+  .tv-featured-tool__meta > span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+  .tv-featured-tool__meta-label {
+    display: inline;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+  }
+  .tv-featured-tool__mono {
+    color: var(--tv-button-activation-bg, #e4b23c);
+    font-size: 1.05rem;
+  }
+  .def-editorial__spot-cta--primary {
+    background: var(--tv-button-activation-bg, #e4b23c);
+    color: #1a1206;
+    border-color: transparent;
+    font-weight: 700;
+  }
+  .def-editorial__spot-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .def-editorial__spot-cta {
+    min-height: 44px;
+  }
+}

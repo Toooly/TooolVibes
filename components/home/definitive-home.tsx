@@ -44,11 +44,11 @@ function Cockpit({
           </h1>
           <p className="def-cockpit__lede">
             <span className="def-cockpit__lede-desktop">
-              Recensioni indipendenti, confronti chiari e guide pratiche per
+              Recensioni indipendenti, confronti chiari e guide pratiche per il
               tuo lavoro con l&apos;AI.
             </span>
             <span className="def-cockpit__lede-mobile">
-              Recensioni indipendenti, confronti chiari e guide pratiche per
+              Recensioni indipendenti, confronti chiari e guide pratiche per il
               tuo lavoro con l&apos;AI.
             </span>
           </p>

@@ -40,19 +40,12 @@ export function SiteFooterV2() {
         <div className="tv-utility__identity">
           <Link href="/" className="tv-utility__brand">
             <BrandLogo size={36} fallback="png" />
-            <span className="tv-utility__wordmark">TOOOLVIBES</span>
+            <span className="tv-utility__wordmark">TooolVibes</span>
           </Link>
           <p className="tv-utility__summary">
             Il sistema decisionale per scegliere software con criterio,
             non l&apos;ennesima directory di tool.
           </p>
-          <a
-            href={contactEmailDestination.href}
-            className="tv-utility__contact"
-          >
-            <Mail size={14} aria-hidden="true" />
-            Scrivici
-          </a>
         </div>
 
         <nav aria-label="Navigazione del sito" className="tv-utility__nav">
@@ -89,6 +82,16 @@ export function SiteFooterV2() {
             </ul>
           </div>
         </nav>
+
+        <div className="tv-utility__service">
+          <a
+            href={contactEmailDestination.href}
+            className="tv-utility__contact"
+          >
+            <Mail size={14} aria-hidden="true" />
+            Scrivici
+          </a>
+        </div>
 
         <div className="tv-utility__legal">
           {legalLinks.map((link) => (

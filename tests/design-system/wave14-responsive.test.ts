@@ -54,7 +54,10 @@ describe("Wave 14 — responsive contracts", () => {
   it("W14-T7 DecisionSheet Fast/Deep semantics stay in place", () => {
     const sheet = read("components/account/workspace/decision-sheet.tsx");
     expect(sheet).toContain('aria-label="Esito"');
-    expect(sheet).toContain("Aggiungi dettagli");
+    // GM-10: no deep gate — Nota privata + revisit inline.
+    expect(sheet).not.toContain("Aggiungi dettagli");
+    expect(sheet).toContain("Nota privata");
+    expect(sheet).toContain("Conferma se lo usi tra 1 mese");
     expect(sheet).toContain("Salva decisione");
     expect(sheet).toContain("commitWorkspaceDecision");
     expect(sheet).toContain('role="radiogroup"');

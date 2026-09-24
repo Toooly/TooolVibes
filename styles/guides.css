@@ -795,18 +795,76 @@
   transform: translateX(2px);
 }
 
-/* ---------- Mobile card variant (1-col, dense) --------------------------- */
+/* ---------- GOLDEN MASTER 04: mobile horizontal editorial rows ----------
+   Thumbnail LEFT (88px), text RIGHT, compact meta + title + 2-line dek,
+   single cream parent surface. Canonical — replaces boxed stacked cards. */
 @media (max-width: 47.99rem) {
+  .guides-grid { gap: 10px; }
+
   .guides-card {
-    padding: 1rem 1rem;
-    gap: 0.65rem;
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-areas:
+      "thumb topline"
+      "thumb title"
+      "thumb dek";
+    column-gap: 12px;
+    row-gap: 3px;
+    padding: 10px;
+    min-height: 0;
+    align-items: start;
   }
 
+  .guides-card__thumb {
+    grid-area: thumb;
+    align-self: start;
+    width: 88px;
+    height: 88px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(160deg, #241a4e, #101530);
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #cdb9ff;
+  }
+  .guides-card__thumb img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+  .guides-card__thumb--glyph {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #cdb9ff;
+  }
+
+  .guides-card__topline {
+    grid-area: topline;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    min-width: 0;
+  }
+  .guides-card__topic { font-size: 0.75rem; letter-spacing: 0.08em; white-space: nowrap; }
+  .guides-card__read { font-size: 0.75rem; white-space: nowrap; }
+
   .guides-card__title {
-    font-size: 1.18rem;
+    grid-area: title;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .guides-card__dek {
+    grid-area: dek;
+    font-size: 0.78rem;
     -webkit-line-clamp: 2;
   }
 
@@ -2285,3 +2343,84 @@
 .guides-masthead__title { text-wrap: balance; }
 .guides-card__dek,
 .guides-masthead__dek { text-wrap: pretty; }
+
+/* ============================================================
+   GOLDEN MASTER 05 — article title/media/index composition (canonical)
+   Compact hero (meta line + controlled title + dek), then a real
+   media panel in GM dimensions, then the index block immediately
+   after. Mobile-first; desktop keeps its richer hero.
+   ============================================================ */
+@media (max-width: 47.99rem) {
+  .guides-article__hero {
+    padding: 16px 14px;
+    gap: 0.7rem;
+  }
+  .guides-article__hero-main { gap: 0.7rem; }
+  .guides-article__hero-meta { gap: 0.35rem; }
+  .guides-article__hero-h1 {
+    font-size: 1.9rem;
+    line-height: 1.04;
+  }
+  .guides-article__hero-dek { font-size: 0.92rem; line-height: 1.5; }
+
+  .guides-article__hero-media {
+    margin: 10px 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .guides-article__hero-media-visual {
+    display: grid;
+    place-items: center;
+    min-height: 190px;
+    padding: 28px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    background:
+      radial-gradient(120% 150% at 80% 15%, rgba(139, 108, 255, 0.22), transparent 60%),
+      linear-gradient(180deg, #141126 0%, #0b0817 100%);
+  }
+  .guides-article__hero-media-visual img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 10px;
+  }
+  .guides-article__hero-media-glyph {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #cdb9ff;
+  }
+  .guides-article__hero-media-caption {
+    margin: 6px 2px 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--tv-ink-muted-aa);
+  }
+
+  .guides-article__hero-index {
+    margin: 10px 0 0;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
+    background: color-mix(in srgb, var(--tv-ink-primary) 3%, transparent);
+  }
+  .guides-article__hero-index-title {
+    margin: 0 0 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #8fd8ff;
+  }
+  .guides-article__hero-index ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    color: var(--tv-ink-primary);
+    font-size: 0.88rem;
+  }
+}

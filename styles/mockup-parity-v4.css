@@ -3,7 +3,7 @@
 
 @media (max-width: 899px) {
   /* ---------- 01 HOME: hero/search/tabs/card regions, catalogue list below fold ---------- */
-  .def-latest { margin-top: 170px !important; }
+  .def-latest { margin-top: 16px !important; }
   .def-editorial__spotlight { padding: 12px !important; }
   .def-editorial__spot-head { margin-top: 4px !important; }
   .def-editorial__spot-lede { margin-top: 4px !important; }
@@ -35,8 +35,8 @@
   .guides-section { padding-top: 6px !important; }
   .guides-filter { margin-top: 8px !important; }
   .guides-grid { grid-template-columns: 1fr !important; gap: 10px !important; margin-top: 12px !important; }
-  .guides-grid .guides-card { display: grid !important; grid-template-columns: 76px minmax(0, 1fr) !important; gap: 10px !important; padding: 12px !important; align-items: start !important; }
-  .guides-grid .guides-card__media, .guides-grid .guides-card__thumb { width: 76px !important; height: 76px !important; border-radius: 10px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__title { font-size: 1rem !important; }
 
   /* ---------- 05 GUIDE ARTICLE: product media region, dark index, cream body below it ---------- */
@@ -132,19 +132,19 @@
 @media (max-width: 899px) {
   /* 04: compact cream rows, one third of the viewport */
   .guides-grid { gap: 10px !important; margin-top: 62px !important; }
-  .guides-grid .guides-card { padding: 8px 10px !important; grid-template-columns: 100px minmax(0, 1fr) !important; gap: 10px !important; }
-  .guides-grid .guides-card__media, .guides-grid .guides-card__thumb { width: 100px !important; height: 100px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__title { font-size: 0.95rem !important; }
   .guides-grid .guides-card__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
 
   /* 05: cream reading surface starts below the first viewport, as in the mockup */
-  .guides-article__body { margin-top: 220px !important; }
+  /* superseded — no fold hacks */
 }
 
 @media (max-width: 899px) {
   /* 04: row = filled topic block left, compact text right */
-  .guides-grid .guides-card { display: grid !important; grid-template-columns: 74px minmax(0,1fr) !important; grid-template-rows: auto 1fr !important; gap: 4px 10px !important; padding: 8px 10px !important; height: 96px !important; }
-  .guides-grid .guides-card__topline { grid-column: 1 !important; grid-row: 1 / span 2 !important; height: 80px !important; border-radius: 10px !important; background: linear-gradient(160deg, #2a1b52, #14102a) !important; flex-direction: column !important; justify-content: flex-end !important; align-items: flex-start !important; padding: 6px !important; gap: 2px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__topic { background: transparent !important; color: #e9e2ff !important; font-size: 0.75rem !important; }
   .guides-grid .guides-card__read { color: #b9aee6 !important; font-size: 0.75rem !important; }
   .guides-grid .guides-card__title { grid-column: 2 !important; grid-row: 1 !important; font-size: 0.92rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
@@ -161,13 +161,13 @@
 @media (max-width: 899px) {
   /* 04 final: three ~130px rows with media blocks, as the mockup */
   .guides-grid { margin-top: 11px !important; gap: 16px !important; }
-  .guides-grid .guides-card { height: 130px !important; padding: 10px !important; grid-template-columns: 74px minmax(0, 1fr) !important; }
-  .guides-grid .guides-card__topline { height: 110px !important; }
+  /* superseded by V4.4 anatomy below */
+  /* superseded by V4.4 anatomy below */
 }
 
 @media (max-width: 899px) {
   /* 04: third row closes the first viewport, as in the mockup */
-  .guides-grid .guides-card:nth-child(4) { margin-top: 300px !important; }
+  /* superseded — no fold hacks */
 }
 
 @media (max-width: 899px) {
@@ -175,11 +175,11 @@
   [data-desktop-featured] { display: none !important; }
   [data-mobile-featured] .guides-section--ink { display: block !important; }
   .guides-grid__featured { display: block; margin: 10px 0 0; }
-  .guides-grid__featured .guides-feature { padding: 12px !important; }
+  /* keep */
   .guides-grid__featured .guides-feature__title { font-size: 1.2rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
   .guides-grid__featured .guides-feature__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-  .guides-grid { margin-top: 340px !important; }
-  .guides-grid .guides-card:nth-child(4) { margin-top: 0 !important; }
+  /* superseded — no fold hacks */
+  /* superseded — no fold hacks */
 }
 @media (min-width: 900px) {
   .guides-grid__featured, [data-mobile-featured] { display: none !important; }
@@ -192,65 +192,7 @@
   .guides-grid__featured .guides-feature { background: #f6f1e8 !important; border-radius: 16px !important; }
 }
 
-@media (max-width: 899px) {
-  /* 04 V4.4: mockup anatomy — compact horizontal rows with thumbnails, real pills */
-  #guides-all { padding-top: 0 !important; }
-  .guides-grid { margin-top: 10px !important; gap: 10px !important; grid-template-columns: 1fr !important; }
-  .guides-grid__featured { margin: 10px 0 0 !important; }
-
-  .guides-grid .guides-card,
-  .guides-grid__featured .guides-card {
-    display: grid !important;
-    grid-template-columns: 88px minmax(0, 1fr) !important;
-    grid-template-rows: auto auto auto !important;
-    column-gap: 12px !important;
-    row-gap: 3px !important;
-    padding: 10px !important;
-    height: 132px !important;
-    align-items: start !important;
-    overflow: hidden !important;
-  }
-  .guides-grid .guides-card__thumb,
-  .guides-grid__featured .guides-card__thumb {
-    grid-column: 1 !important;
-    grid-row: 1 / span 3 !important;
-    width: 88px !important;
-    height: 112px !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    background: linear-gradient(160deg, #2a1b52, #14102a) !important;
-    display: grid !important;
-    place-items: center !important;
-  }
-  .guides-card__thumb img { width: 44px !important; height: 44px !important; object-fit: contain !important; border-radius: 10px !important; }
-  .guides-grid .guides-card__topline,
-  .guides-grid__featured .guides-card__topline { grid-column: 2 !important; grid-row: 1 !important; display: flex !important; align-items: center !important; gap: 6px !important; }
-  .guides-grid .guides-card__title,
-  .guides-grid__featured .guides-card__title { grid-column: 2 !important; grid-row: 2 !important; font-size: 0.95rem !important; line-height: 1.25 !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-  .guides-grid .guides-card__dek,
-  .guides-grid__featured .guides-card__dek { grid-column: 2 !important; grid-row: 3 !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; font-size: 0.78rem !important; }
-  .guides-grid .guides-card__foot,
-  .guides-grid__featured .guides-card__foot { display: none !important; }
-
-  .guides-filter { gap: 8px !important; height: 40px !important; min-height: 40px !important; }
-  .guides-filter__chip {
-    border-radius: 999px !important;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    color: var(--tv-ink-primary) !important;
-    min-height: 34px !important;
-    padding: 0 14px !important;
-    font-size: 0.8rem !important;
-    gap: 6px !important;
-  }
-  .guides-filter__chip[aria-selected="true"] {
-    background: #cdb9ff !important;
-    color: #1a1030 !important;
-    border-color: transparent !important;
-  }
-  .guides-filter__chip__count { font-size: 0.75rem !important; opacity: 0.75; }
-}
-
+/* 04 V4.4 RETIRED — canonical rows now live in styles/guides.css (GM pass). Block neutralized. */
 @media (max-width: 899px) {
   /* 04 GOLDEN MASTER: hero integrated with the violet shell, solid title */
   .guides-masthead { background: transparent !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important; padding-top: 4px !important; }
@@ -594,60 +536,16 @@
   .ar4-shell .ar4-card { position: relative !important; }
 }
 
-@media (max-width: 899px) {
-  /* ============ batch-2 V1 ============ */
-  /* 04: every row one cream card with the full anatomy, 156px tall */
-  .guides-grid .guides-card, .guides-grid__featured .guides-card {
-    height: 156px !important;
-    grid-template-columns: 92px minmax(0, 1fr) !important;
-    padding: 12px !important;
-    overflow: hidden !important;
-  }
-  .guides-grid .guides-card__thumb, .guides-grid__featured .guides-card__thumb { width: 92px !important; height: 132px !important; }
-  .guides-grid .guides-card__title, .guides-grid__featured .guides-card__title { font-size: 0.95rem !important; -webkit-line-clamp: 2 !important; }
-  .guides-grid .guides-card__dek, .guides-grid__featured .guides-card__dek { font-size: 0.78rem !important; -webkit-line-clamp: 2 !important; }
-
-  /* 05: detail header, shell-integrated hero, media frame, compact index */
-  body:has(.guides-article) .mobile-top-bar { display: none !important; }
-  .guides-article-mobileheader {
-    display: flex; align-items: center; justify-content: space-between;
-    min-height: 48px; padding: 0 16px;
-    background: color-mix(in srgb, #241a4a 88%, transparent);
-    position: sticky; top: 0; z-index: 45;
-  }
-  .guides-article-mobileheader__back { color: var(--tv-ink-primary); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
-  .guides-article-mobileheader__account { display: grid; place-items: center; width: 36px; height: 36px; }
-  .guides-article__hero { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; padding-inline: 16px !important; padding-top: 10px !important; }
-  .guides-article__hero-media { height: 200px !important; border-radius: 16px !important; background: linear-gradient(160deg, #2a1b52, #14102a) !important; display: grid !important; place-items: center !important; }
-  .guides-article__hero-media-copy { display: none !important; }
-  .guides-article__hero-media-mark { width: 56px !important; height: 56px !important; }
-  .guides-article__hero-index { padding: 12px 14px !important; border-radius: 14px !important; }
-  .guides-article__hero-index ol { display: grid !important; gap: 0 !important; padding-left: 16px !important; }
-  .guides-article__hero-index li { padding: 7px 0 !important; border-bottom: 1px solid color-mix(in srgb, var(--tv-ink-primary) 8%, transparent) !important; font-size: 0.82rem !important; line-height: 1.3 !important; }
-  .guides-article__hero-index li:last-child { border-bottom: 0 !important; }
-
-  /* 06: route strip, compact workflow rows behind the existing details accordion */
-  body:has(.cx-shell) .mobile-top-bar__route { display: none !important; }
-  .cx-stack-flow-v4__item { min-height: 0 !important; }
-  .cx-stack-flow-v4__row { display: block !important; }
-  .cx-stack-flow-v4__why, .cx-stack-flow-v4__flow { display: none !important; }
-  .cx-stack-flow-v4__body { padding: 4px 0 !important; }
-  .cx-stack-flow-v4__stage { padding: 6px 0 !important; }
-  .cx-stack-flow-v4__list { gap: 10px !important; }
-  .cx-stack-flow-v4__details { margin-top: 6px !important; }
-  .cx-section-nav { min-height: 40px !important; }
+/* GM-08 retired: summary-row anatomy + interior pill nav now live in canonical
+   account.css / workspace-riprendi.tsx. Chevrons only on tappable summary rows. */
+@media (max-width: 47.99rem) {
+  [data-account-surface="workspace"] .tv-app__pagehead { margin-bottom: 0.6rem; }
+  [data-account-surface="workspace"] .tv-app__pagehead .tv-app__page-title { font-size: 1.9rem; }
+  [data-account-surface="workspace"] .tv-app__pagehead .tv-app__page-kicker { display: none; }
+  [data-account-surface="workspace"] .tv-home { gap: 0.7rem; }
 }
 
-@media (max-width: 899px) {
-  /* batch-2 V1 follow-up */
-  .guides-article__hero { margin-top: 0 !important; }
-  .guides-article__layout { margin-top: 0 !important; }
-  .cx-stack-flow-v4__item { padding: 6px 0 !important; }
-  .cx-stack-flow-v4__node { margin-bottom: 2px !important; }
-  .cx-stack-flow-v4__stage-head { padding: 2px 0 !important; }
-  .cx-stack-flow-v4__tool { font-size: 0.95rem !important; }
-  .cx-stack-flow-v4__role { font-size: 0.9rem !important; margin: 2px 0 !important; }
-  .cx-stack-flow-v4__details { margin-top: 4px !important; }
-  .cx-stack-flow-v4__details-summary { min-height: 32px !important; }
-  .cx-stack-flow-v4__body { display: flex !important; flex-direction: column !important; gap: 4px !important; }
+/* GM-09 (fresh branch): decisioni mobile — hide interior pill nav (bottom nav owns it) */
+@media (max-width: 47.99rem) {
+  [data-account-surface="workspace"] .tv-space-switch { display: none; }
 }

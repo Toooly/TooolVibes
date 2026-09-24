@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import {
   composeDecisionMemory,
-  currentDecisionMemories,
   type DecisionMemoryItem,
 } from "@/lib/account/decision-memory";
 import { OUTCOME_STATE_LABELS } from "@/lib/account/workspace-lifecycle";
@@ -20,7 +19,7 @@ function nameOf(names: Map<string, string>, slug: string) {
   return names.get(slug) ?? slug;
 }
 
-function DecisionCard({
+function DecisionRow({
   item,
   names,
   onReview,
@@ -29,34 +28,39 @@ function DecisionCard({
   names: Map<string, string>;
   onReview: (slug: string) => void;
 }) {
-  const vs = item.vsSlugs.map((slug) => nameOf(names, slug)).filter(Boolean);
+  const statusLabel =
+    item.outcome === "selected"
+      ? OUTCOME_STATE_LABELS.selected
+      : item.outcome === "rejected"
+        ? OUTCOME_STATE_LABELS.rejected
+        : OUTCOME_STATE_LABELS.deferred;
   return (
-    <article className="tv-mod" data-decision-card={item.status}>
-      <p className="tv-home-copy">
-        {OUTCOME_STATE_LABELS[item.outcome]}
-        {item.status === "review" ? " · da rivedere" : ""}
-        {item.at ? ` · ${formatWorkspaceDate(item.at)}` : ""}
-      </p>
-      <h3 className="tv-home-title">
-        <WorkspaceToolMark slug={item.slug} name={nameOf(names, item.slug)} size="sm" />{" "}
-        {nameOf(names, item.slug)}
-      </h3>
-      {vs.length > 0 ? (
-        <p className="tv-home-copy">Rispetto a {vs.join(", ")}</p>
-      ) : (
-        <p className="tv-home-copy">Senza alternative registrate.</p>
-      )}
-      {item.reason ? <p className="tv-home-copy">{item.reason}</p> : null}
-      {item.useCase ? <p className="tv-home-copy">Contesto: {item.useCase}</p> : null}
-      <div className="tv-home-actions">
-        <Link className="tv-home-textbtn" href={`/toools/${item.slug}`}>
-          Apri scheda
-        </Link>
-        <button type="button" className="tv-home-cta" onClick={() => onReview(item.slug)}>
-          Rivedi
-        </button>
-      </div>
-    </article>
+    <li className="tv-decision-row">
+      <span className="tv-decision-row__mark" aria-hidden="true">
+        <WorkspaceToolMark slug={item.slug} name={nameOf(names, item.slug)} size="sm" />
+      </span>
+      <span className="tv-decision-row__body">
+        <strong className="tv-decision-row__name">{nameOf(names, item.slug)}</strong>
+        <span className="tv-decision-row__meta">
+          {statusLabel}
+          {item.status === "review" ? " · da rivedere" : ""}
+          {item.at ? ` · ${formatWorkspaceDate(item.at)}` : ""}
+        </span>
+        {item.reason ? (
+          <span className="tv-decision-row__note">{item.reason}</span>
+        ) : item.useCase ? (
+          <span className="tv-decision-row__note">{item.useCase}</span>
+        ) : null}
+      </span>
+      <button
+        type="button"
+        className="tv-decision-row__action"
+        aria-label={`Rivedi la decisione su ${nameOf(names, item.slug)}`}
+        onClick={() => onReview(item.slug)}
+      >
+        Rivedi
+      </button>
+    </li>
   );
 }
 
@@ -73,11 +77,8 @@ export function WorkspaceDecisioni({
     [catalog],
   );
   const allDecisions = composeDecisionMemory(state);
-  const current = currentDecisionMemories(state);
-  const history = allDecisions.filter(
-    (item) => !current.some((live) => live.id === item.id),
-  );
   const [reviewSlug, setReviewSlug] = useState<string | null>(focusSlug);
+  const [filter, setFilter] = useState<"tutte" | "scelte" | "rimandate" | "scartate">("tutte");
   useEffect(() => {
     if (focusSlug) setReviewSlug(focusSlug);
   }, [focusSlug]);
@@ -124,39 +125,51 @@ export function WorkspaceDecisioni({
     );
   }
 
+  const reviewCount = allDecisions.filter((item) => item.status === "review").length;
+  const visibleDecisions = allDecisions.filter((item) => {
+    if (filter === "scelte") return item.outcome === "selected";
+    if (filter === "rimandate") return item.outcome === "deferred";
+    if (filter === "scartate") return item.outcome === "rejected";
+    return true;
+  });
+
   return (
     <div className="tv-home" data-workspace-view="decisioni">
-      <section className="tv-mod" aria-labelledby="tv-decisioni-current">
-        <h2 id="tv-decisioni-current" className="tv-home-title">
-          In corso
-        </h2>
-        {current.length === 0 ? (
-          <p className="tv-home-copy">Nessuna decisione aperta in questo momento.</p>
-        ) : (
-          <div className="tv-home-stack">
-            {current.map((item) => (
-              <DecisionCard
-                key={item.id}
-                item={item}
-                names={names}
-                onReview={setReviewSlug}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-      {history.length > 0 ? (
-      <section className="tv-mod" aria-labelledby="tv-decisioni-history">
-        <h2 id="tv-decisioni-history" className="tv-home-title">
-          Storico
-        </h2>
-        <div className="tv-home-stack">
-          {history.map((item) => (
-            <DecisionCard key={item.id} item={item} names={names} onReview={setReviewSlug} />
+      <p className="tv-decisions__summary" aria-live="polite">
+        {allDecisions.length === 1
+          ? "1 decisione"
+          : `${allDecisions.length} decisioni`}
+        {reviewCount > 0 ? ` · ${reviewCount} da rivedere` : ""}
+      </p>
+
+      <div className="tv-decisions__filters" role="group" aria-label="Filtra decisioni">
+        {(
+          [
+            ["tutte", "Tutte"],
+            ["scelte", "Scelte"],
+            ["rimandate", "Rimandate"],
+            ["scartate", "Scartate"],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={filter === id}
+            className={filter === id ? "is-active" : undefined}
+            onClick={() => setFilter(id)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <section className="tv-decisions" aria-label="Decisioni">
+        <ul className="tv-decision-list">
+          {visibleDecisions.map((item) => (
+            <DecisionRow key={item.id} item={item} names={names} onReview={setReviewSlug} />
           ))}
-        </div>
+        </ul>
       </section>
-      ) : null}
       {reviewSlug ? (
         <DecisionSheet
           open

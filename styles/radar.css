@@ -1797,3 +1797,54 @@ h1.tv-radar__title,
 
 /* Final micro-polish: display wrapping */
 .tv-radar__title { text-wrap: balance; }
+
+/* ============================================================
+   GOLDEN MASTER 07 — mobile ranked signal board (canonical)
+   Populated Radar on mobile reads as a compact 01-05 ranked list:
+   no instrument chrome, no table grid, metrics inline. Desktop keeps
+   map + table compositions.
+   ============================================================ */
+@media (max-width: 47.999rem) {
+  .tv-radar__results { padding-inline: 0; }
+  .tv-radar-table { border: 0; background: transparent; padding: 0; }
+  .tv-radar-table__header,
+  .tv-radar-table__head { display: none; }
+  .tv-radar-table__body { display: grid; gap: 10px; }
+  .tv-radar-table__body li { margin: 0; }
+  .tv-radar-table__row {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 10px;
+    min-height: 0;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 10%, transparent);
+    background: color-mix(in srgb, var(--tv-ink-primary) 3%, transparent);
+  }
+  .tv-radar-table__rank { font-size: 1.05rem; }
+  .tv-radar-table__tool {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .tv-radar-table__tool .tv-radar-signal-identity { display: none; }
+  .tv-radar-table__tool strong { font-size: 1rem; }
+  .tv-radar-table__tool small {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal;
+  }
+  .tv-radar-table__metric { text-align: right; }
+  .tv-radar-table__metric--cta.tv-radar-table__metric--cta { display: none; }
+  .tv-radar-table__row > .tv-radar-table__metric:nth-of-type(4) { display: none; }
+  /* GM07: metric cell reads as compact votes + discussion, CTA hidden on mobile */
+  .tv-radar-table__row > .tv-radar-table__metric:nth-of-type(3) {
+    display: grid;
+    justify-items: end;
+    gap: 1px;
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+}

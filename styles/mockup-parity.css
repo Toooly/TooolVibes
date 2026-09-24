@@ -21,14 +21,7 @@
   background: var(--mp-bg);
 }
 
-/* Home: compact editorial card */
-.def-editorial__spotlight,
-.tv-featured-tool {
-  border-radius: var(--mp-radius);
-  border: 1px solid var(--mp-border);
-  background: var(--mp-surface);
-  padding: 16px;
-}
+/* Home: compact editorial card — desktop keeps boxed card; mobile flat per GM-01 */
 
 .def-editorial__spot-lede {
   display: -webkit-box;

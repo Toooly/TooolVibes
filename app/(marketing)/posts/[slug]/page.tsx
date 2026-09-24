@@ -105,11 +105,23 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   let toolWebsiteHost = "";
   if (post.tool_slug) {
     tool = await getToolBySlug(post.tool_slug);
-    if (tool?.urls.website) {
+    const websiteUrl = tool?.urls.website ?? "";
+    if (websiteUrl) {
       try {
-        toolWebsiteHost = new URL(tool.urls.website).hostname;
+        toolWebsiteHost = new URL(websiteUrl).hostname;
       } catch {
         toolWebsiteHost = "";
+      }
+    }
+    if (!toolWebsiteHost) {
+      const fallback = getDirectoryToolBySlug(post.tool_slug);
+      const fallbackUrl = fallback?.externalUrl ?? "";
+      if (fallbackUrl) {
+        try {
+          toolWebsiteHost = new URL(fallbackUrl).hostname;
+        } catch {
+          toolWebsiteHost = "";
+        }
       }
     }
   }
@@ -243,8 +255,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
         />
 
         {tool ? (
-          <div className="guides-article__hero-media" aria-hidden="true">
-            <span className="guides-article__hero-media-mark">
+          <figure className="guides-article__hero-media" aria-label={`Visuale prodotto: ${tool.name}`}>
+            <span className="guides-article__hero-media-visual" aria-hidden="true">
               {toolWebsiteHost ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -253,21 +265,26 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
                   loading="eager"
                   decoding="async"
                 />
-              ) : null}
+              ) : (
+                <span className="guides-article__hero-media-glyph" aria-hidden="true">
+                  {tool.name.charAt(0).toUpperCase()}
+                </span>
+              )}
             </span>
-            <span className="guides-article__hero-media-copy">
-              <span className="guides-article__hero-media-name">{tool.name}</span>
-              <span className="guides-article__hero-media-topic">{topicLabel}</span>
-            </span>
-          </div>
+            <figcaption className="guides-article__hero-media-caption">
+              {tool.name} · {topicLabel}
+            </figcaption>
+          </figure>
         ) : null}
 
         {isAuthoredPost && serverHeadings.length > 0 ? (
           <nav className="guides-article__hero-index" aria-label="In questa guida">
             <p className="guides-article__hero-index-title">In questa guida</p>
             <ol>
-              {serverHeadings.map((heading) => (
-                <li key={heading}>{heading}</li>
+              {serverHeadings.slice(0, 5).map((heading, index) => (
+                <li key={heading}>
+                  {index + 1}. {heading}
+                </li>
               ))}
             </ol>
           </nav>

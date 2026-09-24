@@ -207,7 +207,9 @@ export function GuideCard({
           {thumbDomain ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(thumbDomain)}&sz=128`} alt="" loading="lazy" decoding="async" />
-          ) : null}
+          ) : (
+            <span aria-hidden="true">{resolvedTopic.charAt(0).toUpperCase()}</span>
+          )}
         </span>
         <div className="guides-card__topline">
           <span
@@ -240,7 +242,9 @@ export function GuideCard({
           {thumbDomain ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(thumbDomain)}&sz=128`} alt="" loading="lazy" decoding="async" />
-          ) : null}
+          ) : (
+            <span aria-hidden="true">{resolvedTopic.charAt(0).toUpperCase()}</span>
+          )}
         </span>
       <div className="guides-card__topline">
         <span

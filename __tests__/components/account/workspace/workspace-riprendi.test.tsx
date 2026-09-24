@@ -88,8 +88,7 @@ describe("WorkspaceRiprendi", () => {
     fireEvent.click(using);
     expect(actions.markWorkspaceToolUsing).toHaveBeenCalledWith("cursor");
 
-    const open = screen.getByRole("link", { name: "Apri" });
-    expect(open.getAttribute("href")).toBe("/account?view=salvati&focus=cursor");
+    // GM-08: confirm_usage is a compact row — CTA only, no "Apri" link.
   });
 
   it("hides In uso and Stack attivi when they are empty", () => {
@@ -105,7 +104,7 @@ describe("WorkspaceRiprendi", () => {
     catalogRuntime.value = catalogFor(workspaceTestFixtures.mature);
     render(createElement(WorkspaceRiprendi, { state: workspaceTestFixtures.mature }));
 
-    const compare = screen.getByRole("link", { name: "Riprendi il confronto" });
+    const compare = screen.getByRole("link", { name: /confronto in corso/ });
     expect(compare.getAttribute("href")).toBe("/compare");
     expect(screen.getByText(/In uso:/)).toBeTruthy();
     expect(screen.getByText(/In uso:/).textContent).toMatch(/Cursor/);

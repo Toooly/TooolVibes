@@ -11,11 +11,9 @@ import {
   reopenWorkspaceDecision,
 } from "@/lib/account/workspace-actions";
 import { OUTCOME_STATE_LABELS } from "@/lib/account/workspace-lifecycle";
-import { MAX_USE_CASE_LENGTH } from "@/lib/discovery/workspace-constants";
 import type {
   CompareObjective,
   WorkspaceDecisionOutcome,
-  WorkspaceStateV1,
 } from "@/lib/discovery/types";
 
 import {
@@ -25,7 +23,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-import { PrivateNoteEditor } from "./private-note-editor";
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { useCanonicalWorkspace } from "./use-canonical-workspace";
 import { WorkspaceToolMark } from "./workspace-tool-mark";
@@ -33,7 +30,7 @@ import { WorkspaceToolMark } from "./workspace-tool-mark";
 import "./decision-sheet.css";
 
 export const DESKTOP_SHEET_QUERY = "(min-width: 1024px)";
-const OUTCOMES: WorkspaceDecisionOutcome[] = ["selected", "rejected", "deferred"];
+const OUTCOMES: WorkspaceDecisionOutcome[] = ["selected", "deferred", "rejected"];
 
 export type DecisionSheetSource = "compare" | "salvati" | "home" | "shortlist";
 
@@ -67,20 +64,6 @@ function desktopSheetSnapshot() {
     : false;
 }
 
-function recentUseCases(state: WorkspaceStateV1, limit = 4) {
-  const ranked = Object.values(state.toolStates)
-    .filter((tool) => tool.useCase?.trim())
-    .sort((left, right) => (right.updatedAt ?? "").localeCompare(left.updatedAt ?? ""));
-  const unique: string[] = [];
-  for (const tool of ranked) {
-    const value = tool.useCase?.trim();
-    if (!value || unique.includes(value)) continue;
-    unique.push(value);
-    if (unique.length >= limit) break;
-  }
-  return unique;
-}
-
 export function DecisionSheet({
   open,
   onOpenChange,
@@ -97,8 +80,6 @@ export function DecisionSheet({
 }: DecisionSheetProps) {
   const state = useCanonicalWorkspace();
   const titleId = useId();
-  const whyId = useId();
-  const useCaseId = useId();
   const isDesktop = useSyncExternalStore(
     subscribeDesktopSheet,
     desktopSheetSnapshot,
@@ -106,10 +87,8 @@ export function DecisionSheet({
   );
   const currentOutcome = state.toolStates[slug]?.decision?.outcome ?? null;
   const [outcome, setOutcome] = useState<WorkspaceDecisionOutcome>(defaultOutcome);
-  const [deepOpen, setDeepOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [reasonChips, setReasonChips] = useState<string[]>([]);
-  const [useCase, setUseCase] = useState("");
   const [revisitAt, setRevisitAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -126,20 +105,16 @@ export function DecisionSheet({
       submittingRef.current = false;
       setSubmitting(false);
       setError(null);
-      setDeepOpen(false);
       setReason("");
       setReasonChips([]);
-      setUseCase("");
       setRevisitAt(null);
       return;
     }
     frozenAltsRef.current = [...alternatives];
     frozenNamesRef.current = alternativeNames ? [...alternativeNames] : null;
     setOutcome(defaultOutcome);
-    setDeepOpen(false);
     setReason("");
     setReasonChips([]);
-    setUseCase("");
     setRevisitAt(null);
     setError(null);
     eventIdRef.current = null;
@@ -151,7 +126,6 @@ export function DecisionSheet({
 
   const frozenAlternatives = frozenAltsRef.current ?? alternatives;
   const frozenNames = frozenNamesRef.current ?? alternativeNames ?? [];
-  const useCaseChips = recentUseCases(state);
 
   function handleOpenChange(next: boolean) {
     if (submittingRef.current && !next) return;
@@ -162,10 +136,8 @@ export function DecisionSheet({
     if (submittingRef.current) return;
     reopenWorkspaceDecision(slug);
     setOutcome(defaultOutcome);
-    setDeepOpen(false);
     setReason("");
     setReasonChips([]);
-    setUseCase("");
     setRevisitAt(null);
     setError(null);
     eventIdRef.current = null;
@@ -180,7 +152,6 @@ export function DecisionSheet({
       eventIdRef.current = crypto.randomUUID();
     }
     const why = composeDecisionReason(reasonChips, reason);
-    const caseText = useCase.trim();
     try {
       commitWorkspaceDecision({
         slug,
@@ -189,7 +160,6 @@ export function DecisionSheet({
         compareObjective,
         eventId: eventIdRef.current,
         ...(why ? { reason: why } : {}),
-        ...(caseText ? { useCase: caseText } : {}),
         ...(outcome === "deferred" || revisitAt ? { revisitAt } : { revisitAt: null }),
       });
       onCommitted?.({ slug, outcome });
@@ -218,7 +188,7 @@ export function DecisionSheet({
               name={toolName}
               accentFrom={accentFrom}
               accentTo={accentTo}
-              size="xl"
+              size="sm"
             />
             <div className="tv-decision-sheet__identity">
               <SheetTitle id={titleId} className="tv-decision-sheet__title">
@@ -228,6 +198,14 @@ export function DecisionSheet({
                 Scegli un esito e conferma. Il contesto extra è facoltativo.
               </SheetDescription>
             </div>
+            <button
+              type="button"
+              className="tv-decision-sheet__close"
+              onClick={() => onOpenChange(false)}
+              aria-label="Chiudi"
+            >
+              ×
+            </button>
           </header>
 
           <div className="tv-decision-sheet__body">
@@ -296,79 +274,27 @@ export function DecisionSheet({
               </div>
             </div>
 
-            <button
-              type="button"
-              className="tv-decision-sheet__deep-toggle"
-              aria-expanded={deepOpen}
-              onClick={() => setDeepOpen((value) => !value)}
-            >
-              {deepOpen ? "Nascondi dettagli" : "Aggiungi dettagli"}
-            </button>
+            <div className="tv-decision-sheet__field">
+              <p className="tv-decision-sheet__field-label">
+                Conferma se lo usi tra 1 mese
+              </p>
+              <RevisitWhenChips
+                tone="light"
+                onSelect={(next) => setRevisitAt(next)}
+              />
+            </div>
 
-            {deepOpen ? (
-              <div className="tv-decision-sheet__deep">
-                <label className="tv-decision-sheet__field" htmlFor={whyId}>
-                  <span className="tv-decision-sheet__field-label">Perché</span>
-                  <textarea
-                    id={whyId}
-                    className="tv-decision-sheet__textarea"
-                    value={reason}
-                    maxLength={2000}
-                    rows={3}
-                    onChange={(event) => setReason(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" && !event.shiftKey && event.metaKey) {
-                        event.preventDefault();
-                      }
-                    }}
-                  />
-                </label>
-
-                <div className="tv-decision-sheet__field">
-                  <span className="tv-decision-sheet__field-label" id={useCaseId}>
-                    Caso d&apos;uso
-                  </span>
-                  {useCaseChips.length > 0 ? (
-                    <div className="tv-decision-sheet__chips" role="group" aria-labelledby={useCaseId}>
-                      {useCaseChips.map((chip) => (
-                        <button
-                          key={chip}
-                          type="button"
-                          className="tv-decision-sheet__chip"
-                          data-active={useCase === chip ? "true" : "false"}
-                          onClick={() => setUseCase(chip)}
-                        >
-                          {chip}
-                        </button>
-                      ))}
-                    </div>
-                  ) : null}
-                  <input
-                    className="tv-decision-sheet__input"
-                    value={useCase}
-                    maxLength={MAX_USE_CASE_LENGTH}
-                    onChange={(event) => setUseCase(event.target.value)}
-                    aria-labelledby={useCaseId}
-                  />
-                </div>
-
-                <div className="tv-decision-sheet__field">
-                  <p className="tv-decision-sheet__field-label">
-                    {outcome === "deferred" ? "Quando rivedere" : "Rivedi più tardi (facoltativo)"}
-                  </p>
-                  <RevisitWhenChips
-                    onSelect={(next) => setRevisitAt(next)}
-                  />
-                </div>
-              </div>
-            ) : null}
-
-            <PrivateNoteEditor
-              slug={slug}
-              origin="decision"
-              compact
-              guestMode="hide"
-            />
+            <label className="tv-decision-sheet__field" htmlFor={`${titleId}-nota`}>
+              <span className="tv-decision-sheet__field-label">Nota privata</span>
+              <input
+                id={`${titleId}-nota`}
+                className="tv-decision-sheet__input"
+                value={reason}
+                maxLength={200}
+                placeholder="Es. È il più utile per me"
+                onChange={(event) => setReason(event.target.value)}
+              />
+            </label>
 
             {currentOutcome ? (
               <button
