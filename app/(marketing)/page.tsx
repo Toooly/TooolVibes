@@ -76,6 +76,9 @@ export default async function HomePage() {
           stages: nodes.map((slot) => ({
             label: slot.stage ?? slot.role,
             name: slot.tool.name,
+            iconUrl: slot.tool.domain
+              ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(slot.tool.domain)}&sz=64`
+              : null,
           })),
         };
       })}

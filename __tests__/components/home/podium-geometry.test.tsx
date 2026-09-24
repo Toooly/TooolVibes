@@ -104,7 +104,7 @@ const tools = [makeTool("blink", "Blink"), makeTool("vibecode", "VibeCode"), mak
 describe("DefinitiveHome — Ultime dal catalogo", () => {
   afterEach(cleanup);
 
-  it("mostra 'Ultime dal catalogo' con una riga per tool e Vedi tutte", () => {
+  it("mostra 'Ultime dal catalogo' con podio centrato + pair + CTA", () => {
     render(
       <AdvertisingConsentProvider>
         <DefinitiveHome tools={tools} />
@@ -112,11 +112,12 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
     );
 
     expect(screen.getByText("Ultime dal catalogo")).toBeTruthy();
-    expect(screen.getByText("Vedi tutte")).toBeTruthy();
+    expect(screen.getByText("Vedi tutto il catalogo")).toBeTruthy();
 
-    const rows = document.querySelectorAll(".def-latest__item");
-    expect(rows.length).toBe(3);
-    expect(document.querySelectorAll(".def-latest__name").length).toBe(3);
+    const lead = document.querySelector(".def-podium__lead");
+    expect(lead).toBeTruthy();
+    expect(document.querySelectorAll(".def-podium__pair-item").length).toBe(2);
+    expect(document.querySelectorAll(".def-podium__lead-name").length).toBe(1);
   });
 
   it("non mostra piu il podio legacy", () => {

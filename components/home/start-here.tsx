@@ -18,6 +18,7 @@ export function formatHomeAnalysisTime(raw: string | null | undefined) {
 export type HomeStackStage = {
   label: string;
   name: string;
+  iconUrl?: string | null;
 };
 
 export type HomeStackPreview = {
@@ -281,62 +282,120 @@ function IvoryEditorial({
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const latest = tools.slice(0, 3);
   if (latest.length === 0) return null;
+  const lead = latest[0];
+  const rest = latest.slice(1);
   return (
     <section className="def-latest" aria-labelledby="def-latest-title">
-      <div className="def-latest__head">
-        <h3 id="def-latest-title" className="def-latest__title">
+      <div className="def-latest__head def-podium__header">
+        <h3 id="def-latest-title" className="def-latest__title def-podium__title">
           Ultime dal catalogo
         </h3>
-        <Link href="/archivio" className="def-latest__more">
-          Vedi tutte
-          <ArrowRight size={13} aria-hidden="true" />
-        </Link>
+        <p className="def-podium__subtitle">I tool più discussi questa settimana.</p>
       </div>
-      <ol className="def-latest__list def-podium">
-        {latest.map((tool, index) => {
-          const score = computeEditorialScore(tool);
-          const iconUrl = iconUrlFor(tool);
-          const initial = initialFor(tool.name);
-          const desc = truncate(tool.tldr || tool.shortDescription || "", 72);
-          const isLead = index === 0;
+      <ol className="def-podium__stage">
+        {(() => {
+          const score = computeEditorialScore(lead);
+          const iconUrl = iconUrlFor(lead);
+          const initial = initialFor(lead.name);
           return (
-            <li
-              key={tool.slug}
-              className={`def-latest__item def-podium__item${isLead ? " def-podium__item--lead" : ""}`}
-            >
+            <li className="def-podium__lead">
               <Link
-                href={`/toools/${tool.slug}`}
-                className="def-latest__link def-podium__link"
-                aria-label={`Apri ${tool.name}`}
+                href={`/toools/${lead.slug}`}
+                className="def-podium__lead-link"
+                aria-label={`Apri ${lead.name}`}
               >
-                <span className="def-podium__rank tv-featured-tool__mono" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
+                <span className="def-podium__lead-rank tv-featured-tool__mono" aria-hidden="true">01</span>
+                <span className="def-podium__wreath-wrap" aria-hidden="true">
+                  <svg className="def-podium__wreath" viewBox="0 0 120 120" fill="none">
+                    <path d="M60 108 C32 100 18 78 16 52 C15 38 22 24 36 16" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+                    <path d="M60 108 C88 100 102 78 104 52 C105 38 98 24 84 16" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+                    <ellipse cx="22" cy="72" rx="7" ry="3.5" transform="rotate(-35 22 72)" fill="currentColor" opacity="0.85"/>
+                    <ellipse cx="18" cy="56" rx="7" ry="3.5" transform="rotate(-20 18 56)" fill="currentColor" opacity="0.85"/>
+                    <ellipse cx="22" cy="40" rx="6.5" ry="3.2" transform="rotate(-5 22 40)" fill="currentColor" opacity="0.85"/>
+                    <ellipse cx="32" cy="25" rx="6" ry="3" transform="rotate(15 32 25)" fill="currentColor" opacity="0.85"/>
+                    <ellipse cx="98" cy="72" rx="7" ry="3.5" transform="rotate(35 98 72)" fill="currentColor" opacity="0.85"/>
+                    <ellipse cx="102" cy="56" rx="7" ry="3.5" transform="rotate(20 102 56)" fill="currentColor" opacity="0.85"/>
+                    <ellipse cx="98" cy="40" rx="6.5" ry="3.2" transform="rotate(5 98 40)" fill="currentColor" opacity="0.85"/>
+                    <ellipse cx="88" cy="25" rx="6" ry="3" transform="rotate(-15 88 25)" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                  <span className="def-podium__lead-avatar">
+                    {iconUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <span>{initial}</span>
+                    )}
+                  </span>
                 </span>
-                <span className="def-podium__avatar" aria-hidden="true">
-                  {iconUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+                <span className="def-podium__lead-name">{lead.name}</span>
+                {lead.categoryLabel ? (
+                  <span className="def-podium__lead-cat">{lead.categoryLabel}</span>
+                ) : null}
+                <span className="def-podium__lead-score">
+                  {score.status === "assessed" && score.value !== null ? (
+                    <>
+                      <span className="tv-featured-tool__mono">{score.value.toFixed(1)}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </>
                   ) : (
-                    <span>{initial}</span>
+                    <span className="tv-featured-tool__mono">—</span>
                   )}
-                </span>
-                <span className="def-podium__body">
-                  <span className="def-latest__name">{tool.name}</span>
-                  {tool.categoryLabel ? (
-                    <span className="def-podium__cat">{tool.categoryLabel}</span>
-                  ) : null}
-                  {desc ? <span className="def-latest__desc">{desc}</span> : null}
-                </span>
-                <span className="def-podium__score tv-featured-tool__mono">
-                  {score.status === "assessed" && score.value !== null
-                    ? `${score.value.toFixed(1)}★`
-                    : ""}
                 </span>
               </Link>
             </li>
           );
-        })}
+        })()}
       </ol>
+      {rest.length > 0 ? (
+        <ol className="def-podium__pair">
+          {rest.map((tool, i) => {
+            const score = computeEditorialScore(tool);
+            const iconUrl = iconUrlFor(tool);
+            const initial = initialFor(tool.name);
+            return (
+              <li key={tool.slug} className="def-podium__pair-item">
+                <Link
+                  href={`/toools/${tool.slug}`}
+                  className="def-podium__pair-link"
+                  aria-label={`Apri ${tool.name}`}
+                >
+                  <span className="def-podium__pair-rank tv-featured-tool__mono" aria-hidden="true">
+                    {String(i + 2).padStart(2, "0")}
+                  </span>
+                  <span className="def-podium__pair-avatar" aria-hidden="true">
+                    {iconUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <span>{initial}</span>
+                    )}
+                  </span>
+                  <span className="def-podium__pair-body">
+                    <span className="def-podium__pair-name">{tool.name}</span>
+                    {tool.categoryLabel ? (
+                      <span className="def-podium__pair-cat">{tool.categoryLabel}</span>
+                    ) : null}
+                  </span>
+                  <span className="def-podium__pair-score">
+                    {score.status === "assessed" && score.value !== null ? (
+                      <>
+                        <span className="tv-featured-tool__mono">{score.value.toFixed(1)}</span>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      </>
+                    ) : (
+                      <span className="tv-featured-tool__mono">—</span>
+                    )}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+      ) : null}
+      <Link href="/archivio" className="def-podium__cta">
+        Vedi tutto il catalogo
+        <ArrowRight size={15} aria-hidden="true" />
+      </Link>
     </section>
   );
 }
@@ -412,6 +471,10 @@ function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
                     <ol className="tv-workflow-card__flow" aria-label="Flusso">
                       {stack.stages.slice(0, 3).map((stage) => (
                         <li key={`${stack.slug}-${stage.name}`}>
+                          {stage.iconUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={stage.iconUrl} alt="" className="tv-workflow-card__stage-icon" loading="lazy" decoding="async" />
+                          ) : null}
                           <b>{stage.label}</b>
                           <span>{stage.name}</span>
                         </li>

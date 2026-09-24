@@ -1736,3 +1736,23 @@
   color: var(--tv-ink-secondary);
   line-height: var(--tv-leading-body);
 }
+
+.td-final-score__star {
+  display: inline-flex;
+  align-items: center;
+  color: var(--tv-accent-gold-on-dark, #e4b23c);
+}
+.td-final-score__verdict {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: var(--tv-radius-pill, 999px);
+  background: color-mix(in srgb, var(--tv-accent-cyan-on-dark, #22d3ee) 18%, transparent);
+  color: var(--tv-accent-cyan-on-dark, #22d3ee);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}

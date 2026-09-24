@@ -14,7 +14,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
@@ -99,6 +99,14 @@ export function MobileTopBar() {
         >
           <Search size={16} aria-hidden="true" />
           <span className="mobile-top-bar__search-text">Cerca tool…</span>
+        </button>
+
+        <button
+          type="button"
+          className="mobile-top-bar__bell"
+          aria-label="Notifiche"
+        >
+          <Bell size={16} aria-hidden="true" />
         </button>
 
         <HeaderAccountControl

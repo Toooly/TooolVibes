@@ -226,3 +226,19 @@
 .marketing-shell:has(.def-home) {
   --tv-header-height-mobile: 3.25rem;
 }
+
+.mobile-top-bar__bell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 60%, transparent);
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: var(--tv-radius-special, 10px);
+  color: var(--tv-ink-secondary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}

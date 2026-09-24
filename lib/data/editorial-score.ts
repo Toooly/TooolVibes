@@ -61,3 +61,10 @@ export function computeEditorialScore(tool: AssessmentInput): EditorialScore {
     limitationsAssessed: assessed,
   };
 }
+
+export function editorialScoreBand(value: number): string {
+  if (value >= 9) return "Eccellente";
+  if (value >= 8) return "Ottimo";
+  if (value >= 7) return "Buono";
+  return "Discreto";
+}
