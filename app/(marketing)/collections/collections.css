@@ -1,3 +1,25 @@
+/* Critical token fallbacks — ensures resolution even if global tokens
+   chunk fails to cascade in the route-level CSS bundle. */
+:root {
+  --tv-font-family-display: var(--font-anton, "Anton"), Impact, "Arial Narrow", sans-serif;
+  --tv-font-family-ui: var(--font-manrope, "Manrope"), "Segoe UI", sans-serif;
+  --tv-text-hero: clamp(3rem, 5vw + 1.2rem, 7rem);
+  --tv-text-h1: clamp(2.5rem, 3.2vw + 1.55rem, 5rem);
+  --tv-text-h2: clamp(2rem, 2.1vw + 1.4rem, 3.5rem);
+  --tv-ink-primary: #F8F5EB;
+  --tv-ink-secondary: #c2beb5;
+  --tv-ink-muted-aa: #aaa59b;
+  --tv-surface-base: #0B0620;
+  --tv-surface-raised: #120C2E;
+  --tv-surface-elevated: #1C1440;
+  --tv-border-subtle: rgba(255,255,255,0.08);
+  --tv-accent-gold-on-dark: #F4C23E;
+  --tv-accent-violet: #7C3AED;
+  --tv-accent-cyan-on-dark: #22D3EE;
+  --tv-button-activation-bg: #F4C23E;
+  --tv-button-activation-text: #1a1206;
+}
+
 /* =====================================================================
    PHASE 4 — VISUAL SYSTEM TOKENS
    =====================================================================
@@ -599,9 +621,9 @@
 }
 
 .cx-index__title {
-  font-family: var(--tv-font-family-display);
+  font-family: var(--tv-font-family-display, "Anton"), Impact, sans-serif;
   font-weight: 400;
-  font-size: var(--tv-text-h1);
+  font-size: var(--tv-text-h1, 2.5rem);
   line-height: var(--tv-leading-display);
   letter-spacing: -0.01em;
   color: var(--tv-ink-primary);
@@ -2433,8 +2455,8 @@
   flex-direction: column;
   gap: 0.7rem;
   padding: 1.05rem 1.1rem 1.1rem;
-  background: var(--tv-grammar-workflow-surface-raised);
-  border: 1px solid var(--tv-grammar-workflow-border);
+  background: var(--tv-grammar-workflow-surface-raised, #120C2E);
+  border: 1px solid var(--tv-grammar-workflow-border, rgba(255,255,255,0.08));
   border-radius: 14px;
   color: var(--tv-ink-primary);
   position: relative;

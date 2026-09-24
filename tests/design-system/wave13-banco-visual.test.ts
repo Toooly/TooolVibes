@@ -37,7 +37,7 @@ describe("Wave 13 — Banco visual contract", () => {
     expect(tokens["tv-surface-2"]).toBe("var(--tv-surface-elevated)");
     expect(tokens["tv-surface-3"]).toBe("var(--tv-surface-floating)");
 
-    expect(tokens["tv-color-surface-base"]).toBe("#08080a");
+    expect(tokens["tv-color-surface-base"]).toBe("#0B0620");
     expect(tokens["tv-accent-brand"]).toBe("var(--tv-color-violet-500)");
     expect(tokens["tv-color-violet-500"]).toBe("#6a3cff");
     expect(tokens["tv-space-1"]).toBe("var(--tv-space-px-1)");

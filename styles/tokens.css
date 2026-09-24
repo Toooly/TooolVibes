@@ -45,13 +45,13 @@
 
   --tv-color-cyan-300: #7adcf9;
   --tv-color-cyan-400: #4ccaf7;
-  --tv-color-cyan-500: #39d2f6;         /* CYAN BRAND */
+  --tv-color-cyan-500: #22D3EE;         /* CYAN BRAND */
   --tv-color-cyan-600: #1ba8cc;
   --tv-color-cyan-700: #0d7d9c;
 
   --tv-color-gold-300: #f8d684;
   --tv-color-gold-400: #f5c968;
-  --tv-color-gold-500: #f3bf4c;         /* GOLD ACCENT */
+  --tv-color-gold-500: #F4C23E;         /* GOLD ACCENT */
   --tv-color-gold-600: #c89b30;
   --tv-color-gold-700: #8e6c1c;
 
@@ -68,7 +68,7 @@
   --tv-color-blue-600: #2563eb;
 
   --tv-color-ink-100: #fffdf8;
-  --tv-color-ink-200: #f4f0e7;
+  --tv-color-ink-200: #F8F5EB;
   --tv-color-ink-300: #ddd8cf;
   --tv-color-ink-400: #c2beb5;
   --tv-color-ink-500: #aaa59b;
@@ -76,11 +76,11 @@
   --tv-color-ink-700: #55524d;
   --tv-color-ink-800: #2c2a28;
 
-  --tv-color-surface-base: #08080a;
-  --tv-color-surface-raised: #111114;
-  --tv-color-surface-elevated: #18181d;
+  --tv-color-surface-base: #0B0620;
+  --tv-color-surface-raised: #120C2E;
+  --tv-color-surface-elevated: #1C1440;
   --tv-color-surface-floating: #202027;
-  --tv-color-surface-inverted: #f4f0e7;
+  --tv-color-surface-inverted: #F8F5EB;
 
   --tv-color-white-pure: #ffffff;
   --tv-color-white-04: rgba(255, 255, 255, 0.04);
