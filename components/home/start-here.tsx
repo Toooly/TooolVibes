@@ -279,7 +279,7 @@ function IvoryEditorial({
 }
 
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
-  const latest = tools.slice(0, 4);
+  const latest = tools.slice(0, 3);
   if (latest.length === 0) return null;
   return (
     <section className="def-latest" aria-labelledby="def-latest-title">
@@ -292,23 +292,27 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           <ArrowRight size={13} aria-hidden="true" />
         </Link>
       </div>
-      <ol className="def-latest__list">
+      <ol className="def-latest__list def-podium">
         {latest.map((tool, index) => {
           const score = computeEditorialScore(tool);
           const iconUrl = iconUrlFor(tool);
           const initial = initialFor(tool.name);
           const desc = truncate(tool.tldr || tool.shortDescription || "", 72);
+          const isLead = index === 0;
           return (
-            <li key={tool.slug} className="def-latest__item">
+            <li
+              key={tool.slug}
+              className={`def-latest__item def-podium__item${isLead ? " def-podium__item--lead" : ""}`}
+            >
               <Link
                 href={`/toools/${tool.slug}`}
-                className="def-latest__link"
+                className="def-latest__link def-podium__link"
                 aria-label={`Apri ${tool.name}`}
               >
-                <span className="def-latest__rank tv-featured-tool__mono" aria-hidden="true">
+                <span className="def-podium__rank tv-featured-tool__mono" aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="def-latest__avatar" aria-hidden="true">
+                <span className="def-podium__avatar" aria-hidden="true">
                   {iconUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={iconUrl} alt="" loading="lazy" decoding="async" />
@@ -316,14 +320,17 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
                     <span>{initial}</span>
                   )}
                 </span>
-                <span className="def-latest__body">
+                <span className="def-podium__body">
                   <span className="def-latest__name">{tool.name}</span>
+                  {tool.categoryLabel ? (
+                    <span className="def-podium__cat">{tool.categoryLabel}</span>
+                  ) : null}
                   {desc ? <span className="def-latest__desc">{desc}</span> : null}
                 </span>
-                <span className="def-latest__score tv-featured-tool__mono">
+                <span className="def-podium__score tv-featured-tool__mono">
                   {score.status === "assessed" && score.value !== null
-                    ? score.value.toFixed(1)
-                    : "—"}
+                    ? `${score.value.toFixed(1)}★`
+                    : ""}
                 </span>
               </Link>
             </li>
