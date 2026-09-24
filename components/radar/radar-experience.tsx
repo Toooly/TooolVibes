@@ -30,6 +30,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  useEffect,
   useMemo,
   useState,
   type CSSProperties,
@@ -328,9 +329,14 @@ function RadarTable({
                       </span>
                     </span>
                     <span className="tv-radar-table__metric">
-                      {item.votesCount > 0
-                        ? `${item.votesCount} ${item.votesCount === 1 ? "voto" : "voti"}`
-                        : "Dato non disponibile"}
+                      <span>
+                        {item.votesCount > 0
+                          ? `${item.votesCount}`
+                          : "n/d"}
+                      </span>
+                      {item.commentsCount > 0 ? (
+                        <span>{(Math.round((item.commentsCount / Math.max(item.votesCount, 1)) * 100) / 100).toFixed(2)}</span>
+                      ) : null}
                     </span>
                     <span className="tv-radar-table__metric">
                       {item.commentsCount > 0
@@ -447,6 +453,14 @@ export function RadarExperience({
   const [activeRange, setActiveRange] = useState<ProductHuntRange>("day");
   const [activeVisual, setActiveVisual] =
     useState<RadarDesktopVisual>(initialVisual);
+  /* GM07: mobile-first ranked signal board. The map instrument is a
+     desktop composition; on small viewports the list is the primary
+     reading surface. MatchMedia guard keeps SSR = initialVisual. */
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    const query = window.matchMedia("(max-width: 47.999rem)");
+    if (query.matches) setActiveVisual("table");
+  }, []);
   const { payload, isLoading, isFetching, refetch } =
     useProductHuntRadar(activeRange);
   const model = useMemo(

@@ -58,12 +58,7 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
       <div className="td-final-hero__facts">
         <ToolDetailScore tool={tool} />
         {tool.levelLabel ? (
-          <>
-            <span className="td-final-hero__facts-sep" aria-hidden="true">
-              ·
-            </span>
-            <span className="td-final-hero__level">{tool.levelLabel}</span>
-          </>
+          <span className="td-final-hero__level-pill">{tool.levelLabel}</span>
         ) : null}
       </div>
 

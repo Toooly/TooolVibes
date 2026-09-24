@@ -148,7 +148,8 @@ describe("Wave 6 two-speed Save", () => {
     fireEvent.click(button);
     expect(button.getAttribute("aria-pressed")).toBe("true");
     expect(button.getAttribute("aria-label")).toBe("Rimuovi Cursor dai salvati");
-    expect(screen.getAllByText("Salvato").length).toBeGreaterThan(0);
+    // GM-02: compact row bookmark shows pressed state via filled icon + red dot.
+    expect(button.querySelector(".ar4-card__bookmark-dot")).toBeTruthy();
   });
 
   it("W6-T4 Save does not require organization", () => {
@@ -338,7 +339,9 @@ describe("Wave 6 two-speed Save", () => {
     ).toBe(true);
   });
 
-  it("hold 400ms on ShortlistToggle opens overflow; click does not", async () => {
+  it.skip("hold 400ms on ShortlistToggle opens overflow; click does not", async () => {
+    // GM-02: archive cards use the compact bookmark (no ShortlistToggle hold).
+    // Hold-to-overflow is covered by the ShortlistToggle unit surface, not the row.
     vi.useFakeTimers();
     renderCard();
     const heart = screen.getByRole("button", { name: "Salva Cursor" });

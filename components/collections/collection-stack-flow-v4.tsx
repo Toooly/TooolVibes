@@ -66,16 +66,44 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
               </div>
 
               <article className="cx-stack-flow-v4__stage">
+                <Link
+                  href={toolHref}
+                  className="cx-stack-flow-v4__row-link"
+                  aria-label={`Vai alla scheda di ${slot.tool.name}`}
+                >
+                  <CollectionToolGlyph
+                    slug={slot.tool.slug}
+                    name={slot.tool.name}
+                    size="md"
+                    accentFrom={slot.tool.accentFrom}
+                    accentTo={slot.tool.accentTo}
+                    domain={slot.tool.domain}
+                    externalUrl={slot.tool.externalUrl}
+                  />
+                  <span className="cx-stack-flow-v4__row-text">
+                    {slot.stage && (
+                      <span className="cx-stack-flow-v4__stage-label">
+                        {slot.stage}
+                      </span>
+                    )}
+                    <span className="cx-stack-flow-v4__tool">
+                      {slot.tool.name}
+                    </span>
+                  </span>
+                  <ArrowRight className="size-4 cx-stack-flow-v4__row-chevron" aria-hidden="true" />
+                </Link>
                 <div className="cx-stack-flow-v4__stage-head">
                   {slot.stage && (
-                    <span className="cx-stack-flow-v4__stage-label">
+                    <span className="cx-stack-flow-v4__stage-label cx-stack-flow-v4__stage-label--full">
                       {slot.stage}
                     </span>
                   )}
                   <Link
                     href={toolHref}
-                    className="cx-stack-flow-v4__tool"
+                    className="cx-stack-flow-v4__tool cx-stack-flow-v4__tool--full"
                     aria-label={`Vai alla scheda di ${slot.tool.name}`}
+                    tabIndex={-1}
+                    aria-hidden="true"
                   >
                     {slot.tool.name}
                   </Link>

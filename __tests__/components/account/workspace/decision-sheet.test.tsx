@@ -253,12 +253,13 @@ describe("DecisionSheet — Wave 8", () => {
     expect(getCanonicalToolWorkspaceState().events.at(-1)?.alternatives).toEqual([]);
   });
 
-  it("W8-T7 Deep expands in place via Aggiungi dettagli", () => {
+  it("W8-T7 GM-10: context fields visible without a deep gate", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(SheetHarness));
-    expect(screen.queryByLabelText("Perché")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Aggiungi dettagli" }));
-    expect(screen.getByLabelText("Perché")).toBeTruthy();
+    // Golden Master 10 shows Nota privata + revisit inline, no Aggiungi dettagli gate.
+    expect(screen.queryByRole("button", { name: "Aggiungi dettagli" })).toBeNull();
+    expect(screen.getByLabelText("Nota privata")).toBeTruthy();
+    expect(screen.getByText("Conferma se lo usi tra 1 mese")).toBeTruthy();
     expect(screen.getByRole("radio", { name: "Scelto" }).getAttribute("aria-checked")).toBe(
       "true",
     );
@@ -267,20 +268,14 @@ describe("DecisionSheet — Wave 8", () => {
   it("W8-T8/T9/T10 Deep fields are optional and land when present", () => {
     seed(workspaceTestFixtures.withSaved);
     render(createElement(SheetHarness));
-    fireEvent.click(screen.getByRole("button", { name: "Aggiungi dettagli" }));
-    fireEvent.change(screen.getByLabelText("Perché"), {
+    fireEvent.change(screen.getByLabelText("Nota privata"), {
       target: { value: "Per il daily coding" },
-    });
-    fireEvent.change(screen.getByLabelText("Caso d'uso"), {
-      target: { value: "pair programming" },
     });
     confirm();
     const state = getCanonicalToolWorkspaceState();
     expect(state.toolStates.cursor?.note).toBeNull();
-    expect(state.toolStates.cursor?.useCase).toBe("pair programming");
     expect(state.events[0]).toMatchObject({
       reason: "Per il daily coding",
-      useCase: "pair programming",
     });
   });
 

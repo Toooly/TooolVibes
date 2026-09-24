@@ -2874,3 +2874,130 @@ a.archive-v4-card:focus-visible {
 
 /* Final micro-polish: display wrapping */
 .ar4-intro__title { text-wrap: balance; }
+
+/* ============================================================
+   GOLDEN MASTER 02 — dense catalog rows on mobile (canonical)
+   Row anatomy: avatar+score left column, identity+best right,
+   bookmark at right edge. Replaces boxed-card stacking ≤767px.
+   ============================================================ */
+@media (max-width: 767px) {
+  .ar4-grid__list { gap: 10px; }
+
+  .ar4-card,
+  .ar4-card.is-promoted,
+  .ar4-card:not(.is-promoted),
+  .ar4-card.is-reduced,
+  .ar4-card[data-density="compact"] {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 28px;
+    grid-template-areas:
+      "avatar identity bookmark"
+      "score best best";
+    column-gap: 10px;
+    row-gap: 2px;
+    padding: 12px 12px 10px;
+    min-height: 0;
+    align-items: start;
+  }
+
+  .ar4-card__top {
+    display: contents;
+  }
+
+  .ar4-card__avatar {
+    grid-area: avatar;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+  }
+  .ar4-card__avatar img,
+  .ar4-card__avatar span {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+
+  .ar4-card__identity {
+    grid-area: identity;
+    min-width: 0;
+  }
+
+  .ar4-card__name { font-size: 17px; line-height: 1.15; }
+  .ar4-card__category { font-size: 12px; margin-top: 2px; }
+
+  .ar4-card__status--editorial,
+  .ar4-card__status--tier,
+  .ar4-card__status--sponsored { display: none; }
+
+  .ar4-card__desc { display: none; }
+
+  .ar4-card__triage {
+    display: contents;
+  }
+
+  .ar4-card__score {
+    grid-area: score;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f3bf4c;
+    margin: 0;
+    white-space: nowrap;
+  }
+  .ar4-card__score strong { font-size: 15px; color: #f3bf4c; }
+
+  .ar4-card__best {
+    grid-area: best;
+    font-size: 12.5px;
+    line-height: 1.35;
+    color: var(--tv-ink-secondary);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ar4-card__actions { display: contents; }
+  .ar4-card__control-rail { display: contents; }
+  .ar4-card__state-flags { display: none; }
+
+  .ar4-card__toggles {
+    display: contents;
+  }
+
+  .ar4-card__bookmark {
+    grid-area: bookmark;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--tv-ink-secondary);
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+  }
+  .ar4-card__bookmark-icon { width: 20px; height: 20px; }
+  .ar4-card__bookmark[data-saved] { color: var(--tv-ink-primary); }
+  .ar4-card__bookmark-dot {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #f0524f;
+  }
+
+  .ar4-card__toggles-more { display: none; }
+
+  .ar4-card__disclosure { display: none; }
+
+  .ar4-card[data-density] .ar4-card__avatar img,
+  .ar4-card[data-density] .ar4-card__avatar span {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+}

@@ -75,13 +75,14 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
   });
 
   it("W11-T13 ShortlistToggle stays on archive cards", () => {
+    // GM-02: compact row uses bookmark + SaveOverflow + CompareToggle.
     const { container } = render(
       <ArchiveV4ToolCard tool={makeCatalogTool({ slug: "cursor", name: "Cursor" })} />,
     );
-    expect(container.querySelector('[data-sonic-action="save"]')).toBeTruthy();
+    expect(container.querySelector(".ar4-card__bookmark")).toBeTruthy();
     const card = readSource("components/archive/archive-v4-tool-card.tsx");
-    expect(card).toContain("ShortlistToggle");
     expect(card).toContain("SaveOverflow");
+    expect(card).toContain("CompareToggle");
   });
 
   it("W11-T24 Filo is not on archive-v4-tool-card", () => {
@@ -170,8 +171,8 @@ describe("Catalogo — compressed mobile discovery", () => {
     expect(nameLink.getAttribute("aria-label")).toBe("Apri la scheda di Cursor");
     expect(screen.queryByText("Apri la scheda")).toBeNull();
     expect(document.querySelector(".ar4-card__open")).toBeNull();
-    expect(document.querySelector('[data-sonic-action="save"]')).toBeTruthy();
-    expect(document.querySelector('[data-sonic-action="compare"]')).toBeTruthy();
+    // GM-02: bookmark + compare + overflow in the row.
+    expect(document.querySelector(".ar4-card__bookmark")).toBeTruthy();
     expect(document.querySelector(".ar4-card__save-more")).toBeTruthy();
   });
 
@@ -201,7 +202,7 @@ describe("Catalogo — compressed mobile discovery", () => {
 
     expect(screen.queryByText(/Valutazione editoriale/)).toBeNull();
     expect(screen.getByText("★ 8.4")).toBeTruthy();
-    expect(screen.getByText("Ideale per: Prototipi con AI")).toBeTruthy();
+    expect(screen.getByText(/Prototipi con AI/)).toBeTruthy();
     expect(document.querySelector(".ar4-card__diff")).toBeNull();
   });
 
@@ -212,7 +213,7 @@ describe("Catalogo — compressed mobile discovery", () => {
     expect(card).not.toContain("Valutazione editoriale");
     expect(card).toContain('aria-label={`Apri la scheda di ${tool.name}`}');
     expect(card).toContain("ar4-card__name-link");
-    expect(card).toContain("ShortlistToggle");
+    expect(card).toContain("ar4-card__bookmark");
     expect(card).toContain("CompareToggle");
     expect(card).toContain("ar4-card__save-more");
 

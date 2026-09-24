@@ -17,7 +17,7 @@
 
 import Link from "next/link";
 import { type MouseEvent, useState } from "react";
-import { Star } from "lucide-react";
+import { Bookmark, Star } from "lucide-react";
 
 import {
   WorkspacePersonalStatusBadge,
@@ -30,8 +30,6 @@ import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { cn } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { SaveOverflow } from "@/components/tools/save-overflow";
-import { openSaveOverflow } from "@/components/tools/save-overflow-state";
-import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 
 type ArchiveV4ToolCardProps = {
   tool: ToolPublicView;
@@ -68,6 +66,7 @@ function ArchiveV4ToolCard({
 }: ArchiveV4ToolCardProps) {
   const compareSlugs = useToolWorkspaceStore((s) => s.compareSlugs);
   const savedSlugs = useToolWorkspaceStore((s) => s.savedSlugs);
+  const toggleSaved = useToolWorkspaceStore((s) => s.toggleSaved);
   const isSelected = compareSlugs.includes(tool.slug);
   const isSaved = savedSlugs.includes(tool.slug);
   const personalStatus = usePersonalToolStatus(tool.slug);
@@ -128,9 +127,6 @@ function ArchiveV4ToolCard({
   const bestFor = reduced
     ? null
     : (tool.idealUseCase?.trim() || tool.useCases[0] || null);
-  const differentiator = reduced
-    ? null
-    : (tool.highlights.find((item) => item && item !== bestFor) ?? null);
   const editorialScore = reduced
     ? null
     : computeEditorialScore({ publicTool: tool.publicTool, cautions: tool.cautions });
@@ -222,10 +218,10 @@ function ArchiveV4ToolCard({
       <p className="ar4-card__desc">
         {tool.tldr || tool.shortDescription || "Scheda in preparazione."}
       </p>
-      {!reduced && (scoreLine || bestFor || differentiator) ? (
+      {!reduced && (scoreLine || bestFor) ? (
         <div className="ar4-card__triage">
           {scoreLine ? <span className="ar4-card__score">{scoreLine}</span> : null}
-          {bestFor ? <p className="ar4-card__best">Ideale per: {bestFor}</p> : null}
+          {bestFor ? <p className="ar4-card__best">Ideale per {bestFor}</p> : null}
         </div>
       ) : null}
 
@@ -245,29 +241,42 @@ function ArchiveV4ToolCard({
             />
           )}
           <div className="ar4-card__toggles">
-            <ShortlistToggle
-              slug={tool.slug}
-              compact
-              mode="icon"
-              toolName={tool.name}
-              onSpeed2Open={() => openSaveOverflow(tool.slug)}
-              onChange={() => {
-                /* re-render via store */
+            <button
+              type="button"
+              className="ar4-card__bookmark"
+              data-saved={isSaved || undefined}
+              aria-pressed={isSaved}
+              aria-label={isSaved ? `Rimuovi ${tool.name} dai salvati` : `Salva ${tool.name}`}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                toggleSaved(tool.slug);
               }}
-            />
-            <SaveOverflow
-              slug={tool.slug}
-              toolName={tool.name}
-              triggerClassName="ar4-card__save-more"
-            />
-            <CompareToggle
-              slug={tool.slug}
-              mode="icon"
-              toolName={tool.name}
-              onChange={() => {
-                /* re-render via store */
-              }}
-            />
+            >
+              <Bookmark
+                className="ar4-card__bookmark-icon"
+                aria-hidden="true"
+                fill={isSaved ? "currentColor" : "none"}
+              />
+              {isSaved ? (
+                <span className="ar4-card__bookmark-dot" aria-hidden="true" />
+              ) : null}
+            </button>
+            <span className="ar4-card__toggles-more">
+              <SaveOverflow
+                slug={tool.slug}
+                toolName={tool.name}
+                triggerClassName="ar4-card__save-more"
+              />
+              <CompareToggle
+                slug={tool.slug}
+                mode="icon"
+                toolName={tool.name}
+                onChange={() => {
+                  /* re-render via store */
+                }}
+              />
+            </span>
           </div>
         </div>
       </div>

@@ -2237,5 +2237,16 @@
   }
   .def-editorial__spot-cta--primary {
     background: var(--tv-button-activation-bg, #e4b23c);
+    color: #1a1206;
+    border-color: transparent;
+    font-weight: 700;
+  }
+  .def-editorial__spot-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .def-editorial__spot-cta {
+    min-height: 44px;
   }
 }

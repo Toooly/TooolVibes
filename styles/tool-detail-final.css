@@ -215,6 +215,21 @@
   font-size: 0.875rem;
   line-height: var(--tv-leading-snug);
 }
+/* GM03: compact verdict pill next to score — bordered chip, no separator dot */
+.td-final-hero__facts {
+  align-items: center;
+}
+.td-final-hero__level-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold) 45%, transparent);
+  color: var(--tv-accent-gold);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
 
 .td-final-hero__facts-sep {
   color: var(--tv-ink-muted-aa);

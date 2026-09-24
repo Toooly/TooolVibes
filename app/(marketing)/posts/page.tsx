@@ -65,8 +65,14 @@ export default async function PostsPage() {
   const featureToolHref = featureTool ? `/toools/${featureTool.slug}` : null;
 
   // All guides as grid items.
-  const hostFromTool = (tool: { urls?: { website?: string | null } } | null | undefined): string | null => {
-    const site = tool?.urls?.website;
+  const toolDomain = (
+    tool:
+      | { domain?: string | null; urls?: { website?: string | null }; url?: string | null }
+      | null
+      | undefined,
+  ): string | null => {
+    if (tool?.domain) return tool.domain;
+    const site = tool?.urls?.website ?? tool?.url ?? null;
     if (!site) return null;
     try {
       return new URL(site).hostname;
@@ -74,6 +80,7 @@ export default async function PostsPage() {
       return null;
     }
   };
+  const hostFromTool = toolDomain;
 
   const items: GuideGridItem[] = guides.map((post) => {
     const topic = getGuideTopic(post);

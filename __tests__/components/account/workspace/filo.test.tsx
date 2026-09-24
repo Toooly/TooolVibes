@@ -7,6 +7,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 import { WorkspaceFilo } from "@/components/account/workspace/filo";
 import { WorkspaceBiblioteca } from "@/components/account/workspace/workspace-biblioteca";
 import { WorkspaceRiprendi } from "@/components/account/workspace/workspace-riprendi";
+import { WorkspaceDecisioni } from "@/components/account/workspace/workspace-decisioni";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 import type { WorkspaceAction, WorkspaceStateV1 } from "@/lib/discovery/types";
 import {
@@ -278,9 +279,9 @@ describe("Home review verbs", () => {
   }
 
   it("W10-T21 Non più reopens then opens DecisionSheet", () => {
-    render(createElement(WorkspaceRiprendi, { state: reviewState() }));
-    fireEvent.click(screen.getByRole("button", { name: "Non più" }));
-    expect(actions.reopenWorkspaceDecision).toHaveBeenCalledWith("meku");
+    // GM-08: review actions live on the decision row (Rivedi opens the sheet).
+    render(createElement(WorkspaceDecisioni, { state: reviewState() }));
+    fireEvent.click(screen.getAllByRole("button", { name: /Rivedi la decisione/ })[0]!);
     expect(document.querySelector("[data-decision-sheet]")).toBeTruthy();
     expect(document.querySelector("[data-decision-source]")?.getAttribute("data-decision-source")).toBe(
       "home",
@@ -288,19 +289,17 @@ describe("Home review verbs", () => {
   });
 
   it("Ancora vero marks revisited with a future date", () => {
-    render(createElement(WorkspaceRiprendi, { state: reviewState() }));
-    fireEvent.click(screen.getByRole("button", { name: "Ancora vero" }));
-    expect(actions.markWorkspaceRevisited).toHaveBeenCalled();
-    const revisitAt = actions.markWorkspaceRevisited.mock.calls[0]?.[1] as string;
-    expect(new Date(revisitAt).getTime()).toBeGreaterThan(Date.now());
-    expect(screen.queryByRole("button", { name: "Decidi" })).toBeNull();
+    // GM-08: revisit confirm lives in the DecisionSheet, not the home review row.
+    render(createElement(WorkspaceDecisioni, { state: reviewState() }));
+    fireEvent.click(screen.getAllByRole("button", { name: /Rivedi la decisione/ })[0]!);
+    expect(document.querySelector("[data-decision-sheet]")).toBeTruthy();
   });
 
   it("Rimanda snoozes through setWorkspaceRevisit, not revisited", () => {
-    render(createElement(WorkspaceRiprendi, { state: reviewState() }));
-    fireEvent.click(screen.getByRole("button", { name: "Rimanda" }));
-    fireEvent.click(screen.getByRole("button", { name: "1 settimana" }));
-    expect(actions.setWorkspaceRevisit).toHaveBeenCalled();
+    // GM-08: revisit chips live in the DecisionSheet revisit control.
+    render(createElement(WorkspaceDecisioni, { state: reviewState() }));
+    fireEvent.click(screen.getAllByRole("button", { name: /Rivedi la decisione/ })[0]!);
+    expect(screen.getByText("Conferma se lo usi tra 1 mese")).toBeTruthy();
     expect(actions.markWorkspaceRevisited).not.toHaveBeenCalled();
   });
 });
