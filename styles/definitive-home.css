@@ -2258,7 +2258,7 @@
   gap: var(--tv-rhythm-related, 12px);
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 1.5rem;
 }
 .def-podium__item {
   border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.08));

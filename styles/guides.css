@@ -723,7 +723,7 @@
   color: var(--guides-text-soft);
   font-size: 0.92rem;
   line-height: 1.55;
-  margin: 0;
+  margin: 0.35rem 0 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;

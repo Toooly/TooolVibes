@@ -145,8 +145,8 @@
   /* 04: row = filled topic block left, compact text right */
   /* superseded by V4.4 anatomy below */
   /* superseded by V4.4 anatomy below */
-  .guides-grid .guides-card__topic { background: transparent !important; color: #e9e2ff !important; font-size: 0.75rem !important; }
-  .guides-grid .guides-card__read { color: #b9aee6 !important; font-size: 0.75rem !important; }
+  .guides-grid .guides-card__topic { background: color-mix(in srgb, var(--tv-accent-brand-pressed, #4d2dd6) 12%, transparent) !important; color: var(--tv-accent-brand-pressed, #4d2dd6) !important; font-size: 0.75rem !important; }
+  .guides-grid .guides-card__read { color: var(--tv-ink-muted, #8d8981) !important; font-size: 0.75rem !important; }
   .guides-grid .guides-card__title { grid-column: 2 !important; grid-row: 1 !important; font-size: 0.92rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
   .guides-grid .guides-card__dek { display: none !important; }
 
