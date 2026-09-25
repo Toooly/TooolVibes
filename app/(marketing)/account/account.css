@@ -708,7 +708,7 @@
 .tv-app__canvas {
   width: min(100%, 80rem);
   margin-inline: auto;
-  padding: 1.15rem var(--tv-gutter-mobile) 2rem;
+  padding: 1.15rem var(--tv-gutter-mobile) 1.25rem;
 }
 
 .tv-app__pagehead {
@@ -4348,11 +4348,14 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 
 .tv-lib-filters {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.35rem;
-  overflow: visible;
-  padding-bottom: 0.1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.15rem;
   grid-column: 1 / -1;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 .tv-lib-filters button {
