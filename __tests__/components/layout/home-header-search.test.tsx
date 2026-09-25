@@ -10,6 +10,7 @@ const pathnameState = vi.hoisted(() => ({ current: "/" }));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameState.current,
+  useRouter: () => ({ refresh: vi.fn() }),
 }));
 
 vi.mock("@/components/layout/brand-logo", () => ({
@@ -27,19 +28,17 @@ describe("Home header search suppression", () => {
     cleanup();
   });
 
-  it("hides the HOME route strip and suppresses search when hero search is visible", () => {
+  it("hides the HOME route strip on Home", () => {
     useMobileUIStore.setState({ heroSearchVisible: true });
     const { container } = render(<MobileTopBar />);
     expect(container.querySelector(".mobile-top-bar__route")).toBeNull();
-    const search = container.querySelector(".mobile-top-bar__search");
-    expect(search?.classList.contains("is-hero-suppressed")).toBe(true);
   });
 
-  it("shows header search on Home once the hero search leaves view", () => {
+  it("shows refresh button at top of Home (not search)", () => {
     useMobileUIStore.setState({ heroSearchVisible: false });
     const { container } = render(<MobileTopBar />);
-    const search = container.querySelector(".mobile-top-bar__search");
-    expect(search?.classList.contains("is-hero-suppressed")).toBe(false);
+    const refresh = container.querySelector(".mobile-top-bar__refresh");
+    expect(refresh).not.toBeNull();
   });
 
   it("keeps the route strip on non-home routes", () => {

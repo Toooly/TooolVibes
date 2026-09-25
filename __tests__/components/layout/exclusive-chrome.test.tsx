@@ -19,6 +19,7 @@ const viewportChangeListeners = new Set<() => void>();
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameState.current,
+  useRouter: () => ({ refresh: vi.fn() }),
 }));
 
 vi.mock("@/components/layout/brand-logo", () => ({

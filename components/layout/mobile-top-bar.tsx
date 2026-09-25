@@ -12,15 +12,15 @@
  *  - Subtle scan line + signal trace
  */
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Bell, Search } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Bell, RefreshCw, Search } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
-import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 import { cn } from "@/lib/utils";
 
 /**
@@ -55,14 +55,33 @@ function getRouteLabel(pathname: string): string {
   return "TooolVibes";
 }
 
+function useHeaderScrolled(threshold = 48) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const shell = document.querySelector(".marketing-shell");
+    const target = shell || window;
+    const getY = () => (shell ? (shell as HTMLElement).scrollTop : window.scrollY);
+    const onScroll = () => setScrolled(getY() > threshold);
+    // Reset on mount — don't inherit stale scroll state
+    setScrolled(false);
+    const raf = requestAnimationFrame(onScroll);
+    target.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      target.removeEventListener("scroll", onScroll);
+    };
+  }, [threshold]);
+  return scrolled;
+}
+
 export function MobileTopBar() {
   const pathname = usePathname() ?? "/";
+  const router = useRouter();
   const isHome = pathname === "/";
   const routeLabel = getRouteLabel(pathname);
   const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
-  const heroSearchVisible = useMobileUIStore((state) => state.heroSearchVisible);
-  const suppressSearch = isHome && heroSearchVisible;
   const viewport = useChromeViewport();
+  const scrolled = useHeaderScrolled();
 
   if (viewport === "desktop") {
     return null;
@@ -71,7 +90,7 @@ export function MobileTopBar() {
   return (
     <header
       role="banner"
-      className={cn("mobile-top-bar", isHome && "mobile-top-bar--home")}
+      className={cn("mobile-top-bar", isHome && "mobile-top-bar--home", scrolled && "is-scrolled")}
     >
       <div className="mobile-top-bar__inner">
         <Link
@@ -86,20 +105,27 @@ export function MobileTopBar() {
           <span className="mobile-top-bar__brand-text">TooolVibes</span>
         </Link>
 
-        <button
-          type="button"
-          className={cn(
-            "mobile-top-bar__search",
-            suppressSearch && "is-hero-suppressed",
+        <div className="mobile-top-bar__action-slot">
+          {scrolled ? (
+            <button
+              type="button"
+              className="mobile-top-bar__search"
+              aria-label="Apri ricerca"
+              onClick={() => setCommandOpen(true)}
+            >
+              <Search size={16} aria-hidden="true" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="mobile-top-bar__search mobile-top-bar__refresh"
+              aria-label="Aggiorna pagina"
+              onClick={() => router.refresh()}
+            >
+              <RefreshCw size={16} aria-hidden="true" />
+            </button>
           )}
-          aria-label="Apri ricerca"
-          aria-hidden={suppressSearch || undefined}
-          tabIndex={suppressSearch ? -1 : undefined}
-          onClick={() => setCommandOpen(true)}
-        >
-          <Search size={16} aria-hidden="true" />
-          <span className="mobile-top-bar__search-text">Cerca tool…</span>
-        </button>
+        </div>
 
         <button
           type="button"

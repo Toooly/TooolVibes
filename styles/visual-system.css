@@ -32,19 +32,43 @@
     transform var(--tv-motion-ui) var(--tv-easing-standard);
 }
 
+.tv-discovery-stage__switch {
+  overflow: hidden;
+  position: relative;
+}
+
 .tv-discovery-stage[data-mode="tool"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="tool"] .def-start__tab[aria-selected="true"] {
-  box-shadow: var(--tv-glow-gold);
+  box-shadow: var(--tv-glow-gold) !important;
 }
 
 .tv-discovery-stage[data-mode="stack"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="stack"] .def-start__tab[aria-selected="true"] {
-  box-shadow: var(--tv-glow-violet);
+  box-shadow: var(--tv-glow-violet) !important;
 }
 
 .tv-discovery-stage[data-mode="radar"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="radar"] .def-start__tab[aria-selected="true"] {
-  box-shadow: var(--tv-glow-cyan);
+  box-shadow: var(--tv-glow-cyan) !important;
+}
+
+/* Hero entrance */
+@keyframes tv-hero-reveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+
+.def-cockpit__title {
+  animation: tv-hero-reveal 0.6s var(--tv-easing-decelerate) both;
+}
+
+.def-cockpit__lede {
+  animation: tv-hero-reveal 0.6s var(--tv-easing-decelerate) 0.12s both;
+}
+
+.def-intent__field,
+.def-cockpit__hero .def-intent {
+  animation: tv-hero-reveal 0.6s var(--tv-easing-decelerate) 0.24s both;
 }
 
 .def-start__panel {
@@ -419,6 +443,19 @@ select:focus {
   border-radius: var(--tv-radius-system);
 }
 
+/* Podium winner celebration */
+@keyframes tv-celebrate {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.03); }
+  60% { transform: scale(0.99); }
+  100% { transform: scale(1); }
+}
+
+.def-podium__item.is-winner,
+.def-editorial__pod-card--rank-1 {
+  animation: tv-celebrate 0.7s var(--tv-easing-spring-smooth) both;
+}
+
 @keyframes tv-shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
@@ -461,6 +498,9 @@ select:focus {
   }
   .tv-reveal,
   .tv-reveal-stagger > *,
+  .def-cockpit__title,
+  .def-cockpit__lede,
+  .def-intent__field,
   .def-start__panel,
   .tv-workflow-card,
   .ar4-card,

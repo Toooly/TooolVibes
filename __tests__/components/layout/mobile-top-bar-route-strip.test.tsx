@@ -12,6 +12,7 @@ const pathnameState = vi.hoisted(() => ({ current: "/" }));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameState.current,
+  useRouter: () => ({ refresh: vi.fn() }),
 }));
 
 vi.mock("@/components/layout/brand-logo", () => ({

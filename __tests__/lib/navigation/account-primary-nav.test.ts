@@ -36,10 +36,10 @@ describe("authenticated primary nav", () => {
     expect(applyAuthenticatedPrimaryNav(guest, false)).toEqual(guest);
   });
 
-  it("maps auth chrome to Spazio, Salvati, Decisioni", () => {
+  it("maps auth chrome to Home, Salvati, Decisioni", () => {
     const next = applyAuthenticatedPrimaryNav(guest, true);
     expect(next.map((entry) => [entry.id, entry.href, entry.label])).toEqual([
-      ["home", "/account", "Spazio"],
+      ["home", "/", "Home"],
       ["catalog", "/archivio", "Catalogo"],
       ["decisions", "/account?view=decisioni", "Decisioni"],
       ["shortlist", "/account?view=salvati", "Salvati"],

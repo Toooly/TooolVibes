@@ -12,9 +12,9 @@ export function applyAuthenticatedPrimaryNav(
     if (item.id === "home") {
       return {
         ...item,
-        href: "/account",
-        label: "Spazio",
-        canonicalLabel: "Spazio",
+        href: "/",
+        label: "Home",
+        canonicalLabel: "Home",
       };
     }
     if (item.id === "shortlist") {
@@ -90,6 +90,7 @@ export function isAuthenticatedNavActive(
     return currentView === view;
   }
 
+  if (path === "/") return pathname === "/";
   if (path === "/archivio" && pathname.startsWith("/toools/")) return true;
   return pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
 }

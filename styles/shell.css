@@ -174,7 +174,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tv-space-2);
-  color: var(--tv-ink-inverted-secondary) !important;
+  color: var(--tv-ink-muted-aa) !important;
   font-size: var(--tv-text-label);
   transition:
     color var(--tv-motion-fast) var(--tv-ease-standard),

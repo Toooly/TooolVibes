@@ -17,6 +17,32 @@
   color: var(--tv-ink-primary);
   border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
   display: block;
+  transition: background-color 0.25s var(--tv-easing-standard),
+    backdrop-filter 0.25s var(--tv-easing-standard),
+    border-color 0.25s var(--tv-easing-standard);
+}
+
+.mobile-top-bar.is-scrolled {
+  background: color-mix(in srgb, var(--tv-bg-base) 82%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom-color: color-mix(in srgb, var(--tv-border-interactive) 70%, transparent);
+}
+
+.mobile-top-bar__action-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.mobile-top-bar__refresh {
+  transition: transform 0.2s var(--tv-easing-standard);
+}
+
+.mobile-top-bar__refresh:active {
+  transform: rotate(180deg) scale(0.9);
 }
 
 @media (min-width: 1280px) {

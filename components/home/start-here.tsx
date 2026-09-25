@@ -298,7 +298,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           const iconUrl = iconUrlFor(lead);
           const initial = initialFor(lead.name);
           return (
-            <li className="def-podium__lead">
+            <li className="def-podium__lead is-winner">
               <Link
                 href={`/toools/${lead.slug}`}
                 className="def-podium__lead-link"
