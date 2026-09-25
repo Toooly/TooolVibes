@@ -1,10 +1,10 @@
 # TooolVibes final production audit
 
-Date: 23 September 2026
-Branch: `golden-master-reconstruction-final-2026-09-23`
-Implementation commit: `42d61287840f4270843568718f4f67cdabf1c7f2` (`feat(ui): golden master visual convergence pass 01/04/05/08-13`)
-Baseline: `e4708aa` app code + `048d799` tooling-only cherry-pick (`e295176`); rejected UI lineage explicitly excluded
-Prior audit (21 Sep 2026, `main` @ `42634fa`): superseded for presentation; shell/auth/merge contracts re-verified below
+Date: 25 September 2026
+Branch: `logged-in-art-direction-v1`
+Implementation commits: `8f3c72fd` (public guest pass) + `fffd13a6` (logged-in polish)
+Prior passes: `42d6128` (golden-master reconstruction), `804879d2` (design tokens), `28d48fa`/`3b6bb70`/`32caa29c` (art direction)
+Baseline: `e4708aa` app code + `048d799` tooling-only cherry-pick
 
 This is a consolidation pass, not a redesign. Identity preserved. System fixed. No deploy from this agent.
 
@@ -224,25 +224,33 @@ Decision sheet focus trap was already `ui/sheet`. Not re-audited with a keyboard
 
 | Check | Result |
 |---|---|
-| `npx tsc --noEmit` | pass (23 Sep 2026, HEAD `42d6128`) |
+| `npx tsc --noEmit` | pass (25 Sep 2026, HEAD `fffd13a6`) |
 | `npm run lint` (`eslint .`) | pass, 0 errors, 1 warning (unused `fs` in `scripts/ui-workstation/playwright-mcp-stdio.mjs`) |
-| `npm run build` (`scripts/next-release-build.mjs`) | pass (23 Sep 2026, HEAD `42d6128`) |
-| vitest scoped (auth P0) | 46 passed (keyboard, oauth-buttons, callback, guest merge) |
-| vitest scoped (shell/ads/chrome) | 73 passed (dock, tinyadz, marketing-chrome, exclusive-chrome, shell contracts, footer) |
-| vitest scoped (surfaces) | 46 passed (home track, tool-detail x3, derivation, collections density, biblioteca, shell-chrome) |
+| `npm run build` (`scripts/next-release-build.mjs`) | pass (25 Sep 2026, HEAD `fffd13a6`) |
+| `npx vitest run` | 2951 passed / 37 skipped (355 files, 4 skipped) |
+| Responsive overflow 390px | 0 on home, archivio, radar, posts, collections, compare, shortlist, account |
+| Responsive overflow 768px | 0 on home, archivio, posts, account |
+| Responsive overflow 1440px | 0 on home, archivio, posts, account |
 
 ## V. Before / after screenshot gallery
 
 Before: product-owner PDF pack (52 mobile shots, 21 Sep 2026) — evidence of overlap, empty ads, launchpad footer, desktop-on-mobile stacks.
 
-After (23 Sep 2026, HEAD `42d6128`, dev server :3030, viewport 390x844, viewed as real pixels):
+After (25 Sep 2026, HEAD `fffd13a6`, dev server :3030, viewport 390x844, viewed as real pixels):
 
-- Home hero preserved: condensed display H1, lede, search, TOOL/STACK/RADAR tabs, SCELTA DELLA REDAZIONE card, gold 8.0 score row, 4-tab bottom nav, no content in nav band
-- Guides list: cream cards with favicon thumbs, topic pills + read time, filter chips (Tutte/Scrittura/SEO & content)
-- Compare: empty state "Servono due strumenti", temporary-workbench copy, CTAs Aggiungi da Salvati / Apri il catalogo
-- Auth (`/account` guest): compact card, conditional OAuth (none shown when GoTrue disables all), inline email + Invia link row, no nav overlap
-- Horizontal overflow: 0 (`body.scrollWidth <= viewport`) on home, archivio, radar, posts, collections, compare, shortlist, account
-- Evidence pairs 01-13 + contact sheet: `artifacts/final-visual-golden-master/` (committed in `42d6128`)
+- Home hero preserved: condensed display H1, lede, search, TOOL/STACK/RADAR tabs, SCELTA DELLA REDAZIONE card, gold score row, 4-tab bottom nav, no content in nav band
+- Catalogue: dense rows with avatar+score, identity+best-for, bookmark icon (was boxed cards)
+- Guides: cream rows with favicon thumbs, topic pills + read time, filter chips
+- Collection: compact stage rows (01/02/03 with glyph+name+chevron), deep details hidden on mobile
+- Radar: ranked board (01-05 compact cards), table view default on mobile
+- Spazio: compact summary rows (icon/title+sub/chevron), no giant resume hero
+- Decisioni: compact DecisionRow (mark/name+meta+note/Rivedi), summary count line
+- Decision Sheet: cream modal (#fffdf8), outcome order Scelto/Rimandato/Scartato, Nota privata, two-column footer
+- Auth: compact card, conditional OAuth, inline email + Invia link row
+- Footer: two-column groups, compact legal, brand wordmark
+- Saved: filters scrollable (nowrap+overflow-x, was wrap 145px), 0 dead space
+- Horizontal overflow: 0 on 390/768/1440 x all tested routes
+- Evidence pairs 01-13 + contact sheet: `artifacts/final-visual-golden-master/`
 
 ## W. Remaining known issues
 
@@ -262,12 +270,14 @@ Do **not** call OAuth “production ready”. Magic-link + guest merge + public 
 
 | Role | SHA |
 |---|---|
-| Implementation (this branch) | `42d61287840f4270843568718f4f67cdabf1c7f2` |
+| Logged-in polish (this branch HEAD) | `fffd13a6` |
+| Public guest pass | `8f3c72fd` |
+| Design tokens | `804879d2` |
+| Golden-master reconstruction | `42d6128` |
 | Baseline app code | `e4708aa` |
 | Tooling-only cherry-pick | `048d799` (verified: no product UI) |
-| Prior production pass (`main`, superseded for presentation) | `42634fa67aa10dad06870e80f40ec15bfb95ed91` |
 
-Working tree clean except preserved untracked dirs (artifacts, audits, .slim, after-p3). This audit file is the only tracked change pending commit.
+Working tree clean except preserved untracked dirs (artifacts, audits, .slim, after-p3).
 
 ## Y. Exact manual external actions required
 
