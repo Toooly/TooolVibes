@@ -20,6 +20,7 @@
 @import "../styles/mobile-bottom-nav.css";
 @import "../styles/guides.css";
 @import "../styles/partner-placements.css";
+@import "../styles/shell.css";
 
 
 /*
@@ -28289,4 +28290,47 @@ img {
   --surface-selection-chip-border: var(--tv-border-default);
   --surface-intro-helper-bg: var(--tv-surface-elevated);
   --surface-panel-shadow: none;
+}
+
+
+/* Footer utility link spacing — fix browser-default UL stacking */
+.site-footer-v2.tv-utility .tv-utility__group ul {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem !important;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.site-footer-v2 .tv-utility__group li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.site-footer-v2 .tv-utility__link {
+  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+
+/* Footer group spacing */
+.site-footer-v2 .tv-utility__service {
+  margin-top: 0.75rem;
+}
+.site-footer-v2 .tv-utility__legal {
+  margin-top: 0.5rem;
+}
+.site-footer-v2 .tv-utility__disclosure {
+  margin-top: 0.5rem;
+}
+
+/* Catalog card category breathing room */
+.ar4-card__category {
+  margin-top: 0.25rem;
+}
+
+/* Guides card dek breathing room */
+.guides-card__dek {
+  margin-top: 0.35rem;
 }
