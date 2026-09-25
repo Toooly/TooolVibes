@@ -1167,7 +1167,7 @@
   /* Master Spec V1 — typography is navigation.
      Hero 48–64 / 80–112. H1 40–52 / 56–80. H2 32–40 / 40–56.
      H3 22–28 / 24–32. Lead 18–20 / 20–24. Body 16.5–18 / 17–19. Meta 12–14. */
-  --tv-type-hero: clamp(3rem, 5vw + 1.2rem, 7rem);
+  --tv-type-hero: clamp(2.75rem, 4vw + 1.2rem, 5.25rem);
   --tv-type-display-xl: var(--tv-type-hero);
   --tv-type-h1: clamp(2.5rem, 3.2vw + 1.55rem, 5rem);
   --tv-type-h2: clamp(2rem, 2.1vw + 1.4rem, 3.5rem);
@@ -1240,7 +1240,7 @@
   --tv-grammar-radar-surface-raised: var(--tv-color-surface-raised);
   --tv-grammar-radar-ink: var(--tv-ink-primary);
   --tv-grammar-radar-accent: var(--tv-accent-cyan);
-  --tv-grammar-radar-live: var(--tv-status-success);
+  --tv-grammar-radar-live: var(--tv-accent-cyan);
   --tv-grammar-radar-border: color-mix(in srgb, var(--tv-accent-cyan) 28%, transparent);
 
   /* SIGNAL aliases — /radar consumes these; same family as RADAR. */

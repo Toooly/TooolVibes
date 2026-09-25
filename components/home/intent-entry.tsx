@@ -78,9 +78,9 @@ export function IntentEntry() {
             id="home-intent-query"
             type="search"
             name="q"
-            placeholder="Cerca tool, categorie, use case..."
+            placeholder="Cerca tool, categoria, uso..."
             autoComplete="off"
-            aria-label="Cerca tool, categorie, use case"
+            aria-label="Cerca tool, categoria, uso"
           />
           <button type="submit" aria-label="Cerca">
             <ArrowRight size={16} aria-hidden="true" />

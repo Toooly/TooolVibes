@@ -9,7 +9,7 @@ describe("IntentEntry motion affordances", () => {
   it("renders one search field with the catalog placeholder and CTA", () => {
     const { container } = render(<IntentEntry />);
     expect(screen.getByRole("searchbox")).toBeTruthy();
-    expect(screen.getByPlaceholderText("Cerca tool, categorie, use case...")).toBeTruthy();
+    expect(screen.getByPlaceholderText("Cerca tool, categoria, uso...")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Cerca" })).toBeTruthy();
     expect(container.querySelector(".def-intent__chips")).toBeNull();
     expect(container.querySelector(".def-intent__label")).toBeNull();

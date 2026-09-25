@@ -2619,6 +2619,12 @@
   font-size: 1rem;
   color: var(--tv-ink-primary, #f4f0e7);
 }
+.def-podium__pair-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
 .def-podium__pair-name {
   font-family: var(--tv-font-family-ui);
   font-size: 0.9375rem;

@@ -83,7 +83,7 @@
 
 .tv-radar__status[data-state="live"],
 .tv-home-radar__status[data-state="live"] {
-  color: var(--tv-status-success);
+  color: var(--tv-accent-cyan);
 }
 
 .tv-radar__status[data-state="stale"],

@@ -25,7 +25,7 @@
 
 .mobile-top-bar__inner {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 10px;
   height: 56px;
@@ -210,13 +210,13 @@
 
 
 .mobile-top-bar--home .mobile-top-bar__inner {
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   padding-inline: var(--tv-home-gutter);
   height: 3.25rem;
 }
 
 .mobile-top-bar--home:has(.mobile-top-bar__search:not(.is-hero-suppressed)) .mobile-top-bar__inner {
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
 }
 
 .mobile-top-bar__search.is-hero-suppressed {
