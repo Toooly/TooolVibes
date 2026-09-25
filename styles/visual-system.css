@@ -18,13 +18,23 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   width: min(100%, 22.5rem);
-  gap: 6px;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-surface-elevated) 85%, transparent);
+  overflow: hidden;
 }
 
 .tv-discovery-stage .def-start__tab {
   width: 100%;
-  min-height: 2.75rem;
+  min-height: 2.5rem;
   padding-inline: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
   transition:
     color var(--tv-motion-ui) var(--tv-easing-standard),
     background-color var(--tv-motion-ui) var(--tv-easing-standard),
@@ -448,15 +458,60 @@ select:focus {
 
 /* Podium winner celebration */
 @keyframes tv-celebrate {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.03); }
-  60% { transform: scale(0.99); }
-  100% { transform: scale(1); }
+  0% { transform: scale(1); filter: brightness(1); }
+  25% { transform: scale(1.04); filter: brightness(1.15); }
+  50% { transform: scale(0.98); filter: brightness(1.05); }
+  75% { transform: scale(1.01); filter: brightness(1.02); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes tv-celebrate-glow {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-gold) 40%, transparent); }
+  50% { box-shadow: 0 0 24px 6px color-mix(in srgb, var(--tv-accent-gold) 30%, transparent); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes tv-spark {
+  0% { opacity: 0; transform: scale(0) translateY(0); }
+  20% { opacity: 1; transform: scale(1) translateY(-8px); }
+  100% { opacity: 0; transform: scale(0.5) translateY(-24px); }
 }
 
 .def-podium__item.is-winner,
 .def-editorial__pod-card--rank-1 {
-  animation: tv-celebrate 0.7s var(--tv-easing-spring-smooth) both;
+  animation: tv-celebrate 0.8s var(--tv-easing-spring-smooth) both;
+  position: relative;
+}
+
+.def-podium__item.is-winner::before,
+.def-editorial__pod-card--rank-1::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  animation: tv-celebrate-glow 1.2s var(--tv-easing-decelerate) 0.2s both;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Sparkle particles on winner */
+.def-podium__item.is-winner::after,
+.def-editorial__pod-card--rank-1::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tv-accent-gold);
+  box-shadow:
+    -16px 8px 0 -1px var(--tv-accent-gold),
+    -32px -4px 0 -2px var(--tv-accent-cyan, #22d3ee),
+    12px 16px 0 -1px var(--tv-accent-gold),
+    -8px -12px 0 -2px var(--tv-accent-gold);
+  animation: tv-spark 0.9s var(--tv-easing-decelerate) 0.3s both;
+  pointer-events: none;
 }
 
 @keyframes tv-shimmer {
@@ -506,6 +561,8 @@ select:focus {
   .def-intent__field,
   .def-start__panel,
   .tv-workflow-card,
+  .def-podium__item.is-winner,
+  .def-editorial__pod-card--rank-1,
   .ar4-card,
   .tv-home-radar__launch,
   .def-editorial__spot-cta--primary,

@@ -109,20 +109,20 @@ export function MobileTopBar() {
           {scrolled ? (
             <button
               type="button"
-              className="mobile-top-bar__search"
-              aria-label="Apri ricerca"
-              onClick={() => setCommandOpen(true)}
-            >
-              <Search size={16} aria-hidden="true" />
-            </button>
-          ) : (
-            <button
-              type="button"
               className="mobile-top-bar__search mobile-top-bar__refresh"
               aria-label="Aggiorna pagina"
               onClick={() => router.refresh()}
             >
               <RefreshCw size={16} aria-hidden="true" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="mobile-top-bar__search"
+              aria-label="Apri ricerca"
+              onClick={() => setCommandOpen(true)}
+            >
+              <Search size={16} aria-hidden="true" />
             </button>
           )}
         </div>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { useAccount } from "@/components/account/account-provider";
 
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
@@ -77,6 +78,8 @@ export function StartHere({
   tools: ToolPublicView[];
   stacks: HomeStackPreview[];
 }) {
+  const account = useAccount();
+  const authenticated = account.status === "authenticated";
   const [tab, setTab] = useState<StartTabId>("tool");
   const [hasSwitched, setHasSwitched] = useState(false);
   const tabRefs = useRef<Partial<Record<StartTabId, HTMLButtonElement | null>>>({});
@@ -158,7 +161,7 @@ export function StartHere({
           aria-labelledby="def-start-tab-stack"
           hidden={tab !== "stack"}
         >
-          <HomeStacks stacks={stacks} />
+          <HomeStacks stacks={stacks} authenticated={authenticated} />
         </div>
 
         <div
@@ -400,7 +403,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   );
 }
 
-function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
+function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPreview[]; authenticated?: boolean }) {
   const scrollerRef = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
 
@@ -486,6 +489,12 @@ function HomeStacks({ stacks }: { stacks: HomeStackPreview[] }) {
                       {stack.setupTime ? <span className="tv-featured-tool__mono">{stack.setupTime}</span> : null}
                       {stack.setupTime && stack.cost ? " · " : null}
                       {stack.cost ? <span className="tv-featured-tool__mono">{stack.cost}</span> : null}
+                    </p>
+                  ) : null}
+                  {!authenticated && stack.stages && stack.stages.length > 3 ? (
+                    <p className="tv-workflow-card__gate">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      Accedi per vedere lo stack completo
                     </p>
                   ) : null}
                 </Link>

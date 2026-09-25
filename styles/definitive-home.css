@@ -2681,3 +2681,70 @@
   border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.08));
   flex-shrink: 0;
 }
+
+
+/* Stack guest gate */
+.tv-workflow-card__gate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 30%, transparent);
+  color: var(--tv-ink-primary, #f4f0e7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* Stack card visual refinement */
+.tv-workflow-card {
+  border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
+  border-radius: var(--tv-radius-card, 12px);
+  background: color-mix(in srgb, var(--tv-surface-raised) 88%, transparent);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.tv-workflow-card:hover {
+  border-color: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 35%, transparent);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 15%, transparent);
+  transform: translateY(-1px);
+}
+
+/* Carousel controls premium feel */
+.tv-editorial-deck__controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.tv-editorial-deck__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 15%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
+  color: var(--tv-ink-primary);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.tv-editorial-deck__nav:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 25%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 40%, transparent);
+}
+
+.tv-editorial-deck__nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
