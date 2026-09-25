@@ -40,16 +40,19 @@
 .tv-discovery-stage[data-mode="tool"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="tool"] .def-start__tab[aria-selected="true"] {
   box-shadow: var(--tv-glow-gold) !important;
+  color: var(--tv-ink-primary) !important;
 }
 
 .tv-discovery-stage[data-mode="stack"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="stack"] .def-start__tab[aria-selected="true"] {
   box-shadow: var(--tv-glow-violet) !important;
+  color: var(--tv-ink-primary) !important;
 }
 
 .tv-discovery-stage[data-mode="radar"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="radar"] .def-start__tab[aria-selected="true"] {
   box-shadow: var(--tv-glow-cyan) !important;
+  color: var(--tv-ink-primary) !important;
 }
 
 /* Hero entrance */

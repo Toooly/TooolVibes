@@ -989,7 +989,7 @@
 .partner-stage__lede {
   margin: var(--tv-space-component-md) 0 0;
   max-width: 46ch;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-inverted-primary);
   font-size: var(--tv-text-body);
   line-height: var(--tv-leading-body);
 }
