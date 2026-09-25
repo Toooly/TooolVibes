@@ -15,6 +15,19 @@ const motionSelectors = [
   "main .page-shell > .premium-panel",
   "main .premium-card",
   "footer .premium-panel",
+  "main .tv-page-transition > section:not([hidden])",
+  "main .tv-page-transition .def-cockpit, main .tv-page-transition .def-start, main .tv-page-transition .def-editorial",
+  "main .tv-page-transition .ar4-intro, main .tv-page-transition .ar4-grid, main .tv-page-transition .ar4-categories",
+  "main .tv-page-transition .guides-masthead, main .tv-page-transition .guides-featured",
+  "main .tv-page-transition .tv-radar-table, main .tv-page-transition .tv-radar__controls",
+  "main .tv-page-transition .tv-home-section, main .tv-page-transition .tv-mod",
+  "main .tv-page-transition .cx-stack-flow-v4, main .tv-page-transition .cx-variant-paths-v4",
+  ".def-cockpit, .def-start, .def-editorial, .def-home__sponsor",
+  ".ar4-intro, .ar4-categories, .ar4-filters, .ar4-grid",
+  ".guides-masthead, .guides-featured, .guides-grid-section",
+  ".tv-radar__hero, .tv-radar-table, .tv-radar-status-bar",
+  ".tv-home-section, .tv-mod, .tv-home__members",
+  ".cx-stack-flow-v4, .cx-variant-paths-v4, .cx-scenario-v4",
 ].join(",");
 
 const STAGGER_STEP_MS = MOTION_DURATION_MS.staggerStep;

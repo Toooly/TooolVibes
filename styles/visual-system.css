@@ -163,7 +163,304 @@
   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--tv-accent-brand) 45%, transparent));
 }
 
+/* ===== Scroll-triggered reveal (animation-based, stays visible after) ===== */
+@keyframes tv-reveal-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+.tv-reveal.is-visible,
+main .tv-page-transition .def-cockpit.is-visible,
+main .tv-page-transition .def-start.is-visible,
+main .tv-page-transition .def-editorial.is-visible,
+main .tv-page-transition .def-latest.is-visible,
+main .tv-page-transition .def-home__sponsor.is-visible,
+main .tv-page-transition .ar4-intro.is-visible,
+main .tv-page-transition .ar4-grid.is-visible,
+main .tv-page-transition .ar4-categories.is-visible,
+main .tv-page-transition .guides-masthead.is-visible,
+main .tv-page-transition .guides-featured.is-visible,
+main .tv-page-transition .tv-radar-table.is-visible,
+main .tv-page-transition .tv-home-section.is-visible,
+main .tv-page-transition .tv-mod.is-visible,
+main .tv-page-transition .cx-stack-flow-v4.is-visible {
+  animation: tv-reveal-up 0.55s var(--tv-easing-decelerate) both;
+}
+
+/* Stagger for card grids */
+@keyframes tv-reveal-stagger-item {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.tv-reveal-stagger.is-visible > * {
+  animation: tv-reveal-stagger-item 0.45s var(--tv-easing-decelerate) both;
+}
+.tv-reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 50ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 100ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 150ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 200ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 250ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 300ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 350ms; }
+.tv-reveal-stagger.is-visible > *:nth-child(n+9) { transition-delay: 400ms; }
+
+/* ===== Button micro-interactions ===== */
+button,
+[role="button"],
+.def-editorial__spot-cta--primary,
+.td-final-cta--primary,
+.tv-home-cta--primary,
+.tv-home-radar__cta,
+.ar4-card__open,
+.cx-card-v4__cta {
+  transition:
+    transform var(--tv-motion-fast) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
+    background-color var(--tv-motion-ui) var(--tv-easing-standard),
+    border-color var(--tv-motion-ui) var(--tv-easing-standard),
+    color var(--tv-motion-ui) var(--tv-easing-standard),
+    filter var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+button:active,
+[role="button"]:active,
+.def-editorial__spot-cta--primary:active,
+.td-final-cta--primary:active,
+.tv-home-cta--primary:active {
+  transform: scale(0.97);
+}
+
+/* ===== Enhanced glow on key CTAs ===== */
+.def-editorial__spot-cta--primary:hover,
+.def-editorial__spot-cta--primary:focus-visible,
+.td-final-cta--primary:hover,
+.td-final-cta--primary:focus-visible,
+.tv-home-cta--primary:hover,
+.tv-home-cta--primary:focus-visible,
+.tv-home-radar__cta:hover,
+.tv-home-radar__cta:focus-visible {
+  box-shadow: var(--tv-glow-gold);
+  filter: brightness(1.06);
+}
+
+.ar4-card__open:hover,
+.ar4-card__open:focus-visible {
+  box-shadow: var(--tv-glow-violet);
+}
+
+.cx-card-v4__cta:hover,
+.cx-card-v4__cta:focus-visible {
+  box-shadow: var(--tv-glow-violet);
+  filter: brightness(1.06);
+}
+
+/* ===== Card hover glow ===== */
+.ar4-card,
+.tv-workflow-card,
+.tv-home-radar__launch,
+.def-editorial__spot,
+.partner-placement,
+.tv-home-tile,
+.tv-home-mini,
+.tv-lib-row,
+.tv-decision-row {
+  transition:
+    border-color var(--tv-motion-ui) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
+    transform var(--tv-motion-ui) var(--tv-easing-standard),
+    background-color var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:hover {
+    border-color: color-mix(in srgb, var(--tv-accent-brand) 35%, var(--tv-border-system));
+    box-shadow: var(--tv-glow-violet);
+  }
+  .tv-workflow-card:hover {
+    border-color: color-mix(in srgb, var(--tv-accent-gold) 35%, var(--tv-border-system));
+    box-shadow: var(--tv-glow-gold);
+  }
+  .tv-home-radar__launch:hover {
+    border-color: color-mix(in srgb, var(--tv-grammar-radar-accent) 35%, var(--tv-border-system));
+    box-shadow: var(--tv-glow-cyan);
+  }
+  .def-editorial__spot:hover {
+    box-shadow: var(--tv-glow-gold);
+  }
+  .partner-placement:hover {
+    box-shadow: var(--tv-glow-gold);
+  }
+  .tv-home-tile:hover,
+  .tv-home-mini:hover {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-brand) 30%, transparent);
+  }
+  .tv-lib-row:hover {
+    background: color-mix(in srgb, var(--tv-accent-brand) 8%, transparent);
+  }
+  .tv-decision-row:hover {
+    border-color: color-mix(in srgb, var(--tv-accent-brand) 30%, var(--tv-border-system));
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--tv-accent-brand) 12%, transparent);
+  }
+}
+
+/* ===== Link hover transitions ===== */
+a {
+  transition:
+    color var(--tv-motion-ui) var(--tv-easing-standard),
+    background-color var(--tv-motion-ui) var(--tv-easing-standard),
+    border-color var(--tv-motion-ui) var(--tv-easing-standard),
+    opacity var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+/* ===== Focus ring enhancement ===== */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--tv-accent-gold) 70%, transparent);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* ===== Smooth scroll ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== Nav item transitions ===== */
+.mobile-bottom-item,
+.tv-space-switch a,
+.tv-space-switch button {
+  transition:
+    background-color var(--tv-motion-ui) var(--tv-easing-standard),
+    color var(--tv-motion-ui) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
+    transform var(--tv-motion-fast) var(--tv-easing-standard);
+}
+
+.mobile-bottom-item:active {
+  transform: scale(0.95);
+}
+
+.mobile-bottom-item.is-active {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-brand) 35%, transparent);
+}
+
+/* ===== Badge / chip transitions ===== */
+.ar4-chip,
+.tv-lib-filter-n,
+.td-final-chip,
+.guides-card__topic,
+.guides-card__read {
+  transition:
+    background-color var(--tv-motion-ui) var(--tv-easing-standard),
+    border-color var(--tv-motion-ui) var(--tv-easing-standard),
+    color var(--tv-motion-ui) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+/* ===== Search input focus glow ===== */
+input[type="search"],
+input[type="email"],
+input[type="text"],
+textarea,
+select {
+  transition:
+    border-color var(--tv-motion-ui) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard);
+}
+
+input[type="search"]:focus,
+input[type="email"]:focus,
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-accent-brand) 25%, transparent);
+}
+
+/* ===== Tab / segmented control transitions ===== */
+.def-start__tab,
+.tv-discovery-stage .def-start__tab,
+.ar4-chip,
+.guides-filter button {
+  transition:
+    background-color var(--tv-motion-ui) var(--tv-easing-standard),
+    border-color var(--tv-motion-ui) var(--tv-easing-standard),
+    color var(--tv-motion-ui) var(--tv-easing-standard),
+    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
+    transform var(--tv-motion-fast) var(--tv-easing-standard);
+}
+
+.def-start__tab:active,
+.ar4-chip:active {
+  transform: scale(0.96);
+}
+
+/* ===== Footer link hover glow ===== */
+.tv-utility__link:hover,
+.tv-utility__link:focus-visible {
+  color: var(--tv-ink-primary);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--tv-accent-gold) 25%, transparent);
+}
+
+/* ===== Loading shimmer for skeletons ===== */
+.tv-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--tv-surface-raised) 25%,
+    color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent) 50%,
+    var(--tv-surface-raised) 75%
+  );
+  background-size: 200% 100%;
+  animation: tv-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--tv-radius-system);
+}
+
+@keyframes tv-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== Pulse for live indicators ===== */
+.tv-pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tv-accent-gold);
+  animation: tv-pulse-soft 2.4s ease-in-out infinite;
+}
+
+@keyframes tv-pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+/* ===== Page transition fade ===== */
+.tv-page-transition {
+  animation: tv-page-fade-in 0.35s var(--tv-easing-decelerate);
+}
+
+@keyframes tv-page-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .tv-reveal,
+  .tv-reveal-stagger > *,
   .def-start__panel,
   .tv-workflow-card,
   .ar4-card,
@@ -171,8 +468,9 @@
   .def-editorial__spot-cta--primary,
   .td-final-cta--primary,
   .tv-discovery-stage .def-start__tab {
+    opacity: 1;
+    transform: none;
     animation: none;
     transition: none;
-    transform: none;
   }
 }
