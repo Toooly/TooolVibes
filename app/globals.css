@@ -28334,3 +28334,17 @@ img {
 .guides-card__dek {
   margin-top: 0.35rem;
 }
+
+
+/* Brand-plate overflow guard (partner-placements.css may not inline) */
+.partner-brand-plate img.partner-brand-plate__img,
+.partner-brand-plate > .partner-brand-plate__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
