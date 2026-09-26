@@ -282,32 +282,30 @@
 }
 
 
-/* Refresh button smooth entry */
-.mobile-top-bar__refresh {
+/* Pull-to-refresh indicator */
+.mobile-top-bar__pull-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
+  flex-shrink: 0;
   color: var(--tv-ink-primary);
-  cursor: pointer;
   opacity: 0;
-  transform: scale(0.85);
-  transition: opacity 0.18s ease, transform 0.18s ease, background 0.15s ease;
-  animation: tv-refresh-in 0.18s ease forwards;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
 }
 
-@keyframes tv-refresh-in {
-  to { opacity: 1; transform: scale(1); }
+.mobile-top-bar__pull-indicator.is-armed {
+  color: var(--tv-accent-gold);
 }
 
-.mobile-top-bar__refresh:hover {
-  background: color-mix(in srgb, var(--tv-ink-primary) 10%, transparent);
+.mobile-top-bar__pull-indicator.is-spinning {
+  opacity: 1;
+  animation: tv-pull-spin 0.6s ease;
 }
 
-.mobile-top-bar__refresh:active {
-  transform: scale(0.92);
+@keyframes tv-pull-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

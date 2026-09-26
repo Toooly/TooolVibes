@@ -12,7 +12,7 @@
  *  - Subtle scan line + signal trace
  */
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
@@ -54,22 +54,77 @@ function getRouteLabel(pathname: string): string {
   return "TooolVibes";
 }
 
-function useHeaderScrolled(threshold = 72) {
-  const [scrolled, setScrolled] = useState(false);
+/**
+ * Pull-to-refresh: only activates when .marketing-shell is at scrollTop 0
+ * and the user drags downward. Normal scrolling NEVER shows the refresh icon.
+ */
+function usePullToRefresh(onRefresh: () => void) {
+  const [pullDistance, setPullDistance] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const startY = useRef(0);
+  const isPulling = useRef(false);
+  const PULL_THRESHOLD = 56;
+
   useEffect(() => {
-    const shell = document.querySelector(".marketing-shell");
-    const target = shell || window;
-    const getY = () => (shell ? (shell as HTMLElement).scrollTop : window.scrollY);
-    const onScroll = () => setScrolled(getY() > threshold);
-    setScrolled(false);
-    const raf = requestAnimationFrame(onScroll);
-    target.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      target.removeEventListener("scroll", onScroll);
+    const shell = document.querySelector<HTMLElement>(".marketing-shell");
+    if (!shell) return;
+
+    
+    const onTouchStart = (e: TouchEvent) => {
+      if (isRefreshing) return;
+      // Only start pull if at very top
+      if (shell.scrollTop > 0) return;
+      startY.current = e.touches[0].clientY;
+      isPulling.current = true;
     };
-  }, [threshold]);
-  return scrolled;
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isPulling.current || isRefreshing) return;
+      // Must still be at top — if user scrolled up, cancel
+      if (shell.scrollTop > 0) {
+        isPulling.current = false;
+        setPullDistance(0);
+        return;
+      }
+      const delta = e.touches[0].clientY - startY.current;
+      if (delta > 0) {
+        // Downward pull at top — prevent native overscroll
+        if (!e.defaultPrevented) e.preventDefault();
+        // Apply resistance (pull feels increasingly hard)
+        const damped = Math.min(delta * 0.5, 90);
+        setPullDistance(damped);
+      }
+    };
+
+    const onTouchEnd = () => {
+      if (!isPulling.current) return;
+      isPulling.current = false;
+      if (pullDistance >= PULL_THRESHOLD) {
+        setIsRefreshing(true);
+        onRefresh();
+        // Brief spin then reset
+        setTimeout(() => {
+          setIsRefreshing(false);
+          setPullDistance(0);
+        }, 600);
+      } else {
+        setPullDistance(0);
+      }
+    };
+
+    // touchmove must be non-passive to allow preventDefault
+    shell.addEventListener("touchstart", onTouchStart, { passive: true });
+    shell.addEventListener("touchmove", onTouchMove, { passive: false });
+    shell.addEventListener("touchend", onTouchEnd, { passive: true });
+
+    return () => {
+            shell.removeEventListener("touchstart", onTouchStart);
+      shell.removeEventListener("touchmove", onTouchMove);
+      shell.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [onRefresh, pullDistance, isRefreshing]);
+
+  return { pullDistance, isRefreshing, PULL_THRESHOLD };
 }
 
 export function MobileTopBar() {
@@ -78,16 +133,23 @@ export function MobileTopBar() {
   const isHome = pathname === "/";
   const routeLabel = getRouteLabel(pathname);
   const viewport = useChromeViewport();
-  const scrolled = useHeaderScrolled();
+
+  const handleRefresh = useCallback(() => router.refresh(), [router]);
+  const { pullDistance, isRefreshing, PULL_THRESHOLD } = usePullToRefresh(handleRefresh);
 
   if (viewport === "desktop") {
     return null;
   }
 
+  // Pull indicator visibility: 0-15px invisible, 15-55px fade in, >=55px armed
+  const pullProgress = Math.min(pullDistance / PULL_THRESHOLD, 1);
+  const showPull = pullDistance > 12 && !isRefreshing;
+  const isArmed = pullDistance >= PULL_THRESHOLD;
+
   return (
     <header
       role="banner"
-      className={cn("mobile-top-bar", isHome && "mobile-top-bar--home", scrolled && "is-scrolled")}
+      className={cn("mobile-top-bar", isHome && "mobile-top-bar--home")}
     >
       <div className="mobile-top-bar__inner">
         <Link
@@ -105,18 +167,21 @@ export function MobileTopBar() {
         <div className="mobile-top-bar__spacer" aria-hidden="true" />
 
         <div className="mobile-top-bar__actions">
-          {scrolled ? (
-            <button
-              type="button"
-              className="mobile-top-bar__refresh"
-              aria-label="Aggiorna pagina"
-              onClick={() => router.refresh()}
-            >
-              <RefreshCw size={16} aria-hidden="true" />
-            </button>
-          ) : (
-            <span className="mobile-top-bar__action-placeholder" aria-hidden="true" />
-          )}
+          <span
+            className={cn(
+              "mobile-top-bar__pull-indicator",
+              showPull && "is-visible",
+              isArmed && "is-armed",
+              isRefreshing && "is-spinning",
+            )}
+            style={{
+              opacity: showPull ? pullProgress : isRefreshing ? 1 : 0,
+              transform: `scale(${0.85 + 0.15 * pullProgress}) rotate(${pullDistance * 2}deg)`,
+            }}
+            aria-hidden="true"
+          >
+            <RefreshCw size={16} />
+          </span>
           <HeaderAccountControl
             linkClassName="mobile-top-bar__account"
             menuClassName="mobile-top-bar__account-menu"
