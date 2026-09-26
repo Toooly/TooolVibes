@@ -1,13 +1,13 @@
 /**
- * Cross-platform haptic feedback utility.
+ * Cross-platform haptic feedback.
  *
- * iOS Safari does NOT support navigator.vibrate() — the Vibration API is
- * not implemented in Safari. On iOS, we use the Web Audio API to produce
- * a very short, low-volume click through the speaker. The physical speaker
- * movement creates a subtle tactile sensation on the device chassis.
+ * iOS Safari does NOT implement navigator.vibrate() — the Vibration API
+ * has never shipped in Safari. On iOS, we use the Web Audio API to produce
+ * a sharp transient click through the speaker. The physical speaker cone
+ * movement creates a perceptible tactile pulse on the device chassis.
  *
- * Android Chrome/Edge/Firefox: navigator.vibrate() (true haptic).
- * iOS Safari/Chrome: Web Audio click fallback.
+ * Android Chrome/Edge: navigator.vibrate() (true haptic motor).
+ * iOS Safari/Chrome (WebKit): Web Audio transient click.
  * Desktop: no-op.
  */
 
@@ -17,7 +17,10 @@ function getAudioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (audioCtx) return audioCtx;
   try {
-    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    const Ctx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
     if (!Ctx) return null;
     audioCtx = new Ctx();
     return audioCtx;
@@ -26,83 +29,104 @@ function getAudioContext(): AudioContext | null {
   }
 }
 
-/** Play a tiny click via Web Audio (iOS Safari fallback). */
-function audioClick(volume = 0.06, duration = 0.012) {
+/**
+ * Produce a sharp transient click via Web Audio.
+ * The burst drives the speaker cone physically, felt as a pulse on the chassis.
+ */
+function audioPulse(volume = 0.2, durationMs = 25, freq = 180) {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  // Resume context if suspended (required on iOS after user gesture)
+  // Must resume inside a user-gesture context (iOS requirement)
   if (ctx.state === "suspended") {
     void ctx.resume();
   }
 
   try {
+    const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.connect(gain);
+    const shaper = ctx.createWaveShaper();
+
+    // Soft clip curve for sharper transient
+    const curve = new Float32Array(256);
+    for (let i = 0; i < 256; i++) {
+      const x = (i / 256) * 2 - 1;
+      curve[i] = Math.tanh(x * 3);
+    }
+    shaper.curve = curve;
+
+    osc.connect(shaper);
+    shaper.connect(gain);
     gain.connect(ctx.destination);
 
     osc.type = "square";
-    osc.frequency.value = 280;
+    osc.frequency.setValueAtTime(freq, now);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + durationMs / 1000);
 
-    const now = ctx.currentTime;
+    const dur = durationMs / 1000;
     gain.gain.setValueAtTime(volume, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    gain.gain.setValueAtTime(volume, now + dur * 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
 
     osc.start(now);
-    osc.stop(now + duration);
+    osc.stop(now + dur);
   } catch {
-    // silent fail
+    // silent
   }
 }
 
-export type HapticPattern =
-  | "light" // single tick — nav taps, threshold cross
-  | "medium" // stronger tick — button press
-  | "success" // double pulse — pull-to-refresh release
-  | "warning"; // triple — cancel/error
+export type HapticPattern = "light" | "medium" | "success" | "warning";
 
-const PATTERNS: Record<HapticPattern, { vibrate: number[]; audio: () => void }> = {
+const PATTERNS: Record<
+  HapticPattern,
+  { vibrate: number[]; audio: () => void }
+> = {
   light: {
-    vibrate: [8],
-    audio: () => audioClick(0.05, 0.01),
+    vibrate: [15],
+    audio: () => audioPulse(0.2, 22, 200),
   },
   medium: {
-    vibrate: [14],
-    audio: () => audioClick(0.08, 0.015),
+    vibrate: [25],
+    audio: () => audioPulse(0.28, 30, 160),
   },
   success: {
-    vibrate: [12, 40, 12],
+    vibrate: [18, 50, 18],
     audio: () => {
-      audioClick(0.07, 0.012);
-      setTimeout(() => audioClick(0.07, 0.012), 60);
+      audioPulse(0.25, 25, 200);
+      setTimeout(() => audioPulse(0.25, 25, 200), 70);
     },
   },
   warning: {
-    vibrate: [6, 30, 6, 30, 6],
+    vibrate: [10, 35, 10, 35, 10],
     audio: () => {
-      audioClick(0.06, 0.01);
-      setTimeout(() => audioClick(0.06, 0.01), 40);
-      setTimeout(() => audioClick(0.06, 0.01), 80);
+      audioPulse(0.18, 18, 280);
+      setTimeout(() => audioPulse(0.18, 18, 280), 50);
+      setTimeout(() => audioPulse(0.18, 18, 280), 100);
     },
   },
 };
 
 export function haptic(pattern: HapticPattern = "light"): void {
   if (typeof window === "undefined") return;
-
   const p = PATTERNS[pattern];
 
-  // 1. Try native vibration (Android, Chrome, some PWAs)
+  // 1. Try native vibration — but CHECK the return value.
+  //    navigator.vibrate() returns false when no motor exists
+  //    (iOS WebKit stub, desktop browsers). Must NOT skip audio.
+  let nativeWorked = false;
   if (typeof navigator !== "undefined" && "vibrate" in navigator) {
     try {
-      navigator.vibrate(p.vibrate);
-      return; // native worked — skip audio
+      nativeWorked = navigator.vibrate(p.vibrate) === true;
     } catch {
-      // fall through to audio
+      nativeWorked = false;
     }
   }
 
-  // 2. iOS Safari / Web Audio fallback
-  p.audio();
+  // 2. Always play audio fallback when native vibration is unavailable
+  //    or didn't actually fire. On Android the native motor fires and
+  //    the click is inaudible; on iOS the click IS the tactile feedback.
+  if (!nativeWorked) {
+    p.audio();
+  }
 }
