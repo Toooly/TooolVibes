@@ -467,34 +467,38 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
             {stacks.map((stack, index) => (
               <li key={stack.slug} data-stack-card="" className={index === active ? "is-active" : undefined}>
                 <Link href={`/collections/${stack.slug}`} className="def-stacks__card tv-workflow-card">
-                  <span>{stack.kicker}</span>
-                  <strong>{stack.title}</strong>
-                  {stack.outcome ? <em>{stack.outcome}</em> : stack.description ? <em>{stack.description}</em> : null}
+                  <p className="tv-workflow-card__eyebrow">{stack.kicker}</p>
+                  <h3 className="tv-workflow-card__outcome">{stack.outcome || stack.title}</h3>
                   {stack.stages && stack.stages.length > 0 ? (
-                    <ol className="tv-workflow-card__flow" aria-label="Flusso">
-                      {stack.stages.slice(0, 3).map((stage) => (
-                        <li key={`${stack.slug}-${stage.name}`}>
-                          {stage.iconUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={stage.iconUrl} alt="" className="tv-workflow-card__stage-icon" loading="lazy" decoding="async" />
+                    <div className="tv-workflow-card__flow" aria-label="Flusso">
+                      {stack.stages.slice(0, 3).map((stage, si) => (
+                        <div key={`${stack.slug}-${stage.name}`} className="tv-workflow-card__step">
+                          <div className="tv-workflow-card__step-icon">
+                            {stage.iconUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={stage.iconUrl} alt="" className="tv-workflow-card__stage-icon" loading="lazy" decoding="async" />
+                            ) : null}
+                          </div>
+                          <span className="tv-workflow-card__step-label">{stage.label}</span>
+                          {si < Math.min(stack.stages?.length ?? 0, 3) - 1 ? (
+                            <span className="tv-workflow-card__step-arrow" aria-hidden="true">→</span>
                           ) : null}
-                          <b>{stage.label}</b>
-                          <span>{stage.name}</span>
-                        </li>
+                        </div>
                       ))}
-                    </ol>
+                    </div>
                   ) : null}
                   {(stack.setupTime || stack.cost) ? (
                     <p className="tv-workflow-card__meta">
                       {stack.setupTime ? <span className="tv-featured-tool__mono">{stack.setupTime}</span> : null}
                       {stack.setupTime && stack.cost ? " · " : null}
                       {stack.cost ? <span className="tv-featured-tool__mono">{stack.cost}</span> : null}
+                      {stack.stages && stack.stages.length > 0 ? ` · ${stack.stages.length} tool` : null}
                     </p>
                   ) : null}
-                  {!authenticated && stack.stages && stack.stages.length > 3 ? (
+                  {!authenticated ? (
                     <p className="tv-workflow-card__gate">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                      Accedi per vedere lo stack completo
+                      Accedi per lo stack completo
                     </p>
                   ) : null}
                 </Link>

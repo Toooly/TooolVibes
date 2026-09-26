@@ -2748,3 +2748,134 @@
   opacity: 0.35;
   cursor: default;
 }
+
+
+/* Stack card hierarchy — outcome-led */
+.tv-workflow-card__eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tv-accent-gold);
+}
+
+.tv-workflow-card__outcome {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--tv-ink-primary);
+}
+
+/* Compact horizontal tool flow */
+.tv-workflow-card__flow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tv-workflow-card__step {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.tv-workflow-card__step-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--tv-ink-primary) 8%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tv-workflow-card__step-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tv-workflow-card__step-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--tv-ink-secondary);
+  white-space: nowrap;
+}
+
+.tv-workflow-card__step-arrow {
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.75rem;
+  margin: 0 0.15rem;
+}
+
+/* Compact metadata */
+.tv-workflow-card__meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  color: var(--tv-ink-muted-aa);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Guest gate — refined */
+.tv-workflow-card__gate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 25%, transparent);
+  color: var(--tv-ink-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+
+/* Carousel controls — aligned with card grid */
+.tv-editorial-deck__controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 0.75rem;
+  padding: 0 0.25rem;
+}
+
+.tv-editorial-deck__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 15%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-elevated) 80%, transparent);
+  color: var(--tv-ink-primary);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+}
+
+.tv-editorial-deck__nav:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 25%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 40%, transparent);
+  transform: scale(1.05);
+}
+
+.tv-editorial-deck__nav:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.tv-editorial-deck__nav:disabled {
+  opacity: 0.3;
+  cursor: default;
+}

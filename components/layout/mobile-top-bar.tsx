@@ -15,7 +15,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Bell, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
@@ -54,14 +54,13 @@ function getRouteLabel(pathname: string): string {
   return "TooolVibes";
 }
 
-function useHeaderScrolled(threshold = 48) {
+function useHeaderScrolled(threshold = 72) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const shell = document.querySelector(".marketing-shell");
     const target = shell || window;
     const getY = () => (shell ? (shell as HTMLElement).scrollTop : window.scrollY);
     const onScroll = () => setScrolled(getY() > threshold);
-    // Reset on mount — don't inherit stale scroll state
     setScrolled(false);
     const raf = requestAnimationFrame(onScroll);
     target.addEventListener("scroll", onScroll, { passive: true });
@@ -103,7 +102,9 @@ export function MobileTopBar() {
           <span className="mobile-top-bar__brand-text">TooolVibes</span>
         </Link>
 
-        <div className="mobile-top-bar__action-slot">
+        <div className="mobile-top-bar__spacer" aria-hidden="true" />
+
+        <div className="mobile-top-bar__actions">
           {scrolled ? (
             <button
               type="button"
@@ -116,22 +117,13 @@ export function MobileTopBar() {
           ) : (
             <span className="mobile-top-bar__action-placeholder" aria-hidden="true" />
           )}
+          <HeaderAccountControl
+            linkClassName="mobile-top-bar__account"
+            menuClassName="mobile-top-bar__account-menu"
+            panelClassName="mobile-top-bar__account-panel"
+            showLabel={false}
+          />
         </div>
-
-        <button
-          type="button"
-          className="mobile-top-bar__bell"
-          aria-label="Notifiche"
-        >
-          <Bell size={16} aria-hidden="true" />
-        </button>
-
-        <HeaderAccountControl
-          linkClassName="mobile-top-bar__account"
-          menuClassName="mobile-top-bar__account-menu"
-          panelClassName="mobile-top-bar__account-panel"
-          showLabel={false}
-        />
       </div>
 
       {isHome || !hasRouteStrip(pathname) ? null : (
