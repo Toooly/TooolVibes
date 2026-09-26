@@ -150,6 +150,10 @@ export function MobileTopBar() {
     <header
       role="banner"
       className={cn("mobile-top-bar", isHome && "mobile-top-bar--home")}
+      style={{
+        transform: pullDistance > 0 ? `translateY(${Math.min(pullDistance * 0.3, 22)}px)` : undefined,
+        transition: pullDistance === 0 ? "transform 0.25s ease" : "none",
+      }}
     >
       <div className="mobile-top-bar__inner">
         <Link

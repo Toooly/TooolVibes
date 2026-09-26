@@ -519,14 +519,14 @@ select:focus {
   100% { opacity: 1; transform: translateY(0); }
 }
 
-.def-podium__item.is-winner,
-.def-editorial__pod-card--rank-1 {
+.def-latest.is-celebrated .def-podium__item.is-winner,
+.def-latest.is-celebrated .def-editorial__pod-card--rank-1 {
   position: relative;
   animation: tv-celebrate-rise 0.6s var(--tv-easing-decelerate) both;
 }
 
-.def-podium__item.is-winner::before,
-.def-editorial__pod-card--rank-1::before {
+.def-latest.is-celebrated .def-podium__item.is-winner::before,
+.def-latest.is-celebrated .def-editorial__pod-card--rank-1::before {
   content: "";
   position: absolute;
   inset: -4px;
@@ -537,14 +537,14 @@ select:focus {
 }
 
 /* Medallion scale */
-.def-podium__item.is-winner .def-podium__wreath-wrap,
-.def-podium__item.is-winner .def-podium__avatar {
+.def-latest.is-celebrated .def-podium__item.is-winner .def-podium__wreath-wrap,
+.def-latest.is-celebrated .def-podium__item.is-winner .def-podium__avatar {
   animation: tv-celebrate-medallion 0.9s var(--tv-easing-spring-smooth) 0.15s both;
 }
 
 /* Spark particles — 8 dots via box-shadow */
-.def-podium__item.is-winner::after,
-.def-editorial__pod-card--rank-1::after {
+.def-latest.is-celebrated .def-podium__item.is-winner::after,
+.def-latest.is-celebrated .def-editorial__pod-card--rank-1::after {
   content: "";
   position: absolute;
   top: 20%;
@@ -567,8 +567,8 @@ select:focus {
 }
 
 /* Score entry delay */
-.def-podium__item.is-winner .def-podium__score,
-.def-editorial__pod-card--rank-1 .def-podium__score {
+.def-latest.is-celebrated .def-podium__item.is-winner .def-podium__score,
+.def-latest.is-celebrated .def-editorial__pod-card--rank-1 .def-podium__score {
   animation: tv-score-enter 0.5s var(--tv-easing-decelerate) 0.55s both;
 }
 
@@ -619,12 +619,14 @@ select:focus {
   .def-intent__field,
   .def-start__panel,
   .tv-workflow-card,
-  .def-podium__item.is-winner,
-  .def-podium__item.is-winner::before,
-  .def-podium__item.is-winner::after,
-  .def-podium__item.is-winner .def-podium__wreath-wrap,
-  .def-podium__item.is-winner .def-podium__avatar,
-  .def-podium__item.is-winner .def-podium__score,
+  .def-latest.is-celebrated .def-podium__item.is-winner,
+  .def-latest.is-celebrated .def-podium__item.is-winner::before,
+  .def-latest.is-celebrated .def-podium__item.is-winner::after,
+  .def-latest.is-celebrated .def-podium__item.is-winner .def-podium__wreath-wrap,
+  .def-latest.is-celebrated .def-podium__item.is-winner .def-podium__avatar,
+  .def-latest.is-celebrated .def-podium__item.is-winner .def-podium__score,
+  .def-editorial__spot-eyebrow.is-revealed,
+  .def-editorial__spot-eyebrow.is-revealed::before,
   .def-editorial__pod-card--rank-1,
   .ar4-card,
   .tv-home-radar__launch,

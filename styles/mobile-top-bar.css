@@ -309,3 +309,15 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
+/* Reduced motion: no elastic header translation */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-top-bar {
+    transition: none !important;
+    transform: none !important;
+  }
+  .mobile-top-bar__pull-indicator.is-spinning {
+    animation: none !important;
+  }
+}

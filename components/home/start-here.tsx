@@ -84,6 +84,7 @@ export function StartHere({
   const [hasSwitched, setHasSwitched] = useState(false);
   const tabRefs = useRef<Partial<Record<StartTabId, HTMLButtonElement | null>>>({});
 
+
   function selectTab(next: StartTabId, focus = false) {
     if (next !== tab) setHasSwitched(true);
     setTab(next);
@@ -283,12 +284,32 @@ function IvoryEditorial({
 }
 
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
+  const podiumRef = useRef<HTMLElement | null>(null);
+  const celebrated = useRef(false);
+
+  useEffect(() => {
+    const podium = podiumRef.current;
+    if (!podium || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting || celebrated.current) continue;
+          celebrated.current = true;
+          podium.classList.add("is-celebrated");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(podium);
+    return () => observer.disconnect();
+  }, []);
   const latest = tools.slice(0, 3);
   if (latest.length === 0) return null;
   const lead = latest[0];
   const rest = latest.slice(1);
   return (
-    <section className="def-latest" aria-labelledby="def-latest-title">
+    <section ref={podiumRef} className="def-latest" aria-labelledby="def-latest-title">
       <div className="def-latest__head def-podium__header">
         <h3 id="def-latest-title" className="def-latest__title def-podium__title">
           Ultime dal catalogo
