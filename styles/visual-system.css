@@ -18,23 +18,54 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   width: min(100%, 22.5rem);
-  gap: 4px;
-  padding: 4px;
+  height: 44px;
+  padding: 3px;
   border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 85%, transparent);
+  position: relative;
   overflow: hidden;
+}
+
+/* Absolute active indicator */
+.tv-discovery-stage .def-start__tabs::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 3);
+  border-radius: 999px;
+  background: var(--tv-accent-violet, #7c3aed);
+  transition: transform 0.25s var(--tv-easing-spring-smooth);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tv-discovery-stage[data-mode="tool"] .def-start__tabs::before {
+  transform: translateX(0);
+}
+
+.tv-discovery-stage[data-mode="stack"] .def-start__tabs::before {
+  transform: translateX(100%);
+}
+
+.tv-discovery-stage[data-mode="radar"] .def-start__tabs::before {
+  transform: translateX(200%);
 }
 
 .tv-discovery-stage .def-start__tab {
   width: 100%;
-  min-height: 2.5rem;
+  min-height: 100%;
   padding-inline: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 0;
   border-radius: 999px;
+  background: transparent;
+  position: relative;
+  z-index: 1;
   transition:
     color var(--tv-motion-ui) var(--tv-easing-standard),
     background-color var(--tv-motion-ui) var(--tv-easing-standard),
@@ -49,19 +80,16 @@
 
 .tv-discovery-stage[data-mode="tool"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="tool"] .def-start__tab[aria-selected="true"] {
-  box-shadow: var(--tv-glow-gold) !important;
   color: var(--tv-ink-primary) !important;
 }
 
 .tv-discovery-stage[data-mode="stack"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="stack"] .def-start__tab[aria-selected="true"] {
-  box-shadow: var(--tv-glow-violet) !important;
   color: var(--tv-ink-primary) !important;
 }
 
 .tv-discovery-stage[data-mode="radar"] .def-start__tab.is-active,
 .tv-discovery-stage[data-mode="radar"] .def-start__tab[aria-selected="true"] {
-  box-shadow: var(--tv-glow-cyan) !important;
   color: var(--tv-ink-primary) !important;
 }
 
@@ -456,62 +484,92 @@ select:focus {
   border-radius: var(--tv-radius-system);
 }
 
-/* Podium winner celebration */
-@keyframes tv-celebrate {
-  0% { transform: scale(1); filter: brightness(1); }
-  25% { transform: scale(1.04); filter: brightness(1.15); }
-  50% { transform: scale(0.98); filter: brightness(1.05); }
-  75% { transform: scale(1.01); filter: brightness(1.02); }
-  100% { transform: scale(1); filter: brightness(1); }
+/* Podium winner celebration — visible viewport-entry sequence */
+@keyframes tv-celebrate-rise {
+  0% { transform: translateY(16px); opacity: 0.6; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes tv-celebrate-medallion {
+  0% { transform: scale(0.94); }
+  40% { transform: scale(1.04); }
+  100% { transform: scale(1); }
 }
 
 @keyframes tv-celebrate-glow {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-gold) 40%, transparent); }
-  50% { box-shadow: 0 0 24px 6px color-mix(in srgb, var(--tv-accent-gold) 30%, transparent); }
-  100% { box-shadow: 0 0 0 0 transparent; }
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-gold) 0%, transparent); }
+  30% { box-shadow: 0 0 32px 10px color-mix(in srgb, var(--tv-accent-gold) 35%, transparent), 0 0 64px 20px color-mix(in srgb, var(--tv-accent-violet) 20%, transparent); }
+  100% { box-shadow: 0 0 16px 4px color-mix(in srgb, var(--tv-accent-gold) 12%, transparent); }
 }
 
 @keyframes tv-spark {
-  0% { opacity: 0; transform: scale(0) translateY(0); }
-  20% { opacity: 1; transform: scale(1) translateY(-8px); }
-  100% { opacity: 0; transform: scale(0.5) translateY(-24px); }
+  0% { opacity: 0; transform: scale(0) translate(0, 0); }
+  15% { opacity: 1; transform: scale(1.1) translate(0, -6px); }
+  100% { opacity: 0; transform: scale(0.3) translate(var(--tx, 10px), var(--ty, -28px)); }
+}
+
+@keyframes tv-orbit {
+  0% { transform: rotate(0deg) scale(1); opacity: 0.6; }
+  50% { transform: rotate(180deg) scale(1.1); opacity: 1; }
+  100% { transform: rotate(360deg) scale(1); opacity: 0.6; }
+}
+
+@keyframes tv-score-enter {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .def-podium__item.is-winner,
 .def-editorial__pod-card--rank-1 {
-  animation: tv-celebrate 0.8s var(--tv-easing-spring-smooth) both;
   position: relative;
+  animation: tv-celebrate-rise 0.6s var(--tv-easing-decelerate) both;
 }
 
 .def-podium__item.is-winner::before,
 .def-editorial__pod-card--rank-1::before {
   content: "";
   position: absolute;
-  inset: -2px;
+  inset: -4px;
   border-radius: inherit;
-  animation: tv-celebrate-glow 1.2s var(--tv-easing-decelerate) 0.2s both;
+  animation: tv-celebrate-glow 1.2s var(--tv-easing-decelerate) 0.3s both;
   pointer-events: none;
   z-index: -1;
 }
 
-/* Sparkle particles on winner */
+/* Medallion scale */
+.def-podium__item.is-winner .def-podium__wreath-wrap,
+.def-podium__item.is-winner .def-podium__avatar {
+  animation: tv-celebrate-medallion 0.9s var(--tv-easing-spring-smooth) 0.15s both;
+}
+
+/* Spark particles — 8 dots via box-shadow */
 .def-podium__item.is-winner::after,
 .def-editorial__pod-card--rank-1::after {
   content: "";
   position: absolute;
-  top: -6px;
-  right: 12px;
-  width: 6px;
-  height: 6px;
+  top: 20%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--tv-accent-gold);
   box-shadow:
-    -16px 8px 0 -1px var(--tv-accent-gold),
-    -32px -4px 0 -2px var(--tv-accent-cyan, #22d3ee),
-    12px 16px 0 -1px var(--tv-accent-gold),
-    -8px -12px 0 -2px var(--tv-accent-gold);
-  animation: tv-spark 0.9s var(--tv-easing-decelerate) 0.3s both;
+    -28px -12px 0 -1px var(--tv-accent-gold),
+    28px -18px 0 -2px var(--tv-accent-cyan, #22d3ee),
+    -36px 14px 0 -1px var(--tv-accent-violet, #7c3aed),
+    36px 8px 0 -2px var(--tv-accent-gold),
+    -12px -32px 0 -2px var(--tv-accent-gold),
+    16px -28px 0 -1px var(--tv-accent-violet, #7c3aed),
+    -20px 28px 0 -2px var(--tv-accent-cyan, #22d3ee),
+    22px 32px 0 -1px var(--tv-accent-gold);
+  animation: tv-spark 1s var(--tv-easing-decelerate) 0.35s both;
   pointer-events: none;
+}
+
+/* Score entry delay */
+.def-podium__item.is-winner .def-podium__score,
+.def-editorial__pod-card--rank-1 .def-podium__score {
+  animation: tv-score-enter 0.5s var(--tv-easing-decelerate) 0.55s both;
 }
 
 @keyframes tv-shimmer {
@@ -562,6 +620,11 @@ select:focus {
   .def-start__panel,
   .tv-workflow-card,
   .def-podium__item.is-winner,
+  .def-podium__item.is-winner::before,
+  .def-podium__item.is-winner::after,
+  .def-podium__item.is-winner .def-podium__wreath-wrap,
+  .def-podium__item.is-winner .def-podium__avatar,
+  .def-podium__item.is-winner .def-podium__score,
   .def-editorial__pod-card--rank-1,
   .ar4-card,
   .tv-home-radar__launch,
@@ -573,4 +636,42 @@ select:focus {
     animation: none;
     transition: none;
   }
+}
+
+
+/* Accent line draw on viewport entry */
+.def-editorial__spot-eyebrow::before {
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: var(--tv-accent-gold);
+  margin-right: 8px;
+  vertical-align: middle;
+  border-radius: 1px;
+  animation: tv-line-draw 0.5s var(--tv-easing-decelerate) both;
+}
+
+@keyframes tv-line-draw {
+  from { width: 0; opacity: 0; }
+  to { width: 24px; opacity: 1; }
+}
+
+/* Editorial card reveal */
+.def-editorial__spot,
+.tv-workflow-card {
+  animation: tv-card-reveal 0.45s var(--tv-easing-decelerate) both;
+}
+
+@keyframes tv-card-reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Stagger for stack cards */
+.def-stacks__grid > li:nth-child(1) { animation-delay: 0ms; }
+.def-stacks__grid > li:nth-child(2) { animation-delay: 60ms; }
+.def-stacks__grid > li:nth-child(3) { animation-delay: 120ms; }
+
+.def-stacks__grid > li {
+  animation: tv-card-reveal 0.45s var(--tv-easing-decelerate) both;
 }

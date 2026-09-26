@@ -34,11 +34,11 @@ describe("Home header search suppression", () => {
     expect(container.querySelector(".mobile-top-bar__route")).toBeNull();
   });
 
-  it("shows search button at top of Home (refresh only on scroll)", () => {
+  it("shows no search or refresh at top of Home", () => {
     useMobileUIStore.setState({ heroSearchVisible: false });
     const { container } = render(<MobileTopBar />);
     const search = container.querySelector(".mobile-top-bar__search");
-    expect(search).not.toBeNull();
+    expect(search).toBeNull();
     const refresh = container.querySelector(".mobile-top-bar__refresh");
     expect(refresh).toBeNull();
   });

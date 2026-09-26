@@ -15,12 +15,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Bell, RefreshCw, Search } from "lucide-react";
+import { Bell, RefreshCw } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 
 /**
@@ -79,7 +78,6 @@ export function MobileTopBar() {
   const router = useRouter();
   const isHome = pathname === "/";
   const routeLabel = getRouteLabel(pathname);
-  const setCommandOpen = useToolWorkspaceStore((state) => state.setCommandOpen);
   const viewport = useChromeViewport();
   const scrolled = useHeaderScrolled();
 
@@ -109,21 +107,14 @@ export function MobileTopBar() {
           {scrolled ? (
             <button
               type="button"
-              className="mobile-top-bar__search mobile-top-bar__refresh"
+              className="mobile-top-bar__refresh"
               aria-label="Aggiorna pagina"
               onClick={() => router.refresh()}
             >
               <RefreshCw size={16} aria-hidden="true" />
             </button>
           ) : (
-            <button
-              type="button"
-              className="mobile-top-bar__search"
-              aria-label="Apri ricerca"
-              onClick={() => setCommandOpen(true)}
-            >
-              <Search size={16} aria-hidden="true" />
-            </button>
+            <span className="mobile-top-bar__action-placeholder" aria-hidden="true" />
           )}
         </div>
 
