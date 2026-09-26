@@ -15,6 +15,7 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transitions";
 
 import { cn } from "@/lib/utils";
+import { haptic } from "@/lib/haptics";
 import {
   CHROME_DESKTOP_MEDIA_QUERY,
   useChromeViewport,
@@ -39,11 +40,7 @@ const BOTTOM_REVEAL_PX = 120;
 const TOP_FORCE_EXPAND_PX = 24;
 const PAUSE_EXPAND_MS = 900;
 
-function haptic(pattern: number | number[] = 8) {
-  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-    navigator.vibrate(pattern);
-  }
-}
+// Haptic feedback via shared utility (native vibrate + iOS audio fallback)
 
 export function MobileBottomNav() {
   const preferReducedMotion = useReducedMotion();
@@ -281,7 +278,7 @@ export function MobileBottomNav() {
                 }
                 className={cn("mobile-bottom-item", isActive && "is-active")}
                 data-family={navFamilyForHref(item.href)}
-                onClick={() => haptic(8)}
+                onClick={() => haptic("light")}
               >
                 <span className="mobile-bottom-item__icon-wrap">
                   {isActive ? (

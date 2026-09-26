@@ -21,6 +21,7 @@ import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
 import { cn } from "@/lib/utils";
+import { haptic } from "@/lib/haptics";
 
 /**
  * V3 route-context policy (Phase 1): the compact strip exists only inside
@@ -66,11 +67,7 @@ function usePullToRefresh(onRefresh: () => void) {
   const wasArmed = useRef(false);
   const PULL_THRESHOLD = 56;
 
-  function haptic(pattern: number | number[]) {
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      navigator.vibrate(pattern);
-    }
-  }
+  // Uses shared haptic utility (native vibrate + iOS audio fallback)
 
   useEffect(() => {
     const shell = document.querySelector<HTMLElement>(".marketing-shell");
@@ -104,7 +101,7 @@ function usePullToRefresh(onRefresh: () => void) {
         // Haptic tick when crossing armed threshold
         if (damped >= PULL_THRESHOLD && !wasArmed.current) {
           wasArmed.current = true;
-          haptic(8);
+          haptic("light");
         }
         if (damped < PULL_THRESHOLD && wasArmed.current) {
           wasArmed.current = false;
@@ -117,7 +114,7 @@ function usePullToRefresh(onRefresh: () => void) {
       isPulling.current = false;
       wasArmed.current = false;
       if (pullDistance >= PULL_THRESHOLD) {
-        haptic([12, 40, 12]); // success pattern
+        haptic("success"); // success pattern
         setIsRefreshing(true);
         onRefresh();
         // Brief spin then reset
