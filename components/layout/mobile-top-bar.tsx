@@ -63,7 +63,14 @@ function usePullToRefresh(onRefresh: () => void) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const startY = useRef(0);
   const isPulling = useRef(false);
+  const wasArmed = useRef(false);
   const PULL_THRESHOLD = 56;
+
+  function haptic(pattern: number | number[]) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      navigator.vibrate(pattern);
+    }
+  }
 
   useEffect(() => {
     const shell = document.querySelector<HTMLElement>(".marketing-shell");
@@ -83,6 +90,7 @@ function usePullToRefresh(onRefresh: () => void) {
       // Must still be at top — if user scrolled up, cancel
       if (shell.scrollTop > 0) {
         isPulling.current = false;
+        wasArmed.current = false;
         setPullDistance(0);
         return;
       }
@@ -93,13 +101,23 @@ function usePullToRefresh(onRefresh: () => void) {
         // Apply resistance (pull feels increasingly hard)
         const damped = Math.min(delta * 0.5, 90);
         setPullDistance(damped);
+        // Haptic tick when crossing armed threshold
+        if (damped >= PULL_THRESHOLD && !wasArmed.current) {
+          wasArmed.current = true;
+          haptic(8);
+        }
+        if (damped < PULL_THRESHOLD && wasArmed.current) {
+          wasArmed.current = false;
+        }
       }
     };
 
     const onTouchEnd = () => {
       if (!isPulling.current) return;
       isPulling.current = false;
+      wasArmed.current = false;
       if (pullDistance >= PULL_THRESHOLD) {
+        haptic([12, 40, 12]); // success pattern
         setIsRefreshing(true);
         onRefresh();
         // Brief spin then reset

@@ -39,6 +39,12 @@ const BOTTOM_REVEAL_PX = 120;
 const TOP_FORCE_EXPAND_PX = 24;
 const PAUSE_EXPAND_MS = 900;
 
+function haptic(pattern: number | number[] = 8) {
+  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+    navigator.vibrate(pattern);
+  }
+}
+
 export function MobileBottomNav() {
   const preferReducedMotion = useReducedMotion();
   const viewport = useChromeViewport();
@@ -275,6 +281,7 @@ export function MobileBottomNav() {
                 }
                 className={cn("mobile-bottom-item", isActive && "is-active")}
                 data-family={navFamilyForHref(item.href)}
+                onClick={() => haptic(8)}
               >
                 <span className="mobile-bottom-item__icon-wrap">
                   {isActive ? (
