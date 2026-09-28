@@ -171,17 +171,18 @@ export function WorkspaceBiblioteca({
     <div className="tv-lib">
       <div className="tv-lib-toolbar">
         <label className="tv-lib-search">
-          <span className="sr-only">Cerca in Salvati</span>
+          <span className="tv-lib-field-label">Cerca</span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Cerca un tool"
+            placeholder="Nome del tool"
+            aria-label="Cerca in Salvati"
           />
         </label>
         <label className="tv-lib-select">
-          <span className="sr-only">Ordina</span>
+          <span className="tv-lib-field-label">Ordina</span>
           <select
-            aria-label="Ordina"
+            aria-label="Ordina i salvati"
             value={sort}
             onChange={(event) => setSort(event.target.value as SalvatiSort)}
           >

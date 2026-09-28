@@ -61,7 +61,7 @@ export function HeaderAccountControl({
           <Link href="/account/settings" prefetch={false}>
             Impostazioni
           </Link>
-          <button type="button" onClick={() => void account.signOut()}>
+          <button type="button" className="is-destructive" onClick={() => void account.signOut()}>
             Esci
           </button>
         </div>

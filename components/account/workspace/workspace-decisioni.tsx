@@ -41,11 +41,13 @@ function DecisionRow({
       </span>
       <span className="tv-decision-row__body">
         <strong className="tv-decision-row__name">{nameOf(names, item.slug)}</strong>
-        <span className="tv-decision-row__meta">
+        <span className="tv-decision-row__status">
           {statusLabel}
           {item.status === "review" ? " · da rivedere" : ""}
-          {item.at ? ` · ${formatWorkspaceDate(item.at)}` : ""}
         </span>
+        {item.at ? (
+          <span className="tv-decision-row__meta">{formatWorkspaceDate(item.at)}</span>
+        ) : null}
         {item.reason ? (
           <span className="tv-decision-row__note">{item.reason}</span>
         ) : item.useCase ? (

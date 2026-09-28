@@ -1844,9 +1844,16 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.tv-decision-row__status {
+  color: var(--tv-ink-primary);
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
 .tv-decision-row__meta {
-  color: var(--tv-ink-secondary);
-  font-size: 0.76rem;
+  color: var(--tv-ink-muted-aa, var(--tv-ink-secondary));
+  font-size: 0.75rem;
+  font-weight: 500;
   line-height: 1.3;
 }
 .tv-decision-row__note {
@@ -2546,9 +2553,11 @@
 }
 
 .tv-choice button[aria-pressed="true"] {
-  background: var(--tv-surface-3);
+  background: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 28%, var(--tv-surface-elevated, #1a1330));
   color: var(--tv-ink-primary);
-  border-color: rgba(185, 164, 255, 0.4);
+  border-color: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 70%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 35%, transparent);
+  font-weight: 700;
 }
 
 .tv-switch {
@@ -2561,11 +2570,17 @@
 }
 
 .tv-switch input {
-  width: 2.6rem;
-  height: 1.45rem;
+  width: 2.75rem;
+  min-width: 2.75rem;
+  height: 1.55rem;
+  min-height: 1.55rem;
+  margin: 0;
+  padding: 0;
+  flex: 0 0 auto;
   appearance: none;
+  border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 22%, transparent);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--tv-ink-primary) 16%, #120e22);
   position: relative;
 }
 
@@ -2581,15 +2596,26 @@
 }
 
 .tv-switch input:checked {
-  background: color-mix(in srgb, var(--tv-tone-using) 55%, #1a1530);
+  background: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 70%, #1a1030);
+  border-color: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 80%, white);
 }
 
-.tv-switch input:checked::after { left: 1.3rem; }
+.tv-switch input:checked::after { left: calc(100% - 1.35rem); }
 
 .tv-danger {
-  margin-top: 0.85rem;
-  padding: 0.85rem 0 0;
-  border-top: 1px solid rgba(201, 137, 137, 0.28);
+  margin-top: 1.1rem;
+  padding: 0.95rem 0 0;
+  border-top: 1px solid color-mix(in srgb, #e0a0a0 35%, transparent);
+  display: grid;
+  gap: 0.55rem;
+}
+.tv-danger .account-btn-secondary,
+.tv-danger button {
+  justify-self: start;
+  min-height: 44px;
+  border-color: color-mix(in srgb, #e7a3a3 55%, transparent);
+  color: #f3d2d2;
+  background: color-mix(in srgb, #e7a3a3 10%, transparent);
 }
 
 .tv-compose-stack {
@@ -2835,7 +2861,12 @@
 }
 
 .tv-switch input {
-  background: rgba(255, 255, 255, 0.34);
+  width: 2.75rem;
+  min-width: 2.75rem;
+  height: 1.55rem;
+  min-height: 1.55rem;
+  padding: 0;
+  background: color-mix(in srgb, var(--tv-ink-primary) 16%, #120e22);
 }
 .tv-choice button {
   border-color: rgba(255, 255, 255, 0.22);
@@ -4337,6 +4368,28 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
   -webkit-backdrop-filter: var(--tv-lib-g1-filter);
   backdrop-filter: var(--tv-lib-g1-filter);
   box-shadow: var(--tv-lib-g1-light), var(--tv-lib-g1-shadow);
+}
+
+.tv-lib-field-label {
+  display: block;
+  margin-bottom: 0.28rem;
+  color: var(--tv-ink-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tv-lib-search,
+.tv-lib-select {
+  display: grid;
+  min-width: 0;
+}
+.tv-lib-select select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--tv-ink-secondary) 50%), linear-gradient(135deg, var(--tv-ink-secondary) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 1.8rem;
 }
 
 .tv-lib-search input,
