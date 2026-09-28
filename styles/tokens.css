@@ -184,6 +184,7 @@
   --tv-header-painted: calc(var(--tv-safe-top) + var(--tv-header-bar-inner) + var(--tv-header-route-extra));
   --tv-scroll-anchor-offset: calc(var(--tv-header-painted) + var(--tv-subnav-height) + 0.5rem);
   --tv-compare-gap: 0.75rem;
+  --tv-page-gutter-mobile: 1.25rem;
   --tv-compare-compact-size: 3.25rem;
 
   /* Route stage offsets — canonical variants for content layout.

@@ -1021,6 +1021,17 @@
 .tv-utility__nav {
   display: grid;
   gap: var(--tv-rhythm-group);
+  padding-top: 0.35rem;
+}
+.tv-utility__service {
+  padding-top: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
+}
+.tv-utility__mark {
+  margin: 0.35rem 0 0;
+  color: var(--tv-ink-muted-aa);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
 }
 
 .tv-utility__group h3 {

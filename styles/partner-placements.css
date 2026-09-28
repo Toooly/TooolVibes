@@ -3394,11 +3394,10 @@
   }
 
   .partner-pe--contextual .partner-brand-plate--contextual {
-    /* Full-bleed width → height from 2/1 ratio (~width/2). No max-height crop. */
-    --partner-plate-max-h: 100rem; /* effectively uncapped; width stays 100% */
-    width: 100%;
+    --partner-plate-max-h: 12rem;
+    width: min(100%, calc(12rem * 2));
     max-width: 100%;
-    max-height: none;
+    max-height: 12rem;
     height: auto;
     aspect-ratio: var(--partner-plate-ratio, 2 / 1);
   }
