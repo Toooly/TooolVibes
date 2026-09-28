@@ -606,3 +606,30 @@
   font-size: 0.875rem;
   font-weight: 600;
 }
+
+.tv-cc-drop {
+  display: grid;
+  justify-items: start;
+  gap: 0.45rem;
+  min-height: 8.5rem;
+  padding: 1rem;
+  border: 1px dashed color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 55%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--tv-surface-raised, #1c1440) 72%, transparent);
+}
+.tv-cc-drop.is-over {
+  border-style: solid;
+  background: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 16%, transparent);
+}
+.tv-cc-drop__meter {
+  height: 4px;
+  margin-top: 0.55rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tv-ink-primary, #fff) 12%, transparent);
+}
+.tv-cc-drop__meter > span {
+  display: block;
+  height: 100%;
+  background: var(--tv-accent-brand, #7c3aed);
+}

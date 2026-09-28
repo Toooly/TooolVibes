@@ -70,6 +70,7 @@ export function ArticleMarkdownEditor({
   const [value, setValue] = useState(initialValue);
   const [mode, setMode] = useState<"write" | "preview">("write");
   const [uploading, setUploading] = useState<MediaKind | null>(null);
+  const [dragging, setDragging] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const videoInputRef = useRef<HTMLInputElement | null>(null);
@@ -302,16 +303,39 @@ export function ArticleMarkdownEditor({
       </div>
 
       {mode === "write" ? (
-        <textarea
-          ref={textareaRef}
-          name={name}
-          value={value}
-          disabled={disabled}
-          onChange={(event) => setValue(event.target.value)}
-          rows={22}
-          className="min-h-[34rem] w-full resize-y bg-transparent px-4 py-4 font-mono text-[0.92rem] leading-7 outline-none disabled:cursor-not-allowed"
-          spellCheck
-        />
+        <div
+          className={dragging ? "tv-cc-drop is-over" : undefined}
+          onDragEnter={(event) => {
+            event.preventDefault();
+            setDragging(true);
+          }}
+          onDragOver={(event) => {
+            event.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(event) => {
+            event.preventDefault();
+            setDragging(false);
+            const files = [...event.dataTransfer.files];
+            for (const file of files) {
+              const kind = file.type.startsWith("video/") ? "video" : "image";
+              void uploadMedia(file, kind);
+            }
+          }}
+        >
+          <textarea
+            ref={textareaRef}
+            name={name}
+            value={value}
+            disabled={disabled}
+            onChange={(event) => setValue(event.target.value)}
+            rows={22}
+            placeholder="Scrivi, oppure trascina qui foto, gif o video."
+            className="min-h-[34rem] w-full resize-y bg-transparent px-4 py-4 font-mono text-[0.92rem] leading-7 outline-none disabled:cursor-not-allowed"
+            spellCheck
+          />
+        </div>
       ) : (
         <>
           <input type="hidden" name={name} value={value} />

@@ -47,3 +47,12 @@ export function readPngSize(bytes: Uint8Array) {
   if (width <= 0 || height <= 0) return null;
   return { width, height };
 }
+
+export function mediaFileRejection(file: { type: string; size: number }): string | null {
+  if (file.size <= 0) return "File vuoto.";
+  if (file.size > MAX_MEDIA_UPLOAD_BYTES) return "File troppo grande. Limite: 8 MB.";
+  if (file.type && !MEDIA_IMAGE_MIME_TYPES.includes(file.type as (typeof MEDIA_IMAGE_MIME_TYPES)[number])) {
+    return "Solo immagini JPEG, PNG, WebP o GIF.";
+  }
+  return null;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useActionState } from "react";
 
 import { ArticleMarkdownEditor } from "@/components/admin/article-markdown-editor";
@@ -115,6 +115,7 @@ export function ArticleForm({
     ...initialValues,
     ...state.values,
   };
+  const [coverUrl, setCoverUrl] = useState(values.cover_image_url);
 
   return (
     <EditorShell dirty={dirty} onDirty={markDirty}>
@@ -204,10 +205,10 @@ export function ArticleForm({
               <FieldLabel label="URL immagine di copertina" />
               <input
                 type="url"
-                defaultValue={values.cover_image_url}
+                value={coverUrl}
                 readOnly
                 aria-label="URL copertina selezionato"
-                placeholder="https://..."
+                placeholder="Trascina un file nella libreria"
                 className="tv-cc-field"
               />
               <FieldError error={state.fieldErrors?.cover_image_url} />
@@ -223,7 +224,7 @@ export function ArticleForm({
               <FieldError error={state.fieldErrors?.cover_image_alt} />
               <div className="mt-4">
                 <FieldLabel label="Scegli dalla media library" />
-                <MediaLibraryPicker fieldName="cover_image_url" defaultValue={values.cover_image_url} />
+                <MediaLibraryPicker fieldName="cover_image_url" defaultValue={values.cover_image_url} onChange={setCoverUrl} />
               </div>
             </label>
 

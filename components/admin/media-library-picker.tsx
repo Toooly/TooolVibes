@@ -2,21 +2,26 @@
 
 import { useMemo, useState } from "react";
 
+import { AdminMediaDropzone } from "@/components/admin/admin-media-dropzone";
 import { getMediaCatalog, type MediaAsset } from "@/lib/admin/media-catalog";
 import { cn } from "@/lib/utils";
 
 export function MediaLibraryPicker({
   fieldName,
   defaultValue = "",
+  onChange,
 }: {
   fieldName: string;
   defaultValue?: string;
+  onChange?: (src: string) => void;
 }) {
   const [value, setValue] = useState(defaultValue);
+  function choose(next: string) {
+    setValue(next);
+    onChange?.(next);
+  }
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState("all");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [uploaded, setUploaded] = useState<MediaAsset[]>([]);
   const catalog = useMemo(() => {
     const base = [...getMediaCatalog(), ...uploaded].filter((asset) => !asset.archived);
@@ -31,30 +36,16 @@ export function MediaLibraryPicker({
   });
   const selected = catalog.find((asset) => asset.src === value || asset.srcPng === value);
 
-  async function onUpload(file: File | undefined) {
-    if (!file) return;
-    setBusy(true);
-    setError(null);
-    const body = new FormData();
-    body.append("file", file);
-    body.append("label", file.name);
-    try {
-      const response = await fetch("/api/admin/media", { method: "POST", body });
-      const payload = (await response.json()) as MediaAsset & { message?: string };
-      if (!response.ok) throw new Error(payload.message || "Upload non riuscito.");
-      setUploaded((current) => [payload, ...current]);
-      setValue(payload.src);
-    } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "Upload non riuscito.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
   return (
     <div className="space-y-3">
       <input type="hidden" name={fieldName} value={value} />
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto]">
+      <AdminMediaDropzone
+        onUploaded={(asset) => {
+          setUploaded((current) => [asset, ...current]);
+          choose(asset.src);
+        }}
+      />
+      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -71,18 +62,7 @@ export function MediaLibraryPicker({
           <option value="brand">Brand</option>
           <option value="editorial">Editoriale</option>
         </select>
-        <label className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full bg-[linear-gradient(135deg,#6a3cff,#39d2f6)] px-4 text-sm font-semibold text-white">
-          {busy ? "Caricamento…" : "Carica"}
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            className="sr-only"
-            disabled={busy}
-            onChange={(event) => void onUpload(event.target.files?.[0])}
-          />
-        </label>
       </div>
-      {error ? <p className="text-sm text-amber-200">{error}</p> : null}
       {filtered.length === 0 ? (
         <p className="tv-cc-notice">Nessun asset. Carica un’immagine o registra un URL.</p>
       ) : (
@@ -91,7 +71,7 @@ export function MediaLibraryPicker({
             <button
               key={asset.id}
               type="button"
-              onClick={() => setValue(asset.src)}
+              onClick={() => choose(asset.src)}
               className={cn("tv-cc-panel flex min-h-16 items-center gap-3 text-left", selected?.id === asset.id && "outline outline-1 outline-[var(--tv-border-brand)]")}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -119,7 +99,7 @@ export function MediaLibraryPicker({
           >
             Copia URL
           </button>
-          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={() => setValue("")}>
+          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={() => choose("")}>
             Rimuovi
           </button>
         </div>
@@ -128,7 +108,7 @@ export function MediaLibraryPicker({
         URL avanzato
         <input
           value={value}
-          onChange={(event) => setValue(event.target.value)}
+          onChange={(event) => choose(event.target.value)}
           className="tv-cc-field"
           placeholder="https:// o /percorso-locale"
         />
