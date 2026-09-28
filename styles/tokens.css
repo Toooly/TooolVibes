@@ -161,7 +161,9 @@
   --tv-z-floating: 100;
   --tv-z-toast: 110;
   --tv-z-effects: 120;
+  --tv-z-subnav: 30;        /* sticky local nav, under header */
   --tv-z-dock: 40;          /* compare session dock, under nav */
+  --tv-z-compare: 45;       /* floating compare utility, under header menus */
   --tv-z-skip: 9999;        /* a11y exception: .skip-link must top everything */
   --tv-z-consent: 130;      /* cookie consent above toast, below skip-link */
 
@@ -172,8 +174,17 @@
   --tv-container-wide: 64rem;        /* 1024px */
   --tv-container-uw: 84rem;          /* 1344px */
   --tv-header-height: 5.25rem;          /* 84px - definitive CommandBar v4 (2026-07-24) */
-  --tv-header-height-mobile: 4.875rem; /* 78px - mobile top bar (brand + route label = 56 + 22) */
+  --tv-header-height-mobile: 4.875rem; /* fallback before painted measure */
   --tv-main-offset-top: var(--tv-header-height);
+  --tv-safe-top: env(safe-area-inset-top, 0px);
+  --tv-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --tv-header-bar-inner: 3.5rem;       /* 56px mobile bar, before route strip */
+  --tv-header-route-extra: 0px;
+  --tv-subnav-height: 0px;
+  --tv-header-painted: calc(var(--tv-safe-top) + var(--tv-header-bar-inner) + var(--tv-header-route-extra));
+  --tv-scroll-anchor-offset: calc(var(--tv-header-painted) + var(--tv-subnav-height) + 0.5rem);
+  --tv-compare-gap: 0.75rem;
+  --tv-compare-compact-size: 3.25rem;
 
   /* Route stage offsets — canonical variants for content layout.
      Use on the FIRST section of each route to control the gap between

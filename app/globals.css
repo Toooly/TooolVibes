@@ -40,12 +40,12 @@ html {
   scrollbar-width: thin;
   /* Fixed-surface contract: anchor scroll offsets land below topbar.
      MobileTopBar = 56px + 0.5rem slack. CommandBar = 84px + 0.5rem slack. */
-  scroll-padding-top: calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem);
+  scroll-padding-top: var(--tv-scroll-anchor-offset, calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem));
 }
 
 @media (min-width: 1280px) {
   html {
-    scroll-padding-top: calc(var(--tv-header-height, 5.25rem) + 0.5rem);
+    scroll-padding-top: var(--tv-scroll-anchor-offset, calc(var(--tv-header-height, 5.25rem) + 0.5rem));
   }
 }
 
@@ -14440,7 +14440,7 @@ img {
 @media (max-width: 767px) {
   /* ── Global mobile scroll padding ── */
   html {
-    scroll-padding-top: calc(4.5rem + env(safe-area-inset-top));
+    scroll-padding-top: var(--tv-scroll-anchor-offset, calc(4.5rem + env(safe-area-inset-top)));
   }
 
   /* ═══════════════════════════════════════════════════════════════

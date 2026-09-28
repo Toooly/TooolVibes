@@ -273,13 +273,13 @@
   background: var(--tv-bg-base);
   border-bottom: 1px solid var(--tv-border-subtle);
   position: sticky;
-  top: 0;
-  z-index: 30;
+  top: var(--tv-header-painted, var(--tv-header-height, 5.25rem));
+  z-index: var(--tv-z-subnav, 30);
 }
 
 /* On tablet narrow (768-819) the mobile header has different sticky top */
-@media (min-width: 768px) and (max-width: 819px) {
-  .ar4-filters { top: var(--tv-header-height-tablet, 64px); }
+@media (min-width: 768px) and (max-width: 1279px) {
+  .ar4-filters { top: var(--tv-header-painted, var(--tv-header-height-mobile, 4.875rem)); }
 }
 
 .ar4-filters__inner {
@@ -1513,14 +1513,17 @@
     background: var(--tv-bg-base);
     border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
     position: sticky;
-    top: var(--tv-header-height-mobile, 78px);
-    z-index: 20;
+    top: var(--tv-header-painted, var(--tv-header-height-mobile, 4.875rem));
+    z-index: var(--tv-z-subnav, 30);
   }
 }
 
 @media (min-width: 768px) and (max-width: 819px) {
   .ar4-mobile-bar {
     display: block;
+    position: sticky;
+    top: var(--tv-header-painted, var(--tv-header-height-mobile, 4.875rem));
+    z-index: var(--tv-z-subnav, 30);
     background: var(--tv-bg-base);
     border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
   }

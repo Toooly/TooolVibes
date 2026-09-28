@@ -2640,10 +2640,10 @@
 
 .tv-lib-toolbar {
   position: sticky;
-  top: 0;
-  z-index: 5;
+  top: var(--tv-header-painted, var(--tv-header-height-mobile, 4.875rem));
+  z-index: var(--tv-z-subnav, 30);
   padding-top: 0.35rem;
-  background: color-mix(in srgb, var(--tv-bg-base, #0b0918) 92%, transparent);
+  background: color-mix(in srgb, var(--tv-bg-base, #0b0918) 98%, #000);
 }
 
 .tv-mod {

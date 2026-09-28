@@ -1784,18 +1784,35 @@
 
 .tv-compare-dock {
   position: fixed;
-  left: 0;
-  right: 0;
-  /* v3.2 P8: 8px breathing room above the bottom nav (token tracks 65px,
-     measured nav runs ~6px taller) so the dock card never tucks under it. */
-  bottom: calc(var(--tv-bottom-nav-total, 0px) + 8px);
-  z-index: var(--tv-z-dock, 40);
-  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  left: max(0.75rem, env(safe-area-inset-left, 0px));
+  right: max(0.75rem, env(safe-area-inset-right, 0px));
+  bottom: calc(
+    var(--tv-bottom-nav-total, 3.625rem) + env(safe-area-inset-bottom, 0px) +
+      var(--tv-compare-gap, 0.75rem)
+  );
+  z-index: var(--tv-z-compare, 45);
+  display: flex;
+  justify-content: center;
   pointer-events: none;
 }
 @media (prefers-reduced-motion: no-preference) {
   .tv-compare-dock {
     animation: tv-motion-dock-in var(--tv-motion-base) var(--tv-easing-decelerate);
+  }
+  .tv-compare-dock,
+  .tv-compare-dock__inner,
+  .tv-compare-dock__list,
+  .tv-compare-dock__cta,
+  .tv-compare-dock__count {
+    transition:
+      max-width 280ms var(--tv-easing-spring-smooth),
+      width 280ms var(--tv-easing-spring-smooth),
+      min-height 280ms var(--tv-easing-standard),
+      padding 280ms var(--tv-easing-standard),
+      border-radius 280ms var(--tv-easing-spring-smooth),
+      opacity 220ms var(--tv-easing-standard),
+      transform 280ms var(--tv-easing-spring-smooth),
+      background 220ms var(--tv-easing-standard);
   }
   .tv-compare-dock[data-ready] .tv-compare-dock__cta {
     animation: tv-emphasis-once var(--tv-duration-reward) var(--tv-easing-decelerate);
@@ -1806,17 +1823,27 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
   max-width: 1120px;
-  margin: 0 auto;
   min-height: 56px;
   padding: 8px 12px;
   border-radius: var(--tv-radius-modal);
   background: var(--tv-surface-floating);
   border: 1px solid var(--tv-border-default);
+  box-shadow: 0 12px 32px color-mix(in srgb, #000 28%, transparent);
+}
+.tv-compare-dock[data-compare-dock-collapsed] {
+  justify-content: flex-end;
 }
 .tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__inner {
-  min-height: 44px;
-  padding-block: 6px;
+  width: auto;
+  max-width: 12.5rem;
+  min-height: var(--tv-compare-compact-size, 3.25rem);
+  height: var(--tv-compare-compact-size, 3.25rem);
+  margin-left: auto;
+  padding: 0 0.45rem 0 0.85rem;
+  border-radius: 999px;
+  gap: 0.35rem;
 }
 .tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__list {
   display: none;
@@ -1831,13 +1858,19 @@
   margin: 0;
   padding: 0;
   border: 0;
+  border-radius: 999px;
   background: transparent;
   color: inherit;
   cursor: pointer;
 }
-.tv-compare-dock__toggle:focus-visible {
-  outline: 2px solid var(--tv-accent-brand-aa);
+.tv-compare-dock__toggle:focus-visible,
+.tv-compare-dock__cta:focus-visible {
+  outline: 2px solid var(--tv-accent-brand-aa, var(--tv-accent-brand));
   outline-offset: 2px;
+}
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__toggle {
+  min-width: 44px;
+  min-height: 44px;
 }
 .tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__toggle svg {
   transform: rotate(180deg);
@@ -1846,6 +1879,7 @@
   margin: 0;
   font-variant-numeric: tabular-nums;
   font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.06em;
   white-space: nowrap;
 }
@@ -1858,6 +1892,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  opacity: 1;
 }
 .tv-compare-dock__list li {
   display: inline-flex;
@@ -1891,7 +1926,11 @@
   text-decoration: none;
   font-weight: var(--tv-button-font-weight);
   font-size: var(--tv-text-button);
-  transition: background var(--tv-duration-fast) var(--tv-easing-standard);
+}
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta {
+  min-height: 2rem;
+  padding-inline: 0.7rem;
+  font-size: 0.75rem;
 }
 .tv-compare-dock:not([data-ready]) .tv-compare-dock__cta {
   background: transparent;
@@ -1905,18 +1944,28 @@
   }
 }
 @media (min-width: 1280px) {
-  .tv-compare-dock { bottom: 16px; }
+  .tv-compare-dock { bottom: 1rem; }
 }
 html:has(.tv-consent-banner) .tv-compare-dock {
-  bottom: calc(var(--tv-bottom-nav-total, 0px) + env(safe-area-inset-bottom, 0px) + var(--tv-consent-banner-height, 7.5rem) + 8px);
+  bottom: calc(
+    var(--tv-bottom-nav-total, 3.625rem) + env(safe-area-inset-bottom, 0px) +
+      var(--tv-consent-banner-height, 7.5rem) + var(--tv-compare-gap, 0.75rem)
+  );
 }
 @media (min-width: 1280px) {
   html:has(.tv-consent-banner) .tv-compare-dock {
-    bottom: calc(16px + var(--tv-consent-banner-height, 7.5rem));
+    bottom: calc(1rem + var(--tv-consent-banner-height, 7.5rem));
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tv-compare-dock { transition: none; }
+  .tv-compare-dock,
+  .tv-compare-dock__inner,
+  .tv-compare-dock__list,
+  .tv-compare-dock__cta,
+  .tv-compare-dock__count {
+    transition: none;
+    animation: none;
+  }
 }
 
 @media (max-width: 47.99rem) {

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { bindShellScroll, getShellScroller, readingLine } from "@/lib/shell/scroll-port";
 
 export type TocItem = { id: string; text: string; level: 2 | 3 };
 
@@ -45,6 +46,7 @@ export function GuideArticleToc({
   const [activeId, setActiveId] = useState<string | null>(items[0]?.id ?? null);
   const [progress, setProgress] = useState(0);
   const preferReducedMotion = useReducedMotion();
+  const pinned = useRef<string | null>(null);
 
   // Deep-link: honor #hash on first paint before scroll-spy takes over.
   useEffect(() => {
@@ -68,26 +70,25 @@ export function GuideArticleToc({
     const measure = () => {
       const root = document.querySelector(progressRootSelector) as HTMLElement | null;
       const target = root ?? document.body;
+      const scroller = getShellScroller();
+      const viewTop = scroller instanceof HTMLElement ? scroller.getBoundingClientRect().top : 0;
+      const viewport = scroller instanceof HTMLElement ? scroller.clientHeight : window.innerHeight;
       const rect = target.getBoundingClientRect();
-      const top = rect.top + window.scrollY;
-      const height = target.offsetHeight;
-      const viewport = window.innerHeight;
-      const scrolled = window.scrollY - top;
-      const total = Math.max(1, height - viewport);
+      const scrolled = viewTop - rect.top;
+      const total = Math.max(1, target.offsetHeight - viewport);
       const pct = Math.max(0, Math.min(1, scrolled / total));
       setProgress(pct);
 
-      // Active section: pick the heading whose top is closest above the
-      // reading line (25% of viewport from top).
-      const line = window.scrollY + viewport * 0.25;
+      if (pinned.current) {
+        setActiveId(pinned.current);
+        return;
+      }
+
+      const line = readingLine();
       let current: string | null = elements[0]?.id ?? null;
       for (const el of elements) {
-        const elTop = el.getBoundingClientRect().top + window.scrollY;
-        if (elTop <= line) {
-          current = el.id;
-        } else {
-          break;
-        }
+        if (el.getBoundingClientRect().top <= line) current = el.id;
+        else break;
       }
       setActiveId(current);
     };
@@ -102,12 +103,14 @@ export function GuideArticleToc({
     };
 
     measure();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const unbind = bindShellScroll(onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    window.addEventListener("hashchange", onScroll);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
+      unbind();
       window.removeEventListener("resize", onScroll);
+      window.removeEventListener("hashchange", onScroll);
     };
   }, [items, preferReducedMotion, progressRootSelector]);
 
@@ -146,6 +149,13 @@ export function GuideArticleToc({
             <a
               href={`#${item.id}`}
               aria-current={activeId === item.id ? "true" : undefined}
+              onClick={() => {
+                pinned.current = item.id;
+                setActiveId(item.id);
+                window.setTimeout(() => {
+                  pinned.current = null;
+                }, 700);
+              }}
             >
               {item.text}
             </a>

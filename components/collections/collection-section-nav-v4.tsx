@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+import { bindShellScroll, readingLine } from "@/lib/shell/scroll-port";
 
 export type CollectionSectionNavItem = {
   id: string;
@@ -13,11 +15,12 @@ type Props = {
 
 /**
  * Sticky in-page map for long Collection journeys.
- * Only renders when there are enough real sections to navigate.
+ * Active pill follows the section that has crossed the shell reading line.
  */
 export function CollectionSectionNavV4({ items }: Props) {
   const safe = useMemo(() => items.filter((i) => i.id && i.label), [items]);
   const [active, setActive] = useState<string | null>(safe[0]?.id ?? null);
+  const pinned = useRef<string | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined" || safe.length < 2) return;
@@ -28,11 +31,14 @@ export function CollectionSectionNavV4({ items }: Props) {
 
     let raf = 0;
     const measure = () => {
-      const line = window.scrollY + window.innerHeight * 0.28;
+      if (pinned.current) {
+        setActive(pinned.current);
+        return;
+      }
+      const line = readingLine();
       let current = els[0]?.id ?? null;
       for (const el of els) {
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        if (top <= line) current = el.id;
+        if (el.getBoundingClientRect().top <= line) current = el.id;
         else break;
       }
       setActive(current);
@@ -41,18 +47,31 @@ export function CollectionSectionNavV4({ items }: Props) {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(measure);
     };
+    const onHash = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (hash && safe.some((item) => item.id === hash)) {
+        pinned.current = hash;
+        setActive(hash);
+        window.setTimeout(() => {
+          pinned.current = null;
+          measure();
+        }, 700);
+      }
+    };
     measure();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const unbind = bindShellScroll(onScroll, { passive: true });
+    window.addEventListener("hashchange", onHash);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
+      unbind();
+      window.removeEventListener("hashchange", onHash);
     };
   }, [safe]);
 
   if (safe.length < 2) return null;
 
   return (
-    <nav className="cx-section-nav" aria-label="Sezioni della raccolta">
+    <nav className="cx-section-nav" data-shell-nav="painted" aria-label="Sezioni della raccolta">
       <div className="cx-section-nav__scroller">
         <ol>
           {safe.map((item) => (
@@ -61,6 +80,13 @@ export function CollectionSectionNavV4({ items }: Props) {
                 href={`#${item.id}`}
                 aria-current={active === item.id ? "true" : undefined}
                 className={active === item.id ? "is-active" : undefined}
+                onClick={() => {
+                  pinned.current = item.id;
+                  setActive(item.id);
+                  window.setTimeout(() => {
+                    pinned.current = null;
+                  }, 700);
+                }}
               >
                 {item.label}
               </a>

@@ -20,6 +20,7 @@ import { BrandLogo } from "./brand-logo";
 import { useChromeViewport } from "./chrome-viewport";
 import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
+import { bindShellScroll, readScrollTop, getShellScroller } from "@/lib/shell/scroll-port";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 
@@ -148,6 +149,32 @@ export function MobileTopBar() {
   const isHome = pathname === "/";
   const routeLabel = getRouteLabel(pathname);
   const viewport = useChromeViewport();
+  const barRef = useRef<HTMLElement | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const el = barRef.current;
+    if (!el || viewport === "desktop") return;
+    const root = document.documentElement;
+    const publish = () => {
+      const height = el.getBoundingClientRect().height;
+      if (height < 8) return;
+      root.style.setProperty("--tv-header-painted", `${Math.round(height)}px`);
+    };
+    publish();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(publish);
+    observer?.observe(el);
+    const onScroll = () => {
+      setScrolled(readScrollTop(getShellScroller()) > 4);
+    };
+    onScroll();
+    const unbind = bindShellScroll(onScroll, { passive: true });
+    return () => {
+      observer?.disconnect();
+      unbind();
+      root.style.removeProperty("--tv-header-painted");
+    };
+  }, [viewport, pathname]);
 
   const handleRefresh = useCallback(() => router.refresh(), [router]);
   const { pullDistance, isRefreshing, PULL_THRESHOLD } = usePullToRefresh(handleRefresh);
@@ -163,8 +190,9 @@ export function MobileTopBar() {
 
   return (
     <header
+      ref={barRef}
       role="banner"
-      className={cn("mobile-top-bar", isHome && "mobile-top-bar--home")}
+      className={cn("mobile-top-bar", isHome && "mobile-top-bar--home", scrolled && "is-scrolled")}
       style={{
         transform: pullDistance > 0 ? `translateY(${Math.min(pullDistance * 0.3, 22)}px)` : undefined,
         transition: pullDistance === 0 ? "transform 0.25s ease" : "none",

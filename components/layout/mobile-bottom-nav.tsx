@@ -16,6 +16,7 @@ import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transit
 
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
+import { getShellScroller, readMaxScroll, readScrollTop } from "@/lib/shell/scroll-port";
 import {
   CHROME_DESKTOP_MEDIA_QUERY,
   useChromeViewport,
@@ -71,7 +72,7 @@ export function MobileBottomNav() {
   useEffect(() => {
     setChromeState("expanded");
     downDistance.current = 0;
-    lastScrollY.current = typeof window !== "undefined" ? window.scrollY : 0;
+    lastScrollY.current = typeof window !== "undefined" ? readScrollTop(getShellScroller()) : 0;
   }, [pathname]);
 
   const publishNavTotal = useCallback(() => {
@@ -159,15 +160,14 @@ export function MobileBottomNav() {
         rafId.current = null;
         if (lockedByInteraction.current || isOverlayOpen || isCommandOpen) {
           setChromeState("expanded");
-          lastScrollY.current = window.scrollY;
+          lastScrollY.current = readScrollTop(getShellScroller());
           return;
         }
 
-        const y = window.scrollY;
+        const y = readScrollTop(getShellScroller());
         const prev = lastScrollY.current;
         const delta = y - prev;
-        const doc = document.documentElement;
-        const maxScroll = Math.max(doc.scrollHeight - window.innerHeight, 0);
+        const maxScroll = readMaxScroll(getShellScroller());
         const nearBottom = maxScroll > 0 && y >= maxScroll - BOTTOM_REVEAL_PX;
 
         if (y <= TOP_FORCE_EXPAND_PX || nearBottom) {
@@ -198,12 +198,16 @@ export function MobileBottomNav() {
       });
     };
 
-    lastScrollY.current = window.scrollY;
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const shell = document.querySelector(".marketing-shell");
+    const onShellScroll = () => onScroll();
+    lastScrollY.current = readScrollTop(getShellScroller());
+    window.addEventListener("scroll", onShellScroll, { passive: true });
+    shell?.addEventListener("scroll", onShellScroll, { passive: true });
     document.addEventListener("focusin", onFocusIn);
     document.addEventListener("focusout", onFocusOut);
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onShellScroll);
+      shell?.removeEventListener("scroll", onShellScroll);
       document.removeEventListener("focusin", onFocusIn);
       document.removeEventListener("focusout", onFocusOut);
       if (rafId.current !== null) {

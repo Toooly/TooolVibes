@@ -8,6 +8,14 @@ import { ChevronUp, X } from "lucide-react";
 
 import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+import {
+  COMPARE_LOCK_MS,
+  comparePrefersCompact,
+  initialCompareChrome,
+  reduceCompareScroll,
+  type CompareGesture,
+} from "@/lib/shell/compare-chrome";
+import { getShellScroller, readScrollTop } from "@/lib/shell/scroll-port";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 function toolName(slug: string): string {
@@ -22,15 +30,53 @@ export function CompareSessionDock() {
   const pathname = usePathname();
   const slugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
-  const [expanded, setExpanded] = useState(false);
-  const dockRef = useRef<HTMLDivElement | null>(null);
   const guideRoute = isGuidePath(pathname);
   const hidden = slugs.length < 1 || pathname === "/compare";
-  const collapsed = hidden || guideRoute || !expanded;
+  const prefersCompact = guideRoute || comparePrefersCompact(pathname);
+  const [expanded, setExpanded] = useState(() => !prefersCompact);
+  const dockRef = useRef<HTMLDivElement | null>(null);
+  const expandedRef = useRef(expanded);
+  const gestureRef = useRef<CompareGesture>(initialCompareChrome(pathname));
+  const lockUntilRef = useRef(0);
+  expandedRef.current = expanded;
 
   useEffect(() => {
-    if (guideRoute) setExpanded(false);
-  }, [guideRoute]);
+    const next = !prefersCompact;
+    gestureRef.current = initialCompareChrome(pathname);
+    lockUntilRef.current = 0;
+    setExpanded(next);
+  }, [pathname, prefersCompact]);
+
+  useEffect(() => {
+    if (hidden || guideRoute) return;
+    let prevY = readScrollTop(getShellScroller());
+    const onScroll = () => {
+      const y = readScrollTop(getShellScroller());
+      if (performance.now() < lockUntilRef.current) {
+        prevY = y;
+        return;
+      }
+      const next = reduceCompareScroll(gestureRef.current, {
+        y,
+        prevY,
+        prefersCompact,
+      });
+      gestureRef.current = next;
+      prevY = y;
+      const shouldExpand = next.chrome === "expanded";
+      if (shouldExpand !== expandedRef.current) {
+        lockUntilRef.current = performance.now() + COMPARE_LOCK_MS;
+        setExpanded(shouldExpand);
+      }
+    };
+    const shell = document.querySelector(".marketing-shell");
+    window.addEventListener("scroll", onScroll, { passive: true });
+    shell?.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      shell?.removeEventListener("scroll", onScroll);
+    };
+  }, [hidden, guideRoute, pathname, prefersCompact]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -55,18 +101,31 @@ export function CompareSessionDock() {
       observer?.disconnect();
       root.style.setProperty("--tv-tray-height", "0px");
     };
-  }, [hidden, collapsed]);
+  }, [hidden, expanded]);
 
   if (hidden) return null;
 
   const ready = slugs.length >= 2;
+  const collapsed = !expanded || guideRoute;
   const listMounted = !collapsed;
+
+  const toggle = () => {
+    lockUntilRef.current = performance.now() + COMPARE_LOCK_MS;
+    gestureRef.current = {
+      chrome: expandedRef.current ? "compact" : "expanded",
+      down: 0,
+      up: 0,
+    };
+    setExpanded((value) => !value);
+  };
 
   const dock = (
     <div
       ref={dockRef}
       className="tv-compare-dock"
       data-compare-dock=""
+      data-compare-chrome={collapsed ? "compact" : "expanded"}
+      data-compare-context={prefersCompact ? "compact-first" : "comparison"}
       data-compare-dock-collapsed={collapsed ? "" : undefined}
       data-ready={ready ? "" : undefined}
       data-count={String(slugs.length)}
@@ -86,7 +145,7 @@ export function CompareSessionDock() {
                 ? "Mostra i tool in confronto"
                 : "Nascondi i tool in confronto"
             }
-            onClick={() => setExpanded((value) => !value)}
+            onClick={toggle}
           >
             <ChevronUp size={16} aria-hidden="true" />
           </button>
@@ -94,22 +153,24 @@ export function CompareSessionDock() {
         <p className="tv-compare-dock__count">
           {slugs.length}/{MAX_COMPARE_TOOLS}
         </p>
-        {listMounted ? (
-          <ul id="tv-compare-dock-list" className="tv-compare-dock__list">
-            {slugs.map((slug) => (
-              <li key={slug}>
-                <span>{toolName(slug)}</span>
-                <button
-                  type="button"
-                  aria-label={`Togli ${toolName(slug)} dal confronto`}
-                  onClick={() => toggleCompare(slug)}
-                >
-                  <X size={14} aria-hidden="true" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
+        <ul
+          id="tv-compare-dock-list"
+          className="tv-compare-dock__list"
+          hidden={!listMounted}
+        >
+          {slugs.map((slug) => (
+            <li key={slug}>
+              <span>{toolName(slug)}</span>
+              <button
+                type="button"
+                aria-label={`Togli ${toolName(slug)} dal confronto`}
+                onClick={() => toggleCompare(slug)}
+              >
+                <X size={14} aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
         <Link
           href={ready ? "/compare" : "/archivio"}
           prefetch={false}

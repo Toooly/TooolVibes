@@ -27,7 +27,7 @@
   .ar4-shell .ar4-card__actions { grid-column: 2 !important; grid-row: 3 !important; }
 
   /* ---------- 03 TOOL DETAIL: compact identity block ---------- */
-  .td-final-hero { padding-top: 0 !important; margin-top: -12px !important; }
+  .td-final-hero { padding-top: 0 !important; margin-top: 0 !important; }
   .td-final-hero > *:first-child { margin-top: 0 !important; }
 
   /* ---------- 04 GUIDES: featured card leaves the first viewport; chips then compact rows ---------- */
@@ -58,7 +58,7 @@
   .tv-radar__lede { font-size: 0.8rem !important; margin-top: 4px !important; }
 
   /* ---------- 08 SPAZIO / 09 DECISIONI: compact rows ---------- */
-  .tv-app__pagehead { margin-top: -62px !important; }
+  .tv-app__pagehead { margin-top: 0 !important; }
   .tv-mod { padding: 10px 12px !important; }
   .tv-home-title { font-size: 1rem !important; }
   .tv-lib-row { padding: 8px 10px !important; min-height: 0 !important; }
@@ -75,7 +75,7 @@
   }
 
   /* ---------- 11 AUTH: identity/heading/collapsed provider area/divider/email row ---------- */
-  .v-auth-page .v-auth-header { margin-top: -30px !important; }
+  .v-auth-page .v-auth-header { margin-top: 0 !important; }
   .v-auth-page .v-auth-form-wrapper { border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent) !important; padding-top: 12px !important; margin-top: 12px !important; }
 
   /* ---------- 13 FOOTER: compact columns and legal row ---------- */
@@ -97,13 +97,13 @@
   .td-final-hero__name { order: -1 !important; }
 
   /* 05 article: pull hero up, index open and body at mockup fold */
-  .guides-article__hero { margin-top: -121px !important; }
+  .guides-article__hero { margin-top: 0 !important; }
 
   /* 06 collection: hero up 35 */
-  .cx-detail-hero-v4 { margin-top: -79px !important; }
+  .cx-detail-hero-v4 { margin-top: 0 !important; }
 
   /* 08 spazio: header up 20 */
-  .tv-app__pagehead { margin-top: -82px !important; }
+  .tv-app__pagehead { margin-top: 0 !important; }
 
   /* 09 decisioni: rows down 44 */
   .tv-decisioni__list, [class*="decisioni"] ul, .tv-app__page > ul { margin-top: 44px !important; }
@@ -232,7 +232,7 @@
    ============================================================ */
 @media (max-width: 899px) {
   /* Shared canonical mobile header: integrated with the violet shell, not a black bar */
-  .mobile-top-bar { background: color-mix(in srgb, #18122c 94%, transparent) !important; border-bottom: 0 !important; }
+  .mobile-top-bar { background: #18122c !important; border-bottom: 1px solid color-mix(in srgb, #fff 12%, transparent) !important; }
 
   /* 01 HOME ---------------------------------------------------- */
   .def-cockpit__lede { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; font-size: 0.85rem !important; }
@@ -312,7 +312,7 @@
 @media (max-width: 899px) {
   /* ============ batch-1 V3 ============ */
   /* 01 HOME */
-  .mobile-top-bar { background: color-mix(in srgb, #241a4a 88%, transparent) !important; }
+  .mobile-top-bar { background: #241a4a !important; }
   .def-cockpit__lede { font-size: 0.75rem !important; line-height: 1.35 !important; }
   .def-cockpit { margin-bottom: 8px !important; }
   .def-intent { margin-top: 20px !important; }
@@ -548,4 +548,45 @@
 /* GM-09 (fresh branch): decisioni mobile — hide interior pill nav (bottom nav owns it) */
 @media (max-width: 47.99rem) {
   [data-account-surface="workspace"] .tv-space-switch { display: none; }
+}
+
+
+/* Shell contract — page titles must start below the sticky header.
+   Negative margin pulls copy into the header on every route that used it. */
+@media (max-width: 1279px) {
+  .marketing-shell :is(
+    .tv-app__pagehead,
+    .guides-article__hero,
+    .guides-masthead,
+    .cx-detail-hero-v4,
+    .def-start,
+    .td-final-hero,
+    .ar4-intro,
+    .v-auth-page .v-auth-header
+  ) {
+    margin-top: 0 !important;
+  }
+  .cx-section-nav,
+  .td-final-decision-nav,
+  .tv-lib-toolbar,
+  .ar4-mobile-bar,
+  .ar4-filters,
+  .guides-toc {
+    top: var(--tv-header-painted, var(--tv-header-height-mobile)) !important;
+    z-index: var(--tv-z-subnav, 30);
+  }
+  .td-final-decision-nav__link,
+  .cx-section-nav a {
+    min-height: 44px !important;
+  }
+}
+
+/* Header scrim: opaque enough that scrolling copy cannot be read through it. */
+.mobile-top-bar,
+.mobile-top-bar.is-scrolled,
+.command-bar {
+  background-color: #1b1438 !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }

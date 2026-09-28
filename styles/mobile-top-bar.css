@@ -14,7 +14,8 @@
   z-index: var(--tv-z-nav);
   width: 100%;
   padding-top: env(safe-area-inset-top, 0px);
-  background: color-mix(in srgb, var(--tv-bg-base, #0B0620) 100%, transparent);
+  isolation: isolate;
+  background: var(--tv-bg-base, #0B0620);
   color: var(--tv-ink-primary);
   border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 50%, transparent);
   display: block;
@@ -24,7 +25,7 @@
 }
 
 .mobile-top-bar.is-scrolled {
-  background: color-mix(in srgb, var(--tv-bg-base, #0B0620) 96%, transparent);
+  background: color-mix(in srgb, var(--tv-bg-base, #0B0620) 98%, #000);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   border-bottom-color: color-mix(in srgb, var(--tv-border-interactive) 70%, transparent);
@@ -224,7 +225,7 @@
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
-  z-index: var(--tv-z-nav);
+  z-index: var(--tv-z-floating);
   min-width: 11rem;
   padding: 8px;
   display: grid;
@@ -261,9 +262,6 @@
   display: none;
 }
 
-.marketing-shell:has(.def-home) {
-  --tv-header-height-mobile: 3.25rem;
-}
 
 .mobile-top-bar__bell {
   display: inline-flex;

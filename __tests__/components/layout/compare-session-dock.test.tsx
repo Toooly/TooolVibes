@@ -86,17 +86,17 @@ describe("CompareSessionDock states", () => {
     expect(trayHeight()).toBe("0px");
   });
 
-  it("appears with one candidate, collapsed by default", () => {
+  it("appears with one candidate, expanded on comparison routes", () => {
     seedWorkspace(compareState("atlas-ai"));
     render(<CompareSessionDock />);
     const dock = document.querySelector("[data-compare-dock]");
     expect(dock).toBeTruthy();
-    expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(true);
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("expanded");
+    expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(false);
     expect(dock?.hasAttribute("data-ready")).toBe(false);
     expect(dock?.getAttribute("data-count")).toBe("1");
     expect(screen.getByRole("link", { name: "Aggiungi un altro" })).toBeTruthy();
-    expect(screen.queryByRole("button", { name: /Togli / })).toBeNull();
-    expect(screen.getByRole("button", { name: "Mostra i tool in confronto" }).getAttribute("aria-controls")).toBeNull();
+    expect(screen.getByRole("button", { name: "Togli atlas-ai dal confronto" })).toBeTruthy();
     expect(trayHeight()).toMatch(/^\d+(?:\.\d+)?px$/);
     expect(trayHeight()).not.toBe("0px");
   });
@@ -107,9 +107,10 @@ describe("CompareSessionDock states", () => {
     const dock = document.querySelector("[data-compare-dock]");
     expect(dock?.hasAttribute("data-ready")).toBe(true);
     expect(dock?.getAttribute("data-count")).toBe("2");
-    expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(true);
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("expanded");
+    expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(false);
     expect(screen.getByRole("link", { name: "Confronta" })).toBeTruthy();
-    expect(screen.queryByRole("button", { name: /Togli / })).toBeNull();
+    expect(screen.getByRole("button", { name: "Togli atlas-ai dal confronto" })).toBeTruthy();
   });
 
   it("hides on the compare route", () => {
@@ -120,23 +121,39 @@ describe("CompareSessionDock states", () => {
     expect(trayHeight()).toBe("0px");
   });
 
-  it("expanding reveals remove buttons and names", () => {
+  it("collapses on toggle and re-expands from the compact control", () => {
     seedWorkspace(compareState("atlas-ai", "gamma-app"));
     render(<CompareSessionDock />);
     fireEvent.click(
-      screen.getByRole("button", { name: "Mostra i tool in confronto" }),
+      screen.getByRole("button", { name: "Nascondi i tool in confronto" }),
     );
     const dock = document.querySelector("[data-compare-dock]");
-    expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(false);
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("compact");
+    expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(true);
+    expect(screen.queryByRole("button", { name: /Togli / })).toBeNull();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Mostra i tool in confronto" }),
+    );
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("expanded");
     expect(screen.getByRole("button", { name: "Togli atlas-ai dal confronto" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Togli gamma-app dal confronto" })).toBeTruthy();
     expect(screen.getByText("atlas-ai")).toBeTruthy();
     expect(screen.getByText("gamma-app")).toBeTruthy();
-    expect(
-      screen.getByRole("button", { name: "Nascondi i tool in confronto" }).getAttribute("aria-controls"),
-    ).toBe("tv-compare-dock-list");
     expect(trayHeight()).toMatch(/^\d+(?:\.\d+)?px$/);
     expect(trayHeight()).not.toBe("0px");
+  });
+
+  it("starts compact on account routes and expands on tap", () => {
+    navRuntime.pathname = "/account/settings";
+    seedWorkspace(compareState("atlas-ai", "gamma-app"));
+    render(<CompareSessionDock />);
+    const dock = document.querySelector("[data-compare-dock]");
+    expect(dock?.getAttribute("data-compare-context")).toBe("compact-first");
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("compact");
+    expect(screen.queryByRole("button", { name: /Togli / })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Mostra i tool in confronto" }));
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("expanded");
+    expect(screen.getByRole("link", { name: "Confronta" })).toBeTruthy();
   });
 
   it("stays collapsed on guide routes", () => {

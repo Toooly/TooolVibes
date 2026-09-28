@@ -8,7 +8,7 @@
   .def-cockpit__lede { margin: 8px 0 0 !important; font-size: 0.88rem !important; }
   .def-intent { margin-top: 10px !important; }
   .def-intent__field { min-height: 44px !important; height: 44px !important; }
-  .def-start { padding-top: 0 !important; margin-top: -34px !important; }
+  .def-start { padding-top: 0 !important; margin-top: 0 !important; }
   .def-start__head { margin-bottom: 6px !important; }
   .tv-discovery-stage .def-start__tabs { height: 40px !important; min-height: 40px !important; }
   .def-start__panel { margin-top: 4px !important; }
@@ -33,7 +33,7 @@
   .ar4-intro__title { margin: 0 !important; }
   .catalogo-facet { min-height: 32px !important; margin: 2px 0 !important; }
   .ar4-intro__eyebrow { display: none !important; }
-  .ar4-intro { margin-top: -30px !important; }
+  .ar4-intro { margin-top: 0 !important; }
   .ar4-intro__panel { margin-top: 62px !important; }
   .ar4-intro__search { min-height: 44px !important; height: 44px !important; }
   .ar4-categories { margin-top: 8px !important; padding-top: 0 !important; }
@@ -41,7 +41,7 @@
   .ar4-shell .ar4-card { min-height: 132px !important; }
 
   /* GUIDES — title 34 top ~58 */
-  .guides-masthead { padding-top: 0 !important; margin-top: -18px !important; }
+  .guides-masthead { padding-top: 0 !important; margin-top: 0 !important; }
   .guides-masthead__title { font-size: 2.125rem !important; }
   .guides-section { padding-top: 12px !important; }
 
@@ -55,13 +55,13 @@
   .guides-article__hero-h1 { font-size: 2.125rem !important; margin-top: 4px !important; }
   .guides-article__hero-dek { margin-top: 4px !important; }
   .guides-article__hero-main { gap: 2px !important; }
-  .guides-article__hero { margin-top: -70px !important; }
+  .guides-article__hero { margin-top: 0 !important; }
   .guides-article__hero-media { height: 168px !important; margin: 10px 0 0 !important; }
   .guides-article__dark-meta { margin-top: 10px !important; }
   .guides-article__dark-meta .guides-article__byline { margin: 0 0 6px !important; }
 
   /* COLLECTION — CTA ~343, stages right after tabs */
-  .cx-detail-hero-v4 { padding-top: 8px !important; margin-top: -44px !important; }
+  .cx-detail-hero-v4 { padding-top: 8px !important; margin-top: 0 !important; }
   .cx-detail-hero-v4 h1, .cx-detail-hero-v4__title { font-size: 2.125rem !important; }
   .cx-detail-hero-v4__audience, .cx-detail-hero-v4__target { display: none !important; }
   .cx-detail-hero-v4__promise { margin-top: 6px !important; -webkit-line-clamp: 2 !important; }

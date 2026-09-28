@@ -53,8 +53,42 @@
     overflow-x: clip;
     overflow-y: auto;
     overscroll-behavior-y: contain;
-    scroll-padding-bottom: 3.5rem;
+    scroll-padding-top: var(--tv-scroll-anchor-offset, calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem));
+    scroll-padding-bottom: calc(var(--tv-tray-height, 0px) + 1rem);
   }
+}
+
+.marketing-shell {
+  --tv-scroll-anchor-offset: calc(
+    var(--tv-header-painted, var(--tv-header-height-mobile, 4.875rem)) +
+      var(--tv-subnav-height, 0px) + 0.5rem
+  );
+}
+
+.marketing-shell:has(.mobile-top-bar--home) {
+  --tv-header-bar-inner: 3.25rem;
+}
+
+.marketing-shell:has(.mobile-top-bar__route) {
+  --tv-header-route-extra: 1.5625rem;
+}
+
+.marketing-shell:has(.cx-section-nav),
+.marketing-shell:has(.td-final-decision-nav),
+.marketing-shell:has(.tv-lib-toolbar),
+.marketing-shell:has(.ar4-mobile-bar),
+.marketing-shell:has(.ar4-filters) {
+  --tv-subnav-height: 4.25rem;
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --tv-header-painted: var(--tv-header-height);
+  }
+}
+
+.marketing-shell main :is(h1, h2, h3, section[id], [id], [data-tv-anchor]) {
+  scroll-margin-top: var(--tv-scroll-anchor-offset, calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem));
 }
 
 .mobile-bottom-link__icon-wrap {
