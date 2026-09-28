@@ -6,7 +6,8 @@ import {
   buildAlternativeWhy,
   deriveEssentialDifference,
 } from "@/lib/data/tool-detail-derivation";
-import { computeEditorialScore } from "@/lib/data/editorial-score";
+import { computeEditorialScore, editorialScoreBand } from "@/lib/data/editorial-score";
+import { ToolDetailAlternativeActions } from "./tool-detail-alternative-actions";
 
 /**
  * Alternative da confrontare
@@ -71,36 +72,27 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
           const assessment = computeEditorialScore(alt);
 
           return (
-            <div className="td-final-alt-row" key={alt.slug}>
-              <span className="td-final-alt-cell td-final-alt-cell--tool">
-                <Link
-                  href={`/toools/${alt.slug}`}
-                  className="td-final-alt-cell__link"
-                >
-                  {alt.name}
-                </Link>
-              </span>
-              {why ? (
-                <span className="td-final-alt-cell td-final-alt-cell--reason">
-                  {why}
-                </span>
-              ) : null}
-              {difference ? (
-                <span className="td-final-alt-cell td-final-alt-cell--difference">
-                  {difference}
-                </span>
-              ) : null}
-              <span className="td-final-alt-cell td-final-alt-cell--score">
+            <article className="td-final-alt-row" key={alt.slug}>
+              <div className="td-final-alt-row__identity">
+                <span className="td-final-alt-row__mark" aria-hidden="true">{alt.name.slice(0, 1)}</span>
+                <div>
+                  <Link href={`/toools/${alt.slug}`} className="td-final-alt-cell__link">{alt.name}</Link>
+                  <p>{alt.categoryLabel}</p>
+                </div>
+              </div>
+              {why || difference ? <p className="td-final-alt-row__why">{why || difference}</p> : null}
+              <div className="td-final-alt-row__score">
                 {assessment.value !== null ? (
                   <>
                     <strong>{assessment.value.toFixed(1)}</strong>
-                    <em>/10</em>
+                    <span>{editorialScoreBand(assessment.value)}</span>
                   </>
                 ) : (
                   <em>Da valutare</em>
                 )}
-              </span>
-            </div>
+              </div>
+              <ToolDetailAlternativeActions slug={alt.slug} name={alt.name} />
+            </article>
           );
         })}
       </div>

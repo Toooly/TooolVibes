@@ -21,6 +21,8 @@ import { ToolDetailExtendedContent } from "./tool-detail-extended-content";
 import { ToolDetailDecisionNav } from "./tool-detail-decision-nav";
 import { ExperienceSection } from "@/components/community/experience-section";
 import { ToolDetailAlternatives } from "./tool-detail-alternatives";
+import { ToolDetailPricing } from "./tool-detail-pricing";
+import { ToolDetailInformation } from "./tool-detail-information";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import {
   PartnerToolCard,
@@ -167,6 +169,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
 
         <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
         <ToolDetailDecisionBrief tool={tool} />
+        <ToolDetailPricing tool={tool} />
         <ToolDetailExtendedContent
           tool={tool}
           experiences={
@@ -177,6 +180,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         />
         <TinyAdzInlineSlot placement="tool-detail" />
         <ToolDetailAlternatives current={tool} related={relatedTools} />
+        <ToolDetailInformation tool={tool} />
         {slug !== "taylora" ? (
           <div className="td-final-page__partner">
             <PartnerToolCard

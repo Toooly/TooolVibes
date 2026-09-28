@@ -43,24 +43,20 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
             <span>{tool.name.slice(0, 2).toUpperCase()}</span>
           )}
         </span>
-        <div className="td-final-hero__chips">
-          <span className="td-final-chip td-final-chip--category">
-            {tool.categoryLabel}
-          </span>
+        <div className="td-final-hero__identity-copy">
+          <h1 id="td-final-tool-name" className="td-final-hero__name">
+            {tool.name}
+          </h1>
+          <p className="td-final-hero__category">{tool.categoryLabel}</p>
         </div>
       </div>
-
-      <h1 id="td-final-tool-name" className="td-final-hero__name">
-        {tool.name}
-      </h1>
-      <p className="td-final-hero__deck">{tool.shortDescription}</p>
-
       <div className="td-final-hero__facts">
         <ToolDetailScore tool={tool} />
         {tool.levelLabel ? (
           <span className="td-final-hero__level-pill">{tool.levelLabel}</span>
         ) : null}
       </div>
+      <p className="td-final-hero__deck">{tool.shortDescription}</p>
 
       <ToolDetailActionSurface
         slug={tool.slug}
