@@ -108,7 +108,7 @@ export function ToolDetailActionSurface({
             aria-hidden="true"
             fill={isSaved ? "currentColor" : "none"}
           />
-          <span>{isSaved ? "Salvato" : "Salva"}</span>
+          <span className="td-final-cta__label">{isSaved ? "Salvato" : "Salva"}</span>
         </button>
         <SaveOverflow
           slug={slug}
