@@ -53,6 +53,14 @@ export function ToolDetailDecisionNav({
         else break;
       }
       setActive(current);
+      const link = document.querySelector(`.td-final-decision-nav [href="#${current}"]`);
+      if (link instanceof HTMLElement && document.activeElement !== link) {
+        const nav = link.parentElement;
+        if (nav instanceof HTMLElement) {
+          const left = link.offsetLeft - nav.clientWidth / 2 + link.clientWidth / 2;
+          nav.scrollTo({ left: Math.max(0, left) });
+        }
+      }
     };
     const onScroll = () => {
       cancelAnimationFrame(raf);
