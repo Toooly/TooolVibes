@@ -82,9 +82,8 @@ export function ToolDetailInformation({
       className="td-final-information"
       aria-labelledby="td-final-information-title"
     >
-      <p className="td-final-section-eyebrow">Dati tecnici</p>
-      <h2 id="td-final-information-title" className="td-final-section-title">
-        Cosa devi sapere prima di provarlo.
+      <h2 id="td-final-information-title" className="td-final-section-eyebrow">
+        Dati tecnici
       </h2>
       {grid}
     </section>

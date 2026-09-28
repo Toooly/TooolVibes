@@ -444,7 +444,7 @@
   .td-final-mobileheader__actions { display: flex; align-items: center; gap: 8px; }
   body:has(.td-final-page) .mobile-top-bar { display: none !important; }
   .td-final-hero__chips > * { text-transform: none !important; font-size: 0.8rem !important; letter-spacing: 0 !important; font-weight: 400 !important; }
-  .td-final-decision-nav { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 4px !important; overflow: visible !important; }
+  .td-final-decision-nav { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 4px !important; overflow-x: auto !important; overflow-y: visible !important; top: 3.5rem !important; }
   .td-final-decision-nav__link { justify-content: center !important; padding: 0 4px !important; font-size: 0.75rem !important; min-height: 34px !important; white-space: nowrap !important; }
   .td-final-brief__points { margin-bottom: 12px !important; }
   .td-final-brief dl { margin-top: 12px !important; }
@@ -597,4 +597,8 @@
   background-image: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+body:has(.td-final-page) .td-final-decision-nav {
+  top: 3.5rem !important;
 }
