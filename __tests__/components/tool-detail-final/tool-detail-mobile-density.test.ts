@@ -52,9 +52,10 @@ describe("tool detail mobile density", () => {
     );
   });
 
-  it("sizes the alternatives carousel without 100vw overflow", () => {
+  it("stacks alternatives on mobile without 100vw overflow", () => {
     const css = read("styles/tool-detail-final.css");
-    expect(css).toMatch(/flex:\s*0 0 calc\(100% - 2\.5rem\)/);
+    expect(css).not.toMatch(/flex:\s*0 0 calc\(100% - 2\.5rem\)/);
+    expect(css).not.toMatch(/scroll-snap-type:\s*x mandatory/);
     expect(css).not.toMatch(/min\(18\.5rem, 82vw\)/);
     expect(css).not.toMatch(/100vw/);
   });

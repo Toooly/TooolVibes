@@ -169,7 +169,6 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
 
         <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
         <ToolDetailDecisionBrief tool={tool} />
-        <ToolDetailPricing tool={tool} />
         <ToolDetailExtendedContent
           tool={tool}
           experiences={
@@ -178,9 +177,10 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             ) : null
           }
         />
-        <TinyAdzInlineSlot placement="tool-detail" />
+        <ToolDetailPricing tool={tool} />
         <ToolDetailAlternatives current={tool} related={relatedTools} />
         <ToolDetailInformation tool={tool} />
+        <TinyAdzInlineSlot placement="tool-detail" />
         {slug !== "taylora" ? (
           <div className="td-final-page__partner">
             <PartnerToolCard

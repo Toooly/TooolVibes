@@ -28,7 +28,7 @@
   padding-block: var(--tv-space-6) var(--tv-space-24);
   padding-inline: var(--tv-gutter-mobile);
   color: var(--tv-ink-primary);
-  overflow-x: hidden;
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
@@ -47,6 +47,11 @@
 /* ============================================================
    A. HERO — Identity + Action Surface
    ============================================================ */
+.td-final-mobileheader {
+  position: sticky;
+  top: 0;
+  z-index: var(--tv-z-nav, 50);
+}
 .td-final-hero {
   position: relative;
   overflow: hidden;
@@ -614,7 +619,7 @@
    ============================================================ */
 .td-final-decision-nav {
   position: sticky;
-  top: var(--tv-header-painted, var(--tv-header-height-mobile, 4.875rem));
+  top: var(--tool-toolbar-height, var(--tv-header-painted, 3.25rem));
   z-index: var(--tv-z-subnav, 30);
   margin-top: var(--tv-space-4);
   padding: 0.35rem 0;
@@ -679,11 +684,11 @@ body:has(.td-final-mobileheader) {
    E. PRODUCT INFORMATION
    ============================================================ */
 .td-final-information {
-  margin-top: var(--tv-space-10);
-  padding: clamp(var(--tv-space-6), 4vw, var(--tv-space-8));
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-modal);
-  background: var(--tv-surface-raised);
+  margin-top: var(--tv-space-6);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .td-final-information__grid {
@@ -1078,21 +1083,16 @@ body:has(.td-final-mobileheader) {
 
 @media (max-width: 819px) {
   .td-final-alternatives__table {
-    display: flex;
-    flex-direction: row;
-    gap: var(--tv-space-4);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-bottom: var(--tv-space-2);
+    display: grid;
+    gap: 0.75rem;
+    overflow: visible;
   }
   .td-final-alternatives__table::-webkit-scrollbar {
     display: none;
   }
   .td-final-alt-row {
-    flex: 0 0 calc(100% - 2.5rem);
-    scroll-snap-align: start;
+    width: 100%;
+    max-width: 100%;
     grid-template-columns: 1fr;
     gap: var(--tv-space-component-sm);
     padding: var(--tv-space-component-md);
@@ -1706,7 +1706,7 @@ body:has(.td-final-mobileheader) {
   }
 
   .td-final-alt-row {
-    flex: 0 0 calc(100% - 2.5rem);
+    width: 100%;
   }
 }
 
