@@ -2663,11 +2663,8 @@
   border-color: color-mix(in srgb, var(--partner-aurora-a) 48%, transparent);
   /* Crisp 1px ring + ambient halo ~10–18px (paint-only, no layout) */
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 58%, transparent),
-    0 0 0 1.5px color-mix(in srgb, var(--partner-aurora-b) 28%, transparent),
-    0 0 12px 0 var(--partner-aurora-glow-a),
-    0 0 22px 2px var(--partner-aurora-glow-b),
-    0 14px 36px -22px color-mix(in srgb, var(--partner-aurora-a) 30%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 36%, transparent),
+    0 0 6px 0 color-mix(in srgb, var(--partner-aurora-b) 22%, transparent);
   transition:
     box-shadow 420ms var(--tv-easing-standard),
     border-color 420ms var(--tv-easing-standard),
@@ -2760,11 +2757,10 @@
       var(--partner-aurora-glow-b),
       transparent 74%
     );
-  filter: blur(18px);
-  opacity: 0.42;
+  filter: none;
+  opacity: 0.16;
   pointer-events: none;
-  transform: translate3d(0, 0, 0);
-  will-change: opacity, transform;
+  transform: none;
 }
 
 .partner-luminous > *:not(.partner-luminous__halo) {
@@ -2836,8 +2832,7 @@
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--partner-aurora-a) 72%, transparent),
       0 0 0 1.5px color-mix(in srgb, var(--partner-aurora-b) 36%, transparent),
-      0 0 14px 1px var(--partner-aurora-glow-a),
-      0 0 28px 3px var(--partner-aurora-glow-b),
+      0 0 8px 0 var(--partner-aurora-glow-a),
       0 20px 44px -20px color-mix(in srgb, var(--partner-aurora-a) 36%, transparent);
   }
 

@@ -426,10 +426,19 @@
 
   /* 03: real detail header; quieter category; 4-col tabs; analysis below fold */
   .td-final-mobileheader {
-    display: flex; align-items: center; justify-content: space-between;
-    min-height: 48px; padding: 0 16px;
-    background: color-mix(in srgb, #241a4a 88%, transparent);
-    position: sticky; top: 0; z-index: 45;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.35rem var(--tv-page-gutter-mobile, 1.25rem);
+    padding-top: calc(0.35rem + env(safe-area-inset-top, 0px));
+    background: #1b1438;
+    border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 42%, transparent);
+    position: sticky;
+    top: 0;
+    z-index: var(--tv-z-nav, 50);
+    box-shadow: none;
   }
   .td-final-mobileheader__back { color: var(--tv-ink-primary); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
   .td-final-mobileheader__actions { display: flex; align-items: center; gap: 8px; }
@@ -477,7 +486,7 @@
   }
 
   /* 03 */
-  .td-final-mobileheader__search { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; border: 1px solid rgba(205,185,255,.32); color: #cdb9ff; }
+  .td-final-mobileheader__search { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; border: 0; background: transparent; color: var(--tv-ink-primary, #f4f0e7); }
   .td-final-hero__level { background: color-mix(in srgb, #8fd6a8 16%, transparent) !important; border: 1px solid color-mix(in srgb, #8fd6a8 34%, transparent) !important; color: #bfe9cd !important; border-radius: 999px !important; padding: 2px 10px !important; font-size: 0.78rem !important; }
   .td-final-cta--save { width: 46px !important; min-width: 46px !important; height: 46px !important; padding: 0 !important; font-size: 0 !important; border-radius: 14px !important; display: grid !important; place-items: center !important; }
   .td-final-cta--save svg { margin: 0 !important; }
@@ -489,11 +498,9 @@
   /* V7 final: pin the real save chip to the card's upper-right corner */
   .ar4-shell .ar4-card { position: relative !important; }
   .ar4-shell .ar4-card [class*="selection-chip"] {
-    position: absolute !important;
-    top: 10px !important;
-    right: 10px !important;
-    left: auto !important;
-    bottom: auto !important;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
   }
   .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
 }
@@ -502,15 +509,15 @@
   /* V7 final: the save control has no stable visual class — pin it by accessible name */
   .ar4-shell .ar4-card button[aria-label^="Salva"],
   .ar4-shell .ar4-card button[aria-label^="Rimuovi"] {
-    position: absolute !important;
-    top: 10px !important;
-    right: 10px !important;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
     left: auto !important;
     bottom: auto !important;
-    width: 28px !important;
-    min-width: 28px !important;
-    height: 28px !important;
-    min-height: 28px !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
     padding: 0 !important;
     border-radius: 9px !important;
     border: 1px solid rgba(205, 185, 255, 0.38) !important;

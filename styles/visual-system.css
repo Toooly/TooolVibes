@@ -179,7 +179,7 @@
 
 .partner-placement {
   border: 1px solid var(--tv-border-system);
-  background: color-mix(in srgb, var(--tv-surface-raised) 88%, transparent);
+  background: var(--tv-surface-inverted, #f8f5eb);
 }
 
 .site-footer-v2.tv-utility .tv-utility__shell {

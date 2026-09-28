@@ -1805,13 +1805,9 @@
   .tv-compare-dock__cta,
   .tv-compare-dock__count {
     transition:
-      max-width 280ms var(--tv-easing-spring-smooth),
-      width 280ms var(--tv-easing-spring-smooth),
-      min-height 280ms var(--tv-easing-standard),
-      padding 280ms var(--tv-easing-standard),
-      border-radius 280ms var(--tv-easing-spring-smooth),
-      opacity 220ms var(--tv-easing-standard),
-      transform 280ms var(--tv-easing-spring-smooth),
+      opacity 280ms var(--tv-easing-standard),
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-radius 320ms cubic-bezier(0.22, 1, 0.36, 1),
       background 220ms var(--tv-easing-standard);
   }
   .tv-compare-dock[data-ready] .tv-compare-dock__cta {
@@ -1830,7 +1826,9 @@
   border-radius: var(--tv-radius-modal);
   background: var(--tv-surface-floating);
   border: 1px solid var(--tv-border-default);
-  box-shadow: 0 12px 32px color-mix(in srgb, #000 28%, transparent);
+  box-shadow: 0 8px 20px color-mix(in srgb, #000 22%, transparent);
+  transform-origin: right center;
+  transform: translate3d(0, 0, 0) scale(1);
 }
 .tv-compare-dock[data-compare-dock-collapsed] {
   justify-content: flex-end;
@@ -1846,7 +1844,11 @@
   gap: 0.35rem;
 }
 .tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__list {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
 }
 .tv-compare-dock__toggle {
   flex-shrink: 0;
@@ -1893,6 +1895,13 @@
   margin: 0;
   padding: 0;
   opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-origin: right center;
+}
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__list {
+  opacity: 0;
+  transform: translate3d(12px, 6px, 0) scale(0.96);
+  pointer-events: none;
 }
 .tv-compare-dock__list li {
   display: inline-flex;

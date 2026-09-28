@@ -47,3 +47,30 @@
 .tinyadz-inline-slot iframe.inlined-ta-ad {
   margin-inline: auto;
 }
+
+.tv-ad-section {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-height: 0;
+}
+.tv-ad-section[data-tv-ad-section="waiting"],
+.tv-ad-section[data-tv-ad-section="empty"] {
+  height: 0;
+  max-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+.tv-ad-section[data-tv-ad-section="filled"] {
+  height: auto;
+  visibility: visible;
+}
+.ar4-grid__item--ad:not(:has([data-tv-ad-section="filled"])) {
+  display: none;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}

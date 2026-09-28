@@ -2893,7 +2893,7 @@ a.archive-v4-card:focus-visible {
   .ar4-card.is-reduced,
   .ar4-card[data-density="compact"] {
     display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) 28px;
+    grid-template-columns: 52px minmax(0, 1fr) 44px;
     grid-template-areas:
       "avatar identity bookmark"
       "score best best";
@@ -2926,6 +2926,12 @@ a.archive-v4-card:focus-visible {
     min-width: 0;
   }
 
+  .ar4-card__name,
+  .ar4-card__name-link,
+  .ar4-card__best {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
   .ar4-card__name { font-size: 17px; line-height: 1.15; }
   .ar4-card__category { font-size: 12px; margin-top: 2px; }
 
@@ -2971,8 +2977,9 @@ a.archive-v4-card:focus-visible {
 
   .ar4-card__bookmark {
     grid-area: bookmark;
-    width: 28px;
-    height: 28px;
+    width: 44px;
+    height: 44px;
+    justify-self: end;
     display: grid;
     place-items: center;
     background: transparent;

@@ -50,7 +50,7 @@
 .td-final-hero {
   position: relative;
   overflow: hidden;
-  padding: clamp(var(--tv-space-5), 2.8vw, var(--tv-space-8)) 0;
+  padding: clamp(var(--tv-space-6), 3.2vw, var(--tv-space-8)) 0 var(--tv-space-5);
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -639,7 +639,7 @@
 }
 
 body:has(.td-final-mobileheader) {
-  --tv-header-painted: 3rem;
+  --tv-header-painted: calc(3.25rem + env(safe-area-inset-top, 0px));
 }
 
 .td-final-decision-nav__link {

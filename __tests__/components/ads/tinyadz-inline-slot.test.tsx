@@ -45,11 +45,12 @@ function mockIframeRect(iframe: HTMLIFrameElement, height: number) {
     }) as DOMRect;
 }
 
-function insertInlinedAd(container: HTMLElement, height: number) {
+function insertInlinedAd(container: HTMLElement, height: number, src?: string) {
   const host = container.querySelector(CONTAINER_SELECTOR);
   expect(host).toBeTruthy();
   const iframe = document.createElement("iframe");
   iframe.className = "inlined-ta-ad";
+  if (src) iframe.setAttribute("src", src);
   mockIframeRect(iframe, height);
   host?.appendChild(iframe);
   return iframe;
@@ -146,10 +147,20 @@ describe("TinyAdzInlineSlot contract", () => {
     expect(container.querySelector("[data-tinyadz-state='waiting']")).toBeTruthy();
   });
 
-  it("shows the advertising label when iframe.inlined-ta-ad paints at least 32px", async () => {
+  it("does not show the advertising label for a tall iframe without a creative src", async () => {
+    const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
+    insertInlinedAd(container, 180);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(container.querySelector(".tinyadz-inline-slot__label")).toBeNull();
+    expect(container.querySelector("[data-tv-ad-section='filled']")).toBeNull();
+  });
+
+  it("shows the advertising label when a creative iframe paints at least 64px", async () => {
     const { container } = render(<TinyAdzInlineSlot placement="home-editorial" />);
     expect(container.querySelector("aside[aria-label='Pubblicità']")).toBeNull();
-    insertInlinedAd(container, 32);
+    insertInlinedAd(container, 64, "https://cdn.apitiny.net/creative.html");
     await waitFor(() => {
       expect(container.querySelector("aside[aria-label='Pubblicità']")).toBeTruthy();
       expect(container.querySelector(".tinyadz-inline-slot__label")?.textContent).toBe(
@@ -210,7 +221,7 @@ describe("TinyAdzInlineSlot asGridItem", () => {
     const { container } = render(
       <TinyAdzInlineSlot placement="archive-feed" asGridItem />,
     );
-    insertInlinedAd(container, 40);
+    insertInlinedAd(container, 80, "https://cdn.apitiny.net/creative.html");
     await waitFor(() => {
       expect(container.querySelector("li.ar4-grid__item--ad")).toBeTruthy();
       expect(container.querySelector(".tinyadz-inline-slot--probe")).toBeNull();

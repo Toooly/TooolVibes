@@ -14,12 +14,23 @@ import {
 import "./tinyadz-inline-slot.css";
 
 const FILL_TIMEOUT_MS = 8000;
-const MIN_FILL_PX = 32;
+const MIN_FILL_PX = 64;
 
 type FillState = "waiting" | "filled" | "empty";
 
-function paintedFillPx(root: Element): number {
+function creativeFrame(root: Element): HTMLIFrameElement | null {
   const iframe = root.querySelector("iframe.inlined-ta-ad");
+  if (!(iframe instanceof HTMLIFrameElement)) return null;
+  const src = iframe.getAttribute("src") ?? "";
+  const srcdoc = iframe.getAttribute("srcdoc") ?? "";
+  const marked = iframe.getAttribute("data-ta-creative") === "true";
+  const addressable = /^https?:\/\//i.test(src) || srcdoc.trim().length > 0 || marked;
+  if (!addressable) return null;
+  return iframe;
+}
+
+function paintedFillPx(root: Element): number {
+  const iframe = creativeFrame(root);
   if (!iframe) return 0;
   return iframe.getBoundingClientRect().height;
 }
@@ -132,16 +143,27 @@ export function TinyAdzInlineSlot({
     </aside>
   );
 
+  const section = (
+    <section
+      className="tv-ad-section"
+      data-tv-ad-section={fillState}
+      data-tinyadz-placement={placement}
+      aria-hidden={fillState !== "filled"}
+    >
+      {slot}
+    </section>
+  );
+
   if (asGridItem) {
     if (fillState !== "filled") {
       return (
         <div className="tinyadz-inline-slot--probe" aria-hidden="true">
-          {slot}
+          {section}
         </div>
       );
     }
-    return <li className="ar4-grid__item--ad">{slot}</li>;
+    return <li className="ar4-grid__item--ad">{section}</li>;
   }
 
-  return slot;
+  return section;
 }

@@ -15,7 +15,7 @@ import {
   reduceCompareScroll,
   type CompareGesture,
 } from "@/lib/shell/compare-chrome";
-import { getShellScroller, readScrollTop } from "@/lib/shell/scroll-port";
+import { readLiveScrollTop } from "@/lib/shell/scroll-port";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 function toolName(slug: string): string {
@@ -49,32 +49,35 @@ export function CompareSessionDock() {
 
   useEffect(() => {
     if (hidden || guideRoute) return;
-    let prevY = readScrollTop(getShellScroller());
+    let prevY = readLiveScrollTop();
+    let frame = 0;
     const onScroll = () => {
-      const y = readScrollTop(getShellScroller());
-      if (performance.now() < lockUntilRef.current) {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const y = readLiveScrollTop();
+        if (performance.now() < lockUntilRef.current) {
+          prevY = y;
+          return;
+        }
+        const next = reduceCompareScroll(gestureRef.current, {
+          y,
+          prevY,
+          prefersCompact,
+        });
+        gestureRef.current = next;
         prevY = y;
-        return;
-      }
-      const next = reduceCompareScroll(gestureRef.current, {
-        y,
-        prevY,
-        prefersCompact,
+        const shouldExpand = next.chrome === "expanded";
+        if (shouldExpand !== expandedRef.current) {
+          lockUntilRef.current = performance.now() + COMPARE_LOCK_MS;
+          setExpanded(shouldExpand);
+        }
       });
-      gestureRef.current = next;
-      prevY = y;
-      const shouldExpand = next.chrome === "expanded";
-      if (shouldExpand !== expandedRef.current) {
-        lockUntilRef.current = performance.now() + COMPARE_LOCK_MS;
-        setExpanded(shouldExpand);
-      }
     };
-    const shell = document.querySelector(".marketing-shell");
-    window.addEventListener("scroll", onScroll, { passive: true });
-    shell?.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("scroll", onScroll, { capture: true, passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      shell?.removeEventListener("scroll", onScroll);
+      document.removeEventListener("scroll", onScroll, { capture: true });
+      if (frame) window.cancelAnimationFrame(frame);
     };
   }, [hidden, guideRoute, pathname, prefersCompact]);
 

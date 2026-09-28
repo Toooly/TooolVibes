@@ -16,7 +16,7 @@ import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transit
 
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
-import { getShellScroller, readMaxScroll, readScrollTop } from "@/lib/shell/scroll-port";
+import { getShellScroller, readLiveScrollTop, readMaxScroll } from "@/lib/shell/scroll-port";
 import {
   CHROME_DESKTOP_MEDIA_QUERY,
   useChromeViewport,
@@ -35,11 +35,11 @@ import {
 
 type NavChromeState = "expanded" | "compact";
 
-const SCROLL_DELTA_THRESHOLD = 12;
-const COMPACT_AFTER = 48;
+const SCROLL_DELTA_THRESHOLD = 16;
+const COMPACT_AFTER = 72;
+const EXPAND_AFTER = 96;
 const BOTTOM_REVEAL_PX = 120;
 const TOP_FORCE_EXPAND_PX = 24;
-const PAUSE_EXPAND_MS = 900;
 
 // Haptic feedback via shared utility (native vibrate + iOS audio fallback)
 
@@ -60,6 +60,7 @@ export function MobileBottomNav() {
 
   const lastScrollY = useRef(0);
   const downDistance = useRef(0);
+  const upDistance = useRef(0);
   const lockedByInteraction = useRef(false);
   const rafId = useRef<number | null>(null);
   const pauseTimer = useRef<number | null>(null);
@@ -72,7 +73,7 @@ export function MobileBottomNav() {
   useEffect(() => {
     setChromeState("expanded");
     downDistance.current = 0;
-    lastScrollY.current = typeof window !== "undefined" ? readScrollTop(getShellScroller()) : 0;
+    lastScrollY.current = typeof window !== "undefined" ? readLiveScrollTop() : 0;
   }, [pathname]);
 
   const publishNavTotal = useCallback(() => {
@@ -129,16 +130,6 @@ export function MobileBottomNav() {
       }
     };
 
-    const schedulePauseExpand = () => {
-      clearPauseTimer();
-      pauseTimer.current = window.setTimeout(() => {
-        pauseTimer.current = null;
-        if (!lockedByInteraction.current && !isOverlayOpen && !isCommandOpen) {
-          setChromeState("expanded");
-        }
-      }, PAUSE_EXPAND_MS);
-    };
-
     const onFocusIn = (event: FocusEvent) => {
       if (isEditableTarget(event.target) || isOverlayOpen || isCommandOpen) {
         lockedByInteraction.current = true;
@@ -160,11 +151,11 @@ export function MobileBottomNav() {
         rafId.current = null;
         if (lockedByInteraction.current || isOverlayOpen || isCommandOpen) {
           setChromeState("expanded");
-          lastScrollY.current = readScrollTop(getShellScroller());
+          lastScrollY.current = readLiveScrollTop();
           return;
         }
 
-        const y = readScrollTop(getShellScroller());
+        const y = readLiveScrollTop();
         const prev = lastScrollY.current;
         const delta = y - prev;
         const maxScroll = readMaxScroll(getShellScroller());
@@ -172,6 +163,7 @@ export function MobileBottomNav() {
 
         if (y <= TOP_FORCE_EXPAND_PX || nearBottom) {
           downDistance.current = 0;
+          upDistance.current = 0;
           clearPauseTimer();
           setChromeState("expanded");
           lastScrollY.current = y;
@@ -179,19 +171,23 @@ export function MobileBottomNav() {
         }
 
         if (Math.abs(delta) < SCROLL_DELTA_THRESHOLD) {
+          lastScrollY.current = y;
           return;
         }
 
         if (delta > 0) {
           downDistance.current += delta;
+          upDistance.current = 0;
           if (downDistance.current >= COMPACT_AFTER) {
             setChromeState("compact");
-            schedulePauseExpand();
           }
         } else {
+          upDistance.current += Math.abs(delta);
           downDistance.current = 0;
-          clearPauseTimer();
-          setChromeState("expanded");
+          if (upDistance.current >= EXPAND_AFTER) {
+            clearPauseTimer();
+            setChromeState("expanded");
+          }
         }
 
         lastScrollY.current = y;
@@ -200,13 +196,13 @@ export function MobileBottomNav() {
 
     const shell = document.querySelector(".marketing-shell");
     const onShellScroll = () => onScroll();
-    lastScrollY.current = readScrollTop(getShellScroller());
-    window.addEventListener("scroll", onShellScroll, { passive: true });
+    lastScrollY.current = readLiveScrollTop();
+    document.addEventListener("scroll", onShellScroll, { capture: true, passive: true });
     shell?.addEventListener("scroll", onShellScroll, { passive: true });
     document.addEventListener("focusin", onFocusIn);
     document.addEventListener("focusout", onFocusOut);
     return () => {
-      window.removeEventListener("scroll", onShellScroll);
+      document.removeEventListener("scroll", onShellScroll, { capture: true });
       shell?.removeEventListener("scroll", onShellScroll);
       document.removeEventListener("focusin", onFocusIn);
       document.removeEventListener("focusout", onFocusOut);
