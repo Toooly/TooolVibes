@@ -64,7 +64,7 @@ export function ToolDetailInformation({
   if (rows.length === 0) return null;
 
   const grid = (
-    <dl className="td-final-information__grid" id={embedded ? "td-final-information" : undefined}>
+    <dl className="td-final-information__grid" id={embedded ? "td-final-information-grid" : undefined}>
       {rows.map((row) => (
         <div className="td-final-information__row" key={row.dt}>
           <dt>{row.dt}</dt>

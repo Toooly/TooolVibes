@@ -23,7 +23,7 @@ export function ToolDetailDecisionNav({
     if (showDeepen) {
       next.push(
         { id: "td-final-overview", label: "Panoramica" },
-        { id: "td-final-pros-limits", label: "Pro e contro" },
+        { id: "td-final-panel-pros-limits", label: "Pro e contro" },
         { id: "td-final-pricing", label: "Prezzi" },
       );
     }
