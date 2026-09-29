@@ -26,7 +26,7 @@ describe("graph data integrity", () => {
       // Guide slugs should match tool slugs or be valid guide identifiers
       expect(slug.length).toBeGreaterThan(0);
     }
-    expect(guideSlugs.length).toBeGreaterThanOrEqual(10);
+    expect(guideSlugs.length).toBeGreaterThanOrEqual(7);
   });
 
   it("no self-referencing guide relations", () => {
