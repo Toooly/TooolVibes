@@ -24,6 +24,7 @@ import { ToolDetailInformation } from "./tool-detail-information";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { buildToolDetailSections, getNavSections } from "@/lib/graph/section-registry";
 import { getGuidesForTool, getStacksForTool } from "@/lib/graph/entity-relations";
+import { EntityCardList } from "@/components/graph/entity-cards";
 import {
   PartnerToolCard,
 } from "@/components/monetization/partner-placements";
@@ -197,28 +198,14 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           <section id="td-final-related-guides" data-td-section data-td-section-target="td-final-related-guides" data-td-section-title="Guide correlate" className="td-final-related-guides">
             <p className="td-final-section-eyebrow">Guide correlate</p>
             <h2 className="td-final-section-title">Approfondisci questo tool</h2>
-            <div className="td-final-related-guides__list">
-              {relatedGuides.map((guide) => (
-                <Link key={guide.slug} href={`/posts/${guide.slug}`} className="td-final-related-guides__card">
-                  <p className="td-final-related-guides__title">{guide.name}</p>
-                  <p className="td-final-related-guides__meta">Guida</p>
-                </Link>
-              ))}
-            </div>
+            <EntityCardList entities={relatedGuides.map((g) => ({ href: `/posts/${g.slug}`, title: g.name, kind: "guide" as const }))} />
           </section>
         ) : null}
         {relatedStacks.length > 0 ? (
           <section id="td-final-related-stacks" data-td-section data-td-section-target="td-final-related-stacks" data-td-section-title="In questi Stack" className="td-final-related-stacks">
             <p className="td-final-section-eyebrow">In questi Stack</p>
             <h2 className="td-final-section-title">Presente in questi Stack</h2>
-            <div className="td-final-related-stacks__list">
-              {relatedStacks.map((stack) => (
-                <Link key={stack.slug} href={`/collections/${stack.slug}`} className="td-final-related-stacks__card">
-                  <p className="td-final-related-stacks__title">{stack.name}</p>
-                  <p className="td-final-related-stacks__meta">{stack.toolCount} tool</p>
-                </Link>
-              ))}
-            </div>
+            <EntityCardList entities={relatedStacks.map((s) => ({ href: `/collections/${s.slug}`, title: s.name, subtitle: `${s.toolCount} tool`, kind: "stack" as const }))} />
           </section>
         ) : null}
         <ToolDetailInformation tool={tool} />

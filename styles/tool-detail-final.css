@@ -2262,3 +2262,52 @@
   font-size: 0.75rem;
   color: var(--tv-ink-secondary);
 }
+
+.entity-card-list {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 42rem;
+}
+.entity-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--tv-border-default) 55%, transparent);
+  border-radius: 0.875rem;
+  background: color-mix(in srgb, var(--tv-surface-raised, #1c1440) 80%, transparent);
+  text-decoration: none;
+  transition: border-color var(--tv-duration-fast, 120ms) var(--tv-easing-standard, ease);
+}
+.entity-card:hover {
+  border-color: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 40%, transparent);
+}
+.entity-card__body { flex: 1; min-width: 0; }
+.entity-card__title {
+  margin: 0 0 0.15rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--tv-ink-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entity-card__subtitle {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--tv-ink-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entity-card__kind {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tv-ink-secondary);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--tv-ink-secondary) 10%, transparent);
+}

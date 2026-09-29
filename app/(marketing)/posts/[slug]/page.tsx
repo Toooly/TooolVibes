@@ -24,6 +24,9 @@ import { JsonLd } from "@/components/seo/json-ld";
 
 import { siteConfig } from "@/lib/config/site";
 import { getRelatedGuides } from "@/lib/data/guide-related";
+import { getToolsForGuide } from "@/lib/graph/entity-relations";
+import { EntityCardList } from "@/components/graph/entity-cards";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import { getGuideTopic } from "@/lib/data/guide-topics";
 import {
   getEditorialPostBySlug,
@@ -158,6 +161,8 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   const topicLabel = getGuideTopic(post);
 
   const relatedGuides = await getRelatedGuides(post, 3);
+const guideContent = [post.title, post.dek, post.summary].filter(Boolean).join(" ");
+const relatedTools = getToolsForGuide(guideContent, directoryTools);
 
   const postStructuredData = {
     "@context": "https://schema.org",
@@ -384,7 +389,14 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
               className="guides-article__partner-rail"
               data-guide-partner-rail-host
             />
-            <GuideRelatedRail
+            {relatedTools.length > 0 ? (
+  <section className="guides-related-tools" aria-label="Tool correlati">
+    <p className="td-final-section-eyebrow">Tool correlati</p>
+    <h2 className="td-final-section-title">Tool menzionati in questa guida</h2>
+    <EntityCardList entities={relatedTools.map((t) => ({ href: `/toools/${t.slug}`, title: t.name, kind: "tool" as const }))} />
+  </section>
+) : null}
+<GuideRelatedRail
               tool={tool}
               toolHref={toolHrefForArticle}
             />
