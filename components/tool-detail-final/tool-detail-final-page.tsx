@@ -22,6 +22,7 @@ import { ToolDetailAlternatives } from "./tool-detail-alternatives";
 import { ToolDetailPricing } from "./tool-detail-pricing";
 import { ToolDetailInformation } from "./tool-detail-information";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
+import { buildToolDetailSections, getNavSections } from "@/lib/graph/section-registry";
 import {
   PartnerToolCard,
 } from "@/components/monetization/partner-placements";
@@ -92,12 +93,12 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
   const hasTechnicalData = Boolean(tool.categoryLabel || tool.levelLabel || tool.domain);
   const hasPricing = Boolean((tool.publicTool as Record<string, unknown>)?.pricingPlans) || hasExtendedContent;
   const sections = buildToolDetailSections({
-    hasExtendedContent,
+    hasExtendedContent: hasExtendedContent,
     hasRelatedTools: relatedTools.length > 0,
     hasRelatedGuides: false,
     hasRelatedStacks: false,
-    hasTechnicalData,
-    hasPricing,
+    hasTechnicalData: hasTechnicalData,
+    hasPricing: hasPricing,
   });
   const navSections = getNavSections(sections);
   const showExperiences = isCommunityReadEnabled();
