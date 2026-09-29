@@ -1,7 +1,7 @@
 import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
 
 // ─── Relationship types ───
-export type ToolRelation = { slug: string; name: string; relation: string };
+export type ToolRelation = { slug: string; name: string; relation: string; score?: number };
 export type GuideRelation = { slug: string; name: string; relation: string; score?: number };
 export type StackRelation = { slug: string; name: string; toolCount: number };
 
@@ -70,8 +70,8 @@ export function getRelatedTools(current: DirectoryTool, allTools: DirectoryTool[
       score += sharedTags.length;
       return { slug: t.slug, name: t.name, relation: "related", score };
     })
-    .filter((t) => t.score > 0)
-    .sort((a, b) => b.score - a.score);
+    .filter((t) => (t.score ?? 0) > 0)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
   return scored.slice(0, limit);
 }
 
@@ -87,7 +87,7 @@ export function getRelatedGuides(toolSlug: string, guideData: Array<{ slug: stri
       }
       return { slug: g.slug, name: g.title, relation: "related", score } as GuideRelation;
     })
-    .filter((g) => g.score >= 3)
-    .sort((a, b) => b.score - a.score)
+    .filter((g) => (g.score ?? 0) >= 3)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
     .slice(0, limit);
 }
