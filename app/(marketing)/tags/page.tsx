@@ -8,6 +8,9 @@ import {
   getPublicToolViews,
 } from "@/lib/data/public-tools";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
+import { getStacksForCategory } from "@/lib/graph/entity-relations";
+import { getCuratedCollections } from "@/lib/data/public-collections";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Tag e categorie del catalogo",
@@ -17,6 +20,10 @@ export const metadata: Metadata = createPublicPageMetadata({
 
 export default async function TagsPage() {
   const [tags, filterGroups, tools] = await Promise.all([
+    getAllTags(),
+    getPublicToolFilterGroups(),
+    getPublicToolViews(),
+    ]);
     getAllTags(),
     getPublicToolFilterGroups(),
     getPublicToolViews(),
