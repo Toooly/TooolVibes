@@ -169,7 +169,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
 
   return (
     <>
-      <JsonLd data={toolStructuredData} /></div>
+      <JsonLd data={toolStructuredData} />
       <div className="td-final-page">
         <nav className="td-final-breadcrumb" aria-label="Breadcrumb">
           <Link href="/archivio" className="td-final-breadcrumb__link">← Catalogo</Link>
@@ -183,33 +183,28 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         >
           <div className="td-final-hero__inner">
             <ToolDetailHero tool={tool} isAffiliateLink={isAffiliateLink} />
-        <ToolDetailActionSurface
-          slug={tool.slug}
-          name={tool.name}
-          externalUrl={tool.affiliateUrl ?? tool.externalUrl}
-          primaryLabel={tool.ctaLabel ?? "Visita"}
-          isAffiliateLink={isAffiliateLink}
-        />
-        <ToolDetailActionSurface
-          slug={tool.slug}
-          name={tool.name}
-          externalUrl={tool.affiliateUrl ?? tool.externalUrl}
-          primaryLabel={tool.ctaLabel ?? "Visita"}
-          isAffiliateLink={isAffiliateLink}
-        />
+          <ToolDetailActionSurface
+            slug={tool.slug}
+            name={tool.name}
+            externalUrl={tool.affiliateUrl ?? tool.externalUrl}
+            primaryLabel={tool.ctaLabel ?? "Visita"}
+            isAffiliateLink={isAffiliateLink}
+          />
           </div>
         </section>
 
         <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} navSections={navSections} />
         <ToolDetailDecisionBrief tool={tool} />
-        <div data-td-section data-td-section-target="td-final-approfondisci" data-td-section-title="Approfondisci"><ToolDetailExtendedContent
-          tool={tool}
-          experiences={
-            showExperiences ? (
-              <ExperienceSection toolSlug={tool.slug} catalogNames={catalogNames} />
-            ) : null
-          }
-        />
+        <div data-td-section data-td-section-target="td-final-approfondisci" data-td-section-title="Approfondisci">
+          <ToolDetailExtendedContent
+            tool={tool}
+            experiences={
+              showExperiences ? (
+                <ExperienceSection toolSlug={tool.slug} catalogNames={catalogNames} />
+              ) : null
+            }
+          />
+        </div>
         <div data-td-section data-td-section-target="td-final-pricing" data-td-section-title="Prezzi"><ToolDetailPricing tool={tool} /></div>
         <div data-td-section data-td-section-target="td-final-alternatives" data-td-section-title="Alternative"><ToolDetailAlternatives current={tool} related={relatedTools} /></div>
         {relatedGuides.length > 0 ? (

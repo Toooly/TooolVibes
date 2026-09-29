@@ -2068,7 +2068,7 @@
 .td-final-brief dl dd { color: var(--tv-ink-secondary); }
 .td-final-decision-nav {
   position: sticky;
-  top: var(--tv-header-painted, 3.5rem);
+  top: 0;
   z-index: var(--tv-z-subnav, 30);
   display: flex;
   gap: 0.25rem;
