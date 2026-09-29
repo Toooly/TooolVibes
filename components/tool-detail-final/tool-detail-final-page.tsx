@@ -190,6 +190,13 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           primaryLabel={tool.ctaLabel ?? "Visita"}
           isAffiliateLink={isAffiliateLink}
         />
+        <ToolDetailActionSurface
+          slug={tool.slug}
+          name={tool.name}
+          externalUrl={tool.affiliateUrl ?? tool.externalUrl}
+          primaryLabel={tool.ctaLabel ?? "Visita"}
+          isAffiliateLink={isAffiliateLink}
+        />
           </div>
         </section>
 
