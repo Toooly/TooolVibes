@@ -28,3 +28,8 @@ Nav items derive from actual rendered section IDs. No hardcoded IDs.
 ## Logo Resolution
 
 `tool.logoUrl` → letter fallback. Single shared resolver.
+
+## Section Registry Integration
+
+`buildToolDetailSections()` is called before render. `getNavSections()` returns nav-visible sections.
+Nav component receives `navSections` as props — no DOM query.

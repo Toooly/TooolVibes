@@ -1,0 +1,93 @@
+import type { DirectoryTool } from "@/lib/data/tooolvibes-directory";
+
+// ─── Relationship types ───
+export type ToolRelation = { slug: string; name: string; relation: string };
+export type GuideRelation = { slug: string; title: string; relation: string };
+export type StackRelation = { slug: string; name: string; toolCount: number };
+
+// ─── Tool → Guides ───
+// Derive from guide content that references tool slugs
+export function getGuidesForTool(toolSlug: string, guideData: Array<{ slug: string; title: string; content: string }>): ToolRelation[] {
+  return guideData
+    .filter((g) => g.content.includes(toolSlug) || g.content.includes(toolSlug.replace(/-/g, " ")))
+    .map((g) => ({ slug: g.slug, name: g.title, relation: "mentions" }))
+    .slice(0, 3);
+}
+
+// ─── Guide → Tools ───
+export function getToolsForGuide(guideContent: string, tools: DirectoryTool[]): ToolRelation[] {
+  return tools
+    .filter((t) => guideContent.includes(t.slug) || guideContent.includes(t.name))
+    .map((t) => ({ slug: t.slug, name: t.name, relation: "mentions" }))
+    .slice(0, 5);
+}
+
+// ─── Tool → Categories ───
+export function getCategoriesForTool(tool: DirectoryTool): string[] {
+  return [tool.category, ...(tool.segments ?? [])].filter(Boolean);
+}
+
+// ─── Category → Tools ───
+export function getToolsForCategory(category: string, tools: DirectoryTool[]): ToolRelation[] {
+  return tools
+    .filter((t) => t.category === category || (t.segments ?? []).includes(category))
+    .map((t) => ({ slug: t.slug, name: t.name, relation: "category" }));
+}
+
+// ─── Category → Guides ───
+export function getGuidesForCategory(category: string, guideData: Array<{ slug: string; title: string; content: string }>): GuideRelation[] {
+  return guideData
+    .filter((g) => g.content.toLowerCase().includes(category.toLowerCase()))
+    .map((g) => ({ slug: g.slug, name: g.title, relation: "category" }))
+    .slice(0, 3);
+}
+
+// ─── Tool → Stacks (from workspace) ───
+export function getStacksForTool(toolSlug: string, stacks: Array<{ slug: string; name: string; toolSlugs: string[] }>): StackRelation[] {
+  return stacks
+    .filter((s) => s.toolSlugs.includes(toolSlug))
+    .map((s) => ({ slug: s.slug, name: s.name, relation: "contains", toolCount: s.toolSlugs.length }));
+}
+
+// ─── Stack → Tools ───
+export function getToolsForStack(stack: { toolSlugs: string[] }, tools: DirectoryTool[]): ToolRelation[] {
+  return stack.toolSlugs
+    .map((slug) => tools.find((t) => t.slug === slug))
+    .filter(Boolean)
+    .map((t) => ({ slug: t!.slug, name: t!.name, relation: "contains" }));
+}
+
+// ─── Related Tools (deterministic) ───
+export function getRelatedTools(current: DirectoryTool, allTools: DirectoryTool[], limit = 3): ToolRelation[] {
+  const scored = allTools
+    .filter((t) => t.slug !== current.slug)
+    .map((t) => {
+      let score = 0;
+      if (t.category === current.category) score += 3;
+      const sharedSegments = (t.segments ?? []).filter((s) => (current.segments ?? []).includes(s));
+      score += sharedSegments.length * 2;
+      const sharedTags = (t.tags ?? []).filter((tag) => (current.tags ?? []).includes(tag));
+      score += sharedTags.length;
+      return { slug: t.slug, name: t.name, relation: "related", score };
+    })
+    .filter((t) => t.score > 0)
+    .sort((a, b) => b.score - a.score);
+  return scored.slice(0, limit);
+}
+
+// ─── Related Guides (deterministic) ───
+export function getRelatedGuides(toolSlug: string, guideData: Array<{ slug: string; title: string; content: string }>, limit = 2): GuideRelation[] {
+  return guideData
+    .map((g) => {
+      let score = 0;
+      if (g.content.includes(toolSlug)) score += 3;
+      const words = toolSlug.split("-").filter((w) => w.length > 2);
+      for (const w of words) {
+        if (g.content.includes(w)) score += 1;
+      }
+      return { slug: g.slug, name: g.title, relation: "related", score };
+    })
+    .filter((g) => g.score >= 3)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}

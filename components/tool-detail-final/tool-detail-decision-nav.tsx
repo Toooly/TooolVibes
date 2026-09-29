@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { bindShellScroll, readingLine } from "@/lib/shell/scroll-port";
 
@@ -13,11 +13,16 @@ type Item = { id: string; label: string };
 export function ToolDetailDecisionNav({
   showAlternatives,
   showDeepen = true,
+  navSections,
 }: {
   showAlternatives: boolean;
   showDeepen?: boolean;
+  navSections?: Array<{ id: string; label: string }>;
 }) {
-  const [items, setItems] = useState<Item[]>(() => {
+  const items = useMemo<Item[]>(() => {
+    if (navSections && navSections.length > 0) {
+      return navSections.map((s) => ({ id: s.id, label: s.label }));
+    }
     const next: Item[] = [];
     if (showDeepen) {
       next.push(
@@ -28,18 +33,7 @@ export function ToolDetailDecisionNav({
     }
     if (showAlternatives) next.push({ id: "td-final-alternatives", label: "Alternative" });
     return next;
-  });
-
-  useEffect(() => {
-    const sections = document.querySelectorAll("[data-td-section]");
-    const derived: Item[] = [];
-    sections.forEach((el) => {
-      const id = el.getAttribute("data-td-section-target");
-      const label = el.getAttribute("data-td-section-title");
-      if (id && label) derived.push({ id, label });
-    });
-    if (derived.length > 0) setItems(derived);
-  }, []);
+  }, [navSections, showAlternatives, showDeepen]);
   const [active, setActive] = useState(items[0]?.id ?? "");
   const pinned = useRef<string | null>(null);
 

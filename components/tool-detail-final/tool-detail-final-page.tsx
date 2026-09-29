@@ -88,6 +88,18 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
   }
 
   const relatedTools = await getRelatedToolViewsBySlug(tool.slug, 3);
+  const hasExtendedContent = Boolean(tool.extendedContent && tool.extendedContent.trim().length > 0);
+  const hasTechnicalData = Boolean(tool.categoryLabel || tool.levelLabel || tool.domain);
+  const hasPricing = Boolean((tool.publicTool as Record<string, unknown>)?.pricingPlans) || hasExtendedContent;
+  const sections = buildToolDetailSections({
+    hasExtendedContent,
+    hasRelatedTools: relatedTools.length > 0,
+    hasRelatedGuides: false,
+    hasRelatedStacks: false,
+    hasTechnicalData,
+    hasPricing,
+  });
+  const navSections = getNavSections(sections);
   const showExperiences = isCommunityReadEnabled();
   const catalogNames = showExperiences
     ? Object.fromEntries((await getPublicToolViews()).map((item) => [item.slug, item.name]))
@@ -159,7 +171,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           </div>
         </section>
 
-        <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} />
+        <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} navSections={navSections} />
         <ToolDetailDecisionBrief tool={tool} />
         <ToolDetailExtendedContent
           tool={tool}

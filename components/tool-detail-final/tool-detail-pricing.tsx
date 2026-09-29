@@ -23,13 +23,44 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
   const sourceUrl = (publicTool as Record<string, unknown>)?.pricingSourceUrl as string ?? null;
   const verifiedAt = (publicTool as Record<string, unknown>)?.pricingLastVerifiedAt as string ?? null;
 
+  // Detect pricing model
+  const isTransactional = plans.some((p) => p.period.includes("transaction"));
+  const isUsageBased = plans.some((p) => p.period.includes("credit") || p.period.includes("usage"));
+  const isFree = plans.length === 1 && plans[0].price === "$0";
+  const isCustom = plans.some((p) => p.price === "Custom");
+
   return (
     <section id="td-final-pricing" className="td-final-pricing" aria-labelledby="td-final-pricing-title">
       <p className="td-final-pricing__eyebrow">Prezzi</p>
       <h2 id="td-final-pricing-title" className="td-final-section-title">
         Quanto costa {tool.name}
       </h2>
-      {plans.length > 0 ? (
+      {isTransactional ? (
+        <div className="td-final-pricing__unknown">
+          <span className="td-final-pricing__unknown-icon" aria-hidden="true">%</span>
+          <div>
+            <p style={{ fontWeight: 600, marginBottom: 4 }}>Modello transazionale</p>
+            <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}>
+              Commissione per transazione. Nessun canone mensile per le funzionalità ecommerce.
+            </p>
+            {plans.map((plan) => (
+              <p key={plan.name} style={{ margin: "4px 0 0", fontWeight: 600 }}>
+                {plan.name}: {plan.price} {plan.period}
+              </p>
+            ))}
+          </div>
+        </div>
+      ) : isFree && !isCustom ? (
+        <div className="td-final-pricing__unknown">
+          <span className="td-final-pricing__unknown-icon" aria-hidden="true">✓</span>
+          <div>
+            <p style={{ fontWeight: 600, marginBottom: 4 }}>Gratuito</p>
+            <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}>
+              Questo tool offre un piano gratuito.
+            </p>
+          </div>
+        </div>
+      ) : plans.length > 0 ? (
         <div className="td-final-pricing__plans">
           {plans.map((plan) => (
             <div key={plan.name} className="td-final-pricing__plan">
@@ -59,10 +90,19 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
         <div className="td-final-pricing__unknown">
           <span className="td-final-pricing__unknown-icon" aria-hidden="true">?</span>
           <div>
-            <p style={{ fontWeight: 600, marginBottom: 4 }}>Prezzo non verificato</p>
+            <p style={{ fontWeight: 600, marginBottom: 4 }}>
+              {pricingStatus === "contact" ? "Listino su richiesta" :
+               pricingStatus === "custom" ? "Prezzo custom" :
+               pricingStatus === "temporarily_unverifiable" ? "Temporaneamente non verificabile" :
+               "Prezzo non verificato"}
+            </p>
             <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}>
               {pricingStatus === "contact"
                 ? "Listino su richiesta. Contatta il team per un preventivo."
+                : pricingStatus === "custom"
+                ? "Prezzo personalizzato in base alle esigenze."
+                : pricingStatus === "temporarily_unverifiable"
+                ? "Il listino non è temporaneamente verificabile. Riprova più tardi."
                 : "Questa scheda non pubblica un listino verificato. Controlla il sito del tool prima di decidere."}
             </p>
           </div>
