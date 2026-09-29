@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Layers3, Wrench } from "lucide-react";
 
 import { bindShellScroll, readingLine } from "@/lib/shell/scroll-port";
 
@@ -81,7 +80,6 @@ export function ToolDetailDecisionNav({
   return (
     <nav className="td-final-decision-nav" aria-label="Sezioni della scheda">
       {items.map((item) => {
-        const Icon = item.id === "td-final-alternatives" ? Wrench : Layers3;
         const selected = active === item.id;
         return (
           <a
@@ -97,7 +95,6 @@ export function ToolDetailDecisionNav({
               }, 700);
             }}
           >
-            <Icon size={13} aria-hidden="true" style={{ marginRight: 4 }} />
             {item.label}
           </a>
         );

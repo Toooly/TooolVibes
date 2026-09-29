@@ -62,13 +62,5 @@ export function reduceCompareScroll(
     }
     return { ...state, down, up: 0 };
   }
-  const up = state.up + Math.abs(delta);
-  if (
-    !input.prefersCompact &&
-    up >= COMPARE_EXPAND_DELTA &&
-    state.chrome === "compact"
-  ) {
-    return { chrome: "expanded", down: 0, up: 0 };
-  }
-  return { ...state, up, down: 0 };
+  return { ...state, up: state.up + Math.abs(delta), down: 0 };
 }

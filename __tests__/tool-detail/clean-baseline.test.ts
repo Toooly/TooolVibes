@@ -200,13 +200,13 @@ describe("Tool Detail clean baseline — owner tree", () => {
     expect(nav).not.toMatch(/#td-final-signal/);
     for (const id of [
       "td-final-overview",
-      "td-final-pros-limits",
+      "td-final-panel-pros-limits",
       "td-final-pricing",
       "td-final-alternatives",
     ]) {
       expect(nav).toContain(id);
     }
-    expect(extended).toMatch(/id=\{`td-final-\$\{panel\.id\}`\}/);
+    expect(extended).toMatch(/id=\{`td-final-panel-\$\{panel\.id\}`\}/);
     expect(extended).toMatch(/"pros-limits"/);
     expect(extended).toMatch(/"pricing"/);
     expect(page).toMatch(/id="td-final-overview"/);

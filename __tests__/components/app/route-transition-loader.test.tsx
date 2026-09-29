@@ -62,7 +62,7 @@ describe("RouteTransitionLoader", () => {
     );
 
     act(() => {
-      vi.advanceTimersByTime(479);
+      vi.advanceTimersByTime(179);
     });
     expect(loader?.classList.contains("is-visible")).toBe(true);
 

@@ -9,8 +9,8 @@ import {
   shouldShowRouteTransitionPresentation,
 } from "@/lib/motion/reduced-motion";
 
-const HOLD_MS = 480;
-const SAFETY_MS = 900;
+const HOLD_MS = 180;
+const SAFETY_MS = 400;
 
 const ROUTE_LABELS: Record<string, string> = {
   "/": "Home",
