@@ -27,8 +27,6 @@
   .ar4-shell .ar4-card__actions { grid-column: 2 !important; grid-row: 3 !important; }
 
   /* ---------- 03 TOOL DETAIL: compact identity block ---------- */
-  .td-final-hero { padding-top: 0 !important; margin-top: 0 !important; }
-  .td-final-hero > *:first-child { margin-top: 0 !important; }
 
   /* ---------- 04 GUIDES: featured card leaves the first viewport; chips then compact rows ---------- */
   .guides-section--ink { display: none !important; }
@@ -84,17 +82,15 @@
   .site-footer-v2 .tv-utility__nav { margin-top: 2px !important; }
   .site-footer-v2 .tv-utility__legal { margin-top: 2px !important; }
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* 02 catalogue: chips visible, mockup spacing */
   .ar4-categories { display: block !important; margin-top: 44px !important; }
-  .ar4-categories__chips { margin-top: 0 !important; }
-  .ar4-intro__panel { margin-top: 33px !important; }
-  .ar4-grid, .ar4-grid__list { margin-top: 22px !important; }
 
-  /* 03 tool: identity first, then category */
-  .td-final-hero { display: flex !important; flex-direction: column !important; }
-  .td-final-hero__name { order: -1 !important; }
+  .ar4-categories__chips { margin-top: 0 !important; }
+
+  .ar4-intro__panel { margin-top: 33px !important; }
+
+  .ar4-grid, .ar4-grid__list { margin-top: 22px !important; }
 
   /* 05 article: pull hero up, index open and body at mockup fold */
   .guides-article__hero { margin-top: 0 !important; }
@@ -107,89 +103,112 @@
 
   /* 09 decisioni: rows down 44 */
   .tv-decisioni__list, [class*="decisioni"] ul, .tv-app__page > ul { margin-top: 44px !important; }
-}
 
-@media (max-width: 899px) {
+}
+@media (max-width: 899px){
   /* 05 article: TOC index moves into the dark hero, above the cream reading surface */
   .guides-article__layout { display: flex !important; flex-direction: column !important; }
+
   .guides-article__rail { order: -1 !important; margin: 6px 0 10px !important; }
+
   .guides-toc { background: transparent !important; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent) !important; border-radius: 16px !important; padding: 12px 14px !important; }
+
   .guides-toc__title { font-size: 0.85rem !important; }
+
   .guides-toc__list { display: block !important; gap: 0 !important; }
-}
 
-@media (max-width: 899px) {
+}
+@media (max-width: 899px){
   .ar4-intro__facet { display: none !important; }
-  .ar4-categories { margin: 24px 0 0 !important; }
-  .ar4-grid, .ar4-grid__list { margin-top: 16px !important; }
-  .td-final-hero__inner > :first-child { display: none !important; }
-  .guides-article__dark-meta { display: none !important; }
-  .guides-article__rail { margin: 2px 0 8px !important; }
-  .guides-toc { padding: 10px 12px !important; }
-  .guides-article__body { margin-top: 4px !important; }
-}
 
-@media (max-width: 899px) {
+  .ar4-categories { margin: 24px 0 0 !important; }
+
+  .ar4-grid, .ar4-grid__list { margin-top: 16px !important; }
+
+  .guides-article__dark-meta { display: none !important; }
+
+  .guides-article__rail { margin: 2px 0 8px !important; }
+
+  .guides-toc { padding: 10px 12px !important; }
+
+  .guides-article__body { margin-top: 4px !important; }
+
+}
+@media (max-width: 899px){
   /* 04: compact cream rows, one third of the viewport */
   .guides-grid { gap: 10px !important; margin-top: 62px !important; }
+
   /* superseded by V4.4 anatomy below */
   /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__title { font-size: 0.95rem !important; }
+
   .guides-grid .guides-card__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
 
   /* 05: cream reading surface starts below the first viewport, as in the mockup */
   /* superseded — no fold hacks */
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* 04: row = filled topic block left, compact text right */
   /* superseded by V4.4 anatomy below */
   /* superseded by V4.4 anatomy below */
   .guides-grid .guides-card__topic { background: color-mix(in srgb, var(--tv-accent-brand-pressed, #4d2dd6) 12%, transparent) !important; color: var(--tv-accent-brand-pressed, #4d2dd6) !important; font-size: 0.75rem !important; }
+
   .guides-grid .guides-card__read { color: var(--tv-ink-muted, #8d8981) !important; font-size: 0.75rem !important; }
+
   .guides-grid .guides-card__title { grid-column: 2 !important; grid-row: 1 !important; font-size: 0.92rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+
   .guides-grid .guides-card__dek { display: none !important; }
 
   /* 05: dark meta pills and rail CTA; dark index box */
   .guides-article__hero-meta .pill { background: color-mix(in srgb, var(--tv-ink-primary) 8%, transparent) !important; color: var(--tv-ink-primary) !important; }
-  .guides-rail__cta { background: transparent !important; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 14%, transparent) !important; color: var(--tv-ink-primary) !important; }
-  .guides-article__hero-index { display: block; margin: 8px 0 4px; padding: 12px 14px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent); }
-  .guides-article__hero-index-title { margin: 0 0 6px; font-size: 0.85rem; font-weight: 700; color: var(--tv-ink-primary); }
-  .guides-article__hero-index ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--tv-ink-secondary); font-size: 0.82rem; }
-}
 
-@media (max-width: 899px) {
+  .guides-rail__cta { background: transparent !important; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 14%, transparent) !important; color: var(--tv-ink-primary) !important; }
+
+  .guides-article__hero-index { display: block; margin: 8px 0 4px; padding: 12px 14px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent); }
+
+  .guides-article__hero-index-title { margin: 0 0 6px; font-size: 0.85rem; font-weight: 700; color: var(--tv-ink-primary); }
+
+  .guides-article__hero-index ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--tv-ink-secondary); font-size: 0.82rem; }
+
+}
+@media (max-width: 899px){
   /* 04 final: three ~130px rows with media blocks, as the mockup */
   .guides-grid { margin-top: 11px !important; gap: 16px !important; }
+
   /* superseded by V4.4 anatomy below */
   /* superseded by V4.4 anatomy below */
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* 04: third row closes the first viewport, as in the mockup */
   /* superseded — no fold hacks */
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* 04 V4.2: featured cream card between filter rail and a below-fold list */
   [data-desktop-featured] { display: none !important; }
+
   [data-mobile-featured] .guides-section--ink { display: block !important; }
+
   .guides-grid__featured { display: block; margin: 10px 0 0; }
+
   /* keep */
   .guides-grid__featured .guides-feature__title { font-size: 1.2rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-  .guides-grid__featured .guides-feature__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-  /* superseded — no fold hacks */
-  /* superseded — no fold hacks */
-}
-@media (min-width: 900px) {
-  .guides-grid__featured, [data-mobile-featured] { display: none !important; }
-}
 
-@media (max-width: 899px) {
+  .guides-grid__featured .guides-feature__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+
+  /* superseded — no fold hacks */
+  /* superseded — no fold hacks */
+}
+@media (min-width: 900px){
+  .guides-grid__featured, [data-mobile-featured] { display: none !important; }
+
+}
+@media (max-width: 899px){
   /* 04 V4.3: root cause — legacy ivory gradient on the grid section painted a cream slab.
      The section goes back to the dark shell; only the featured editorial card paints cream. */
   #guides-all { background-image: none !important; background-color: transparent !important; }
+
   .guides-grid__featured .guides-feature { background: #f6f1e8 !important; border-radius: 16px !important; }
+
 }
 
 /* 04 V4.4 RETIRED — canonical rows now live in styles/guides.css (GM pass). Block neutralized. */
@@ -267,155 +286,144 @@
 
   /* 03 TOOL DETAIL -------------------------------------------- */
   /* Restore the identity block (was hidden by an earlier rule) as the mockup header */
-  .td-final-hero__inner > :first-child { display: grid !important; }
-  .td-final-hero__inner > :first-child { grid-template-columns: 64px minmax(0, 1fr) !important; column-gap: 12px !important; row-gap: 2px !important; align-items: center !important; }
-  .td-final-hero__identity > :first-child { grid-column: 1 !important; grid-row: 1 / span 3 !important; width: 56px !important; height: 56px !important; border-radius: 14px !important; }
-  .td-final-hero__identity > :nth-child(2), .td-final-hero__name { grid-column: 2 !important; grid-row: 1 !important; }
-  .td-final-hero__identity > :nth-child(3) { grid-column: 2 !important; grid-row: 2 !important; }
-  .td-final-score { color: #f3bf4c !important; }
-  .td-final-decision-nav [class*="item"], .td-final-decision-nav a, .td-final-decision-nav button { border-radius: 999px !important; }
-  .td-final-decision-nav [aria-current="true"], .td-final-decision-nav .is-active { background: #cdb9ff !important; color: #1a1030 !important; }
-  .td-final-brief p { display: -webkit-box !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* batch-1 follow-up: catalogue rail closes the gap, tool actions become one compact row */
   .ar4-categories__disclosure { display: none !important; }
-  .ar4-categories { margin-bottom: 0 !important; padding-bottom: 0 !important; }
-  .ar4-grid, .ar4-grid__list { margin-top: 12px !important; }
-  .td-final-actions { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: center !important; gap: 8px !important; }
-  .td-final-affiliate-note { display: none !important; }
-  .td-final-save-cluster { flex: 0 0 auto !important; }
-}
 
-@media (max-width: 899px) {
+  .ar4-categories { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+
+  .ar4-grid, .ar4-grid__list { margin-top: 12px !important; }
+
+}
+@media (max-width: 899px){
   /* batch-1 v2 — 01 home */
   .def-start__head { min-height: 0 !important; height: auto !important; margin: 0 !important; padding: 0 !important; }
+
   .def-start__head :is(h2, h3, p, .def-start__title, .def-start__kicker) { display: none !important; }
+
   .def-intent__field input { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+
   .def-cockpit__lede { -webkit-line-clamp: unset !important; display: block !important; font-size: 0.78rem !important; }
+
   .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #6b46ff !important; color: #ffffff !important; }
+
   .def-editorial__spot-avatar { width: 56px !important; height: 56px !important; border-radius: 14px !important; }
+
   .def-editorial__spot-lede { color: #d9d3e8 !important; }
 
   /* batch-1 v2 — 02 catalogue */
   .ar4-mobile-bar { display: none !important; }
+
   .ar4-intro { margin-top: 0 !important; }
+
   .ar4-intro__inner { padding-top: 6px !important; }
+
   .ar4-shell .ar4-card { min-height: 120px !important; }
 
-  /* batch-1 v2 — 03 tool detail */
-  .td-final-brief li, .td-final-brief [class*="bullet"] { color: #8fd6a8 !important; }
-  .td-final-decision-nav a, .td-final-decision-nav button { min-height: 36px !important; }
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* ============ batch-1 V3 ============ */
   /* 01 HOME */
   .mobile-top-bar { background: #241a4a !important; }
+
   .def-cockpit__lede { font-size: 0.75rem !important; line-height: 1.35 !important; }
+
   .def-cockpit { margin-bottom: 8px !important; }
+
   .def-intent { margin-top: 20px !important; }
+
   .def-intent__field { height: 48px !important; min-height: 48px !important; border-color: rgba(139, 108, 255, 0.45) !important; }
+
   .tv-discovery-stage .def-start__tabs { height: 44px !important; margin-top: 10px !important; }
+
   .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #5a35f0 !important; }
+
   .def-editorial__spotlight { margin-top: 10px !important; padding: 14px !important; }
+
   .def-editorial__spot-avatar, .def-editorial__spot-mark { width: 64px !important; height: 64px !important; border-radius: 16px !important; }
+
   .def-editorial__spot-lede { color: #e4def2 !important; }
+
   .def-editorial__spot-cta--primary { min-height: 44px !important; }
+
   .def-editorial__spot-disclosure, .def-editorial__spot-affiliate { display: none !important; }
 
   /* 02 CATALOGUE */
   body:has(.ar4-shell) [class*="route-strip"] { display: none !important; }
+
   .ar4-intro__inner { padding-top: 0 !important; }
+
   .ar4-intro__panel { margin-top: 24px !important; }
+
   .ar4-categories { margin-top: 24px !important; }
+
   .ar4-grid, .ar4-grid__list { margin-top: 8px !important; padding-top: 0 !important; }
+
   .ar4-shell .ar4-card { position: relative !important; min-height: 124px !important; padding-right: 56px !important; }
+
   .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
+
   .ar4-shell .ar4-card__actions { position: absolute !important; top: 10px !important; right: 10px !important; margin: 0 !important; }
 
-  /* 03 TOOL DETAIL: coherent identity grid (undo the earlier nth-child hack) */
-  .td-final-hero__inner > :first-child { grid-template-columns: 64px minmax(0, 1fr) !important; column-gap: 12px !important; }
-  .td-final-hero__identity { display: grid !important; grid-template-columns: 64px minmax(0, 1fr) !important; column-gap: 14px !important; row-gap: 6px !important; }
-  .td-final-hero__breadcrumb { grid-column: 1 / -1 !important; }
-  .td-final-hero__row { display: flex !important; grid-column: 1 / -1 !important; align-items: center !important; gap: 0.75rem !important; min-width: 0 !important; }
-  .td-final-hero__avatar { width: 64px !important; height: 64px !important; border-radius: 16px !important; flex: 0 0 64px !important; }
-  .td-final-hero__identity-copy { min-width: 0 !important; display: grid !important; grid-template-columns: minmax(0,1fr) !important; align-content: center !important; }
-  .td-final-hero__name { grid-column: 1 !important; grid-row: auto !important; margin: 0 !important; line-height: 1.05 !important; }
-  .td-final-hero__category { grid-column: 1 !important; }
-  .td-final-hero__chips > * { background: transparent !important; color: var(--tv-ink-secondary) !important; padding: 0 !important; font-size: 0.8rem !important; }
-  .td-final-hero__deck { grid-column: 1 / -1 !important; grid-row: 4 !important; display: -webkit-box !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-  .td-final-hero__facts { grid-column: 1 / -1 !important; grid-row: 5 !important; display: flex !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; }
-  .td-final-scope, .td-final-actions { margin-top: 4px !important; }
-  .td-final-decision-nav__link { min-height: 36px !important; }
 }
-
-@media (max-width: 899px) {
-  /* ============ batch-1 V4 ============ */
-  /* 02: real strip class; tight rail->list; bookmark contained in the card */
-  body:has(.ar4-shell) .mobile-top-bar__route,
-  body:has(.td-final-page) .mobile-top-bar__route { display: none !important; }
+@media (max-width: 899px){
   .ar4-grid { margin-top: 10px !important; }
+
   .ar4-grid__list { margin-top: 0 !important; }
+
   .ar4-shell .ar4-card { overflow: hidden !important; }
+
   .ar4-shell .ar4-card__actions { top: 12px !important; right: 12px !important; }
 
-  /* 03: Golden Master component order inside the identity grid */
-  .td-final-hero__facts { grid-row: 4 !important; }
-  .td-final-hero__deck { grid-row: 5 !important; }
-  .td-final-hero__identity > .td-final-actions { grid-column: 1 / -1 !important; grid-row: 6 !important; position: static !important; margin-top: 6px !important; }
-  /* four tabs fit at 390 without clipping */
-  .td-final-decision-nav { gap: 4px !important; }
-  .td-final-decision-nav__link { padding: 0 10px !important; font-size: 0.8rem !important; white-space: nowrap !important; }
-  /* In sintesi points */
-  .td-final-brief__summary { margin: 6px 0 8px !important; }
-  .td-final-brief__points { list-style: none !important; margin: 0 0 10px !important; padding: 0 !important; display: grid !important; gap: 6px !important; }
-  .td-final-brief__points li { display: flex !important; gap: 8px !important; align-items: flex-start !important; color: #d9d3e8 !important; }
-  .td-final-brief__points li::before { content: "✓" !important; color: #8fd6a8 !important; font-weight: 700 !important; }
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* ============ batch-1 V5 micro-closure ============ */
   /* 01: recommendation card presence */
   .def-editorial__spotlight { padding: 16px !important; }
+
   .def-editorial__spot-head { margin-top: 6px !important; }
+
   .def-editorial__spot-lede { margin-top: 8px !important; }
+
   .tv-featured-tool__meta { margin-top: 8px !important; }
+
   .def-editorial__spot-actions { margin-top: 12px !important; }
 
   /* 02: natural rhythm compaction */
   .ar4-intro__panel { margin-top: 14px !important; }
+
   .ar4-categories { margin-top: 12px !important; padding: 0 !important; }
+
   .ar4-grid { margin-top: 10px !important; }
+
   /* flat bookmark inside the card, upper-right */
   .ar4-shell .ar4-card__toggles > *, .ar4-shell .ar4-card__actions [class*="selection-chip"] {
     background: transparent !important; border: 0 !important; box-shadow: none !important;
     width: 28px !important; height: 28px !important; min-height: 28px !important;
   }
 
-  /* 03: score anatomy, category quiet, overflow out of the primary row, tab fit, fold */
-  .td-final-score__denom { display: none !important; }
-  .td-final-hero__chips > * { border: 0 !important; background: transparent !important; color: var(--tv-ink-secondary) !important; }
-  .td-final-save-cluster > :nth-child(2) { display: none !important; }
-  .td-final-decision-nav__link { padding: 0 8px !important; font-size: 0.78rem !important; min-height: 34px !important; }
-  .td-final-decision-nav { overflow-x: auto !important; }
-  .td-final-brief dl { margin-top: 20px !important; }
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* ============ batch-1 V6 pixel-closure ============ */
   /* 01 subtitle measure + card presence */
   .def-cockpit__lede { font-size: 0.8125rem !important; line-height: 1.3 !important; letter-spacing: -0.01em !important; }
+
   .def-editorial__spotlight { padding: 18px !important; }
+
   .def-editorial__spot-lede { margin-top: 10px !important; }
+
   .tv-featured-tool__meta { margin-top: 10px !important; }
+
   .def-editorial__spot-actions { margin-top: 14px !important; }
 
   /* 02 rail->list and visible compact bookmark */
   .ar4-intro { padding-bottom: 0 !important; }
+
   .ar4-grid { margin-top: 0 !important; }
+
   .ar4-grid__list { margin-top: 0 !important; padding-top: 0 !important; }
+
   .ar4-shell .ar4-card__toggles > *, .ar4-shell .ar4-card__actions [class*="selection-chip"] {
     width: 26px !important; height: 26px !important; min-height: 26px !important;
     border-radius: 8px !important;
@@ -424,91 +432,67 @@
     color: #cdb9ff !important;
   }
 
-  /* 03: real detail header; quieter category; 4-col tabs; analysis below fold */
-  .td-final-mobileheader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    min-height: 3.25rem;
-    padding: 0.25rem var(--tv-page-gutter-mobile, 1.25rem);
-    padding-top: calc(0.25rem + env(safe-area-inset-top, 0px));
-    background: color-mix(in srgb, #1b1438 92%, transparent);
-    border-bottom: 1px solid color-mix(in srgb, var(--tv-border-interactive) 24%, transparent);
-    position: sticky;
-    top: 0;
-    z-index: var(--tv-z-nav, 50);
-    box-shadow: none;
-    width: 100%;
-    border-radius: 0;
-  }
-  .td-final-mobileheader__back { color: var(--tv-ink-primary); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
-  .td-final-mobileheader__actions { display: flex; align-items: center; gap: 8px; }
-  body:has(.td-final-page) .mobile-top-bar { display: none !important; }
-  .td-final-hero__chips > * { text-transform: none !important; font-size: 0.8rem !important; letter-spacing: 0 !important; font-weight: 400 !important; }
-  .td-final-decision-nav { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 4px !important; overflow-x: auto !important; overflow-y: visible !important; top: 3.5rem !important; }
-  .td-final-decision-nav__link { justify-content: center !important; padding: 0 4px !important; font-size: 0.75rem !important; min-height: 34px !important; white-space: nowrap !important; }
-  .td-final-brief__points { margin-bottom: 12px !important; }
-  .td-final-brief dl { margin-top: 12px !important; }
 }
-@media (min-width: 900px) {
-  .td-final-mobileheader { display: none !important; }
+@media (min-width: 900px){
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* V6 follow-up */
   .def-cockpit__lede { font-size: 0.75rem !important; line-height: 1.25 !important; }
-  .def-cockpit { padding-inline: 12px !important; }
-  .ar4-intro { margin-bottom: 0 !important; padding-bottom: 0 !important; }
-  .ar4-categories { margin-bottom: 0 !important; }
-  .ar4-grid__list > *:first-child { margin-top: 0 !important; }
-  .td-final-brief__points { margin-bottom: 72px !important; }
-  .td-final-brief dl { margin-top: 72px !important; }
-}
 
-@media (max-width: 899px) {
+  .def-cockpit { padding-inline: 12px !important; }
+
+  .ar4-intro { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+
+  .ar4-categories { margin-bottom: 0 !important; }
+
+  .ar4-grid__list > *:first-child { margin-top: 0 !important; }
+
+}
+@media (max-width: 899px){
   /* ============ batch-1 V7 final micro-closure ============ */
   /* 01 */
   .def-cockpit__lede { max-width: none !important; font-size: 0.8125rem !important; line-height: 1.3 !important; letter-spacing: -0.012em !important; }
+
   .def-editorial__spot-lede { margin-top: 12px !important; }
+
   .tv-featured-tool__meta { margin-top: 12px !important; }
+
   .def-editorial__spot-actions { margin-top: 16px !important; }
+
   .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #5f3fd6 !important; }
+
   .def-intent__field button { background: #c3b0f7 !important; }
 
   /* 02 */
   .ar4-categories__inner, .ar4-categories { padding-bottom: 0 !important; }
+
   .ar4-grid { padding-top: 0 !important; }
+
   .ar4-shell .ar4-card__actions { top: 10px !important; right: 10px !important; }
+
   .ar4-shell .ar4-card__toggles > *, .ar4-shell .ar4-card__actions [class*="selection-chip"] {
     width: 28px !important; height: 28px !important; min-height: 28px !important;
   }
+
   .ar4-chip[aria-pressed="true"], .ar4-chip[data-active="true"], .ar4-chip.is-active {
     background: #6b4de0 !important; color: #ffffff !important; border-color: transparent !important;
   }
 
-  /* 03 */
-  .td-final-mobileheader__search { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; border: 0; background: transparent; color: var(--tv-ink-primary, #f4f0e7); }
-  .td-final-hero__level { background: color-mix(in srgb, #8fd6a8 16%, transparent) !important; border: 1px solid color-mix(in srgb, #8fd6a8 34%, transparent) !important; color: #bfe9cd !important; border-radius: 999px !important; padding: 2px 10px !important; font-size: 0.78rem !important; }
-  .td-final-cta--save { width: 44px !important; min-width: 44px !important; max-width: 44px !important; min-height: 44px !important; height: 44px !important; padding: 0 !important; border-radius: 999px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 0 !important; }
-  .td-final-cta--save svg { margin: 0 !important; }
-  .td-final-cta--save span { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; }
-  .td-final-brief__points { margin-bottom: 12px !important; }
-  .td-final-brief dl { margin-top: 12px !important; }
 }
-
-@media (max-width: 899px) {
+@media (max-width: 899px){
   /* V7 final: pin the real save chip to the card's upper-right corner */
   .ar4-shell .ar4-card { position: relative !important; }
+
   .ar4-shell .ar4-card [class*="selection-chip"] {
     position: static !important;
     top: auto !important;
     right: auto !important;
   }
-  .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
-}
 
-@media (max-width: 899px) {
+  .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
+
+}
+@media (max-width: 899px){
   /* V7 final: the save control has no stable visual class — pin it by accessible name */
   .ar4-shell .ar4-card button[aria-label^="Salva"],
   .ar4-shell .ar4-card button[aria-label^="Rimuovi"] {
@@ -530,20 +514,22 @@
     place-items: center !important;
     font-size: 0 !important;
   }
-}
 
-@media (max-width: 899px) {
+}
+@media (max-width: 899px){
   /* V7 final fix: make the card the containing block for the absolute save chip */
   .ar4-shell .ar4-card__actions { position: static !important; }
-}
 
-@media (max-width: 899px) {
+}
+@media (max-width: 899px){
   /* V7: card is the containing block for the absolute save chip */
   .ar4-shell .ar4-card__actions,
   .ar4-shell .ar4-card__control-rail,
   .ar4-shell .ar4-card__toggles,
   .ar4-shell .ar4-card__toggles > span { position: static !important; }
+
   .ar4-shell .ar4-card { position: relative !important; }
+
 }
 
 /* GM-08 retired: summary-row anatomy + interior pill nav now live in canonical
@@ -560,7 +546,6 @@
   [data-account-surface="workspace"] .tv-space-switch { display: none; }
 }
 
-
 /* Shell contract — page titles must start below the sticky header.
    Negative margin pulls copy into the header on every route that used it. */
 @media (max-width: 1279px) {
@@ -570,14 +555,12 @@
     .guides-masthead,
     .cx-detail-hero-v4,
     .def-start,
-    .td-final-hero,
     .ar4-intro,
     .v-auth-page .v-auth-header
   ) {
     margin-top: 0 !important;
   }
   .cx-section-nav,
-  .td-final-decision-nav,
   .tv-lib-toolbar,
   .ar4-mobile-bar,
   .ar4-filters,
@@ -585,7 +568,6 @@
     top: var(--tv-header-painted, var(--tv-header-height-mobile)) !important;
     z-index: var(--tv-z-subnav, 30);
   }
-  .td-final-decision-nav__link,
   .cx-section-nav a {
     min-height: 44px !important;
   }
@@ -601,30 +583,3 @@
   -webkit-backdrop-filter: none !important;
 }
 
-body:has(.td-final-page) .td-final-decision-nav {
-  top: 3.5rem !important;
-}
-
-.td-final-page__partner {
-  margin-top: var(--tv-space-6);
-}
-.td-final-page__partner .partner-placement--tool,
-.td-final-page__partner .partner-insert {
-  background: color-mix(in srgb, var(--tv-surface-raised, #1c1440) 92%, transparent) !important;
-  color: var(--tv-ink-primary, #f4f0e7) !important;
-  border-color: color-mix(in srgb, var(--tv-border-default) 50%, transparent) !important;
-  max-height: 14rem;
-  overflow: hidden;
-}
-.td-final-page__partner .partner-placement--tool *,
-.td-final-page__partner .partner-insert * {
-  color: inherit !important;
-}
-.td-final-page__partner .partner-placement__editorial h2,
-.td-final-page__partner .partner-insert__headline {
-  color: var(--tv-ink-primary, #f4f0e7) !important;
-}
-.td-final-page__partner .partner-placement__editorial p,
-.td-final-page__partner .partner-insert__body {
-  color: var(--tv-ink-secondary) !important;
-}
