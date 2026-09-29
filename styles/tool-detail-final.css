@@ -1,3 +1,9 @@
+:root {
+  --motion-fast: 160ms;
+  --motion-standard: 210ms;
+  --motion-expand: 260ms;
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 /*
  * TooolVibes — Tool Detail FINAL (2026-07-25)
  *
@@ -1006,7 +1012,7 @@
 /* ============================================================
    G. COMPARISON ROWS (.td-final-alt-row / .td-final-alt-cell)
    ============================================================ */
-.td-final-alt-row {
+.td-final-alt-row--legacy-table {
   display: grid;
   grid-template-columns: minmax(8rem, 1.2fr) minmax(12rem, 2fr) minmax(6rem, 1fr) minmax(4rem, 0.6fr);
   gap: var(--tv-space-4);
@@ -1981,13 +1987,14 @@
   white-space: pre-wrap;
 }
 .td-final-alt-row {
+  flex: 0 0 86%;
+  scroll-snap-align: start;
   display: grid;
   gap: 0.65rem;
   padding: 0.85rem 1rem;
   border: 1px solid color-mix(in srgb, var(--tv-border-default) 55%, transparent);
   border-radius: 0.875rem;
   background: color-mix(in srgb, var(--tv-surface-raised, #1c1440) 80%, transparent);
-  margin-bottom: 0.5rem;
 }
 .td-final-alt-row__identity {
   display: flex;
@@ -2090,8 +2097,104 @@
 .td-final-breadcrumb__link {
   color: var(--tv-ink-secondary);
   text-decoration: none;
-  transition: color 160ms ease;
+  transition: color var(--motion-fast, 160ms) var(--motion-ease, ease);
 }
 .td-final-breadcrumb__link:hover { color: var(--tv-ink-primary); }
 .td-final-breadcrumb__sep { opacity: 0.4; }
 .td-final-breadcrumb__current { color: var(--tv-ink-primary); font-weight: 600; }
+
+.td-final-deepen__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  list-style: none;
+}
+.td-final-deepen__summary::-webkit-details-marker { display: none; }
+.td-final-deepen__icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--tv-ink-secondary) 12%, transparent);
+  color: var(--tv-ink-secondary);
+  flex-shrink: 0;
+  transition: background var(--motion-standard) var(--motion-ease), color var(--motion-standard) var(--motion-ease);
+}
+.td-final-deepen__item[open] .td-final-deepen__icon {
+  background: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 20%, transparent);
+  color: var(--tv-accent-brand, #7c3aed);
+}
+.td-final-deepen__chevron {
+  margin-left: auto;
+  transition: transform var(--motion-standard) var(--motion-ease);
+}
+.td-final-deepen__item[open] .td-final-deepen__chevron {
+  transform: rotate(180deg);
+}
+.td-final-deepen__panel {
+  padding: 0 0.75rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.td-final-deepen__panel p { margin: 0 0 0.5rem; }
+.td-final-deepen__panel strong { font-weight: 600; }
+
+.td-final-brief dl > div {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.5rem 0.65rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.875rem;
+}
+.td-final-brief dl > div::before {
+  content: none;
+}
+.td-final-brief__icon {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.55rem;
+}
+.td-final-brief dl > div:nth-child(1) .td-final-brief__icon {
+  background: color-mix(in srgb, #86efac 18%, transparent);
+  color: #86efac;
+}
+.td-final-brief dl > div:nth-child(2) .td-final-brief__icon {
+  background: color-mix(in srgb, #fdba74 18%, transparent);
+  color: #fdba74;
+}
+.td-final-brief dl > div:nth-child(3) .td-final-brief__icon {
+  background: color-mix(in srgb, #c4b5fd 18%, transparent);
+  color: #c4b5fd;
+}
+.td-final-brief dl dt,
+.td-final-brief dl dd { grid-column: 2; }
+
+.td-final-pricing__unknown {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 42rem;
+  padding: 1rem 1.1rem;
+  border-radius: 0.875rem;
+  border: 1px solid color-mix(in srgb, var(--tv-border-default) 55%, transparent);
+  background: color-mix(in srgb, var(--tv-surface-raised, #1c1440) 80%, transparent);
+}
+.td-final-pricing__unknown-icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.55rem;
+  background: color-mix(in srgb, var(--tv-accent-gold, #c9a227) 18%, transparent);
+  color: var(--tv-accent-gold, #c9a227);
+  font-weight: 700;
+  font-size: 0.875rem;
+}

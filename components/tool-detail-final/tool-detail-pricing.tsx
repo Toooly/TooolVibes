@@ -25,9 +25,15 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
       {known ? (
         <div className="td-final-pricing__body">{body}</div>
       ) : (
-        <p className="td-final-pricing__unknown">
-          Questa scheda non pubblica un listino verificato. Controlla il sito del tool prima di decidere.
-        </p>
+        <div className="td-final-pricing__unknown">
+          <span className="td-final-pricing__unknown-icon" aria-hidden="true">?</span>
+          <div>
+            <p style={{ fontWeight: 600, marginBottom: 4 }}>Prezzo non verificato</p>
+            <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}>
+              Questa scheda non pubblica un listino verificato. Controlla il sito del tool prima di decidere.
+            </p>
+          </div>
+        </div>
       )}
     </section>
   );

@@ -1,3 +1,5 @@
+import { Target, Scale, Star } from "lucide-react";
+
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import {
   extractMarkdownTradeOff,
@@ -58,8 +60,11 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
         </ul>
       ) : null}
       <dl>
-        {rows.map((row) => (
+        {rows.map((row, rowIndex) => (
           <div key={row.dt}>
+            <span className="td-final-brief__icon" aria-hidden="true">
+              {rowIndex === 0 ? <Target size={16} /> : rowIndex === 1 ? <Scale size={16} /> : <Star size={16} />}
+            </span>
             <dt>{row.dt}</dt>
             <dd>{row.dd}</dd>
           </div>

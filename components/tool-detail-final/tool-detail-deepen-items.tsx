@@ -1,5 +1,6 @@
 "use client";
 
+import { FileText, Settings, Target, Scale, User, HelpCircle } from "lucide-react";
 
 type Panel = {
   id: string;
@@ -27,6 +28,14 @@ export function ToolDetailDeepenItems({ panels }: { panels: Panel[] }) {
           }}
         >
           <summary className="td-final-deepen__summary">
+            <span className="td-final-deepen__icon" aria-hidden="true">
+              {panel.id === "overview" ? <FileText size={16} /> :
+               panel.id === "features" ? <Settings size={16} /> :
+               panel.id === "use-cases" ? <Target size={16} /> :
+               panel.id === "pros-limits" ? <Scale size={16} /> :
+               panel.id === "experience" ? <User size={16} /> :
+               <HelpCircle size={16} />}
+            </span>
             <span>{panel.title}</span>
             <span className="td-final-deepen__chevron" aria-hidden="true" />
           </summary>
