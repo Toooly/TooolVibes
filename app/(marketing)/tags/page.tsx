@@ -7,6 +7,8 @@ import {
   getPublicToolFilterGroups,
   getPublicToolViews,
 } from "@/lib/data/public-tools";
+import { getGuidesForCategory } from "@/lib/graph/entity-relations";
+import { getGuidePosts } from "@/lib/data/public-articles";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
@@ -16,11 +18,13 @@ export const metadata: Metadata = createPublicPageMetadata({
 });
 
 export default async function TagsPage() {
-  const [tags, filterGroups, tools] = await Promise.all([
+  const [tags, filterGroups, tools, allGuides] = await Promise.all([
     getAllTags(),
     getPublicToolFilterGroups(),
     getPublicToolViews(),
+    getGuidePosts(),
   ]);
+  const guideData = allGuides.map((g) => ({ slug: g.slug, title: g.title, content: g.summary ?? g.dek ?? "" }));
   const tagCounts = Object.entries(tags).sort(
     (left, right) => right[1] - left[1],
   );

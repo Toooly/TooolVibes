@@ -2225,3 +2225,40 @@
   text-decoration: none;
 }
 .td-final-pricing__cta:hover { opacity: 0.9; }
+
+.td-final-related-guides,
+.td-final-related-stacks {
+  margin-top: var(--tv-space-8);
+}
+.td-final-related-guides__list,
+.td-final-related-stacks__list {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 42rem;
+}
+.td-final-related-guides__card,
+.td-final-related-stacks__card {
+  display: block;
+  padding: 0.75rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--tv-border-default) 55%, transparent);
+  border-radius: 0.875rem;
+  background: color-mix(in srgb, var(--tv-surface-raised, #1c1440) 80%, transparent);
+  text-decoration: none;
+  transition: border-color var(--tv-duration-fast, 120ms) var(--tv-easing-standard, ease);
+}
+.td-final-related-guides__card:hover,
+.td-final-related-stacks__card:hover {
+  border-color: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 40%, transparent);
+}
+.td-final-related-guides__title,
+.td-final-related-stacks__title {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  color: var(--tv-ink-primary);
+}
+.td-final-related-guides__meta,
+.td-final-related-stacks__meta {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--tv-ink-secondary);
+}

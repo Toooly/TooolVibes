@@ -23,6 +23,7 @@ import { ToolDetailPricing } from "./tool-detail-pricing";
 import { ToolDetailInformation } from "./tool-detail-information";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { buildToolDetailSections, getNavSections } from "@/lib/graph/section-registry";
+import { getGuidesForTool, getStacksForTool } from "@/lib/graph/entity-relations";
 import {
   PartnerToolCard,
 } from "@/components/monetization/partner-placements";
@@ -92,11 +93,17 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
   const hasExtendedContent = Boolean(tool.extendedContent && tool.extendedContent.trim().length > 0);
   const hasTechnicalData = Boolean(tool.categoryLabel || tool.levelLabel || tool.domain);
   const hasPricing = Boolean((tool.publicTool as Record<string, unknown>)?.pricingPlans) || hasExtendedContent;
+  const { getGuidePosts } = await import("@/lib/data/public-articles");
+  const allGuides = await getGuidePosts();
+  const guideData = allGuides.map((g) => ({ slug: g.slug, title: g.title, content: g.summary ?? g.dek ?? "" }));
+  const relatedGuides = getGuidesForTool(tool.slug, guideData);
+  const { directoryTools } = await import("@/lib/data/tooolvibes-directory");
+  const relatedStacks = getStacksForTool(tool.slug, []);
   const sections = buildToolDetailSections({
     hasExtendedContent: hasExtendedContent,
     hasRelatedTools: relatedTools.length > 0,
-    hasRelatedGuides: false,
-    hasRelatedStacks: false,
+    hasRelatedGuides: relatedGuides.length > 0,
+    hasRelatedStacks: relatedStacks.length > 0,
     hasTechnicalData: hasTechnicalData,
     hasPricing: hasPricing,
   });
@@ -184,6 +191,34 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         />
         <ToolDetailPricing tool={tool} />
         <ToolDetailAlternatives current={tool} related={relatedTools} />
+        {relatedGuides.length > 0 ? (
+          <section id="td-final-related-guides" data-td-section data-td-section-target="td-final-related-guides" data-td-section-title="Guide correlate" className="td-final-related-guides">
+            <p className="td-final-section-eyebrow">Guide correlate</p>
+            <h2 className="td-final-section-title">Approfondisci questo tool</h2>
+            <div className="td-final-related-guides__list">
+              {relatedGuides.map((guide) => (
+                <Link key={guide.slug} href={`/posts/${guide.slug}`} className="td-final-related-guides__card">
+                  <p className="td-final-related-guides__title">{guide.name}</p>
+                  <p className="td-final-related-guides__meta">Guida</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
+        {relatedStacks.length > 0 ? (
+          <section id="td-final-related-stacks" data-td-section data-td-section-target="td-final-related-stacks" data-td-section-title="In questi Stack" className="td-final-related-stacks">
+            <p className="td-final-section-eyebrow">In questi Stack</p>
+            <h2 className="td-final-section-title">Presente in questi Stack</h2>
+            <div className="td-final-related-stacks__list">
+              {relatedStacks.map((stack) => (
+                <Link key={stack.slug} href={`/collections/${stack.slug}`} className="td-final-related-stacks__card">
+                  <p className="td-final-related-stacks__title">{stack.name}</p>
+                  <p className="td-final-related-stacks__meta">{stack.toolCount} tool</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
         <ToolDetailInformation tool={tool} />
         <TinyAdzInlineSlot placement="tool-detail" />
         {slug !== "taylora" ? (

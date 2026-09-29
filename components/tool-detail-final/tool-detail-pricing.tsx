@@ -28,6 +28,7 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
   const isUsageBased = plans.some((p) => p.period.includes("credit") || p.period.includes("usage"));
   const isFree = plans.length === 1 && plans[0].price === "$0";
   const isCustom = plans.some((p) => p.price === "Custom");
+  const pricingModel = isTransactional ? "transactional" : isUsageBased ? "usage" : isFree ? "free" : isCustom ? "custom" : "tiered";
 
   return (
     <section id="td-final-pricing" className="td-final-pricing" aria-labelledby="td-final-pricing-title">
@@ -35,7 +36,7 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
       <h2 id="td-final-pricing-title" className="td-final-section-title">
         Quanto costa {tool.name}
       </h2>
-      {isTransactional ? (
+      {pricingModel === "transactional" ? (
         <div className="td-final-pricing__unknown">
           <span className="td-final-pricing__unknown-icon" aria-hidden="true">%</span>
           <div>
@@ -50,7 +51,7 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
             ))}
           </div>
         </div>
-      ) : isFree && !isCustom ? (
+      ) : pricingModel === "free" ? (
         <div className="td-final-pricing__unknown">
           <span className="td-final-pricing__unknown-icon" aria-hidden="true">✓</span>
           <div>
