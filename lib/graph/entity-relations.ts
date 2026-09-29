@@ -30,7 +30,7 @@ export function getCategoriesForTool(tool: DirectoryTool): string[] {
 // ─── Category → Tools ───
 export function getToolsForCategory(category: string, tools: DirectoryTool[]): ToolRelation[] {
   return tools
-    .filter((t) => t.category === category || (t.segments ?? []).includes(category))
+    .filter((t) => t.category === category || (t.segments as string[]).includes(category))
     .map((t) => ({ slug: t.slug, name: t.name, relation: "category" }));
 }
 
@@ -64,9 +64,9 @@ export function getRelatedTools(current: DirectoryTool, allTools: DirectoryTool[
     .map((t) => {
       let score = 0;
       if (t.category === current.category) score += 3;
-      const sharedSegments = (t.segments ?? []).filter((s) => (current.segments ?? []).includes(s));
+      const sharedSegments = (t.segments as string[]).filter((s) => (current.segments as string[]).includes(s));
       score += sharedSegments.length * 2;
-      const sharedTags = (t.tags ?? []).filter((tag) => (current.tags ?? []).includes(tag));
+      const sharedTags = (t.tags as string[]).filter((tag) => (current.tags as string[]).includes(tag));
       score += sharedTags.length;
       return { slug: t.slug, name: t.name, relation: "related", score };
     })
