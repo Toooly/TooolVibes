@@ -93,11 +93,13 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
   const hasExtendedContent = Boolean(tool.extendedContent && tool.extendedContent.trim().length > 0);
   const hasTechnicalData = Boolean(tool.categoryLabel || tool.levelLabel || tool.domain);
   const hasPricing = Boolean((tool.publicTool as Record<string, unknown>)?.pricingPlans) || hasExtendedContent;
-  const { getGuidePosts } = await import("@/lib/data/public-articles");
-  const allGuides = await getGuidePosts();
-  const guideData = allGuides.map((g) => ({ slug: g.slug, title: g.title, content: g.summary ?? g.dek ?? "" }));
-  const relatedGuides = getGuidesForTool(tool.slug, guideData);
-  const { directoryTools } = await import("@/lib/data/tooolvibes-directory");
+  let relatedGuides: Array<{ slug: string; name: string; relation: string }> = [];
+  try {
+    const { getGuidePosts } = await import("@/lib/data/public-articles");
+    const allGuides = await getGuidePosts();
+    const guideData = allGuides.map((g) => ({ slug: g.slug, title: g.title, content: g.summary ?? g.dek ?? "" }));
+    relatedGuides = getGuidesForTool(tool.slug, guideData);
+  } catch {}
   const relatedStacks = getStacksForTool(tool.slug, []);
   const sections = buildToolDetailSections({
     hasExtendedContent: hasExtendedContent,
