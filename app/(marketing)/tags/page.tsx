@@ -20,12 +20,7 @@ export default async function TagsPage() {
     getAllTags(),
     getPublicToolFilterGroups(),
     getPublicToolViews(),
-    ]);
-    getAllTags(),
-    getPublicToolFilterGroups(),
-    getPublicToolViews(),
-    ]);
-  // getGuidePosts available for future guide-per-category wiring
+  ]);
   const tagCounts = Object.entries(tags).sort(
     (left, right) => right[1] - left[1],
   );
