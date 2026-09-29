@@ -22,6 +22,7 @@ export type DirectoryFilterGroup =
 export type PricingPlan = { name: string; price: string; period: string };
 
 export type DirectoryTool = {
+  logoUrl?: string;
   pricingStatus?: string;
   pricingPlans?: PricingPlan[];
   pricingSourceUrl?: string;
@@ -249,6 +250,17 @@ export const directoryTools: DirectoryTool[] = [
     id: "cosmicjs",
     name: "CosmicJS",
     slug: "cosmicjs",
+    logoUrl: "/tool-logos/cosmicjs.svg",
+    pricingStatus: "verified" as const,
+    pricingPlans: [
+      { name: "Free", price: "$0", period: "forever" },
+      { name: "Builder", price: "$99", period: "per month" },
+      { name: "Team", price: "$299", period: "per month" },
+      { name: "Business", price: "$499", period: "per month" },
+      { name: "Enterprise", price: "Custom", period: "" },
+    ],
+    pricingSourceUrl: "https://www.cosmicjs.com/pricing",
+    pricingLastVerifiedAt: "2026-09-29",
     affiliateUrl: "https://app.cosmicjs.com/signup?ref=TOOOLVIBES",
     category: "Headless CMS",
     categoryLabel: "CMS headless / flussi AI",
@@ -596,6 +608,16 @@ export const directoryTools: DirectoryTool[] = [
     id: "synthesia-ai",
     name: "Synthesia AI",
     slug: "synthesia-ai",
+    logoUrl: "/tool-logos/synthesia-ai.svg",
+    pricingStatus: "verified" as const,
+    pricingPlans: [
+      { name: "Free", price: "$0", period: "forever" },
+      { name: "Starter", price: "$18", period: "per month (yearly)" },
+      { name: "Creator", price: "Custom", period: "" },
+      { name: "Enterprise", price: "Custom", period: "" },
+    ],
+    pricingSourceUrl: "https://www.synthesia.io/pricing",
+    pricingLastVerifiedAt: "2026-09-29",
     category: "Video AI",
     categoryLabel: "Video AI / avatar",
     level: "intermediate",
@@ -722,6 +744,14 @@ export const directoryTools: DirectoryTool[] = [
     id: "chatbot",
     name: "ChatBot",
     slug: "chatbot",
+    pricingStatus: "verified" as const,
+    pricingPlans: [
+      { name: "Free", price: "$0", period: "forever" },
+      { name: "Team", price: "$29", period: "per month" },
+      { name: "Business", price: "$50", period: "per month" },
+    ],
+    pricingSourceUrl: "https://www.chatbot.com/pricing",
+    pricingLastVerifiedAt: "2026-09-29",
     category: "AI Chatbot",
     categoryLabel: "Chatbot AI / supporto clienti",
     level: "intermediate",
@@ -753,6 +783,13 @@ export const directoryTools: DirectoryTool[] = [
     id: "helpdesk",
     name: "HelpDesk",
     slug: "helpdesk",
+    pricingStatus: "verified" as const,
+    pricingPlans: [
+      { name: "Free", price: "$0", period: "forever" },
+      { name: "Standard", price: "$19", period: "per user/month" },
+    ],
+    pricingSourceUrl: "https://www.helpdesk.com/pricing",
+    pricingLastVerifiedAt: "2026-09-29",
     category: "Supporto clienti",
     categoryLabel: "Supporto clienti / ticket",
     level: "intermediate",
@@ -846,6 +883,14 @@ export const directoryTools: DirectoryTool[] = [
     id: "lemon-squeezy",
     name: "Lemon Squeezy",
     slug: "lemon-squeezy",
+    logoUrl: "/tool-logos/lemon-squeezy.svg",
+    pricingStatus: "verified" as const,
+    pricingPlans: [
+      { name: "Free to start", price: "$0", period: "forever" },
+      { name: "Transaction fee", price: "5% + 50¢", period: "per transaction" },
+    ],
+    pricingSourceUrl: "https://www.lemonsqueezy.com/pricing",
+    pricingLastVerifiedAt: "2026-09-29",
     category: "Pagamenti",
     categoryLabel: "Pagamenti / Merchant of Record",
     level: "intermediate",
@@ -1002,6 +1047,7 @@ export const directoryTools: DirectoryTool[] = [
     id: "flowise",
     name: "Flowise",
     slug: "flowise",
+    logoUrl: "/tool-logos/flowise.png",
     category: "Agenti AI",
     categoryLabel: "Agenti AI / LangChain / flussi AI",
     level: "expert",

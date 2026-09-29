@@ -162,13 +162,14 @@ export function createToolPublicView(
     canonicalLevel?.label ?? (tool.flags.featured ? "In evidenza" : null);
 
   const dirRec = directoryTool as Record<string, unknown> | undefined;
+  const logoUrl = (dirRec?.logoUrl as string) ?? null;
   const pricingStatus = (dirRec?.pricingStatus as string) ?? null;
   const pricingPlans = (dirRec?.pricingPlans as Array<{ name: string; price: string; period: string }>) ?? [];
   const pricingSourceUrl = (dirRec?.pricingSourceUrl as string) ?? null;
   const pricingLastVerifiedAt = (dirRec?.pricingLastVerifiedAt as string) ?? null;
 
   return {
-    publicTool: { ...tool, pricingStatus, pricingPlans, pricingSourceUrl, pricingLastVerifiedAt } as typeof tool,
+    publicTool: { ...tool, logoUrl, pricingStatus, pricingPlans, pricingSourceUrl, pricingLastVerifiedAt } as typeof tool,
     presentationKind: directoryTool ? "directory" : "canonical",
     id: tool.provenance.sourceId,
     slug: tool.slug,

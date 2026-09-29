@@ -26,6 +26,19 @@ describe("tool data integrity", () => {
     expect(affUrls.length).toBeGreaterThanOrEqual(10);
   });
 
+  it("imported logos are configured", () => {
+    expect(dir).toContain('logoUrl: "/tool-logos/cosmicjs.svg"');
+    expect(dir).toContain('logoUrl: "/tool-logos/synthesia-ai.svg"');
+    expect(dir).toContain('logoUrl: "/tool-logos/lemon-squeezy.svg"');
+    expect(dir).toContain('logoUrl: "/tool-logos/flowise.png"');
+  });
+
+  it("verified pricing from first-party sources", () => {
+    expect(dir).toContain('pricingSourceUrl: "https://www.cosmicjs.com/pricing"');
+    expect(dir).toContain('pricingSourceUrl: "https://www.lemonsqueezy.com/pricing"');
+    expect(dir).toContain('pricingSourceUrl: "https://www.synthesia.io/pricing"');
+  });
+
   it("every tool has a canonical name and slug", () => {
     const slugs = dir.match(/slug:\s*"([^"]+)"/g) ?? [];
     expect(slugs.length).toBeGreaterThanOrEqual(30);
