@@ -16,12 +16,12 @@ const kindLabels = {
 
 export function EntityCard({ href, title, subtitle, kind }: EntityCardProps) {
   return (
-    <Link href={href} className="entity-card" data-kind={kind}>
-      <div className="entity-card__body">
-        <p className="entity-card__title">{title}</p>
-        {subtitle ? <p className="entity-card__subtitle">{subtitle}</p> : null}
+    <Link href={href} className="td-final-entity-card" data-kind={kind}>
+      <div className="td-final-entity-card__body">
+        <p className="td-final-entity-card__title">{title}</p>
+        {subtitle ? <p className="td-final-entity-card__subtitle">{subtitle}</p> : null}
       </div>
-      <span className="entity-card__kind">{kindLabels[kind]}</span>
+      <span className="td-final-entity-card__kind">{kindLabels[kind]}</span>
     </Link>
   );
 }
@@ -33,7 +33,7 @@ type EntityCardListProps = {
 export function EntityCardList({ entities }: EntityCardListProps) {
   if (entities.length === 0) return null;
   return (
-    <div className="entity-card-list">
+    <div className="td-final-entity-card-list">
       {entities.map((e) => (
         <EntityCard key={e.href} {...e} />
       ))}
