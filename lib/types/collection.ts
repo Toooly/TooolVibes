@@ -336,6 +336,7 @@ export type CuratedCollectionRecord = {
   highlights: string[];
   premium_teaser?: string;
   theme: CollectionTheme;
+  category?: string;
   audience: CollectionAudience;
   difficulty: CollectionDifficulty;
   tone: CollectionTone;
