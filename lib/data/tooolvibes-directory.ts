@@ -19,7 +19,13 @@ export type DirectoryFilterGroup =
   | "website-builder"
   | "productivity";
 
+export type PricingPlan = { name: string; price: string; period: string };
+
 export type DirectoryTool = {
+  pricingStatus?: string;
+  pricingPlans?: PricingPlan[];
+  pricingSourceUrl?: string;
+  pricingLastVerifiedAt?: string;
   id: string;
   name: string;
   slug: string;
@@ -1047,6 +1053,16 @@ export const directoryTools: DirectoryTool[] = [
   defineTool({
     id: "agentx",
     name: "AgentX",
+    pricingStatus: "verified" as const,
+    pricingPlans: [
+      { name: "Free", price: "$0", period: "forever" },
+      { name: "Solo Builder", price: "$49", period: "per month" },
+      { name: "Professional", price: "$199", period: "per month" },
+      { name: "Business", price: "$299", period: "per month" },
+      { name: "Enterprise", price: "Custom", period: "" },
+    ],
+    pricingSourceUrl: "https://agentx.so/pricing",
+    pricingLastVerifiedAt: "2026-09-29",
     slug: "agentx",
     category: "Agenti AI",
     categoryLabel: "Agenti AI / builder no-code",

@@ -164,6 +164,9 @@ export const toolPublicSchema = z
     attributes: z
       .object({
         pricing: z.enum(toolPricingValues).nullable(),
+  pricingPlans: z.array(z.object({ name: z.string(), price: z.string(), period: z.string() })).optional(),
+  pricingSourceUrl: z.string().nullable().optional(),
+  pricingLastVerifiedAt: z.string().nullable().optional(),
         platforms: uniqueTextListSchema,
         level: z
           .object({
