@@ -74,8 +74,39 @@ describe("canonical tool detail template", () => {
     }
   });
 
-  it("stacks alternatives instead of a horizontal carousel", () => {
-    expect(css).not.toContain("scroll-snap-type: x mandatory");
-    expect(css).not.toContain("flex: 0 0 calc(100% - 2.5rem)");
+  it("breadcrumb is non-sticky and replaces the old catalog slab", () => {
+    const page = readFileSync("components/tool-detail-final/tool-detail-final-page.tsx", "utf8");
+    expect(page).toContain("td-final-breadcrumb");
+    expect(page).not.toContain("td-final-mobileheader");
+    const css = readFileSync("styles/tool-detail-final.css", "utf8");
+    expect(css).toContain(".td-final-breadcrumb {");
+    expect(css).not.toContain(".td-final-mobileheader {");
+  });
+
+  it("section nav shows all four tabs without horizontal scroll", () => {
+    const css = readFileSync("styles/tool-detail-final.css", "utf8");
+    expect(css).toContain(".td-final-decision-nav__link {");
+    expect(css).toContain("flex: 1 1 0");
+  });
+
+  it("alternatives use a carousel with scroll-snap", () => {
+    const css = readFileSync("styles/tool-detail-final.css", "utf8");
+    expect(css).toContain("scroll-snap-type: x mandatory");
+    expect(css).toContain("scroll-snap-align: start");
+  });
+
+  it("compare dock has no yellow left rail", () => {
+    const css = readFileSync("styles/compare.css", "utf8");
+    expect(css).not.toContain("tv-compare-dock__inner::before");
+  });
+
+  it("accordion auto-positions summary below sticky nav on open", () => {
+    const deepenItems = readFileSync("components/tool-detail-final/tool-detail-deepen-items.tsx", "utf8");
+    expect(deepenItems).toContain("onToggle");
+    expect(deepenItems).toContain("td-final-decision-nav");
+  });
+
+  it("alternatives carousel has no 100vw overflow", () => {
+    expect(css).not.toContain("100vw");
   });
 });

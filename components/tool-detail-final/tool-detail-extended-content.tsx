@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { ToolDetailDeepenItems } from "./tool-detail-deepen-items";
+
 import { MarkdownContent } from "@/components/editorial/markdown-content";
 import {
   parsePublicToolMarkdown,
@@ -178,20 +180,7 @@ export function ToolDetailExtendedContent({
         Approfondisci
       </h2>
       <div className="td-final-deepen__list">
-        {panels.map((panel) => (
-          <details
-            key={panel.id}
-            id={`td-final-panel-${panel.id}`}
-            className="td-final-deepen__item"
-            name="td-final-approfondisci"
-          >
-            <summary className="td-final-deepen__summary">
-              <span>{panel.title}</span>
-              <span className="td-final-deepen__chevron" aria-hidden="true" />
-            </summary>
-            <div className="td-final-deepen__panel">{panel.content}</div>
-          </details>
-        ))}
+        <ToolDetailDeepenItems panels={panels} />
       </div>
     </section>
   );

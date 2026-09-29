@@ -206,7 +206,8 @@ describe("Tool Detail clean baseline — owner tree", () => {
     ]) {
       expect(nav).toContain(id);
     }
-    expect(extended).toMatch(/id=\{`td-final-panel-\$\{panel\.id\}`\}/);
+    const deepenItems = read(path.join(TOOL_DETAIL_DIR, "tool-detail-deepen-items.tsx"));
+    expect(deepenItems).toMatch(/id=\{`td-final-panel-\$\{panel\.id\}`\}/);
     expect(extended).toMatch(/"pros-limits"/);
     expect(extended).toMatch(/"pricing"/);
     expect(page).toMatch(/id="td-final-overview"/);

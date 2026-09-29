@@ -2098,17 +2098,7 @@ html:has(.tv-consent-banner) .tv-compare-dock {
   position: relative;
 }
 
-.tv-compare-dock[data-ready] .tv-compare-dock__inner::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.65rem;
-  bottom: 0.65rem;
-  width: 2px;
-  background: var(--tv-grammar-activation);
-  border-radius: 1px;
-  pointer-events: none;
-}
+
 
 .compare-workbench-chrome[data-compare-workbench-state="closed"] {
   box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);

@@ -11,9 +11,7 @@ import {
 } from "@/lib/seo/metadata";
 
 import Link from "next/link";
-import { Search } from "lucide-react";
 
-import { HeaderAccountControl } from "@/components/layout/header-account-control";
 
 import { ToolDetailHero } from "./tool-detail-hero";
 import { ToolDetailDecisionBrief } from "./tool-detail-decision-brief";
@@ -146,17 +144,11 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
     <>
       <JsonLd data={toolStructuredData} />
       <div className="td-final-page">
-        <div className="td-final-mobileheader">
-          <Link href="/archivio" className="td-final-mobileheader__back">
-            ← Torna al catalogo
-          </Link>
-          <div className="td-final-mobileheader__actions">
-            <Link href="/archivio" className="td-final-mobileheader__search" aria-label="Cerca nel catalogo">
-              <Search size={16} aria-hidden="true" />
-            </Link>
-            <HeaderAccountControl linkClassName="td-final-mobileheader__account" menuClassName="td-final-mobileheader__menu" panelClassName="td-final-mobileheader__panel" showLabel={false} floating />
-          </div>
-        </div>
+        <nav className="td-final-breadcrumb" aria-label="Breadcrumb">
+          <Link href="/archivio" className="td-final-breadcrumb__link">← Catalogo</Link>
+          <span className="td-final-breadcrumb__sep" aria-hidden="true">/</span>
+          <span className="td-final-breadcrumb__current">{tool.name}</span>
+        </nav>
         <section
           id="td-final-overview"
           className="td-final-hero"

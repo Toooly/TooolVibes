@@ -96,6 +96,9 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
           );
         })}
       </div>
+      <div className="td-final-alt-row__progress" aria-hidden="true">
+        {related.map((_, i) => <span key={i} className={i === 0 ? "is-active" : ""} />)}
+      </div>
     </section>
   );
 }

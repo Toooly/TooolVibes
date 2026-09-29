@@ -218,15 +218,6 @@ describe("Decision Mark", () => {
     expect(compareCss).toContain(
       ".tv-compare-dock[data-ready] .tv-compare-dock__inner",
     );
-    expect(compareCss).toContain(
-      ".tv-compare-dock[data-ready] .tv-compare-dock__inner::before",
-    );
-    const mark = extractBlock(
-      compareCss,
-      ".tv-compare-dock[data-ready] .tv-compare-dock__inner::before {",
-    );
-    expect(mark).toContain("var(--tv-grammar-activation)");
-    expect(mark).toContain("width: 2px");
     const inner = extractBlock(
       compareCss,
       ".tv-compare-dock[data-ready] .tv-compare-dock__inner {",
