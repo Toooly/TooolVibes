@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { bindShellScroll, readingLine } from "@/lib/shell/scroll-port";
 
@@ -17,7 +17,7 @@ export function ToolDetailDecisionNav({
   showAlternatives: boolean;
   showDeepen?: boolean;
 }) {
-  const items = useMemo<Item[]>(() => {
+  const [items, setItems] = useState<Item[]>(() => {
     const next: Item[] = [];
     if (showDeepen) {
       next.push(
@@ -28,7 +28,18 @@ export function ToolDetailDecisionNav({
     }
     if (showAlternatives) next.push({ id: "td-final-alternatives", label: "Alternative" });
     return next;
-  }, [showAlternatives, showDeepen]);
+  });
+
+  useEffect(() => {
+    const sections = document.querySelectorAll("[data-td-section]");
+    const derived: Item[] = [];
+    sections.forEach((el) => {
+      const id = el.getAttribute("data-td-section-id");
+      const label = el.getAttribute("data-td-section-label");
+      if (id && label) derived.push({ id, label });
+    });
+    if (derived.length > 0) setItems(derived);
+  }, []);
   const [active, setActive] = useState(items[0]?.id ?? "");
   const pinned = useRef<string | null>(null);
 
