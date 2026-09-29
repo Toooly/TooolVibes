@@ -150,7 +150,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           <span className="td-final-breadcrumb__current">{tool.name}</span>
         </nav>
         <section
-          id="td-final-overview" data-td-section data-td-section-id="td-final-overview" data-td-section-label="Panoramica"
+          id="td-final-overview" data-td-section data-td-section-target="td-final-overview" data-td-section-title="Panoramica"
           className="td-final-hero"
           aria-labelledby="td-final-tool-name"
         >

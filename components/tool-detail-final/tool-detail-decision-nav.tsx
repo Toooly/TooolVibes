@@ -34,8 +34,8 @@ export function ToolDetailDecisionNav({
     const sections = document.querySelectorAll("[data-td-section]");
     const derived: Item[] = [];
     sections.forEach((el) => {
-      const id = el.getAttribute("data-td-section-id");
-      const label = el.getAttribute("data-td-section-label");
+      const id = el.getAttribute("data-td-section-target");
+      const label = el.getAttribute("data-td-section-title");
       if (id && label) derived.push({ id, label });
     });
     if (derived.length > 0) setItems(derived);
