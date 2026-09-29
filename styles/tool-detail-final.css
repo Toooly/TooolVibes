@@ -616,7 +616,7 @@
    ============================================================ */
 .td-final-decision-nav {
   position: sticky;
-  top: 3.5rem;
+  top: var(--tv-header-painted, 3.5rem);
   z-index: var(--tv-z-subnav, 30);
   margin-top: var(--tv-space-4);
   padding: 0.35rem 0;
@@ -2068,7 +2068,7 @@
 .td-final-brief dl dd { color: var(--tv-ink-secondary); }
 .td-final-decision-nav {
   position: sticky;
-  top: 0;
+  top: var(--tv-header-painted, 3.5rem);
   z-index: var(--tv-z-subnav, 30);
   display: flex;
   gap: 0.25rem;

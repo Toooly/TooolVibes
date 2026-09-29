@@ -14,6 +14,7 @@ import Link from "next/link";
 
 
 import { ToolDetailHero } from "./tool-detail-hero";
+import { ToolDetailActionSurface } from "./tool-detail-action-surface";
 import { ToolDetailDecisionBrief } from "./tool-detail-decision-brief";
 import { ToolDetailExtendedContent } from "./tool-detail-extended-content";
 import { ToolDetailDecisionNav } from "./tool-detail-decision-nav";
@@ -168,7 +169,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
 
   return (
     <>
-      <JsonLd data={toolStructuredData} />
+      <JsonLd data={toolStructuredData} /></div>
       <div className="td-final-page">
         <nav className="td-final-breadcrumb" aria-label="Breadcrumb">
           <Link href="/archivio" className="td-final-breadcrumb__link">← Catalogo</Link>
@@ -182,12 +183,19 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         >
           <div className="td-final-hero__inner">
             <ToolDetailHero tool={tool} isAffiliateLink={isAffiliateLink} />
+        <ToolDetailActionSurface
+          slug={tool.slug}
+          name={tool.name}
+          externalUrl={tool.affiliateUrl ?? tool.externalUrl}
+          primaryLabel={tool.ctaLabel ?? "Visita"}
+          isAffiliateLink={isAffiliateLink}
+        />
           </div>
         </section>
 
         <ToolDetailDecisionNav showAlternatives={relatedTools.length > 0} navSections={navSections} />
         <ToolDetailDecisionBrief tool={tool} />
-        <ToolDetailExtendedContent
+        <div data-td-section data-td-section-target="td-final-approfondisci" data-td-section-title="Approfondisci"><ToolDetailExtendedContent
           tool={tool}
           experiences={
             showExperiences ? (
@@ -195,8 +203,8 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             ) : null
           }
         />
-        <ToolDetailPricing tool={tool} />
-        <ToolDetailAlternatives current={tool} related={relatedTools} />
+        <div data-td-section data-td-section-target="td-final-pricing" data-td-section-title="Prezzi"><ToolDetailPricing tool={tool} /></div>
+        <div data-td-section data-td-section-target="td-final-alternatives" data-td-section-title="Alternative"><ToolDetailAlternatives current={tool} related={relatedTools} /></div>
         {relatedGuides.length > 0 ? (
           <section id="td-final-related-guides" data-td-section data-td-section-target="td-final-related-guides" data-td-section-title="Guide correlate" className="td-final-related-guides">
             <p className="td-final-section-eyebrow">Guide correlate</p>
@@ -211,7 +219,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             <EntityCardList entities={relatedStacks.map((s) => ({ href: `/collections/${s.slug}`, title: s.name, subtitle: `${s.toolCount} tool`, kind: "stack" as const }))} />
           </section>
         ) : null}
-        <ToolDetailInformation tool={tool} />
+        <div data-td-section data-td-section-target="td-final-information" data-td-section-title="Dati tecnici"><ToolDetailInformation tool={tool} /></div>
         <TinyAdzInlineSlot placement="tool-detail" />
         {slug !== "taylora" ? (
           <div className="td-final-page__partner">
