@@ -9,6 +9,9 @@ import {
 } from "@/components/monetization/partner-placements";
 import { partnerSegmentsForToolSlugs } from "@/lib/sponsors/partner-context";
 import { getCollectionThemeLabel } from "@/lib/collections/helpers";
+import { getCategoriesForStack, getGuidesForStack } from "@/lib/graph/entity-relations";
+import { EntityCardList } from "@/components/graph/entity-cards";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import {
   getCollectionBySlug,
   getCuratedCollections,
@@ -74,6 +77,8 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
       <CollectionDetailBodyV4
         collection={collection}
         relatedCollections={relatedCollections}
+      categories={stackCategories}
+      relatedGuides={stackGuides}
         allCollections={allCollections}
       />
 
