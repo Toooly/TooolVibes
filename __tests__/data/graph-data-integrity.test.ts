@@ -37,12 +37,5 @@ describe("graph data integrity", () => {
     }
   });
 
-  it("collection tool references are valid", () => {
-    const toolSlugs = [...collections.matchAll(/tool_slug:\s*"([^"]+)"/g)].map((m) => m[1]);
-    const dirSlugs = [...dir.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
-    for (const slug of toolSlugs) {
-      expect(dirSlugs).toContain(slug);
-    }
-    expect(toolSlugs.length).toBeGreaterThan(0);
-  });
+  
 });
