@@ -1112,17 +1112,20 @@
 
 @media (max-width: 819px) {
   .td-final-alternatives__table {
-    display: grid;
+    display: flex;
     gap: 0.75rem;
-    overflow: visible;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0.5rem;
   }
   .td-final-alternatives__table::-webkit-scrollbar {
     display: none;
   }
   .td-final-alt-row {
-    width: 100%;
-    max-width: 100%;
-    grid-template-columns: 1fr;
+    flex: 0 0 86%;
+    scroll-snap-align: start;
     gap: var(--tv-space-component-sm);
     padding: var(--tv-space-component-md);
   }
@@ -1749,7 +1752,7 @@
   }
 
   .td-final-alt-row {
-    width: 100%;
+    flex: 0 0 86%;
   }
 }
 

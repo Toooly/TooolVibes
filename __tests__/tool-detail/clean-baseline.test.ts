@@ -209,7 +209,7 @@ describe("Tool Detail clean baseline — owner tree", () => {
     const deepenItems = read(path.join(TOOL_DETAIL_DIR, "tool-detail-deepen-items.tsx"));
     expect(deepenItems).toMatch(/id=\{`td-final-panel-\$\{panel\.id\}`\}/);
     expect(extended).toMatch(/"pros-limits"/);
-    expect(extended).toMatch(/"pricing"/);
+    
     expect(page).toMatch(/id="td-final-overview"/);
     expect(page).toMatch(/showAlternatives=\{relatedTools\.length > 0\}/);
   });

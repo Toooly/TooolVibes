@@ -111,7 +111,7 @@ describe("ToolDetailExtendedContent public markdown", () => {
     const text = container.textContent ?? "";
     expect(text).toContain("Overview");
     expect(text).toContain("FAQ");
-    expect(text).toContain("Dati tecnici");
+    expect(text).not.toContain("Dati tecnici");
     expect(text).toContain("Testo pubblico della scheda.");
     expect(text).toContain("Verifica sul sito ufficiale.");
     expect(text).not.toContain("CTA e stati");

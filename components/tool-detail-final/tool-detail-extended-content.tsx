@@ -11,7 +11,6 @@ import { deriveScoreDimensions } from "@/lib/data/tool-detail-derivation";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { cn } from "@/lib/utils";
 
-import { hasToolDetailInformation, ToolDetailInformation } from "./tool-detail-information";
 
 type ToolDetailExtendedContentProps = {
   tool: ToolPublicView;
@@ -35,15 +34,6 @@ function MarkdownBody({ content }: { content: string }) {
   );
 }
 
-function isGenericPricingDisclaimer(body: string) {
-  const text = body.replace(/[`*_>#-]/g, " ").replace(/\s+/g, " ").trim();
-  if (!text) return true;
-  return (
-    /^Piani e condizioni possono cambiare/i.test(text) &&
-    text.length < 180
-  );
-}
-
 /**
  * Approfondisci — progressive disclosure of extended editorial content.
  * Snapshot-only headings (Ideale per / Meno adatto / Verdetto) and
@@ -51,7 +41,6 @@ function isGenericPricingDisclaimer(body: string) {
  */
 export function ToolDetailExtendedContent({
   tool,
-  experiences,
   content,
 }: ToolDetailExtendedContentProps) {
   const source = content ?? tool.extendedContent;
@@ -138,35 +127,11 @@ export function ToolDetailExtendedContent({
     });
   }
 
-  if (parsed.byId.pricing && !isGenericPricingDisclaimer(parsed.byId.pricing)) {
-    panels.push({
-      id: "pricing",
-      title: "Pricing",
-      content: <MarkdownBody content={parsed.byId.pricing} />,
-    });
-  }
-
   if (parsed.byId.faq) {
     panels.push({
       id: "faq",
       title: "FAQ",
       content: <MarkdownBody content={parsed.byId.faq} />,
-    });
-  }
-
-  if (hasToolDetailInformation(tool)) {
-    panels.push({
-      id: "specs",
-      title: "Dati tecnici",
-      content: <ToolDetailInformation tool={tool} embedded />,
-    });
-  }
-
-  if (experiences) {
-    panels.push({
-      id: "ugc",
-      title: "Esperienze",
-      content: experiences,
     });
   }
 
