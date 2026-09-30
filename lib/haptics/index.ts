@@ -12,8 +12,9 @@
  */
 
 let audioCtx: AudioContext | null = null;
+let gestureListenerAttached = false;
 
-function getAudioContext(): AudioContext | null {
+function ensureAudioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (audioCtx) return audioCtx;
   try {
@@ -29,12 +30,41 @@ function getAudioContext(): AudioContext | null {
   }
 }
 
+function resumeAudioContext() {
+  const ctx = ensureAudioContext();
+  if (ctx && ctx.state === "suspended") {
+    ctx.resume().catch(() => {});
+  }
+}
+
+// Pre-resume AudioContext on first user gesture (iOS requirement)
+function attachGestureListener() {
+  if (gestureListenerAttached || typeof window === "undefined") return;
+  gestureListenerAttached = true;
+  const resume = () => {
+    resumeAudioContext();
+    window.removeEventListener("touchstart", resume);
+    window.removeEventListener("touchend", resume);
+    window.removeEventListener("click", resume);
+    window.removeEventListener("pointerdown", resume);
+  };
+  window.addEventListener("touchstart", resume, { once: true, passive: true });
+  window.addEventListener("touchend", resume, { once: true, passive: true });
+  window.addEventListener("click", resume, { once: true });
+  window.addEventListener("pointerdown", resume, { once: true, passive: true });
+}
+
+// Attach on module load
+if (typeof window !== "undefined") {
+  attachGestureListener();
+}
+
 /**
  * Produce a sharp transient click via Web Audio.
  * The burst drives the speaker cone physically, felt as a pulse on the chassis.
  */
 function audioPulse(volume = 0.3, durationMs = 18, freq = 220) {
-  const ctx = getAudioContext();
+  const ctx = ensureAudioContext();
   if (!ctx) return;
 
   // Resume synchronously — iOS Safari requires this inside the user gesture
@@ -119,7 +149,7 @@ export function haptic(pattern: HapticPattern = "light"): void {
   //    The AudioContext MUST be resumed synchronously inside the user
   //    gesture — iOS Safari blocks autoplay otherwise.
   if (!nativeWorked) {
-    const ctx = getAudioContext();
+    const ctx = ensureAudioContext();
     if (ctx && ctx.state === "suspended") {
       // Synchronous resume attempt — iOS unlocks the context here
       ctx.resume().catch(() => {});
