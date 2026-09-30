@@ -17,22 +17,49 @@ Canonical flow (same Supabase SSR/PKCE stack as magic-link, no second auth syste
    `linkSocialIdentity()` (same redirect model). Supabase remains the
    identity-linking authority; the app never merges users by email.
 
-## PRODUCTION ACTIVATION STATE (2026-09-30, verified live via GoTrue `/auth/v1/settings`)
+## PRODUCTION ACTIVATION STATE — FINAL (verified live)
 
 - Project ref: `pjyasxaebxvvmcjxvnno` → `https://pjyasxaebxvvmcjxvnno.supabase.co`
 - Identity-provider callback (IdP dashboards point HERE):
   `https://pjyasxaebxvvmcjxvnno.supabase.co/auth/v1/callback`
-- Application redirect (Supabase `redirectTo`, code does `oauthRedirectTo(next)`):
+- Application redirect (`redirectTo`, code `oauthRedirectTo(next)`):
   `https://tooolvibes.eu/auth/callback` (+ `?next=<safe-path>`)
 - Site URL: `https://tooolvibes.eu` — Redirect allowlist: `https://tooolvibes.eu/auth/callback`
-- Live provider flags: `google: true`, `github: true`, `azure: false`, `apple: false`, `email: true`.
+- Live GoTrue flags: `google: true`, `github: true`, `azure: false`, `apple: false`, `email: true`.
 
-| Provider | IdP resource | Supabase | Live | Real E2E |
-|---|---|---|---|---|
-| Google | GCP project `tooolvibes`, Web client `TooolVibes Web`, origin `https://tooolvibes.eu`, redirect = Supabase callback; consent External/Test, test user added | client ID + secret set, enabled | `true` | PASS (login → `/account?connected=1` → workspace, reload persists, settings shows Google Collegato) |
-| GitHub | OAuth App `TooolVibes` (org `Toooly`), homepage `https://tooolvibes.eu`, callback = Supabase callback, email-read scope | client ID + secret set, enabled + allow-missing-email | `true` | PASS (authorize → callback → logged workspace, reload persists, settings shows GitHub Collegato) |
-| Microsoft/Azure | SKIPPED per owner decision (Entra tenant friction) | disabled | `false` | not attempted — code path (`microsoft`→`azure`) implemented + unit-tested, UI hidden until enabled |
-| Apple | BLOCKED: Sign in with Apple web requires paid Apple Developer Program membership (Services ID + Key + Team ID); owner declined enrollment | disabled | `false` | not possible without membership — code path + normalization (private-relay safe) implemented + unit-tested, UI hidden until enabled |
+### EMAIL / MAGIC LINK: LIVE
+Unchanged, coexists with social. Guest UI: email field + `Invia link`.
+
+### GOOGLE: LIVE / PRODUCTION (not test-only)
+- GCP project `tooolvibes`, Web client `TooolVibes Web`, origin `https://tooolvibes.eu`,
+  redirect = Supabase callback.
+- Publishing status: **In produzione** (External). Test-user restriction lifted.
+- Scopes: none configured beyond Supabase runtime defaults (`openid email profile`);
+  Accesso-ai-dati tables empty; verification center: "La verifica non è richiesta".
+- Branding: name `TooolVibes`, support email set, homepage/privacy (`/privacy`)/
+  terms (`/termini`) links set, authorized domains `tooolvibes.eu` (+ Supabase
+  callback host). No logo submitted (optional polish; submitting one would trigger
+  verification — intentionally deferred).
+- Public eligibility proof: non-test account (`info@tooolvibes.com`) passed the
+  Testing-block and reached Google identity challenge (no `403 access_denied`);
+  existing Google session login → `/account?connected=1` → workspace, reload
+  persists, settings shows Google Collegato, logout → guest UI.
+
+### GITHUB: LIVE
+- OAuth App `TooolVibes` (org-owned `Toooly` — acceptable), homepage
+  `https://tooolvibes.eu`, callback = Supabase callback, email-read scope.
+- Supabase: ID + secret set, enabled, allow-missing-email ON.
+- E2E: authorize → callback → logged workspace, reload persists, settings shows
+  GitHub Collegato, logout → guest UI. Same-email Google+GitHub link into ONE
+  canonical account (verified `info@tooolvibes.com` shows both Collegato).
+
+### MICROSOFT: DISABLED BY PRODUCT DECISION
+`azure: false`, button hidden. Implementation retained dormant for future use.
+
+### APPLE: DISABLED — PAID APPLE DEVELOPER DEPENDENCY NOT ACCEPTED
+`apple: false`, button hidden. Sign in with Apple web requires paid Developer
+Program membership (Services ID + key + Team ID). Implementation + private-relay
+normalization retained dormant. No paid account required for this release.
 
 Secrets live ONLY in Supabase provider config. No secret in repo/docs/screenshots/logs.
 Google consent is in Test mode: only added test users can log in until the app is published/verified.
