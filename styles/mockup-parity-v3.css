@@ -4,7 +4,7 @@
 @media (max-width: 899px) {
   /* HOME — title 77, search ~250, tabs 343, card 403 */
   .def-cockpit__inner { padding-top: 16px !important; }
-  .def-cockpit__title { font-size: 2.5rem !important; line-height: 1.02 !important; margin: 0 !important; }
+  /* RETIRED 2026-09-30: canonical mobile .def-cockpit__title owns size (h1 token). */
   .def-cockpit__lede { margin: 8px 0 0 !important; font-size: 0.88rem !important; }
   .def-intent { margin-top: 10px !important; }
   .def-intent__field { min-height: 44px !important; height: 44px !important; }
@@ -26,7 +26,7 @@
   .def-editorial__spot-head { gap: 8px !important; }
 
   /* CATALOGUE — title 34 top ~55, search ~170, chips ~238, row 132 */
-  .ar4-intro__title { font-size: 2.125rem !important; }
+  /* RETIRED 2026-09-30: canonical .ar4-intro__title owns size. */
   .ar4-intro { padding-top: 0 !important; }
   .ar4-intro__inner { padding-top: 0 !important; gap: 4px !important; }
   .ar4-intro__copy { gap: 2px !important; }
@@ -42,7 +42,7 @@
 
   /* GUIDES — title 34 top ~58 */
   .guides-masthead { padding-top: 0 !important; margin-top: 0 !important; }
-  .guides-masthead__title { font-size: 2.125rem !important; }
+  /* RETIRED 2026-09-30: canonical .guides-masthead__title owns size (h1 token). */
   .guides-section { padding-top: 12px !important; }
 
   /* GUIDE ARTICLE — compact hero, body ~475 */
@@ -52,7 +52,7 @@
   .guides-article__body { margin-top: 12px !important; }
   .guides-article__breadcrumb { margin: 0 !important; }
   .guides-article__hero-meta { margin: 2px 0 4px !important; }
-  .guides-article__hero-h1 { font-size: 2.125rem !important; margin-top: 4px !important; }
+  .guides-article__hero-h1 { margin-top: 4px !important; } /* size: canonical hero-h1 owns it. */
   .guides-article__hero-dek { margin-top: 4px !important; }
   .guides-article__hero-main { gap: 2px !important; }
   .guides-article__hero { margin-top: 0 !important; }

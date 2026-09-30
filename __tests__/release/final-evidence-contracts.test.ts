@@ -67,10 +67,12 @@ describe("\u00a746-50 empty states render CTA hrefs", () => {
     const model = read("components/account/workspace/workspace-model.ts");
     expect(model).toContain("GUEST_SALVATI_HREF");
   });
-  it("tags empty renders copy (structural: no silent blank)", () => {
+  it("tags empty renders copy + one CTA to discovery", () => {
     const src = read("app/(marketing)/tags/page.tsx");
     expect(src).toContain("tagCounts.length === 0");
     expect(src).toContain("Nessun tag disponibile");
+    expect(src).toContain('href="/archivio"');
+    expect(src).toContain("Esplora il catalogo");
   });
 });
 

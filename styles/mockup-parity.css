@@ -355,16 +355,8 @@
   .td-final-brief, .td-final-decision-brief { padding: 14px; margin-top: 12px; }
   .td-final-deepen { margin-top: 12px; }
 
-  /* 04 GUIDES — title 34px, top ~58 */
-  .guides-masthead { padding-top: 14px; }
-  .guides-masthead__title { font-size: 2.125rem; }
-  .guides-section { padding-top: 16px; }
-
-  /* 05 GUIDE ARTICLE — title ~102, body ~475 */
-  .guides-article__hero, .guide-article-hero { padding-top: 12px; }
-  .guides-article__title, .guide-article-hero__title { font-size: 2.125rem; }
-  .guides-article__hero { margin-bottom: 14px; }
-  .guides-article__body { margin-top: 14px; }
+  /* 04 GUIDES — RETIRED 2026-09-30: titles owned by canonical guides.css hierarchy. */
+  /* 05 GUIDE ARTICLE — RETIRED 2026-09-30: titles owned by canonical guides.css hierarchy. */
 
   /* 06 COLLECTION — CTA ~343, first stage ~489 */
   .cx-detail-hero-v4 { padding-top: 16px; }

@@ -10,7 +10,27 @@ type CollectionsIndexProps = {
 
 export function CollectionsIndex({ collections }: CollectionsIndexProps) {
   if (collections.length === 0) {
-    return null;
+    return (
+      <div className="cx-index">
+        <div className="cx-index__inner">
+          <section
+            className="mobile-library-empty cx-index__empty"
+            aria-labelledby="cx-index-empty-title"
+          >
+            <div className="mobile-library-empty__content">
+              <span className="mobile-library-empty__kicker">Raccolte</span>
+              <h1 id="cx-index-empty-title">Nessuna raccolta disponibile.</h1>
+              <p>Le raccolte sono in preparazione. Intanto esplora il catalogo.</p>
+            </div>
+            <div className="mobile-library-empty__actions">
+              <a href="/archivio" className="mobile-library-empty__cta">
+                Esplora i tool
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
   }
 
   const lead = pickFeaturedCollection(collections);

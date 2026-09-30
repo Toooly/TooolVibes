@@ -78,14 +78,18 @@ describe("CollectionsIndex", () => {
     expect(screen.getByText("Le altre raccolte restano nel tuo spazio.")).toBeTruthy();
   });
 
-  it("omits the index instead of inventing an empty collections state", () => {
+  it("renders an intentional empty state instead of a blank page", () => {
     const { container } = render(
       <AccountPreviewProvider value={guestValue()}>
         <CollectionsIndex collections={[]} />
       </AccountPreviewProvider>,
     );
-    expect(container.firstChild).toBeNull();
-    expect(container.textContent).toBe("");
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Nessuna raccolta disponibile." }),
+    ).toBeTruthy();
+    const cta = screen.getByRole("link", { name: "Esplora i tool" });
+    expect(cta.getAttribute("href")).toBe("/archivio");
+    expect(container.querySelector(".cx-index__empty")).toBeTruthy();
   });
 
   it("does not unlock gated groups for guests and shows them to members", () => {

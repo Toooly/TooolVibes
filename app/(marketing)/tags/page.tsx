@@ -103,9 +103,17 @@ export default async function TagsPage() {
         </div>
 
         {tagCounts.length === 0 ? (
-          <p className="mt-5 text-sm leading-6 text-[var(--muted-strong)]">
-            Nessun tag disponibile al momento. Esplora il catalogo per scoprire i tool.
-          </p>
+          <div className="mt-5 flex flex-col items-start gap-4">
+            <p className="text-sm leading-6 text-[var(--muted-strong)]">
+              Nessun tag disponibile al momento. Esplora il catalogo per scoprire i tool.
+            </p>
+            <Link
+              href="/archivio"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--tv-accent-brand)] bg-[var(--tv-surface-selected)] px-4 py-2 text-sm font-semibold text-[var(--tv-ink-on-brand)]"
+            >
+              Esplora il catalogo
+            </Link>
+          </div>
         ) : (
         <div className="mt-5 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
           {tagCounts.map(([tag, count]) => (

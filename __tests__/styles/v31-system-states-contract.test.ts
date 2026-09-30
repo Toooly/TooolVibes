@@ -100,8 +100,11 @@ describe("V3.1 system states — catalog empty", () => {
 });
 
 describe("V3.1 system states — collections empty", () => {
-  it("omits the index when the catalog is empty instead of inventing collections", () => {
-    expect(collectionsSrc).toMatch(/if \(collections\.length === 0\) \{\s*return null;/);
+  it("renders an intentional empty state instead of a blank page", () => {
+    expect(collectionsSrc).toContain("cx-index__empty");
+    expect(collectionsSrc).toContain("Nessuna raccolta disponibile.");
+    expect(collectionsSrc).toContain('href="/archivio"');
+    expect(collectionsSrc).not.toMatch(/if \(collections\.length === 0\) \{\s*return null;/);
   });
 });
 

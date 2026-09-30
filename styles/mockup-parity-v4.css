@@ -11,7 +11,7 @@
   .def-editorial__spot-actions { margin-top: 8px !important; }
 
   /* ---------- 02 CATALOGUE: two-line title, chip rail, row = avatar+score left / text right ---------- */
-  .ar4-intro__title { font-size: 2.5rem !important; max-width: 12ch !important; line-height: 1.02 !important; }
+  /* RETIRED 2026-09-30: canonical .ar4-intro__title owns size/geometry. */
   .ar4-intro__inner { padding-top: 0 !important; }
   .ar4-intro__panel { margin-top: 2px !important; }
   .ar4-categories { margin-top: 10px !important; }

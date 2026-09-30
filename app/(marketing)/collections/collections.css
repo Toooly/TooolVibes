@@ -4796,6 +4796,11 @@
   }
 }
 
+/* Empty index: reuse mobile-library-empty grammar; enforce 44px CTA floor. */
+.cx-index__empty .mobile-library-empty__cta {
+  min-height: var(--tv-button-min-height-touch);
+}
+
 /* ── MVP 1.0 — Collection section journey map ── */
 .cx-section-nav {
   position: sticky;
