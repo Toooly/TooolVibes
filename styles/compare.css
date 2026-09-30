@@ -1392,6 +1392,7 @@
 .compare-battle-stage__fight-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--tv-space-2); min-height: 3.5rem; padding: var(--tv-space-3) var(--tv-space-6); border: 0; border-radius: var(--tv-radius-md); background: var(--tv-accent-brand); color: var(--tv-ink-on-brand); font-weight: var(--tv-weight-bold); box-shadow: var(--tv-elevation-button); cursor: pointer; transition: filter .18s ease, transform .18s ease; }
 .compare-battle-stage__fight-btn:hover:not(:disabled) { filter: brightness(1.12); transform: translateY(-1px); }
 .compare-battle-stage__fight-btn:disabled { cursor: not-allowed; filter: grayscale(.25); opacity: .5; }
+.compare-battle-stage__fight-btn:active:not(:disabled) { transform: scale(.97); }
 .compare-battle-stage__flash { position: absolute; inset: 15% 20%; pointer-events: none; border-radius: 50%; opacity: 0; background: radial-gradient(circle, color-mix(in srgb, var(--tv-accent-gold) 55%, transparent), transparent 68%); }
 .compare-battle-stage[data-state="fighting"] .compare-battle-stage__flash { animation: compare-battle-flash .7s ease-in-out infinite alternate; }
 @keyframes compare-battle-flash { to { opacity: .8; transform: scale(1.08); } }
@@ -1508,6 +1509,7 @@
 @media (prefers-reduced-motion: reduce) {
   .compare-battle-stage__flash { display: none; animation: none; }
   .compare-battle-stage__fight-btn, .compare-factor-bar__fill, .compare-factor-accordion__tool-bar-fill { transition: none; }
+  .compare-battle-stage__fight-btn:active:not(:disabled) { transform: none; }
 }
 
 /* Wave 7 — shared workbench chrome (empty / prep / sticky identity / decide jump) */

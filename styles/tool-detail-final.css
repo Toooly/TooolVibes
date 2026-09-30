@@ -648,6 +648,7 @@
   justify-content: center;
   min-height: 2.75rem;
   padding: 0 0.125rem;
+  border: 1px solid transparent;
   border-radius: 999px;
   color: var(--tv-ink-secondary);
   font-size: clamp(0.75rem, 3.4vw, 0.8125rem);
@@ -691,10 +692,10 @@
 }
 .td-final-decision-nav__link.is-active,
 .td-final-decision-nav__link[aria-current="true"] {
-  color: var(--tv-ink-primary);
-  background: #6b4de0;
+  border-color: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 72%, transparent);
+  background: var(--tv-accent-brand, #7c3aed);
   color: #fff;
-  box-shadow: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 45%, transparent);
   font-weight: var(--tv-weight-bold);
 }
 
@@ -1686,6 +1687,8 @@
   font-size: 0.85rem;
   font-weight: var(--tv-weight-bold);
   letter-spacing: var(--tv-tracking-eyebrow);
+  line-height: 1.4;
+  overflow-wrap: break-word;
 }
 
 .td-final-deepen__body {

@@ -3159,7 +3159,7 @@
 }
 
 .partner-pe--ribbon .partner-placement__action a {
-  min-height: 2.4rem;
+  min-height: var(--tv-button-min-height-touch);
   padding: 0.45rem 0.9rem;
   font-size: 0.88rem;
 }

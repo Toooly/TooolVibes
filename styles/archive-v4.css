@@ -1149,8 +1149,12 @@
 @media (prefers-reduced-motion: reduce) {
   .ar4-card,
   .ar4-card__open,
-  .ar4-chip {
+  .ar4-chip,
+  .ar4-grid__more-btn {
     transition: none;
+  }
+  .ar4-grid__more-btn:active {
+    transform: none;
   }
 }
 
@@ -1907,6 +1911,7 @@
   border-color: var(--tv-accent-primary);
   color: var(--tv-accent-primary);
 }
+.ar4-grid__more-btn:active { transform: scale(.97); }
 
 .ar4-grid__more-count {
   display: inline-grid;
@@ -3048,6 +3053,8 @@ a.archive-v4-card:focus-visible {
   border-color: color-mix(in srgb, var(--tv-ink-secondary, #c2beb5) 22%, transparent);
   background: color-mix(in srgb, var(--tv-surface-elevated, #1c1440) 60%, var(--tv-surface-raised, #111114));
 }
-.ar4-card:hover {
-  border-color: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 40%, transparent);
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:hover {
+    border-color: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 40%, transparent);
+  }
 }

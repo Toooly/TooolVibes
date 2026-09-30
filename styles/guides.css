@@ -1465,11 +1465,15 @@
   transition: color 200ms ease, background 200ms ease, border-color 200ms ease;
 }
 
-.guides-toc__list a:hover,
+.guides-toc__list a:hover {
+  color: var(--guides-text);
+  background: rgba(106, 60, 255, 0.06);
+}
 .guides-toc__list a:focus-visible {
   color: var(--guides-text);
   background: rgba(106, 60, 255, 0.06);
-  outline: none;
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
 }
 
 .guides-toc__list a[aria-current="true"] {
@@ -1508,10 +1512,13 @@
   border: 1px solid var(--guides-rule);
 }
 
-.guides-toc__cta a:hover,
+.guides-toc__cta a:hover {
+  background: rgba(18, 13, 47, 0.10);
+}
 .guides-toc__cta a:focus-visible {
   background: rgba(18, 13, 47, 0.10);
-  outline: none;
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
 }
 
 /* ---------- Article side rail (right column) ----------------------------- */
@@ -1579,12 +1586,17 @@
   transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
 }
 
-.guides-rail__list li a:hover,
+.guides-rail__list li a:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--guides-accent);
+  transform: translateX(2px);
+}
 .guides-rail__list li a:focus-visible {
   background: rgba(255, 255, 255, 0.85);
   border-color: var(--guides-accent);
   transform: translateX(2px);
-  outline: none;
+  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
+  outline-offset: var(--tv-focus-ring-offset);
 }
 
 .guides-rail__list li a .kicker {

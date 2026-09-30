@@ -280,7 +280,7 @@
   .ar4-intro__search { background: rgba(139, 108, 255, 0.16) !important; border: 1px solid rgba(139, 108, 255, 0.35) !important; border-radius: 14px !important; }
   .ar4-categories__chips { flex-wrap: nowrap !important; overflow-x: auto !important; height: 44px !important; min-height: 44px !important; gap: 8px !important; scrollbar-width: none; }
   .ar4-categories__chips::-webkit-scrollbar { display: none; }
-  .ar4-chip { border-radius: 999px !important; border: 1px solid rgba(255, 255, 255, 0.16) !important; background: rgba(255, 255, 255, 0.05) !important; color: var(--tv-ink-primary) !important; min-height: 34px !important; padding: 0 14px !important; flex: 0 0 auto !important; font-size: 0.8rem !important; }
+  .ar4-chip { border-radius: 999px !important; border: 1px solid rgba(255, 255, 255, 0.16) !important; background: rgba(255, 255, 255, 0.05) !important; color: var(--tv-ink-primary) !important; min-height: 44px !important; padding: 0 14px !important; flex: 0 0 auto !important; font-size: 0.8rem !important; }
   .ar4-chip[aria-pressed="true"], .ar4-chip[data-active="true"], .ar4-chip.is-active { background: #cdb9ff !important; color: #1a1030 !important; border-color: transparent !important; }
   .ar4-grid__head, .ar4-grid__list-head { display: none !important; }
 

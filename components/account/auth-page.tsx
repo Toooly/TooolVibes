@@ -179,6 +179,7 @@ export function AuthPage() {
                     <input
                       id="auth-email"
                       type="email"
+                      inputMode="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Inserisci la tua email"

@@ -102,6 +102,11 @@ export default async function TagsPage() {
           </span>
         </div>
 
+        {tagCounts.length === 0 ? (
+          <p className="mt-5 text-sm leading-6 text-[var(--muted-strong)]">
+            Nessun tag disponibile al momento. Esplora il catalogo per scoprire i tool.
+          </p>
+        ) : (
         <div className="mt-5 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
           {tagCounts.map(([tag, count]) => (
             <Link
@@ -116,6 +121,7 @@ export default async function TagsPage() {
             </Link>
           ))}
         </div>
+        )}
       </section>
     </div>
   );

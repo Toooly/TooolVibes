@@ -1182,7 +1182,7 @@
      H3 22–28 / 24–32. Lead 18–20 / 20–24. Body 16.5–18 / 17–19. Meta 12–14. */
   --tv-type-hero: clamp(2.75rem, 4vw + 1.2rem, 5.25rem);
   --tv-type-display-xl: var(--tv-type-hero);
-  --tv-type-h1: clamp(2.5rem, 3.2vw + 1.55rem, 5rem);
+  --tv-type-h1: clamp(2rem, 3.2vw + 1.55rem, 5rem);
   --tv-type-h2: clamp(2rem, 2.1vw + 1.4rem, 3.5rem);
   --tv-type-h3: clamp(1.375rem, 0.75vw + 1.12rem, 2rem);
   --tv-type-lead: clamp(1.125rem, 0.45vw + 1.02rem, 1.5rem);
