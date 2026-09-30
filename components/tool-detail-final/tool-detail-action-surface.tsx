@@ -18,6 +18,7 @@ import {
 } from "@/lib/stores/tool-workspace-store";
 import { cn } from "@/lib/utils";
 import { SaveOverflow } from "@/components/tools/save-overflow";
+import { feedback } from "@/lib/feedback";
 import { useSaveHold } from "@/components/tools/save-hold";
 import { openSaveOverflow } from "@/components/tools/save-overflow-state";
 
@@ -52,6 +53,7 @@ export function ToolDetailActionSurface({
     isSaved,
     onToggle: () => {
       toggleSaved(slug);
+      feedback.success();
     },
     onSpeed2Open: () => openSaveOverflow(slug),
     slug,
@@ -61,7 +63,10 @@ export function ToolDetailActionSurface({
     <div className="td-final-actions" role="group" aria-label="Azioni scheda">
       <button
         type="button"
-        onClick={() => toggleCompare(slug)}
+        onClick={() => {
+          toggleCompare(slug);
+          feedback.selection();
+        }}
         className="td-final-cta--primary"
         aria-pressed={compareRank > 0}
         aria-label={

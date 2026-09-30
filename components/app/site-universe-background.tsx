@@ -5,12 +5,14 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { usePathname } from "next/navigation";
 import { useMounted } from "@/lib/hooks/use-mounted";
+import { getPlatformCapabilities } from "@/lib/platform/capabilities";
 
 // ── Performance & Motion Preferences ──
 function getPerformanceProfile() {
   if (typeof window === "undefined") return { dpr: 1 as const, particles: 0, planets: 0, enabled: false, reduced: false };
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 1024;
+  const caps = getPlatformCapabilities();
+  const isMobile = caps.isIOS || caps.isAndroid || window.innerWidth < 1024;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveData = (navigator as any).connection?.saveData === true;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

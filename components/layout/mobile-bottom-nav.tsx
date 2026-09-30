@@ -15,7 +15,6 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transitions";
 
 import { cn } from "@/lib/utils";
-import { triggerHaptic } from "@/lib/haptics";
 import { getShellScroller, readLiveScrollTop, readMaxScroll } from "@/lib/shell/scroll-port";
 import {
   CHROME_DESKTOP_MEDIA_QUERY,
@@ -41,7 +40,7 @@ const EXPAND_AFTER = 96;
 const BOTTOM_REVEAL_PX = 120;
 const TOP_FORCE_EXPAND_PX = 24;
 
-// Haptic feedback via shared utility (native vibrate + iOS audio fallback)
+// Haptic feedback via shared utility (canonical feedback service)
 
 export function MobileBottomNav() {
   const preferReducedMotion = useReducedMotion();
@@ -278,7 +277,6 @@ export function MobileBottomNav() {
                 }
                 className={cn("mobile-bottom-item", isActive && "is-active")}
                 data-family={navFamilyForHref(item.href)}
-                onClick={() => triggerHaptic("selection")}
               >
                 <span className="mobile-bottom-item__icon-wrap">
                   {isActive ? (

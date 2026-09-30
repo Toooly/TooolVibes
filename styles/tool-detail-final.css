@@ -29,7 +29,6 @@
   padding-inline: var(--tv-gutter-mobile);
   color: var(--tv-ink-primary);
   min-width: 0;
-  --tool-toolbar-height: 3.5rem;
 }
 
 @media (min-width: 768px) {

@@ -22,7 +22,7 @@ import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
 import { bindShellScroll, readScrollTop, getShellScroller } from "@/lib/shell/scroll-port";
 import { cn } from "@/lib/utils";
-import { triggerHaptic } from "@/lib/haptics";
+import { feedback } from "@/lib/feedback";
 
 /**
  * V3 route-context policy (Phase 1): the compact strip exists only inside
@@ -68,7 +68,7 @@ function usePullToRefresh(onRefresh: () => void) {
   const wasArmed = useRef(false);
   const PULL_THRESHOLD = 56;
 
-  // Uses shared haptic utility (native vibrate + iOS audio fallback)
+  // Uses shared haptic utility (canonical feedback service)
 
   useEffect(() => {
     const shell = document.querySelector<HTMLElement>(".marketing-shell");
@@ -102,7 +102,7 @@ function usePullToRefresh(onRefresh: () => void) {
         // Haptic tick when crossing armed threshold
         if (damped >= PULL_THRESHOLD && !wasArmed.current) {
           wasArmed.current = true;
-          triggerHaptic("light");
+          feedback.selection();
         }
         if (damped < PULL_THRESHOLD && wasArmed.current) {
           wasArmed.current = false;
@@ -115,7 +115,7 @@ function usePullToRefresh(onRefresh: () => void) {
       isPulling.current = false;
       wasArmed.current = false;
       if (pullDistance >= PULL_THRESHOLD) {
-        triggerHaptic("success"); // success pattern
+        feedback.success();
         setIsRefreshing(true);
         onRefresh();
         // Brief spin then reset
