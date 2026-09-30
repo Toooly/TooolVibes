@@ -34,6 +34,8 @@
   text-transform: none;
   letter-spacing: 0.01em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: border-color var(--tv-duration-fast) var(--tv-easing-standard), background var(--tv-duration-fast) var(--tv-easing-standard), color var(--tv-duration-fast) var(--tv-easing-standard);
@@ -849,6 +851,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ar4-card__name-link:hover { color: var(--tv-accent-primary); }
@@ -899,6 +903,8 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   flex: 0 1 auto;
   max-width: 100%;
 }
@@ -941,6 +947,8 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ar4-card__score {
@@ -949,6 +957,8 @@
   gap: 3px;
   font-family: var(--tv-font-family-mono);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ar4-card__score strong {
@@ -970,6 +980,8 @@
   font-size: var(--tv-text-xs);
   color: var(--tv-ink-muted-aa);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ar4-card__actions {
@@ -1102,6 +1114,8 @@
   line-height: 1;
   pointer-events: none;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 359px) {
@@ -1195,6 +1209,8 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1;
 }
 
@@ -1597,6 +1613,8 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ar4-mobile-bar__chip:hover { background: color-mix(in srgb, var(--tv-accent-primary) 22%, var(--tv-bg-base)); }
@@ -2043,6 +2061,8 @@ a.archive-v4-card:focus-visible {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border: 0;
 }
 
@@ -2387,6 +2407,8 @@ a.archive-v4-card:focus-visible {
   letter-spacing: 0.01em;
   flex-shrink: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
 }
 .ar4-card__status--sponsored {
@@ -2405,6 +2427,8 @@ a.archive-v4-card:focus-visible {
   letter-spacing: 0.01em;
   flex-shrink: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
 }
 .ar4-card__status--tier {
@@ -2419,6 +2443,8 @@ a.archive-v4-card:focus-visible {
   letter-spacing: 0.01em;
   flex-shrink: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
 }
 .ar4-card__status--tier-primary {
@@ -2709,6 +2735,8 @@ a.archive-v4-card:focus-visible {
   .ar4-card__score,
   .ar4-card__skill {
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .ar4-card__best {
@@ -2952,6 +2980,8 @@ a.archive-v4-card:focus-visible {
     color: #f3bf4c;
     margin: 0;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .ar4-card__score strong { font-size: 15px; color: #f3bf4c; }
 

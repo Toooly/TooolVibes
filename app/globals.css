@@ -28348,3 +28348,60 @@ img {
   object-position: center;
   display: block;
 }
+
+.tv-responsive {
+  max-width: 100%;
+  height: auto;
+}
+.tv-responsive img {
+  max-width: 100%;
+  height: auto;
+}
+.tv-text-clip {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 479px) {
+  .tv-text-clip {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+}
+
+.tv-touch-target,
+button, a[role="button"], [role="tab"], [role="link"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+.def-start__tab {
+  min-height: 44px !important;
+}
+.ar4-chip {
+  min-height: 44px !important;
+}
+.tv-utility__link {
+  min-height: 44px !important;
+  min-width: 44px !important;
+  display: inline-flex;
+  align-items: center;
+}
+.td-final-breadcrumb__link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+}
+.skip-link:focus {
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+}

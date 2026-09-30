@@ -476,6 +476,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tv-radar-node__label strong {
@@ -649,6 +651,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tv-radar-index__copy strong {
@@ -664,6 +668,8 @@
 .tv-radar-index__metric {
   font-family: var(--tv-font-family-mono);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tv-radar-index__state,
@@ -738,6 +744,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tv-radar-table__tool strong {
