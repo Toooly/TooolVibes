@@ -1625,7 +1625,7 @@
 .ar4-sheet {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: var(--tv-z-floating, 100);
   display: flex;
   align-items: flex-end;
   justify-content: center;

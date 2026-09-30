@@ -47,19 +47,35 @@ describe("compare chrome state machine", () => {
     expect(state.chrome).toBe("expanded");
   });
 
-  it("never auto-expands on upward scroll (Dashboard policy)", () => {
+  it("re-expands after upward intent on comparison routes, stays compact elsewhere", () => {
     const compact: CompareGesture = { chrome: "compact", down: 0, up: 0 };
-    const stayedExpanded = reduceCompareScroll(compact, {
+    const reExpanded = reduceCompareScroll(compact, {
       y: 40,
       prevY: 40 + COMPARE_EXPAND_DELTA,
       prefersCompact: false,
     });
-    expect(stayedExpanded.chrome).toBe("compact");
+    expect(reExpanded.chrome).toBe("expanded");
     const stayedCompact = reduceCompareScroll(compact, {
       y: 40,
       prevY: 40 + COMPARE_EXPAND_DELTA,
       prefersCompact: true,
     });
     expect(stayedCompact.chrome).toBe("compact");
+  });
+
+  it("needs a sufficient upward delta before re-expanding", () => {
+    const compact: CompareGesture = { chrome: "compact", down: 0, up: 0 };
+    const partial = reduceCompareScroll(compact, {
+      y: 100,
+      prevY: 100 + Math.floor(COMPARE_EXPAND_DELTA / 2),
+      prefersCompact: false,
+    });
+    expect(partial.chrome).toBe("compact");
+    const full = reduceCompareScroll(partial, {
+      y: 100 - COMPARE_EXPAND_DELTA,
+      prevY: 100,
+      prefersCompact: false,
+    });
+    expect(full.chrome).toBe("expanded");
   });
 });

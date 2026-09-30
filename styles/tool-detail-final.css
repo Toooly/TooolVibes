@@ -2048,7 +2048,7 @@
 }
 
 .td-final-page :is(#td-final-overview, #td-final-approfondisci, #td-final-pricing, #td-final-alternatives, #td-final-information, .td-final-brief) {
-  scroll-margin-top: calc(var(--tool-toolbar-height, 3.5rem) + var(--tool-section-nav-height, 3rem) + 0.5rem);
+  scroll-margin-top: var(--tv-scroll-anchor-offset, calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem));
 }
 
 .td-final-brief dl > div::before {
@@ -2066,19 +2066,7 @@
 .td-final-brief dl dt,
 .td-final-brief dl dd { grid-column: 2; color: var(--tv-ink-primary); }
 .td-final-brief dl dd { color: var(--tv-ink-secondary); }
-.td-final-decision-nav {
-  position: sticky;
-  top: 0;
-  z-index: var(--tv-z-subnav, 30);
-  display: flex;
-  gap: 0.25rem;
-  padding: 0.3rem;
-  margin-top: var(--tv-space-3);
-  border-radius: 999px;
-  background: color-mix(in srgb, #1b1438 92%, transparent);
-  border: 1px solid color-mix(in srgb, var(--tv-border-default) 40%, transparent);
-  overflow: visible;
-}
+/* G3 removed: late top:0 override let the pill bar slide under the painted header. Canonical .td-final-decision-nav above owns top/z. */
 
 .td-final-breadcrumb {
   display: flex;

@@ -697,11 +697,8 @@ body:has(.td-final-page) .mobile-top-bar__inner {
   background: color-mix(in srgb, var(--tv-ink-secondary) 10%, transparent);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+/* G1: global * kill-switch removed. It negated every designed transition
+   (compare 280/320ms, pills, nav) for ALL users via this late sheet, and it
+   duplicated the canonical handlers in premium-motion.css + compare.css +
+   collections.css, which already switch states without transformation under
+   prefers-reduced-motion. Reduced-motion users are covered there. */

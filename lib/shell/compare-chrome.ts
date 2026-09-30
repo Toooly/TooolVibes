@@ -62,5 +62,15 @@ export function reduceCompareScroll(
     }
     return { ...state, down, up: 0 };
   }
-  return { ...state, up: state.up + Math.abs(delta), down: 0 };
+  // Upward intent on comparison routes re-expands after a sufficient delta.
+  // Compact-first contexts (account/settings/editorial/guides) stay compact.
+  const up = state.up + Math.abs(delta);
+  if (
+    up >= COMPARE_EXPAND_DELTA &&
+    state.chrome === "compact" &&
+    !input.prefersCompact
+  ) {
+    return { chrome: "expanded", down: 0, up: 0 };
+  }
+  return { ...state, up, down: 0 };
 }

@@ -14438,9 +14438,9 @@ img {
    ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 767px) {
-  /* ── Global mobile scroll padding ── */
+  /* ── Global mobile scroll padding: same canonical offset as the shell scrollport. ── */
   html {
-    scroll-padding-top: var(--tv-scroll-anchor-offset, calc(4.5rem + env(safe-area-inset-top)));
+    scroll-padding-top: var(--tv-scroll-anchor-offset, calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem));
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -14452,7 +14452,7 @@ img {
   }
 
   .mobile-catalog-view__header {
-    z-index: 45;
+    z-index: var(--tv-z-compare, 45);
   }
 
   /* Guide scroll hint */
@@ -26659,7 +26659,7 @@ img {
 @media (max-width: 767px) {
 
   .vibe-home-mobile-origin {
-    margin-top: calc(-4.15rem - env(safe-area-inset-top, 0px));
+    margin-top: 0;
   }
 
   .v-discovery-stage {
@@ -26763,7 +26763,7 @@ img {
 
   .mobile-radar-view {
     min-height: 100svh;
-    margin-top: calc(-3.7rem - env(safe-area-inset-top, 0px));
+    margin-top: 0;
     padding-top: calc(4.75rem + env(safe-area-inset-top, 0px)) !important;
   }
 
@@ -26805,7 +26805,7 @@ img {
   }
 
   .mobile-library-board {
-    margin-top: calc(-3.7rem - env(safe-area-inset-top, 0px));
+    margin-top: 0;
     padding-top: calc(4.7rem + env(safe-area-inset-top, 0px)) !important;
   }
 
@@ -26815,7 +26815,7 @@ img {
   }
 
   .mobile-compare-arena {
-    margin-top: calc(-3.7rem - env(safe-area-inset-top, 0px));
+    margin-top: 0;
     padding-top: calc(4.7rem + env(safe-area-inset-top, 0px)) !important;
   }
 }
