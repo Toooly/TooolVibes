@@ -1,159 +1,105 @@
 /**
- * Cross-platform haptic feedback.
+ * TooolVibes — Canonical Haptics Service
  *
- * iOS Safari does NOT implement navigator.vibrate() — the Vibration API
- * has never shipped in Safari. On iOS, we use the Web Audio API to produce
- * a sharp transient click through the speaker. The physical speaker cone
- * movement creates a perceptible tactile pulse on the device chassis.
+ * Platform capability contract:
+ *   1. Native TooolVibes bridge (future iOS native shell) — real Taptic Engine
+ *   2. navigator.vibrate() — Android Chrome/Edge, Firefox Android
+ *   3. Unsupported (iOS Safari, desktop) — no-op, visual feedback only
  *
- * Android Chrome/Edge: navigator.vibrate() (true haptic motor).
- * iOS Safari/Chrome (WebKit): Web Audio transient click.
- * Desktop: no-op.
+ * iOS Safari does NOT implement the Vibration API.
+ * Audio-based fake haptics are FORBIDDEN — they produce unpleasant
+ * crack/click sounds through the speaker and are not haptic feedback.
+ *
+ * On unsupported platforms this service silently returns.
+ * UI pressed/active states provide visual feedback independently.
  */
 
-let audioCtx: AudioContext | null = null;
-let gestureListenerAttached = false;
+export type HapticIntent = "selection" | "light" | "medium" | "success" | "warning";
 
-function ensureAudioContext(): AudioContext | null {
-  if (typeof window === "undefined") return null;
-  if (audioCtx) return audioCtx;
-  try {
-    const Ctx =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext;
-    if (!Ctx) return null;
-    audioCtx = new Ctx();
-    return audioCtx;
-  } catch {
-    return null;
-  }
+export type HapticResult = "native-bridge" | "vibration" | "unsupported";
+
+/**
+ * Canonical vibration patterns (milliseconds).
+ * Restrained — haptics communicate meaning, not decoration.
+ */
+const PATTERNS: Record<HapticIntent, number[]> = {
+  selection: [8],
+  light: [12],
+  medium: [20],
+  success: [15, 40, 15],
+  warning: [10, 30, 10],
+};
+
+/**
+ * Future native bridge hook.
+ * When a native iOS shell (Capacitor, React Native, WKWebView bridge)
+ * becomes available, register it here to get true Taptic Engine output.
+ *
+ * Do NOT invent a fake bridge. This is an extension point only.
+ */
+type NativeBridge = {
+  trigger: (intent: HapticIntent) => void;
+};
+
+let nativeBridge: NativeBridge | null = null;
+
+export function registerNativeHapticBridge(bridge: NativeBridge): void {
+  nativeBridge = bridge;
 }
 
-function resumeAudioContext() {
-  const ctx = ensureAudioContext();
-  if (ctx && ctx.state === "suspended") {
-    ctx.resume().catch(() => {});
-  }
-}
-
-// Pre-resume AudioContext on first user gesture (iOS requirement)
-function attachGestureListener() {
-  if (gestureListenerAttached || typeof window === "undefined") return;
-  gestureListenerAttached = true;
-  const resume = () => {
-    resumeAudioContext();
-    window.removeEventListener("touchstart", resume);
-    window.removeEventListener("touchend", resume);
-    window.removeEventListener("click", resume);
-    window.removeEventListener("pointerdown", resume);
-  };
-  window.addEventListener("touchstart", resume, { once: true, passive: true });
-  window.addEventListener("touchend", resume, { once: true, passive: true });
-  window.addEventListener("click", resume, { once: true });
-  window.addEventListener("pointerdown", resume, { once: true, passive: true });
-}
-
-// Attach on module load
-if (typeof window !== "undefined") {
-  attachGestureListener();
+export function clearNativeHapticBridge(): void {
+  nativeBridge = null;
 }
 
 /**
- * Produce a sharp transient click via Web Audio.
- * The burst drives the speaker cone physically, felt as a pulse on the chassis.
+ * Feature-detect the Vibration API.
+ * Do NOT use user-agent or touch detection — only real capability.
  */
-function audioPulse(volume = 0.3, durationMs = 18, freq = 220) {
-  const ctx = ensureAudioContext();
-  if (!ctx) return;
-
-  // Resume synchronously — iOS Safari requires this inside the user gesture
-  if (ctx.state === "suspended") {
-    ctx.resume().catch(() => {});
-  }
-
-  try {
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    // Sharp attack + fast decay for a crisp click
-    osc.type = "square";
-    osc.frequency.setValueAtTime(freq, now);
-    osc.frequency.exponentialRampToValueAtTime(freq * 0.4, now + durationMs / 1000);
-
-    const dur = durationMs / 1000;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(volume, now + 0.002); // 2ms attack
-    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + dur + 0.01);
-  } catch {
-    // silent
-  }
+function hasVibration(): boolean {
+  return (
+    typeof navigator !== "undefined" &&
+    typeof navigator.vibrate === "function"
+  );
 }
 
-export type HapticPattern = "light" | "medium" | "success" | "warning";
-
-const PATTERNS: Record<
-  HapticPattern,
-  { vibrate: number[]; audio: () => void }
-> = {
-  light: {
-    vibrate: [15],
-    audio: () => audioPulse(0.2, 22, 200),
-  },
-  medium: {
-    vibrate: [25],
-    audio: () => audioPulse(0.28, 30, 160),
-  },
-  success: {
-    vibrate: [18, 50, 18],
-    audio: () => {
-      audioPulse(0.25, 25, 200);
-      setTimeout(() => audioPulse(0.25, 25, 200), 70);
-    },
-  },
-  warning: {
-    vibrate: [10, 35, 10, 35, 10],
-    audio: () => {
-      audioPulse(0.18, 18, 280);
-      setTimeout(() => audioPulse(0.18, 18, 280), 50);
-      setTimeout(() => audioPulse(0.18, 18, 280), 100);
-    },
-  },
-};
-
-export function haptic(pattern: HapticPattern = "light"): void {
-  if (typeof window === "undefined") return;
-  const p = PATTERNS[pattern];
-
-  // 1. Try native vibration (Android Chrome/Edge).
-  //    iOS Safari does NOT implement navigator.vibrate — the property
-  //    is completely absent, not a stub returning false.
-  let nativeWorked = false;
-  try {
-    if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
-      nativeWorked = navigator.vibrate(p.vibrate) === true;
+/**
+ * Trigger haptic feedback for a meaningful interaction intent.
+ *
+ * Returns which platform path was used, or "unsupported" on iOS Safari / desktop.
+ * NEVER throws. NEVER produces audio. NEVER fakes vibration.
+ */
+export function triggerHaptic(intent: HapticIntent = "light"): HapticResult {
+  // 1. Native bridge (future iOS shell)
+  if (nativeBridge) {
+    try {
+      nativeBridge.trigger(intent);
+      return "native-bridge";
+    } catch {
+      // fall through to web vibration
     }
-  } catch {
-    nativeWorked = false;
   }
 
-  // 2. On iOS (and any platform where vibration failed), use Web Audio
-  //    to create a speaker transient felt as a tactile pulse.
-  //    The AudioContext MUST be resumed synchronously inside the user
-  //    gesture — iOS Safari blocks autoplay otherwise.
-  if (!nativeWorked) {
-    const ctx = ensureAudioContext();
-    if (ctx && ctx.state === "suspended") {
-      // Synchronous resume attempt — iOS unlocks the context here
-      ctx.resume().catch(() => {});
+  // 2. Web Vibration API (Android)
+  if (hasVibration()) {
+    try {
+      const result = navigator.vibrate(PATTERNS[intent]);
+      if (result !== false) {
+        return "vibration";
+      }
+    } catch {
+      // fall through to unsupported
     }
-    p.audio();
   }
+
+  // 3. Unsupported (iOS Safari, desktop) — honest no-op
+  //    Visual UI feedback (pressed/active states) handles the interaction.
+  return "unsupported";
+}
+
+/**
+ * Backward-compatible alias for existing callers.
+ * Prefer triggerHaptic() in new code.
+ */
+export function haptic(pattern: "light" | "medium" | "success" | "warning" = "light"): void {
+  triggerHaptic(pattern);
 }

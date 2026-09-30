@@ -22,7 +22,7 @@ import { HeaderAccountControl } from "./header-account-control";
 import { getNavDestinationForPathname } from "@/lib/navigation/selectors";
 import { bindShellScroll, readScrollTop, getShellScroller } from "@/lib/shell/scroll-port";
 import { cn } from "@/lib/utils";
-import { haptic } from "@/lib/haptics";
+import { triggerHaptic } from "@/lib/haptics";
 
 /**
  * V3 route-context policy (Phase 1): the compact strip exists only inside
@@ -102,7 +102,7 @@ function usePullToRefresh(onRefresh: () => void) {
         // Haptic tick when crossing armed threshold
         if (damped >= PULL_THRESHOLD && !wasArmed.current) {
           wasArmed.current = true;
-          haptic("light");
+          triggerHaptic("light");
         }
         if (damped < PULL_THRESHOLD && wasArmed.current) {
           wasArmed.current = false;
@@ -115,7 +115,7 @@ function usePullToRefresh(onRefresh: () => void) {
       isPulling.current = false;
       wasArmed.current = false;
       if (pullDistance >= PULL_THRESHOLD) {
-        haptic("success"); // success pattern
+        triggerHaptic("success"); // success pattern
         setIsRefreshing(true);
         onRefresh();
         // Brief spin then reset

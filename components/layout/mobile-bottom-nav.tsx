@@ -15,7 +15,7 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { layoutMarkerTransition, microPopTransition } from "@/lib/motion/transitions";
 
 import { cn } from "@/lib/utils";
-import { haptic } from "@/lib/haptics";
+import { triggerHaptic } from "@/lib/haptics";
 import { getShellScroller, readLiveScrollTop, readMaxScroll } from "@/lib/shell/scroll-port";
 import {
   CHROME_DESKTOP_MEDIA_QUERY,
@@ -278,7 +278,7 @@ export function MobileBottomNav() {
                 }
                 className={cn("mobile-bottom-item", isActive && "is-active")}
                 data-family={navFamilyForHref(item.href)}
-                onClick={() => haptic("light")}
+                onClick={() => triggerHaptic("selection")}
               >
                 <span className="mobile-bottom-item__icon-wrap">
                   {isActive ? (
