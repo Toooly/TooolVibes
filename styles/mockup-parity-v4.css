@@ -64,8 +64,8 @@
   /* ---------- 10 DECISION SHEET: compact cream modal, dark page visible around ---------- */
   .tv-decision-sheet {
     position: fixed !important;
-    left: 12px !important;
-    right: 12px !important;
+    left: 0.75rem !important;
+    right: 0.75rem !important;
     bottom: 12px !important;
     max-height: 66vh !important;
     border-radius: 22px !important;
@@ -374,7 +374,7 @@
 
   .ar4-shell .ar4-card { overflow: hidden !important; }
 
-  .ar4-shell .ar4-card__actions { top: 12px !important; right: 12px !important; }
+  .ar4-shell .ar4-card__actions { top: 12px !important; right: 0.75rem !important; }
 
 }
 @media (max-width: 899px){

@@ -33,44 +33,35 @@ function getAudioContext(): AudioContext | null {
  * Produce a sharp transient click via Web Audio.
  * The burst drives the speaker cone physically, felt as a pulse on the chassis.
  */
-function audioPulse(volume = 0.2, durationMs = 25, freq = 180) {
+function audioPulse(volume = 0.3, durationMs = 18, freq = 220) {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  // Must resume inside a user-gesture context (iOS requirement)
+  // Resume synchronously — iOS Safari requires this inside the user gesture
   if (ctx.state === "suspended") {
-    void ctx.resume();
+    ctx.resume().catch(() => {});
   }
 
   try {
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    const shaper = ctx.createWaveShaper();
 
-    // Soft clip curve for sharper transient
-    const curve = new Float32Array(256);
-    for (let i = 0; i < 256; i++) {
-      const x = (i / 256) * 2 - 1;
-      curve[i] = Math.tanh(x * 3);
-    }
-    shaper.curve = curve;
-
-    osc.connect(shaper);
-    shaper.connect(gain);
-    gain.connect(ctx.destination);
-
+    // Sharp attack + fast decay for a crisp click
     osc.type = "square";
     osc.frequency.setValueAtTime(freq, now);
-    osc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + durationMs / 1000);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.4, now + durationMs / 1000);
 
     const dur = durationMs / 1000;
-    gain.gain.setValueAtTime(volume, now);
-    gain.gain.setValueAtTime(volume, now + dur * 0.3);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(volume, now + 0.002); // 2ms attack
     gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
 
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
     osc.start(now);
-    osc.stop(now + dur);
+    osc.stop(now + dur + 0.01);
   } catch {
     // silent
   }
@@ -111,22 +102,28 @@ export function haptic(pattern: HapticPattern = "light"): void {
   if (typeof window === "undefined") return;
   const p = PATTERNS[pattern];
 
-  // 1. Try native vibration — but CHECK the return value.
-  //    navigator.vibrate() returns false when no motor exists
-  //    (iOS WebKit stub, desktop browsers). Must NOT skip audio.
+  // 1. Try native vibration (Android Chrome/Edge).
+  //    iOS Safari does NOT implement navigator.vibrate — the property
+  //    is completely absent, not a stub returning false.
   let nativeWorked = false;
-  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-    try {
+  try {
+    if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
       nativeWorked = navigator.vibrate(p.vibrate) === true;
-    } catch {
-      nativeWorked = false;
     }
+  } catch {
+    nativeWorked = false;
   }
 
-  // 2. Always play audio fallback when native vibration is unavailable
-  //    or didn't actually fire. On Android the native motor fires and
-  //    the click is inaudible; on iOS the click IS the tactile feedback.
+  // 2. On iOS (and any platform where vibration failed), use Web Audio
+  //    to create a speaker transient felt as a tactile pulse.
+  //    The AudioContext MUST be resumed synchronously inside the user
+  //    gesture — iOS Safari blocks autoplay otherwise.
   if (!nativeWorked) {
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === "suspended") {
+      // Synchronous resume attempt — iOS unlocks the context here
+      ctx.resume().catch(() => {});
+    }
     p.audio();
   }
 }

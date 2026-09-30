@@ -132,8 +132,8 @@
 
 .mobile-bottom-item__badge {
   position: absolute;
-  top: 2px;
-  right: 6px;
+  top: 0.125rem;
+  right: 0.375rem;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
@@ -160,8 +160,8 @@
 /* Signal node demoted to a small static dot — was a permanent pulse */
 .mobile-bottom-item__node {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 0.25rem;
+  right: 0.25rem;
   width: 4px;
   height: 4px;
   border-radius: var(--tv-radius-pill);
@@ -256,7 +256,7 @@ html[data-tv-bottom-nav="hidden"] {
 .mobile-bottom-item.is-active::after {
   content: "";
   position: absolute;
-  top: 5px;
+  top: 0.3125rem;
   right: calc(50% - 16px);
   width: 5px;
   height: 5px;

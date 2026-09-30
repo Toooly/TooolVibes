@@ -28405,3 +28405,24 @@ button, a[role="button"], [role="tab"], [role="link"] {
   overflow: visible;
   clip: auto;
 }
+
+/* Device-safe horizontal padding for all screen widths */
+@supports (padding: env(safe-area-inset-left)) {
+  .marketing-shell,
+  .td-final-page,
+  .page-shell {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
+
+/* Wide phone optimization (Galaxy Ultra, iPhone Pro Max) */
+@media (min-width: 430px) and (max-width: 767px) {
+  .td-final-hero__name {
+    font-size: clamp(1.5rem, 5vw, 1.875rem);
+  }
+  .td-final-decision-nav__link {
+    font-size: 0.8125rem;
+    padding: 0 0.75rem;
+  }
+}

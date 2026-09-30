@@ -1131,7 +1131,7 @@
 .ar4-card__ribbon {
   position: absolute;
   top: -10px;
-  right: 14px;
+  right: 0.875rem;
   padding: 3px 9px;
   background: var(--tv-accent-gold);
   color: var(--tv-bg-base);
@@ -2961,7 +2961,7 @@ a.archive-v4-card:focus-visible {
     overflow-wrap: anywhere;
   }
   .ar4-card__name { font-size: 17px; line-height: 1.15; }
-  .ar4-card__category { font-size: 12px; margin-top: 2px; }
+  .ar4-card__category { font-size: 12px; margin-top: 0.125rem; }
 
   .ar4-card__status--editorial,
   .ar4-card__status--tier,
@@ -3023,7 +3023,7 @@ a.archive-v4-card:focus-visible {
   .ar4-card__bookmark[data-saved] { color: var(--tv-ink-primary); }
   .ar4-card__bookmark-dot {
     position: absolute;
-    top: 2px;
+    top: 0.125rem;
     right: 2px;
     width: 7px;
     height: 7px;

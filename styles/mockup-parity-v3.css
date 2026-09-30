@@ -131,7 +131,7 @@
     scrollbar-width: none;
   }
   .guides-filter__chip { flex: 0 0 auto !important; min-height: 36px !important; font-size: 0.8rem !important; }
-  .guides-section--ink { margin-bottom: 210px !important; }
+  .guides-section--ink { margin-bottom: 13.125rem !important; }
   .cx-section-nav { min-height: 40px !important; margin-block: 4px !important; }
   .cx-stack-flow-v4 { margin-block: 0 !important; padding-top: 0 !important; }
   .cx-detail-hero-v4 { padding-bottom: 6px !important; }

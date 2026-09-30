@@ -226,7 +226,7 @@
 }
 
 .tv-design-system {
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   background:
     radial-gradient(circle at 50% -12rem, rgba(139, 92, 246, 0.24), transparent 30rem),
