@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 
 import {
   COMPARE_COLLAPSE_DELTA,
-  COMPARE_EXPAND_DELTA,
   COMPARE_TOP_ZONE,
   comparePrefersCompact,
   initialCompareChrome,
@@ -35,7 +34,7 @@ describe("compare chrome state machine", () => {
     expect(state.chrome).toBe("compact");
   });
 
-  it("ignores Safari bounce and re-expands near the top on comparison routes", () => {
+  it("ignores Safari bounce; top zone never auto-expands a collapsed tray", () => {
     let state: CompareGesture = { chrome: "compact", down: 0, up: 40 };
     state = reduceCompareScroll(state, { y: -12, prevY: 4, prefersCompact: false });
     expect(state.chrome).toBe("compact");
@@ -44,38 +43,35 @@ describe("compare chrome state machine", () => {
       prevY: 80,
       prefersCompact: false,
     });
-    expect(state.chrome).toBe("expanded");
+    expect(state.chrome).toBe("compact");
   });
 
-  it("re-expands after upward intent on comparison routes, stays compact elsewhere", () => {
+  it("never auto-expands from scroll: 400px up stays compact (final contract)", () => {
     const compact: CompareGesture = { chrome: "compact", down: 0, up: 0 };
-    const reExpanded = reduceCompareScroll(compact, {
+    const afterUp = reduceCompareScroll(compact, {
       y: 40,
-      prevY: 40 + COMPARE_EXPAND_DELTA,
+      prevY: 440,
       prefersCompact: false,
     });
-    expect(reExpanded.chrome).toBe("expanded");
-    const stayedCompact = reduceCompareScroll(compact, {
+    expect(afterUp.chrome).toBe("compact");
+    const afterUpCompactFirst = reduceCompareScroll(compact, {
       y: 40,
-      prevY: 40 + COMPARE_EXPAND_DELTA,
+      prevY: 440,
       prefersCompact: true,
     });
-    expect(stayedCompact.chrome).toBe("compact");
+    expect(afterUpCompactFirst.chrome).toBe("compact");
   });
 
-  it("needs a sufficient upward delta before re-expanding", () => {
-    const compact: CompareGesture = { chrome: "compact", down: 0, up: 0 };
-    const partial = reduceCompareScroll(compact, {
-      y: 100,
-      prevY: 100 + Math.floor(COMPARE_EXPAND_DELTA / 2),
+  it("stays compact at top zone once collapsed; only toggle re-opens", () => {
+    const compact: CompareGesture = { chrome: "compact", down: 0, up: 300 };
+    const atTop = reduceCompareScroll(compact, {
+      y: COMPARE_TOP_ZONE,
+      prevY: 400,
       prefersCompact: false,
     });
-    expect(partial.chrome).toBe("compact");
-    const full = reduceCompareScroll(partial, {
-      y: 100 - COMPARE_EXPAND_DELTA,
-      prevY: 100,
-      prefersCompact: false,
-    });
-    expect(full.chrome).toBe("expanded");
+    // Reached top from a collapsed tray: remains compact until explicit toggle.
+    // (initialCompareChrome still starts expanded near top on fresh route entry;
+    // the reducer itself never flips compact->expanded.)
+    expect(atTop.chrome).toBe("compact");
   });
 });
