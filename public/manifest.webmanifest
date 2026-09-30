@@ -1,0 +1,21 @@
+{
+  "name": "TooolVibes — Scegli il tool giusto. Ricorda perche.",
+  "short_name": "TooolVibes",
+  "description": "Tool AI, SaaS e no-code selezionati senza rumore. Salva, confronta, decidi.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0620",
+  "theme_color": "#0b0620",
+  "lang": "it-IT",
+  "dir": "ltr",
+  "categories": ["productivity", "business", "utilities"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -40,10 +40,16 @@ export const metadata: Metadata = {
     "stack no-code",
     "TooolVibes",
   ],
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: "/brand/tooolvibes-logo.png",
     shortcut: "/brand/tooolvibes-logo.png",
-    apple: "/brand/tooolvibes-logo.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "TooolVibes",
+    statusBarStyle: "black-translucent",
   },
   title: {
     default: `${siteConfig.name} | Tool AI, SaaS, no-code e vibe coding`,
