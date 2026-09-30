@@ -84,7 +84,8 @@ export function getPlatformCapabilities(): PlatformCapabilities {
   const isAndroid = inferred === "android";
 
   const standalone =
-    window.matchMedia("(display-mode: standalone)").matches ||
+    (typeof window.matchMedia === "function" &&
+      window.matchMedia("(display-mode: standalone)").matches) ||
     (navigator as unknown as { standalone?: boolean }).standalone === true ||
     document.referrer.startsWith("android-app://");
 

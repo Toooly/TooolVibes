@@ -1,4 +1,12 @@
-import type { CapacitorConfig } from "@capacitor/cli";
+// NOTE: `npm i @capacitor/cli` on the provisioned machine provides the real
+// CapacitorConfig type. This structural alias keeps `tsc` green until then.
+type CapacitorConfig = {
+  appId: string;
+  appName: string;
+  webDir: string;
+  backgroundColor?: string;
+  android?: { allowMixedContent?: boolean };
+};
 
 /**
  * TooolVibes — Capacitor shell config (foundation only).

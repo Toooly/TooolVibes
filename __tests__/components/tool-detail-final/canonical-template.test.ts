@@ -30,7 +30,7 @@ describe("canonical tool detail template", () => {
     const block = css.slice(css.indexOf(".td-final-page {"), css.indexOf(".td-final-hero {"));
     expect(block).not.toContain("overflow-x: hidden");
     expect(css).toContain("position: sticky");
-    expect(css).toContain("--tool-toolbar-height");
+    expect(css).toContain("top: var(--tv-header-painted)");
   });
 
   it("all rendered ids are unique", () => {

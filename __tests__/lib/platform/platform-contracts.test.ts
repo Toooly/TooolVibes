@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
 const feedbackSrc = readFileSync("lib/feedback/index.ts", "utf8");
@@ -8,7 +9,6 @@ const toolCss = readFileSync("styles/tool-detail-final.css", "utf8");
 
 function sourceFiles(): Array<{ path: string; src: string }> {
   // Static contract: scan real component/app/lib sources (not tests, not impl).
-  const { execSync } = require("node:child_process") as typeof import("node:child_process");
   const out = execSync(
     'git grep -l --fixed-strings -- "navigator.vibrate" -- components app lib',
     { encoding: "utf8" },
@@ -42,7 +42,6 @@ describe("platform static contracts", () => {
   });
 
   it("no duplicated platform detection outside the capability layer", () => {
-    const { execSync } = require("node:child_process") as typeof import("node:child_process");
     const out = execSync('git grep -n --fixed-strings -- "navigator.userAgent" -- components app lib', {
       encoding: "utf8",
     }) as string;

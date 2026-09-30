@@ -19,6 +19,14 @@ export function InstallExperienceGate() {
   const compared = useToolWorkspaceStore((s) => s.compareSlugs.length);
 
   useEffect(() => {
+    try {
+      if (new URLSearchParams(window.location.search).get("install_preview") === "ios") {
+        setEngaged(true);
+        return;
+      }
+    } catch {
+      // ignore malformed query
+    }
     let sessions = 0;
     try {
       sessions = Number(sessionStorage.getItem(SESSION_KEY) ?? 0) + 1;

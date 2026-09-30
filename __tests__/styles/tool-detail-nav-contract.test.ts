@@ -34,6 +34,17 @@ describe("tool detail nav final contract", () => {
     expect(nav).not.toMatch(/top:\s*0;/);
   });
 
+  it("320: 2x2 grid, all tabs visible, no scroll", () => {
+    expect(css).toContain("@media (max-width: 359px)");
+    const small = css.slice(css.indexOf("@media (max-width: 359px)"));
+    expect(small).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
+  });
+
+  it("type never drops below the 12px floor", () => {
+    const link = extractBlock(css, ".td-final-decision-nav__link {");
+    expect(link).toContain("clamp(0.75rem,");
+  });
+
   it("four tabs, no horizontal scroll geometry", () => {
     const nav = extractBlock(css, ".td-final-decision-nav {");
     expect(nav).toContain("grid-template-columns: repeat(4, minmax(0, 1fr))");

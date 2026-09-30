@@ -21,16 +21,7 @@ export function registerNativeHapticBridgeCompat(bridge: LegacyBridge): void {
   registerNativeFeedbackBridge({ feedback: (intent) => bridge.trigger(intent) });
 }
 
-/** Canonical vibration patterns (ms) — mirrors lib/feedback WEB_PATTERNS. */
-const PATTERNS = {
-  selection: [8],
-  light: [12],
-  medium: [20],
-  success: [15, 40, 15],
-  warning: [10, 30, 10],
-} as const;
-
-export type LegacyPattern = keyof typeof PATTERNS;
+export type LegacyPattern = "selection" | "light" | "medium" | "success" | "warning";
 
 /**
  * Trigger haptic feedback for a meaningful interaction intent.

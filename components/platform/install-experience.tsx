@@ -43,6 +43,9 @@ function dismissedRecently(): boolean {
 }
 
 export function InstallExperience({ engaged = true }: { engaged?: boolean }) {
+  // Preview hook for QA evidence (e.g. ?install_preview=ios on desktop).
+  // Real gating still uses capability detection; this only forces the surface.
+
   const [visible, setVisible] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
@@ -52,6 +55,13 @@ export function InstallExperience({ engaged = true }: { engaged?: boolean }) {
     const caps = getPlatformCapabilities();
     if (caps.isStandalone || caps.isNative) return;
     if (dismissedRecently()) return;
+    if (
+      new URLSearchParams(window.location.search).get("install_preview") === "ios"
+    ) {
+      setIsIOS(true);
+      setVisible(true);
+      return;
+    }
     setIsIOS(caps.isIOS);
     if (caps.isIOS) {
       setVisible(true);
