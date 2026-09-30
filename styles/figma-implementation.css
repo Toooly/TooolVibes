@@ -628,3 +628,20 @@
     grid-column: 1 / -1;
   }
 }
+
+/* Smooth interactive states */
+button, a, [role="button"], [role="tab"], input, select, textarea {
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, opacity 160ms ease, transform 160ms ease;
+}
+button:active, a:active, [role="button"]:active, [role="tab"]:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

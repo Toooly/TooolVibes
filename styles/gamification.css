@@ -37,3 +37,12 @@
 
 .level-up-modal__sparkle{position:absolute;width:8px;height:8px;background:var(--tv-color-gold-500);border-radius:50%;animation:sparkle 1.5s ease-in-out infinite}
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
