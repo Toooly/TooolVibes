@@ -36,8 +36,8 @@ import {
   isSupabaseBrowserEnabled,
   loadBrowserSupabaseRuntimeConfig,
 } from "@/lib/supabase/browser-client";
-import { mapAuthProviderError } from "@/lib/auth/auth-messages";
-import { oauthProviderLabel, oauthRedirectTo, type OAuthProviderId } from "@/lib/auth/oauth-providers";
+import { linkSocialIdentity, signInWithSocialProvider } from "@/lib/auth/social-auth";
+import { type OAuthProviderId } from "@/lib/auth/oauth-providers";
 
 type AccountStatus = "loading" | "guest" | "authenticated" | "unavailable";
 type AccountMagicLinkMetadata = Record<string, string | number | boolean | null | undefined>;
@@ -59,9 +59,11 @@ export type AccountContextValue = {
   ) => Promise<{ ok: boolean; message: string }>;
   signInWithOAuth?: (
     provider: OAuthProviderId,
+    options?: { next?: string },
   ) => Promise<{ ok: boolean; message: string }>;
   linkIdentity?: (
     provider: OAuthProviderId,
+    options?: { next?: string },
   ) => Promise<{ ok: boolean; message: string }>;
   restoreQuarantinedWorkspace: () => Promise<{ ok: boolean; message: string }>;
   signOut: () => Promise<void>;
@@ -546,7 +548,7 @@ export function AccountProvider({
     }
   }, []);
 
-  const signInWithOAuth = useCallback(async (provider: OAuthProviderId) => {
+  const signInWithOAuth = useCallback(async (provider: OAuthProviderId, options?: { next?: string }) => {
     if (!isSupabaseBrowserEnabled()) {
       const message = "Accesso non disponibile in questo momento.";
       setAuthMessage(message);
@@ -557,26 +559,11 @@ export function AccountProvider({
     setAuthMessage(null);
 
     try {
-      const client = getBrowserSupabaseClient();
-      const { error } = await client.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: oauthRedirectTo(),
-          skipBrowserRedirect: false,
-          queryParams:
-            provider === "google" ? { prompt: "select_account" } : undefined,
-        },
-      });
-      if (error) {
-        const message = mapAuthProviderError(error);
-        setAuthMessage(message);
-        return { ok: false, message };
-      }
-      return { ok: true, message: "Ti stiamo portando al provider." };
-    } catch (error) {
-      const message = mapAuthProviderError(
-        error instanceof Error ? error.message : null,
-      );
+      const result = await signInWithSocialProvider(getBrowserSupabaseClient(), provider, options);
+      if (!result.ok) setAuthMessage(result.message);
+      return result;
+    } catch {
+      const message = "Accesso non completato. Riprova.";
       setAuthMessage(message);
       return { ok: false, message };
     } finally {
@@ -584,7 +571,7 @@ export function AccountProvider({
     }
   }, []);
 
-  const linkIdentity = useCallback(async (provider: OAuthProviderId) => {
+  const linkIdentity = useCallback(async (provider: OAuthProviderId, options?: { next?: string }) => {
     if (!isSupabaseBrowserEnabled()) {
       const message = "Accesso non disponibile in questo momento.";
       setAuthMessage(message);
@@ -595,21 +582,11 @@ export function AccountProvider({
     setAuthMessage(null);
 
     try {
-      const client = getBrowserSupabaseClient();
-      const { error } = await client.auth.linkIdentity({
-        provider,
-        options: { redirectTo: oauthRedirectTo() },
-      });
-      if (error) {
-        const message = mapAuthProviderError(error);
-        setAuthMessage(message);
-        return { ok: false, message };
-      }
-      return { ok: true, message: `Ti stiamo portando a ${oauthProviderLabel(provider)}.` };
-    } catch (error) {
-      const message = mapAuthProviderError(
-        error instanceof Error ? error.message : null,
-      );
+      const result = await linkSocialIdentity(getBrowserSupabaseClient(), provider, options);
+      if (!result.ok) setAuthMessage(result.message);
+      return result;
+    } catch {
+      const message = "Accesso non completato. Riprova.";
       setAuthMessage(message);
       return { ok: false, message };
     } finally {

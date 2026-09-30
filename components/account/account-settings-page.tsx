@@ -38,10 +38,7 @@ import {
   getCanonicalToolWorkspaceState,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
-import {
-  emailLocalPart,
-  initialsFromEmail,
-} from "@/components/account/workspace/workspace-model";
+import { normalizeUserProfile } from "@/lib/auth/profile-normalization";
 
 export function AccountSettingsPage() {
   const account = useAccount();
@@ -58,6 +55,7 @@ export function AccountSettingsPage() {
   }
 
   const email = account.user?.email ?? null;
+  const profile = normalizeUserProfile(account.user);
   const showRecovery =
     account.hasQuarantinedWorkspace || Boolean(account.authMessage);
 
@@ -66,10 +64,10 @@ export function AccountSettingsPage() {
       <div className="tv-settings">
         <header className="tv-id">
           <span className="tv-app__initials" aria-hidden="true">
-            {initialsFromEmail(email)}
+            {profile.displayName?.slice(0, 2).toUpperCase() ?? (email?.slice(0, 2).toUpperCase() ?? "TV")}
           </span>
           <div className="tv-id__copy">
-            <p className="tv-id__name">{emailLocalPart(email)}</p>
+            <p className="tv-id__name">{profile.displayName ?? email?.split("@")[0] ?? "account"}</p>
             {email ? <p className="tv-id__meta">{email}</p> : null}
             <h1 className="sr-only">Impostazioni</h1>
           </div>

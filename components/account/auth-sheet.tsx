@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/sheet";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { trackAuthGateFromIntent } from "@/lib/analytics/auth-gate-events";
+import type { OAuthProviderId } from "@/lib/auth/oauth-providers";
 import {
   writePendingAuthIntent,
   type PendingAuthCapability,
@@ -124,7 +125,7 @@ function AuthSheetForm({
   description: ReactNode;
   onEmailChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  onOAuth?: (provider: "google" | "apple" | "github") => void;
+  onOAuth?: (provider: OAuthProviderId) => void;
   onDismiss: () => void;
 }) {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -312,7 +313,7 @@ export function AuthSheet({
     setPhase("sent");
   };
 
-  const handleOAuth = (provider: "google" | "apple" | "github") => {
+  const handleOAuth = (provider: OAuthProviderId) => {
     if (!draft || !account.signInWithOAuth) return;
     const written = writePendingAuthIntent({
       capability: draft.capability ?? "stack.create",
@@ -336,7 +337,7 @@ export function AuthSheet({
       returnTo: draft.returnTo,
     });
     setPhase("submitting");
-    void account.signInWithOAuth(provider).then((result) => {
+    void account.signInWithOAuth(provider, { next: draft.returnTo }).then((result) => {
       if (!result.ok) {
         setError(result.message || "Accesso non riuscito. Riprova.");
         setPhase("error");

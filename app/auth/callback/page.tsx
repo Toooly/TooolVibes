@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { completeAuthCallback } from "@/lib/auth/complete-auth-callback";
+import { isSafeReturnTo } from "@/lib/auth/pending-auth-intent";
+import { resolveSafeNextPath } from "@/lib/auth/oauth-providers";
 import {
   getBrowserSupabaseClient,
   isSupabaseBrowserEnabled,
@@ -53,7 +55,17 @@ export default function AuthCallbackPage() {
         return;
       }
 
-      router.replace("/account?connected=1");
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const next = params.get("next");
+        const destination =
+          next && isSafeReturnTo(next) ? next : resolveSafeNextPath(null);
+        // Strip OAuth code/token material from the address bar before leaving.
+        window.history.replaceState(null, "", window.location.pathname);
+        router.replace(destination);
+      } catch {
+        router.replace(resolveSafeNextPath(null));
+      }
     }
 
     void handleCallback();
@@ -99,7 +111,7 @@ export default function AuthCallbackPage() {
               Torna all&apos;accesso
             </PremiumLink>
             <p className="mt-3 max-w-[52ch] text-sm leading-6 text-[var(--tv-ink-secondary)]">
-              Puoi riprovare Google o un altro social, oppure inviarti un nuovo
+              Puoi riprovare con Google, Apple, Microsoft o GitHub, oppure inviarti un nuovo
               link email dalla pagina account.
             </p>
           </div>

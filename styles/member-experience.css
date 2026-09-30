@@ -280,13 +280,30 @@
 }
 
 .tv-oauth__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
   min-height: var(--tv-button-min-height-touch);
+  padding: 0.65rem 1rem;
   border: 1px solid var(--tv-activation-accent-border);
   border-radius: var(--tv-radius-pill);
   background: var(--tv-surface-elevated);
   color: var(--tv-activation-ink);
   font-size: var(--tv-text-button);
   font-weight: var(--tv-button-font-weight);
+  cursor: pointer;
+}
+
+.tv-oauth__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.tv-oauth__btn[aria-busy="true"] {
+  cursor: progress;
 }
 
 .tv-oauth__btn:disabled {
@@ -309,8 +326,19 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .tv-oauth__row[data-count="3"],
+  .tv-oauth__row[data-count="4"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
   .tv-oauth__row[data-count="3"] {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tv-oauth__row[data-count="4"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
 import {
+  normalizeIdentityProvider,
   oauthProviderLabel,
   type OAuthProviderId,
 } from "@/lib/auth/oauth-providers";
@@ -16,9 +17,13 @@ export function AccountIdentitiesSection() {
   const [message, setMessage] = useState<string | null>(null);
 
   const linked = useMemo(() => {
-    const ids = new Set(
-      (account.user?.identities ?? []).map((identity) => identity.provider),
-    );
+    const ids = new Set<string>();
+    for (const identity of account.user?.identities ?? []) {
+      const normalized = normalizeIdentityProvider(
+        (identity as { provider?: unknown } | null)?.provider,
+      );
+      if (normalized) ids.add(normalized);
+    }
     if (account.user?.email) ids.add("email");
     return ids;
   }, [account.user]);

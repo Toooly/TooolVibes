@@ -35,9 +35,26 @@ file_size_limit = "50MiB"
 [auth]
 enabled = true
 site_url = "http://127.0.0.1:3000"
-additional_redirect_urls = ["http://localhost:3000/auth/callback", "http://127.0.0.1:3000/auth/callback", "http://127.0.0.1:3010/auth/callback", "http://localhost:3010/auth/callback"]
+additional_redirect_urls = ["http://localhost:3000/auth/callback", "http://127.0.0.1:3000/auth/callback", "http://127.0.0.1:3010/auth/callback", "http://localhost:3010/auth/callback", "https://tooolvibes.eu/auth/callback"]
 jwt_expiry = 3600
 enable_signup = true
 
 [analytics]
+enabled = false
+
+# Social providers: disabled locally until real IdP client credentials exist.
+# Production enablement requires OAuth client IDs/secrets in the Supabase
+# Dashboard (or Management API with an access token) — no credentials are
+# committed here. App UI derives availability from /api/auth/config so a
+# provider never renders as usable unless Supabase reports it enabled.
+[auth.external.google]
+enabled = false
+
+[auth.external.apple]
+enabled = false
+
+[auth.external.azure]
+enabled = false
+
+[auth.external.github]
 enabled = false
