@@ -17,20 +17,26 @@ Canonical flow (same Supabase SSR/PKCE stack as magic-link, no second auth syste
    `linkSocialIdentity()` (same redirect model). Supabase remains the
    identity-linking authority; the app never merges users by email.
 
-## Configuration state (verified 2026-09-30)
+## PRODUCTION ACTIVATION STATE (2026-09-30, verified live via GoTrue `/auth/v1/settings`)
 
-- Production Supabase `https://pjyasxaebxvvmcjxvnno.supabase.co` `GET /auth/v1/settings`:
-  `external = { google: false, apple: false, azure: false, github: false, email: true }`.
-  All four social providers are currently DISABLED server-side.
-- Local `supabase/config.toml` scaffolds `[auth.external.{google,apple,azure,github}]`
-  as `enabled = false` (no secrets committed) and adds the production
-  `https://tooolvibes.eu/auth/callback` redirect URL.
-- `/api/auth/config` derives UI availability from live GoTrue `external`
-  state, so a provider never renders as usable unless Supabase reports it
-  enabled. `parseEnabledOAuthProviders` maps `azure` → `microsoft`.
-- Supabase CLI is not installed here (`supabase: command not found`) and no
-  `SUPABASE_ACCESS_TOKEN` exists in env, so server-side enablement + IdP
-  OAuth client credentials could NOT be automated — see external blockers.
+- Project ref: `pjyasxaebxvvmcjxvnno` → `https://pjyasxaebxvvmcjxvnno.supabase.co`
+- Identity-provider callback (IdP dashboards point HERE):
+  `https://pjyasxaebxvvmcjxvnno.supabase.co/auth/v1/callback`
+- Application redirect (Supabase `redirectTo`, code does `oauthRedirectTo(next)`):
+  `https://tooolvibes.eu/auth/callback` (+ `?next=<safe-path>`)
+- Site URL: `https://tooolvibes.eu` — Redirect allowlist: `https://tooolvibes.eu/auth/callback`
+- Live provider flags: `google: true`, `github: true`, `azure: false`, `apple: false`, `email: true`.
+
+| Provider | IdP resource | Supabase | Live | Real E2E |
+|---|---|---|---|---|
+| Google | GCP project `tooolvibes`, Web client `TooolVibes Web`, origin `https://tooolvibes.eu`, redirect = Supabase callback; consent External/Test, test user added | client ID + secret set, enabled | `true` | PASS (login → `/account?connected=1` → workspace, reload persists, settings shows Google Collegato) |
+| GitHub | OAuth App `TooolVibes` (org `Toooly`), homepage `https://tooolvibes.eu`, callback = Supabase callback, email-read scope | client ID + secret set, enabled + allow-missing-email | `true` | PASS (authorize → callback → logged workspace, reload persists, settings shows GitHub Collegato) |
+| Microsoft/Azure | SKIPPED per owner decision (Entra tenant friction) | disabled | `false` | not attempted — code path (`microsoft`→`azure`) implemented + unit-tested, UI hidden until enabled |
+| Apple | BLOCKED: Sign in with Apple web requires paid Apple Developer Program membership (Services ID + Key + Team ID); owner declined enrollment | disabled | `false` | not possible without membership — code path + normalization (private-relay safe) implemented + unit-tested, UI hidden until enabled |
+
+Secrets live ONLY in Supabase provider config. No secret in repo/docs/screenshots/logs.
+Google consent is in Test mode: only added test users can log in until the app is published/verified.
+GitHub App is org-owned (`Toooly`); authorization shows its org name — expected.
 
 ## What OpenCode configured automatically
 
