@@ -1,0 +1,63 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+
+const root = process.cwd();
+const read = (rel: string) => readFileSync(resolve(root, rel), "utf8");
+
+/* Scelta della redazione: featured/winner treatment stays scoped,
+   data-driven, decorative-only, and calm under reduced motion. */
+
+describe("home editorial pick contract", () => {
+  it("renders the pick from the dynamic featured tool (no hardcoded identity)", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("Scelta della redazione");
+    expect(tsx).toContain("focusTool.name");
+    expect(tsx).toContain("data-spotlight={focusTool.slug}");
+    expect(tsx).not.toMatch(/blink|Blink/i);
+  });
+
+  it("keeps the celebration layer decorative and click-transparent", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain('className="tv-featured-tool__sparks"');
+    expect(tsx).toContain('aria-hidden="true"');
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".tv-featured-tool__sparks {");
+    expect(css).toContain("pointer-events: none");
+  });
+
+  it("scopes all featured keyframes to the tv-spot namespace", () => {
+    const css = read("styles/definitive-home.css");
+    const names = [...css.matchAll(/@keyframes\s+([\w-]+)/g)].map((m) => m[1]);
+    const spot = names.filter((n) => n.startsWith("tv-spot-"));
+    expect(spot).toContain("tv-spot-bar-sweep");
+    expect(spot).toContain("tv-spot-aura");
+    expect(spot).toContain("tv-spot-spark-rise");
+    for (const n of spot) {
+      const uses = [...css.matchAll(new RegExp(`animation:\\s*${n}\\b`, "g"))];
+      expect(uses.length, `${n} must be referenced`).toBeGreaterThan(0);
+    }
+  });
+
+  it("runs the three effects on one shared ambient clock", () => {
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain("--tv-spot-cycle: 9s");
+    expect(css).toContain("animation: tv-spot-bar-sweep var(--tv-spot-cycle)");
+    expect(css).toContain("animation: tv-spot-aura var(--tv-spot-cycle)");
+    expect(css).toContain("animation: tv-spot-spark-rise var(--tv-spot-cycle)");
+  });
+
+  it("disables all featured motion under prefers-reduced-motion", () => {
+    const css = read("styles/definitive-home.css");
+    const block = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+    expect(block).toContain(".tv-featured-tool .def-editorial__spot-eyebrow::after");
+    expect(block).toContain(".tv-featured-tool__sparks");
+    expect(block).toContain(".tv-featured-tool .def-editorial__spot-avatar::before");
+    expect(block).toContain("animation: none");
+  });
+
+  it("never touches the segmented control contract", () => {
+    const css = read("styles/definitive-home.css");
+    expect(css).not.toMatch(/def-start__tabs::(before|after)/);
+  });
+});

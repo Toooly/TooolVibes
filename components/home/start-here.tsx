@@ -201,7 +201,12 @@ function IvoryEditorial({
   return (
     <div className="def-editorial tv-tool-mode" aria-label="In evidenza">
       <div className="def-editorial__inner">
-        <article className="def-editorial__spotlight tv-featured-tool">
+        <article
+          className="def-editorial__spotlight tv-featured-tool"
+          data-spotlight={focusTool.slug}
+          key={focusTool.slug}
+        >
+          <span className="tv-featured-tool__sparks" aria-hidden="true" data-sparks="" />
           <div className="def-editorial__spot-body">
             <p className="def-editorial__spot-eyebrow">Scelta della redazione</p>
             <div className="def-editorial__spot-head">

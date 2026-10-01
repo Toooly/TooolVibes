@@ -83,6 +83,179 @@
   position: relative;
   overflow: visible;
 }
+
+/* ============================================================
+   Scelta della redazione — featured/winner motion language.
+   Scoped strictly to .tv-featured-tool. One shared ambient clock
+   (--tv-spot-cycle: 9s): bar sweep (0-9%) → calm → aura pulse
+   (33-42%) → calm → edge sparks (66-75%) → long calm. The three
+   effects never peak together. All motion is transform/opacity only.
+   ============================================================ */
+.tv-featured-tool {
+  --tv-spot-cycle: 9s;
+  isolation: isolate;
+}
+/* Kicker: warm editorial yellow, crisp text, restrained halo. */
+.tv-featured-tool .def-editorial__spot-eyebrow {
+  position: relative;
+  color: var(--tv-accent-gold-on-dark, #f5c968);
+  text-shadow:
+    0 0 1px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 60%, transparent),
+    0 0 14px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 28%, transparent);
+}
+/* Left editorial bar: stable geometry, traveling energy sweep. */
+.tv-featured-tool .def-editorial__spot-eyebrow::before {
+  position: relative;
+  overflow: hidden;
+  width: 18px;
+  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 55%, transparent);
+  box-shadow: none;
+}
+.tv-featured-tool .def-editorial__spot-eyebrow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  transform: translateY(-50%) translateX(-20px) scaleX(0.4);
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--tv-accent-gold-on-dark, #f5c968));
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent));
+  pointer-events: none;
+  animation: tv-spot-bar-sweep var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
+}
+@keyframes tv-spot-bar-sweep {
+  0%, 7% { transform: translateY(-50%) translateX(-20px) scaleX(0.4); opacity: 0; }
+  1.5% { opacity: 1; }
+  5.5% { transform: translateY(-50%) translateX(2px) scaleX(1); opacity: 1; }
+  9%, 100% { transform: translateY(-50%) translateX(4px) scaleX(1); opacity: 0; }
+}
+/* Featured edge: whisper of winner light on the card sides. */
+.tv-featured-tool::before {
+  content: "";
+  position: absolute;
+  inset: 8px -6px;
+  border-radius: 18px;
+  border-inline: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 32%, transparent);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 10%, transparent),
+    transparent 28% 72%,
+    color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 10%, transparent));
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: -1;
+}
+/* Celebration sparks: 6 deterministic edge glints, one shared clock. */
+.tv-featured-tool__sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: tv-spot-sparks-veil var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
+}
+.tv-featured-tool__sparks::before,
+.tv-featured-tool__sparks::after {
+  content: "";
+  position: absolute;
+  top: 18%;
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.4);
+  opacity: 0;
+}
+.tv-featured-tool__sparks::before {
+  left: -2px;
+  background: var(--tv-accent-gold-on-dark, #f5c968);
+  box-shadow:
+    -4px 26px 0 -1px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 75%, transparent),
+    -2px 52px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 80%, transparent);
+}
+.tv-featured-tool__sparks::after {
+  right: -2px;
+  background: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 85%, white);
+  box-shadow:
+    4px 26px 0 -1px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 75%, transparent),
+    2px 52px 0 -1.5px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent);
+}
+.tv-featured-tool__sparks::before,
+.tv-featured-tool__sparks::after {
+  animation: tv-spot-spark-rise var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
+}
+@keyframes tv-spot-sparks-veil {
+  0%, 64% { opacity: 0; }
+  66% { opacity: 1; }
+  76%, 100% { opacity: 0; }
+}
+@keyframes tv-spot-spark-rise {
+  0%, 64% { opacity: 0; transform: rotate(45deg) translateY(6px) scale(0.4); }
+  68% { opacity: 1; }
+  75%, 100% { opacity: 0; transform: rotate(45deg) translateY(-10px) scale(0.9); }
+}
+/* Logo aura: halo breathes behind a geometrically stable logo. */
+.tv-featured-tool .def-editorial__spot-avatar {
+  position: relative;
+  isolation: isolate;
+}
+.tv-featured-tool .def-editorial__spot-avatar::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 38%, transparent);
+  background: radial-gradient(circle at 50% 45%,
+    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 20%, transparent),
+    transparent 70%);
+  opacity: 0.35;
+  z-index: -1;
+  pointer-events: none;
+  animation: tv-spot-aura var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
+}
+@keyframes tv-spot-aura {
+  0%, 30% { opacity: 0.22; transform: scale(0.97); }
+  36% { opacity: 0.6; transform: scale(1.03); }
+  44%, 100% { opacity: 0.22; transform: scale(0.97); }
+}
+/* Reading calm: content always above decoration, never shifted. */
+.tv-featured-tool .def-editorial__spot-body {
+  position: relative;
+  z-index: 1;
+}
+/* Restrained on mobile: fewer/smaller sparks, no viewport-edge touch. */
+@media (max-width: 47.99rem) {
+  .tv-featured-tool::before { inset: 10px -2px; opacity: 0.4; }
+  .tv-featured-tool__sparks::before {
+    box-shadow:
+      -2px 22px 0 -1.5px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 75%, transparent);
+  }
+  .tv-featured-tool__sparks::after {
+    box-shadow:
+      2px 22px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 75%, transparent);
+  }
+  @keyframes tv-spot-spark-rise {
+    0%, 64% { opacity: 0; transform: rotate(45deg) translateY(4px) scale(0.35); }
+    68% { opacity: 1; }
+    75%, 100% { opacity: 0; transform: rotate(45deg) translateY(-6px) scale(0.8); }
+  }
+  .tv-featured-tool .def-editorial__spot-avatar::before { inset: -3px; }
+}
+/* Reduced motion: static featured hierarchy, zero travel. */
+@media (prefers-reduced-motion: reduce) {
+  .tv-featured-tool .def-editorial__spot-eyebrow::after,
+  .tv-featured-tool__sparks,
+  .tv-featured-tool__sparks::before,
+  .tv-featured-tool__sparks::after,
+  .tv-featured-tool .def-editorial__spot-avatar::before {
+    animation: none;
+  }
+  .tv-featured-tool .def-editorial__spot-eyebrow::after { opacity: 0; }
+  .tv-featured-tool__sparks { opacity: 0; }
+  .tv-featured-tool .def-editorial__spot-avatar::before { opacity: 0.35; }
+  .tv-featured-tool::before { opacity: 0.8; }
+}
 .def-editorial__spot-body {
   display: flex;
   flex-direction: column;
