@@ -130,20 +130,22 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
     expect(screen.getByText("Ultime dal catalogo")).toBeTruthy();
     expect(screen.getByText("Vedi tutto il catalogo")).toBeTruthy();
 
-    const cells = document.querySelectorAll(".def-podium__cell");
-    expect(cells.length).toBe(3);
-    const ranks = [...cells].map(
+    const stageCells = document.querySelectorAll(".def-podium__stage .def-podium__cell");
+    expect(stageCells.length).toBe(3);
+    const ranks = [...stageCells].map(
       (cell) => cell.querySelector(".def-podium__rank")?.textContent,
     );
     expect(ranks).toEqual(["02", "01", "03"]);
     expect(
-      document.querySelector(".def-podium__cell.pos-first .def-podium__name")?.textContent,
+      document.querySelector(".def-podium__stage .pos-first .def-podium__name")?.textContent,
     ).toBe("Blink");
     expect(document.querySelector(".def-podium__crown")).toBeTruthy();
-    const hrefs = [...document.querySelectorAll(".def-podium__card")].map((card) =>
+    expect(document.querySelector(".def-podium__laurels")).toBeTruthy();
+    const hrefs = [...document.querySelectorAll(".def-podium__stage .def-podium__card")].map((card) =>
       card.getAttribute("href"),
     );
     expect(hrefs).toEqual(["/toools/vibecode", "/toools/blink", "/toools/weweb"]);
+    expect(document.querySelector(".def-podium__rail")).toBeNull();
   });
 
   it("non mostra piu il podio legacy", () => {

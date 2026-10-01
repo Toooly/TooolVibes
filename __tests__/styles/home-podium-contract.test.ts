@@ -16,13 +16,17 @@ describe("home podium contract", () => {
     expect(tsx).not.toMatch(/VibeCode|WeWeb|CosmicJS|Mocha/);
   });
 
-  it("orders the rail 02 / 01 / 03 / 04 / 05 with canonical links", () => {
+  it("separates the safe top-3 stage from the 04/05 continuation", () => {
     const tsx = read("components/home/start-here.tsx");
-    expect(tsx).toContain("pos-first");
-    expect(tsx).toContain("pos-fifth");
+    expect(tsx).toContain("def-podium__stage");
+    expect(tsx).toContain("def-podium__rail");
+    expect(tsx).toContain("top3");
+    expect(tsx).toContain("aria-label=\"Podio dei tool\"");
+    expect(tsx).toContain("aria-label=\"Posizioni 04 e 05\"");
     expect(tsx).toContain("href={`/toools/${tool.slug}`}");
-    expect(tsx).toContain('aria-label={`Posizione ${rank}: apri ${tool.name}`}');
-    expect(tsx).toContain('aria-label="Classifica dei tool"');
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".def-podium__stage {");
+    expect(css).toContain("grid-template-areas: \"second first third\"");
   });
 
   it("keeps the crown decorative and the cards keyboard-reachable links", () => {
@@ -33,7 +37,15 @@ describe("home podium contract", () => {
     expect(css).toContain("pointer-events: none");
   });
 
-  it("defines the rail as the intentional scroller with snap + tap grammar", () => {
+  it("frames the winner with crown and laurels, both decorative", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("def-podium__laurels");
+    expect(tsx).toContain('className="def-podium__crown" aria-hidden="true"');
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".def-podium__laurels {");
+  });
+
+  it("defines the continuation rail as the intentional scroller with snap + tap grammar", () => {
     const css = read("styles/definitive-home.css");
     expect(css).toContain(".def-podium__rail {");
     expect(css).toContain("scroll-snap-type: x mandatory");
@@ -45,8 +57,18 @@ describe("home podium contract", () => {
   it("calms the podium under prefers-reduced-motion (scroll still works)", () => {
     const css = read("styles/definitive-home.css");
     const tail = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
-    expect(tail).toContain(".def-latest.is-celebrated .def-podium__cell,");
+    expect(tail).toContain(".def-latest.is-celebrated .def-podium__stage .def-podium__cell,");
     expect(tail).toContain("animation: none");
+  });
+
+  it("keeps the top-3 stage viewport-safe (no bleed, no rail clipping)", () => {
+    const css = read("styles/definitive-home.css");
+    const stage = css.slice(css.indexOf(".def-podium__stage {"), css.indexOf(".def-podium__stage {") + 700);
+    expect(stage).not.toContain("calc(-1");
+    expect(stage).not.toContain("overflow-x");
+    expect(css).toContain('grid-template-areas: "second first third"');
+    const rail = css.slice(css.indexOf(".def-podium__rail {"), css.indexOf(".def-podium__rail {") + 900);
+    expect(rail).not.toContain("calc(-1");
   });
 
   it("never touches the segmented control", () => {

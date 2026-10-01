@@ -106,20 +106,21 @@
 .tv-featured-tool.def-editorial__spotlight {
   --tv-meteor-cycle: 8.5s;
   position: relative;
-  border: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 45%, transparent);
+  border: 1px solid color-mix(in srgb, #8a5cff 52%, transparent);
   border-radius: 22px;
   background:
-    radial-gradient(120% 90% at 18% 0%,
-      color-mix(in srgb, #a678ff 55%, transparent),
-      transparent 55%),
-    radial-gradient(90% 75% at 85% 100%,
-      color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 20%, transparent),
-      transparent 60%),
-    linear-gradient(155deg, #7a4dff 0%, #5b2ee5 38%, #2a165e 78%, #170b38 100%);
+    radial-gradient(52% 38% at 24% 6%,
+      color-mix(in srgb, #8a5cff 55%, transparent),
+      transparent 70%),
+    radial-gradient(40% 30% at 78% 100%,
+      color-mix(in srgb, #8a5cff 22%, transparent),
+      transparent 70%),
+    linear-gradient(165deg, #2a1550 0%, #1c0d3c 46%, #130927 100%);
   box-shadow:
     0 20px 48px color-mix(in srgb, black 45%, transparent),
     0 0 0 1px color-mix(in srgb, black 35%, transparent),
-    0 0 30px color-mix(in srgb, #7a4dff 35%, transparent),
+    0 0 22px color-mix(in srgb, #8a5cff 22%, transparent),
+    0 0 44px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 8%, transparent),
     inset 0 1px 0 color-mix(in srgb, white 28%, transparent);
   padding: clamp(18px, 4.5vw, 28px);
   overflow: hidden;
@@ -127,26 +128,40 @@
 }
 /* Luminous stage dressing: violet energy wash + gold arc + star field.
    Static layer (no per-frame cost); the meteor owns the motion. */
+/* Cinematic dressing. Layer order (first = top): dimming veil over the
+   text zone (readability), violet arc, gold arc, 7 sparse glints.
+   Arcs are thin ring-segment gradients crossing empty zones only. */
 .tv-featured-tool.def-editorial__spotlight::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   background:
-    radial-gradient(1.5px 1.5px at 12% 22%, white 60%, transparent 100%),
-    radial-gradient(1px 1px at 32% 12%, white 60%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 68% 18%, white 55%, transparent 100%),
-    radial-gradient(1px 1px at 82% 34%, white 60%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 55% 8%, white 50%, transparent 100%),
-    radial-gradient(70% 46% at 88% 108%,
-      color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 26%, transparent),
+    linear-gradient(180deg,
+      color-mix(in srgb, #0d061f 58%, transparent) 0%,
+      color-mix(in srgb, #0d061f 26%, transparent) 44%,
+      transparent 64%),
+    radial-gradient(112% 78% at 50% 128%,
+      transparent 60%,
+      color-mix(in srgb, #9a6fff 78%, transparent) 67%,
+      transparent 73%),
+    radial-gradient(96% 66% at 82% 128%,
+      transparent 58%,
+      color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 68%, transparent) 65%,
+      transparent 72%),
+    radial-gradient(70% 44% at 8% -6%,
+      transparent 58%,
+      color-mix(in srgb, #8a5cff 45%, transparent) 64%,
       transparent 70%),
-    radial-gradient(80% 52% at -8% 108%,
-      color-mix(in srgb, #8a5cff 30%, transparent),
-      transparent 70%),
-    linear-gradient(180deg, transparent 62%,
-      color-mix(in srgb, #1a0b40 55%, transparent));
-  opacity: 0.9;
+    radial-gradient(1.5px 1.5px at 14% 20%, white 65%, transparent 100%),
+    radial-gradient(1px 1px at 38% 10%, white 60%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 64% 14%, white 55%, transparent 100%),
+    radial-gradient(1px 1px at 84% 30%, white 60%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 90% 62%,
+      color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 90%, white) 55%, transparent 100%),
+    radial-gradient(1px 1px at 8% 58%, white 55%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 48% 30%, white 50%, transparent 100%);
+  opacity: 1;
   pointer-events: none;
   z-index: 0;
 }
@@ -2959,63 +2974,121 @@
 }
 
 /* ============================================================
-   Ultime dal catalogo — FINAL interactive podium (approved mockup).
-   Visual order on the rail: 02 / 01 / 03 / 04 / 05. 01 is the hero:
-   taller, elevated, gold edge + crown, stage pedestal beneath.
-   Mobile: horizontal snap rail with 04/05 continuation + peek.
-   Desktop: 02/01/03 podium grid centered, 04/05 as compact row.
-   Tap: press compression + rank-aware edge flare, ~180ms, no delay.
+   Ultime dal catalogo — FINAL podium stage (approved mockup).
+   PRIMARY STAGE (.def-podium__stage): 02/01/03 fully inside the safe
+   content width at every viewport — never a scroller, no clipping.
+   CONTINUATION (.def-podium__rail): 04/05 compact swipe rail below.
+   Rank 01: elevated gold pedestal, crown + laurels, floor light.
+   Ranks 02/03: lower violet pedestals. One-shot rise on reveal.
    ============================================================ */
 .def-podium__header {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 4px;
-  margin-bottom: var(--tv-rhythm-related-lg, 1rem);
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  margin-bottom: clamp(14px, 3.5vw, 22px);
 }
 .def-podium__title {
   margin: 0;
-  font-family: var(--tv-font-family-ui);
-  font-size: 12px;
-  font-weight: 600;
+  font-family: var(--tv-font-family-display, "Anton", sans-serif);
+  font-size: clamp(1.65rem, 7vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--tv-ink-secondary);
-  line-height: 1.4;
+  color: #fff;
+  text-shadow: 0 0 22px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 22%, transparent);
 }
 .def-podium__subtitle {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: clamp(0.8125rem, 3.4vw, 0.9375rem);
   color: var(--tv-ink-secondary, #c2beb5);
 }
-/* Rail: the ONLY intentional horizontal scroller in this zone. */
-.def-podium__rail {
+.def-latest {
+  position: relative;
+  isolation: isolate;
+  margin-top: clamp(22px, 5vw, 34px);
+  padding-top: clamp(18px, 4vw, 26px);
+  border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 10%, transparent);
+}
+/* Atmospheric backdrop: violet spotlight + floor glow, zone-scoped. */
+.def-podium__backdrop {
+  position: absolute;
+  inset: 40px 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1.5px 1.5px at 18% 30%, color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 80%, transparent) 60%, transparent 100%),
+    radial-gradient(1px 1px at 82% 24%, white 60%, transparent 100%),
+    radial-gradient(1px 1px at 64% 42%, white 55%, transparent 100%),
+    radial-gradient(60% 34% at 50% 0%, color-mix(in srgb, #8a5cff 26%, transparent), transparent 70%),
+    radial-gradient(78% 22% at 50% 100%, color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 12%, transparent), transparent 70%);
+}
+/* Primary stage: 3 columns inside the safe width. 01 elevated. */
+.def-podium__stage {
   position: relative;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 9.5rem;
-  gap: 10px;
-  overflow-x: auto;
-  overflow-y: visible;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  margin-inline: calc(-1 * clamp(20px, 5vw, 48px));
-  padding-inline: clamp(20px, 5vw, 48px);
-  padding-block: 26px 12px;
-  scroll-padding-inline: clamp(20px, 5vw, 48px);
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.16fr) minmax(0, 0.92fr);
+  grid-template-areas: "second first third";
+  gap: clamp(8px, 2.4vw, 16px);
+  align-items: end;
+  margin: 0;
+  padding: 30px 0 0;
+  list-style: none;
 }
-.def-podium__rail::-webkit-scrollbar {
-  display: none;
-}
-.def-podium__cell {
-  scroll-snap-align: center;
+.def-podium__stage .def-podium__cell {
+  position: relative;
   min-width: 0;
+  padding-bottom: 12px;
+  scroll-snap-align: none;
 }
-.def-podium__cell.is-first {
-  margin-top: -14px;
+.def-podium__cell.pos-second { grid-area: second; }
+.def-podium__cell.pos-first { grid-area: first; }
+.def-podium__cell.pos-third { grid-area: third; }
+/* Pedestals: dark cylinders with illuminated rims + floor light. */
+.def-podium__stage .def-podium__cell::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 0;
+  height: 10px;
+  border-radius: 3px 3px 7px 7px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, #8a5cff 38%, transparent),
+    color-mix(in srgb, #8a5cff 8%, transparent));
+  box-shadow: 0 0 12px color-mix(in srgb, #8a5cff 25%, transparent);
+  pointer-events: none;
 }
+.def-podium__stage .def-podium__cell.pos-first::after {
+  height: 15px;
+  left: -2px;
+  right: -2px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 60%, transparent),
+    color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 14%, transparent));
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 35%, transparent),
+    0 6px 18px color-mix(in srgb, black 40%, transparent);
+}
+.def-podium__stage .def-podium__cell::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -6px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%,
+    color-mix(in srgb, #8a5cff 30%, transparent), transparent 70%);
+  pointer-events: none;
+}
+.def-podium__stage .def-podium__cell.pos-first::before {
+  background: radial-gradient(50% 50% at 50% 50%,
+    color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 42%, transparent), transparent 70%);
+}
+/* Cards: contained, centered, subordinate to the stage. */
 .def-podium__card {
   position: relative;
   display: flex;
@@ -3024,55 +3097,54 @@
   text-align: center;
   gap: 5px;
   height: 100%;
-  padding: 16px 12px 14px;
-  border-radius: 18px;
+  padding: 14px 8px 12px;
+  border-radius: 16px;
   text-decoration: none;
   color: inherit;
-  background: var(--tv-surface-raised, #111114);
-  border: 1px solid color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 30%, transparent);
-  box-shadow: 0 12px 28px color-mix(in srgb, black 38%, transparent);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, white 4%, var(--tv-surface-raised, #111114)),
+    var(--tv-surface-raised, #111114));
+  border: 1px solid color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 34%, transparent);
+  box-shadow: 0 12px 26px color-mix(in srgb, black 40%, transparent);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: transform 180ms var(--tv-easing-standard), border-color 180ms var(--tv-easing-standard), box-shadow 180ms var(--tv-easing-standard);
 }
 .def-podium__card.is-first {
-  padding-top: 22px;
-  border-color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
+  padding: 20px 10px 16px;
+  border-color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 60%, transparent);
   background:
-    linear-gradient(180deg, color-mix(in srgb, white 5%, transparent), transparent 42%),
-    linear-gradient(160deg,
-      color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 16%, var(--tv-surface-raised)),
-      var(--tv-surface-raised) 62%);
+    linear-gradient(180deg, color-mix(in srgb, white 6%, transparent), transparent 44%),
+    linear-gradient(165deg,
+      color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 18%, var(--tv-surface-raised)),
+      var(--tv-surface-raised) 64%);
   box-shadow:
-    0 18px 40px color-mix(in srgb, black 42%, transparent),
-    0 0 26px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 16%, transparent);
+    0 18px 40px color-mix(in srgb, black 44%, transparent),
+    0 0 28px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 20%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 20%, transparent);
 }
-.def-podium__card.is-rest {
-  opacity: 0.92;
-}
-/* Rank numerals: gold hero vs muted companions. */
 .def-podium__rank {
   font-family: var(--tv-type-mono, monospace);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
-  font-size: 1.5rem;
+  font-size: clamp(1.1rem, 4.6vw, 1.5rem);
   color: var(--tv-ink-muted-aa, #aaa59b);
 }
 .def-podium__card.is-first .def-podium__rank {
-  font-size: 2.6rem;
+  font-size: clamp(2rem, 8vw, 2.6rem);
   color: var(--tv-accent-gold-on-dark, #e4b23c);
-  text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 40%, transparent);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 42%, transparent);
 }
 .def-podium__crown {
   position: absolute;
-  top: -16px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 44px;
-  height: 26px;
+  width: 42px;
+  height: 25px;
   color: var(--tv-accent-gold-on-dark, #e4b23c);
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 60%, transparent));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 65%, transparent));
   pointer-events: none;
 }
 .def-podium__crown svg {
@@ -3080,10 +3152,22 @@
   height: 100%;
   display: block;
 }
+.def-podium__laurels {
+  position: absolute;
+  inset: 18px -10px -4px;
+  color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.def-podium__laurels svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 .def-podium__avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: clamp(40px, 13vw, 52px);
+  height: clamp(40px, 13vw, 52px);
+  border-radius: 13px;
   background: var(--tv-surface-elevated, #1c1440);
   border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.1));
   display: grid;
@@ -3092,10 +3176,11 @@
   margin-top: 2px;
 }
 .def-podium__card.is-first .def-podium__avatar {
-  width: 64px;
-  height: 64px;
+  width: clamp(52px, 17vw, 68px);
+  height: clamp(52px, 17vw, 68px);
   border-radius: 16px;
-  border-color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 45%, transparent);
+  border-color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 50%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 25%, transparent);
 }
 .def-podium__avatar img {
   width: 62%;
@@ -3104,18 +3189,19 @@
 }
 .def-podium__avatar span {
   font-family: var(--tv-font-display, Anton, sans-serif);
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--tv-ink-primary, #f4f0e7);
 }
 .def-podium__name {
   font-family: var(--tv-font-family-ui);
-  font-size: 1rem;
+  font-size: clamp(0.82rem, 3.6vw, 1rem);
   font-weight: 700;
   color: var(--tv-ink-primary, #f4f0e7);
   line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 .def-podium__card.is-first .def-podium__name {
-  font-size: 1.25rem;
+  font-size: clamp(1.05rem, 4.6vw, 1.3rem);
 }
 .def-podium__cat {
   font-size: 0.75rem;
@@ -3133,87 +3219,97 @@
   margin-top: auto;
   padding-top: 6px;
   font-family: var(--tv-type-mono, monospace);
-  font-size: 1rem;
+  font-size: clamp(0.85rem, 3.6vw, 1rem);
   font-weight: 700;
   color: var(--tv-ink-primary, #f4f0e7);
 }
 .def-podium__card.is-first .def-podium__score {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 4.4vw, 1.2rem);
   color: var(--tv-accent-gold-on-dark, #e4b23c);
 }
 .def-podium__score svg {
   color: currentColor;
 }
-/* Pedestal: the stage floor shared by all five cells. */
-.def-podium__cell {
+/* Continuation rail: 04/05 compact swipe, explicitly separated. */
+.def-podium__rail {
   position: relative;
-  padding-bottom: 10px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 9.5rem;
+  gap: 10px;
+  justify-content: start;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin: clamp(14px, 3.5vw, 20px) 0 0;
+  padding: 8px 2px 14px;
+  scroll-padding-inline: 2px;
 }
-.def-podium__cell::after {
+.def-podium__rail::-webkit-scrollbar {
+  display: none;
+}
+.def-podium__rail .def-podium__cell {
+  position: relative;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+.def-podium__rail .def-podium__cell::after {
   content: "";
   position: absolute;
-  left: 6px;
-  right: 6px;
-  bottom: 0;
-  height: 8px;
-  border-radius: 3px 3px 6px 6px;
+  left: 10px;
+  right: 10px;
+  bottom: 2px;
+  height: 6px;
+  border-radius: 3px;
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-ink-primary) 16%, transparent),
-    color-mix(in srgb, var(--tv-ink-primary) 4%, transparent));
+    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 30%, transparent),
+    transparent);
   pointer-events: none;
 }
-.def-podium__cell.is-first::after {
-  height: 12px;
-  background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 45%, transparent),
-    color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 10%, transparent));
-  box-shadow: 0 0 14px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 25%, transparent);
+.def-podium__rail .def-podium__rank {
+  font-size: 1.15rem;
+}
+/* Peek affordance: edge fade hints at continuation. */
+.def-podium__rail-wrap {
+  position: relative;
 }
 /* Tap: press compression + rank-aware edge flare, immediate, ~180ms. */
-@media (hover: none), (hover: hover) {
-  .def-podium__card:active {
-    transform: scale(0.96);
-    border-color: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 75%, transparent);
-    box-shadow:
-      0 6px 18px color-mix(in srgb, black 40%, transparent),
-      0 0 20px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 40%, transparent);
-  }
-  .def-podium__card.is-first:active {
-    border-color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 85%, transparent);
-    box-shadow:
-      0 6px 18px color-mix(in srgb, black 40%, transparent),
-      0 0 26px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 50%, transparent);
-  }
+.def-podium__card:active {
+  transform: scale(0.96);
+  border-color: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 75%, transparent);
+  box-shadow:
+    0 6px 18px color-mix(in srgb, black 40%, transparent),
+    0 0 20px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 40%, transparent);
+}
+.def-podium__card.is-first:active {
+  transform: scale(0.96);
+  border-color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 85%, transparent);
+  box-shadow:
+    0 6px 18px color-mix(in srgb, black 40%, transparent),
+    0 0 26px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 50%, transparent);
 }
 /* Entrance: one-shot rise + hero glow, driven by .is-celebrated. */
-.def-latest.is-celebrated .def-podium__cell {
+.def-latest.is-celebrated .def-podium__stage .def-podium__cell {
   animation: tv-podium-rise 0.6s var(--tv-easing-decelerate) both;
 }
-.def-latest.is-celebrated .def-podium__cell:nth-child(2) {
-  animation-delay: 0.06s;
+.def-latest.is-celebrated .def-podium__stage .def-podium__cell.pos-first {
+  animation-delay: 0.02s;
 }
-.def-latest.is-celebrated .def-podium__cell:nth-child(3) {
-  animation-delay: 0.12s;
-}
-.def-latest.is-celebrated .def-podium__cell:nth-child(n+4) {
-  animation-delay: 0.18s;
+.def-latest.is-celebrated .def-podium__stage .def-podium__cell.pos-third {
+  animation-delay: 0.1s;
 }
 .def-latest.is-celebrated .def-podium__card.is-first .def-podium__rank {
   animation: tv-podium-glow 1.4s var(--tv-easing-decelerate) 0.25s both;
 }
-/* Peek affordance: edge fade hints at 04/05 continuation. */
-.def-latest {
-  position: relative;
+@keyframes tv-podium-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
 }
-.def-latest::after {
-  content: "";
-  position: absolute;
-  top: 60px;
-  bottom: 70px;
-  right: calc(-1 * clamp(20px, 5vw, 48px));
-  width: 34px;
-  background: linear-gradient(270deg, var(--tv-surface-base, #0b0b10) 20%, transparent);
-  pointer-events: none;
+@keyframes tv-podium-glow {
+  from { text-shadow: 0 0 0 transparent; }
+  to { text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 35%, transparent); }
 }
 .def-podium__cta {
   display: flex;
@@ -3237,29 +3333,25 @@
 .def-podium__cta:hover {
   background: var(--tv-button-activation-bg-pressed, #c9a227);
 }
-/* Desktop: true 02/01/03 podium grid; 04/05 compact continuation row. */
+/* Desktop: true centered stage, generous air; rail becomes calm row. */
 @media (min-width: 48rem) {
+  .def-podium__stage {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+    max-width: 46rem;
+    margin-inline: auto;
+    padding-top: 34px;
+  }
   .def-podium__rail {
     grid-auto-flow: row;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    grid-template-areas: "second first third fourth fifth";
-    align-items: end;
+    grid-template-columns: repeat(2, minmax(0, 17rem));
+    justify-content: center;
     overflow: visible;
     margin-inline: 0;
     padding-inline: 0;
-    padding-top: 30px;
-  }
-  .def-podium__cell.pos-first { grid-area: first; margin-top: -18px; }
-  .def-podium__cell.pos-second { grid-area: second; }
-  .def-podium__cell.pos-third { grid-area: third; }
-  .def-podium__cell.pos-fourth { grid-area: fourth; }
-  .def-podium__cell.pos-fifth { grid-area: fifth; }
-  .def-latest::after {
-    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .def-latest.is-celebrated .def-podium__cell,
+  .def-latest.is-celebrated .def-podium__stage .def-podium__cell,
   .def-latest.is-celebrated .def-podium__card.is-first .def-podium__rank {
     animation: none;
   }
