@@ -103,6 +103,14 @@ describe("home podium contract", () => {
     expect(tail).toContain(".def-podium__stage.has-focus-second .def-podium__cell.pos-second,");
   });
 
+  it("keeps selected side cards >=2px inside mobile bounds (inward translate)", () => {
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain("translateX(5px) scale(1.05)");
+    expect(css).toContain("translateX(-5px) scale(1.05)");
+    expect(css).not.toContain("translateX(3px) scale(1.05)");
+    expect(css).not.toContain("translateX(-3px) scale(1.05)");
+  });
+
   it("keeps the top-3 stage viewport-safe (no bleed, no rail clipping)", () => {
     const css = read("styles/definitive-home.css");
     const stage = css.slice(css.indexOf(".def-podium__stage {"), css.indexOf(".def-podium__stage {") + 700);

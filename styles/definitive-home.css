@@ -3431,7 +3431,7 @@
 }
 .def-podium__stage.has-focus-second .def-podium__cell.pos-second {
   z-index: 5;
-  transform: translateY(-9px) translateX(3px) scale(1.05);
+  transform: translateY(-9px) translateX(5px) scale(1.05);
 }
 .def-podium__stage.has-focus-first .def-podium__cell.pos-first {
   z-index: 5;
@@ -3439,7 +3439,7 @@
 }
 .def-podium__stage.has-focus-third .def-podium__cell.pos-third {
   z-index: 5;
-  transform: translateY(-9px) translateX(-3px) scale(1.05);
+  transform: translateY(-9px) translateX(-5px) scale(1.05);
 }
 .def-podium__stage.has-focus-second .def-podium__cell.pos-first,
 .def-podium__stage.has-focus-second .def-podium__cell.pos-third,
