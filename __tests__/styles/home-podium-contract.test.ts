@@ -18,6 +18,14 @@ describe("home podium contract", () => {
     expect(tsx).not.toMatch(/VibeCode|WeWeb|CosmicJS|Mocha/);
   });
 
+  it("keeps 04-09 tool names fully readable with no ellipsis truncation", () => {
+    const css = read("styles/definitive-home.css");
+    const compactName = css.slice(css.indexOf(".def-podium__card.is-compact .def-podium__name"), css.indexOf(".def-podium__card.is-compact .def-podium__name") + 400);
+    expect(compactName).not.toContain("text-overflow: ellipsis");
+    expect(compactName).not.toContain("white-space: nowrap");
+    expect(compactName).toContain("-webkit-line-clamp: 2");
+  });
+
   it("renders 04-09 in a continuation rail with canonical links", () => {
     const tsx = read("components/home/start-here.tsx");
     expect(tsx).toContain("tools.slice(0, 9)");
