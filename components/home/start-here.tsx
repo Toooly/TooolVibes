@@ -358,6 +358,24 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     }
   };
 
+  /* Reset selection when tapping/clicking outside the podium stage. */
+  useEffect(() => {
+    if (!selectedPos) return;
+    const onOutside = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (!target.closest(".def-podium__stage")) {
+        setSelectedPos(null);
+      }
+    };
+    document.addEventListener("mousedown", onOutside);
+    document.addEventListener("touchstart", onOutside, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", onOutside);
+      document.removeEventListener("touchstart", onOutside);
+    };
+  }, [selectedPos]);
+
   useEffect(() => {
     const podium = podiumRef.current;
     if (!podium || typeof IntersectionObserver === "undefined") return;
@@ -439,9 +457,27 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           <div className="def-podium__extra">
             {tool.shortDescription ? <p className="def-podium__extra-desc">{truncate(tool.shortDescription, 120)}</p> : null}
             <div className="def-podium__extra-meta">
-              {tool.levelLabel ? <span>{tool.levelLabel}</span> : null}
-              {tool.readingTime ? <span>{formatHomeAnalysisTime(tool.readingTime)}</span> : null}
-              {tool.tags?.[0] ? <span>{tool.tags[0]}</span> : null}
+              {tool.levelLabel ? (
+                <span className="def-podium__pill">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  {tool.levelLabel}
+                </span>
+              ) : null}
+              {tool.readingTime ? (
+                <span className="def-podium__pill">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  {formatHomeAnalysisTime(tool.readingTime)}
+                </span>
+              ) : null}
+              {tool.tags?.[0] ? (
+                <span className="def-podium__pill def-podium__pill--tag">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  {tool.tags[0]}
+                </span>
+              ) : null}
+              {tool.tags?.[1] ? (
+                <span className="def-podium__pill def-podium__pill--tag">{tool.tags[1]}</span>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -512,9 +548,27 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           <div className="def-podium__extra">
             {tool.shortDescription ? <p className="def-podium__extra-desc">{truncate(tool.shortDescription, 120)}</p> : null}
             <div className="def-podium__extra-meta">
-              {tool.levelLabel ? <span>{tool.levelLabel}</span> : null}
-              {tool.readingTime ? <span>{formatHomeAnalysisTime(tool.readingTime)}</span> : null}
-              {tool.tags?.[0] ? <span>{tool.tags[0]}</span> : null}
+              {tool.levelLabel ? (
+                <span className="def-podium__pill">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  {tool.levelLabel}
+                </span>
+              ) : null}
+              {tool.readingTime ? (
+                <span className="def-podium__pill">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  {formatHomeAnalysisTime(tool.readingTime)}
+                </span>
+              ) : null}
+              {tool.tags?.[0] ? (
+                <span className="def-podium__pill def-podium__pill--tag">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  {tool.tags[0]}
+                </span>
+              ) : null}
+              {tool.tags?.[1] ? (
+                <span className="def-podium__pill def-podium__pill--tag">{tool.tags[1]}</span>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -562,11 +616,11 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         ) : null}
       </div>
       {rest.length > 0 ? (
-        <div className="def-podium__more" role="list" aria-label={`Posizioni 04${rest.length > 2 ? ", 05 e 06" : " e 05"}`}>
+        <div className="def-podium__rail" role="list" aria-label={`Posizioni 04${rest.length > 2 ? ", 05 e 06" : " e 05"}`}>
           {rest.map((tool, i) => {
             const rank = String(i + 4).padStart(2, "0");
             return (
-              <div key={tool.slug} role="listitem" className="def-podium__cell is-rest">
+              <div key={tool.slug} role="listitem" className="def-podium__rail-item">
                 <StageCard tool={tool} rank={rank} rankClass="is-rest" compact isSelected={false} />
               </div>
             );

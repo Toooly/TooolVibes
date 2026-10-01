@@ -145,7 +145,7 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
       card.getAttribute("href"),
     );
     expect(hrefs).toEqual(["/toools/vibecode", "/toools/blink", "/toools/weweb"]);
-    expect(document.querySelector(".def-podium__rail")).toBeNull();
+    expect(document.querySelector(".def-podium__more")).toBeNull();
   });
 
   it("non mostra piu il podio legacy", () => {

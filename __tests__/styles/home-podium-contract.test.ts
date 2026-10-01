@@ -21,15 +21,15 @@ describe("home podium contract", () => {
   it("separates the safe top-3 stage from the static 04/05/06 grid", () => {
     const tsx = read("components/home/start-here.tsx");
     expect(tsx).toContain("def-podium__stage");
-    expect(tsx).toContain("def-podium__more");
-    expect(tsx).not.toContain("def-podium__rail");
+    expect(tsx).toContain("def-podium__rail");
+    expect(tsx).not.toContain("def-podium__more");
     expect(tsx).toContain("top3");
     expect(tsx).toContain("aria-label=\"Podio dei tool\"");
     expect(tsx).toContain("Posizioni 04");
     expect(tsx).toContain("href={`/toools/${tool.slug}`}");
     const css = read("styles/definitive-home.css");
     expect(css).toContain(".def-podium__stage {");
-    expect(css).toContain(".def-podium__more {");
+    expect(css).toContain(".def-podium__rail {");
     expect(css).toContain("grid-template-areas: \"second first third\"");
   });
 
@@ -62,6 +62,13 @@ describe("home podium contract", () => {
     expect(css).toContain(".def-podium__cell.pos-third .def-podium__rank");
   });
 
+  it("resets selection on outside click/tap", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("mousedown");
+    expect(tsx).toContain("touchstart");
+    expect(tsx).toContain("setSelectedPos(null)");
+  });
+
   it("implements two-tap select-then-navigate depth interaction", () => {
     const tsx = read("components/home/start-here.tsx");
     expect(tsx).toContain("selectedPos");
@@ -71,7 +78,7 @@ describe("home podium contract", () => {
     expect(tsx).toContain("data-selected");
     expect(tsx).not.toContain("aria-pressed");
     /* No ranking reorder: visual order stays 02/01/03 in source. */
-    const stage = tsx.slice(tsx.indexOf("def-podium__stage"), tsx.indexOf("def-podium__more"));
+    const stage = tsx.slice(tsx.indexOf("def-podium__stage"), tsx.indexOf("def-podium__rail"));
     expect(stage.indexOf("pos-second")).toBeLessThan(stage.indexOf("pos-first"));
     expect(stage.indexOf("pos-first")).toBeLessThan(stage.indexOf("pos-third"));
     const css = read("styles/definitive-home.css");
@@ -107,8 +114,8 @@ describe("home podium contract", () => {
 
   it("keeps selected side cards >=2px inside mobile bounds (inward translate)", () => {
     const css = read("styles/definitive-home.css");
-    expect(css).toContain("translateX(5px) scale(1.05)");
-    expect(css).toContain("translateX(-5px) scale(1.05)");
+    expect(css).toContain("translateX(5px) scale(1.10)");
+    expect(css).toContain("translateX(-5px) scale(1.10)");
     expect(css).not.toContain("translateX(3px) scale(1.05)");
     expect(css).not.toContain("translateX(-3px) scale(1.05)");
   });
@@ -129,10 +136,10 @@ describe("home podium contract", () => {
     expect(stage).not.toContain("calc(-1");
     expect(stage).not.toContain("overflow-x");
     expect(css).toContain('grid-template-areas: "second first third"');
-    const more = css.slice(css.indexOf(".def-podium__more {"), css.indexOf(".def-podium__more {") + 900);
+    const more = css.slice(css.indexOf(".def-podium__rail {"), css.indexOf(".def-podium__rail {") + 900);
     expect(more).not.toContain("calc(-1");
-    expect(more).not.toContain("overflow-x");
-    expect(more).not.toContain("scroll-snap");
+    expect(more).toContain("overflow-x: auto");
+    expect(more).toContain("scroll-snap-type: x mandatory");
   });
 
   it("never touches the segmented control", () => {
