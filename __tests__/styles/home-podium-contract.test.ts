@@ -18,12 +18,23 @@ describe("home podium contract", () => {
     expect(tsx).not.toMatch(/VibeCode|WeWeb|CosmicJS|Mocha/);
   });
 
-  it("keeps 04-09 tool names fully readable with no ellipsis truncation", () => {
+  it("keeps 04-09 tool names fully readable with no truncation at all", () => {
     const css = read("styles/definitive-home.css");
     const compactName = css.slice(css.indexOf(".def-podium__card.is-compact .def-podium__name"), css.indexOf(".def-podium__card.is-compact .def-podium__name") + 400);
     expect(compactName).not.toContain("text-overflow: ellipsis");
     expect(compactName).not.toContain("white-space: nowrap");
-    expect(compactName).toContain("-webkit-line-clamp: 2");
+    expect(compactName).not.toContain("-webkit-line-clamp");
+    expect(compactName).not.toContain("-webkit-box-orient");
+    expect(compactName).toContain("overflow-wrap: anywhere");
+  });
+
+  it("uses intrinsic height for compact cards, not fixed height", () => {
+    const css = read("styles/definitive-home.css");
+    const compactCard = css.slice(css.indexOf(".def-podium__card.is-compact {"), css.indexOf(".def-podium__card.is-compact {") + 500);
+    expect(compactCard).toContain("height: auto");
+    expect(compactCard).toContain("min-height: 72px");
+    expect(compactCard).not.toContain("height: 80px");
+    expect(compactCard).not.toContain("height: 64px");
   });
 
   it("renders 04-09 in a continuation rail with canonical links", () => {

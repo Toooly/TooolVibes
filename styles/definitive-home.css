@@ -3535,22 +3535,23 @@
 }
 .def-podium__rail::-webkit-scrollbar { display: none; }
 .def-podium__rail-item {
-  flex: 0 0 clamp(180px, 48vw, 260px);
+  flex: 0 0 clamp(190px, 50vw, 280px);
   scroll-snap-align: start;
   min-width: 0;
+  display: flex;
 }
-/* Premium compact card: refined landscape tile with cinematic surface. */
+/* Premium compact card: refined landscape tile with cinematic surface.
+   NO line-clamp, NO ellipsis, NO truncation on tool names.
+   Intrinsic height: grows only when content requires it.
+   overflow-wrap:anywhere for future long unbroken brand names. */
 .def-podium__card.is-compact {
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-    "rank avatar name score"
-    "rank avatar cat  score";
-  gap: 2px 8px;
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  padding: 12px 12px 10px;
-  min-height: 80px;
+  gap: 8px;
+  padding: 12px 12px;
+  min-height: 72px;
+  height: auto;
   border-radius: 14px;
   text-align: left;
   border: 1px solid color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 30%, transparent);
@@ -3570,62 +3571,52 @@
   opacity: 0.7;
 }
 .def-podium__card.is-compact .def-podium__rank {
-  grid-area: rank;
   font-family: var(--tv-type-mono, monospace);
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 0.85rem;
   color: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 70%, white);
-  min-width: 22px;
-  align-self: start;
+  min-width: 20px;
   line-height: 1;
+  flex-shrink: 0;
 }
 .def-podium__card.is-compact .def-podium__avatar {
-  grid-area: avatar;
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  align-self: center;
+  flex-shrink: 0;
 }
 .def-podium__card.is-compact .def-podium__name {
-  grid-area: name;
   font-size: 0.85rem;
   font-weight: 700;
-  line-height: 1.2;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  align-self: end;
+  line-height: 1.25;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .def-podium__card.is-compact .def-podium__cat {
-  grid-area: cat;
-  font-size: 0.75rem;
-  color: var(--tv-ink-secondary, #c2beb5);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  align-self: start;
+  display: none;
 }
 .def-podium__card.is-compact .def-podium__score {
-  grid-area: score;
   font-family: var(--tv-type-mono, monospace);
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--tv-accent-brand, #8b6cff);
   margin-top: 0;
   padding-top: 0;
-  align-self: center;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .def-podium__card.is-compact .def-podium__score svg { width: 10px; height: 10px; }
-/* Desktop: elegant static row, no scroll needed. */
-@media (min-width: 768px) {
+/* Desktop: elegant static row when all cards fit comfortably (1024px+).
+   Below 1024px the rail stays scrollable so names never get squeezed. */
+@media (min-width: 1024px) {
   .def-podium__rail {
     overflow-x: visible;
     justify-content: center;
   }
   .def-podium__rail-item {
     flex: 1 1 0;
-    max-width: 300px;
+    max-width: 320px;
   }
 }
 /* Extra info pills: micro-elements with icons for selected card. */
@@ -3688,43 +3679,7 @@
   color: var(--tv-ink-muted-aa, #aaa59b);
   background: color-mix(in srgb, var(--tv-surface-elevated, #1c1440) 80%, transparent);
 }
-/* Compact 04/05/06: horizontal-ish rectangular tiles. */
-.def-podium__card.is-compact {
-  flex-direction: row;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
-  min-height: 64px;
-  border-radius: 10px;
-}
-.def-podium__card.is-compact .def-podium__rank {
-  font-size: 0.85rem;
-  min-width: 18px;
-}
-.def-podium__card.is-compact .def-podium__avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-.def-podium__card.is-compact .def-podium__name {
-  font-size: 0.8rem;
-  line-height: 1.2;
-  flex: 1;
-  min-width: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.def-podium__card.is-compact .def-podium__cat {
-  display: none;
-}
-.def-podium__card.is-compact .def-podium__score {
-  font-size: 0.8rem;
-  margin-top: 0;
-  padding-top: 0;
-}
+/* Consolidated into the single is-compact rule above. */
 /* Tap: press compression + rank-aware edge flare, immediate, ~180ms. */
 /* Bring-to-front: the selected cell comes toward the viewer (2.5D depth:
    lift + scale + stronger floor light), siblings recede slightly.
