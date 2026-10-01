@@ -59,6 +59,17 @@ describe("home editorial pick contract", () => {
     expect(block).toContain("animation: none");
   });
 
+  it("explains the pick with data-driven micro reasons (max 3, no hardcoding)", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("editorialReasonsFor(focusTool)");
+    expect(tsx).toContain("tv-featured-tool__reasons");
+    expect(tsx).toContain("reasons.slice(0, 3)");
+    expect(tsx).not.toMatch(/blink|vibecode|weweb|cosmic|mocha/i);
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".tv-featured-tool__reasons {");
+    expect(css).toContain(".tv-featured-tool__reasons li {");
+  });
+
   it("never touches the segmented control contract", () => {
     const css = read("styles/definitive-home.css");
     expect(css).not.toMatch(/def-start__tabs::(before|after)/);

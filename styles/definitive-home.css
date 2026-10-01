@@ -373,6 +373,39 @@
   z-index: 1;
   gap: 14px;
 }
+/* Micro editorial reasons: compact gold-outline pills, never a wall of text. */
+.tv-featured-tool__reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tv-featured-tool__reasons li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 42%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 10%, transparent);
+  color: #ffe9b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.tv-featured-tool__reasons li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tv-accent-gold-on-dark, #f5c968);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent);
+  flex-shrink: 0;
+}
 /* Restrained on mobile: 6 smaller sparks, tighter travel. */
 @media (max-width: 47.99rem) {
   .tv-featured-tool.def-editorial__spotlight::before { opacity: 0.75; }
@@ -2977,7 +3010,7 @@
    Ultime dal catalogo — FINAL podium stage (approved mockup).
    PRIMARY STAGE (.def-podium__stage): 02/01/03 fully inside the safe
    content width at every viewport — never a scroller, no clipping.
-   CONTINUATION (.def-podium__rail): 04/05 compact swipe rail below.
+   CONTINUATION (.def-podium__more): 04/05/06 compact static grid below.
    Rank 01: elevated gold pedestal, crown + laurels, floor light.
    Ranks 02/03: lower violet pedestals. One-shot rise on reveal.
    ============================================================ */
@@ -3010,6 +3043,9 @@
   isolation: isolate;
   margin-top: clamp(22px, 5vw, 34px);
   padding-top: clamp(18px, 4vw, 26px);
+  /* Breathing room before Pubblicità: the sponsor block carries no top
+     spacing on desktop, so the zone owns its bottom clearance. */
+  padding-bottom: clamp(20px, 4vw, 30px);
   border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 10%, transparent);
 }
 /* Atmospheric backdrop: violet spotlight + floor glow, zone-scoped. */
@@ -3158,11 +3194,51 @@
   color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
   opacity: 0.85;
   pointer-events: none;
+  transform-origin: 50% 90%;
+  animation: tv-laurel-sway var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
+}
+@keyframes tv-laurel-sway {
+  0%, 100% { opacity: 0.8; transform: rotate(-1.6deg); }
+  50% { opacity: 0.95; transform: rotate(1.6deg); }
+}
+/* Glow pulse: hero rank + medals breathe gently on the same clock. */
+.def-latest .def-podium__card.is-first .def-podium__rank {
+  animation: tv-podium-glow 1.4s var(--tv-easing-decelerate) 0.25s both, tv-rank-breathe var(--tv-spot-cycle, 12s) var(--tv-easing-standard) 1.6s infinite;
+}
+@keyframes tv-rank-breathe {
+  0%, 100% { text-shadow: 0 0 14px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 28%, transparent); }
+  50% { text-shadow: 0 0 22px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 48%, transparent); }
 }
 .def-podium__laurels svg {
   width: 100%;
   height: 100%;
   display: block;
+}
+/* Rank marks: silver for 02, bronze for 03 — sober siblings of the crown. */
+.def-podium__medal {
+  display: block;
+  width: 30px;
+  height: 20px;
+  margin-top: -2px;
+  pointer-events: none;
+  animation: tv-medal-shimmer var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
+}
+.def-podium__medal svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.def-podium__medal--silver {
+  color: color-mix(in srgb, #cfd6e4 85%, white);
+  filter: drop-shadow(0 0 5px color-mix(in srgb, #cfd6e4 55%, transparent));
+}
+.def-podium__medal--bronze {
+  color: color-mix(in srgb, #d29a6b 88%, white);
+  filter: drop-shadow(0 0 5px color-mix(in srgb, #d29a6b 55%, transparent));
+}
+@keyframes tv-medal-shimmer {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
 }
 .def-podium__avatar {
   width: clamp(40px, 13vw, 52px);
@@ -3230,50 +3306,55 @@
 .def-podium__score svg {
   color: currentColor;
 }
-/* Continuation rail: 04/05 compact swipe, explicitly separated. */
-.def-podium__rail {
-  position: relative;
+/* Continuation grid: 04/05/06 compact, static, inside gutters.
+   No carousel, no scroll, no bleed. Clearly subordinate to top-3. */
+.def-podium__more {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 9.5rem;
-  gap: 10px;
-  justify-content: start;
-  overflow-x: auto;
-  overflow-y: visible;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  margin: clamp(14px, 3.5vw, 20px) 0 0;
-  padding: 8px 2px 14px;
-  scroll-padding-inline: 2px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(8px, 2.4vw, 12px);
+  margin: clamp(12px, 3vw, 18px) 0 0;
+  padding: 0;
 }
-.def-podium__rail::-webkit-scrollbar {
-  display: none;
-}
-.def-podium__rail .def-podium__cell {
+.def-podium__more .def-podium__cell {
   position: relative;
   min-width: 0;
-  scroll-snap-align: start;
+  padding-bottom: 8px;
 }
-.def-podium__rail .def-podium__cell::after {
+.def-podium__more .def-podium__cell::after {
   content: "";
   position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 2px;
-  height: 6px;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 5px;
   border-radius: 3px;
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 30%, transparent),
+    color-mix(in srgb, var(--tv-ink-primary) 14%, transparent),
     transparent);
   pointer-events: none;
 }
-.def-podium__rail .def-podium__rank {
-  font-size: 1.15rem;
+.def-podium__more .def-podium__rank {
+  font-size: clamp(0.95rem, 4vw, 1.1rem);
 }
-/* Peek affordance: edge fade hints at continuation. */
-.def-podium__rail-wrap {
-  position: relative;
+.def-podium__card.is-compact {
+  padding: 10px 6px 10px;
+  gap: 4px;
+  border-radius: 14px;
+}
+.def-podium__card.is-compact .def-podium__avatar {
+  width: clamp(32px, 10vw, 40px);
+  height: clamp(32px, 10vw, 40px);
+  border-radius: 10px;
+}
+.def-podium__card.is-compact .def-podium__name {
+  font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+}
+.def-podium__card.is-compact .def-podium__cat {
+  display: none;
+}
+.def-podium__card.is-compact .def-podium__score {
+  font-size: 0.85rem;
+  padding-top: 2px;
 }
 /* Tap: press compression + rank-aware edge flare, immediate, ~180ms. */
 .def-podium__card:active {
@@ -3341,16 +3422,15 @@
     margin-inline: auto;
     padding-top: 34px;
   }
-  .def-podium__rail {
-    grid-auto-flow: row;
-    grid-template-columns: repeat(2, minmax(0, 17rem));
+  .def-podium__more {
+    grid-template-columns: repeat(3, minmax(0, 14rem));
     justify-content: center;
-    overflow: visible;
-    margin-inline: 0;
-    padding-inline: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .def-podium__laurels,
+  .def-podium__medal,
+  .def-latest .def-podium__card.is-first .def-podium__rank,
   .def-latest.is-celebrated .def-podium__stage .def-podium__cell,
   .def-latest.is-celebrated .def-podium__card.is-first .def-podium__rank {
     animation: none;

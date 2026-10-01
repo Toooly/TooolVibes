@@ -61,6 +61,41 @@ function initialFor(name: string) {
   return name.slice(0, 2).toUpperCase();
 }
 
+/* Micro editorial reasons: up to 3 compact badges explaining WHY this tool
+   is the editors' pick. Fully data-driven — derived from canonical fields
+   (score, level, tags, useCases). No identity hardcoding. Order: speed →
+   ease → quality, max one per family. */
+function editorialReasonsFor(tool: ToolPublicView): string[] {
+  const hay = [
+    tool.categoryLabel ?? "",
+    tool.category ?? "",
+    ...(tool.tags ?? []),
+    ...(tool.useCases ?? []),
+    ...(tool.highlights ?? []),
+    tool.shortDescription ?? "",
+    tool.levelLabel ?? "",
+  ]
+    .join(" \n ")
+    .toLowerCase();
+  const has = (...needles: string[]) => needles.some((n) => hay.includes(n));
+  const reasons: string[] = [];
+  if (has("minut", "ore invece", "veloc", "rapid", "acceler", "subito", "ore", "fast", "rapid")) {
+    reasons.push("Risultato in poche ore");
+  }
+  if (has("base", "beginner", "facile", "semplice", "dolce", "senza ripartire", "no-code", "no code", "easy")) {
+    reasons.push("Facile anche da zero");
+  }
+  if (
+    has("produzione", "serio", "completa", "completo", "backend", "pubblica", "qualit", "solido", "production")
+  ) {
+    reasons.push("Output di qualità");
+  }
+  if (reasons.length === 0 && tool.levelLabel) {
+    reasons.push(`Livello ${tool.levelLabel}`);
+  }
+  return reasons.slice(0, 3);
+}
+
 const START_TABS = [
   { id: "tool", label: "TOOL" },
   { id: "stack", label: "STACK" },
@@ -227,6 +262,13 @@ function IvoryEditorial({
             {positioning ? (
               <p className="def-editorial__spot-lede">{positioning}</p>
             ) : null}
+            {editorialReasonsFor(focusTool).length > 0 ? (
+              <ul className="tv-featured-tool__reasons" aria-label="Perché la redazione lo consiglia">
+                {editorialReasonsFor(focusTool).map((reason) => (
+                  <li key={reason}>{reason}</li>
+                ))}
+              </ul>
+            ) : null}
 
             <p className="tv-featured-tool__meta">
               <span>
@@ -293,7 +335,6 @@ function IvoryEditorial({
 
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const podiumRef = useRef<HTMLElement | null>(null);
-  const railRef = useRef<HTMLDivElement | null>(null);
   const celebrated = useRef(false);
 
   useEffect(() => {
@@ -316,12 +357,15 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   /* Canonical top-5: same ranked dataset (tool order), no algorithm change,
      no invented entries. Top-3 compose the safe stage; 04/05 continue in
      the secondary rail. Renders only with >=3 canonical tools. */
-  const ranked = tools.slice(0, 5);
+  /* Canonical ranking: top-3 stage + 04/05/06 compact continuation grid.
+     No carousel, no scroll. Renders 04/05(/06) only when canonical tools
+     exist — never invented. */
+  const ranked = tools.slice(0, 6);
   if (ranked.length < 3) return null;
   const top3 = [ranked[1], ranked[0], ranked[2]].filter(Boolean) as ToolPublicView[];
-  const rest = ranked.slice(3);
+  const rest = ranked.slice(3, 6);
 
-  function StageCard({ tool, rank, rankClass }: { tool: ToolPublicView; rank: string; rankClass: string }) {
+  function StageCard({ tool, rank, rankClass, medal, compact }: { tool: ToolPublicView; rank: string; rankClass: string; medal?: "silver" | "bronze"; compact?: boolean }) {
     const score = computeEditorialScore(tool);
     const iconUrl = iconUrlFor(tool);
     const initial = initialFor(tool.name);
@@ -330,10 +374,18 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     return (
       <Link
         href={`/toools/${tool.slug}`}
-        className={`def-podium__card ${rankClass}`}
+        className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}`}
         aria-label={`Posizione ${rank}: apri ${tool.name}`}
       >
         <span className="def-podium__rank" aria-hidden="true">{rank}</span>
+        {medal ? (
+          <span className={`def-podium__medal def-podium__medal--${medal}`} aria-hidden="true">
+            <svg viewBox="0 0 40 26" fill="none">
+              <path d="M5 22 L9 9 L15 16 L20 7 L25 16 L31 9 L35 22 Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+              <circle cx="20" cy="5" r="1.8" fill="currentColor" />
+            </svg>
+          </span>
+        ) : null}
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -419,7 +471,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
       <div className="def-podium__stage" role="list" aria-label="Podio dei tool">
         {top3[0] ? (
           <div role="listitem" className="def-podium__cell pos-second">
-            <StageCard tool={top3[0]} rank="02" rankClass="is-top" />
+            <StageCard tool={top3[0]} rank="02" rankClass="is-top" medal="silver" />
           </div>
         ) : null}
         {top3[1] ? (
@@ -429,17 +481,17 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         ) : null}
         {top3[2] ? (
           <div role="listitem" className="def-podium__cell pos-third">
-            <StageCard tool={top3[2]} rank="03" rankClass="is-top" />
+            <StageCard tool={top3[2]} rank="03" rankClass="is-top" medal="bronze" />
           </div>
         ) : null}
       </div>
       {rest.length > 0 ? (
-        <div ref={railRef} className="def-podium__rail" role="list" aria-label="Posizioni 04 e 05">
+        <div className="def-podium__more" role="list" aria-label={`Posizioni 04${rest.length > 2 ? ", 05 e 06" : " e 05"}`}>
           {rest.map((tool, i) => {
             const rank = String(i + 4).padStart(2, "0");
             return (
               <div key={tool.slug} role="listitem" className="def-podium__cell is-rest">
-                <StageCard tool={tool} rank={rank} rankClass="is-rest" />
+                <StageCard tool={tool} rank={rank} rankClass="is-rest" compact />
               </div>
             );
           })}
