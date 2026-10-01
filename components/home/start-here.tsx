@@ -250,15 +250,18 @@ function IvoryEditorial({
   return (
     <div className="def-editorial tv-tool-mode" aria-label="In evidenza">
       <div className="def-editorial__inner">
-        <Link
-          href={`/toools/${focusTool.slug}`}
+        <div
           className="def-editorial__spotlight tv-featured-tool"
           data-spotlight={focusTool.slug}
           key={focusTool.slug}
-          aria-label={`Apri ${focusTool.name}`}
         >
           <span className="tv-featured-tool__meteor" aria-hidden="true" data-meteor="" />
           <span className="tv-featured-tool__sparks" aria-hidden="true" data-sparks="" />
+          <Link
+            href={`/toools/${focusTool.slug}`}
+            className="tv-featured-tool__stretch"
+            aria-label={`Apri ${focusTool.name}`}
+          />
           <div className="def-editorial__spot-body">
             <p className="def-editorial__spot-eyebrow">Scelta della redazione</p>
             <div className="def-editorial__spot-head">
@@ -313,7 +316,7 @@ function IvoryEditorial({
                   rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
                   className="tv-featured-tool__external"
                   aria-label={isAffiliateLink ? `Visita sito di ${focusTool.name} (link affiliato)` : `Visita sito di ${focusTool.name}`}
-                  onClick={(e) => e.stopPropagation()}
+                  
                 >
                   Visita sito
                   <ExternalLink size={12} aria-hidden="true" />
@@ -326,7 +329,7 @@ function IvoryEditorial({
               </p>
             ) : null}
           </div>
-        </Link>
+        </div>
 
         <LatestFromCatalog tools={tools} />
       </div>
@@ -388,7 +391,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         href={`/toools/${tool.slug}`}
         className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}${isSelected ? " is-selected" : ""}`}
         aria-label={`Posizione ${rank}: apri ${tool.name}`}
-        aria-pressed={isSelected}
+        data-selected={isSelected || undefined}
         onClick={onSelect}
       >
         {laurel ? <RankLaurels tone={laurel} compact /> : null}
@@ -460,7 +463,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         href={`/toools/${tool.slug}`}
         className={`def-podium__card is-first${isSelected ? " is-selected" : ""}`}
         aria-label={`Posizione 01: apri ${tool.name}`}
-        aria-pressed={isSelected}
+        data-selected={isSelected || undefined}
         onClick={onSelect}
       >
         <span className="def-podium__crown" aria-hidden="true">

@@ -68,7 +68,8 @@ describe("home podium contract", () => {
     expect(tsx).toContain("handleCellClick");
     expect(tsx).toContain("has-focus-");
     expect(tsx).toContain("onClick");
-    expect(tsx).toContain("aria-pressed");
+    expect(tsx).toContain("data-selected");
+    expect(tsx).not.toContain("aria-pressed");
     /* No ranking reorder: visual order stays 02/01/03 in source. */
     const stage = tsx.slice(tsx.indexOf("def-podium__stage"), tsx.indexOf("def-podium__more"));
     expect(stage.indexOf("pos-second")).toBeLessThan(stage.indexOf("pos-first"));
@@ -110,6 +111,16 @@ describe("home podium contract", () => {
     expect(css).toContain("translateX(-5px) scale(1.05)");
     expect(css).not.toContain("translateX(3px) scale(1.05)");
     expect(css).not.toContain("translateX(-3px) scale(1.05)");
+  });
+
+  it("keeps keyboard navigation native (no two-step for keyboard users)", () => {
+    const tsx = read("components/home/start-here.tsx");
+    // handleCellClick only preventDefault when selecting (first tap), not when already selected
+    expect(tsx).toContain("if (selectedPos !== pos)");
+    expect(tsx).toContain("e.preventDefault()");
+    // When already selected, Link navigates naturally (no preventDefault)
+    const handler = tsx.slice(tsx.indexOf("handleCellClick"), tsx.indexOf("handleCellClick") + 300);
+    expect(handler).not.toContain("window.location");
   });
 
   it("keeps the top-3 stage viewport-safe (no bleed, no rail clipping)", () => {

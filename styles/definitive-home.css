@@ -125,8 +125,20 @@
   padding: clamp(18px, 4.5vw, 28px);
   overflow: hidden;
   color: #fff;
-  text-decoration: none;
   display: block;
+  position: relative;
+}
+/* Stretched link: covers the whole card surface as the primary action.
+   The "Visita sito" link sits above it in z-index. No nested anchors. */
+.tv-featured-tool__stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+}
+.tv-featured-tool__stretch:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent);
+  outline-offset: 2px;
 }
 /* Luminous stage dressing: violet energy wash + gold arc + star field.
    Static layer (no per-frame cost); the meteor owns the motion. */
@@ -338,7 +350,8 @@
   34% { opacity: 0.85; transform: scale(1.05); }
   42%, 100% { opacity: 0.35; transform: scale(0.96); }
 }
-/* Featured CTA footer: integrated inside the card. */
+/* Featured CTA footer: integrated inside the card. Sits above the
+   stretched link so "Visita sito" remains independently clickable. */
 .tv-featured-tool__footer {
   display: flex;
   align-items: center;
@@ -347,6 +360,8 @@
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid color-mix(in srgb, white 10%, transparent);
+  position: relative;
+  z-index: 3;
 }
 .tv-featured-tool__cta {
   display: inline-flex;

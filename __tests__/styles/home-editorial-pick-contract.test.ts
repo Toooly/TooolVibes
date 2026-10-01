@@ -95,6 +95,31 @@ describe("home editorial pick contract", () => {
     expect(css).toContain(".tv-featured-tool__footer {");
   });
 
+  it("uses valid HTML: no nested interactive elements in featured card", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("tv-featured-tool__stretch");
+    expect(tsx).not.toContain("stopPropagation");
+    // The stretched link is a separate Link, not wrapping the external link
+    const stretchIdx = tsx.indexOf("tv-featured-tool__stretch");
+    const externalIdx = tsx.indexOf("tv-featured-tool__external");
+    expect(stretchIdx).toBeGreaterThan(-1);
+    expect(externalIdx).toBeGreaterThan(stretchIdx);
+  });
+
+  it("preserves external link security semantics", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain('target="_blank"');
+    expect(tsx).toContain("noopener noreferrer");
+    expect(tsx).toContain("sponsored noopener noreferrer");
+  });
+
+  it("has primary internal destination and separate external destination", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("tv-featured-tool__stretch");
+    expect(tsx).toContain("/toools/${focusTool.slug}");
+    expect(tsx).toContain("focusTool.url");
+  });
+
   it("rebuilds the catalog block as a ranked podium", () => {
     const tsx = read("components/home/start-here.tsx");
     expect(tsx).toContain("def-podium__rank");
