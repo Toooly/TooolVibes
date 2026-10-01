@@ -49,6 +49,37 @@ describe("home podium contract", () => {
     expect(css).toContain(".def-podium__laurels {");
   });
 
+  it("gives 02/03 metal-matched laurel decoration subordinate to 01", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain('laurel="silver"');
+    expect(tsx).toContain('laurel="bronze"');
+    expect(tsx).toContain("RankLaurels");
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".def-podium__laurels--silver");
+    expect(css).toContain(".def-podium__laurels--bronze");
+    expect(css).toContain(".def-podium__laurels--gold");
+    expect(css).toContain(".def-podium__cell.pos-second .def-podium__rank");
+    expect(css).toContain(".def-podium__cell.pos-third .def-podium__rank");
+  });
+
+  it("implements flip-to-front depth interaction without persistent state", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("pressedPos");
+    expect(tsx).toContain("has-focus-");
+    expect(tsx).toContain("onPointerDown");
+    expect(tsx).toContain("onPointerUp");
+    expect(tsx).toContain("onPointerCancel");
+    /* No ranking reorder: visual order stays 02/01/03 in source. */
+    const stage = tsx.slice(tsx.indexOf("def-podium__stage"), tsx.indexOf("def-podium__more"));
+    expect(stage.indexOf("pos-second")).toBeLessThan(stage.indexOf("pos-first"));
+    expect(stage.indexOf("pos-first")).toBeLessThan(stage.indexOf("pos-third"));
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain("perspective: 1100px");
+    expect(css).toContain(".def-podium__stage.has-focus-second .def-podium__cell.pos-second");
+    expect(css).toContain(".def-podium__stage.has-focus-first .def-podium__cell.pos-first");
+    expect(css).toContain(".def-podium__stage.has-focus-third .def-podium__cell.pos-third");
+  });
+
   it("marks 02 silver and 03 bronze and loops laurels subtly", () => {
     const tsx = read("components/home/start-here.tsx");
     expect(tsx).toContain('medal="silver"');
@@ -69,6 +100,7 @@ describe("home podium contract", () => {
     const tail = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
     expect(tail).toContain(".def-latest.is-celebrated .def-podium__stage .def-podium__cell,");
     expect(tail).toContain("animation: none");
+    expect(tail).toContain(".def-podium__stage.has-focus-second .def-podium__cell.pos-second,");
   });
 
   it("keeps the top-3 stage viewport-safe (no bleed, no rail clipping)", () => {

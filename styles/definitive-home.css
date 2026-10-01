@@ -3061,17 +3061,24 @@
     radial-gradient(60% 34% at 50% 0%, color-mix(in srgb, #8a5cff 26%, transparent), transparent 70%),
     radial-gradient(78% 22% at 50% 100%, color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 12%, transparent), transparent 70%);
 }
-/* Primary stage: 3 columns inside the safe width. 01 elevated. */
+/* Primary stage: 3 columns inside the safe width. 01 elevated.
+   Scoped perspective context: 01 FRONT CENTER, 02/03 one plane behind.
+   2.5D depth (translate/scale, NO rotate) keeps Safari text razor-sharp. */
 .def-podium__stage {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.16fr) minmax(0, 0.92fr);
+  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.22fr) minmax(0, 0.94fr);
   grid-template-areas: "second first third";
-  gap: clamp(8px, 2.4vw, 16px);
+  gap: clamp(4px, 1.4vw, 10px);
   align-items: end;
   margin: 0;
   padding: 30px 0 0;
   list-style: none;
+  perspective: 1100px;
+}
+.def-podium__stage .def-podium__cell {
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 .def-podium__stage .def-podium__cell {
   position: relative;
@@ -3082,6 +3089,25 @@
 .def-podium__cell.pos-second { grid-area: second; }
 .def-podium__cell.pos-first { grid-area: first; }
 .def-podium__cell.pos-third { grid-area: third; }
+/* Rest planes: 01 closer to the viewer, 02/03 one plane behind.
+   01 overlaps inner edges by ~2px via negative margins (inside stage). */
+.def-podium__stage .def-podium__cell.pos-first {
+  z-index: 3;
+  margin-inline: -3px;
+  transform: translateY(-7px) scale(1.03);
+}
+.def-podium__stage .def-podium__cell.pos-second {
+  z-index: 1;
+  transform: translateY(0) scale(0.97);
+}
+.def-podium__stage .def-podium__cell.pos-third {
+  z-index: 1;
+  transform: translateY(0) scale(0.97);
+}
+.def-podium__stage .def-podium__cell.pos-second .def-podium__card,
+.def-podium__stage .def-podium__cell.pos-third .def-podium__card {
+  filter: brightness(0.94);
+}
 /* Pedestals: dark cylinders with illuminated rims + floor light. */
 .def-podium__stage .def-podium__cell::after {
   content: "";
@@ -3167,6 +3193,33 @@
   font-size: clamp(1.1rem, 4.6vw, 1.5rem);
   color: var(--tv-ink-muted-aa, #aaa59b);
 }
+/* Metal identity: silver 02 / bronze 03 — unmistakable without reading. */
+.def-podium__cell.pos-second .def-podium__rank {
+  color: color-mix(in srgb, #dbe2ef 92%, white);
+  text-shadow: 0 0 14px color-mix(in srgb, #cfd6e4 45%, transparent);
+}
+.def-podium__cell.pos-third .def-podium__rank {
+  color: color-mix(in srgb, #e0aa7e 92%, white);
+  text-shadow: 0 0 14px color-mix(in srgb, #d29a6b 45%, transparent);
+}
+.def-podium__cell.pos-second .def-podium__card {
+  border-color: color-mix(in srgb, #cfd6e4 42%, transparent);
+}
+.def-podium__cell.pos-third .def-podium__card {
+  border-color: color-mix(in srgb, #d29a6b 42%, transparent);
+}
+.def-podium__stage .def-podium__cell.pos-second::after {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, #cfd6e4 52%, transparent),
+    color-mix(in srgb, #cfd6e4 10%, transparent));
+  box-shadow: 0 0 12px color-mix(in srgb, #cfd6e4 30%, transparent);
+}
+.def-podium__stage .def-podium__cell.pos-third::after {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, #d29a6b 52%, transparent),
+    color-mix(in srgb, #d29a6b 10%, transparent));
+  box-shadow: 0 0 12px color-mix(in srgb, #d29a6b 30%, transparent);
+}
 .def-podium__card.is-first .def-podium__rank {
   font-size: clamp(2rem, 8vw, 2.6rem);
   color: var(--tv-accent-gold-on-dark, #e4b23c);
@@ -3198,28 +3251,39 @@
   animation: tv-laurel-sway var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
 }
 @keyframes tv-laurel-sway {
-  0%, 100% { opacity: 0.8; transform: rotate(-1.6deg); }
-  50% { opacity: 0.95; transform: rotate(1.6deg); }
+  0%, 100% { opacity: 0.72; transform: rotate(-2.6deg); }
+  50% { opacity: 1; transform: rotate(2.6deg); }
 }
 /* Glow pulse: hero rank + medals breathe gently on the same clock. */
 .def-latest .def-podium__card.is-first .def-podium__rank {
   animation: tv-podium-glow 1.4s var(--tv-easing-decelerate) 0.25s both, tv-rank-breathe var(--tv-spot-cycle, 12s) var(--tv-easing-standard) 1.6s infinite;
 }
 @keyframes tv-rank-breathe {
-  0%, 100% { text-shadow: 0 0 14px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 28%, transparent); }
-  50% { text-shadow: 0 0 22px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 48%, transparent); }
+  0%, 100% { text-shadow: 0 0 12px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 24%, transparent); }
+  50% { text-shadow: 0 0 26px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 58%, transparent); }
 }
 .def-podium__laurels svg {
   width: 100%;
   height: 100%;
   display: block;
 }
+.def-podium__laurels--gold {
+  color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
+}
+.def-podium__laurels--silver {
+  color: color-mix(in srgb, #cfd6e4 42%, transparent);
+  inset: 26px -4px 2px;
+}
+.def-podium__laurels--bronze {
+  color: color-mix(in srgb, #d29a6b 42%, transparent);
+  inset: 26px -4px 2px;
+}
 /* Rank marks: silver for 02, bronze for 03 — sober siblings of the crown. */
 .def-podium__medal {
   display: block;
-  width: 30px;
-  height: 20px;
-  margin-top: -2px;
+  width: 38px;
+  height: 25px;
+  margin-top: -4px;
   pointer-events: none;
   animation: tv-medal-shimmer var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
 }
@@ -3237,7 +3301,7 @@
   filter: drop-shadow(0 0 5px color-mix(in srgb, #d29a6b 55%, transparent));
 }
 @keyframes tv-medal-shimmer {
-  0%, 100% { opacity: 0.75; }
+  0%, 100% { opacity: 0.62; }
   50% { opacity: 1; }
 }
 .def-podium__avatar {
@@ -3357,6 +3421,47 @@
   padding-top: 2px;
 }
 /* Tap: press compression + rank-aware edge flare, immediate, ~180ms. */
+/* Flip-to-front: the pressed cell comes toward the viewer (2.5D depth:
+   lift + scale + stronger floor light), siblings recede slightly.
+   Geometry-aware: selected 02 shifts INWARD (+x), selected 03 shifts
+   INWARD (-x), so scaled cards never cross the safe stage bounds.
+   180–200ms, navigation never waits. */
+.def-podium__stage .def-podium__cell {
+  transition: transform 190ms var(--tv-easing-standard), filter 190ms var(--tv-easing-standard);
+}
+.def-podium__stage.has-focus-second .def-podium__cell.pos-second {
+  z-index: 5;
+  transform: translateY(-9px) translateX(3px) scale(1.05);
+}
+.def-podium__stage.has-focus-first .def-podium__cell.pos-first {
+  z-index: 5;
+  transform: translateY(-11px) scale(1.05);
+}
+.def-podium__stage.has-focus-third .def-podium__cell.pos-third {
+  z-index: 5;
+  transform: translateY(-9px) translateX(-3px) scale(1.05);
+}
+.def-podium__stage.has-focus-second .def-podium__cell.pos-first,
+.def-podium__stage.has-focus-second .def-podium__cell.pos-third,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-second,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-third,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-first,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-second {
+  transform: translateY(1px) scale(0.98);
+}
+.def-podium__stage.has-focus-second .def-podium__cell.pos-second .def-podium__card,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-third .def-podium__card,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-first .def-podium__card {
+  filter: brightness(1.06);
+}
+.def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card,
+.def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
+  filter: brightness(0.9);
+}
 .def-podium__card:active {
   transform: scale(0.96);
   border-color: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 75%, transparent);
@@ -3373,7 +3478,9 @@
 }
 /* Entrance: one-shot rise + hero glow, driven by .is-celebrated. */
 .def-latest.is-celebrated .def-podium__stage .def-podium__cell {
-  animation: tv-podium-rise 0.6s var(--tv-easing-decelerate) both;
+  /* backwards (not both): after the entrance the fill must release so the
+     depth/flip transforms own the cells. */
+  animation: tv-podium-rise 0.6s var(--tv-easing-decelerate) backwards;
 }
 .def-latest.is-celebrated .def-podium__stage .def-podium__cell.pos-first {
   animation-delay: 0.02s;
@@ -3437,8 +3544,14 @@
   }
   .def-podium__card,
   .def-podium__card:active,
-  .def-podium__card.is-first:active {
+  .def-podium__card.is-first:active,
+  .def-podium__stage .def-podium__cell {
     transition: none;
+    transform: none;
+  }
+  .def-podium__stage.has-focus-second .def-podium__cell.pos-second,
+  .def-podium__stage.has-focus-first .def-podium__cell.pos-first,
+  .def-podium__stage.has-focus-third .def-podium__cell.pos-third {
     transform: none;
   }
 }

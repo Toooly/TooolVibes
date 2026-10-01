@@ -350,6 +350,9 @@ function IvoryEditorial({
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const podiumRef = useRef<HTMLElement | null>(null);
   const celebrated = useRef(false);
+  /* Forward-focus: which top-3 cell is being pressed. Pure interaction
+     feedback — no ranking/product state, cleared on release/cancel. */
+  const [pressedPos, setPressedPos] = useState<"second" | "first" | "third" | null>(null);
 
   useEffect(() => {
     const podium = podiumRef.current;
@@ -379,7 +382,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const top3 = [ranked[1], ranked[0], ranked[2]].filter(Boolean) as ToolPublicView[];
   const rest = ranked.slice(3, 6);
 
-  function StageCard({ tool, rank, rankClass, medal, compact }: { tool: ToolPublicView; rank: string; rankClass: string; medal?: "silver" | "bronze"; compact?: boolean }) {
+  function StageCard({ tool, rank, rankClass, medal, compact, laurel }: { tool: ToolPublicView; rank: string; rankClass: string; medal?: "silver" | "bronze"; compact?: boolean; laurel?: "silver" | "bronze" }) {
     const score = computeEditorialScore(tool);
     const iconUrl = iconUrlFor(tool);
     const initial = initialFor(tool.name);
@@ -391,6 +394,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}`}
         aria-label={`Posizione ${rank}: apri ${tool.name}`}
       >
+        {laurel ? <RankLaurels tone={laurel} compact /> : null}
         <span className="def-podium__rank" aria-hidden="true">{rank}</span>
         {medal ? (
           <span className={`def-podium__medal def-podium__medal--${medal}`} aria-hidden="true">
@@ -420,6 +424,25 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     );
   }
 
+  /* Rank laurels: restrained stylized branches framing a prestige card.
+     Full span for 01 gold; compact (~65%) for 02 silver / 03 bronze. */
+  function RankLaurels({ tone, compact }: { tone: "gold" | "silver" | "bronze"; compact?: boolean }) {
+    return (
+      <span className={`def-podium__laurels def-podium__laurels--${tone}${compact ? " is-compact" : ""}`} aria-hidden="true">
+        <svg viewBox="0 0 120 96" fill="none">
+          <path d="M28 88 C16 72 10 52 12 30" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M92 88 C104 72 110 52 108 30" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <ellipse cx="17" cy="70" rx="6" ry="3" transform="rotate(-38 17 70)" fill="currentColor" opacity="0.9" />
+          <ellipse cx="14" cy="55" rx="6" ry="3" transform="rotate(-22 14 55)" fill="currentColor" opacity="0.9" />
+          <ellipse cx="15" cy="40" rx="5.5" ry="2.8" transform="rotate(-6 15 40)" fill="currentColor" opacity="0.9" />
+          <ellipse cx="103" cy="70" rx="6" ry="3" transform="rotate(38 103 70)" fill="currentColor" opacity="0.9" />
+          <ellipse cx="106" cy="55" rx="6" ry="3" transform="rotate(22 106 55)" fill="currentColor" opacity="0.9" />
+          <ellipse cx="105" cy="40" rx="5.5" ry="2.8" transform="rotate(6 105 40)" fill="currentColor" opacity="0.9" />
+        </svg>
+      </span>
+    );
+  }
+
   function WinnerCard({ tool }: { tool: ToolPublicView }) {
     const score = computeEditorialScore(tool);
     const iconUrl = iconUrlFor(tool);
@@ -440,18 +463,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
             <circle cx="40" cy="8" r="2.2" fill="currentColor" />
           </svg>
         </span>
-        <span className="def-podium__laurels" aria-hidden="true">
-          <svg viewBox="0 0 120 96" fill="none">
-            <path d="M28 88 C16 72 10 52 12 30" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            <path d="M92 88 C104 72 110 52 108 30" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            <ellipse cx="17" cy="70" rx="6" ry="3" transform="rotate(-38 17 70)" fill="currentColor" opacity="0.9" />
-            <ellipse cx="14" cy="55" rx="6" ry="3" transform="rotate(-22 14 55)" fill="currentColor" opacity="0.9" />
-            <ellipse cx="15" cy="40" rx="5.5" ry="2.8" transform="rotate(-6 15 40)" fill="currentColor" opacity="0.9" />
-            <ellipse cx="103" cy="70" rx="6" ry="3" transform="rotate(38 103 70)" fill="currentColor" opacity="0.9" />
-            <ellipse cx="106" cy="55" rx="6" ry="3" transform="rotate(22 106 55)" fill="currentColor" opacity="0.9" />
-            <ellipse cx="105" cy="40" rx="5.5" ry="2.8" transform="rotate(6 105 40)" fill="currentColor" opacity="0.9" />
-          </svg>
-        </span>
+        <RankLaurels tone="gold" />
         <span className="def-podium__rank" aria-hidden="true">01</span>
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
@@ -482,20 +494,45 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         <p className="def-podium__subtitle">I tool più discussi questa settimana.</p>
       </div>
       <div className="def-podium__backdrop" aria-hidden="true" />
-      <div className="def-podium__stage" role="list" aria-label="Podio dei tool">
+      <div
+        className={"def-podium__stage" + (pressedPos ? " has-focus-" + pressedPos : "")}
+        role="list"
+        aria-label="Podio dei tool"
+      >
         {top3[0] ? (
-          <div role="listitem" className="def-podium__cell pos-second">
-            <StageCard tool={top3[0]} rank="02" rankClass="is-top" medal="silver" />
+          <div
+            role="listitem"
+            className="def-podium__cell pos-second"
+            onPointerDown={() => setPressedPos("second")}
+            onPointerUp={() => setPressedPos(null)}
+            onPointerCancel={() => setPressedPos(null)}
+            onPointerLeave={() => setPressedPos(null)}
+          >
+            <StageCard tool={top3[0]} rank="02" rankClass="is-top" medal="silver" laurel="silver" />
           </div>
         ) : null}
         {top3[1] ? (
-          <div role="listitem" className="def-podium__cell pos-first">
+          <div
+            role="listitem"
+            className="def-podium__cell pos-first"
+            onPointerDown={() => setPressedPos("first")}
+            onPointerUp={() => setPressedPos(null)}
+            onPointerCancel={() => setPressedPos(null)}
+            onPointerLeave={() => setPressedPos(null)}
+          >
             <WinnerCard tool={top3[1]} />
           </div>
         ) : null}
         {top3[2] ? (
-          <div role="listitem" className="def-podium__cell pos-third">
-            <StageCard tool={top3[2]} rank="03" rankClass="is-top" medal="bronze" />
+          <div
+            role="listitem"
+            className="def-podium__cell pos-third"
+            onPointerDown={() => setPressedPos("third")}
+            onPointerUp={() => setPressedPos(null)}
+            onPointerCancel={() => setPressedPos(null)}
+            onPointerLeave={() => setPressedPos(null)}
+          >
+            <StageCard tool={top3[2]} rank="03" rankClass="is-top" medal="bronze" laurel="bronze" />
           </div>
         ) : null}
       </div>
