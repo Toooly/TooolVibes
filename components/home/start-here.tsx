@@ -61,37 +61,51 @@ function initialFor(name: string) {
   return name.slice(0, 2).toUpperCase();
 }
 
-/* Micro editorial reasons: up to 3 compact badges explaining WHY this tool
-   is the editors' pick. Fully data-driven — derived from canonical fields
-   (score, level, tags, useCases). No identity hardcoding. Order: speed →
-   ease → quality, max one per family. */
+/* Micro editorial reasons: up to 3 compact pills explaining the pick.
+   GROUNDED LOGIC — every label is a literal canonical datum, never an
+   inferred benefit claim:
+   1. canonical tags (e.g. "Vibe coding", "No-code") — editorial taxonomy;
+   2. canonical categoryLabel when it adds a distinct facet;
+   3. canonical useCases — first use case, truncated, only when it states a
+      concrete job (no time/ease/quality inference added);
+   4. canonical levelLabel ("Livello Base") as the closing facet.
+   No time-to-result, ease, quality or performance claims are synthesized. */
 function editorialReasonsFor(tool: ToolPublicView): string[] {
-  const hay = [
-    tool.categoryLabel ?? "",
-    tool.category ?? "",
-    ...(tool.tags ?? []),
-    ...(tool.useCases ?? []),
-    ...(tool.highlights ?? []),
-    tool.shortDescription ?? "",
-    tool.levelLabel ?? "",
-  ]
-    .join(" \n ")
-    .toLowerCase();
-  const has = (...needles: string[]) => needles.some((n) => hay.includes(n));
+  const seen = new Set<string>();
   const reasons: string[] = [];
-  if (has("minut", "ore invece", "veloc", "rapid", "acceler", "subito", "ore", "fast", "rapid")) {
-    reasons.push("Risultato in poche ore");
+  const push = (label: string) => {
+    const clean = label.trim().replace(/\s+/g, " ");
+    if (clean.length < 2 || clean.length > 42) return;
+    const key = clean.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    reasons.push(clean);
+  };
+  const category = (tool.categoryLabel ?? "").trim();
+  for (const tag of tool.tags ?? []) {
+    if (reasons.length >= 2) break;
+    const clean = tag.trim();
+    if (category && clean.toLowerCase() !== category.toLowerCase()) {
+      push(clean);
+    }
   }
-  if (has("base", "beginner", "facile", "semplice", "dolce", "senza ripartire", "no-code", "no code", "easy")) {
-    reasons.push("Facile anche da zero");
+  if (reasons.length < 2 && category) {
+    push(category);
   }
-  if (
-    has("produzione", "serio", "completa", "completo", "backend", "pubblica", "qualit", "solido", "production")
-  ) {
-    reasons.push("Output di qualità");
+  const firstUseCase = (tool.useCases ?? []).map((u) => u.trim()).find((u) => u.length > 0);
+  if (firstUseCase && reasons.length < 3) {
+    /* Word-boundary truncation: never cut a word, never alter meaning. */
+    const words = firstUseCase.split(/\s+/);
+    let short = "";
+    for (const word of words) {
+      const next = short ? `${short} ${word}` : word;
+      if (next.length > 40) break;
+      short = next;
+    }
+    push(short.length >= 12 ? (short.length < firstUseCase.length ? `${short}…` : short) : firstUseCase.slice(0, 40).trimEnd());
   }
-  if (reasons.length === 0 && tool.levelLabel) {
-    reasons.push(`Livello ${tool.levelLabel}`);
+  if (reasons.length < 3 && tool.levelLabel) {
+    push(`Livello ${tool.levelLabel}`);
   }
   return reasons.slice(0, 3);
 }
