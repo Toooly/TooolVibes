@@ -87,28 +87,50 @@
 /* ============================================================
    Scelta della redazione — featured/winner motion language.
    Scoped strictly to .tv-featured-tool. One shared ambient clock
-   (--tv-spot-cycle: 9s): bar sweep (0-9%) → calm → aura pulse
-   (33-42%) → calm → edge sparks (66-75%) → long calm. The three
+   (--tv-spot-cycle: 12s): bar sweep (0-8%) → calm → aura pulse
+   (30-40%) → calm → edge sparks (62-72%) → long calm. The three
    effects never peak together. All motion is transform/opacity only.
+   The featured CTA row below the card and the podium ranking live
+   in the same .def-editorial flow but outside the card's clock.
    ============================================================ */
 .tv-featured-tool {
-  --tv-spot-cycle: 9s;
+  --tv-spot-cycle: 12s;
   isolation: isolate;
+}
+/* The featured card: real editorial surface, not a transparent ghost.
+   Deep violet-ink panel, hairline gold edge, restrained presence. */
+.tv-featured-tool.def-editorial__spotlight {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 38%, transparent);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, white 5%, transparent), transparent 34%),
+    linear-gradient(160deg,
+      color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 16%, var(--tv-surface-raised)),
+      var(--tv-surface-raised) 55%);
+  box-shadow:
+    0 18px 44px color-mix(in srgb, black 42%, transparent),
+    0 0 0 1px color-mix(in srgb, black 30%, transparent),
+    0 0 26px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 16%, transparent);
+  padding: clamp(18px, 4.5vw, 28px);
+  overflow: hidden;
 }
 /* Kicker: warm editorial yellow, crisp text, restrained halo. */
 .tv-featured-tool .def-editorial__spot-eyebrow {
   position: relative;
   color: var(--tv-accent-gold-on-dark, #f5c968);
   text-shadow:
-    0 0 1px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 60%, transparent),
-    0 0 14px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 28%, transparent);
+    0 0 1px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 65%, transparent),
+    0 0 16px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 32%, transparent);
 }
-/* Left editorial bar: stable geometry, traveling energy sweep. */
+/* Left editorial bar: stable geometry, VISIBLE traveling energy sweep. */
 .tv-featured-tool .def-editorial__spot-eyebrow::before {
   position: relative;
   overflow: hidden;
-  width: 18px;
-  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 55%, transparent);
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 30%, transparent);
   box-shadow: none;
 }
 .tv-featured-tool .def-editorial__spot-eyebrow::after {
@@ -116,145 +138,343 @@
   position: absolute;
   left: 0;
   top: 50%;
-  width: 18px;
+  width: 22px;
   height: 3px;
   border-radius: 2px;
-  transform: translateY(-50%) translateX(-20px) scaleX(0.4);
+  transform: translateY(-50%) translateX(-24px);
   opacity: 0;
-  background: linear-gradient(90deg, transparent, var(--tv-accent-gold-on-dark, #f5c968));
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent));
+  background: linear-gradient(90deg, transparent, #ffe9b8 45%, var(--tv-accent-gold-on-dark, #f5c968));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 90%, transparent));
   pointer-events: none;
   animation: tv-spot-bar-sweep var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
 }
 @keyframes tv-spot-bar-sweep {
-  0%, 7% { transform: translateY(-50%) translateX(-20px) scaleX(0.4); opacity: 0; }
-  1.5% { opacity: 1; }
-  5.5% { transform: translateY(-50%) translateX(2px) scaleX(1); opacity: 1; }
-  9%, 100% { transform: translateY(-50%) translateX(4px) scaleX(1); opacity: 0; }
+  0%, 6.5% { transform: translateY(-50%) translateX(-24px); opacity: 0; }
+  1% { opacity: 1; }
+  5% { transform: translateY(-50%) translateX(0); opacity: 1; }
+  8%, 100% { transform: translateY(-50%) translateX(3px); opacity: 0; }
 }
-/* Featured edge: whisper of winner light on the card sides. */
-.tv-featured-tool::before {
+/* Featured edge: readable winner light hugging the card sides. */
+.tv-featured-tool.def-editorial__spotlight::before {
   content: "";
   position: absolute;
-  inset: 8px -6px;
-  border-radius: 18px;
-  border-inline: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 32%, transparent);
+  inset: 0;
+  border-radius: inherit;
+  border-inline: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 45%, transparent);
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 10%, transparent),
-    transparent 28% 72%,
-    color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 10%, transparent));
-  opacity: 0.8;
+    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 13%, transparent),
+    transparent 26% 74%,
+    color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 13%, transparent));
+  opacity: 0.9;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
 }
-/* Celebration sparks: 6 deterministic edge glints, one shared clock. */
+/* Celebration sparks: 8 readable edge glints, one shared clock.
+   Single node; two pseudo layers × box-shadow pairs. Static-visible
+   at rest (opacity floor), rising briefly at the celebration peak. */
 .tv-featured-tool__sparks {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0;
-  animation: tv-spot-sparks-veil var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
+  opacity: 1;
 }
 .tv-featured-tool__sparks::before,
 .tv-featured-tool__sparks::after {
   content: "";
   position: absolute;
-  top: 18%;
-  width: 5px;
-  height: 5px;
-  border-radius: 1px;
-  transform: rotate(45deg) scale(0.4);
-  opacity: 0;
-}
-.tv-featured-tool__sparks::before {
-  left: -2px;
+  top: 22%;
+  width: 6px;
+  height: 6px;
+  border-radius: 1.5px;
+  transform: rotate(45deg);
   background: var(--tv-accent-gold-on-dark, #f5c968);
-  box-shadow:
-    -4px 26px 0 -1px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 75%, transparent),
-    -2px 52px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 80%, transparent);
-}
-.tv-featured-tool__sparks::after {
-  right: -2px;
-  background: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 85%, white);
-  box-shadow:
-    4px 26px 0 -1px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 75%, transparent),
-    2px 52px 0 -1.5px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent);
-}
-.tv-featured-tool__sparks::before,
-.tv-featured-tool__sparks::after {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent);
   animation: tv-spot-spark-rise var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
 }
-@keyframes tv-spot-sparks-veil {
-  0%, 64% { opacity: 0; }
-  66% { opacity: 1; }
-  76%, 100% { opacity: 0; }
+.tv-featured-tool__sparks::before {
+  left: 8px;
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent),
+    -3px 30px 0 -1px var(--tv-accent-gold-on-dark, #f5c968),
+    -4px 60px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white),
+    -2px 92px 0 -2px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent);
+}
+.tv-featured-tool__sparks::after {
+  right: 8px;
+  background: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 85%, white);
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 70%, transparent),
+    3px 30px 0 -1px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white),
+    4px 60px 0 -1.5px var(--tv-accent-gold-on-dark, #f5c968),
+    2px 92px 0 -2px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 80%, transparent);
 }
 @keyframes tv-spot-spark-rise {
-  0%, 64% { opacity: 0; transform: rotate(45deg) translateY(6px) scale(0.4); }
-  68% { opacity: 1; }
-  75%, 100% { opacity: 0; transform: rotate(45deg) translateY(-10px) scale(0.9); }
+  0%, 60% { opacity: 0.55; transform: rotate(45deg) translateY(3px) scale(0.85); }
+  64% { opacity: 1; }
+  72%, 100% { opacity: 0.55; transform: rotate(45deg) translateY(-7px) scale(1); }
 }
 /* Logo aura: halo breathes behind a geometrically stable logo. */
 .tv-featured-tool .def-editorial__spot-avatar {
   position: relative;
   isolation: isolate;
+  overflow: visible;
+  border-color: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 45%, transparent);
 }
 .tv-featured-tool .def-editorial__spot-avatar::before {
   content: "";
   position: absolute;
-  inset: -5px;
-  border-radius: 16px;
-  border: 1px solid color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 38%, transparent);
+  inset: -6px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 55%, transparent);
   background: radial-gradient(circle at 50% 45%,
-    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 20%, transparent),
+    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 30%, transparent),
     transparent 70%);
-  opacity: 0.35;
+  opacity: 0.5;
   z-index: -1;
   pointer-events: none;
   animation: tv-spot-aura var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
 }
 @keyframes tv-spot-aura {
-  0%, 30% { opacity: 0.22; transform: scale(0.97); }
-  36% { opacity: 0.6; transform: scale(1.03); }
-  44%, 100% { opacity: 0.22; transform: scale(0.97); }
+  0%, 28% { opacity: 0.35; transform: scale(0.96); }
+  34% { opacity: 0.85; transform: scale(1.05); }
+  42%, 100% { opacity: 0.35; transform: scale(0.96); }
+}
+/* Featured CTA row: natural continuation directly under the card. */
+.tv-featured-tool__cta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+/* The featured flow stacks vertically at every width: card, CTA row,
+   then podium — never side-by-side in the desktop editorial grid. */
+.def-editorial__inner > .tv-featured-tool,
+.def-editorial__inner > .tv-featured-tool__cta-row,
+.def-editorial__inner > .def-latest {
+  grid-column: 1 / -1;
+}
+@media (min-width: 48rem) {
+  .def-editorial__inner > .tv-featured-tool,
+  .def-editorial__inner > .tv-featured-tool__cta-row {
+    max-width: 60rem;
+    width: 100%;
+    margin-inline: auto;
+  }
+}
+.tv-featured-tool__cta-row .def-editorial__spot-actions {
+  margin-top: 0 !important;
 }
 /* Reading calm: content always above decoration, never shifted. */
 .tv-featured-tool .def-editorial__spot-body {
   position: relative;
   z-index: 1;
+  gap: 14px;
 }
-/* Restrained on mobile: fewer/smaller sparks, no viewport-edge touch. */
+/* Restrained on mobile: 6 smaller sparks, tighter travel. */
 @media (max-width: 47.99rem) {
-  .tv-featured-tool::before { inset: 10px -2px; opacity: 0.4; }
+  .tv-featured-tool.def-editorial__spotlight::before { opacity: 0.75; }
   .tv-featured-tool__sparks::before {
+    left: 6px;
     box-shadow:
-      -2px 22px 0 -1.5px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 75%, transparent);
+      0 0 7px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent),
+      -2px 28px 0 -1.5px var(--tv-accent-gold-on-dark, #f5c968),
+      -3px 56px 0 -2px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white);
   }
   .tv-featured-tool__sparks::after {
+    right: 6px;
     box-shadow:
-      2px 22px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 75%, transparent);
+      0 0 7px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 70%, transparent),
+      2px 28px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white),
+      3px 56px 0 -2px var(--tv-accent-gold-on-dark, #f5c968);
   }
   @keyframes tv-spot-spark-rise {
-    0%, 64% { opacity: 0; transform: rotate(45deg) translateY(4px) scale(0.35); }
-    68% { opacity: 1; }
-    75%, 100% { opacity: 0; transform: rotate(45deg) translateY(-6px) scale(0.8); }
+    0%, 60% { opacity: 0.55; transform: rotate(45deg) translateY(2px) scale(0.8); }
+    64% { opacity: 1; }
+    72%, 100% { opacity: 0.55; transform: rotate(45deg) translateY(-5px) scale(0.95); }
   }
-  .tv-featured-tool .def-editorial__spot-avatar::before { inset: -3px; }
+  .tv-featured-tool .def-editorial__spot-avatar::before { inset: -4px; }
 }
 /* Reduced motion: static featured hierarchy, zero travel. */
 @media (prefers-reduced-motion: reduce) {
   .tv-featured-tool .def-editorial__spot-eyebrow::after,
-  .tv-featured-tool__sparks,
   .tv-featured-tool__sparks::before,
   .tv-featured-tool__sparks::after,
   .tv-featured-tool .def-editorial__spot-avatar::before {
     animation: none;
   }
   .tv-featured-tool .def-editorial__spot-eyebrow::after { opacity: 0; }
-  .tv-featured-tool__sparks { opacity: 0; }
-  .tv-featured-tool .def-editorial__spot-avatar::before { opacity: 0.35; }
-  .tv-featured-tool::before { opacity: 0.8; }
+  .tv-featured-tool__sparks::before,
+  .tv-featured-tool__sparks::after { opacity: 0.7; transform: rotate(45deg); }
+  .tv-featured-tool .def-editorial__spot-avatar::before { opacity: 0.5; }
+  .tv-featured-tool.def-editorial__spotlight::before { opacity: 0.9; }
+}
+/* ============================================================
+   Ultime dal catalogo — true editorial podium.
+   Mobile: 01 dominant center; 02/03 compact below.
+   Desktop: 01 clearly dominant in a 3-column podium grid.
+   ============================================================ */
+.def-latest {
+  margin-top: clamp(22px, 5vw, 34px);
+  padding-top: clamp(18px, 4vw, 26px);
+  border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 10%, transparent);
+}
+.def-podium__header {
+  align-items: flex-start;
+  text-align: left;
+  margin-bottom: var(--tv-rhythm-related-lg, 1rem);
+}
+.def-podium__title {
+  font-family: var(--tv-font-family-ui);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tv-ink-secondary);
+  line-height: 1.4;
+}
+.def-podium__subtitle {
+  font-size: 0.8125rem;
+}
+.def-podium__stage {
+  display: grid;
+  gap: 10px;
+}
+.def-podium__lead-link {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "rank name score"
+    "rank cat score"
+    "avatar avatar avatar";
+  align-items: center;
+  column-gap: 14px;
+  width: 100%;
+  padding: clamp(16px, 4vw, 22px) clamp(16px, 4vw, 22px) clamp(14px, 3.5vw, 18px);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 32%, transparent);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, white 4%, transparent), transparent 40%),
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 12%, var(--tv-surface-raised)),
+      var(--tv-surface-raised) 60%);
+  box-shadow:
+    0 14px 34px color-mix(in srgb, black 38%, transparent),
+    0 0 22px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 10%, transparent);
+  overflow: hidden;
+  isolation: isolate;
+}
+.def-podium__lead-rank {
+  grid-area: rank;
+  font-size: clamp(2.4rem, 9vw, 3.2rem);
+  color: var(--tv-accent-gold-on-dark, #e4b23c);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 35%, transparent);
+}
+.def-podium__lead-name {
+  grid-area: name;
+  font-size: clamp(1.3rem, 5vw, 1.6rem);
+  margin-top: 0;
+  text-align: left;
+}
+.def-podium__lead-cat {
+  grid-area: cat;
+  text-align: left;
+}
+.def-podium__lead-score {
+  grid-area: score;
+  font-size: 1.35rem;
+}
+.def-podium__wreath-wrap {
+  grid-area: avatar;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 6px;
+}
+.def-podium__wreath {
+  display: none;
+}
+.def-podium__lead-avatar {
+  width: 56px;
+  height: 56px;
+}
+.def-podium__lead-avatar img {
+  width: 36px;
+  height: 36px;
+}
+.def-podium__pair {
+  grid-template-columns: 1fr 1fr;
+}
+.def-podium__pair-link {
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  padding: 12px;
+  gap: 10px;
+}
+.def-podium__pair-rank {
+  font-size: 1rem;
+  color: var(--tv-ink-muted-aa, #aaa59b);
+}
+.def-podium__pair-body {
+  align-items: flex-start;
+  flex: 1;
+  min-width: 0;
+}
+.def-podium__pair-name {
+  font-size: 0.9375rem;
+}
+.def-podium__pair-score {
+  font-size: 0.9375rem;
+}
+.def-latest.is-celebrated .def-podium__lead-link {
+  animation: tv-podium-rise 0.6s var(--tv-easing-decelerate) both;
+}
+.def-latest.is-celebrated .def-podium__lead-rank {
+  animation: tv-podium-glow 1.4s var(--tv-easing-decelerate) 0.25s both;
+}
+.def-latest.is-celebrated .def-podium__pair-item {
+  animation: tv-podium-rise 0.6s var(--tv-easing-decelerate) both;
+}
+.def-latest.is-celebrated .def-podium__pair-item:nth-child(2) {
+  animation-delay: 0.08s;
+}
+@keyframes tv-podium-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes tv-podium-glow {
+  from { text-shadow: 0 0 0 transparent; }
+  to { text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 35%, transparent); }
+}
+@media (min-width: 48rem) {
+  .def-podium__stage {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .def-podium__lead {
+    grid-row: span 1;
+  }
+  .def-podium__lead-link {
+    height: 100%;
+    min-height: 220px;
+    align-content: center;
+  }
+  .def-podium__pair {
+    grid-template-columns: minmax(0, 1fr);
+    margin: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .def-latest.is-celebrated .def-podium__lead-link,
+  .def-latest.is-celebrated .def-podium__lead-rank,
+  .def-latest.is-celebrated .def-podium__lead-link,
+  .def-latest.is-celebrated .def-podium__lead-rank,
+  .def-latest.is-celebrated .def-podium__pair-item {
+    animation: none;
+  }
 }
 .def-editorial__spot-body {
   display: flex;

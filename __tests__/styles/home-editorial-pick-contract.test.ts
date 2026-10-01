@@ -41,7 +41,7 @@ describe("home editorial pick contract", () => {
 
   it("runs the three effects on one shared ambient clock", () => {
     const css = read("styles/definitive-home.css");
-    expect(css).toContain("--tv-spot-cycle: 9s");
+    expect(css).toContain("--tv-spot-cycle: 12s");
     expect(css).toContain("animation: tv-spot-bar-sweep var(--tv-spot-cycle)");
     expect(css).toContain("animation: tv-spot-aura var(--tv-spot-cycle)");
     expect(css).toContain("animation: tv-spot-spark-rise var(--tv-spot-cycle)");
@@ -59,5 +59,30 @@ describe("home editorial pick contract", () => {
   it("never touches the segmented control contract", () => {
     const css = read("styles/definitive-home.css");
     expect(css).not.toMatch(/def-start__tabs::(before|after)/);
+  });
+
+  it("keeps the featured flow vertically sequenced: card, CTA row, podium", () => {
+    const tsx = read("components/home/start-here.tsx");
+    const card = tsx.indexOf('className="def-editorial__spotlight tv-featured-tool"');
+    const row = tsx.indexOf("tv-featured-tool__cta-row");
+    const podium = tsx.indexOf("<LatestFromCatalog tools={tools} />");
+    expect(card).toBeGreaterThan(-1);
+    expect(row).toBeGreaterThan(card);
+    expect(podium).toBeGreaterThan(row);
+    expect(tsx).toContain("Apri {focusTool.name}");
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".def-editorial__inner > .tv-featured-tool,");
+    expect(css).toContain(".tv-featured-tool__cta-row {");
+  });
+
+  it("rebuilds the catalog block as a ranked podium", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("def-podium__lead-rank");
+    expect(tsx).toContain("def-podium__pair-item");
+    expect(tsx).toContain("Ultime dal catalogo");
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".def-podium__lead-link {");
+    expect(css).toContain("@keyframes tv-podium-rise");
+    expect(css).toContain("@keyframes tv-podium-glow");
   });
 });

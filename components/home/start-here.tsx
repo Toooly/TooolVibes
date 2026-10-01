@@ -244,43 +244,45 @@ function IvoryEditorial({
               </span>
             </p>
 
-            <div className="def-editorial__spot-actions">
-              <Link
-                href={`/toools/${focusTool.slug}`}
-                className="def-editorial__spot-cta def-editorial__spot-cta--primary"
-                aria-label={`Apri ${focusTool.name}`}
-              >
-                Apri {focusTool.name}
-                <ArrowRight size={14} aria-hidden="true" />
-              </Link>
-              {focusTool.url ? (
-                <a
-                  href={focusTool.url}
-                  target="_blank"
-                  rel={
-                    isAffiliateLink
-                      ? "sponsored noopener noreferrer"
-                      : "noopener noreferrer"
-                  }
-                  className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
-                  aria-label={
-                    isAffiliateLink
-                      ? `Sito ufficiale di ${focusTool.name} (link affiliato)`
-                      : `Sito ufficiale di ${focusTool.name}`
-                  }
-                >
-                  Sito
-                  <ExternalLink size={14} aria-hidden="true" />
-                </a>
-              ) : null}
-            </div>
-            {isAffiliateLink ? (
-              <p className="def-editorial__spot-disclosure">
-                Link affiliato: commissione possibile, senza costi extra.
-              </p>
-            ) : null}
           </div>
         </article>
+        <div className="tv-featured-tool__cta-row">
+          <div className="def-editorial__spot-actions">
+            <Link
+              href={`/toools/${focusTool.slug}`}
+              className="def-editorial__spot-cta def-editorial__spot-cta--primary"
+              aria-label={`Apri ${focusTool.name}`}
+            >
+              Apri {focusTool.name}
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+            {focusTool.url ? (
+              <a
+                href={focusTool.url}
+                target="_blank"
+                rel={
+                  isAffiliateLink
+                    ? "sponsored noopener noreferrer"
+                    : "noopener noreferrer"
+                }
+                className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
+                aria-label={
+                  isAffiliateLink
+                    ? `Sito ufficiale di ${focusTool.name} (link affiliato)`
+                    : `Sito ufficiale di ${focusTool.name}`
+                }
+              >
+                Sito
+                <ExternalLink size={14} aria-hidden="true" />
+              </a>
+            ) : null}
+          </div>
+          {isAffiliateLink ? (
+            <p className="def-editorial__spot-disclosure">
+              Link affiliato: commissione possibile, senza costi extra.
+            </p>
+          ) : null}
+        </div>
 
         <LatestFromCatalog tools={tools} />
       </div>
