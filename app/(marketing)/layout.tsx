@@ -14,6 +14,7 @@ import { CommercialClockProvider } from "@/components/monetization/commercial-cl
 import { ConsentBanner } from "@/components/ads/consent-banner";
 import { ConsentSettingsDialog } from "@/components/ads/consent-settings-dialog";
 import { MarketingChrome } from "@/components/layout/marketing-chrome";
+import { ScrollRestorationInit } from "@/components/layout/scroll-restoration-init";
 import { OrbitalProvider } from "@/components/app/orbital-system";
 import { releaseFeatures } from "@/lib/config/release-features";
 import { buildSignalClientFlagSnapshot } from "@/lib/signal-progression/client-flags";
@@ -59,6 +60,7 @@ export default async function MarketingLayout({
 
   return (
     <div className="marketing-shell relative overflow-x-clip">
+      <ScrollRestorationInit />
       <a href="#main-content" className="skip-link">
         Salta al contenuto
       </a>
