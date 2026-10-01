@@ -2991,6 +2991,7 @@
 }
 /* Rail: the ONLY intentional horizontal scroller in this zone. */
 .def-podium__rail {
+  position: relative;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 9.5rem;
