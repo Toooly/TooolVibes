@@ -305,23 +305,29 @@ function IvoryEditorial({
               </span>
             </p>
             <div className="tv-featured-tool__footer">
-              <span className="tv-featured-tool__cta">
+              <Link
+                href={`/toools/${focusTool.slug}`}
+                className="tv-featured-tool__cta"
+                aria-label={`Apri ${focusTool.name}`}
+              >
                 Apri scheda
                 <ArrowRight size={13} aria-hidden="true" />
-              </span>
-              {focusTool.url ? (
-                <a
-                  href={focusTool.url}
-                  target="_blank"
-                  rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
-                  className="tv-featured-tool__external"
-                  aria-label={isAffiliateLink ? `Visita sito di ${focusTool.name} (link affiliato)` : `Visita sito di ${focusTool.name}`}
-                  
-                >
-                  Visita sito
-                  <ExternalLink size={12} aria-hidden="true" />
-                </a>
-              ) : null}
+              </Link>
+              {(() => {
+                const visitUrl = focusTool.affiliateUrl ?? focusTool.externalUrl;
+                return visitUrl ? (
+                  <a
+                    href={visitUrl}
+                    target="_blank"
+                    rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
+                    className="tv-featured-tool__external"
+                    aria-label={isAffiliateLink ? `Visita sito di ${focusTool.name} (link affiliato)` : `Visita sito di ${focusTool.name}`}
+                  >
+                    Visita sito
+                    <ExternalLink size={12} aria-hidden="true" />
+                  </a>
+                ) : null;
+              })()}
             </div>
             {isAffiliateLink ? (
               <p className="def-editorial__spot-disclosure">
@@ -343,7 +349,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   /* Selection state: which top-3 cell is currently brought to front.
      First tap selects (brings forward), second tap on same card navigates.
      No persistent ranking state — pure UI feedback. */
-  const [selectedPos, setSelectedPos] = useState<"second" | "first" | "third" | null>("first");
+  const [selectedPos, setSelectedPos] = useState<"second" | "first" | "third" | null>(null);
 
   const handleCellClick = (pos: "second" | "first" | "third") => (e: React.MouseEvent) => {
     if (selectedPos !== pos) {
@@ -429,6 +435,16 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           <span className="tv-featured-tool__mono">{scoreLabel}</span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </span>
+        {isSelected && !compact ? (
+          <div className="def-podium__extra">
+            {tool.shortDescription ? <p className="def-podium__extra-desc">{truncate(tool.shortDescription, 120)}</p> : null}
+            <div className="def-podium__extra-meta">
+              {tool.levelLabel ? <span>{tool.levelLabel}</span> : null}
+              {tool.readingTime ? <span>{formatHomeAnalysisTime(tool.readingTime)}</span> : null}
+              {tool.tags?.[0] ? <span>{tool.tags[0]}</span> : null}
+            </div>
+          </div>
+        ) : null}
       </Link>
     );
   }
@@ -492,6 +508,16 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           <span className="tv-featured-tool__mono">{scoreLabel}</span>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </span>
+        {isSelected ? (
+          <div className="def-podium__extra">
+            {tool.shortDescription ? <p className="def-podium__extra-desc">{truncate(tool.shortDescription, 120)}</p> : null}
+            <div className="def-podium__extra-meta">
+              {tool.levelLabel ? <span>{tool.levelLabel}</span> : null}
+              {tool.readingTime ? <span>{formatHomeAnalysisTime(tool.readingTime)}</span> : null}
+              {tool.tags?.[0] ? <span>{tool.tags[0]}</span> : null}
+            </div>
+          </div>
+        ) : null}
       </Link>
     );
   }
@@ -506,7 +532,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
       </div>
       <div className="def-podium__backdrop" aria-hidden="true" />
       <div
-        className={"def-podium__stage has-focus-" + (selectedPos ?? "first")}
+        className={"def-podium__stage" + (selectedPos ? " has-focus-" + selectedPos : "")}
         role="list"
         aria-label="Podio dei tool"
       >

@@ -376,6 +376,12 @@
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
+  text-decoration: none;
+  transition: transform 140ms var(--tv-easing-standard), box-shadow 140ms var(--tv-easing-standard);
+}
+.tv-featured-tool__cta:active {
+  transform: scale(0.96);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 40%, transparent);
 }
 .tv-featured-tool__external {
   display: inline-flex;
@@ -392,7 +398,11 @@
   line-height: 1;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 150ms var(--tv-easing-standard), color 150ms var(--tv-easing-standard);
+  transition: background 150ms var(--tv-easing-standard), color 150ms var(--tv-easing-standard), transform 140ms var(--tv-easing-standard), box-shadow 140ms var(--tv-easing-standard);
+}
+.tv-featured-tool__external:active {
+  transform: scale(0.96);
+  box-shadow: 0 0 8px color-mix(in srgb, white 25%, transparent);
 }
 .tv-featured-tool__external:hover {
   background: color-mix(in srgb, white 12%, transparent);
@@ -3112,11 +3122,12 @@
 }
 /* Primary stage: 3 columns inside the safe width. 01 elevated.
    Scoped perspective context: 01 FRONT CENTER, 02/03 one plane behind.
-   2.5D depth (translate/scale, NO rotate) keeps Safari text razor-sharp. */
+   2.5D depth (translate/scale, NO rotate) keeps Safari text razor-sharp.
+   Selected card expands TOWARD CENTER via grid geometry animation. */
 .def-podium__stage {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.22fr) minmax(0, 0.94fr);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.10fr) minmax(0, 0.95fr);
   grid-template-areas: "second first third";
   gap: clamp(4px, 1.4vw, 10px);
   align-items: end;
@@ -3124,6 +3135,16 @@
   padding: 30px 0 0;
   list-style: none;
   perspective: 1100px;
+  transition: grid-template-columns 280ms var(--tv-easing-standard);
+}
+.def-podium__stage.has-focus-second {
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.72fr) minmax(0, 0.72fr);
+}
+.def-podium__stage.has-focus-first {
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.55fr) minmax(0, 0.72fr);
+}
+.def-podium__stage.has-focus-third {
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 0.72fr) minmax(0, 1.55fr);
 }
 .def-podium__stage .def-podium__cell {
   transform-style: preserve-3d;
@@ -3475,6 +3496,78 @@
   font-size: 0.8rem;
   padding-top: 1px;
 }
+/* Extra info revealed on selected card (2-line desc + 1-2 metadata items). */
+.def-podium__extra {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 240ms var(--tv-easing-standard) 80ms, transform 240ms var(--tv-easing-standard) 80ms;
+  pointer-events: none;
+  width: 100%;
+}
+.def-podium__card.is-selected .def-podium__extra {
+  opacity: 1;
+  transform: translateY(0);
+}
+.def-podium__extra-desc {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--tv-ink-secondary, #c2beb5);
+  margin: 2px 0 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.def-podium__extra-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+.def-podium__extra-meta span {
+  display: inline-flex;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--tv-ink-muted-aa, #aaa59b);
+  background: color-mix(in srgb, var(--tv-surface-elevated, #1c1440) 80%, transparent);
+}
+/* Compact 04/05/06: horizontal-ish rectangular tiles. */
+.def-podium__card.is-compact {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  min-height: 64px;
+  border-radius: 10px;
+}
+.def-podium__card.is-compact .def-podium__rank {
+  font-size: 0.85rem;
+  min-width: 18px;
+}
+.def-podium__card.is-compact .def-podium__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.def-podium__card.is-compact .def-podium__name {
+  font-size: 0.75rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.def-podium__card.is-compact .def-podium__cat {
+  display: none;
+}
+.def-podium__card.is-compact .def-podium__score {
+  font-size: 0.8rem;
+  margin-top: 0;
+  padding-top: 0;
+}
 /* Tap: press compression + rank-aware edge flare, immediate, ~180ms. */
 /* Bring-to-front: the selected cell comes toward the viewer (2.5D depth:
    lift + scale + stronger floor light), siblings recede slightly.
@@ -3517,6 +3610,24 @@
 .def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
 .def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
   filter: brightness(0.9);
+}
+/* Fog/haze on siblings: selected card floats above a soft depth field. */
+.def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card,
+.def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
+  filter: brightness(0.85) saturate(0.85);
+  opacity: 0.75;
+}
+.def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card,
+.def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card,
+.def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
+.def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
+  cursor: pointer;
 }
 /* Selected card flare: brief material glow on the active card. */
 .def-podium__card.is-selected {
@@ -3607,6 +3718,17 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .tv-featured-tool__cta:active,
+  .tv-featured-tool__external:active {
+    transform: none;
+    box-shadow: none;
+  }
+  .def-podium__stage {
+    transition: none;
+  }
+  .def-podium__extra {
+    transition: none;
+  }
   .def-podium__laurels,
   .def-podium__medal,
   .def-latest .def-podium__card.is-first .def-podium__rank,
