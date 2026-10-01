@@ -206,6 +206,7 @@ function IvoryEditorial({
           data-spotlight={focusTool.slug}
           key={focusTool.slug}
         >
+          <span className="tv-featured-tool__meteor" aria-hidden="true" data-meteor="" />
           <span className="tv-featured-tool__sparks" aria-hidden="true" data-sparks="" />
           <div className="def-editorial__spot-body">
             <p className="def-editorial__spot-eyebrow">Scelta della redazione</p>
@@ -292,7 +293,20 @@ function IvoryEditorial({
 
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const podiumRef = useRef<HTMLElement | null>(null);
+  const railRef = useRef<HTMLDivElement | null>(null);
   const celebrated = useRef(false);
+
+  /* Initial view centers rank 01 (mobile rail): 02/03 peek symmetrically.
+     Instant (no smooth scroll) so reduced-motion stays calm. Desktop grid
+     ignores scroll position. */
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || typeof window === "undefined") return;
+    if (window.matchMedia("(min-width: 48rem)").matches) return;
+    const first = rail.querySelector<HTMLElement>(".def-podium__cell.pos-first");
+    if (!first) return;
+    rail.scrollLeft = Math.max(0, first.offsetLeft - (rail.clientWidth - first.clientWidth) / 2);
+  }, []);
 
   useEffect(() => {
     const podium = podiumRef.current;
@@ -311,10 +325,56 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     observer.observe(podium);
     return () => observer.disconnect();
   }, []);
-  const latest = tools.slice(0, 3);
-  if (latest.length === 0) return null;
-  const lead = latest[0];
-  const rest = latest.slice(1);
+  /* Canonical top-5: same ranked dataset as before (tool order), extended
+     presentation from 3 to 5. No ranking-algorithm change, no invented
+     entries — renders however many canonical tools exist (need >=3). */
+  const ranked = tools.slice(0, 5);
+  if (ranked.length < 3) return null;
+  const ordered = [ranked[1], ranked[0], ...ranked.slice(2)].filter(Boolean) as ToolPublicView[];
+
+  function PodiumCard({ tool, rank, rankClass }: { tool: ToolPublicView; rank: string; rankClass: string }) {
+    const score = computeEditorialScore(tool);
+    const iconUrl = iconUrlFor(tool);
+    const initial = initialFor(tool.name);
+    const scoreLabel =
+      score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
+    return (
+      <Link
+        href={`/toools/${tool.slug}`}
+        className={`def-podium__card ${rankClass}`}
+        aria-label={`Posizione ${rank}: apri ${tool.name}`}
+      >
+        <span className="def-podium__rank" aria-hidden="true">{rank}</span>
+        {rankClass === "is-first" ? (
+          <span className="def-podium__crown" aria-hidden="true">
+            <svg viewBox="0 0 48 28" fill="none">
+              <path d="M4 24 L8 10 L16 18 L24 6 L32 18 L40 10 L44 24 Z" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />
+              <circle cx="8" cy="8" r="2.2" fill="currentColor" />
+              <circle cx="24" cy="4" r="2.2" fill="currentColor" />
+              <circle cx="40" cy="8" r="2.2" fill="currentColor" />
+            </svg>
+          </span>
+        ) : null}
+        <span className="def-podium__avatar" aria-hidden="true">
+          {iconUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+          ) : (
+            <span>{initial}</span>
+          )}
+        </span>
+        <span className="def-podium__name">{tool.name}</span>
+        {tool.categoryLabel ? (
+          <span className="def-podium__cat">{tool.categoryLabel}</span>
+        ) : null}
+        <span className="def-podium__score">
+          <span className="tv-featured-tool__mono">{scoreLabel}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </span>
+      </Link>
+    );
+  }
+
   return (
     <section ref={podiumRef} className="def-latest" aria-labelledby="def-latest-title">
       <div className="def-latest__head def-podium__header">
@@ -323,106 +383,20 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         </h3>
         <p className="def-podium__subtitle">I tool più discussi questa settimana.</p>
       </div>
-      <ol className="def-podium__stage">
-        {(() => {
-          const score = computeEditorialScore(lead);
-          const iconUrl = iconUrlFor(lead);
-          const initial = initialFor(lead.name);
+      <div ref={railRef} className="def-podium__rail" role="list" aria-label="Classifica dei tool">
+        {ordered.map((tool, i) => {
+          const rankIndex = i === 0 ? 1 : i === 1 ? 0 : i;
+          const rank = String(rankIndex + 1).padStart(2, "0");
+          const rankClass = rankIndex === 0 ? "is-first" : rankIndex < 3 ? "is-top" : "is-rest";
+          const posClass =
+            rankIndex === 0 ? "pos-first" : rankIndex === 1 ? "pos-second" : rankIndex === 2 ? "pos-third" : rankIndex === 3 ? "pos-fourth" : "pos-fifth";
           return (
-            <li className="def-podium__lead is-winner">
-              <Link
-                href={`/toools/${lead.slug}`}
-                className="def-podium__lead-link"
-                aria-label={`Apri ${lead.name}`}
-              >
-                <span className="def-podium__lead-rank tv-featured-tool__mono" aria-hidden="true">01</span>
-                <span className="def-podium__wreath-wrap" aria-hidden="true">
-                  <svg className="def-podium__wreath" viewBox="0 0 120 120" fill="none">
-                    <path d="M60 108 C32 100 18 78 16 52 C15 38 22 24 36 16" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
-                    <path d="M60 108 C88 100 102 78 104 52 C105 38 98 24 84 16" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
-                    <ellipse cx="22" cy="72" rx="7" ry="3.5" transform="rotate(-35 22 72)" fill="currentColor" opacity="0.85"/>
-                    <ellipse cx="18" cy="56" rx="7" ry="3.5" transform="rotate(-20 18 56)" fill="currentColor" opacity="0.85"/>
-                    <ellipse cx="22" cy="40" rx="6.5" ry="3.2" transform="rotate(-5 22 40)" fill="currentColor" opacity="0.85"/>
-                    <ellipse cx="32" cy="25" rx="6" ry="3" transform="rotate(15 32 25)" fill="currentColor" opacity="0.85"/>
-                    <ellipse cx="98" cy="72" rx="7" ry="3.5" transform="rotate(35 98 72)" fill="currentColor" opacity="0.85"/>
-                    <ellipse cx="102" cy="56" rx="7" ry="3.5" transform="rotate(20 102 56)" fill="currentColor" opacity="0.85"/>
-                    <ellipse cx="98" cy="40" rx="6.5" ry="3.2" transform="rotate(5 98 40)" fill="currentColor" opacity="0.85"/>
-                    <ellipse cx="88" cy="25" rx="6" ry="3" transform="rotate(-15 88 25)" fill="currentColor" opacity="0.85"/>
-                  </svg>
-                  <span className="def-podium__lead-avatar">
-                    {iconUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={iconUrl} alt="" loading="lazy" decoding="async" />
-                    ) : (
-                      <span>{initial}</span>
-                    )}
-                  </span>
-                </span>
-                <span className="def-podium__lead-name">{lead.name}</span>
-                {lead.categoryLabel ? (
-                  <span className="def-podium__lead-cat">{lead.categoryLabel}</span>
-                ) : null}
-                <span className="def-podium__lead-score">
-                  {score.status === "assessed" && score.value !== null ? (
-                    <>
-                      <span className="tv-featured-tool__mono">{score.value.toFixed(1)}</span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    </>
-                  ) : (
-                    <span className="tv-featured-tool__mono">—</span>
-                  )}
-                </span>
-              </Link>
-            </li>
+            <div key={tool.slug} role="listitem" className={`def-podium__cell ${rankClass} ${posClass}`}>
+              <PodiumCard tool={tool} rank={rank} rankClass={rankClass} />
+            </div>
           );
-        })()}
-      </ol>
-      {rest.length > 0 ? (
-        <ol className="def-podium__pair">
-          {rest.map((tool, i) => {
-            const score = computeEditorialScore(tool);
-            const iconUrl = iconUrlFor(tool);
-            const initial = initialFor(tool.name);
-            return (
-              <li key={tool.slug} className="def-podium__pair-item">
-                <Link
-                  href={`/toools/${tool.slug}`}
-                  className="def-podium__pair-link"
-                  aria-label={`Apri ${tool.name}`}
-                >
-                  <span className="def-podium__pair-rank tv-featured-tool__mono" aria-hidden="true">
-                    {String(i + 2).padStart(2, "0")}
-                  </span>
-                  <span className="def-podium__pair-avatar" aria-hidden="true">
-                    {iconUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={iconUrl} alt="" loading="lazy" decoding="async" />
-                    ) : (
-                      <span>{initial}</span>
-                    )}
-                  </span>
-                  <span className="def-podium__pair-body">
-                    <span className="def-podium__pair-name">{tool.name}</span>
-                    {tool.categoryLabel ? (
-                      <span className="def-podium__pair-cat">{tool.categoryLabel}</span>
-                    ) : null}
-                  </span>
-                  <span className="def-podium__pair-score">
-                    {score.status === "assessed" && score.value !== null ? (
-                      <>
-                        <span className="tv-featured-tool__mono">{score.value.toFixed(1)}</span>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                      </>
-                    ) : (
-                      <span className="tv-featured-tool__mono">—</span>
-                    )}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ol>
-      ) : null}
+        })}
+      </div>
       <Link href="/archivio" className="def-podium__cta">
         Vedi tutto il catalogo
         <ArrowRight size={15} aria-hidden="true" />

@@ -42,6 +42,9 @@ describe("home editorial pick contract", () => {
   it("runs the three effects on one shared ambient clock", () => {
     const css = read("styles/definitive-home.css");
     expect(css).toContain("--tv-spot-cycle: 12s");
+    expect(css).toContain("--tv-meteor-cycle: 8.5s");
+    expect(css).toContain("@keyframes tv-meteor-orbit");
+    expect(css).toContain(".tv-featured-tool__meteor {");
     expect(css).toContain("animation: tv-spot-bar-sweep var(--tv-spot-cycle)");
     expect(css).toContain("animation: tv-spot-aura var(--tv-spot-cycle)");
     expect(css).toContain("animation: tv-spot-spark-rise var(--tv-spot-cycle)");
@@ -77,11 +80,11 @@ describe("home editorial pick contract", () => {
 
   it("rebuilds the catalog block as a ranked podium", () => {
     const tsx = read("components/home/start-here.tsx");
-    expect(tsx).toContain("def-podium__lead-rank");
-    expect(tsx).toContain("def-podium__pair-item");
+    expect(tsx).toContain("def-podium__rank");
+    expect(tsx).toContain("def-podium__cell");
     expect(tsx).toContain("Ultime dal catalogo");
     const css = read("styles/definitive-home.css");
-    expect(css).toContain(".def-podium__lead-link {");
+    expect(css).toContain(".def-podium__card {");
     expect(css).toContain("@keyframes tv-podium-rise");
     expect(css).toContain("@keyframes tv-podium-glow");
   });

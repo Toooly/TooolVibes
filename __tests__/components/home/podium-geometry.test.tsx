@@ -35,6 +35,22 @@ vi.mock("@/lib/motion/use-once-in-view", () => ({
   useOnceInView: () => ({ ref: { current: null }, hasBeenVisible: true, preferReducedMotion: true }),
 }));
 
+if (typeof window !== "undefined" && typeof window.matchMedia !== "function") {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+  });
+}
+
 function makeTool(slug: string, name: string): ToolPublicView {
   return {
     publicTool: {
@@ -104,7 +120,7 @@ const tools = [makeTool("blink", "Blink"), makeTool("vibecode", "VibeCode"), mak
 describe("DefinitiveHome — Ultime dal catalogo", () => {
   afterEach(cleanup);
 
-  it("mostra 'Ultime dal catalogo' con podio centrato + pair + CTA", () => {
+  it("mostra 'Ultime dal catalogo' con rail 02/01/03 + CTA", () => {
     render(
       <AdvertisingConsentProvider>
         <DefinitiveHome tools={tools} />
@@ -114,10 +130,20 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
     expect(screen.getByText("Ultime dal catalogo")).toBeTruthy();
     expect(screen.getByText("Vedi tutto il catalogo")).toBeTruthy();
 
-    const lead = document.querySelector(".def-podium__lead");
-    expect(lead).toBeTruthy();
-    expect(document.querySelectorAll(".def-podium__pair-item").length).toBe(2);
-    expect(document.querySelectorAll(".def-podium__lead-name").length).toBe(1);
+    const cells = document.querySelectorAll(".def-podium__cell");
+    expect(cells.length).toBe(3);
+    const ranks = [...cells].map(
+      (cell) => cell.querySelector(".def-podium__rank")?.textContent,
+    );
+    expect(ranks).toEqual(["02", "01", "03"]);
+    expect(
+      document.querySelector(".def-podium__cell.pos-first .def-podium__name")?.textContent,
+    ).toBe("Blink");
+    expect(document.querySelector(".def-podium__crown")).toBeTruthy();
+    const hrefs = [...document.querySelectorAll(".def-podium__card")].map((card) =>
+      card.getAttribute("href"),
+    );
+    expect(hrefs).toEqual(["/toools/vibecode", "/toools/blink", "/toools/weweb"]);
   });
 
   it("non mostra piu il podio legacy", () => {
