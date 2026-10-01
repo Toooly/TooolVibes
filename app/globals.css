@@ -28371,11 +28371,14 @@ img {
 }
 
 .tv-touch-target,
-button, a[role="button"], [role="tab"], [role="link"] {
+button:not(.tv-discovery-stage .def-start__tab), a[role="button"], [role="tab"]:not(.tv-discovery-stage .def-start__tab), [role="link"] {
   min-height: 44px;
   min-width: 44px;
 }
-.def-start__tab {
+/* Segmented control excluded: the 44px track + label hit extension own the
+   touch target, so labels can stretch to the 34px content row without
+   overflowing the clipped track. */
+.def-start__tab:not(.tv-discovery-stage .def-start__tab) {
   min-height: 44px !important;
 }
 .ar4-chip {

@@ -268,7 +268,7 @@
   }
   .tv-discovery-stage .def-start__tabs { background: color-mix(in srgb, #221a44 85%, transparent) !important; }
   .tv-discovery-stage .def-start__tab[aria-selected="true"] {
-    background: #cdb9ff !important; color: #1a1030 !important; box-shadow: none !important;
+    background: transparent !important; box-shadow: none !important;
   }
   .def-editorial__spotlight { padding: 12px !important; }
   .def-editorial__spot-head { margin-top: 2px !important; }
@@ -306,7 +306,7 @@
 
   .def-cockpit__lede { -webkit-line-clamp: unset !important; display: block !important; font-size: 0.78rem !important; }
 
-  .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #6b46ff !important; color: #ffffff !important; }
+  /* segmented thumb owns the fill; labels stay color-only */
 
   .def-editorial__spot-avatar { width: 56px !important; height: 56px !important; border-radius: 14px !important; }
 
@@ -337,7 +337,7 @@
 
   .tv-discovery-stage .def-start__tabs { height: 44px !important; margin-top: 10px !important; }
 
-  .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #5a35f0 !important; }
+  /* segmented thumb owns the fill; labels stay color-only */
 
   .def-editorial__spotlight { margin-top: 10px !important; padding: 14px !important; }
 
@@ -459,7 +459,7 @@
 
   .def-editorial__spot-actions { margin-top: 16px !important; }
 
-  .tv-discovery-stage .def-start__tab[aria-selected="true"] { background: #5f3fd6 !important; }
+  /* segmented thumb owns the fill; labels stay color-only */
 
   .def-intent__field button { background: #c3b0f7 !important; }
 

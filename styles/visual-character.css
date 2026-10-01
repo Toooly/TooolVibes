@@ -110,9 +110,9 @@
   color: var(--tv-ink-secondary);
 }
 
-.def-start__tab.is-active {
+.tv-discovery-stage .def-start__tab.is-active {
   color: var(--tv-ink-primary);
-  background: var(--tv-grammar-selected-wash);
+  background: transparent;
 }
 
 .tv-home-radar.tv-home-radar--snapshot {

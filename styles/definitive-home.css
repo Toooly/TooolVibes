@@ -990,7 +990,8 @@
   outline: 2px solid var(--tv-focus-ring);
   outline-offset: 2px;
 }
-.def-start__tab.is-active, .def-start__tab[aria-selected="true"] {
+/* Segmented control excluded: its tabs never paint fills (single ::before thumb). */
+.def-start__tab.is-active:not(.tv-discovery-stage .def-start__tab), .def-start__tab[aria-selected="true"]:not(.tv-discovery-stage .def-start__tab) {
   border-color: var(--tv-accent-brand);
   background: var(--tv-surface-selected);
   color: var(--tv-ink-primary);
@@ -1103,11 +1104,14 @@
   letter-spacing: 0.08em;
   min-height: 2.75rem;
 }
+/* Segmented-control labels never paint geometry: the ::before thumb is the
+   single active fill. Keep color-only contrast here (canonical rule lives in
+   visual-system.css). */
 .tv-discovery-stage .def-start__tab.is-active, .tv-discovery-stage .def-start__tab[aria-selected="true"] {
-  background: var(--tv-grammar-selected-wash);
+  background: transparent;
   color: var(--tv-ink-primary);
-  border-color: var(--tv-grammar-selected);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-grammar-selected) 55%, transparent);
+  border-color: transparent;
+  box-shadow: none;
 }
 .tv-discovery-stage[data-mode="tool"] .tv-discovery-stage__frame,
 .tv-discovery-stage[data-mode="stack"] .tv-discovery-stage__frame,
@@ -1419,16 +1423,8 @@
   padding: var(--tv-rhythm-related-lg);
   overflow: clip;
 }
-.tv-discovery-stage__switch {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(6.25rem, 1fr));
-  padding: 0.2rem;
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-pill);
-  background: var(--tv-surface-raised);
-  width: max-content;
-  max-width: 100%;
-}
+/* Legacy switch box removed: canonical track geometry (grid 3x1fr, 22.5rem cap,
+   4px uniform padding, centered) lives in visual-system.css. */
 .def-start .tv-workflow-deck__track.def-stacks__grid {
   display: flex;
 }
@@ -1531,15 +1527,8 @@
   background: var(--tv-grammar-radar-accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-grammar-radar-accent) 25%, transparent);
 }
-.tv-discovery-stage[data-mode="tool"] .def-start__tab.is-active {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 60%, transparent);
-}
-.tv-discovery-stage[data-mode="stack"] .def-start__tab.is-active {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-grammar-stack-node) 60%, transparent);
-}
-.tv-discovery-stage[data-mode="radar"] .def-start__tab.is-active {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tv-grammar-radar-accent) 60%, transparent);
-}
+/* Per-mode active-tab rings removed: they stacked a second visible pill edge
+   under the sliding thumb. Thumb tint stays violet for all three states. */
 .def-cockpit__scope {
   display: none;
 }
@@ -2454,8 +2443,9 @@
   outline: 2px solid var(--tv-focus-ring, #7c3aed);
   outline-offset: 2px;
 }
-.def-start__tab.is-active,
-.def-start__tab[aria-selected="true"] {
+/* Segmented control excluded: single-thumb contract (see visual-system.css). */
+.def-start__tab.is-active:not(.tv-discovery-stage .def-start__tab),
+.def-start__tab[aria-selected="true"]:not(.tv-discovery-stage .def-start__tab) {
   background: var(--tv-accent-violet, #7c3aed);
   color: var(--tv-ink-primary, #fffdf8);
 }

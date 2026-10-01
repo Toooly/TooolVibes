@@ -17,9 +17,11 @@
 .tv-discovery-stage .def-start__tabs {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
   width: min(100%, 22.5rem);
+  margin-inline: auto;
   height: 44px;
-  padding: 3px;
+  padding: 4px;
   border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--tv-surface-elevated) 85%, transparent);
@@ -27,17 +29,25 @@
   overflow: hidden;
 }
 
-/* Absolute active indicator */
+/* Single geometric active thumb: one fill, one width, one translation formula.
+   Track padding is uniform 4px, so the inner width is (100% - 8px) and each
+   column owns exactly one third. translateX(100%) therefore steps by exactly
+   one column with no per-state compensation. */
 .tv-discovery-stage .def-start__tabs::before {
   content: "";
   position: absolute;
-  top: 0.25rem;
+  top: 4px;
   bottom: 4px;
-  left: 0.25rem;
+  left: 4px;
   width: calc((100% - 8px) / 3);
   border-radius: 999px;
-  background: var(--tv-accent-violet, #7c3aed);
-  transition: transform 0.25s var(--tv-easing-spring-smooth);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, white 14%, transparent), transparent 55%),
+    linear-gradient(135deg, var(--tv-color-violet-400, #9a6dff), var(--tv-accent-brand, #6a3cff) 70%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 22%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, white 8%, transparent);
+  transition: transform var(--tv-duration-base, 180ms) var(--tv-easing-standard);
   pointer-events: none;
   z-index: 0;
 }
@@ -56,26 +66,57 @@
 
 .tv-discovery-stage .def-start__tab {
   width: 100%;
-  min-height: 100%;
+  min-height: 0;
+  height: auto;
+  align-self: stretch;
   padding-inline: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 0;
   border-radius: 999px;
-  background: transparent;
+  background: transparent !important;
+  box-shadow: none !important;
   position: relative;
   z-index: 1;
-  transition:
-    color var(--tv-motion-ui) var(--tv-easing-standard),
-    background-color var(--tv-motion-ui) var(--tv-easing-standard),
-    box-shadow var(--tv-motion-ui) var(--tv-easing-standard),
-    transform var(--tv-motion-ui) var(--tv-easing-standard);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  transition: color var(--tv-duration-base, 180ms) var(--tv-easing-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tv-discovery-stage .def-start__tab:hover:not([aria-selected="true"]) {
+    color: var(--tv-ink-primary);
+  }
+}
+/* >=44px touch target without changing the 44px visual track: the label box
+   fills the 34px content row; an invisible hit rect extends it to 44px. */
+.tv-discovery-stage .def-start__tab::after {
+  content: "";
+  position: absolute;
+  inset: -5px 0;
+  background: transparent;
+  pointer-events: none;
 }
 
 .tv-discovery-stage__switch {
-  overflow: hidden;
+  overflow: visible;
   position: relative;
+}
+.tv-discovery-stage .def-start__tabs::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 22%, transparent);
+  opacity: 0;
+  transition: opacity var(--tv-duration-base, 180ms) var(--tv-easing-standard);
+  pointer-events: none;
+  z-index: 0;
+}
+.tv-discovery-stage[data-switched] .def-start__tabs::after {
+  opacity: 1;
 }
 
 .tv-discovery-stage[data-mode="tool"] .def-start__tab.is-active,
@@ -446,9 +487,13 @@ select:focus {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-accent-brand) 25%, transparent);
 }
 
-/* ===== Tab / segmented control transitions ===== */
-.def-start__tab,
-.tv-discovery-stage .def-start__tab,
+/* ===== Tab / segmented control transitions =====
+   Segmented tabs own color-only transitions. The thumb owns positional
+   movement; tabs never animate geometry (no second moving pill). */
+.tv-discovery-stage .def-start__tab {
+  transition: color var(--tv-duration-base, 180ms) var(--tv-easing-standard);
+}
+.def-start__tab:not(.tv-discovery-stage .def-start__tab),
 .ar4-chip,
 .guides-filter button {
   transition:
@@ -459,9 +504,11 @@ select:focus {
     transform var(--tv-motion-fast) var(--tv-easing-standard);
 }
 
-.def-start__tab:active,
 .ar4-chip:active {
   transform: scale(0.96);
+}
+.tv-discovery-stage .def-start__tab:active {
+  transform: none;
 }
 
 /* ===== Footer link hover glow ===== */
