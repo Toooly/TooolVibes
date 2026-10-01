@@ -10,12 +10,19 @@ const read = (rel: string) => readFileSync(resolve(root, rel), "utf8");
    decorative crown/laurels/medals hidden from AT, calm reduced-motion. */
 
 describe("home podium contract", () => {
-  it("renders top-6 from the canonical tool list without inventing ranks", () => {
+  it("renders top-9 from the canonical tool list without inventing ranks", () => {
     const tsx = read("components/home/start-here.tsx");
-    expect(tsx).toContain("tools.slice(0, 6)");
-    expect(tsx).toContain("ranked.slice(3, 6)");
+    expect(tsx).toContain("tools.slice(0, 9)");
+    expect(tsx).toContain("ranked.slice(3, 9)");
     expect(tsx).toContain("if (ranked.length < 3) return null");
     expect(tsx).not.toMatch(/VibeCode|WeWeb|CosmicJS|Mocha/);
+  });
+
+  it("renders 04-09 in a continuation rail with canonical links", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("tools.slice(0, 9)");
+    expect(tsx).toContain("ranked.slice(3, 9)");
+    expect(tsx).toContain("def-podium__rail");
   });
 
   it("separates the safe top-3 stage from the static 04/05/06 grid", () => {
@@ -33,9 +40,19 @@ describe("home podium contract", () => {
     expect(css).toContain("grid-template-areas: \"second first third\"");
   });
 
+  it("places rank/crown/medal/laurels in a floating badge layer above the card", () => {
+    const tsx = read("components/home/start-here.tsx");
+    expect(tsx).toContain("def-podium__badge");
+    expect(tsx).toContain("def-podium__badge--gold");
+    const css = read("styles/definitive-home.css");
+    expect(css).toContain(".def-podium__badge {");
+    expect(css).toContain(".def-podium__badge--gold");
+  });
+
   it("keeps the crown decorative and the cards keyboard-reachable links", () => {
     const tsx = read("components/home/start-here.tsx");
-    expect(tsx).toContain('className="def-podium__crown" aria-hidden="true"');
+    expect(tsx).toContain('className="def-podium__badge');
+    expect(tsx).toContain('aria-hidden="true"');
     const css = read("styles/definitive-home.css");
     expect(css).toContain(".def-podium__crown {");
     expect(css).toContain("pointer-events: none");
@@ -44,7 +61,7 @@ describe("home podium contract", () => {
   it("frames the winner with crown and laurels, both decorative", () => {
     const tsx = read("components/home/start-here.tsx");
     expect(tsx).toContain("def-podium__laurels");
-    expect(tsx).toContain('className="def-podium__crown" aria-hidden="true"');
+    expect(tsx).toContain('className="def-podium__badge def-podium__badge--gold" aria-hidden="true"');
     const css = read("styles/definitive-home.css");
     expect(css).toContain(".def-podium__laurels {");
   });
@@ -114,8 +131,8 @@ describe("home podium contract", () => {
 
   it("keeps selected side cards >=2px inside mobile bounds (inward translate)", () => {
     const css = read("styles/definitive-home.css");
-    expect(css).toContain("translateX(5px) scale(1.10)");
-    expect(css).toContain("translateX(-5px) scale(1.10)");
+    expect(css).toContain("translateX(5px) scale(1.14)");
+    expect(css).toContain("translateX(-5px) scale(1.14)");
     expect(css).not.toContain("translateX(3px) scale(1.05)");
     expect(css).not.toContain("translateX(-3px) scale(1.05)");
   });

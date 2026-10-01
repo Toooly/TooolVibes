@@ -3325,6 +3325,10 @@
   letter-spacing: -0.02em;
   font-size: clamp(1.1rem, 4.6vw, 1.5rem);
   color: var(--tv-ink-muted-aa, #aaa59b);
+  display: block;
+}
+.def-podium__rank--inline {
+  display: block;
 }
 /* Metal identity: silver 02 / bronze 03 — unmistakable without reading. */
 .def-podium__cell.pos-second .def-podium__rank {
@@ -3358,11 +3362,26 @@
   color: var(--tv-accent-gold-on-dark, #e4b23c);
   text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 42%, transparent);
 }
-.def-podium__crown {
+/* Floating badge layer: rank/crown/medal/laurels sit ABOVE the card.
+   Always fully visible, never clipped by card overflow:hidden. */
+.def-podium__badge {
   position: absolute;
-  top: -15px;
+  top: -22px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  pointer-events: none;
+  width: max-content;
+}
+.def-podium__badge--gold {
+  top: -28px;
+}
+.def-podium__crown {
+  display: block;
   width: 42px;
   height: 25px;
   color: var(--tv-accent-gold-on-dark, #e4b23c);
@@ -3376,7 +3395,7 @@
 }
 .def-podium__laurels {
   position: absolute;
-  inset: 18px -10px -4px;
+  inset: 0;
   color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
   opacity: 0.85;
   pointer-events: none;
@@ -3405,18 +3424,15 @@
 }
 .def-podium__laurels--silver {
   color: color-mix(in srgb, #cfd6e4 42%, transparent);
-  inset: 26px -4px 2px;
 }
 .def-podium__laurels--bronze {
   color: color-mix(in srgb, #d29a6b 42%, transparent);
-  inset: 26px -4px 2px;
 }
 /* Rank marks: silver for 02, bronze for 03 — sober siblings of the crown. */
 .def-podium__medal {
   display: block;
   width: 38px;
   height: 25px;
-  margin-top: -4px;
   pointer-events: none;
   animation: tv-medal-shimmer var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
 }
@@ -3717,15 +3733,15 @@
 }
 .def-podium__stage.has-focus-second .def-podium__cell.pos-second {
   z-index: 5;
-  transform: translateY(-12px) translateX(5px) scale(1.10);
+  transform: translateY(-14px) translateX(5px) scale(1.14);
 }
 .def-podium__stage.has-focus-first .def-podium__cell.pos-first {
   z-index: 5;
-  transform: translateY(-14px) scale(1.10);
+  transform: translateY(-16px) scale(1.14);
 }
 .def-podium__stage.has-focus-third .def-podium__cell.pos-third {
   z-index: 5;
-  transform: translateY(-12px) translateX(-5px) scale(1.10);
+  transform: translateY(-14px) translateX(-5px) scale(1.14);
 }
 .def-podium__stage.has-focus-second .def-podium__cell.pos-first,
 .def-podium__stage.has-focus-second .def-podium__cell.pos-third,
@@ -3784,12 +3800,14 @@
   cursor: pointer;
 }
 /* Selected card flare: brief material glow on the active card. */
-/* Selected card: stronger glow + subtle background shimmer animation. */
+/* Selected card: stronger glow + cinematic background animation in metal. */
 .def-podium__card.is-selected {
   box-shadow:
     0 18px 44px color-mix(in srgb, black 45%, transparent),
     0 0 36px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 35%, transparent),
     inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
+}
+.def-podium__card.is-selected::before {
   animation: tv-card-shimmer 3s var(--tv-easing-standard) infinite;
 }
 .def-podium__cell.pos-second .def-podium__card.is-selected {
@@ -3805,8 +3823,8 @@
     inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
 }
 @keyframes tv-card-shimmer {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.06); }
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.02); }
 }
 .def-podium__card:active {
   transform: scale(0.96);

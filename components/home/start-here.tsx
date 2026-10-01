@@ -399,10 +399,10 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   /* Canonical ranking: top-3 stage + 04/05/06 compact continuation grid.
      No carousel, no scroll. Renders 04/05(/06) only when canonical tools
      exist — never invented. */
-  const ranked = tools.slice(0, 6);
+  const ranked = tools.slice(0, 9);
   if (ranked.length < 3) return null;
   const top3 = [ranked[1], ranked[0], ranked[2]].filter(Boolean) as ToolPublicView[];
-  const rest = ranked.slice(3, 6);
+  const rest = ranked.slice(3, 9);
 
   function StageCard({ tool, rank, rankClass, medal, compact, laurel, isSelected, onSelect }: { tool: ToolPublicView; rank: string; rankClass: string; medal?: "silver" | "bronze"; compact?: boolean; laurel?: "silver" | "bronze"; isSelected?: boolean; onSelect?: (e: React.MouseEvent) => void }) {
     const score = computeEditorialScore(tool);
@@ -418,25 +418,30 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         data-selected={isSelected || undefined}
         onClick={onSelect}
       >
-        {laurel ? <RankLaurels tone={laurel} compact /> : null}
-        <span className="def-podium__rank" aria-hidden="true">{rank}</span>
-        {medal === "silver" ? (
-          <span className="def-podium__medal def-podium__medal--silver" aria-hidden="true">
-            <svg viewBox="0 0 44 28" fill="none">
-              <path d="M4 24 L7 8 L14 16 L22 5 L30 16 L37 8 L40 24 Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-              <circle cx="22" cy="3" r="1.6" fill="currentColor" />
-              <line x1="14" y1="16" x2="30" y2="16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-            </svg>
-          </span>
-        ) : medal === "bronze" ? (
-          <span className="def-podium__medal def-podium__medal--bronze" aria-hidden="true">
-            <svg viewBox="0 0 40 28" fill="none">
-              <path d="M6 24 L10 10 L20 6 L30 10 L34 24 Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
-              <circle cx="20" cy="4" r="1.4" fill="currentColor" />
-              <path d="M12 20 Q20 16 28 20" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-            </svg>
-          </span>
+        {!compact ? (
+          <div className="def-podium__badge" aria-hidden="true">
+            {laurel ? <RankLaurels tone={laurel} compact /> : null}
+            {medal === "silver" ? (
+              <span className="def-podium__medal def-podium__medal--silver">
+                <svg viewBox="0 0 44 28" fill="none">
+                  <path d="M4 24 L7 8 L14 16 L22 5 L30 16 L37 8 L40 24 Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+                  <circle cx="22" cy="3" r="1.6" fill="currentColor" />
+                  <line x1="14" y1="16" x2="30" y2="16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+                </svg>
+              </span>
+            ) : medal === "bronze" ? (
+              <span className="def-podium__medal def-podium__medal--bronze">
+                <svg viewBox="0 0 40 28" fill="none">
+                  <path d="M6 24 L10 10 L20 6 L30 10 L34 24 Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+                  <circle cx="20" cy="4" r="1.4" fill="currentColor" />
+                  <path d="M12 20 Q20 16 28 20" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+                </svg>
+              </span>
+            ) : null}
+            <span className="def-podium__rank">{rank}</span>
+          </div>
         ) : null}
+        {compact ? <span className="def-podium__rank def-podium__rank--inline" aria-hidden="true">{rank}</span> : null}
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -518,16 +523,18 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         data-selected={isSelected || undefined}
         onClick={onSelect}
       >
-        <span className="def-podium__crown" aria-hidden="true">
-          <svg viewBox="0 0 48 28" fill="none">
-            <path d="M4 24 L8 10 L16 18 L24 6 L32 18 L40 10 L44 24 Z" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />
-            <circle cx="8" cy="8" r="2.2" fill="currentColor" />
-            <circle cx="24" cy="4" r="2.2" fill="currentColor" />
-            <circle cx="40" cy="8" r="2.2" fill="currentColor" />
-          </svg>
-        </span>
-        <RankLaurels tone="gold" />
-        <span className="def-podium__rank" aria-hidden="true">01</span>
+        <div className="def-podium__badge def-podium__badge--gold" aria-hidden="true">
+          <RankLaurels tone="gold" />
+          <span className="def-podium__crown">
+            <svg viewBox="0 0 48 28" fill="none">
+              <path d="M4 24 L8 10 L16 18 L24 6 L32 18 L40 10 L44 24 Z" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />
+              <circle cx="8" cy="8" r="2.2" fill="currentColor" />
+              <circle cx="24" cy="4" r="2.2" fill="currentColor" />
+              <circle cx="40" cy="8" r="2.2" fill="currentColor" />
+            </svg>
+          </span>
+          <span className="def-podium__rank">01</span>
+        </div>
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -616,7 +623,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         ) : null}
       </div>
       {rest.length > 0 ? (
-        <div className="def-podium__rail" role="list" aria-label={`Posizioni 04${rest.length > 2 ? ", 05 e 06" : " e 05"}`}>
+        <div className="def-podium__rail" role="list" aria-label={`Posizioni 04–${String(Math.min(rest.length + 3, 9)).padStart(2, "0")}`}>
           {rest.map((tool, i) => {
             const rank = String(i + 4).padStart(2, "0");
             return (
