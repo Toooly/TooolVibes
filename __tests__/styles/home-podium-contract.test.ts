@@ -62,13 +62,13 @@ describe("home podium contract", () => {
     expect(css).toContain(".def-podium__cell.pos-third .def-podium__rank");
   });
 
-  it("implements flip-to-front depth interaction without persistent state", () => {
+  it("implements two-tap select-then-navigate depth interaction", () => {
     const tsx = read("components/home/start-here.tsx");
-    expect(tsx).toContain("pressedPos");
+    expect(tsx).toContain("selectedPos");
+    expect(tsx).toContain("handleCellClick");
     expect(tsx).toContain("has-focus-");
-    expect(tsx).toContain("onPointerDown");
-    expect(tsx).toContain("onPointerUp");
-    expect(tsx).toContain("onPointerCancel");
+    expect(tsx).toContain("onClick");
+    expect(tsx).toContain("aria-pressed");
     /* No ranking reorder: visual order stays 02/01/03 in source. */
     const stage = tsx.slice(tsx.indexOf("def-podium__stage"), tsx.indexOf("def-podium__more"));
     expect(stage.indexOf("pos-second")).toBeLessThan(stage.indexOf("pos-first"));
@@ -78,6 +78,7 @@ describe("home podium contract", () => {
     expect(css).toContain(".def-podium__stage.has-focus-second .def-podium__cell.pos-second");
     expect(css).toContain(".def-podium__stage.has-focus-first .def-podium__cell.pos-first");
     expect(css).toContain(".def-podium__stage.has-focus-third .def-podium__cell.pos-third");
+    expect(css).toContain(".def-podium__card.is-selected");
   });
 
   it("marks 02 silver and 03 bronze and loops laurels subtly", () => {

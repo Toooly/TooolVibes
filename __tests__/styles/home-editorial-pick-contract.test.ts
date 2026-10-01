@@ -81,18 +81,18 @@ describe("home editorial pick contract", () => {
     expect(css).not.toMatch(/def-start__tabs::(before|after)/);
   });
 
-  it("keeps the featured flow vertically sequenced: card, CTA row, podium", () => {
+  it("keeps the featured flow vertically sequenced: card, podium", () => {
     const tsx = read("components/home/start-here.tsx");
     const card = tsx.indexOf('className="def-editorial__spotlight tv-featured-tool"');
-    const row = tsx.indexOf("tv-featured-tool__cta-row");
     const podium = tsx.indexOf("<LatestFromCatalog tools={tools} />");
     expect(card).toBeGreaterThan(-1);
-    expect(row).toBeGreaterThan(card);
-    expect(podium).toBeGreaterThan(row);
-    expect(tsx).toContain("Apri {focusTool.name}");
+    expect(podium).toBeGreaterThan(card);
+    expect(tsx).toContain("Apri scheda");
+    expect(tsx).toContain("Visita sito");
+    expect(tsx).toContain("tv-featured-tool__footer");
     const css = read("styles/definitive-home.css");
     expect(css).toContain(".def-editorial__inner > .tv-featured-tool,");
-    expect(css).toContain(".tv-featured-tool__cta-row {");
+    expect(css).toContain(".tv-featured-tool__footer {");
   });
 
   it("rebuilds the catalog block as a ranked podium", () => {

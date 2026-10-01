@@ -250,10 +250,12 @@ function IvoryEditorial({
   return (
     <div className="def-editorial tv-tool-mode" aria-label="In evidenza">
       <div className="def-editorial__inner">
-        <article
+        <Link
+          href={`/toools/${focusTool.slug}`}
           className="def-editorial__spotlight tv-featured-tool"
           data-spotlight={focusTool.slug}
           key={focusTool.slug}
+          aria-label={`Apri ${focusTool.name}`}
         >
           <span className="tv-featured-tool__meteor" aria-hidden="true" data-meteor="" />
           <span className="tv-featured-tool__sparks" aria-hidden="true" data-sparks="" />
@@ -277,13 +279,12 @@ function IvoryEditorial({
               <p className="def-editorial__spot-lede">{positioning}</p>
             ) : null}
             {editorialReasonsFor(focusTool).length > 0 ? (
-              <ul className="tv-featured-tool__reasons" aria-label="Perché la redazione lo consiglia">
+              <ul className="tv-featured-tool__reasons" aria-label="Perche la redazione lo consiglia">
                 {editorialReasonsFor(focusTool).map((reason) => (
                   <li key={reason}>{reason}</li>
                 ))}
               </ul>
             ) : null}
-
             <p className="tv-featured-tool__meta">
               <span>
                 <span className="tv-featured-tool__meta-label">Score</span>
@@ -291,7 +292,7 @@ function IvoryEditorial({
               </span>
               <span>
                 <span className="tv-featured-tool__meta-label">Livello</span>
-                <strong>{focusTool.levelLabel ?? "—"}</strong>
+                <strong>{focusTool.levelLabel ?? "\u2014"}</strong>
               </span>
               <span>
                 <span className="tv-featured-tool__meta-label">Lettura</span>
@@ -300,46 +301,32 @@ function IvoryEditorial({
                 </strong>
               </span>
             </p>
-
-          </div>
-        </article>
-        <div className="tv-featured-tool__cta-row">
-          <div className="def-editorial__spot-actions">
-            <Link
-              href={`/toools/${focusTool.slug}`}
-              className="def-editorial__spot-cta def-editorial__spot-cta--primary"
-              aria-label={`Apri ${focusTool.name}`}
-            >
-              Apri {focusTool.name}
-              <ArrowRight size={14} aria-hidden="true" />
-            </Link>
-            {focusTool.url ? (
-              <a
-                href={focusTool.url}
-                target="_blank"
-                rel={
-                  isAffiliateLink
-                    ? "sponsored noopener noreferrer"
-                    : "noopener noreferrer"
-                }
-                className="def-editorial__spot-cta def-editorial__spot-cta--ghost"
-                aria-label={
-                  isAffiliateLink
-                    ? `Sito ufficiale di ${focusTool.name} (link affiliato)`
-                    : `Sito ufficiale di ${focusTool.name}`
-                }
-              >
-                Sito
-                <ExternalLink size={14} aria-hidden="true" />
-              </a>
+            <div className="tv-featured-tool__footer">
+              <span className="tv-featured-tool__cta">
+                Apri scheda
+                <ArrowRight size={13} aria-hidden="true" />
+              </span>
+              {focusTool.url ? (
+                <a
+                  href={focusTool.url}
+                  target="_blank"
+                  rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
+                  className="tv-featured-tool__external"
+                  aria-label={isAffiliateLink ? `Visita sito di ${focusTool.name} (link affiliato)` : `Visita sito di ${focusTool.name}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Visita sito
+                  <ExternalLink size={12} aria-hidden="true" />
+                </a>
+              ) : null}
+            </div>
+            {isAffiliateLink ? (
+              <p className="def-editorial__spot-disclosure">
+                Link affiliato: commissione possibile, senza costi extra.
+              </p>
             ) : null}
           </div>
-          {isAffiliateLink ? (
-            <p className="def-editorial__spot-disclosure">
-              Link affiliato: commissione possibile, senza costi extra.
-            </p>
-          ) : null}
-        </div>
+        </Link>
 
         <LatestFromCatalog tools={tools} />
       </div>
@@ -350,9 +337,17 @@ function IvoryEditorial({
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const podiumRef = useRef<HTMLElement | null>(null);
   const celebrated = useRef(false);
-  /* Forward-focus: which top-3 cell is being pressed. Pure interaction
-     feedback — no ranking/product state, cleared on release/cancel. */
-  const [pressedPos, setPressedPos] = useState<"second" | "first" | "third" | null>(null);
+  /* Selection state: which top-3 cell is currently brought to front.
+     First tap selects (brings forward), second tap on same card navigates.
+     No persistent ranking state — pure UI feedback. */
+  const [selectedPos, setSelectedPos] = useState<"second" | "first" | "third" | null>("first");
+
+  const handleCellClick = (pos: "second" | "first" | "third") => (e: React.MouseEvent) => {
+    if (selectedPos !== pos) {
+      e.preventDefault();
+      setSelectedPos(pos);
+    }
+  };
 
   useEffect(() => {
     const podium = podiumRef.current;
@@ -382,7 +377,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const top3 = [ranked[1], ranked[0], ranked[2]].filter(Boolean) as ToolPublicView[];
   const rest = ranked.slice(3, 6);
 
-  function StageCard({ tool, rank, rankClass, medal, compact, laurel }: { tool: ToolPublicView; rank: string; rankClass: string; medal?: "silver" | "bronze"; compact?: boolean; laurel?: "silver" | "bronze" }) {
+  function StageCard({ tool, rank, rankClass, medal, compact, laurel, isSelected, onSelect }: { tool: ToolPublicView; rank: string; rankClass: string; medal?: "silver" | "bronze"; compact?: boolean; laurel?: "silver" | "bronze"; isSelected?: boolean; onSelect?: (e: React.MouseEvent) => void }) {
     const score = computeEditorialScore(tool);
     const iconUrl = iconUrlFor(tool);
     const initial = initialFor(tool.name);
@@ -391,16 +386,27 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     return (
       <Link
         href={`/toools/${tool.slug}`}
-        className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}`}
+        className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}${isSelected ? " is-selected" : ""}`}
         aria-label={`Posizione ${rank}: apri ${tool.name}`}
+        aria-pressed={isSelected}
+        onClick={onSelect}
       >
         {laurel ? <RankLaurels tone={laurel} compact /> : null}
         <span className="def-podium__rank" aria-hidden="true">{rank}</span>
-        {medal ? (
-          <span className={`def-podium__medal def-podium__medal--${medal}`} aria-hidden="true">
-            <svg viewBox="0 0 40 26" fill="none">
-              <path d="M5 22 L9 9 L15 16 L20 7 L25 16 L31 9 L35 22 Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
-              <circle cx="20" cy="5" r="1.8" fill="currentColor" />
+        {medal === "silver" ? (
+          <span className="def-podium__medal def-podium__medal--silver" aria-hidden="true">
+            <svg viewBox="0 0 44 28" fill="none">
+              <path d="M4 24 L7 8 L14 16 L22 5 L30 16 L37 8 L40 24 Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+              <circle cx="22" cy="3" r="1.6" fill="currentColor" />
+              <line x1="14" y1="16" x2="30" y2="16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+            </svg>
+          </span>
+        ) : medal === "bronze" ? (
+          <span className="def-podium__medal def-podium__medal--bronze" aria-hidden="true">
+            <svg viewBox="0 0 40 28" fill="none">
+              <path d="M6 24 L10 10 L20 6 L30 10 L34 24 Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+              <circle cx="20" cy="4" r="1.4" fill="currentColor" />
+              <path d="M12 20 Q20 16 28 20" stroke="currentColor" strokeWidth="1" opacity="0.5" />
             </svg>
           </span>
         ) : null}
@@ -443,7 +449,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     );
   }
 
-  function WinnerCard({ tool }: { tool: ToolPublicView }) {
+  function WinnerCard({ tool, isSelected, onSelect }: { tool: ToolPublicView; isSelected?: boolean; onSelect?: (e: React.MouseEvent) => void }) {
     const score = computeEditorialScore(tool);
     const iconUrl = iconUrlFor(tool);
     const initial = initialFor(tool.name);
@@ -452,8 +458,10 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     return (
       <Link
         href={`/toools/${tool.slug}`}
-        className="def-podium__card is-first"
+        className={`def-podium__card is-first${isSelected ? " is-selected" : ""}`}
         aria-label={`Posizione 01: apri ${tool.name}`}
+        aria-pressed={isSelected}
+        onClick={onSelect}
       >
         <span className="def-podium__crown" aria-hidden="true">
           <svg viewBox="0 0 48 28" fill="none">
@@ -495,44 +503,32 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
       </div>
       <div className="def-podium__backdrop" aria-hidden="true" />
       <div
-        className={"def-podium__stage" + (pressedPos ? " has-focus-" + pressedPos : "")}
+        className={"def-podium__stage has-focus-" + (selectedPos ?? "first")}
         role="list"
         aria-label="Podio dei tool"
       >
         {top3[0] ? (
           <div
             role="listitem"
-            className="def-podium__cell pos-second"
-            onPointerDown={() => setPressedPos("second")}
-            onPointerUp={() => setPressedPos(null)}
-            onPointerCancel={() => setPressedPos(null)}
-            onPointerLeave={() => setPressedPos(null)}
+            className={"def-podium__cell pos-second"}
           >
-            <StageCard tool={top3[0]} rank="02" rankClass="is-top" medal="silver" laurel="silver" />
+            <StageCard tool={top3[0]} rank="02" rankClass="is-top" medal="silver" laurel="silver" isSelected={selectedPos === "second"} onSelect={handleCellClick("second")} />
           </div>
         ) : null}
         {top3[1] ? (
           <div
             role="listitem"
-            className="def-podium__cell pos-first"
-            onPointerDown={() => setPressedPos("first")}
-            onPointerUp={() => setPressedPos(null)}
-            onPointerCancel={() => setPressedPos(null)}
-            onPointerLeave={() => setPressedPos(null)}
+            className={"def-podium__cell pos-first"}
           >
-            <WinnerCard tool={top3[1]} />
+            <WinnerCard tool={top3[1]} isSelected={selectedPos === "first"} onSelect={handleCellClick("first")} />
           </div>
         ) : null}
         {top3[2] ? (
           <div
             role="listitem"
-            className="def-podium__cell pos-third"
-            onPointerDown={() => setPressedPos("third")}
-            onPointerUp={() => setPressedPos(null)}
-            onPointerCancel={() => setPressedPos(null)}
-            onPointerLeave={() => setPressedPos(null)}
+            className={"def-podium__cell pos-third"}
           >
-            <StageCard tool={top3[2]} rank="03" rankClass="is-top" medal="bronze" laurel="bronze" />
+            <StageCard tool={top3[2]} rank="03" rankClass="is-top" medal="bronze" laurel="bronze" isSelected={selectedPos === "third"} onSelect={handleCellClick("third")} />
           </div>
         ) : null}
       </div>
@@ -542,7 +538,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
             const rank = String(i + 4).padStart(2, "0");
             return (
               <div key={tool.slug} role="listitem" className="def-podium__cell is-rest">
-                <StageCard tool={tool} rank={rank} rankClass="is-rest" compact />
+                <StageCard tool={tool} rank={rank} rankClass="is-rest" compact isSelected={false} />
               </div>
             );
           })}

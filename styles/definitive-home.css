@@ -125,6 +125,8 @@
   padding: clamp(18px, 4.5vw, 28px);
   overflow: hidden;
   color: #fff;
+  text-decoration: none;
+  display: block;
 }
 /* Luminous stage dressing: violet energy wash + gold arc + star field.
    Static layer (no per-frame cost); the meteor owns the motion. */
@@ -336,17 +338,53 @@
   34% { opacity: 0.85; transform: scale(1.05); }
   42%, 100% { opacity: 0.35; transform: scale(0.96); }
 }
-/* Featured CTA row: natural continuation directly under the card. */
-.tv-featured-tool__cta-row {
+/* Featured CTA footer: integrated inside the card. */
+.tv-featured-tool__footer {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 14px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, white 10%, transparent);
 }
-/* The featured flow stacks vertically at every width: card, CTA row,
-   then podium — never side-by-side in the desktop editorial grid. */
+.tv-featured-tool__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 16px;
+  border-radius: var(--tv-radius-pill, 999px);
+  background: var(--tv-button-activation-bg, #e4b23c);
+  color: var(--tv-button-activation-text, #1a1206);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+.tv-featured-tool__external {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--tv-radius-pill, 999px);
+  border: 1px solid color-mix(in srgb, white 18%, transparent);
+  background: color-mix(in srgb, white 6%, transparent);
+  color: color-mix(in srgb, white 80%, transparent);
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 150ms var(--tv-easing-standard), color 150ms var(--tv-easing-standard);
+}
+.tv-featured-tool__external:hover {
+  background: color-mix(in srgb, white 12%, transparent);
+  color: #fff;
+}
+/* The featured flow stacks vertically at every width: card then podium. */
 .def-editorial__inner > .tv-featured-tool,
-.def-editorial__inner > .tv-featured-tool__cta-row,
 .def-editorial__inner > .def-latest {
   grid-column: 1 / -1;
   min-width: 0;
@@ -357,15 +395,11 @@
   }
 }
 @media (min-width: 48rem) {
-  .def-editorial__inner > .tv-featured-tool,
-  .def-editorial__inner > .tv-featured-tool__cta-row {
+  .def-editorial__inner > .tv-featured-tool {
     max-width: 60rem;
     width: 100%;
     margin-inline: auto;
   }
-}
-.tv-featured-tool__cta-row .def-editorial__spot-actions {
-  margin-top: 0 !important;
 }
 /* Reading calm: content always above decoration, never shifted. */
 .tv-featured-tool .def-editorial__spot-body {
@@ -3401,33 +3435,40 @@
   font-size: clamp(0.95rem, 4vw, 1.1rem);
 }
 .def-podium__card.is-compact {
-  padding: 10px 6px 10px;
-  gap: 4px;
-  border-radius: 14px;
+  padding: 12px 8px 10px;
+  gap: 3px;
+  border-radius: 12px;
+  min-height: 88px;
 }
 .def-podium__card.is-compact .def-podium__avatar {
-  width: clamp(32px, 10vw, 40px);
-  height: clamp(32px, 10vw, 40px);
-  border-radius: 10px;
+  width: clamp(28px, 8vw, 36px);
+  height: clamp(28px, 8vw, 36px);
+  border-radius: 8px;
 }
 .def-podium__card.is-compact .def-podium__name {
-  font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+  font-size: clamp(0.75rem, 3vw, 0.8rem);
 }
 .def-podium__card.is-compact .def-podium__cat {
-  display: none;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .def-podium__card.is-compact .def-podium__score {
-  font-size: 0.85rem;
-  padding-top: 2px;
+  font-size: 0.8rem;
+  padding-top: 1px;
 }
 /* Tap: press compression + rank-aware edge flare, immediate, ~180ms. */
-/* Flip-to-front: the pressed cell comes toward the viewer (2.5D depth:
+/* Bring-to-front: the selected cell comes toward the viewer (2.5D depth:
    lift + scale + stronger floor light), siblings recede slightly.
    Geometry-aware: selected 02 shifts INWARD (+x), selected 03 shifts
    INWARD (-x), so scaled cards never cross the safe stage bounds.
-   180–200ms, navigation never waits. */
+   180–200ms, clear and brief. */
 .def-podium__stage .def-podium__cell {
-  transition: transform 190ms var(--tv-easing-standard), filter 190ms var(--tv-easing-standard);
+  transition: transform 200ms var(--tv-easing-standard), filter 200ms var(--tv-easing-standard);
+  cursor: pointer;
 }
 .def-podium__stage.has-focus-second .def-podium__cell.pos-second {
   z-index: 5;
@@ -3461,6 +3502,22 @@
 .def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
 .def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
   filter: brightness(0.9);
+}
+/* Selected card flare: brief material glow on the active card. */
+.def-podium__card.is-selected {
+  box-shadow:
+    0 14px 32px color-mix(in srgb, black 40%, transparent),
+    0 0 24px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 28%, transparent);
+}
+.def-podium__cell.pos-second .def-podium__card.is-selected {
+  box-shadow:
+    0 14px 32px color-mix(in srgb, black 40%, transparent),
+    0 0 24px color-mix(in srgb, #cfd6e4 30%, transparent);
+}
+.def-podium__cell.pos-third .def-podium__card.is-selected {
+  box-shadow:
+    0 14px 32px color-mix(in srgb, black 40%, transparent),
+    0 0 24px color-mix(in srgb, #d29a6b 30%, transparent);
 }
 .def-podium__card:active {
   transform: scale(0.96);
@@ -3553,6 +3610,15 @@
   .def-podium__stage.has-focus-first .def-podium__cell.pos-first,
   .def-podium__stage.has-focus-third .def-podium__cell.pos-third {
     transform: none;
+  }
+  .def-podium__card.is-selected {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 50%, transparent);
+  }
+  .def-podium__cell.pos-second .def-podium__card.is-selected {
+    box-shadow: 0 0 0 2px color-mix(in srgb, #cfd6e4 50%, transparent);
+  }
+  .def-podium__cell.pos-third .def-podium__card.is-selected {
+    box-shadow: 0 0 0 2px color-mix(in srgb, #d29a6b 50%, transparent);
   }
 }
 
