@@ -32,7 +32,7 @@ async function scrollToY(page: import("@playwright/test").Page, y: number): Prom
       window.scrollTo(0, targetY);
     }
   }, y);
-  await page.waitForTimeout(200);
+  await page.waitForTimeout(300);
 }
 
 test.describe("history scroll restoration (390)", () => {
@@ -40,62 +40,73 @@ test.describe("history scroll restoration (390)", () => {
     await page.setViewportSize({ width: 390, height: 844 });
   });
 
-  test("Home Featured → Tool → Back restores exact scroll Y", async ({ page }) => {
+  test("A. Home Featured -> Tool -> Back restores exact scroll Y", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await dismissConsentIfPresent(page);
     await scrollToY(page, 400);
     const beforeY = await getScrollY(page);
-    // Navigate to a tool
     await page.goto("/toools/blink", { waitUntil: "networkidle" });
-    await page.waitForTimeout(300);
-    // Back
+    await page.waitForTimeout(400);
     await page.goBack({ waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const afterY = await getScrollY(page);
     expect(Math.abs(afterY - beforeY)).toBeLessThanOrEqual(2);
   });
 
-  test("Home Podium → Tool → Back restores exact scroll Y", async ({ page }) => {
+  test("B. Home Podium -> Tool -> Back restores exact scroll Y", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await dismissConsentIfPresent(page);
     await scrollToY(page, 1200);
     const beforeY = await getScrollY(page);
     await page.goto("/toools/blink", { waitUntil: "networkidle" });
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
     await page.goBack({ waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const afterY = await getScrollY(page);
     expect(Math.abs(afterY - beforeY)).toBeLessThanOrEqual(2);
   });
 
-  test("Catalog → Tool → Back restores exact scroll Y", async ({ page }) => {
+  test("C. Catalog -> Tool -> Back restores exact scroll Y", async ({ page }) => {
     await page.goto("/archivio", { waitUntil: "networkidle" });
     await dismissConsentIfPresent(page);
     await scrollToY(page, 600);
     const beforeY = await getScrollY(page);
     await page.goto("/toools/blink", { waitUntil: "networkidle" });
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
     await page.goBack({ waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const afterY = await getScrollY(page);
     expect(Math.abs(afterY - beforeY)).toBeLessThanOrEqual(2);
   });
 
-  test("Back then Forward restores both positions", async ({ page }) => {
+  test("D. Tool Detail -> internal route -> Back restores exact scroll Y", async ({ page }) => {
+    await page.goto("/toools/blink", { waitUntil: "networkidle" });
+    await dismissConsentIfPresent(page);
+    await scrollToY(page, 800);
+    const beforeY = await getScrollY(page);
+    // Navigate to another internal route from Tool Detail
+    await page.goto("/archivio", { waitUntil: "networkidle" });
+    await page.waitForTimeout(400);
+    await page.goBack({ waitUntil: "networkidle" });
+    await page.waitForTimeout(600);
+    const afterY = await getScrollY(page);
+    expect(Math.abs(afterY - beforeY)).toBeLessThanOrEqual(2);
+  });
+
+  test("E. Back then Forward restores both positions", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await dismissConsentIfPresent(page);
     await scrollToY(page, 400);
     const homeY = await getScrollY(page);
     await page.goto("/toools/blink", { waitUntil: "networkidle" });
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
     await page.goBack({ waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const backY = await getScrollY(page);
     expect(Math.abs(backY - homeY)).toBeLessThanOrEqual(2);
     // Forward
     await page.goForward({ waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
-    // Should be at tool page (top or restored position)
+    await page.waitForTimeout(600);
     await expect(page).toHaveURL(/\/toools\/blink/);
   });
 });
@@ -105,15 +116,15 @@ test.describe("history scroll restoration (1440 desktop)", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
   });
 
-  test("Home → Tool → Back restores exact scroll Y", async ({ page }) => {
+  test("F. Home -> Tool -> Back restores exact scroll Y (desktop)", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await dismissConsentIfPresent(page);
     await scrollToY(page, 800);
     const beforeY = await getScrollY(page);
     await page.goto("/toools/blink", { waitUntil: "networkidle" });
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
     await page.goBack({ waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const afterY = await getScrollY(page);
     expect(Math.abs(afterY - beforeY)).toBeLessThanOrEqual(2);
   });

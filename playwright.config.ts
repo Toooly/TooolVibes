@@ -219,6 +219,16 @@ export default defineConfig({
           },
           dependencies: ["gate-setup"],
         },
+        {
+          name: "scroll-restoration",
+          testMatch: /scroll-restoration\.spec\.ts/,
+          use: {
+            ...devices["Desktop Chrome"],
+            viewport: { width: 390, height: 844 },
+            storageState: gateStorageState,
+          },
+          dependencies: ["gate-setup"],
+        },
         ...visualProjects,
         typographyProject,
       ],
