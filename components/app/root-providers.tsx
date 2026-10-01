@@ -8,7 +8,7 @@ import { GlobalExperienceLayer } from "@/components/app/global-experience-layer"
 import { InteractionSoundLayerV2 } from "@/components/app/interaction-sound-layer-v2";
 import { MusicAmbienceLayer } from "@/components/app/music-ambience-layer";
 import { ExperienceReleaseProvider } from "@/lib/config/release-context";
-import { RouteTransitionLoader } from "@/components/app/route-transition-loader";
+
 import { GameEffectsLayer } from "@/components/gamification/game-effects-layer";
 import {
   GamificationReleaseProvider,
@@ -77,7 +77,7 @@ export function RootProviders({
                 <>
                   <GlobalExperienceLayer />
                   <MotionObserver />
-                  <RouteTransitionLoader />
+
                   {enableAudio && (
                     <>
                       <InteractionSoundLayerV2 />

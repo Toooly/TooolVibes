@@ -10,7 +10,7 @@ import { expect, test } from "./fixtures/release-fixture";
 async function dismissConsentIfPresent(page: import("@playwright/test").Page) {
   const accept = page.getByRole("button", { name: "Accetta tutto" });
   if (await accept.isVisible().catch(() => false)) {
-    await accept.tap();
+    await accept.click();
     await expect(page.locator(".tv-consent-banner")).toHaveCount(0);
   }
 }

@@ -32,10 +32,6 @@ const motionCss = readFileSync(
   "utf8",
 );
 const globalsCss = readFileSync(resolve(process.cwd(), "app/globals.css"), "utf8");
-const loaderSrc = readFileSync(
-  resolve(process.cwd(), "components/app/route-transition-loader.tsx"),
-  "utf8",
-);
 
 function extractBlock(source: string, selector: string): string | null {
   const selectorIndex = source.indexOf(selector);
@@ -145,11 +141,7 @@ describe("V3.1 family surfaces", () => {
 describe("V3.1 route-guide and overlay", () => {
   it("removes the V1 purple route-guide hex", () => {
     expect(memberCss).not.toContain("#1a1238");
-    expect(extractBlock(memberCss, ".tv-route-guide__card {")).toContain(
-      "var(--tv-grammar-institutional-surface-raised)",
-    );
-    expect(loaderSrc).toContain("data-family={family}");
-    expect(loaderSrc).toContain("function familyForPath");
+    expect(memberCss).not.toContain("tv-route-guide");
   });
 
   it("normalizes shadcn card/popover to canonical cloth", () => {

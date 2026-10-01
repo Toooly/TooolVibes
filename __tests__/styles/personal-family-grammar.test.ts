@@ -262,7 +262,7 @@ describe("V3 account — il mio spazio", () => {
     expect(marker).toContain("var(--tv-grammar-personal-remembered-marker)");
   });
 
-  it("il dock route-guide usa il gutter canonico, non 1rem hardcoded", () => {
-    expect(memberExperienceCss).toContain("padding: 0 var(--tv-gutter-mobile) calc(");
+  it("il dock route-guide e stato rimosso completamente", () => {
+    expect(memberExperienceCss).not.toContain("tv-route-guide");
   });
 });

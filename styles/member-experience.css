@@ -344,119 +344,26 @@
 
 
 /* Route guide — dock on mobile, panel on desktop. Never a top bar. */
-.tv-route-guide {
-  position: fixed;
-  inset: 0;
-  z-index: calc(var(--tv-z-nav, 50) + 12);
-  display: grid;
-  place-items: end center;
-  padding: 0 var(--tv-gutter-mobile) calc(var(--tv-bottom-nav-total, 4.0625rem) + 0.85rem);
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 200ms ease, visibility 200ms linear;
-}
 
-.tv-route-guide.is-visible {
-  opacity: 1;
-  visibility: visible;
-}
 
-.tv-route-guide__veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 42%,
-    color-mix(in srgb, var(--tv-grammar-institutional-surface) 72%, transparent) 100%
-  );
-}
 
-.tv-route-guide__card {
-  position: relative;
-  width: min(20rem, calc(100vw - 2rem));
-  padding: 0.95rem 1.15rem 1.05rem;
-  border: 1px solid var(--tv-grammar-institutional-border);
-  border-radius: 1.35rem;
-  background: var(--tv-grammar-institutional-surface-raised);
-  box-shadow: var(--tv-elevation-rest);
-  text-align: center;
-  transform: translate3d(0, 1.1rem, 0);
-  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
-}
 
-.tv-route-guide[data-family="signal"] .tv-route-guide__card {
-  box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace), var(--tv-elevation-rest);
-}
 
-.tv-route-guide[data-family="personal"] .tv-route-guide__card {
-  box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge), var(--tv-elevation-rest);
-}
 
-.tv-route-guide[data-family="editorial"] .tv-route-guide__card {
-  box-shadow: inset 0 1px 0 var(--tv-grammar-editorial-rail), var(--tv-elevation-rest);
-}
 
-.tv-route-guide[data-family="workflow"] .tv-route-guide__card {
-  box-shadow: inset 2px 0 0 var(--tv-grammar-workflow-border), var(--tv-elevation-rest);
-}
 
-.tv-route-guide[data-family="resource"] .tv-route-guide__card {
-  background: var(--tv-grammar-resource-surface);
-}
 
-.tv-route-guide[data-family="commercial"] .tv-route-guide__card {
-  background: var(--tv-grammar-commercial-surface);
-}
 
-.tv-route-guide.is-visible .tv-route-guide__card {
-  transform: none;
-}
 
-.tv-route-guide__kicker {
-  margin: 0 0 0.2rem;
-  font-size: var(--tv-text-eyebrow);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--tv-grammar-institutional-ink-secondary);
-}
 
-.tv-route-guide__title {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 750;
-  letter-spacing: -0.03em;
-  color: var(--tv-grammar-institutional-ink);
-}
 
 @media (min-width: 1280px) {
-  .tv-route-guide {
-    place-items: center;
-    padding: 0;
-  }
 
-  .tv-route-guide__veil {
-    background: color-mix(in srgb, var(--tv-grammar-institutional-surface) 42%, transparent);
-  }
 
-  .tv-route-guide__card {
-    width: min(22rem, 28vw);
-    padding: 1.15rem 1.4rem 1.25rem;
-    transform: translate3d(0, 0, 0) scale(0.96);
-  }
 
-  .tv-route-guide.is-visible .tv-route-guide__card {
-    transform: scale(1);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tv-route-guide,
-  .tv-route-guide__card {
-    transition: none;
-    transform: none;
-  }
 }
 
 .tv-page-transition { min-width: 0; }
