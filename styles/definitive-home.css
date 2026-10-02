@@ -1355,21 +1355,14 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* Decorative telemetry accent — fixed width, NOT a data metric */
 .tv-home-radar__launch-bar {
   grid-column: 1 / -1;
   height: 2px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  overflow: hidden;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tv-accent-primary, #6a3cff) 40%, transparent) 0%, color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 50%, transparent) 60%, transparent 100%);
   margin-top: 0.15rem;
-}
-.tv-home-radar__launch-bar::after {
-  content: "";
-  display: block;
-  height: 100%;
-  width: var(--intensity, 0%);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--tv-accent-primary, #6a3cff) 60%, transparent), var(--tv-accent-cyan, #39d2f6));
-  border-radius: inherit;
+  opacity: 0.5;
 }
 /* More-signals affordance */
 .tv-home-radar__hint {

@@ -665,7 +665,6 @@ export function HomeRadarPreview() {
   );
 
   const top = model.items.slice(0, 5);
-  const maxVotes = top.reduce((m, i) => Math.max(m, i.votesCount), 0) || 1;
 
   return (
     <div
@@ -717,7 +716,6 @@ export function HomeRadarPreview() {
       ) : top.length > 0 ? (
         <ol className="tv-home-radar__launches" aria-label="Top lanci del periodo">
           {top.map((item, index) => {
-            const intensity = Math.round((item.votesCount / maxVotes) * 100);
             return (
               <li key={item.id}>
                 <a
@@ -748,7 +746,6 @@ export function HomeRadarPreview() {
                   <span
                     className="tv-home-radar__launch-bar"
                     aria-hidden="true"
-                    style={{ ["--intensity" as string]: `${intensity}%` }}
                   />
                 </a>
               </li>
