@@ -4715,6 +4715,10 @@
   outline: 2px solid color-mix(in srgb, #f0c14b 60%, transparent);
   outline-offset: 3px;
 }
+/* Stack CTA label: restrained negative tracking to fit one line at 320 */
+.tv-gold-cta--secondary .tv-gold-cta__label {
+  letter-spacing: -0.05em;
+}
 /* Restrained gold edge shimmer for secondary */
 .tv-gold-cta--secondary::before {
   content: "";
