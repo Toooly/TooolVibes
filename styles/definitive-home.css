@@ -1539,7 +1539,7 @@
   display: grid;
   gap: 8px;
   min-height: 100%;
-  padding: 18px;
+  padding: 18px 8px;
   border-radius: var(--tv-radius-lg);
   border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.08));
   text-decoration: none;
@@ -4491,13 +4491,15 @@
 }
 /* Stack card CTA — secondary variant of gold CTA family.
    Layout-only here; visual identity from .tv-gold-cta--secondary. */
-.def-stacks__cta {
+.def-stacks__cta.tv-gold-cta {
   margin-top: auto;
+  width: calc(100% + 16px);
+  margin-inline: -8px;
   max-width: none;
-  padding: 10px 6px;
-  gap: 3px;
+  padding: 10px 4px;
+  gap: 2px;
   font-size: 0.75rem;
-  letter-spacing: 0;
+  letter-spacing: -0.03em;
   white-space: nowrap;
 }
 .def-stacks__arrow {
