@@ -237,10 +237,8 @@ function ArchiveV4ToolCard({
           <span className="ar4-card__best-icon" aria-hidden="true">
             <Target />
           </span>
-          <span>
-            <span className="ar4-card__best-label">Ideale per</span>{" "}
-            <span className="ar4-card__best-text">{bestFor}</span>
-          </span>
+          <span className="ar4-card__best-label">Ideale per</span>
+          <span className="ar4-card__best-text">{bestFor}</span>
         </p>
       ) : null}
 

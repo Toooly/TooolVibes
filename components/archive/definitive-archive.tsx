@@ -41,6 +41,16 @@ import {
 import { DISCOVERY_INTENTS } from "@/lib/product/discovery-intents";
 import type { ToolFilterGroup, ToolPublicView } from "@/lib/data/tool-public-view";
 import { ArchiveV4ToolCard } from "./archive-v4-tool-card";
+
+/**
+ * Podium metallic tiers — coherent with homepage podium crown/medal system.
+ * blink = gold (01), vibecode = silver (02), weweb = bronze (03).
+ */
+const PODIUM_TIERS: Record<string, "primary" | "secondary" | "tertiary"> = {
+  blink: "primary",
+  vibecode: "secondary",
+  weweb: "tertiary",
+};
 import { CatalogoFacetHead } from "./catalogo-facet-head";
 
 type DefinitiveArchiveProps = {
@@ -535,6 +545,7 @@ export function DefinitiveArchive({
                       <ArchiveV4ToolCard
                         tool={tool}
                         rank={idx + 1}
+                        promotedTier={PODIUM_TIERS[tool.slug]}
                         className={idx < 3 ? "ar4-card--lead" : "ar4-card--rest"}
                       />
                     </li>
