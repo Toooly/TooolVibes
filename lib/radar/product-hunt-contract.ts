@@ -40,6 +40,8 @@ export type ProductHuntPayload = {
   updatedAt: string;
   items: ProductHuntItem[];
   message?: string;
+  diag?: string;
+  diagDetail?: string;
 };
 
 export type RadarDataState =

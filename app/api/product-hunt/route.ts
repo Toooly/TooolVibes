@@ -27,9 +27,6 @@ type ProductHuntGraphQlResponse = {
           name?: string;
           tagline?: string;
           votesCount?: number;
-          votes?: {
-            totalCount?: number;
-          } | null;
           commentsCount?: number;
           url?: string;
           thumbnail?: {
@@ -64,9 +61,6 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
           name
           tagline
           votesCount
-          votes {
-            totalCount
-          }
           commentsCount
           url
           thumbnail {
@@ -261,7 +255,7 @@ function normalizeItems(data: ProductHuntGraphQlResponse): ProductHuntItem[] {
       id: node.id ?? node.name ?? crypto.randomUUID(),
       name: node.name ?? "Lancio su Product Hunt",
       tagline: node.tagline ?? "Nuovo lancio su Product Hunt",
-      votesCount: node.votesCount ?? node.votes?.totalCount ?? 0,
+      votesCount: node.votesCount ?? 0,
       commentsCount: node.commentsCount ?? 0,
       productHuntUrl: node.url ?? "https://www.producthunt.com/",
       thumbnailUrl: node.thumbnail?.url,
@@ -289,18 +283,19 @@ async function getProductHuntToken(now: number): Promise<{ token: string | null;
   }
 
   try {
+    const oauthBody = new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "client_credentials",
+    });
+
     const response = await productHuntFetch(PRODUCT_HUNT_OAUTH_ENDPOINT, {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        grant_type: "client_credentials",
-        scope: "public private",
-      }),
+      body: oauthBody.toString(),
     });
 
     if (!response.ok) {
@@ -386,7 +381,6 @@ export async function GET(request: NextRequest) {
       message: "Classifica Product Hunt non configurata.",
     };
 
-    fallbackCache.set(range, { expiresAt: now + FALLBACK_TTL_MS, payload });
     return buildResponse(payload, FALLBACK_TTL_MS);
   }
 
@@ -527,9 +521,16 @@ export async function GET(request: NextRequest) {
           updatedAt: new Date(now).toISOString(),
           items: [],
           message: "Classifica Product Hunt temporaneamente non disponibile.",
+          diag: category,
+          diagDetail: errMsg.slice(0, 120),
         };
 
-    fallbackCache.set(range, { expiresAt: now + FALLBACK_TTL_MS, payload });
+    // Only cache last-known-GOOD responses in fallbackCache.
+    // Error/missing-token payloads must NOT be cached — otherwise the
+    // endpoint gets stuck serving stale errors for FALLBACK_TTL_MS.
+    if (payload.status === "ok" && payload.items.length > 0) {
+      fallbackCache.set(range, { expiresAt: now + FALLBACK_TTL_MS, payload });
+    }
     return buildResponse(payload, FALLBACK_TTL_MS);
   }
 }
