@@ -44,7 +44,7 @@ type ProductHuntGraphQlResponse = {
 
 const PRODUCT_HUNT_ENDPOINT = "https://api.producthunt.com/v2/api/graphql";
 const PRODUCT_HUNT_OAUTH_ENDPOINT = "https://api.producthunt.com/v2/oauth/token";
-const productHuntFetch = createTimeoutFetch(5000);
+const productHuntFetch = createTimeoutFetch(10000);
 
 const PRODUCT_HUNT_QUERY = /* GraphQL */ `
   query TooolVibesProductHuntTop(
@@ -299,6 +299,7 @@ async function getProductHuntToken(now: number): Promise<{ token: string | null;
         client_id: clientId,
         client_secret: clientSecret,
         grant_type: "client_credentials",
+        scope: "public private",
       }),
     });
 
@@ -396,6 +397,7 @@ export async function GET(request: NextRequest) {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
         query: PRODUCT_HUNT_QUERY,
