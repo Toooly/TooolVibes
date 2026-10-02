@@ -31,6 +31,8 @@ export type HomeStackPreview = {
   setupTime?: string | null;
   cost?: string | null;
   stages?: HomeStackStage[];
+  variantLabel?: string | null;
+  toolCount?: number | null;
 };
 
 function hasAffiliateSignal(href: string | null | undefined) {
@@ -674,80 +676,146 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
   function scrollToIndex(index: number) {
     const root = scrollerRef.current;
     const card = root?.querySelectorAll<HTMLElement>("[data-stack-card]")[index];
-    card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    card?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    setActive(index);
   }
+
+  const total = stacks.length;
+  const showDots = total > 1 && total <= 12;
 
   return (
     <div className="def-stacks tv-stack-mode">
       {stacks.length > 0 ? (
         <div
-          className="tv-workflow-deck"
+          className="def-stacks__carousel"
           role="region"
           aria-roledescription="carousel"
           aria-label="Stack in evidenza"
         >
-          <div className="tv-editorial-deck__controls">
-            <button
-              type="button"
-              className="tv-editorial-deck__nav"
-              aria-label="Stack precedente"
-              onClick={() => scrollToIndex(Math.max(0, active - 1))}
-              disabled={active === 0}
-            >
-              <ChevronLeft size={16} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="tv-editorial-deck__nav"
-              aria-label="Stack successivo"
-              onClick={() => scrollToIndex(Math.min(stacks.length - 1, active + 1))}
-              disabled={active === stacks.length - 1}
-            >
-              <ChevronRight size={16} aria-hidden="true" />
-            </button>
-          </div>
-          <ul ref={scrollerRef} className="def-stacks__grid tv-workflow-deck__track">
-            {stacks.map((stack, index) => (
-              <li key={stack.slug} data-stack-card="" className={index === active ? "is-active" : undefined}>
-                <Link href={`/collections/${stack.slug}`} className="def-stacks__card tv-workflow-card">
-                  <p className="tv-workflow-card__eyebrow">{stack.kicker}</p>
-                  <h3 className="tv-workflow-card__outcome">{stack.outcome || stack.title}</h3>
-                  {stack.stages && stack.stages.length > 0 ? (
-                    <div className="tv-workflow-card__flow" aria-label="Flusso">
-                      {stack.stages.slice(0, 3).map((stage, si) => (
-                        <div key={`${stack.slug}-${stage.name}`} className="tv-workflow-card__step">
-                          <div className="tv-workflow-card__step-icon">
-                            {stage.iconUrl ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img src={stage.iconUrl} alt="" className="tv-workflow-card__stage-icon" loading="lazy" decoding="async" />
-                            ) : null}
-                          </div>
-                          <span className="tv-workflow-card__step-label">{stage.label}</span>
-                          {si < Math.min(stack.stages?.length ?? 0, 3) - 1 ? (
-                            <span className="tv-workflow-card__step-arrow" aria-hidden="true">→</span>
-                          ) : null}
-                        </div>
-                      ))}
+          <button
+            type="button"
+            className="def-stacks__arrow def-stacks__arrow--prev"
+            aria-label="Stack precedente"
+            onClick={() => scrollToIndex(Math.max(0, active - 1))}
+            disabled={active === 0}
+          >
+            <ChevronLeft size={18} aria-hidden="true" />
+          </button>
+          <ul ref={scrollerRef} className="def-stacks__rail">
+            {stacks.map((stack, index) => {
+              const isActive = index === active;
+              const shownTools = (stack.stages ?? []).slice(0, 3);
+              const extraCount = Math.max(0, (stack.toolCount ?? stack.stages?.length ?? 0) - 3);
+              return (
+                <li
+                  key={stack.slug}
+                  data-stack-card=""
+                  className={`def-stacks__slide${isActive ? " is-active" : ""}`}
+                >
+                  <Link href={`/collections/${stack.slug}`} className="def-stacks__card">
+                    <div className="def-stacks__card-head">
+                      <span className="def-stacks__pill">{stack.kicker}</span>
+                      <span className="def-stacks__counter">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                        {index + 1}/{total}
+                      </span>
                     </div>
-                  ) : null}
-                  {(stack.setupTime || stack.cost) ? (
-                    <p className="tv-workflow-card__meta">
-                      {stack.setupTime ? <span className="tv-featured-tool__mono">{stack.setupTime}</span> : null}
-                      {stack.setupTime && stack.cost ? " · " : null}
-                      {stack.cost ? <span className="tv-featured-tool__mono">{stack.cost}</span> : null}
-                      {stack.stages && stack.stages.length > 0 ? ` · ${stack.stages.length} tool` : null}
-                    </p>
-                  ) : null}
-                  {!authenticated ? (
-                    <p className="tv-workflow-card__gate">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                      Accedi per lo stack completo
-                    </p>
-                  ) : null}
-                </Link>
-              </li>
-            ))}
+                    <h3 className="def-stacks__title">{stack.title}</h3>
+                    {stack.outcome ? (
+                      <p className="def-stacks__desc">{stack.outcome}</p>
+                    ) : null}
+                    {shownTools.length > 0 ? (
+                      <ol className="def-stacks__tools" aria-label="Tool inclusi">
+                        {shownTools.map((stage, si) => (
+                          <li key={`${stack.slug}-${stage.name}`} className="def-stacks__tool">
+                            <span className="def-stacks__tool-icon">
+                              {stage.iconUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={stage.iconUrl} alt="" loading="lazy" decoding="async" />
+                              ) : (
+                                <span className="def-stacks__tool-fallback">{stage.name.slice(0, 1).toUpperCase()}</span>
+                              )}
+                            </span>
+                            <span className="def-stacks__tool-text">
+                              <strong>{stage.name}</strong>
+                              {stage.label ? <span>{stage.label}</span> : null}
+                            </span>
+                            {si < shownTools.length - 1 ? (
+                              <span className="def-stacks__tool-node" aria-hidden="true" />
+                            ) : null}
+                          </li>
+                        ))}
+                        {extraCount > 0 ? (
+                          <li className="def-stacks__tool def-stacks__tool--more">+{extraCount} altri</li>
+                        ) : null}
+                      </ol>
+                    ) : null}
+                    <div className="def-stacks__meta">
+                      {stack.setupTime ? (
+                        <span className="def-stacks__meta-item">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                          {stack.setupTime}
+                        </span>
+                      ) : null}
+                      {stack.variantLabel ? (
+                        <span className="def-stacks__meta-item">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                          Variante {stack.variantLabel}
+                        </span>
+                      ) : null}
+                      {stack.cost ? (
+                        <span className="def-stacks__meta-item">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                          {stack.cost}
+                        </span>
+                      ) : null}
+                      {stack.toolCount ? (
+                        <span className="def-stacks__meta-item">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                          {stack.toolCount} tool
+                        </span>
+                      ) : null}
+                    </div>
+                    {!authenticated ? (
+                      <span className="def-stacks__cta">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        Accedi per lo stack completo
+                      </span>
+                    ) : (
+                      <span className="def-stacks__cta def-stacks__cta--open">
+                        Apri raccolta
+                        <ArrowRight size={14} aria-hidden="true" />
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
+          <button
+            type="button"
+            className="def-stacks__arrow def-stacks__arrow--next"
+            aria-label="Stack successivo"
+            onClick={() => scrollToIndex(Math.min(stacks.length - 1, active + 1))}
+            disabled={active === stacks.length - 1}
+          >
+            <ChevronRight size={18} aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
+      {showDots ? (
+        <div className="def-stacks__dots" role="tablist" aria-label="Paginazione stack">
+          {stacks.map((stack, index) => (
+            <button
+              key={stack.slug}
+              type="button"
+              role="tab"
+              aria-selected={index === active}
+              aria-label={`Vai allo stack ${index + 1}`}
+              className={`def-stacks__dot${index === active ? " is-active" : ""}`}
+              onClick={() => scrollToIndex(index)}
+            />
+          ))}
         </div>
       ) : null}
       <Link href="/collections" className="def-stacks__more">

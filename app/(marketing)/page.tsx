@@ -51,7 +51,7 @@ export default async function HomePage() {
 
   const selectedStacks = [...featuredStacks];
   for (const stack of allStacks) {
-    if (selectedStacks.length >= 3) break;
+    if (selectedStacks.length >= 8) break;
     if (!selectedStacks.some((item) => item.slug === stack.slug)) {
       selectedStacks.push(stack);
     }
@@ -62,7 +62,7 @@ export default async function HomePage() {
       tools={tools}
       weeklyTool={featured}
       announcement={homepage.announcement.enabled ? homepage.announcement : null}
-      stacks={selectedStacks.slice(0, 3).map((stack) => {
+      stacks={selectedStacks.slice(0, 8).map((stack) => {
         const cores = stack.included_tools.filter((slot) => slot.is_core).slice(0, 3);
         const nodes = (cores.length >= 2 ? cores : stack.included_tools).slice(0, 3);
         return {
@@ -80,6 +80,8 @@ export default async function HomePage() {
               ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(slot.tool.domain)}&sz=64`
               : null,
           })),
+          variantLabel: stack.stack_variants?.[0]?.label ?? null,
+          toolCount: stack.tool_count ?? null,
         };
       })}
     />

@@ -145,7 +145,7 @@ describe("home podium contract", () => {
 
   it("calms the podium under prefers-reduced-motion (scroll still works)", () => {
     const css = read("styles/definitive-home.css");
-    const tail = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
+    const tail = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
     expect(tail).toContain(".def-latest.is-celebrated .def-podium__stage .def-podium__cell,");
     expect(tail).toContain("animation: none");
     expect(tail).toContain(".def-podium__stage.has-focus-second .def-podium__cell.pos-second,");
