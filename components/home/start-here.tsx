@@ -411,13 +411,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     const scoreLabel =
       score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
     return (
-      <Link
-        href={`/toools/${tool.slug}`}
-        className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}${isSelected ? " is-selected" : ""}`}
-        aria-label={`Posizione ${rank}: apri ${tool.name}`}
-        data-selected={isSelected || undefined}
-        onClick={onSelect}
-      >
+      <>
         {!compact ? (
           <div className="def-podium__badge" aria-hidden="true">
             {laurel ? <RankLaurels tone={laurel} compact /> : null}
@@ -441,6 +435,13 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
             <span className="def-podium__rank">{rank}</span>
           </div>
         ) : null}
+        <Link
+          href={`/toools/${tool.slug}`}
+          className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}${isSelected ? " is-selected" : ""}`}
+          aria-label={`Posizione ${rank}: apri ${tool.name}`}
+          data-selected={isSelected || undefined}
+          onClick={onSelect}
+        >
         {compact ? <span className="def-podium__rank def-podium__rank--inline" aria-hidden="true">{rank}</span> : null}
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
@@ -486,7 +487,8 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
             </div>
           </div>
         ) : null}
-      </Link>
+        </Link>
+      </>
     );
   }
 
@@ -516,13 +518,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     const scoreLabel =
       score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
     return (
-      <Link
-        href={`/toools/${tool.slug}`}
-        className={`def-podium__card is-first${isSelected ? " is-selected" : ""}`}
-        aria-label={`Posizione 01: apri ${tool.name}`}
-        data-selected={isSelected || undefined}
-        onClick={onSelect}
-      >
+      <>
         <div className="def-podium__badge def-podium__badge--gold" aria-hidden="true">
           <RankLaurels tone="gold" />
           <span className="def-podium__crown">
@@ -535,6 +531,13 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           </span>
           <span className="def-podium__rank">01</span>
         </div>
+        <Link
+          href={`/toools/${tool.slug}`}
+          className={`def-podium__card is-first${isSelected ? " is-selected" : ""}`}
+          aria-label={`Posizione 01: apri ${tool.name}`}
+          data-selected={isSelected || undefined}
+          onClick={onSelect}
+        >
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -579,7 +582,8 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
             </div>
           </div>
         ) : null}
-      </Link>
+        </Link>
+      </>
     );
   }
 
