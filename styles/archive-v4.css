@@ -56,12 +56,20 @@
 .ar4-chip:hover { border-color: var(--tv-border-interactive); }
 
 .ar4-chip.is-active {
-  background: var(--tv-accent-primary);
-  border-color: var(--tv-accent-primary);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--tv-accent-violet) 88%, transparent),
+    color-mix(in srgb, var(--tv-accent-primary) 72%, transparent));
+  border-color: color-mix(in srgb, var(--tv-accent-violet) 60%, transparent);
   color: var(--tv-ink-on-brand);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 24%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-violet) 30%, transparent),
+    0 2px 8px -2px color-mix(in srgb, var(--tv-accent-violet) 40%, transparent);
 }
-.ar4-chip.is-active em { background: color-mix(in srgb, #000 14%, transparent); color: var(--tv-ink-on-brand); }
+.ar4-chip.is-active em {
+  background: color-mix(in srgb, #000 18%, transparent);
+  color: var(--tv-ink-on-brand);
+}
 
 .ar4-chip--level.is-active {
   background: color-mix(in srgb, var(--tv-accent-primary) 18%, transparent);
@@ -735,13 +743,14 @@
   min-width: 0;
 }
 
-.ar4-card.is-hover {
-  border-color: var(--tv-border-interactive);
-  background: var(--tv-surface-elevated);
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:hover {
+    border-color: var(--tv-border-interactive);
+    background: var(--tv-surface-elevated);
+  }
 }
-
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .ar4-card.is-hover {
+  .ar4-card:hover {
     transform: translateY(-1px);
   }
 }
@@ -751,7 +760,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ar4-card.is-hover,
+  .ar4-card:hover,
   .ar4-card:active {
     transform: none;
   }
@@ -855,12 +864,15 @@
   text-overflow: ellipsis;
 }
 
-.ar4-card__name-link:hover { color: var(--tv-accent-primary); }
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card__name-link:hover { color: var(--tv-accent-primary); }
+}
 
-.ar4-card:has(.ar4-card__status--editorial) .ar4-card__name-link:hover,
-.ar4-card:has(.ar4-card__status--editorial).is-hover .ar4-card__name-link,
-.ar4-card:has(.ar4-card__status--editorial):hover .ar4-card__name-link {
-  color: var(--tv-ink-primary);
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:has(.ar4-card__status--editorial) .ar4-card__name-link:hover,
+  .ar4-card:has(.ar4-card__status--editorial):hover .ar4-card__name-link {
+    color: var(--tv-ink-primary);
+  }
 }
 
 /* Mobile: name MUST NOT truncate (Blink → "BL..." regression fix). */
@@ -2674,39 +2686,64 @@ a.archive-v4-card:focus-visible {
 .ar4-applied {
   max-width: var(--tv-container-uw);
   margin: 0 auto;
-  padding: 0 var(--tv-gutter-mobile) 12px;
-  display: grid;
-  gap: 8px;
+  padding: 4px var(--tv-gutter-mobile) 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 .ar4-applied__label {
   margin: 0;
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--tv-ink-muted-aa);
+  flex-shrink: 0;
 }
 .ar4-applied__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
-.ar4-applied__chip,
+.ar4-applied__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 0 8px 0 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-violet) 35%, transparent);
+  background: color-mix(in srgb, var(--tv-accent-violet) 10%, transparent);
+  color: var(--tv-ink-primary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
 .ar4-applied__reset {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-height: 32px;
+  gap: 4px;
+  min-height: 28px;
   padding: 0 10px;
   border-radius: 999px;
   border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.12));
   background: transparent;
-  color: inherit;
+  color: var(--tv-ink-secondary);
   font: inherit;
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color var(--tv-duration-fast) var(--tv-easing-standard),
+              color var(--tv-duration-fast) var(--tv-easing-standard);
 }
-.ar4-applied__reset {
-  text-decoration: underline;
-  border: 0;
+.ar4-applied__reset:hover {
+  border-color: var(--tv-border-interactive);
+  color: var(--tv-ink-primary);
 }
 
 /* ============================================================
@@ -2777,13 +2814,11 @@ a.archive-v4-card:focus-visible {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .ar4-card:has(.ar4-card__status--editorial):hover,
-  .ar4-card:has(.ar4-card__status--editorial).is-hover {
+  .ar4-card:has(.ar4-card__status--editorial):hover {
     border-color: color-mix(in srgb, var(--tv-grammar-editorial-brass) 52%, var(--tv-grammar-resource-edge));
   }
 
-  .ar4-card:has(.ar4-card__status--editorial):hover::after,
-  .ar4-card:has(.ar4-card__status--editorial).is-hover::after {
+  .ar4-card:has(.ar4-card__status--editorial):hover::after {
     width: 3.25rem;
     background: var(--tv-grammar-editorial-brass);
   }
@@ -2894,8 +2929,10 @@ a.archive-v4-card:focus-visible {
 .ar4-card {
   transition: box-shadow var(--tv-duration-base) var(--tv-easing-standard);
 }
-.ar4-card:hover {
-  box-shadow: inset 2px 0 0 var(--tv-accent-brand);
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:hover {
+    box-shadow: inset 2px 0 0 var(--tv-accent-brand);
+  }
 }
 
 .ar4-card--lead {
@@ -2918,7 +2955,7 @@ a.archive-v4-card:focus-visible {
    bookmark at right edge. Replaces boxed-card stacking ≤767px.
    ============================================================ */
 @media (max-width: 767px) {
-  .ar4-grid__list { gap: 10px; }
+  .ar4-grid__list { gap: 14px; }
 
   .ar4-card,
   .ar4-card.is-promoted,
@@ -2926,9 +2963,9 @@ a.archive-v4-card:focus-visible {
   .ar4-card.is-reduced,
   .ar4-card[data-density="compact"] {
     display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) 44px;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
     grid-template-areas:
-      "avatar identity bookmark"
+      "avatar identity actions"
       "score best best";
     column-gap: 10px;
     row-gap: 2px;
@@ -3000,6 +3037,8 @@ a.archive-v4-card:focus-visible {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
   }
 
   .ar4-card__actions { display: contents; }
@@ -3010,11 +3049,16 @@ a.archive-v4-card:focus-visible {
     display: contents;
   }
 
+  .ar4-card__toggles {
+    grid-area: actions;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    justify-self: end;
+  }
   .ar4-card__bookmark {
-    grid-area: bookmark;
     width: 44px;
     height: 44px;
-    justify-self: end;
     display: grid;
     place-items: center;
     background: transparent;
@@ -3025,18 +3069,9 @@ a.archive-v4-card:focus-visible {
     position: relative;
   }
   .ar4-card__bookmark-icon { width: 20px; height: 20px; }
-  .ar4-card__bookmark[data-saved] { color: var(--tv-ink-primary); }
-  .ar4-card__bookmark-dot {
-    position: absolute;
-    top: 0.125rem;
-    right: 2px;
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background: #f0524f;
-  }
+  .ar4-card__bookmark[data-saved] { color: var(--tv-accent-primary); }
 
-  .ar4-card__toggles-more { display: none; }
+  .ar4-card__toggles-more { display: inline-flex; align-items: center; }
 
   .ar4-card__disclosure { display: none; }
 
@@ -3056,5 +3091,170 @@ a.archive-v4-card:focus-visible {
 @media (hover: hover) and (pointer: fine) {
   .ar4-card:hover {
     border-color: color-mix(in srgb, var(--tv-accent-violet, #7c3aed) 40%, transparent);
+  }
+}
+
+/* ============================================================
+   CATALOG FINAL — Compare perimeter energy (violet/cyan)
+   A small luminous point travels the card perimeter when
+   the tool is in the Compare session. Restrained, cool, specific.
+   ============================================================ */
+@property --ar4-cmp-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.ar4-card[data-selected] {
+  --ar4-cmp-angle: 0deg;
+  position: relative;
+  border-color: color-mix(in srgb, var(--tv-accent-violet) 45%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-violet) 30%, transparent),
+    0 0 12px -2px color-mix(in srgb, var(--tv-accent-cyan) 25%, transparent);
+}
+
+.ar4-card[data-selected]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--ar4-cmp-angle),
+    transparent 0deg,
+    transparent 300deg,
+    color-mix(in srgb, var(--tv-accent-cyan) 70%, transparent) 330deg,
+    color-mix(in srgb, var(--tv-accent-violet) 80%, transparent) 350deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: ar4-cmp-orbit 3.2s linear infinite;
+}
+
+@keyframes ar4-cmp-orbit {
+  to { --ar4-cmp-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card[data-selected]::after {
+    animation: none;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--tv-accent-violet) 50%, transparent),
+      color-mix(in srgb, var(--tv-accent-cyan) 40%, transparent)
+    );
+  }
+}
+
+/* ============================================================
+   CATALOG FINAL — Card entry reveal (one-shot, IntersectionObserver)
+   Cards fade+rise once as they enter the viewport. No replay.
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .ar4-card-reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity var(--tv-duration-base) var(--tv-easing-decelerate),
+      transform var(--tv-duration-base) var(--tv-easing-decelerate);
+    transition-delay: var(--ar4-reveal-delay, 0ms);
+  }
+  .ar4-card-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   CATALOG FINAL — Filter rail geometry
+   Safe inline padding so first/last chips are never clipped.
+   ============================================================ */
+.ar4-categories__chips {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  scroll-padding-inline: 4px;
+  padding-inline: 4px;
+  margin-inline: -4px;
+}
+.ar4-categories__chips::-webkit-scrollbar { display: none; }
+
+.ar4-chip {
+  scroll-margin-inline: 8px;
+}
+
+/* ============================================================
+   CATALOG FINAL — Category chip count badge integrated
+   ============================================================ */
+.ar4-chip em {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  color: inherit;
+  opacity: 0.75;
+  padding: 1px 5px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: 999px;
+  line-height: 1.2;
+}
+
+/* ============================================================
+   CATALOG FINAL — Compare toggle always visible on cards
+   ============================================================ */
+.ar4-card__toggles [data-sonic-action="compare"] {
+  display: inline-flex !important;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   CATALOG FINAL — 44px touch targets for Save + Compare
+   Overrides mockup-parity 28px/26px compact sizing.
+   ============================================================ */
+@media (max-width: 767px) {
+  .ar4-card__toggles > *,
+  .ar4-card__toggles button {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  .ar4-card__toggles [data-sonic-action="compare"] {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .ar4-shell .ar4-card__toggles > *,
+  .ar4-shell .ar4-card__toggles button,
+  .ar4-shell .ar4-card__toggles [data-sonic-action="compare"] {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
   }
 }

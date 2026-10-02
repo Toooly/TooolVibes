@@ -148,8 +148,10 @@ describe("Wave 6 two-speed Save", () => {
     fireEvent.click(button);
     expect(button.getAttribute("aria-pressed")).toBe("true");
     expect(button.getAttribute("aria-label")).toBe("Rimuovi Cursor dai salvati");
-    // GM-02: compact row bookmark shows pressed state via filled icon + red dot.
-    expect(button.querySelector(".ar4-card__bookmark-dot")).toBeTruthy();
+    // GM-02: compact row bookmark shows pressed state via filled icon.
+    const icon = button.querySelector("svg");
+    expect(icon).toBeTruthy();
+    expect(icon!.getAttribute("fill")).toBe("currentColor");
   });
 
   it("W6-T4 Save does not require organization", () => {

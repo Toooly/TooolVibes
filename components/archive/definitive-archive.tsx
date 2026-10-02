@@ -139,6 +139,7 @@ export function DefinitiveArchive({
   const [filterSheetOpen, setFilterSheetOpen] = useState<boolean>(false);
   const [mobileVisibleCount, setMobileVisibleCount] = useState<number>(INITIAL_MOBILE_COUNT);
   const filterTriggerRef = useRef<HTMLButtonElement>(null);
+  const chipsRef = useRef<HTMLDivElement>(null);
   const closeFilterSheet = useCallback(() => setFilterSheetOpen(false), []);
 
   const totalTools = tools.length;
@@ -319,7 +320,7 @@ export function DefinitiveArchive({
       {/* ═══ 2. CATEGORIE — chip rail con expand/collapse ═══ */}
       <section className="ar4-categories" aria-labelledby="ar4-categories-title">
         <div className="ar4-categories__inner">
-          <div className="ar4-categories__chips" role="group" aria-label="Categorie del catalogo">
+          <div ref={chipsRef} className="ar4-categories__chips" role="group" aria-label="Categorie del catalogo">
             <button
               type="button"
               className={cn("ar4-chip", activeGroup === "all" && "is-active")}

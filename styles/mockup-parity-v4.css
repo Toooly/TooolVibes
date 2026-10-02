@@ -362,7 +362,6 @@
 
   .ar4-shell .ar4-card { position: relative !important; min-height: 124px !important; padding-right: 56px !important; }
 
-  .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
 
   .ar4-shell .ar4-card__actions { position: absolute !important; top: 10px !important; right: 10px !important; margin: 0 !important; }
 
@@ -489,7 +488,6 @@
     right: auto !important;
   }
 
-  .ar4-shell .ar4-card [aria-label*="confronto"] { display: none !important; }
 
 }
 @media (max-width: 899px){

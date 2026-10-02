@@ -95,6 +95,7 @@ export function CompareToggle({
           isSelected ? "is-active" : ""
         } ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
         style={{
+          display: "inline-flex",
           borderColor: isSelected ? "rgba(112,82,255,0.24)" : "var(--line)",
           background: isSelected ? "#6a3cff" : "rgba(18, 13, 46, 0.92)",
           color: "#f4f1ff",

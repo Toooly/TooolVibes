@@ -29,6 +29,7 @@ import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { cn } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
+import { useCardReveal } from "@/lib/hooks/use-card-reveal";
 import { SaveOverflow } from "@/components/tools/save-overflow";
 
 type ArchiveV4ToolCardProps = {
@@ -75,7 +76,8 @@ function ArchiveV4ToolCard({
       ? personalStatus
       : null;
   const showRank = isSelected && typeof rank === "number" && !personalWord;
-  const [hover, setHover] = useState(false);
+  const revealRef = useCardReveal<HTMLElement>(rank && rank <= 6 ? (rank - 1) * 35 : 0);
+  const [logoFailed, setLogoFailed] = useState(false);
 
   // iOS Safari can miss hit-testing the stretched ::after card link, so the
   // whole card must still activate. Keep the anchor for semantics/SEO and, when
@@ -140,9 +142,9 @@ function ArchiveV4ToolCard({
 
   return (
     <article
+      ref={revealRef}
       className={cn(
         "ar4-card",
-        hover && "is-hover",
         isSelected && "is-selected",
         isPromoted && "is-promoted",
         effectiveTier && `is-tier-${effectiveTier}`,
@@ -150,8 +152,6 @@ function ArchiveV4ToolCard({
         showSponsoredBadge && "is-sponsored",
         className,
       )}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       onClick={handleCardActivate}
       data-density={density}
       data-promoted={isPromoted || undefined}
@@ -164,9 +164,15 @@ function ArchiveV4ToolCard({
       {/* ═══ TOP ROW: avatar + identity ═══ */}
       <div className="ar4-card__top">
         <span className="ar4-card__avatar" aria-hidden="true">
-          {iconUrl ? (
+          {iconUrl && !logoFailed ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+            <img
+              src={iconUrl}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onError={() => setLogoFailed(true)}
+            />
           ) : (
             <span>{initial}</span>
           )}
@@ -258,23 +264,20 @@ function ArchiveV4ToolCard({
                 aria-hidden="true"
                 fill={isSaved ? "currentColor" : "none"}
               />
-              {isSaved ? (
-                <span className="ar4-card__bookmark-dot" aria-hidden="true" />
-              ) : null}
             </button>
+            <CompareToggle
+              slug={tool.slug}
+              mode="icon"
+              toolName={tool.name}
+              onChange={() => {
+                /* re-render via store */
+              }}
+            />
             <span className="ar4-card__toggles-more">
               <SaveOverflow
                 slug={tool.slug}
                 toolName={tool.name}
                 triggerClassName="ar4-card__save-more"
-              />
-              <CompareToggle
-                slug={tool.slug}
-                mode="icon"
-                toolName={tool.name}
-                onChange={() => {
-                  /* re-render via store */
-                }}
               />
             </span>
           </div>
