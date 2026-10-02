@@ -767,11 +767,12 @@ export function HomeRadarPreview() {
       ) : null}
       <Link
         href="/radar"
-        className="tv-home-radar__cta"
+        className="tv-home-radar__cta tv-gold-cta"
         aria-label="Apri il Radar completo dei nuovi lanci"
       >
-        Apri Radar
-        <ArrowRight size={16} aria-hidden="true" />
+        <span className="tv-gold-cta__glow" aria-hidden="true" />
+        <span className="tv-gold-cta__label">Apri Radar</span>
+        <ArrowRight size={14} aria-hidden="true" />
       </Link>
     </div>
   );

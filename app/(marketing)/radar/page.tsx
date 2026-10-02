@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { MemberPreviewGate } from "@/components/account/member-preview-gate";
 import { RadarExperience } from "@/components/radar/radar-experience";
 import { radarDesktopVisual } from "@/lib/radar/radar-view-config";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
@@ -18,5 +19,13 @@ export const metadata: Metadata = createPublicPageMetadata({
 });
 
 export default function RadarPage() {
-  return <RadarExperience initialVisual={radarDesktopVisual} />;
+  return (
+    <MemberPreviewGate
+      kicker="Radar completo"
+      title="Accedi per esplorare tutti i segnali"
+      body="La preview in homepage è pubblica. Il Radar completo con mappa, elenco esteso e strumenti di analisi è riservato ai membri."
+    >
+      <RadarExperience initialVisual={radarDesktopVisual} />
+    </MemberPreviewGate>
+  );
 }

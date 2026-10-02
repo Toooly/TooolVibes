@@ -781,13 +781,13 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
                       ) : null}
                     </div>
                     {!authenticated ? (
-                      <span className="def-stacks__cta">
+                      <span className="def-stacks__cta tv-gold-cta tv-gold-cta--secondary">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        Accedi per lo stack completo
+                        <span className="tv-gold-cta__label">Accedi per lo stack completo</span>
                       </span>
                     ) : (
-                      <span className="def-stacks__cta def-stacks__cta--open">
-                        Apri raccolta
+                      <span className="def-stacks__cta tv-gold-cta tv-gold-cta--secondary">
+                        <span className="tv-gold-cta__label">Apri raccolta</span>
                         <ArrowRight size={14} aria-hidden="true" />
                       </span>
                     )}
