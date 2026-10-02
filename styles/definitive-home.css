@@ -3134,7 +3134,6 @@
   margin: 0;
   padding: 30px 0 0;
   list-style: none;
-  perspective: 1100px;
   overflow: visible;
   transition: grid-template-columns 280ms var(--tv-easing-standard);
 }
@@ -3148,13 +3147,8 @@
   grid-template-columns: minmax(0, 0.72fr) minmax(0, 0.72fr) minmax(0, 1.55fr);
 }
 .def-podium__stage .def-podium__cell {
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-.def-podium__stage .def-podium__cell {
   position: relative;
   min-width: 0;
-  padding-top: 52px;
   padding-bottom: 12px;
   scroll-snap-align: none;
   overflow: visible;
@@ -3370,28 +3364,31 @@
   color: var(--tv-accent-gold-on-dark, #e4b23c);
   text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 42%, transparent);
 }
-/* Prestige badge layer: rank/crown/medal/laurels live in a RESERVED
-   vertical zone above the card. The zone consumes real layout space
-   (cell padding-top), so the badge never relies on negative offsets
-   outside an unreserved clipping boundary. Badge floats above the card
-   via z-index + slight negative margin WITHIN the reserved zone. */
+/* Prestige badge row: rank/crown/medal/laurels live in a RESERVED
+   in-flow row above the card. Flex column consumes real layout space,
+   so no negative offsets can push decoration outside an unreserved
+   clipping boundary on iPhone Safari. Laurels are visually centered
+   behind the rank via a fixed-height visual wrapper. */
 .def-podium__badge {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
+  justify-content: flex-end;
+  gap: 2px;
+  min-height: 64px;
+  margin-bottom: -14px;
   pointer-events: none;
-  width: max-content;
+  width: 100%;
 }
 .def-podium__badge--gold {
-  top: -4px;
+  min-height: 78px;
+  margin-bottom: -16px;
 }
 .def-podium__crown {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 42px;
   height: 25px;
@@ -3406,10 +3403,20 @@
 }
 .def-podium__laurels {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  bottom: 6px;
+  width: 120px;
+  height: 60px;
+  margin-left: -60px;
   color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
   opacity: 0.85;
   pointer-events: none;
+  z-index: 0;
+}
+.def-podium__laurels svg {
+  width: 100%;
+  height: 100%;
+  display: block;
   transform-origin: 50% 90%;
   animation: tv-laurel-sway var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
 }
@@ -3425,11 +3432,6 @@
   0%, 100% { text-shadow: 0 0 12px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 24%, transparent); }
   50% { text-shadow: 0 0 26px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 58%, transparent); }
 }
-.def-podium__laurels svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
 .def-podium__laurels--gold {
   color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
 }
@@ -3441,11 +3443,17 @@
 }
 /* Rank marks: silver for 02, bronze for 03 — sober siblings of the crown. */
 .def-podium__medal {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 38px;
   height: 25px;
   pointer-events: none;
   animation: tv-medal-shimmer var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
+}
+.def-podium__badge .def-podium__rank {
+  position: relative;
+  z-index: 1;
 }
 .def-podium__medal svg {
   width: 100%;
@@ -3815,7 +3823,7 @@
 .def-latest.is-celebrated .def-podium__stage .def-podium__cell {
   /* backwards (not both): after the entrance the fill must release so the
      depth/flip transforms own the cells. */
-  animation: tv-podium-rise 0.6s var(--tv-easing-decelerate) backwards;
+  animation: tv-podium-rise 0.6s var(--tv-easing-decelerate);
 }
 .def-latest.is-celebrated .def-podium__stage .def-podium__cell.pos-first {
   animation-delay: 0.02s;
@@ -3901,8 +3909,7 @@
   }
   .def-podium__card,
   .def-podium__card:active,
-  .def-podium__card.is-first:active,
-  .def-podium__stage .def-podium__cell {
+  .def-podium__card.is-first:active {
     transition: none;
     transform: none;
   }

@@ -59,13 +59,15 @@ describe("home podium contract", () => {
     expect(css).toContain("grid-template-areas: \"second first third\"");
   });
 
-  it("places rank/crown/medal/laurels in a floating badge layer above the card", () => {
+  it("places rank/crown/medal/laurels in a reserved in-flow badge row above the card", () => {
     const tsx = read("components/home/start-here.tsx");
     expect(tsx).toContain("def-podium__badge");
     expect(tsx).toContain("def-podium__badge--gold");
     const css = read("styles/definitive-home.css");
     expect(css).toContain(".def-podium__badge {");
-    expect(css).toContain(".def-podium__badge--gold");
+    expect(css).toContain("min-height: 64px");
+    expect(css).not.toContain("top: -28px");
+    expect(css).not.toContain("top: -4px");
   });
 
   it("keeps the crown decorative and the cards keyboard-reachable links", () => {
@@ -118,7 +120,8 @@ describe("home podium contract", () => {
     expect(stage.indexOf("pos-second")).toBeLessThan(stage.indexOf("pos-first"));
     expect(stage.indexOf("pos-first")).toBeLessThan(stage.indexOf("pos-third"));
     const css = read("styles/definitive-home.css");
-    expect(css).toContain("perspective: 1100px");
+    expect(css).not.toContain("perspective: 1100px");
+    expect(css).not.toContain("preserve-3d");
     expect(css).toContain(".def-podium__stage.has-focus-second .def-podium__cell.pos-second");
     expect(css).toContain(".def-podium__stage.has-focus-first .def-podium__cell.pos-first");
     expect(css).toContain(".def-podium__stage.has-focus-third .def-podium__cell.pos-third");
