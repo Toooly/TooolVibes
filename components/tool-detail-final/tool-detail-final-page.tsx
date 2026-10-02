@@ -182,7 +182,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
           aria-labelledby="td-final-tool-name"
         >
           <div className="td-final-hero__inner">
-            <ToolDetailHero tool={tool} isAffiliateLink={isAffiliateLink} />
+            <ToolDetailHero tool={tool} />
           <ToolDetailActionSurface
             slug={tool.slug}
             name={tool.name}

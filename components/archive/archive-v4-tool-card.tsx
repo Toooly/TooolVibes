@@ -16,6 +16,7 @@
  *    violet trace on editorial cards.
  */
 
+import { Target } from "lucide-react";
 import Link from "next/link";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { Bookmark, Star } from "lucide-react";
@@ -232,7 +233,15 @@ function ArchiveV4ToolCard({
         {tool.tldr || tool.shortDescription || "Scheda in preparazione."}
       </p>
       {!reduced && bestFor ? (
-        <p className="ar4-card__best">Ideale per {bestFor}</p>
+        <p className="ar4-card__best">
+          <span className="ar4-card__best-icon" aria-hidden="true">
+            <Target />
+          </span>
+          <span>
+            <span className="ar4-card__best-label">Ideale per</span>{" "}
+            <span className="ar4-card__best-text">{bestFor}</span>
+          </span>
+        </p>
       ) : null}
 
       {/* FOOTER: score + Save + Compare */}

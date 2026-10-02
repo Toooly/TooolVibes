@@ -2,23 +2,22 @@ import Link from "next/link";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
-import { ToolDetailActionSurface } from "./tool-detail-action-surface";
 import { ToolDetailScore } from "./tool-detail-score";
 
 /**
- * A. Hero (Identity + Action Surface)
+ * A. Hero (Identity)
  * Server component. Breadcrumb, avatar, category, name, deck, compact
- * score · level, actions. Meta (date, reading time, domain, tags)
- * lives in Approfondisci → Dati tecnici.
+ * score · level. Actions live in ToolDetailActionSurface (rendered by
+ * ToolDetailFinalPage after this component — exactly one instance).
+ * Meta (date, reading time, domain, tags) lives in Approfondisci → Dati tecnici.
  * Fit copy lives in In breve, not in the hero facts.
  */
 
 type ToolDetailHeroProps = {
   tool: ToolPublicView;
-  isAffiliateLink: boolean;
 };
 
-export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
+export function ToolDetailHero({ tool }: ToolDetailHeroProps) {
   return (
     <div className="td-final-hero__identity">
       <nav className="td-final-hero__breadcrumb" aria-label="Percorso">
@@ -58,13 +57,6 @@ export function ToolDetailHero({ tool, isAffiliateLink }: ToolDetailHeroProps) {
       </div>
       <p className="td-final-hero__deck">{tool.shortDescription}</p>
 
-      <ToolDetailActionSurface
-        slug={tool.slug}
-        name={tool.name}
-        externalUrl={tool.url}
-        primaryLabel={tool.ctaLabel ?? "Apri il sito"}
-        isAffiliateLink={isAffiliateLink}
-      />
     </div>
   );
 }
