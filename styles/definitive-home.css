@@ -1527,12 +1527,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.def-stacks__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-}
 .def-intent__more[aria-expanded="true"] {
   border-style: solid;
   border-color: rgba(255,255,255,0.28);
@@ -3842,27 +3836,12 @@
   from { text-shadow: 0 0 0 transparent; }
   to { text-shadow: 0 0 18px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 35%, transparent); }
 }
+/* Podium CTA: layout-specific properties only. Visual identity
+   (bg, color, radius, shadow, animation) comes from .tv-gold-cta. */
 .def-podium__cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   margin: 1.1rem auto 0;
   max-width: 560px;
   min-height: 52px;
-  padding: 12px 26px;
-  border-radius: var(--tv-radius-pill, 999px);
-  background: var(--tv-button-activation-bg, #e4b23c);
-  color: var(--tv-button-activation-text, #1a1206);
-  font-family: var(--tv-font-family-ui);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: background var(--tv-duration-fast) var(--tv-easing-standard);
-}
-.def-podium__cta:hover {
-  background: var(--tv-button-activation-bg-pressed, #c9a227);
 }
 /* Desktop: true centered stage, generous air; rail becomes calm row. */
 @media (min-width: 48rem) {
@@ -4399,46 +4378,151 @@
   outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
   outline-offset: 2px;
 }
-.def-stacks__dots {
+/* ── Segmented pagination (premium pills) ─────────────────────── */
+.def-stacks__pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 0 4px;
+  gap: 14px;
+  padding: 10px 0 4px;
 }
-.def-stacks__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+.def-stacks__segments {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.def-stacks__segment {
+  appearance: none;
   border: none;
-  padding: 0;
-  background: color-mix(in srgb, var(--tv-ink-muted-aa, #aaa59b) 35%, transparent);
+  background: transparent;
+  padding: 6px 2px;
   cursor: pointer;
-  transition: background 160ms var(--tv-easing-standard), transform 160ms var(--tv-easing-standard);
+  display: flex;
+  align-items: center;
 }
-.def-stacks__dot.is-active {
-  background: var(--tv-accent-brand, #8b6cff);
-  transform: scale(1.25);
+.def-stacks__segment-bar {
+  display: block;
+  width: 18px;
+  height: 4px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 18%, transparent);
+  transition: width 280ms var(--tv-easing-standard), background 280ms var(--tv-easing-standard), box-shadow 280ms var(--tv-easing-standard);
 }
-.def-stacks__dot:focus-visible {
+.def-stacks__segment.is-past .def-stacks__segment-bar {
+  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 38%, transparent);
+}
+.def-stacks__segment.is-active .def-stacks__segment-bar {
+  width: 32px;
+  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 92%, #fff);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 45%, transparent);
+}
+.def-stacks__segment:hover .def-stacks__segment-bar {
+  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
+}
+.def-stacks__segment:focus-visible {
   outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
   outline-offset: 2px;
+  border-radius: 4px;
 }
-.def-stacks__more {
+.def-stacks__progress-label {
+  font-family: var(--tv-font-family-mono, "JetBrains Mono", monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
+  min-width: 2.5em;
+  text-align: center;
+  user-select: none;
+}
+
+/* ── Discovery hint + gold CTA ────────────────────────────────── */
+.def-stacks__discovery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0 8px;
+}
+.def-stacks__discovery-hint {
+  margin: 0;
+  font-family: var(--tv-font-family-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--tv-ink-muted-aa, #aaa59b) 65%, transparent);
+  text-align: center;
+}
+
+/* Gold CTA system — shared by podium "Vedi tutto il catalogo" and
+   stack "Tutte le raccolte". Yellow base + premium energy animation. */
+.tv-gold-cta {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin: 12px auto 0;
-  padding-bottom: 8px;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
   font-family: var(--tv-font-family-ui);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--tv-ink-secondary, #c2beb5);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   text-decoration: none;
+  color: #1a0b38;
+  background: linear-gradient(165deg, #f0c14b 0%, #e4b23c 45%, #d4a02e 100%);
+  border: 1px solid color-mix(in srgb, #f5d070 60%, transparent);
+  border-radius: 9999px;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #e4b23c 20%, transparent),
+    0 2px 12px color-mix(in srgb, #e4b23c 25%, transparent),
+    0 0 24px color-mix(in srgb, #e4b23c 12%, transparent);
+  transition: box-shadow 220ms var(--tv-easing-standard), transform 180ms var(--tv-easing-standard);
+  -webkit-tap-highlight-color: transparent;
 }
-.def-stacks__more:focus-visible {
-  outline: var(--tv-focus-ring-width) solid var(--tv-focus-ring);
-  outline-offset: 2px;
+.tv-gold-cta__label {
+  position: relative;
+  z-index: 1;
+}
+.tv-gold-cta svg {
+  position: relative;
+  z-index: 1;
+}
+.tv-gold-cta:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #e4b23c 35%, transparent),
+    0 4px 18px color-mix(in srgb, #e4b23c 35%, transparent),
+    0 0 32px color-mix(in srgb, #e4b23c 18%, transparent);
+}
+.tv-gold-cta:active {
+  transform: scale(0.97);
+}
+.tv-gold-cta:focus-visible {
+  outline: 2px solid color-mix(in srgb, #f0c14b 70%, transparent);
+  outline-offset: 3px;
+}
+/* Energy glow sweep — subtle particle/wave crossing the button */
+.tv-gold-cta__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      105deg,
+      transparent 30%,
+      color-mix(in srgb, #fff 22%, transparent) 48%,
+      color-mix(in srgb, var(--tv-accent-brand, #8b6cff) 18%, transparent) 52%,
+      transparent 70%
+    );
+  background-size: 250% 100%;
+  animation: tv-gold-cta-sweep 4.5s var(--tv-easing-standard) infinite;
+}
+@keyframes tv-gold-cta-sweep {
+  0% { background-position: 120% 0; opacity: 0.6; }
+  50% { background-position: -20% 0; opacity: 1; }
+  100% { background-position: -20% 0; opacity: 0.6; }
 }
 @media (min-width: 768px) {
   .def-stacks__slide { flex: 0 0 60%; }
@@ -4449,9 +4533,17 @@
   .def-stacks__rail { scroll-padding-inline: 29%; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .tv-gold-cta__glow {
+    animation: none;
+    background: linear-gradient(105deg, transparent 40%, color-mix(in srgb, #fff 12%, transparent) 50%, transparent 60%);
+    background-size: 100% 100%;
+  }
+  .def-stacks__segment-bar {
+    transition: none;
+  }
   .def-stacks__slide,
   .def-stacks__arrow,
-  .def-stacks__dot {
+  .def-stacks__segment {
     transition: none;
   }
 }

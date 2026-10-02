@@ -640,8 +640,9 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           })}
         </div>
       ) : null}
-      <Link href="/archivio" className="def-podium__cta">
-        Vedi tutto il catalogo
+      <Link href="/archivio" className="def-podium__cta tv-gold-cta">
+        <span className="tv-gold-cta__glow" aria-hidden="true" />
+        <span className="tv-gold-cta__label">Vedi tutto il catalogo</span>
         <ArrowRight size={15} aria-hidden="true" />
       </Link>
     </section>
@@ -675,8 +676,11 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
 
   function scrollToIndex(index: number) {
     const root = scrollerRef.current;
-    const card = root?.querySelectorAll<HTMLElement>("[data-stack-card]")[index];
-    card?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    if (!root || !root.isConnected) return;
+    const cards = root.querySelectorAll<HTMLElement>("[data-stack-card]");
+    const card = cards[index];
+    if (!card || !card.isConnected) return;
+    card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     setActive(index);
   }
 
@@ -804,23 +808,36 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
         </div>
       ) : null}
       {showDots ? (
-        <div className="def-stacks__dots" role="group" aria-label="Paginazione stack">
-          {stacks.map((stack, index) => (
-            <button
-              key={stack.slug}
-              type="button"
-              aria-current={index === active ? "true" : undefined}
-              aria-label={`Vai allo stack ${index + 1}`}
-              className={`def-stacks__dot${index === active ? " is-active" : ""}`}
-              onClick={() => scrollToIndex(index)}
-            />
-          ))}
+        <div className="def-stacks__pagination" role="group" aria-label="Paginazione stack">
+          <div className="def-stacks__segments">
+            {stacks.map((stack, index) => (
+              <button
+                key={stack.slug}
+                type="button"
+                aria-current={index === active ? "true" : undefined}
+                aria-label={`Vai allo stack ${index + 1}`}
+                className={`def-stacks__segment${index === active ? " is-active" : ""}${index < active ? " is-past" : ""}`}
+                onClick={() => scrollToIndex(index)}
+              >
+                <span className="def-stacks__segment-bar" />
+              </button>
+            ))}
+          </div>
+          <span className="def-stacks__progress-label" aria-live="polite">
+            {active + 1} / {total}
+          </span>
         </div>
       ) : null}
-      <Link href="/collections" className="def-stacks__more">
-        Tutte le raccolte
-        <ArrowRight size={14} aria-hidden="true" />
-      </Link>
+      <div className="def-stacks__discovery">
+        <p className="def-stacks__discovery-hint">
+          {total} in evidenza · molte altre da esplorare
+        </p>
+        <Link href="/collections" className="def-stacks__more tv-gold-cta">
+          <span className="tv-gold-cta__glow" aria-hidden="true" />
+          <span className="tv-gold-cta__label">Tutte le raccolte</span>
+          <ArrowRight size={14} aria-hidden="true" />
+        </Link>
+      </div>
     </div>
   );
 }

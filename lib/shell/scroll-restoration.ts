@@ -58,9 +58,27 @@ function flushOnHide(): void {
 
 let restoreToken = 0;
 let resizeObs: ResizeObserver | null = null;
+let restoreRafId: number | null = null;
 
-function attemptRestore(targetY: number, token: number): void {
+const MAX_RESTORE_RETRIES = 180; /* ~3s at 60fps — bounded, never infinite */
+
+function cleanupRestore(): void {
+  if (restoreRafId !== null) {
+    cancelAnimationFrame(restoreRafId);
+    restoreRafId = null;
+  }
+  if (resizeObs) {
+    resizeObs.disconnect();
+    resizeObs = null;
+  }
+}
+
+function attemptRestore(targetY: number, token: number, retry = 0): void {
   if (token !== restoreToken) return;
+  if (retry > MAX_RESTORE_RETRIES) {
+    cleanupRestore();
+    return;
+  }
   const scroller = getShellScroller();
   const max = scroller instanceof Window
     ? Math.max(document.documentElement.scrollHeight - window.innerHeight, 0)
@@ -71,22 +89,15 @@ function attemptRestore(targetY: number, token: number): void {
     } else {
       scroller.scrollTop = targetY;
     }
-    if (resizeObs) {
-      resizeObs.disconnect();
-      resizeObs = null;
-    }
+    cleanupRestore();
     return;
   }
-  // ScrollHeight not yet sufficient — retry on next frame + observe resize.
-  requestAnimationFrame(() => attemptRestore(targetY, token));
+  restoreRafId = requestAnimationFrame(() => attemptRestore(targetY, token, retry + 1));
 }
 
 function startRestore(targetY: number): void {
   const token = ++restoreToken;
-  if (resizeObs) {
-    resizeObs.disconnect();
-    resizeObs = null;
-  }
+  cleanupRestore();
   if (typeof ResizeObserver !== "undefined") {
     resizeObs = new ResizeObserver(() => attemptRestore(targetY, token));
     resizeObs.observe(document.documentElement);
@@ -111,9 +122,13 @@ function onVisibilityChange(): void {
   }
 }
 
+let initialised = false;
+let teardownFns: Array<() => void> = [];
+
 /** Call once per client session to activate history scroll restoration. */
 export function initScrollRestoration(): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || initialised) return;
+  initialised = true;
   // Save current scroll for the initial history entry.
   writeStateScrollY(Math.round(readLiveScrollTop()));
 
@@ -125,4 +140,25 @@ export function initScrollRestoration(): void {
   const onScroll = () => scheduleSave();
   scroller.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+
+  teardownFns = [
+    () => window.removeEventListener("popstate", onPopState),
+    () => window.removeEventListener("pagehide", onPageHide),
+    () => document.removeEventListener("visibilitychange", onVisibilityChange),
+    () => scroller.removeEventListener("scroll", onScroll),
+    () => window.removeEventListener("scroll", onScroll, { capture: true }),
+    cleanupRestore,
+    () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = null;
+      pendingSave = false;
+    },
+  ];
+}
+
+/** Tear down all scroll-restoration listeners (useful for HMR / tests). */
+export function destroyScrollRestoration(): void {
+  teardownFns.forEach((fn) => fn());
+  teardownFns = [];
+  initialised = false;
 }
