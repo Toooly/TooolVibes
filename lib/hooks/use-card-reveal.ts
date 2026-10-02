@@ -7,6 +7,7 @@ import { getShellScroller } from "@/lib/shell/scroll-port";
  * One-shot card entry reveal using IntersectionObserver.
  * Uses the canonical .marketing-shell scrollport on mobile (not window).
  * Cards animate in once — no replay on scroll-back.
+ * Stagger: 28ms per card, capped at 6 cards (168ms total).
  */
 export function useCardReveal<T extends HTMLElement>(delayMs = 0) {
   const ref = useRef<T | null>(null);

@@ -74,14 +74,13 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
     expect(archive).not.toMatch(/<ArchiveV4CompareTray/);
   });
 
-  it("W11-T13 ShortlistToggle stays on archive cards", () => {
-    // GM-02: compact row uses bookmark + SaveOverflow + CompareToggle.
+  it("W11-T13 bookmark + CompareToggle stay on archive cards", () => {
     const { container } = render(
       <ArchiveV4ToolCard tool={makeCatalogTool({ slug: "cursor", name: "Cursor" })} />,
     );
     expect(container.querySelector(".ar4-card__bookmark")).toBeTruthy();
     const card = readSource("components/archive/archive-v4-tool-card.tsx");
-    expect(card).toContain("SaveOverflow");
+    expect(card).not.toContain("SaveOverflow");
     expect(card).toContain("CompareToggle");
   });
 
@@ -173,7 +172,7 @@ describe("Catalogo — compressed mobile discovery", () => {
     expect(document.querySelector(".ar4-card__open")).toBeNull();
     // GM-02: bookmark + compare + overflow in the row.
     expect(document.querySelector(".ar4-card__bookmark")).toBeTruthy();
-    expect(document.querySelector(".ar4-card__save-more")).toBeTruthy();
+    expect(document.querySelector(".ar4-card__bookmark")).toBeTruthy();
   });
 
   it("renders compact score · skill copy without the editorial label", () => {
@@ -215,7 +214,7 @@ describe("Catalogo — compressed mobile discovery", () => {
     expect(card).toContain("ar4-card__name-link");
     expect(card).toContain("ar4-card__bookmark");
     expect(card).toContain("CompareToggle");
-    expect(card).toContain("ar4-card__save-more");
+    expect(card).toContain("ar4-card__bookmark");
 
     expect(css).toContain(".ar4-card__name-link::after");
     expect(css).toContain("inset: 0");
@@ -225,7 +224,7 @@ describe("Catalogo — compressed mobile discovery", () => {
     expect(css).not.toContain("padding: 28px 18px 36px");
     expect(css).toContain(".ar4-intro__data");
     expect(css).toContain(".ar4-card__diff");
-    expect(css).toContain(".ar4-card__save-more");
+    expect(css).toContain(".ar4-card__bookmark");
     expect(css).toContain("-webkit-line-clamp: 1");
     expect(css).toContain("background: var(--tv-button-activation-bg)");
     expect(css).not.toContain("100vw");

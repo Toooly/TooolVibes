@@ -1,7 +1,7 @@
 "use client";
 
 import { type MouseEvent, useEffect, useRef, useState } from "react";
-import { Columns3 } from "lucide-react";
+import { Columns2 } from "lucide-react";
 
 import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
 import { MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -104,7 +104,7 @@ export function CompareToggle({
         aria-label={ariaLabel}
         data-sonic-action="compare"
       >
-        <Columns3 className="h-4 w-4" aria-hidden="true" />
+        <Columns2 className="h-4 w-4" aria-hidden="true" />
       </button>
     );
   }

@@ -14,6 +14,7 @@ vi.mock("next/navigation", () => ({
 import { AccountPreviewProvider } from "@/components/account/account-provider";
 import { AuthContinuationProvider } from "@/components/account/auth-continuation-provider";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
+import { SaveOverflow } from "@/components/tools/save-overflow";
 import { WorkspaceBiblioteca } from "@/components/account/workspace/workspace-biblioteca";
 import { WorkspaceStacks } from "@/components/account/workspace/workspace-stacks";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
@@ -126,9 +127,11 @@ function guestAccountValue() {
 function renderCard(
   overrides: Parameters<typeof makeCatalogTool>[0] = { slug: "cursor", name: "Cursor" },
 ) {
+  const tool = makeCatalogTool(overrides);
   return render(
     <OverlayProvider>
-      <ArchiveV4ToolCard tool={makeCatalogTool(overrides)} />
+      <ArchiveV4ToolCard tool={tool} />
+      <SaveOverflow slug={tool.slug} toolName={tool.name} />
     </OverlayProvider>,
   );
 }
@@ -136,11 +139,13 @@ function renderCard(
 function renderCardWithGuestGate(
   overrides: Parameters<typeof makeCatalogTool>[0] = { slug: "cursor", name: "Cursor" },
 ) {
+  const tool = makeCatalogTool(overrides);
   return render(
     <OverlayProvider>
       <AccountPreviewProvider value={guestAccountValue()}>
         <AuthContinuationProvider>
-          <ArchiveV4ToolCard tool={makeCatalogTool(overrides)} />
+          <ArchiveV4ToolCard tool={tool} />
+          <SaveOverflow slug={tool.slug} toolName={tool.name} />
         </AuthContinuationProvider>
       </AccountPreviewProvider>
     </OverlayProvider>,

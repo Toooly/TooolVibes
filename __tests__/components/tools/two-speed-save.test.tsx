@@ -4,6 +4,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-libra
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
+import { SaveOverflow } from "@/components/tools/save-overflow";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
 import { SAVE_HOLD_MS } from "@/components/tools/save-hold";
 import {
@@ -72,9 +73,11 @@ function collectKeys(value: unknown, acc = new Set<string>()): Set<string> {
 function renderCard(
   overrides: Parameters<typeof makeCatalogTool>[0] = { slug: "cursor", name: "Cursor" },
 ) {
+  const tool = makeCatalogTool(overrides);
   return render(
     <OverlayProvider>
-      <ArchiveV4ToolCard tool={makeCatalogTool(overrides)} />
+      <ArchiveV4ToolCard tool={tool} />
+      <SaveOverflow slug={tool.slug} toolName={tool.name} />
     </OverlayProvider>,
   );
 }
@@ -82,12 +85,15 @@ function renderCard(
 function renderCards(slugs: string[]) {
   return render(
     <OverlayProvider>
-      {slugs.map((slug) => (
-        <ArchiveV4ToolCard
-          key={slug}
-          tool={makeCatalogTool({ slug, name: slug })}
-        />
-      ))}
+      {slugs.map((slug) => {
+        const tool = makeCatalogTool({ slug, name: slug });
+        return (
+          <div key={slug}>
+            <ArchiveV4ToolCard tool={tool} />
+            <SaveOverflow slug={tool.slug} toolName={tool.name} />
+          </div>
+        );
+      })}
     </OverlayProvider>,
   );
 }

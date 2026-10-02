@@ -3258,3 +3258,542 @@ a.archive-v4-card:focus-visible {
     min-height: 44px !important;
   }
 }
+
+/* ============================================================
+   CATALOG FINAL V2 — Premium Card State System (2026-10-02)
+   Complete state grammar: DEFAULT / SAVED / COMPARE / SAVED+COMPARE / FEATURED
+   ============================================================ */
+
+/* ── 1. DEFAULT MATERIAL: midnight violet ── */
+.ar4-card {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(106, 60, 255, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #1a1235 0%, #120d2e 100%) !important;
+  border: 1px solid rgba(139, 108, 255, 0.12) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 1px 4px rgba(0, 0, 0, 0.15) !important;
+  transition:
+    border-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 240ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:hover {
+    border-color: rgba(139, 108, 255, 0.28) !important;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(106, 60, 255, 0.09) 0%, transparent 50%),
+      linear-gradient(180deg, #1e1540 0%, #150f33 100%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    transform: none !important;
+  }
+}
+
+.ar4-card:active {
+  transform: none !important;
+}
+
+/* ── 2. MOBILE GRID: TOP / BODY / FOOTER ── */
+@media (max-width: 767px) {
+  .ar4-shell .ar4-card,
+  .ar4-shell .ar4-card.is-promoted,
+  .ar4-shell .ar4-card:not(.is-promoted),
+  .ar4-shell .ar4-card.is-reduced,
+  .ar4-shell .ar4-card[data-density="compact"] {
+    display: grid !important;
+    grid-template-columns: 52px minmax(0, 1fr) auto !important;
+    grid-template-areas:
+      "avatar identity identity"
+      "desc   desc     desc"
+      "body   body     body"
+      "score  score    toggles" !important;
+    column-gap: 10px !important;
+    row-gap: 6px !important;
+    padding: 14px 14px 12px !important;
+    min-height: 0 !important;
+    align-items: start !important;
+  }
+
+  .ar4-shell .ar4-card__top { display: contents !important; }
+  .ar4-shell .ar4-card__actions { display: contents !important; }
+  .ar4-shell .ar4-card__control-rail { display: contents !important; }
+  .ar4-shell .ar4-card__state-flags { display: none !important; }
+  .ar4-shell .ar4-card__saved-label { display: none !important; }
+  .ar4-shell .ar4-card__disclosure { display: none !important; }
+  .ar4-shell .ar4-card__status--editorial,
+  .ar4-shell .ar4-card__status--tier,
+  .ar4-shell .ar4-card__status--sponsored { display: none !important; }
+
+  .ar4-shell .ar4-card__avatar {
+    grid-area: avatar !important;
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 14px !important;
+    position: static !important;
+  }
+  .ar4-shell .ar4-card__avatar img,
+  .ar4-shell .ar4-card__avatar span {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 13px !important;
+  }
+
+  .ar4-shell .ar4-card__identity {
+    grid-area: identity !important;
+    min-width: 0 !important;
+  }
+
+  .ar4-shell .ar4-card__name { font-size: 17px !important; line-height: 1.15 !important; }
+  .ar4-shell .ar4-card__name-text {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+  .ar4-shell .ar4-card__category { font-size: 12px !important; margin-top: 0.125rem !important; }
+
+  .ar4-shell .ar4-card__desc {
+    grid-area: desc !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    color: var(--tv-ink-secondary) !important;
+    margin: 0 !important;
+  }
+
+  .ar4-shell .ar4-card__best {
+    grid-area: body !important;
+    font-size: 12.5px !important;
+    line-height: 1.35 !important;
+    color: var(--tv-ink-secondary) !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    overflow-wrap: anywhere !important;
+    min-width: 0 !important;
+  }
+
+  .ar4-shell .ar4-card__score {
+    grid-area: score !important;
+    justify-self: start !important;
+    align-self: center !important;
+    font-family: var(--tv-font-family-mono) !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #f3bf4c !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+  }
+  .ar4-shell .ar4-card__score strong { font-size: 15px !important; color: #f3bf4c !important; }
+
+  .ar4-shell .ar4-card__toggles {
+    grid-area: toggles !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    justify-self: end !important;
+    align-self: center !important;
+    pointer-events: auto !important;
+    position: static !important;
+  }
+
+  .ar4-shell .ar4-card__toggles > *,
+  .ar4-shell .ar4-card__toggles button,
+  .ar4-shell .ar4-card__toggles [data-sonic-action="compare"] {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 10px !important;
+  }
+}
+
+/* ── 3. SAVED: luminous perimeter ── */
+.ar4-card[data-saved] {
+  border-color: rgba(139, 108, 255, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(139, 108, 255, 0.18),
+    0 0 14px -2px rgba(139, 108, 255, 0.15) !important;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(106, 60, 255, 0.07) 0%, transparent 50%),
+    linear-gradient(180deg, #1a1235 0%, #120d2e 100%) !important;
+}
+
+/* Kill old saved ::before violet marker */
+.ar4-card[data-saved]::before {
+  content: none !important;
+}
+
+/* ── 4. COMPARE: interior cyan/violet wash + watermark ── */
+.ar4-card[data-selected] {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(57, 210, 246, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 0%, rgba(106, 60, 255, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #1a1235 0%, #120d2e 100%) !important;
+  border-color: rgba(57, 210, 246, 0.25) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(57, 210, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  transition:
+    border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 280ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Compare watermark: dual-panel glyph */
+.ar4-card[data-selected]::before {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 10px !important;
+  right: 10px !important;
+  width: 40px !important;
+  height: 30px !important;
+  opacity: 0.07 !important;
+  pointer-events: none !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 30'%3E%3Crect x='2' y='2' width='15' height='26' rx='2' fill='none' stroke='%2339d2f6' stroke-width='2'/%3E%3Crect x='23' y='2' width='15' height='26' rx='2' fill='none' stroke='%236a3cff' stroke-width='2'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+}
+
+/* Kill old compare orbit ::after */
+.ar4-card[data-selected]::after {
+  content: none !important;
+  animation: none !important;
+  padding: 0 !important;
+  background: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+}
+
+/* ── 5. SAVED + COMPARE: coexist ── */
+.ar4-card[data-saved][data-selected] {
+  border-color: rgba(139, 108, 255, 0.35) !important;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(57, 210, 246, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 0%, rgba(106, 60, 255, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #1a1235 0%, #120d2e 100%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(57, 210, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(139, 108, 255, 0.15),
+    0 0 14px -2px rgba(139, 108, 255, 0.12) !important;
+}
+
+/* ── 6. FEATURED: gold language ── */
+.ar4-card:has(.ar4-card__status--editorial),
+.ar4-card.is-promoted {
+  border-color: rgba(243, 191, 76, 0.3) !important;
+}
+
+/* ── 7. FEATURED + SAVED: gold outer preserved, inner violet trace ── */
+.ar4-card[data-saved]:has(.ar4-card__status--editorial),
+.ar4-card[data-saved].is-promoted {
+  border-color: rgba(243, 191, 76, 0.3) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(139, 108, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+/* ── 8. SAVE TRACE: one-shot perimeter sweep ── */
+@property --ar4-save-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.ar4-card.is-save-trace::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: -1px !important;
+  border-radius: inherit !important;
+  padding: 1.5px !important;
+  background: conic-gradient(
+    from var(--ar4-save-angle),
+    transparent 0deg,
+    transparent 290deg,
+    rgba(139, 108, 255, 0.85) 330deg,
+    rgba(255, 255, 255, 0.45) 350deg,
+    transparent 360deg
+  ) !important;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0) !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+  animation: ar4-save-trace 650ms linear 1 both !important;
+  z-index: 2 !important;
+}
+
+@keyframes ar4-save-trace {
+  from { --ar4-save-angle: 0deg; opacity: 1; }
+  to { --ar4-save-angle: 360deg; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card.is-save-trace::after {
+    animation: none !important;
+    content: none !important;
+  }
+}
+
+/* ── 9. REVEAL MOTION: settle-in, no color flash ── */
+@media (prefers-reduced-motion: no-preference) {
+  .ar4-card-reveal {
+    opacity: 0 !important;
+    transform: translateY(8px) !important;
+    transition:
+      opacity 220ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 220ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition-delay: var(--ar4-reveal-delay, 0ms) !important;
+  }
+  .ar4-card-reveal.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── 10. CARD SPACING: 16px rhythm ── */
+.ar4-grid__list {
+  gap: 16px !important;
+}
+
+/* ── 11. FILTER CHIPS: unified family ── */
+.ar4-chip {
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--tv-ink-primary) !important;
+  min-height: 36px !important;
+  padding: 0 14px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  transition:
+    border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.ar4-chip:hover {
+  border-color: rgba(139, 108, 255, 0.35) !important;
+  background: rgba(139, 108, 255, 0.08) !important;
+}
+
+.ar4-chip.is-active,
+.ar4-chip[aria-pressed="true"] {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--tv-accent-violet) 85%, transparent),
+    color-mix(in srgb, var(--tv-accent-primary) 70%, transparent)) !important;
+  border-color: color-mix(in srgb, var(--tv-accent-violet) 55%, transparent) !important;
+  color: var(--tv-ink-on-brand) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tv-accent-violet) 25%, transparent),
+    0 2px 8px -2px color-mix(in srgb, var(--tv-accent-violet) 35%, transparent) !important;
+}
+
+.ar4-chip em {
+  font-style: normal !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: inherit !important;
+  opacity: 0.7 !important;
+  padding: 1px 5px !important;
+  background: color-mix(in srgb, currentColor 10%, transparent) !important;
+  border-radius: 999px !important;
+  line-height: 1.2 !important;
+  margin-left: 4px !important;
+}
+
+.ar4-chip.is-active em,
+.ar4-chip[aria-pressed="true"] em {
+  background: color-mix(in srgb, #000 18%, transparent) !important;
+  color: var(--tv-ink-on-brand) !important;
+  opacity: 1 !important;
+}
+
+/* ── 12. FILTER RAIL: safe edges, native scroll ── */
+.ar4-categories__chips {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  scroll-padding-inline: 4px !important;
+  padding-inline: 4px !important;
+  margin-inline: -4px !important;
+  gap: 8px !important;
+  min-height: 44px !important;
+}
+.ar4-categories__chips::-webkit-scrollbar { display: none !important; }
+.ar4-chip { scroll-margin-inline: 8px !important; flex: 0 0 auto !important; }
+
+/* ── 13. ACTIVE FILTERS: compact strip ── */
+.ar4-applied {
+  padding-block: 4px 8px !important;
+  gap: 6px !important;
+  min-height: 0 !important;
+}
+.ar4-applied__chip {
+  min-height: 28px !important;
+  border-radius: 999px !important;
+  border: 1px solid color-mix(in srgb, var(--tv-accent-violet) 35%, transparent) !important;
+  background: color-mix(in srgb, var(--tv-accent-violet) 10%, transparent) !important;
+  font-size: 12px !important;
+}
+.ar4-applied__reset {
+  min-height: 28px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--tv-border-subtle, rgba(255,255,255,0.12)) !important;
+  background: transparent !important;
+  font-size: 12px !important;
+  text-decoration: none !important;
+}
+
+/* ── 14. PARTNER: content island breathing room ── */
+.ar4-grid__item--partner {
+  grid-column: 1 / -1;
+  margin-block: 28px !important;
+}
+.ar4-grid__item--partner > * {
+  margin-block: 0 !important;
+}
+
+/* ── 15. EMPTY AD: zero footprint ── */
+.tinyadz-inline-slot--probe {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.tinyadz-inline-slot[data-tinyadz-state="waiting"],
+.tinyadz-inline-slot[data-tinyadz-state="empty"] {
+  padding: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  gap: 0 !important;
+  visibility: hidden !important;
+}
+.tv-ad-section[data-tv-ad-section="waiting"],
+.tv-ad-section[data-tv-ad-section="empty"] {
+  height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+.ar4-grid__item--ad:not(:has([data-tv-ad-section="filled"])) {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ── 16. ACTION BUTTONS: unified neutral base ── */
+.ar4-card__bookmark {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(205, 185, 255, 0.2) !important;
+  background: rgba(205, 185, 255, 0.06) !important;
+  color: var(--tv-ink-secondary) !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition:
+    border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 200ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+.ar4-card__bookmark[data-saved] {
+  border-color: rgba(139, 108, 255, 0.4) !important;
+  background: rgba(139, 108, 255, 0.12) !important;
+  color: var(--tv-accent-primary) !important;
+}
+.ar4-card__bookmark-icon { width: 20px !important; height: 20px !important; }
+
+/* Compare icon button: same geometry family */
+.ar4-card__toggles [data-sonic-action="compare"] {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  border-radius: 10px !important;
+  display: grid !important;
+  place-items: center !important;
+}
+.ar4-card__toggles [data-sonic-action="compare"].is-active {
+  border-color: rgba(57, 210, 246, 0.35) !important;
+  background: rgba(57, 210, 246, 0.1) !important;
+  color: var(--tv-accent-cyan) !important;
+  box-shadow: 0 0 8px -2px rgba(57, 210, 246, 0.2) !important;
+}
+
+/* ── 17. FOCUS-VISIBLE: clean, no violet wash ── */
+.ar4-card:focus-visible {
+  outline: 2px solid var(--tv-accent-primary) !important;
+  outline-offset: 2px !important;
+}
+.ar4-card a:focus-visible,
+.ar4-card button:focus-visible {
+  outline: 2px solid var(--tv-accent-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* ── 18. KILL NON-SEMANTIC VIOLET ── */
+/* No violet wash on is-selected without compare meaning */
+.ar4-card.is-selected:not([data-selected]) {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(106, 60, 255, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #1a1235 0%, #120d2e 100%) !important;
+  border-color: rgba(139, 108, 255, 0.12) !important;
+}
+
+/* No hover violet wash on promoted cards */
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card.is-promoted:hover {
+    border-color: rgba(243, 191, 76, 0.4) !important;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(243, 191, 76, 0.05) 0%, transparent 50%),
+      linear-gradient(180deg, #1e1540 0%, #150f33 100%) !important;
+  }
+}
+
+/* ── 19. TYPOGRAPHY FLOOR: 12px minimum ── */
+.ar4-card__category,
+.ar4-card__best,
+.ar4-card__desc {
+  font-size: max(12px, 0.75rem) !important;
+}

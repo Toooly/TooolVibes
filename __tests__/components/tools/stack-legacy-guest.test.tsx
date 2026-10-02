@@ -12,6 +12,7 @@ vi.mock("next/navigation", () => ({
 import { AccountPreviewProvider } from "@/components/account/account-provider";
 import { AuthContinuationProvider } from "@/components/account/auth-continuation-provider";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
+import { SaveOverflow } from "@/components/tools/save-overflow";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
 import { closeSaveOverflow } from "@/components/tools/save-overflow-state";
 import { makeCatalogTool } from "../directory/catalog-test-fixtures";
@@ -96,11 +97,13 @@ function guestValue() {
 }
 
 function renderGuestCard() {
+  const tool = makeCatalogTool({ slug: "windsurf", name: "Windsurf" });
   return render(
     <OverlayProvider>
       <AccountPreviewProvider value={guestValue()}>
         <AuthContinuationProvider>
-          <ArchiveV4ToolCard tool={makeCatalogTool({ slug: "windsurf", name: "Windsurf" })} />
+          <ArchiveV4ToolCard tool={tool} />
+          <SaveOverflow slug={tool.slug} toolName={tool.name} />
         </AuthContinuationProvider>
       </AccountPreviewProvider>
     </OverlayProvider>,
@@ -292,9 +295,11 @@ describe("legacy guest stack gating", () => {
 
   it("STACK-LEGACY-10 authenticated add-to-existing does not open AuthSheet", async () => {
     seedAccount();
+    const tool = makeCatalogTool({ slug: "windsurf", name: "Windsurf" });
     render(
       <OverlayProvider>
-        <ArchiveV4ToolCard tool={makeCatalogTool({ slug: "windsurf", name: "Windsurf" })} />
+        <ArchiveV4ToolCard tool={tool} />
+        <SaveOverflow slug={tool.slug} toolName={tool.name} />
       </OverlayProvider>,
     );
     await openOverflow();

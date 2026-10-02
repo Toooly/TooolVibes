@@ -1,22 +1,23 @@
 "use client";
 
 /**
- * TooolVibes — Archive V4 Tool Card (CATALOG V2, 2026-08-03)
+ * TooolVibes — Archive V4 Tool Card (CATALOG FINAL V2, 2026-10-02)
  *
- * V2 contract:
- *  - Editorial badge "Selezione della redazione" only when toolOfWeek
- *  - Sponsored badge "Contenuto sponsorizzato" + disclosure when affiliateUrl
- *  - Generic pills ("Segnalato", "In vetrina", "In evidenza", "Base") REMOVED
- *  - Description fallback: "Scheda in preparazione."
- *  - CTA aria-label: "Apri la scheda di [Tool]"
- *  - Save / Compare aria-labels are tool-specific (V2 contract)
- *  - Mobile-first, no truncation
- *  - Decision Desk band removed from catalog — promoted tier prop kept
- *    optional for other surfaces (homepage, compare page, etc.)
+ * V3 contract:
+ *  - Two actions only: Save + Compare. No overflow/third action.
+ *  - Card body opens Tool Detail via stretched link.
+ *  - Mobile anatomy: TOP (logo + identity), BODY (desc + Ideale per),
+ *    FOOTER (score + Save + Compare).
+ *  - State semantics: SAVED = luminous perimeter, COMPARE = interior wash +
+ *    watermark, FEATURED = gold. These meanings never overlap.
+ *  - Save tap fires a one-shot perimeter trace (~650ms) then settles to a
+ *    stable thin luminous border.
+ *  - Editorial (gold) border is preserved when saved; saved uses an inner
+ *    violet trace on editorial cards.
  */
 
 import Link from "next/link";
-import { type MouseEvent, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { Bookmark, Star } from "lucide-react";
 
 import {
@@ -30,22 +31,13 @@ import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { cn } from "@/lib/utils";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { useCardReveal } from "@/lib/hooks/use-card-reveal";
-import { SaveOverflow } from "@/components/tools/save-overflow";
 
 type ArchiveV4ToolCardProps = {
   tool: ToolPublicView;
-  /** rank/position 1..n (used for podium-style label on selected state) */
   rank?: number;
-  /** Force the promoted gold treatment (back-compat alias for tier="primary"). */
   promoted?: boolean;
-  /**
-   * Optional promoted tier — only meaningful outside the catalog
-   * (Decision Desk, homepage spotlight). The catalog grid never passes a tier.
-   */
   promotedTier?: "primary" | "secondary" | "tertiary";
-  /** Density for the action rail. */
   density?: "comfortable" | "compact";
-  /** Reduced rendering: hide metrics row, ribbon, and secondary metadata. */
   reduced?: boolean;
   className?: string;
 };
@@ -55,6 +47,8 @@ const TIER_LABEL: Record<"primary" | "secondary" | "tertiary", string> = {
   secondary: "In vetrina",
   tertiary: "Selezione TooolVibes",
 };
+
+const SAVE_TRACE_DURATION_MS = 650;
 
 function ArchiveV4ToolCard({
   tool,
@@ -76,13 +70,17 @@ function ArchiveV4ToolCard({
       ? personalStatus
       : null;
   const showRank = isSelected && typeof rank === "number" && !personalWord;
-  const revealRef = useCardReveal<HTMLElement>(rank && rank <= 6 ? (rank - 1) * 35 : 0);
+  const revealRef = useCardReveal<HTMLElement>(rank && rank <= 6 ? (rank - 1) * 28 : 0);
   const [logoFailed, setLogoFailed] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
+  const saveTimerRef = useRef<number | null>(null);
 
-  // iOS Safari can miss hit-testing the stretched ::after card link, so the
-  // whole card must still activate. Keep the anchor for semantics/SEO and, when
-  // the tap did not already land on the link or on an in-card control
-  // (save / compare / overflow), forward it to that anchor.
+  useEffect(() => {
+    return () => {
+      if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+    };
+  }, []);
+
   const handleCardActivate = (event: MouseEvent<HTMLElement>) => {
     if (event.defaultPrevented) return;
     if (
@@ -107,24 +105,32 @@ function ArchiveV4ToolCard({
       ?.click();
   };
 
-  // Avatar fallback (icon URL via Google s2)
+  const handleSave = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const wasSaved = isSaved;
+    toggleSaved(tool.slug);
+    if (!wasSaved) {
+      setJustSaved(true);
+      if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = window.setTimeout(
+        () => setJustSaved(false),
+        SAVE_TRACE_DURATION_MS,
+      );
+    }
+  };
+
   const iconUrl = tool.domain
     ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(tool.domain)}&sz=128`
     : null;
   const initial = tool.name.slice(0, 2).toUpperCase();
 
-  // Resolve effective promoted treatment (only used when caller passes tier)
   const effectiveTier: "primary" | "secondary" | "tertiary" | null =
     promotedTier ?? (promoted || tool.toolOfWeek ? "primary" : null);
   const isPromoted = effectiveTier !== null;
 
-  // V2 badges:
-  //  - editorial: "Selezione della redazione" only when toolOfWeek (real)
-  //  - sponsored: "Contenuto sponsorizzato" + disclosure when affiliateUrl
   const showEditorialBadge = tool.toolOfWeek;
   const showSponsoredBadge = Boolean(tool.affiliateUrl);
-  // Tier-based badge only if the caller passed a tier (preserved for
-  // backwards-compat with surfaces that still use a Decision Desk).
   const showTierBadge = isPromoted && promotedTier !== undefined;
   const bestFor = reduced
     ? null
@@ -150,6 +156,7 @@ function ArchiveV4ToolCard({
         effectiveTier && `is-tier-${effectiveTier}`,
         reduced && "is-reduced",
         showSponsoredBadge && "is-sponsored",
+        justSaved && "is-save-trace",
         className,
       )}
       onClick={handleCardActivate}
@@ -161,7 +168,7 @@ function ArchiveV4ToolCard({
       data-reduced={reduced || undefined}
       data-sponsored={showSponsoredBadge || undefined}
     >
-      {/* ═══ TOP ROW: avatar + identity ═══ */}
+      {/* TOP: logo + identity */}
       <div className="ar4-card__top">
         <span className="ar4-card__avatar" aria-hidden="true">
           {iconUrl && !logoFailed ? (
@@ -220,18 +227,15 @@ function ArchiveV4ToolCard({
         ) : null}
       </div>
 
-      {/* ═══ DESCRIPTION ═══ */}
+      {/* BODY: description + Ideale per */}
       <p className="ar4-card__desc">
         {tool.tldr || tool.shortDescription || "Scheda in preparazione."}
       </p>
-      {!reduced && (scoreLine || bestFor) ? (
-        <div className="ar4-card__triage">
-          {scoreLine ? <span className="ar4-card__score">{scoreLine}</span> : null}
-          {bestFor ? <p className="ar4-card__best">Ideale per {bestFor}</p> : null}
-        </div>
+      {!reduced && bestFor ? (
+        <p className="ar4-card__best">Ideale per {bestFor}</p>
       ) : null}
 
-      {/* ═══ ACTION RAIL — reserved control cluster (no absolute overlays) ═══ */}
+      {/* FOOTER: score + Save + Compare */}
       <div className="ar4-card__actions">
         <div className="ar4-card__control-rail" data-has-rank={showRank ? "true" : undefined}>
           {showRank ? (
@@ -246,6 +250,9 @@ function ArchiveV4ToolCard({
               className="ar4-card__saved-label"
             />
           )}
+          {!reduced && scoreLine ? (
+            <span className="ar4-card__score">{scoreLine}</span>
+          ) : null}
           <div className="ar4-card__toggles">
             <button
               type="button"
@@ -253,11 +260,7 @@ function ArchiveV4ToolCard({
               data-saved={isSaved || undefined}
               aria-pressed={isSaved}
               aria-label={isSaved ? `Rimuovi ${tool.name} dai salvati` : `Salva ${tool.name}`}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                toggleSaved(tool.slug);
-              }}
+              onClick={handleSave}
             >
               <Bookmark
                 className="ar4-card__bookmark-icon"
@@ -269,22 +272,12 @@ function ArchiveV4ToolCard({
               slug={tool.slug}
               mode="icon"
               toolName={tool.name}
-              onChange={() => {
-                /* re-render via store */
-              }}
             />
-            <span className="ar4-card__toggles-more">
-              <SaveOverflow
-                slug={tool.slug}
-                toolName={tool.name}
-                triggerClassName="ar4-card__save-more"
-              />
-            </span>
           </div>
         </div>
       </div>
 
-      {/* ═══ DISCLOSURE — only when the card carries an affiliate link ═══ */}
+      {/* DISCLOSURE */}
       {showSponsoredBadge ? (
         <p className="ar4-card__disclosure">
           Link affiliato: potremmo ricevere una commissione, senza costi
