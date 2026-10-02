@@ -4494,10 +4494,10 @@
 .def-stacks__cta {
   margin-top: auto;
   max-width: none;
-  padding: 10px 10px;
-  gap: 4px;
+  padding: 10px 6px;
+  gap: 3px;
   font-size: 0.75rem;
-  letter-spacing: 0.03em;
+  letter-spacing: 0;
   white-space: nowrap;
 }
 .def-stacks__arrow {
