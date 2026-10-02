@@ -37,7 +37,9 @@ import {
 } from "react";
 import {
   ArrowRight,
+  ChevronUp,
   ExternalLink,
+  MessageCircle,
   Radar as RadarIcon,
   RefreshCw,
 } from "lucide-react";
@@ -733,13 +735,13 @@ export function HomeRadarPreview() {
                   </span>
                   <span className="tv-home-radar__launch-metrics">
                     <span className="tv-home-radar__launch-votes">
-                      {item.votesCount > 0
-                        ? `${item.votesCount} ${item.votesCount === 1 ? "voto" : "voti"}`
-                        : "voti n/d"}
+                      <ChevronUp size={12} aria-hidden="true" />
+                      {item.votesCount > 0 ? item.votesCount : "n/d"}
                     </span>
                     {item.commentsCount > 0 ? (
                       <span className="tv-home-radar__launch-comments">
-                        {item.commentsCount} {item.commentsCount === 1 ? "comm." : "comm."}
+                        <MessageCircle size={10} aria-hidden="true" />
+                        {item.commentsCount}
                       </span>
                     ) : null}
                   </span>
@@ -761,6 +763,11 @@ export function HomeRadarPreview() {
         </p>
       )}
 
+      {top.length > 0 ? (
+        <p className="tv-home-radar__hint" aria-hidden="true">
+          {top.length} segnali in evidenza · Apri Radar per tutti i segnali
+        </p>
+      ) : null}
       <Link
         href="/radar"
         className="tv-home-radar__cta"
