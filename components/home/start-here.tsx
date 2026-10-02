@@ -804,13 +804,12 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
         </div>
       ) : null}
       {showDots ? (
-        <div className="def-stacks__dots" role="tablist" aria-label="Paginazione stack">
+        <div className="def-stacks__dots" role="group" aria-label="Paginazione stack">
           {stacks.map((stack, index) => (
             <button
               key={stack.slug}
               type="button"
-              role="tab"
-              aria-selected={index === active}
+              aria-current={index === active ? "true" : undefined}
               aria-label={`Vai allo stack ${index + 1}`}
               className={`def-stacks__dot${index === active ? " is-active" : ""}`}
               onClick={() => scrollToIndex(index)}
