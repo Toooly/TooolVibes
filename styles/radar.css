@@ -830,28 +830,12 @@
   margin-top: 0;
 }
 
+/* Radar CTA — layout only. Visual identity comes from tv-gold-cta. */
 .tv-home-radar__cta {
   display: inline-flex;
-  min-height: var(--tv-button-min-height-touch);
   align-items: center;
   justify-content: center;
-  gap: var(--tv-space-micro-sm);
-  padding: var(--tv-space-px-3) var(--tv-space-px-4);
-  border: 1px solid var(--tv-border-default);
-  border-radius: var(--tv-radius-pill);
-  background: var(--tv-button-secondary-bg);
-  color: var(--tv-button-secondary-text);
-  font-size: var(--tv-text-label);
-  font-weight: var(--tv-weight-semibold);
   text-decoration: none;
-  transition:
-    border-color var(--tv-motion-fast) var(--tv-easing-standard),
-    background var(--tv-motion-fast) var(--tv-easing-standard);
-}
-
-.tv-home-radar__cta:hover {
-  border-color: var(--tv-border-interactive);
-  background: var(--tv-button-secondary-bg-hover);
 }
 
 @media (max-width: 79.999rem) {
