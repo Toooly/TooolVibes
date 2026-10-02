@@ -80,6 +80,45 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
 
 const rangeSettings = RADAR_RANGE_SETTINGS;
 
+type RadarDiagCategory =
+  | "AUTH"
+  | "RATE_LIMIT"
+  | "QUERY"
+  | "SCHEMA"
+  | "NETWORK"
+  | "TIMEOUT"
+  | "PARSING"
+  | "EMPTY"
+  | "OK"
+  | "OTHER";
+
+function logRadarDiag(facts: {
+  provider: string;
+  status: number | string;
+  resultCount: number;
+  cacheState: string;
+  stale: boolean;
+  errorCategory: RadarDiagCategory;
+  rateLimitRemaining?: string | null;
+  detail?: string;
+}) {
+  // Safe structured log — NEVER credentials or Authorization headers.
+  console.log(
+    JSON.stringify({
+      event: "radar-product-hunt",
+      timestamp: new Date().toISOString(),
+      provider: facts.provider,
+      httpStatus: facts.status,
+      resultCount: facts.resultCount,
+      cacheState: facts.cacheState,
+      stale: facts.stale,
+      errorCategory: facts.errorCategory,
+      rateLimitRemaining: facts.rateLimitRemaining ?? null,
+      detail: facts.detail?.slice(0, 200) ?? null,
+    }),
+  );
+}
+
 // Cache dei soli payload live riusciti: il fallback stale ri-serva sempre
 // l'ultima classifica reale con il suo `updatedAt` originale (B36 / FLOW-606).
 const responseCache = new Map<
@@ -196,10 +235,18 @@ function getDateWindow(range: ProductHuntRange) {
 
 function buildResponse(payload: ProductHuntPayload, ttlMs: number) {
   const maxAgeSeconds = Math.max(60, Math.floor(ttlMs / 1000));
+  const isSuccess = payload.status === "ok" && payload.items.length > 0;
+
+  // Success: cache aggressively with stale-if-error so the CDN serves
+  // last-known-good during upstream outages.
+  // Error/empty: short s-maxage + long stale-if-error preserves LKG.
+  const cacheControl = isSuccess
+    ? `public, s-maxage=${maxAgeSeconds}, stale-while-revalidate=${maxAgeSeconds}, stale-if-error=86400`
+    : `public, s-maxage=0, stale-if-error=86400`;
 
   return NextResponse.json(payload, {
     headers: {
-      "Cache-Control": `public, s-maxage=${maxAgeSeconds}, stale-while-revalidate=${maxAgeSeconds}`,
+      "Cache-Control": cacheControl,
     },
   });
 }
@@ -223,55 +270,62 @@ function normalizeItems(data: ProductHuntGraphQlResponse): ProductHuntItem[] {
     .slice(0, 5);
 }
 
-async function getProductHuntToken(now: number) {
+async function getProductHuntToken(now: number): Promise<{ token: string | null; errorCategory: RadarDiagCategory; detail: string }> {
   const directToken = process.env.PRODUCTHUNT_TOKEN?.trim();
 
   if (directToken) {
-    return directToken;
+    return { token: directToken, errorCategory: "OK", detail: "direct-token" };
   }
 
   if (productHuntTokenCache && productHuntTokenCache.expiresAt > now + 60 * 1000) {
-    return productHuntTokenCache.token;
+    return { token: productHuntTokenCache.token, errorCategory: "OK", detail: "cached-oauth" };
   }
 
   const clientId = process.env.PRODUCTHUNT_CLIENT_ID?.trim();
   const clientSecret = process.env.PRODUCTHUNT_CLIENT_SECRET?.trim();
 
   if (!clientId || !clientSecret) {
-    return null;
+    return { token: null, errorCategory: "AUTH", detail: "no-credentials" };
   }
 
-  const response = await productHuntFetch(PRODUCT_HUNT_OAUTH_ENDPOINT, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: "client_credentials",
-    }),
-  });
+  try {
+    const response = await productHuntFetch(PRODUCT_HUNT_OAUTH_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: "client_credentials",
+      }),
+    });
 
-  if (!response.ok) {
-    throw new Error(`OAuth Product Hunt non disponibile: ${response.status}`);
+    if (!response.ok) {
+      const category = response.status === 401 ? "AUTH" : response.status === 429 ? "RATE_LIMIT" : "AUTH";
+      return { token: null, errorCategory: category, detail: `oauth-http-${response.status}` };
+    }
+
+    const data = (await response.json()) as ProductHuntOAuthResponse;
+
+    if (!data.access_token) {
+      return { token: null, errorCategory: "AUTH", detail: data.error ?? data.error_description ?? "no-access-token" };
+    }
+
+    const ttlSeconds = data.expires_in ?? 60 * 60;
+    const safeTtlMs = Math.max(5 * 60 * 1000, (ttlSeconds - 60) * 1000);
+    productHuntTokenCache = {
+      token: data.access_token,
+      expiresAt: now + safeTtlMs,
+    };
+
+    return { token: data.access_token, errorCategory: "OK", detail: "oauth-success" };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    const category: RadarDiagCategory = msg.includes("abort") || msg.includes("timeout") ? "TIMEOUT" : "NETWORK";
+    return { token: null, errorCategory: category, detail: msg.slice(0, 100) };
   }
-
-  const data = (await response.json()) as ProductHuntOAuthResponse;
-
-  if (!data.access_token) {
-    throw new Error(data.error_description ?? data.error ?? "Token OAuth Product Hunt mancante");
-  }
-
-  const ttlSeconds = data.expires_in ?? 60 * 60;
-  const safeTtlMs = Math.max(5 * 60 * 1000, (ttlSeconds - 60) * 1000);
-  productHuntTokenCache = {
-    token: data.access_token,
-    expiresAt: now + safeTtlMs,
-  };
-
-  return data.access_token;
 }
 
 export async function GET(request: NextRequest) {
@@ -296,15 +350,31 @@ export async function GET(request: NextRequest) {
     return buildResponse(fallbackCached.payload, FALLBACK_TTL_MS);
   }
 
-  let token: string | null = null;
-
-  try {
-    token = await getProductHuntToken(now);
-  } catch {
-    token = null;
-  }
+  const tokenResult = await getProductHuntToken(now);
+  const { token, errorCategory: tokenCategory, detail: tokenDetail } = tokenResult;
 
   if (!token) {
+    logRadarDiag({
+      provider: "product-hunt",
+      status: "no-token",
+      resultCount: 0,
+      cacheState: cached ? "has-lkg" : "no-lkg",
+      stale: false,
+      errorCategory: tokenCategory,
+      detail: tokenDetail,
+    });
+
+    // Serve last-known-good if available instead of collapsing to zero.
+    if (cached) {
+      const stalePayload: ProductHuntPayload = {
+        ...cached.payload,
+        source: "product-hunt-stale",
+        stale: true,
+        message: "Aggiornamento live non riuscito: mostro l'ultima classifica Product Hunt sincronizzata.",
+      };
+      return buildResponse(stalePayload, FALLBACK_TTL_MS);
+    }
+
     const payload: ProductHuntPayload = {
       status: "missing-token",
       source: "none",
@@ -312,8 +382,7 @@ export async function GET(request: NextRequest) {
       range,
       updatedAt: new Date(now).toISOString(),
       items: [],
-      message:
-        "Classifica Product Hunt non configurata.",
+      message: "Classifica Product Hunt non configurata.",
     };
 
     fallbackCache.set(range, { expiresAt: now + FALLBACK_TTL_MS, payload });
@@ -338,14 +407,65 @@ export async function GET(request: NextRequest) {
       }),
     });
 
+    const rateLimitRemaining = response.headers.get("x-ratelimit-remaining");
+
     if (!response.ok) {
+      const category: RadarDiagCategory =
+        response.status === 401 ? "AUTH" :
+        response.status === 403 ? "AUTH" :
+        response.status === 429 ? "RATE_LIMIT" :
+        "NETWORK";
+      logRadarDiag({
+        provider: "product-hunt",
+        status: response.status,
+        resultCount: 0,
+        cacheState: cached ? "has-lkg" : "no-lkg",
+        stale: false,
+        errorCategory: category,
+        rateLimitRemaining,
+        detail: `graphql-http-${response.status}`,
+      });
       throw new Error(`API Product Hunt non disponibile: ${response.status}`);
     }
 
     const data = (await response.json()) as ProductHuntGraphQlResponse;
 
     if (data.errors?.length) {
-      throw new Error(data.errors.map((error) => error.message).join("; "));
+      const errMsg = data.errors.map((error) => error.message).join("; ");
+      logRadarDiag({
+        provider: "product-hunt",
+        status: 200,
+        resultCount: 0,
+        cacheState: cached ? "has-lkg" : "no-lkg",
+        stale: false,
+        errorCategory: "QUERY",
+        rateLimitRemaining,
+        detail: errMsg.slice(0, 200),
+      });
+      throw new Error(errMsg);
+    }
+
+    const items = normalizeItems(data);
+
+    // Phase 7: don't overwrite LKG with empty result unless demonstrably legitimate.
+    if (items.length === 0 && cached && cached.payload.items.length > 0) {
+      logRadarDiag({
+        provider: "product-hunt",
+        status: 200,
+        resultCount: 0,
+        cacheState: "has-lkg-preserved",
+        stale: true,
+        errorCategory: "EMPTY",
+        rateLimitRemaining,
+        detail: "empty-response-preserved-lkg",
+      });
+      const stalePayload: ProductHuntPayload = {
+        ...cached.payload,
+        source: "product-hunt-stale",
+        stale: true,
+        message: "Aggiornamento live non riuscito: mostro l'ultima classifica Product Hunt sincronizzata.",
+      };
+      return buildResponse(stalePayload, FALLBACK_TTL_MS);
     }
 
     const payload: ProductHuntPayload = {
@@ -354,12 +474,38 @@ export async function GET(request: NextRequest) {
       stale: false,
       range,
       updatedAt: new Date(now).toISOString(),
-      items: normalizeItems(data),
+      items,
     };
+
+    logRadarDiag({
+      provider: "product-hunt",
+      status: 200,
+      resultCount: items.length,
+      cacheState: "fresh",
+      stale: false,
+      errorCategory: items.length > 0 ? "OK" : "EMPTY",
+      rateLimitRemaining,
+    });
 
     responseCache.set(range, { expiresAt: now + settings.ttlMs, payload });
     return buildResponse(payload, settings.ttlMs);
-  } catch {
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    const category: RadarDiagCategory =
+      errMsg.includes("abort") || errMsg.includes("timeout") ? "TIMEOUT" :
+      errMsg.includes("non disponibile") ? "NETWORK" :
+      "OTHER";
+
+    logRadarDiag({
+      provider: "product-hunt",
+      status: "exception",
+      resultCount: 0,
+      cacheState: cached ? "has-lkg" : "no-lkg",
+      stale: false,
+      errorCategory: category,
+      detail: errMsg.slice(0, 200),
+    });
+
     // Fallback esplicito: se esiste un'ultima classifica reale la ri-serviamo
     // dichiarando provenienza (`source`) e staleness (`stale`) senza riscrivere
     // il timestamp di origine; altrimenti nessun dato inventato.

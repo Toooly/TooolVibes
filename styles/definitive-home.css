@@ -2449,6 +2449,18 @@
   .tv-home-radar__launch:hover {
     box-shadow: inset 2px 0 0 var(--tv-grammar-signal-trace);
   }
+  .tv-home-radar--snapshot .tv-home-radar__status[data-state="live"] > span {
+    animation: none;
+    box-shadow: none;
+  }
+  .tv-home-radar__meta-skeleton,
+  .tv-home-radar__skeleton-line {
+    animation: none;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .tv-home-radar__launch::before {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2769,6 +2781,109 @@
   height: 0.45rem;
   border-radius: 999px;
   background: var(--tv-grammar-radar-live, var(--tv-accent-cyan));
+}
+.tv-home-radar--snapshot .tv-home-radar__status[data-state="live"] > span {
+  animation: tv-radar-pulse 2.4s ease-in-out infinite;
+}
+.tv-home-radar--snapshot .tv-home-radar__status[data-state="stale"] > span {
+  background: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 50%, transparent);
+}
+.tv-home-radar--snapshot .tv-home-radar__status[data-state="error"] > span,
+.tv-home-radar--snapshot .tv-home-radar__status[data-state="missing-token"] > span {
+  background: rgba(255, 255, 255, 0.25);
+}
+@keyframes tv-radar-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 50%, transparent); }
+  50% { opacity: 0.75; box-shadow: 0 0 6px 2px color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 30%, transparent); }
+}
+
+/* Stale marker */
+.tv-home-radar__stale-mark {
+  color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 60%, white);
+  font-style: italic;
+}
+
+/* Loading skeleton */
+.tv-home-radar__meta-skeleton {
+  display: inline-block;
+  width: 12rem;
+  height: 0.75rem;
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: tv-radar-shimmer 1.8s ease-in-out infinite;
+}
+.tv-home-radar__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+.tv-home-radar__skeleton-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.55rem 0.65rem;
+  align-items: center;
+  padding: 0.55rem 0.65rem 0.65rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  min-height: 3.25rem;
+}
+.tv-home-radar__skeleton-rank {
+  width: 1.2rem;
+  height: 0.75rem;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.tv-home-radar__skeleton-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.tv-home-radar__skeleton-line {
+  display: block;
+  height: 0.65rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: tv-radar-shimmer 1.8s ease-in-out infinite;
+}
+.tv-home-radar__skeleton-line--name { width: 65%; }
+.tv-home-radar__skeleton-line--tag { width: 85%; height: 0.55rem; }
+.tv-home-radar__skeleton-metric {
+  width: 2.5rem;
+  height: 0.65rem;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+}
+@keyframes tv-radar-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Launch metrics polish */
+.tv-home-radar__launch-votes {
+  color: color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 85%, white);
+  font-variant-numeric: tabular-nums;
+}
+.tv-home-radar__launch-comments {
+  color: rgba(244, 240, 234, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle scan line on active card */
+.tv-home-radar__launch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, transparent 48%, color-mix(in srgb, var(--tv-accent-cyan, #39d2f6) 4%, transparent) 50%, transparent 52%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms var(--tv-easing-standard);
+}
+.tv-home-radar__launch:hover::before {
+  opacity: 1;
 }
 
 @media (max-width: 767px) {

@@ -662,7 +662,7 @@ export function HomeRadarPreview() {
     [payload],
   );
 
-  const top = model.items.slice(0, 4);
+  const top = model.items.slice(0, 5);
   const maxVotes = top.reduce((m, i) => Math.max(m, i.votesCount), 0) || 1;
 
   return (
@@ -683,21 +683,39 @@ export function HomeRadarPreview() {
       </header>
 
       <p className="tv-home-radar__meta-line" aria-label="Sintesi segnali di oggi">
-        {model.signalCount ?? (isLoading ? "…" : "0")} segnali
-        {" · "}
-        Product Hunt
-        {" · "}
-        aggiornato {model.updatedAtLabel}
+        {isLoading ? (
+          <span className="tv-home-radar__meta-skeleton" aria-hidden="true" />
+        ) : (
+          <>
+            {model.signalCount ?? 0} segnali
+            {" · "}
+            Product Hunt
+            {" · "}
+            aggiornato {model.updatedAtLabel}
+            {model.state === "stale" ? (
+              <span className="tv-home-radar__stale-mark"> · dati recenti</span>
+            ) : null}
+          </>
+        )}
       </p>
 
-      {top.length > 0 ? (
+      {isLoading ? (
+        <div className="tv-home-radar__skeleton" aria-hidden="true">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div key={i} className="tv-home-radar__skeleton-row">
+              <span className="tv-home-radar__skeleton-rank" />
+              <span className="tv-home-radar__skeleton-body">
+                <span className="tv-home-radar__skeleton-line tv-home-radar__skeleton-line--name" />
+                <span className="tv-home-radar__skeleton-line tv-home-radar__skeleton-line--tag" />
+              </span>
+              <span className="tv-home-radar__skeleton-metric" />
+            </div>
+          ))}
+        </div>
+      ) : top.length > 0 ? (
         <ol className="tv-home-radar__launches" aria-label="Top lanci del periodo">
           {top.map((item, index) => {
             const intensity = Math.round((item.votesCount / maxVotes) * 100);
-            const talk =
-              item.votesCount > 0
-                ? Math.round((item.commentsCount / item.votesCount) * 100) / 100
-                : null;
             return (
               <li key={item.id}>
                 <a
@@ -714,14 +732,14 @@ export function HomeRadarPreview() {
                     <em>{item.tagline || "Lancio su Product Hunt"}</em>
                   </span>
                   <span className="tv-home-radar__launch-metrics">
-                    <span>
+                    <span className="tv-home-radar__launch-votes">
                       {item.votesCount > 0
-                        ? `${item.votesCount} voti`
+                        ? `${item.votesCount} ${item.votesCount === 1 ? "voto" : "voti"}`
                         : "voti n/d"}
                     </span>
-                    {talk !== null ? (
-                      <span title="Commenti per voto (derivato dal set corrente)">
-                        {talk.toFixed(2)} disc.
+                    {item.commentsCount > 0 ? (
+                      <span className="tv-home-radar__launch-comments">
+                        {item.commentsCount} {item.commentsCount === 1 ? "comm." : "comm."}
                       </span>
                     ) : null}
                   </span>
@@ -737,11 +755,9 @@ export function HomeRadarPreview() {
         </ol>
       ) : (
         <p className="tv-home-radar__empty" role="status">
-          {isLoading
-            ? "Lettura segnali in corso…"
-            : model.state === "error" || model.state === "missing-token"
-              ? "Segnali non disponibili in questo momento. Nessun dato simulato."
-              : "Nessun lancio nel periodo. Apri il Radar completo per altri intervalli."}
+          {model.state === "error" || model.state === "missing-token"
+            ? "Segnali non disponibili in questo momento. Nessun dato simulato."
+            : "Nessun lancio nel periodo. Apri il Radar completo per altri intervalli."}
         </p>
       )}
 
