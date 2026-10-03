@@ -3771,9 +3771,9 @@ a.archive-v4-card:focus-visible {
   -webkit-tap-highlight-color: transparent !important;
 }
 .ar4-card__bookmark[data-saved] {
-  border-color: rgba(139, 108, 255, 0.4) !important;
-  background: rgba(139, 108, 255, 0.12) !important;
-  color: var(--tv-accent-primary) !important;
+  border-color: rgba(244, 194, 62, 0.4) !important;
+  background: rgba(244, 194, 62, 0.12) !important;
+  color: var(--tv-accent-gold, #F4C23E) !important;
 }
 .ar4-card__bookmark-icon { width: 20px !important; height: 20px !important; }
 
@@ -4284,9 +4284,9 @@ a.archive-v4-card:focus-visible {
     from var(--ar4-save-angle),
     transparent 0deg,
     transparent 270deg,
-    rgba(139, 108, 255, 0.9) 320deg,
-    rgba(200, 180, 255, 0.6) 345deg,
-    rgba(255, 255, 255, 0.3) 355deg,
+    rgba(244, 194, 62, 0.9) 320deg,
+    rgba(245, 201, 104, 0.6) 345deg,
+    rgba(255, 255, 255, 0.35) 355deg,
     transparent 360deg
   ) !important;
   -webkit-mask:
@@ -4308,9 +4308,9 @@ a.archive-v4-card:focus-visible {
 }
 
 @keyframes ar4-save-bloom {
-  0% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.25), 0 0 20px -2px rgba(139,108,255,.2), 0 0 40px -8px rgba(139,108,255,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(139,108,255,.12); }
-  30% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 2px rgba(139,108,255,.4), 0 0 32px 0 rgba(139,108,255,.3), 0 0 60px -4px rgba(139,108,255,.15), inset 0 1px 0 rgba(255,255,255,.1), inset 0 0 0 1px rgba(139,108,255,.2); }
-  100% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.25), 0 0 20px -2px rgba(139,108,255,.2), 0 0 40px -8px rgba(139,108,255,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(139,108,255,.12); }
+  0% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(244,194,62,.25), 0 0 20px -2px rgba(244,194,62,.2), 0 0 40px -8px rgba(244,194,62,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(244,194,62,.1); }
+  30% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 2px rgba(244,194,62,.4), 0 0 32px 0 rgba(244,194,62,.3), 0 0 60px -4px rgba(244,194,62,.15), inset 0 1px 0 rgba(255,255,255,.1), inset 0 0 0 1px rgba(244,194,62,.2); }
+  100% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(244,194,62,.25), 0 0 20px -2px rgba(244,194,62,.2), 0 0 40px -8px rgba(244,194,62,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(244,194,62,.1); }
 }
 
 /* ── COMPARE: enhanced rest state ── */
@@ -4369,24 +4369,27 @@ a.archive-v4-card:focus-visible {
 
 /* ── SAVED + COMPARE: coexist ── */
 .ar4-card[data-saved][data-selected] {
-  border-color: rgba(139, 108, 255, 0.4) !important;
+  border-color: rgba(244, 194, 62, 0.45) !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(57, 210, 246, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 85% 10%, rgba(106, 60, 255, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(57, 210, 246, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 10%, rgba(106, 60, 255, 0.06) 0%, transparent 55%),
     radial-gradient(ellipse at 15% 90%, rgba(57, 210, 246, 0.04) 0%, transparent 50%),
     linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%) !important;
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.3),
     0 14px 36px rgba(0, 0, 0, 0.22),
-    0 0 0 1px rgba(139, 108, 255, 0.25),
-    0 0 20px -2px rgba(139, 108, 255, 0.18),
-    0 0 40px -8px rgba(139, 108, 255, 0.08),
+    0 0 0 1px rgba(244, 194, 62, 0.22),
+    0 0 20px -2px rgba(244, 194, 62, 0.16),
+    0 0 40px -8px rgba(244, 194, 62, 0.08),
     inset 0 0 0 1px rgba(57, 210, 246, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
 }
 
 /* ── METALLIC + SAVED: gold outer preserved, violet inner trace ── */
+/* Gold podium + Saved: editorial gold outer (border + accent bar) + distinct
+   secondary containment via double inner ring (gold 1px + gold-warm 2px).
+   NOT a second gold outer border — the inner rings are the Saved signal. */
 .ar4-card[data-tier="primary"][data-saved],
 .ar4-card.is-tier-primary[data-saved] {
   border-color: rgba(228, 178, 60, 0.5) !important;
@@ -4395,7 +4398,8 @@ a.archive-v4-card:focus-visible {
     0 10px 28px rgba(0, 0, 0, 0.2),
     0 0 0 1px rgba(228, 178, 60, 0.12),
     0 0 24px -4px rgba(228, 178, 60, 0.12),
-    inset 0 0 0 1px rgba(139, 108, 255, 0.35),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.35),
+    inset 0 0 0 2px rgba(245, 201, 104, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 .ar4-card[data-tier="secondary"][data-saved],
@@ -4406,7 +4410,8 @@ a.archive-v4-card:focus-visible {
     0 10px 28px rgba(0, 0, 0, 0.2),
     0 0 0 1px rgba(207, 214, 228, 0.1),
     0 0 22px -4px rgba(207, 214, 228, 0.1),
-    inset 0 0 0 1px rgba(139, 108, 255, 0.35),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.35),
+    inset 0 0 0 2px rgba(245, 201, 104, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 .ar4-card[data-tier="tertiary"][data-saved],
@@ -4417,7 +4422,8 @@ a.archive-v4-card:focus-visible {
     0 10px 28px rgba(0, 0, 0, 0.2),
     0 0 0 1px rgba(210, 154, 107, 0.1),
     0 0 22px -4px rgba(210, 154, 107, 0.1),
-    inset 0 0 0 1px rgba(139, 108, 255, 0.35),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.35),
+    inset 0 0 0 2px rgba(245, 201, 104, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -4462,7 +4468,7 @@ a.archive-v4-card:focus-visible {
     0 0 0 1px rgba(228, 178, 60, 0.12),
     0 0 24px -4px rgba(228, 178, 60, 0.12),
     inset 0 0 0 1px rgba(57, 210, 246, 0.15),
-    inset 0 0 0 2px rgba(139, 108, 255, 0.25),
+    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 .ar4-card[data-tier="secondary"][data-saved][data-selected],
@@ -4474,7 +4480,7 @@ a.archive-v4-card:focus-visible {
     0 0 0 1px rgba(207, 214, 228, 0.1),
     0 0 22px -4px rgba(207, 214, 228, 0.1),
     inset 0 0 0 1px rgba(57, 210, 246, 0.15),
-    inset 0 0 0 2px rgba(139, 108, 255, 0.25),
+    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 .ar4-card[data-tier="tertiary"][data-saved][data-selected],
@@ -4486,7 +4492,7 @@ a.archive-v4-card:focus-visible {
     0 0 0 1px rgba(210, 154, 107, 0.1),
     0 0 22px -4px rgba(210, 154, 107, 0.1),
     inset 0 0 0 1px rgba(57, 210, 246, 0.15),
-    inset 0 0 0 2px rgba(139, 108, 255, 0.25),
+    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -4525,7 +4531,7 @@ a.archive-v4-card:focus-visible {
   position: absolute !important;
   inset: -6px !important;
   border-radius: 12px !important;
-  border: 2px solid rgba(139, 108, 255, 0.6) !important;
+  border: 2px solid rgba(244, 194, 62, 0.6) !important;
   opacity: 0 !important;
   animation: ar4-bookmark-ping 240ms cubic-bezier(0.16, 1, 0.3, 1) 80ms 1 both !important;
   pointer-events: none !important;
@@ -4547,7 +4553,7 @@ a.archive-v4-card:focus-visible {
   width: 10px !important;
   height: 14px !important;
   margin-left: -5px !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath d='M1 1h8v12l-4-3-4 3z' fill='%238b6cff' opacity='0.8'/%3E%3C/svg%3E") no-repeat center !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath d='M1 1h8v12l-4-3-4 3z' fill='%23f4c23e' opacity='0.85'/%3E%3C/svg%3E") no-repeat center !important;
   background-size: contain !important;
   opacity: 0 !important;
   animation: ar4-bookmark-rise 300ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
@@ -4648,15 +4654,15 @@ a.archive-v4-card:focus-visible {
 
 /* ── ENHANCED SAVE REST: stronger perimeter + depth ── */
 .ar4-card[data-saved] {
-  border-color: rgba(139, 108, 255, 0.55) !important;
+  border-color: rgba(244, 194, 62, 0.55) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.28),
     0 10px 28px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(139, 108, 255, 0.28),
-    0 0 24px -2px rgba(139, 108, 255, 0.22),
-    0 0 48px -8px rgba(139, 108, 255, 0.12),
+    0 0 0 1px rgba(244, 194, 62, 0.25),
+    0 0 24px -2px rgba(244, 194, 62, 0.2),
+    0 0 48px -8px rgba(244, 194, 62, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    inset 0 0 0 1px rgba(139, 108, 255, 0.12) !important;
+    inset 0 0 0 1px rgba(244, 194, 62, 0.1) !important;
 }
 
 /* ── UNSAVE: clean reverse fade (240ms) ── */
@@ -4666,8 +4672,8 @@ a.archive-v4-card:focus-visible {
 
 @keyframes ar4-unsave-fade {
   0% {
-    border-color: rgba(139, 108, 255, 0.55);
-    box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.28), 0 0 24px -2px rgba(139,108,255,.22), 0 0 48px -8px rgba(139,108,255,.12), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(139,108,255,.12);
+    border-color: rgba(244, 194, 62, 0.55);
+    box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(244,194,62,.25), 0 0 24px -2px rgba(244,194,62,.2), 0 0 48px -8px rgba(244,194,62,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(244,194,62,.1);
   }
   100% {
     border-color: rgba(139, 108, 255, 0.2);
@@ -4782,4 +4788,21 @@ a.archive-v4-card:focus-visible {
   .ar4-card__enriched-chip {
     transition: none !important;
   }
+}
+
+/* ============================================================
+   AUTH DENSITY CLS PREVENTION
+   Reserve enriched height during auth resolution to prevent
+   visible card expansion. Guest resolves to compact instantly.
+   ============================================================ */
+
+/* During auth loading: reserve enriched height to prevent visible expansion
+   when auth resolves to enriched. Guest shrinks to compact after resolution. */
+.ar4-card[data-auth-loading] {
+  min-height: 336px !important;
+}
+
+/* After auth resolves: natural height */
+.ar4-card:not([data-auth-loading]) {
+  min-height: 0 !important;
 }

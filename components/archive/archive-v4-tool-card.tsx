@@ -38,7 +38,7 @@ type ArchiveV4ToolCardProps = {
   rank?: number;
   promoted?: boolean;
   promotedTier?: "primary" | "secondary" | "tertiary";
-  density?: "comfortable" | "compact" | "enriched";
+  density?: "compact" | "enriched";
   reduced?: boolean;
   className?: string;
 };
@@ -76,13 +76,17 @@ function ArchiveV4ToolCard({
   const [compareFresh, setCompareFresh] = useState(false);
   const [justUnsaved, setJustUnsaved] = useState(false);
   const [justUncompared, setJustUncompared] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const saveTimerRef = useRef<number | null>(null);
   const compareTimerRef = useRef<number | null>(null);
   const unsaveTimerRef = useRef<number | null>(null);
   const uncompareTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // Delay auth-loading removal to next frame after auth resolves
+    const t = window.setTimeout(() => setAuthLoading(false), 0);
     return () => {
+      window.clearTimeout(t);
       if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
       if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
       if (unsaveTimerRef.current) window.clearTimeout(unsaveTimerRef.current);
@@ -199,6 +203,7 @@ function ArchiveV4ToolCard({
       )}
       onClick={handleCardActivate}
       data-density={density}
+      data-auth-loading={authLoading ? "true" : undefined}
       data-promoted={isPromoted || undefined}
       data-selected={isSelected || undefined}
       data-tier={effectiveTier || undefined}
