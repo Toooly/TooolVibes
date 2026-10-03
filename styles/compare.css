@@ -1785,6 +1785,9 @@
 
 
 .tv-compare-dock {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   position: fixed;
   left: max(0.75rem, env(safe-area-inset-left, 0px));
   right: max(0.75rem, env(safe-area-inset-right, 0px));
@@ -1799,6 +1802,9 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .tv-compare-dock {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
     animation: tv-motion-dock-in var(--tv-motion-base) var(--tv-easing-decelerate);
   }
   .tv-compare-dock,
@@ -1957,9 +1963,15 @@
   }
 }
 @media (min-width: 1280px) {
-  .tv-compare-dock { bottom: 1rem; }
+  .tv-compare-dock {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important; bottom: 1rem; }
 }
 html:has(.tv-consent-banner) .tv-compare-dock {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   bottom: calc(
     var(--tv-bottom-nav-total, 3.625rem) + env(safe-area-inset-bottom, 0px) +
       var(--tv-consent-banner-height, 7.5rem) + var(--tv-compare-gap, 0.75rem)
@@ -1967,6 +1979,9 @@ html:has(.tv-consent-banner) .tv-compare-dock {
 }
 @media (min-width: 1280px) {
   html:has(.tv-consent-banner) .tv-compare-dock {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
     bottom: calc(1rem + var(--tv-consent-banner-height, 7.5rem));
   }
 }

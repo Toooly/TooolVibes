@@ -84,9 +84,9 @@ describe("v3.1 responsive contract", () => {
     );
   });
 
-  it("mobile shell scrollport ends above the fixed nav band", () => {
+  it("mobile shell extends to full viewport with content padding for nav clearance", () => {
     expect(shellCss).toMatch(
-      /@media \(max-width: 1279px\)[\s\S]*?\.marketing-shell \{[\s\S]*?100dvh - var\(--tv-bottom-nav-total, 3\.625rem\) - var\(--tv-tray-height, 0px\)/,
+      /@media \(max-width: 1279px\)[\s\S]*?\.marketing-shell \{[\s\S]*?height: 100dvh/,
     );
     expect(shellCss).toMatch(/env\(safe-area-inset-bottom, 0px\)/);
   });

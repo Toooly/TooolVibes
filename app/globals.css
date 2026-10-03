@@ -70,7 +70,7 @@ body {
 }
 
 body:has(.marketing-shell) {
-  background: var(--tv-bg-base);
+  background: linear-gradient(180deg, var(--tv-bg-base) 0%, #070820 100%);
   color: var(--tv-ink-primary);
 }
 

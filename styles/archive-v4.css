@@ -4798,3 +4798,554 @@ a.archive-v4-card:focus-visible {
 
 /* Density is resolved server-side from cookie hint — no intermediate
    geometry needed. Compact and enriched both paint at their natural height. */
+
+/* ============================================================
+   CATALOG FINAL VISUAL V2 — State Hierarchy Convergence
+   Reference: CATALOG-FINAL-VISUAL-REFERENCE.png
+   DEFAULT = deep midnight, restrained violet edge (NEUTRAL)
+   SAVE = TrueVibes Gold #F4C23E (OUTER containment)
+   COMPARE = Logo Cyan #22D3EE (INNER analysis field)
+   BOTH = Gold outer + Cyan inner (OBVIOUS dual signal)
+   ============================================================ */
+
+/* ── 1. DEFAULT: deep midnight, restrained violet, NEUTRAL ── */
+.ar4-card {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(133, 103, 223, 0.03) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(106, 60, 255, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #0d0b2a 0%, #0b0926 40%, #080820 100%) !important;
+  border: 1px solid rgba(133, 103, 223, 0.15) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(133, 103, 223, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12) !important;
+  transition:
+    border-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ar4-card:hover {
+    border-color: rgba(133, 103, 223, 0.25) !important;
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, 0.45),
+      0 14px 40px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(133, 103, 223, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-1px) !important;
+  }
+}
+
+.ar4-card:active {
+  transform: translateY(0) !important;
+}
+
+/* ── 2. SAVE: TRUEVIBES GOLD — unmistakable containment ── */
+/* Reference: bright gold perimeter rgb(252,215,92), warm glow */
+.ar4-card[data-saved] {
+  border-color: rgba(244, 194, 62, 0.7) !important;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(244, 194, 62, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(245, 201, 104, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #0f0c28 0%, #0c0a26 40%, #090822 100%) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(244, 194, 62, 0.35),
+    0 0 28px -2px rgba(244, 194, 62, 0.25),
+    0 0 55px -8px rgba(244, 194, 62, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.1) !important;
+}
+.ar4-card[data-saved]::before {
+  content: none !important;
+}
+
+/* ── 3. SAVE ACTIVATION: capture → seal → stored ── */
+.ar4-card.is-save-trace::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: -3px !important;
+  border-radius: inherit !important;
+  padding: 2.5px !important;
+  background: conic-gradient(
+    from var(--ar4-save-angle),
+    transparent 0deg,
+    transparent 260deg,
+    rgba(252, 215, 92, 1) 310deg,
+    rgba(244, 194, 62, 0.8) 335deg,
+    rgba(255, 255, 255, 0.5) 352deg,
+    transparent 360deg
+  ) !important;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+  animation: ar4-save-trace 700ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+  z-index: 2 !important;
+}
+
+.ar4-card.is-save-trace {
+  animation: ar4-save-bloom 700ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+}
+
+@keyframes ar4-save-bloom {
+  0% { box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 2px rgba(244,194,62,.35), 0 0 28px -2px rgba(244,194,62,.25), 0 0 55px -8px rgba(244,194,62,.12), inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(244,194,62,.1); }
+  35% { box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 3px rgba(252,215,92,.5), 0 0 40px 2px rgba(252,215,92,.3), 0 0 70px -2px rgba(244,194,62,.15), inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px rgba(244,194,62,.2); }
+  100% { box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 2px rgba(244,194,62,.35), 0 0 28px -2px rgba(244,194,62,.25), 0 0 55px -8px rgba(244,194,62,.12), inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(244,194,62,.1); }
+}
+
+/* Bookmark ping */
+.ar4-card.is-save-trace .ar4-card__bookmark::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -6px !important;
+  border-radius: 12px !important;
+  border: 2px solid rgba(252, 215, 92, 0.6) !important;
+  opacity: 0 !important;
+  animation: ar4-bookmark-ping 240ms cubic-bezier(0.16, 1, 0.3, 1) 80ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+.ar4-card.is-save-trace .ar4-card__bookmark::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -4px !important;
+  left: 50% !important;
+  width: 10px !important;
+  height: 14px !important;
+  margin-left: -5px !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath d='M1 1h8v12l-4-3-4 3z' fill='%23fcd75c' opacity='0.9'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  opacity: 0 !important;
+  animation: ar4-bookmark-rise 300ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ar4-bookmark-ping {
+  0% { opacity: 0.7; transform: scale(0.7); }
+  50% { opacity: 0.4; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+
+@keyframes ar4-bookmark-rise {
+  0% { opacity: 0.9; transform: translateY(2px) scale(0.6); }
+  40% { opacity: 0.6; transform: translateY(-6px) scale(0.9); }
+  100% { opacity: 0; transform: translateY(-12px) scale(0.5); }
+}
+
+/* Bookmark button: gold active */
+.ar4-card__bookmark[data-saved] {
+  border-color: rgba(252, 215, 92, 0.5) !important;
+  background: rgba(244, 194, 62, 0.15) !important;
+  color: #FCD75C !important;
+}
+
+/* ── 4. COMPARE: LOGO CYAN — strong interior analysis field ── */
+/* Reference: bright cyan rgb(5,206,251), large interior illumination */
+.ar4-card[data-selected] {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.15) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(5, 206, 251, 0.06) 0%, transparent 45%),
+    linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%) !important;
+  border-color: rgba(5, 206, 251, 0.4) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(5, 206, 251, 0.15),
+    0 0 25px -3px rgba(5, 206, 251, 0.12),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+  transition:
+    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 300ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Compare watermark: large dual-panel glyph */
+.ar4-card[data-selected]::before {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  width: 72px !important;
+  height: 54px !important;
+  opacity: 0.15 !important;
+  pointer-events: none !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 54'%3E%3Crect x='3' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3'/%3E%3Crect x='41' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3' opacity='0.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  z-index: 0 !important;
+}
+
+.ar4-card[data-selected]::after {
+  content: none !important;
+  animation: none !important;
+}
+
+/* Compare activation: analysis sweep */
+.ar4-card[data-selected].is-compare-fresh {
+  animation: ar4-compare-sweep 450ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+}
+
+@keyframes ar4-compare-sweep {
+  0% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.03) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.04) 0%, transparent 50%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
+  35% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.25) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.12) 0%, transparent 50%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
+  100% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.08) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(5,206,251,0.06) 0%, transparent 45%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
+}
+
+/* Compare ping */
+.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -5px !important;
+  border-radius: 10px !important;
+  border: 2px solid rgba(5, 206, 251, 0.5) !important;
+  opacity: 0 !important;
+  animation: ar4-compare-ping 220ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ar4-compare-ping {
+  0% { opacity: 0.6; transform: scale(0.7); }
+  50% { opacity: 0.35; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+
+/* Compare dual-panel split */
+.ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -3px !important;
+  left: 50% !important;
+  width: 16px !important;
+  height: 12px !important;
+  margin-left: -8px !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12'%3E%3Crect x='0' y='0' width='6' height='12' rx='1' fill='none' stroke='%2305cefb' stroke-width='1.5' opacity='0.8'/%3E%3Crect x='10' y='0' width='6' height='12' rx='1' fill='none' stroke='%2305cefb' stroke-width='1.5' opacity='0.8'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  opacity: 0 !important;
+  animation: ar4-compare-split 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ar4-compare-split {
+  0% { opacity: 0.7; transform: translateY(2px) scaleX(0.5); }
+  40% { opacity: 0.5; transform: translateY(-4px) scaleX(1.1); }
+  100% { opacity: 0; transform: translateY(-8px) scaleX(0.8); }
+}
+
+/* Compare button active: cyan */
+.ar4-card__toggles [data-sonic-action="compare"].is-active {
+  border-color: rgba(5, 206, 251, 0.45) !important;
+  background: rgba(5, 206, 251, 0.1) !important;
+  color: #05CEFB !important;
+  box-shadow: 0 0 10px -2px rgba(5, 206, 251, 0.2) !important;
+}
+
+/* ── 5. BOTH: Gold outer + Cyan inner — OBVIOUS ── */
+.ar4-card[data-saved][data-selected] {
+  border-color: rgba(252, 215, 92, 0.55) !important;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(244, 194, 62, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(5, 206, 251, 0.05) 0%, transparent 45%),
+    linear-gradient(180deg, #0d0b2a 0%, #0b0926 40%, #080820 100%) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    0 0 0 2px rgba(244, 194, 62, 0.3),
+    0 0 25px -2px rgba(244, 194, 62, 0.2),
+    0 0 50px -8px rgba(244, 194, 62, 0.08),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── 6. UNSAVE / UNCOMPARE ── */
+.ar4-card.is-unsave-fade {
+  animation: ar4-unsave-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
+}
+
+@keyframes ar4-unsave-fade {
+  0% { border-color: rgba(244, 194, 62, 0.7); box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 2px rgba(244,194,62,.35), 0 0 28px -2px rgba(244,194,62,.25), 0 0 55px -8px rgba(244,194,62,.12), inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(244,194,62,.1); }
+  100% { border-color: rgba(133, 103, 223, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 1px rgba(133,103,223,.05), inset 0 1px 0 rgba(255,255,255,.04), inset 0 -1px 0 rgba(0,0,0,.12); }
+}
+
+.ar4-card.is-uncompare-fade {
+  animation: ar4-uncompare-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
+}
+
+@keyframes ar4-uncompare-fade {
+  0% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.08) 0%, transparent 50%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); border-color: rgba(5, 206, 251, 0.4); }
+  100% { background: radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.04) 0%, transparent 50%), linear-gradient(180deg, #0d0b2a 0%, #0b0926 40%, #080820 100%); border-color: rgba(133, 103, 223, 0.15); }
+}
+
+.ar4-card.is-uncompare-fade::before {
+  animation: ar4-watermark-out 200ms ease-out 1 both !important;
+}
+
+@keyframes ar4-watermark-out {
+  0% { opacity: 0.15; }
+  100% { opacity: 0; }
+}
+
+/* ── 7. PODIUM METALLIC + SAVE/COMPARE ── */
+.ar4-card[data-tier="primary"][data-saved],
+.ar4-card.is-tier-primary[data-saved] {
+  border-color: rgba(228, 178, 60, 0.55) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(228, 178, 60, 0.15),
+    0 0 25px -3px rgba(228, 178, 60, 0.15),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.35),
+    inset 0 0 0 2px rgba(252, 215, 92, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.ar4-card[data-tier="secondary"][data-saved],
+.ar4-card.is-tier-secondary[data-saved] {
+  border-color: rgba(207, 214, 228, 0.5) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(207, 214, 228, 0.12),
+    0 0 22px -4px rgba(207, 214, 228, 0.12),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.35),
+    inset 0 0 0 2px rgba(252, 215, 92, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.ar4-card[data-tier="tertiary"][data-saved],
+.ar4-card.is-tier-tertiary[data-saved] {
+  border-color: rgba(210, 154, 107, 0.5) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(210, 154, 107, 0.12),
+    0 0 22px -4px rgba(210, 154, 107, 0.12),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.35),
+    inset 0 0 0 2px rgba(252, 215, 92, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.ar4-card[data-tier][data-selected] {
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+.ar4-card[data-tier][data-selected]::before {
+  content: "" !important;
+}
+.ar4-card[data-tier][data-selected]::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  width: 72px !important;
+  height: 54px !important;
+  opacity: 0.15 !important;
+  pointer-events: none !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 54'%3E%3Crect x='3' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3'/%3E%3Crect x='41' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3' opacity='0.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  z-index: 0 !important;
+  animation: none !important;
+}
+
+.ar4-card[data-tier="primary"][data-saved][data-selected],
+.ar4-card.is-tier-primary[data-saved][data-selected] {
+  border-color: rgba(252, 215, 92, 0.5) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    0 0 0 2px rgba(228, 178, 60, 0.25),
+    0 0 25px -3px rgba(228, 178, 60, 0.15),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
+    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.ar4-card[data-tier="secondary"][data-saved][data-selected],
+.ar4-card.is-tier-secondary[data-saved][data-selected] {
+  border-color: rgba(207, 214, 228, 0.45) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(207, 214, 228, 0.1),
+    0 0 22px -4px rgba(207, 214, 228, 0.1),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
+    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.ar4-card[data-tier="tertiary"][data-saved][data-selected],
+.ar4-card.is-tier-tertiary[data-saved][data-selected] {
+  border-color: rgba(210, 154, 107, 0.45) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(210, 154, 107, 0.1),
+    0 0 22px -4px rgba(210, 154, 107, 0.1),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
+    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ── 8. IDEALE PER: refined GUI module ── */
+.ar4-card__best {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 7px !important;
+  flex-wrap: wrap !important;
+  margin: 8px 0 0 !important;
+  padding: 7px 9px !important;
+  border-radius: 6px !important;
+  background: rgba(133, 103, 223, 0.05) !important;
+  border-left: 2px solid rgba(133, 103, 223, 0.25) !important;
+}
+
+.ar4-card__best-icon {
+  flex-shrink: 0 !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(133, 103, 223, 0.2) !important;
+  background: rgba(133, 103, 223, 0.1) !important;
+  display: grid !important;
+  place-items: center !important;
+  margin-top: 1px !important;
+}
+
+.ar4-card__best-icon svg {
+  width: 11px !important;
+  height: 11px !important;
+  color: rgba(139, 108, 255, 0.85) !important;
+  stroke-width: 2.2 !important;
+}
+
+.ar4-card__best-label {
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  color: var(--tv-ink-primary, #fff) !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  line-height: 1.5 !important;
+  flex-shrink: 0 !important;
+}
+
+.ar4-card__best-text {
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  font-size: 12.5px !important;
+  font-weight: 450 !important;
+  line-height: 1.35 !important;
+  flex: 1 1 80px !important;
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* ── 9. TYPOGRAPHY + SCORE ── */
+.ar4-card__name-text {
+  font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--tv-ink-primary, #fff) !important;
+}
+
+.ar4-card__category {
+  color: var(--tv-ink-muted-aa, #aaa59b) !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+}
+
+.ar4-card__desc {
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  line-height: 1.4 !important;
+  position: relative !important;
+  padding-top: 8px !important;
+}
+
+.ar4-card__desc::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 24px !important;
+  height: 2px !important;
+  border-radius: 1px !important;
+  background: linear-gradient(90deg, rgba(133, 103, 223, 0.4), rgba(133, 103, 223, 0.05)) !important;
+  pointer-events: none !important;
+}
+
+.ar4-card__score {
+  font-family: var(--tv-font-family-mono) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--tv-ink-primary, #fff) !important;
+}
+
+/* ── 10. ENRICHED METADATA ── */
+.ar4-card__enriched {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 5px !important;
+  margin-top: 8px !important;
+}
+
+.ar4-card__enriched-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(133, 103, 223, 0.1) !important;
+  background: rgba(133, 103, 223, 0.04) !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  white-space: nowrap !important;
+}
+
+.ar4-card[data-density="enriched"] .ar4-card__enriched:empty {
+  display: none !important;
+  margin: 0 !important;
+}
+
+/* ── 11. TOUCH FEEDBACK ── */
+.ar4-card__bookmark:active,
+.ar4-card__toggles [data-sonic-action="compare"]:active {
+  transform: scale(0.95) !important;
+  transition: transform 80ms ease-out !important;
+}
+
+/* ── 12. REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card.is-save-trace::after,
+  .ar4-card.is-save-trace .ar4-card__bookmark::before,
+  .ar4-card.is-save-trace .ar4-card__bookmark::after,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
+    animation: none !important;
+    content: none !important;
+  }
+  .ar4-card.is-save-trace,
+  .ar4-card.is-compare-fresh,
+  .ar4-card.is-unsave-fade,
+  .ar4-card.is-uncompare-fade {
+    animation: none !important;
+  }
+}

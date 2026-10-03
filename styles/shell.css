@@ -49,20 +49,14 @@
 @media (max-width: 1279px) {
   .marketing-shell {
     box-sizing: border-box;
-    height: calc(
-      100dvh - var(--tv-bottom-nav-total, 3.625rem) - var(--tv-tray-height, 0px) -
-        env(safe-area-inset-bottom, 0px)
-    );
-    max-height: calc(
-      100dvh - var(--tv-bottom-nav-total, 3.625rem) - var(--tv-tray-height, 0px) -
-        env(safe-area-inset-bottom, 0px)
-    );
+    height: 100dvh;
+    max-height: 100dvh;
     min-height: 0;
     overflow-x: clip;
     overflow-y: auto;
     overscroll-behavior-y: contain;
     scroll-padding-top: var(--tv-scroll-anchor-offset, calc(var(--tv-header-height-mobile, 4.875rem) + 0.5rem));
-    scroll-padding-bottom: calc(var(--tv-tray-height, 0px) + 1rem);
+    scroll-padding-bottom: calc(var(--tv-bottom-nav-total, 3.625rem) + var(--tv-tray-height, 0px) + env(safe-area-inset-bottom, 0px) + 1rem);
   }
 }
 
