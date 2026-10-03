@@ -58,6 +58,7 @@ type DefinitiveArchiveProps = {
    * the first meaningful group of organic cards. Purely render-level:
    * the organic array, its order and its ranks are never touched.
    */
+  initialDensity?: "compact" | "enriched";
   partnerInsert?: ReactNode;
   /**
    * TinyAdz inline insert, rendered after the twelfth organic card —
@@ -132,6 +133,7 @@ export function DefinitiveArchive({
   initialQuery = "",
   initialGroup = "all",
   initialLevel = "all",
+  initialDensity = "compact",
   partnerInsert = null,
   adInsert = null,
 }: DefinitiveArchiveProps) {
@@ -153,13 +155,17 @@ export function DefinitiveArchive({
   // as Home podium). No tool identity is special; tiers follow position.
   const podiumTiers = useMemo(() => resolvePodiumTiers(tools), [tools]);
 
-  // Density resolved from canonical auth state. Uses mounted gate to avoid
-  // hydration mismatch (SSR + first render always produce compact).
+  // Density from server-resolved cookie hint (first-paint correct).
+  // useAccount() keeps it in sync for live auth transitions after hydration.
   const account = useAccount();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-  const cardDensity: "compact" | "enriched" =
-    mounted && account.status === "authenticated" ? "enriched" : "compact";
+  const [cardDensity, setCardDensity] = useState<"compact" | "enriched">(initialDensity);
+  useEffect(() => {
+    if (account.status === "authenticated" && cardDensity !== "enriched") {
+      setCardDensity("enriched");
+    } else if (account.status === "guest" && cardDensity !== "compact") {
+      setCardDensity("compact");
+    }
+  }, [account.status, cardDensity]);
 
   useEffect(() => {
     function onPopState() {

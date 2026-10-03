@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -49,6 +50,10 @@ export default async function ArchivePage({
   searchParams: Promise<ArchiveSearchParams>;
 }) {
   const params = await searchParams;
+  const cookieStore = await cookies();
+  const densityCookie = cookieStore.get("tv-density")?.value;
+  const initialDensity: "compact" | "enriched" =
+    densityCookie === "enriched" ? "enriched" : "compact";
   const [tools, filterGroups] = await Promise.all([
     getPublicToolViews(),
     getPublicToolFilterGroups(),
@@ -76,6 +81,7 @@ export default async function ArchivePage({
         initialQuery={initialQuery}
         initialGroup={initialGroup}
         initialLevel={initialLevel}
+        initialDensity={initialDensity}
         partnerInsert={
           placement ? (
             <PartnerEditorialInsert

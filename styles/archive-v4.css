@@ -4796,13 +4796,5 @@ a.archive-v4-card:focus-visible {
    visible card expansion. Guest resolves to compact instantly.
    ============================================================ */
 
-/* During auth loading: reserve enriched height to prevent visible expansion
-   when auth resolves to enriched. Guest shrinks to compact after resolution. */
-.ar4-card[data-auth-loading] {
-  min-height: 336px !important;
-}
-
-/* After auth resolves: natural height */
-.ar4-card:not([data-auth-loading]) {
-  min-height: 0 !important;
-}
+/* Density is resolved server-side from cookie hint — no intermediate
+   geometry needed. Compact and enriched both paint at their natural height. */

@@ -105,6 +105,15 @@ export function AccountProvider({
      full configuration from /api/auth/config. */
   const [authEnabled, setAuthEnabled] = useState(initialAuthEnabled);
   const [status, setStatus] = useState<AccountStatus>("loading");
+
+  // Sync density hint cookie for server-side first-paint density resolution.
+  // This is NOT auth truth — it is a layout hint only. The canonical auth
+  // state remains in AccountProvider via Supabase session.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const density = status === "authenticated" ? "enriched" : "compact";
+    document.cookie = `tv-density=${density}; path=/; max-age=31536000; samesite=lax`;
+  }, [status]);
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isSendingLink, setIsSendingLink] = useState(false);
