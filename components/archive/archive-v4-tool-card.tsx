@@ -73,13 +73,26 @@ function ArchiveV4ToolCard({
   const revealRef = useCardReveal<HTMLElement>(rank && rank <= 6 ? (rank - 1) * 28 : 0);
   const [logoFailed, setLogoFailed] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+  const [compareFresh, setCompareFresh] = useState(false);
   const saveTimerRef = useRef<number | null>(null);
+  const compareTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
       if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+      if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
     };
   }, []);
+
+  const prevSelectedRef = useRef(isSelected);
+  useEffect(() => {
+    if (isSelected && !prevSelectedRef.current) {
+      setCompareFresh(true);
+      if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
+      compareTimerRef.current = window.setTimeout(() => setCompareFresh(false), 320);
+    }
+    prevSelectedRef.current = isSelected;
+  }, [isSelected]);
 
   const handleCardActivate = (event: MouseEvent<HTMLElement>) => {
     if (event.defaultPrevented) return;
@@ -158,7 +171,7 @@ function ArchiveV4ToolCard({
         effectiveTier && `is-tier-${effectiveTier}`,
         reduced && "is-reduced",
         showSponsoredBadge && "is-sponsored",
-        justSaved && "is-save-trace",
+        justSaved && "is-save-trace", compareFresh && "is-compare-fresh",
         className,
       )}
       onClick={handleCardActivate}

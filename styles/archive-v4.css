@@ -4247,3 +4247,265 @@ a.archive-v4-card:focus-visible {
   letter-spacing: -0.015em !important;
   color: var(--tv-ink-primary, #fff) !important;
 }
+
+/* ============================================================
+   CATALOG DECISION WOW STATES — Final State System (2026-10-03)
+   SAVED = electric violet perimeter + one-shot luminous trace
+   COMPARE = cyan/violet interior field + watermark + depth
+   SAVED+COMPARE = outer violet + inner cyan, both clear
+   METALLIC + STATES = gold/silver/bronze outer preserved
+   ============================================================ */
+
+/* ── SAVED: enhanced rest state ── */
+.ar4-card[data-saved] {
+  border-color: rgba(139, 108, 255, 0.55) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.28),
+    0 10px 28px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(139, 108, 255, 0.25),
+    0 0 20px -2px rgba(139, 108, 255, 0.2),
+    0 0 40px -8px rgba(139, 108, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(139, 108, 255, 0.12) !important;
+}
+.ar4-card[data-saved]::before {
+  content: none !important;
+}
+
+/* ── SAVED: one-shot luminous perimeter trace (550-750ms) ── */
+.ar4-card.is-save-trace::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: -2px !important;
+  border-radius: inherit !important;
+  padding: 2px !important;
+  background: conic-gradient(
+    from var(--ar4-save-angle),
+    transparent 0deg,
+    transparent 270deg,
+    rgba(139, 108, 255, 0.9) 320deg,
+    rgba(200, 180, 255, 0.6) 345deg,
+    rgba(255, 255, 255, 0.3) 355deg,
+    transparent 360deg
+  ) !important;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0) !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+  animation: ar4-save-trace 650ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+  z-index: 2 !important;
+}
+
+/* ── SAVED: brief local glow bloom on activation ── */
+.ar4-card.is-save-trace {
+  animation: ar4-save-bloom 650ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+}
+
+@keyframes ar4-save-bloom {
+  0% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.25), 0 0 20px -2px rgba(139,108,255,.2), 0 0 40px -8px rgba(139,108,255,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(139,108,255,.12); }
+  30% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 2px rgba(139,108,255,.4), 0 0 32px 0 rgba(139,108,255,.3), 0 0 60px -4px rgba(139,108,255,.15), inset 0 1px 0 rgba(255,255,255,.1), inset 0 0 0 1px rgba(139,108,255,.2); }
+  100% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.25), 0 0 20px -2px rgba(139,108,255,.2), 0 0 40px -8px rgba(139,108,255,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(139,108,255,.12); }
+}
+
+/* ── COMPARE: enhanced rest state ── */
+.ar4-card[data-selected] {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(57, 210, 246, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 10%, rgba(106, 60, 255, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 90%, rgba(57, 210, 246, 0.04) 0%, transparent 50%),
+    linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%) !important;
+  border-color: rgba(57, 210, 246, 0.3) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.3),
+    0 14px 36px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(57, 210, 246, 0.12),
+    0 0 24px -4px rgba(57, 210, 246, 0.08),
+    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+  transition:
+    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 300ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* ── COMPARE: watermark (works on ALL cards including tier) ── */
+.ar4-card[data-selected]::before {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  width: 56px !important;
+  height: 42px !important;
+  opacity: 0.06 !important;
+  pointer-events: none !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 42'%3E%3Crect x='3' y='3' width='22' height='36' rx='3' fill='none' stroke='%2339d2f6' stroke-width='2.5'/%3E%3Crect x='31' y='3' width='22' height='36' rx='3' fill='none' stroke='%236a3cff' stroke-width='2.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  z-index: 0 !important;
+}
+
+/* Kill old compare orbit ::after */
+.ar4-card[data-selected]::after {
+  content: none !important;
+  animation: none !important;
+}
+
+/* ── COMPARE: one-shot energy sweep on activation ── */
+.ar4-card[data-selected].is-compare-fresh {
+  animation: ar4-compare-activate 320ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+}
+
+@keyframes ar4-compare-activate {
+  0% { background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.02) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.06) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%); }
+  50% { background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.14) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.12) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%); }
+  100% { background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.09) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.1) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%); }
+}
+
+/* ── SAVED + COMPARE: coexist ── */
+.ar4-card[data-saved][data-selected] {
+  border-color: rgba(139, 108, 255, 0.4) !important;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(57, 210, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 10%, rgba(106, 60, 255, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 90%, rgba(57, 210, 246, 0.04) 0%, transparent 50%),
+    linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.3),
+    0 14px 36px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(139, 108, 255, 0.25),
+    0 0 20px -2px rgba(139, 108, 255, 0.18),
+    0 0 40px -8px rgba(139, 108, 255, 0.08),
+    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── METALLIC + SAVED: gold outer preserved, violet inner trace ── */
+.ar4-card[data-tier="primary"][data-saved],
+.ar4-card.is-tier-primary[data-saved] {
+  border-color: rgba(228, 178, 60, 0.5) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.28),
+    0 10px 28px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(228, 178, 60, 0.12),
+    0 0 24px -4px rgba(228, 178, 60, 0.12),
+    inset 0 0 0 1px rgba(139, 108, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+.ar4-card[data-tier="secondary"][data-saved],
+.ar4-card.is-tier-secondary[data-saved] {
+  border-color: rgba(207, 214, 228, 0.45) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.28),
+    0 10px 28px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(207, 214, 228, 0.1),
+    0 0 22px -4px rgba(207, 214, 228, 0.1),
+    inset 0 0 0 1px rgba(139, 108, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+.ar4-card[data-tier="tertiary"][data-saved],
+.ar4-card.is-tier-tertiary[data-saved] {
+  border-color: rgba(210, 154, 107, 0.45) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.28),
+    0 10px 28px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(210, 154, 107, 0.1),
+    0 0 22px -4px rgba(210, 154, 107, 0.1),
+    inset 0 0 0 1px rgba(139, 108, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── METALLIC + COMPARE: metallic outer + cyan interior + watermark ── */
+.ar4-card[data-tier][data-selected] {
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.3),
+    0 14px 36px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+/* Tier accent bar stays (earlier rule) — watermark uses same ::before but
+   the tier accent bar rule has higher specificity via .is-tier-* class.
+   On tier+compare, we want BOTH: accent bar AND watermark. Solution: put
+   watermark on ::after instead for tier cards. */
+.ar4-card[data-tier][data-selected]::before {
+  content: "" !important;
+}
+.ar4-card[data-tier][data-selected]::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  width: 56px !important;
+  height: 42px !important;
+  opacity: 0.06 !important;
+  pointer-events: none !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 42'%3E%3Crect x='3' y='3' width='22' height='36' rx='3' fill='none' stroke='%2339d2f6' stroke-width='2.5'/%3E%3Crect x='31' y='3' width='22' height='36' rx='3' fill='none' stroke='%236a3cff' stroke-width='2.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  z-index: 0 !important;
+  animation: none !important;
+}
+
+/* ── METALLIC + SAVED + COMPARE: triple state ── */
+.ar4-card[data-tier="primary"][data-saved][data-selected],
+.ar4-card.is-tier-primary[data-saved][data-selected] {
+  border-color: rgba(228, 178, 60, 0.45) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.3),
+    0 14px 36px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(228, 178, 60, 0.12),
+    0 0 24px -4px rgba(228, 178, 60, 0.12),
+    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
+    inset 0 0 0 2px rgba(139, 108, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+.ar4-card[data-tier="secondary"][data-saved][data-selected],
+.ar4-card.is-tier-secondary[data-saved][data-selected] {
+  border-color: rgba(207, 214, 228, 0.4) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.3),
+    0 14px 36px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(207, 214, 228, 0.1),
+    0 0 22px -4px rgba(207, 214, 228, 0.1),
+    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
+    inset 0 0 0 2px rgba(139, 108, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+.ar4-card[data-tier="tertiary"][data-saved][data-selected],
+.ar4-card.is-tier-tertiary[data-saved][data-selected] {
+  border-color: rgba(210, 154, 107, 0.4) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.3),
+    0 14px 36px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(210, 154, 107, 0.1),
+    0 0 22px -4px rgba(210, 154, 107, 0.1),
+    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
+    inset 0 0 0 2px rgba(139, 108, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── TOUCH FEEDBACK ── */
+.ar4-card__bookmark:active,
+.ar4-card__toggles [data-sonic-action="compare"]:active {
+  transform: scale(0.96) !important;
+  transition: transform 80ms ease-out !important;
+}
+
+/* ── REDUCED MOTION: static states, no animation ── */
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card.is-save-trace::after {
+    content: none !important;
+    animation: none !important;
+  }
+  .ar4-card.is-save-trace {
+    animation: none !important;
+  }
+  .ar4-card[data-selected].is-compare-fresh {
+    animation: none !important;
+  }
+}

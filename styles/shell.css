@@ -14,7 +14,7 @@
     radial-gradient(ellipse 90% 55% at 8% -10%, color-mix(in srgb, var(--tv-accent-gold) 18%, transparent), transparent 52%),
     radial-gradient(ellipse 70% 60% at 92% 6%, color-mix(in srgb, var(--tv-accent-cyan) 14%, transparent), transparent 48%),
     radial-gradient(ellipse 80% 70% at 48% 0%, color-mix(in srgb, var(--tv-accent-brand) 24%, transparent), transparent 58%),
-    color-mix(in srgb, var(--tv-color-violet-900) 58%, var(--tv-bg-base)) !important;
+    var(--tv-bg-base) !important;
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-ui);
 }

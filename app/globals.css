@@ -70,7 +70,7 @@ body {
 }
 
 body:has(.marketing-shell) {
-  background: color-mix(in srgb, var(--tv-color-violet-900) 58%, var(--tv-bg-base));
+  background: var(--tv-bg-base);
   color: var(--tv-ink-primary);
 }
 
