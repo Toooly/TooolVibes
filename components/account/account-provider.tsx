@@ -106,13 +106,28 @@ export function AccountProvider({
   const [authEnabled, setAuthEnabled] = useState(initialAuthEnabled);
   const [status, setStatus] = useState<AccountStatus>("loading");
 
-  // Sync density hint cookie for server-side first-paint density resolution.
-  // This is NOT auth truth — it is a layout hint only. The canonical auth
-  // state remains in AccountProvider via Supabase session.
+  // Sync tv-density presentation hint cookie for server-side first-paint
+  // density selection. This is NOT auth — it is a narrow layout hint only.
+  //
+  // Canonical auth source: AccountProvider / Supabase client session.
+  // tv-density role: server-readable presentation hint to choose compact
+  // vs enriched card geometry before React hydrates. NEVER used for
+  // authorization — only public Tool metadata (levelLabel, readingTime,
+  // tags) is shown in enriched mode.
+  //
+  // Lifecycle: synced on every canonical auth status change (login,
+  // logout, session expiry, cross-tab auth change via onAuthStateChange).
+  // "loading"/"unavailable" → compact (safe default, no privileged hint).
+  // Cookie: Path=/, SameSite=Lax, Secure in production, 30-day Max-Age.
+  // Stores only "compact" or "enriched" — no PII, no tokens, no user data.
   useEffect(() => {
     if (typeof document === "undefined") return;
+    // During loading/unavailable: do NOT overwrite an existing cookie.
+    // Preserve whatever hint the server used for first paint.
+    if (status === "loading" || status === "unavailable") return;
     const density = status === "authenticated" ? "enriched" : "compact";
-    document.cookie = `tv-density=${density}; path=/; max-age=31536000; samesite=lax`;
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `tv-density=${density}; path=/; max-age=2592000; samesite=lax${secure}`;
   }, [status]);
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);

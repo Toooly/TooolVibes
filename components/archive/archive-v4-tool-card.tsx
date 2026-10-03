@@ -279,6 +279,9 @@ function ArchiveV4ToolCard({
           <span className="ar4-card__best-text">{bestFor}</span>
         </p>
       ) : null}
+      {/* Enriched density: shows only PUBLIC canonical Tool metadata
+          (levelLabel, readingTime, tags). No PII, no private data.
+          tv-density cookie is a presentation hint — NOT authorization. */}
       {density === "enriched" && (
         <div className="ar4-card__enriched">
           {tool.levelLabel ? (

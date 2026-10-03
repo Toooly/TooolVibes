@@ -155,8 +155,10 @@ export function DefinitiveArchive({
   // as Home podium). No tool identity is special; tiers follow position.
   const podiumTiers = useMemo(() => resolvePodiumTiers(tools), [tools]);
 
-  // Density from server-resolved cookie hint (first-paint correct).
-  // useAccount() keeps it in sync for live auth transitions after hydration.
+  // Density from server-resolved tv-density presentation hint (first-paint
+  // correct). useAccount() keeps it in sync for live auth transitions
+  // (login/logout/cross-tab). tv-density is NOT auth — it is a layout hint.
+  // Enriched shows only public Tool metadata (levelLabel, readingTime, tags).
   const account = useAccount();
   const [cardDensity, setCardDensity] = useState<"compact" | "enriched">(initialDensity);
   useEffect(() => {

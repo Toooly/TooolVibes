@@ -50,6 +50,14 @@ export default async function ArchivePage({
   searchParams: Promise<ArchiveSearchParams>;
 }) {
   const params = await searchParams;
+  // tv-density is a server-readable PRESENTATION HINT — not auth.
+  // Canonical auth: AccountProvider / Supabase client session.
+  // This cookie only selects first-paint card geometry (compact vs
+  // enriched). Enriched content is public Tool metadata only
+  // (levelLabel, readingTime, tags). NEVER used for authorization.
+  // If absent or invalid → defaults to "compact" (safe guest default).
+  // Known limitation: first visit after deploy for already-authenticated
+  // users without cookie → paints compact, upgrades once via client sync.
   const cookieStore = await cookies();
   const densityCookie = cookieStore.get("tv-density")?.value;
   const initialDensity: "compact" | "enriched" =
