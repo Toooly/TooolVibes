@@ -3786,6 +3786,7 @@ a.archive-v4-card:focus-visible {
   border-radius: 10px !important;
   display: grid !important;
   place-items: center !important;
+  position: relative !important;
 }
 .ar4-card__toggles [data-sonic-action="compare"].is-active {
   border-color: rgba(57, 210, 246, 0.35) !important;
@@ -4506,6 +4507,223 @@ a.archive-v4-card:focus-visible {
     animation: none !important;
   }
   .ar4-card[data-selected].is-compare-fresh {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   SAVE & COMPARE FINAL MOTION LANGUAGE (2026-10-03 Phase 2)
+   SAVE = Bookmark metaphor → perimeter containment
+   COMPARE = Dual-panel metaphor → interior analysis field
+   Micro-GUI: bookmark ping + compare split signal
+   Reverse: clean fade (180-260ms)
+   ============================================================ */
+
+/* ── BOOKMARK PING: micro-GUI from Save button ── */
+.ar4-card.is-save-trace .ar4-card__bookmark::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -6px !important;
+  border-radius: 12px !important;
+  border: 2px solid rgba(139, 108, 255, 0.6) !important;
+  opacity: 0 !important;
+  animation: ar4-bookmark-ping 240ms cubic-bezier(0.16, 1, 0.3, 1) 80ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ar4-bookmark-ping {
+  0% { opacity: 0.8; transform: scale(0.7); }
+  50% { opacity: 0.5; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+
+/* Bookmark echo glyph — small luminous bookmark that rises from the button */
+.ar4-card.is-save-trace .ar4-card__bookmark::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -4px !important;
+  left: 50% !important;
+  width: 10px !important;
+  height: 14px !important;
+  margin-left: -5px !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath d='M1 1h8v12l-4-3-4 3z' fill='%238b6cff' opacity='0.8'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  opacity: 0 !important;
+  animation: ar4-bookmark-rise 300ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ar4-bookmark-rise {
+  0% { opacity: 0.9; transform: translateY(2px) scale(0.6); }
+  40% { opacity: 0.7; transform: translateY(-6px) scale(0.9); }
+  100% { opacity: 0; transform: translateY(-12px) scale(0.5); }
+}
+
+/* ── COMPARE MICRO-GUI: dual-panel split signal from Compare button ── */
+.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -5px !important;
+  border-radius: 10px !important;
+  border: 2px solid rgba(57, 210, 246, 0.5) !important;
+  opacity: 0 !important;
+  animation: ar4-compare-ping 220ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ar4-compare-ping {
+  0% { opacity: 0.7; transform: scale(0.7); }
+  50% { opacity: 0.4; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+
+/* Dual-panel split micro-icon that emerges from Compare button */
+.ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -3px !important;
+  left: 50% !important;
+  width: 16px !important;
+  height: 12px !important;
+  margin-left: -8px !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12'%3E%3Crect x='0' y='0' width='6' height='12' rx='1' fill='none' stroke='%2339d2f6' stroke-width='1.5' opacity='0.7'/%3E%3Crect x='10' y='0' width='6' height='12' rx='1' fill='none' stroke='%236a3cff' stroke-width='1.5' opacity='0.7'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  opacity: 0 !important;
+  animation: ar4-compare-split 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms 1 both !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ar4-compare-split {
+  0% { opacity: 0.8; transform: translateY(2px) scaleX(0.5); }
+  40% { opacity: 0.6; transform: translateY(-4px) scaleX(1.1); }
+  100% { opacity: 0; transform: translateY(-8px) scaleX(0.8); }
+}
+
+/* ── ENHANCED WATERMARK: calibrated opacity 0.10 ── */
+.ar4-card[data-selected]::before {
+  opacity: 0.10 !important;
+}
+.ar4-card[data-tier][data-selected]::after {
+  opacity: 0.10 !important;
+}
+
+/* ── ENHANCED COMPARE FIELD: stronger interior wash ── */
+.ar4-card[data-selected] {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(57, 210, 246, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 10%, rgba(106, 60, 255, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 90%, rgba(57, 210, 246, 0.05) 0%, transparent 50%),
+    linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%) !important;
+}
+
+/* ── ENHANCED COMPARE ACTIVATION: diagonal sweep + field intensify ── */
+.ar4-card[data-selected].is-compare-fresh {
+  animation: ar4-compare-sweep 400ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+}
+
+@keyframes ar4-compare-sweep {
+  0% {
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.06) 0%, transparent 55%),
+      linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
+  }
+  35% {
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.16) 0%, transparent 55%),
+      linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
+  }
+  100% {
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.12) 0%, transparent 55%),
+      linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
+  }
+}
+
+/* ── ENHANCED SAVE REST: stronger perimeter + depth ── */
+.ar4-card[data-saved] {
+  border-color: rgba(139, 108, 255, 0.55) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.28),
+    0 10px 28px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(139, 108, 255, 0.28),
+    0 0 24px -2px rgba(139, 108, 255, 0.22),
+    0 0 48px -8px rgba(139, 108, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(139, 108, 255, 0.12) !important;
+}
+
+/* ── UNSAVE: clean reverse fade (240ms) ── */
+.ar4-card.is-unsave-fade {
+  animation: ar4-unsave-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
+}
+
+@keyframes ar4-unsave-fade {
+  0% {
+    border-color: rgba(139, 108, 255, 0.55);
+    box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.28), 0 0 24px -2px rgba(139,108,255,.22), 0 0 48px -8px rgba(139,108,255,.12), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(139,108,255,.12);
+  }
+  100% {
+    border-color: rgba(139, 108, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.08), 0 0 24px -6px rgba(139,108,255,.06), inset 0 1px 0 rgba(255,255,255,.07), inset 0 -1px 0 rgba(0,0,0,.15), inset 1px 0 0 rgba(139,108,255,.03);
+  }
+}
+
+/* ── UNCOMPARE: clean reverse fade (240ms) ── */
+.ar4-card.is-uncompare-fade {
+  animation: ar4-uncompare-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
+}
+
+@keyframes ar4-uncompare-fade {
+  0% {
+    background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.12) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.12) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
+    border-color: rgba(57, 210, 246, 0.3);
+  }
+  100% {
+    background: radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.08) 0%, transparent 55%), radial-gradient(ellipse at 15% 90%, rgba(106,60,255,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(139,108,255,0.03) 0%, transparent 70%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
+    border-color: rgba(139, 108, 255, 0.2);
+  }
+}
+
+/* Watermark fade on uncompare */
+.ar4-card.is-uncompare-fade::before {
+  animation: ar4-watermark-out 200ms ease-out 1 both !important;
+}
+@keyframes ar4-watermark-out {
+  0% { opacity: 0.10; }
+  100% { opacity: 0; }
+}
+
+/* ── BUTTON PRESS: subtle compression ── */
+.ar4-card__bookmark:active,
+.ar4-card__toggles [data-sonic-action="compare"]:active {
+  transform: scale(0.95) !important;
+  transition: transform 80ms ease-out !important;
+}
+
+/* ── REDUCED MOTION: all static ── */
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card.is-save-trace .ar4-card__bookmark::before,
+  .ar4-card.is-save-trace .ar4-card__bookmark::after,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
+    animation: none !important;
+    content: none !important;
+  }
+  .ar4-card.is-save-trace,
+  .ar4-card.is-compare-fresh,
+  .ar4-card.is-unsave-fade,
+  .ar4-card.is-uncompare-fade {
+    animation: none !important;
+  }
+  .ar4-card.is-save-trace::after {
+    content: none !important;
     animation: none !important;
   }
 }

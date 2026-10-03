@@ -74,22 +74,37 @@ function ArchiveV4ToolCard({
   const [logoFailed, setLogoFailed] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
   const [compareFresh, setCompareFresh] = useState(false);
+  const [justUnsaved, setJustUnsaved] = useState(false);
+  const [justUncompared, setJustUncompared] = useState(false);
   const saveTimerRef = useRef<number | null>(null);
   const compareTimerRef = useRef<number | null>(null);
+  const unsaveTimerRef = useRef<number | null>(null);
+  const uncompareTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
       if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
       if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
+      if (unsaveTimerRef.current) window.clearTimeout(unsaveTimerRef.current);
+      const ucTimer = uncompareTimerRef.current;
+      if (ucTimer) window.clearTimeout(ucTimer);
     };
   }, []);
 
   const prevSelectedRef = useRef(isSelected);
   useEffect(() => {
+    // Clear all animation timers before starting new one
+    if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
+    const ucTimer2 = uncompareTimerRef.current;
+    if (ucTimer2) window.clearTimeout(ucTimer2);
+    setCompareFresh(false);
+    setJustUncompared(false);
     if (isSelected && !prevSelectedRef.current) {
       setCompareFresh(true);
-      if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
-      compareTimerRef.current = window.setTimeout(() => setCompareFresh(false), 320);
+      compareTimerRef.current = window.setTimeout(() => setCompareFresh(false), 400);
+    } else if (!isSelected && prevSelectedRef.current) {
+      setJustUncompared(true);
+      uncompareTimerRef.current = window.setTimeout(() => setJustUncompared(false), 240);
     }
     prevSelectedRef.current = isSelected;
   }, [isSelected]);
@@ -123,13 +138,20 @@ function ArchiveV4ToolCard({
     event.stopPropagation();
     const wasSaved = isSaved;
     toggleSaved(tool.slug);
+    // Clear all animation timers before starting new one
+    if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
+    if (unsaveTimerRef.current) window.clearTimeout(unsaveTimerRef.current);
+    setJustSaved(false);
+    setJustUnsaved(false);
     if (!wasSaved) {
       setJustSaved(true);
-      if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
       saveTimerRef.current = window.setTimeout(
         () => setJustSaved(false),
         SAVE_TRACE_DURATION_MS,
       );
+    } else {
+      setJustUnsaved(true);
+      unsaveTimerRef.current = window.setTimeout(() => setJustUnsaved(false), 240);
     }
   };
 
@@ -171,7 +193,8 @@ function ArchiveV4ToolCard({
         effectiveTier && `is-tier-${effectiveTier}`,
         reduced && "is-reduced",
         showSponsoredBadge && "is-sponsored",
-        justSaved && "is-save-trace", compareFresh && "is-compare-fresh",
+        justSaved && "is-save-trace", justUnsaved && "is-unsave-fade",
+        compareFresh && "is-compare-fresh", justUncompared && "is-uncompare-fade",
         className,
       )}
       onClick={handleCardActivate}
