@@ -229,6 +229,14 @@ export default defineConfig({
           },
           dependencies: ["gate-setup"],
         },
+        {
+          name: "client-runtime",
+          testMatch: /client-runtime-stability\.spec\.ts/,
+          use: {
+            ...devices["Desktop Chrome"],
+            viewport: { width: 390, height: 844 },
+          },
+        },
         ...visualProjects,
         typographyProject,
       ],

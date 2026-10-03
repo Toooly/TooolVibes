@@ -116,6 +116,18 @@ function onPageHide(): void {
   flushOnHide();
 }
 
+function onPageShow(event: PageTransitionEvent): void {
+  // BFCache restore: the page resumes from a frozen state. Re-sync scroll
+  // position so the visible content matches the history entry. Without this,
+  // Safari restores a stale scroll offset that can reference detached nodes.
+  if (event.persisted) {
+    const y = readStateScrollY();
+    if (y !== null) {
+      startRestore(y);
+    }
+  }
+}
+
 function onVisibilityChange(): void {
   if (document.visibilityState === "hidden") {
     flushOnHide();
@@ -134,6 +146,7 @@ export function initScrollRestoration(): void {
 
   window.addEventListener("popstate", onPopState);
   window.addEventListener("pagehide", onPageHide);
+  window.addEventListener("pageshow", onPageShow);
   document.addEventListener("visibilitychange", onVisibilityChange);
 
   const scroller = getShellScroller();
@@ -144,6 +157,7 @@ export function initScrollRestoration(): void {
   teardownFns = [
     () => window.removeEventListener("popstate", onPopState),
     () => window.removeEventListener("pagehide", onPageHide),
+    () => window.removeEventListener("pageshow", onPageShow),
     () => document.removeEventListener("visibilitychange", onVisibilityChange),
     () => scroller.removeEventListener("scroll", onScroll),
     () => window.removeEventListener("scroll", onScroll, { capture: true }),

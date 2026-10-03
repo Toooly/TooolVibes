@@ -35,6 +35,20 @@ const nextConfig: NextConfig = {
           supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
         }),
       },
+      {
+        // Prevent year-long CDN caching of HTML that references content-hashed
+        // JS chunks. After a deploy, stale HTML + missing/replaced chunks =
+        // ChunkLoadError on the client. Match the ISR stale-time (300s) and
+        // allow stale-while-revalidate so the CDN serves cached HTML briefly
+        // while refreshing in the background.
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=300, stale-while-revalidate=600",
+          },
+        ],
+      },
     ];
   },
   webpack: (config) => {
