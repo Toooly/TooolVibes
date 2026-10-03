@@ -38,7 +38,7 @@ type ArchiveV4ToolCardProps = {
   rank?: number;
   promoted?: boolean;
   promotedTier?: "primary" | "secondary" | "tertiary";
-  density?: "comfortable" | "compact";
+  density?: "comfortable" | "compact" | "enriched";
   reduced?: boolean;
   className?: string;
 };
@@ -55,7 +55,7 @@ function ArchiveV4ToolCard({
   tool,
   rank,
   promotedTier,
-  density = "comfortable",
+  density = "compact",
   reduced = false,
   className,
 }: ArchiveV4ToolCardProps) {
@@ -278,6 +278,19 @@ function ArchiveV4ToolCard({
           <span className="ar4-card__best-text">{bestFor}</span>
         </p>
       ) : null}
+      {density === "enriched" && (
+        <div className="ar4-card__enriched">
+          {tool.levelLabel ? (
+            <span className="ar4-card__enriched-chip">{tool.levelLabel}</span>
+          ) : null}
+          {tool.readingTime ? (
+            <span className="ar4-card__enriched-chip">{tool.readingTime}</span>
+          ) : null}
+          {tool.tags.slice(0, 2).map((tag) => (
+            <span key={tag} className="ar4-card__enriched-chip">{tag}</span>
+          ))}
+        </div>
+      )}
 
       {/* FOOTER: score + Save + Compare */}
       <div className="ar4-card__actions">

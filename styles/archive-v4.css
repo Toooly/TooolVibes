@@ -4727,3 +4727,59 @@ a.archive-v4-card:focus-visible {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   CARD INFORMATION DENSITY — Guest Compact / Auth Enriched
+   Same surface, border, depth, typography, Save/Compare language.
+   Enriched adds canonical decision context where data exists.
+   ============================================================ */
+
+/* ── Enriched metadata row ── */
+.ar4-card__enriched {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin-top: 8px !important;
+}
+
+.ar4-card__enriched-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(139, 108, 255, 0.15) !important;
+  background: rgba(139, 108, 255, 0.06) !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1.3 !important;
+  white-space: nowrap !important;
+}
+
+/* ── Enriched density: slightly more breathing room ── */
+.ar4-card[data-density="enriched"] {
+  padding-bottom: 16px !important;
+}
+
+.ar4-card[data-density="enriched"] .ar4-card__enriched {
+  margin-top: 10px !important;
+}
+
+/* ── Compact density (guest): current density preserved ── */
+.ar4-card[data-density="compact"] .ar4-card__enriched {
+  display: none !important;
+}
+
+/* ── Graceful degradation: when enriched data is absent, card stays compact ── */
+.ar4-card[data-density="enriched"] .ar4-card__enriched:empty {
+  display: none !important;
+  margin: 0 !important;
+}
+
+/* ── Reduced motion: enriched row is static ── */
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card__enriched-chip {
+    transition: none !important;
+  }
+}

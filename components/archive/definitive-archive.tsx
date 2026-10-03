@@ -20,6 +20,8 @@
  */
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+
+import { useAccount } from "@/components/account/account-provider";
 import { createPortal } from "react-dom";
 import {
   Search,
@@ -150,6 +152,14 @@ export function DefinitiveArchive({
   // Podium metallic tiers — derived from canonical ranking order (same source
   // as Home podium). No tool identity is special; tiers follow position.
   const podiumTiers = useMemo(() => resolvePodiumTiers(tools), [tools]);
+
+  // Density resolved from canonical auth state. Uses mounted gate to avoid
+  // hydration mismatch (SSR + first render always produce compact).
+  const account = useAccount();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  const cardDensity: "compact" | "enriched" =
+    mounted && account.status === "authenticated" ? "enriched" : "compact";
 
   useEffect(() => {
     function onPopState() {
@@ -542,6 +552,7 @@ export function DefinitiveArchive({
                         tool={tool}
                         rank={idx + 1}
                         promotedTier={podiumTiers[tool.slug]}
+                        density={cardDensity}
                         className={idx < 3 ? "ar4-card--lead" : "ar4-card--rest"}
                       />
                     </li>
