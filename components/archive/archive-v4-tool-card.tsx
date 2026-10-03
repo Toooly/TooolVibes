@@ -54,7 +54,6 @@ const SAVE_TRACE_DURATION_MS = 650;
 function ArchiveV4ToolCard({
   tool,
   rank,
-  promoted = false,
   promotedTier,
   density = "comfortable",
   reduced = false,
@@ -126,8 +125,10 @@ function ArchiveV4ToolCard({
     : null;
   const initial = tool.name.slice(0, 2).toUpperCase();
 
+  // Metallic tier is resolved solely from canonical podium position
+  // (resolvePodiumTiers). No tool identity or flag fallback.
   const effectiveTier: "primary" | "secondary" | "tertiary" | null =
-    promotedTier ?? (promoted || tool.toolOfWeek ? "primary" : null);
+    promotedTier ?? null;
   const isPromoted = effectiveTier !== null;
 
   const showEditorialBadge = tool.toolOfWeek;
