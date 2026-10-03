@@ -3,14 +3,30 @@
  *
  * When a JS chunk fails to load (deploy version skew, network flake, CDN
  * hiccup), Next.js shows a fatal "Application error" screen. This module
- * performs at most ONE automatic recovery reload per browser session
- * (guarded by sessionStorage) for recognized chunk-loading failures only.
+ * performs at most ONE automatic recovery reload per RELEASE / FAILURE KEY
+ * (scoped guard, not a session-global flag).
  *
- * Never reloads for arbitrary application errors. After one failed recovery,
- * the error boundary is shown — the reload loop is bounded by design.
+ * Guard architecture:
+ *   key = {releaseSha}:{failureSignature}
+ *   value = "1" (recovery attempted)
+ *
+ * - Same failure + same release → NO second reload (loop prevention)
+ * - Different release → recovery may fire once again (legitimate new deploy)
+ * - Unrelated TypeError / application bug → NEVER reloads
+ * - sessionStorage is the storage — cleared when the browser session ends
+ * - No secrets, no user data, no PII stored
+ *
+ * After one failed recovery for a given key, the error boundary is shown.
+ * The reload loop is bounded by design: one attempt per failure/release.
  */
 
-const RECOVERY_KEY = "__tvChunkRecovery";
+const STORAGE_PREFIX = "__tvChunkRecovery:";
+
+function getReleaseSha(): string {
+  // The release SHA is embedded at build time via env.
+  // Falls back to "dev" in local/test environments.
+  return process.env.TOOOLVIBES_RELEASE_SHA ?? "dev";
+}
 
 function isChunkLoadError(message: string): boolean {
   return (
@@ -18,39 +34,50 @@ function isChunkLoadError(message: string): boolean {
     message.includes("ChunkLoadError") ||
     message.includes("Failed to fetch dynamically imported module") ||
     message.includes("Loading CSS chunk") ||
-    message.includes("Failed to load resource") && message.includes("_next/static") ||
-    message.includes("Importing a module script failed")
+    message.includes("Importing a module script failed") ||
+    (message.includes("Failed to load resource") && message.includes("_next/static"))
   );
 }
 
-function hasRecovered(): boolean {
+function failureKey(message: string): string {
+  // Normalize the failure signature: strip dynamic parts (URLs, line numbers).
+  const sig = message
+    .replace(/https?:\/\/[^\s"']+/g, "<url>")
+    .replace(/:\d+:\d+/g, "")
+    .slice(0, 120);
+  return `${getReleaseSha()}:${sig}`;
+}
+
+function hasRecovered(key: string): boolean {
   try {
-    return sessionStorage.getItem(RECOVERY_KEY) === "1";
+    return sessionStorage.getItem(STORAGE_PREFIX + key) === "1";
   } catch {
-    return false;
+    return true; // Storage unavailable → refuse recovery to avoid loops.
   }
 }
 
-function markRecovered(): void {
+function markRecovered(key: string): void {
   try {
-    sessionStorage.setItem(RECOVERY_KEY, "1");
+    sessionStorage.setItem(STORAGE_PREFIX + key, "1");
   } catch {
-    // Storage unavailable — skip recovery to avoid loops.
+    // Storage unavailable — recovery already refused in hasRecovered.
   }
 }
 
-function attemptRecovery(): void {
-  if (hasRecovered()) return;
-  markRecovered();
-  // Use location.reload() — preserves the URL and history entry.
+function attemptRecovery(message: string): void {
+  const key = failureKey(message);
+  if (hasRecovered(key)) return;
+  markRecovered(key);
   window.location.reload();
 }
 
-/** Install chunk-load error recovery. Call once at app bootstrap. */
+/** Install chunk-load error recovery. Call once at app bootstrap. Idempotent. */
+let installed = false;
 export function initChunkRecovery(): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || installed) return;
+  installed = true;
 
-  // Catch uncaught errors from <script> load failures.
+  // Catch uncaught errors from <script>/<link> load failures.
   window.addEventListener("error", (event) => {
     const msg = event.message ?? "";
     const target = event.target as HTMLElement | null;
@@ -60,7 +87,7 @@ export function initChunkRecovery(): void {
       msg.includes("ChunkLoadError") ||
       msg.includes("Loading chunk");
     if (isScriptError && isChunkLoadError(msg)) {
-      attemptRecovery();
+      attemptRecovery(msg);
     }
   }, true);
 
@@ -70,7 +97,7 @@ export function initChunkRecovery(): void {
     const msg = reason?.message ?? String(reason ?? "");
     if (isChunkLoadError(msg)) {
       event.preventDefault();
-      attemptRecovery();
+      attemptRecovery(msg);
     }
   });
 }

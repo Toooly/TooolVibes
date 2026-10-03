@@ -41,7 +41,13 @@ const nextConfig: NextConfig = {
         // ChunkLoadError on the client. Match the ISR stale-time (300s) and
         // allow stale-while-revalidate so the CDN serves cached HTML briefly
         // while refreshing in the background.
+        //
+        // RSC payloads (request header RSC: 1) must NEVER be cached — they
+        // contain dynamic per-request data. The `missing` matcher excludes them.
         source: "/:path*",
+        missing: [
+          { type: "header", key: "RSC" },
+        ],
         headers: [
           {
             key: "Cache-Control",
