@@ -66,7 +66,7 @@ const mockTool = {
   segments: [],
   filterGroups: [],
   presentationKind: "directory" as const,
-  publicTool: { editorial: { evidence: [] }, score: null } as Record<string, unknown>,
+  publicTool: { editorial: { evidence: [] }, score: null } as unknown as import("@/lib/data/tool-public-view").ToolPublicView["publicTool"],
   id: "agentx",
   description: "",
   longDescription: "",
