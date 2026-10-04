@@ -3069,7 +3069,7 @@ a.archive-v4-card:focus-visible {
     position: relative;
   }
   .ar4-card__bookmark-icon { width: 20px; height: 20px; }
-  .ar4-card__bookmark[data-saved] { color: #F4C23E !important; border-color: rgba(244, 194, 62, 0.45) !important; background: rgba(244, 194, 62, 0.12) !important; box-shadow: 0 0 8px -2px rgba(244, 194, 62, 0.15) !important; }
+  .ar4-card__bookmark[data-saved] { color: #F4C23E !important; border-color: rgba(244, 194, 62, 0.55) !important; background: rgba(244, 194, 62, 0.2) !important; box-shadow: 0 0 8px -2px rgba(244, 194, 62, 0.15) !important; }
 
   .ar4-card__toggles-more { display: inline-flex; align-items: center; }
 
@@ -6021,7 +6021,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 /* Save button: warm gold material */
 .ar4-card__bookmark[data-saved] {
   border-color: rgba(252, 215, 92, 0.6) !important;
-  background: linear-gradient(135deg, rgba(244, 194, 62, 0.2) 0%, rgba(252, 215, 92, 0.12) 100%) !important;
+  background: linear-gradient(135deg, rgba(244, 194, 62, 0.35) 0%, rgba(252, 215, 92, 0.25) 100%) !important;
   color: #FCD75C !important;
   box-shadow:
     0 0 12px -2px rgba(252, 215, 92, 0.3),
@@ -6033,16 +6033,16 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-selected] {
   border-color: rgba(5, 206, 251, 0.3) !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.1) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 10%, rgba(34, 211, 238, 0.06) 0%, transparent 45%),
-    radial-gradient(ellipse at 15% 90%, rgba(5, 206, 251, 0.05) 0%, transparent 40%),
-    linear-gradient(175deg, #0a0e32 0%, #080c2e 35%, #060a28 70%, #040822 100%) !important;
+    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(34, 211, 238, 0.15) 0%, transparent 45%),
+    radial-gradient(ellipse at 15% 90%, rgba(5, 206, 251, 0.12) 0%, transparent 40%),
+    linear-gradient(175deg, #080a28 0%, #060824 35%, #04061e 70%, #030518 100%) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(5, 206, 251, 0.1),
-    0 0 24px -4px rgba(5, 206, 251, 0.1),
-    inset 0 0 0 1px rgba(5, 206, 251, 0.12),
+    0 0 0 1px rgba(5, 206, 251, 0.18),
+    0 0 24px -4px rgba(5, 206, 251, 0.15),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
 }
@@ -6051,8 +6051,8 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-selected] .ar4-card__compare-layer {
   opacity: 1 !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(34, 211, 238, 0.05) 0%, transparent 50%) !important;
+    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(34, 211, 238, 0.12) 0%, transparent 50%) !important;
   box-shadow: inset 0 0 30px -6px rgba(5, 206, 251, 0.06) !important;
 }
 
@@ -6075,8 +6075,8 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 
 /* Compare button: cyan material */
 .ar4-card__toggles [data-sonic-action="compare"].is-active {
-  border-color: rgba(5, 206, 251, 0.55) !important;
-  background: linear-gradient(135deg, rgba(5, 206, 251, 0.18) 0%, rgba(34, 211, 238, 0.1) 100%) !important;
+  border-color: rgba(5, 206, 251, 0.65) !important;
+  background: linear-gradient(135deg, rgba(5, 206, 251, 0.25) 0%, rgba(34, 211, 238, 0.15) 100%) !important;
   color: #05CEFB !important;
   box-shadow:
     0 0 12px -2px rgba(5, 206, 251, 0.3),
@@ -6094,7 +6094,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 2px rgba(244, 194, 62, 0.28),
+    0 0 0 2px rgba(244, 194, 62, 0.38),
     0 0 24px -2px rgba(244, 194, 62, 0.18),
     0 0 48px -8px rgba(244, 194, 62, 0.08),
     inset 0 0 0 1px rgba(5, 206, 251, 0.12),
@@ -6259,7 +6259,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3),
-    inset 0 0 0 1px rgba(5, 206, 251, 0.12),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
 }
