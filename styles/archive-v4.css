@@ -3069,7 +3069,7 @@ a.archive-v4-card:focus-visible {
     position: relative;
   }
   .ar4-card__bookmark-icon { width: 20px; height: 20px; }
-  .ar4-card__bookmark[data-saved] { color: #F4C23E !important; border-color: rgba(244, 194, 62, 0.55) !important; background: rgba(244, 194, 62, 0.2) !important; box-shadow: 0 0 8px -2px rgba(244, 194, 62, 0.15) !important; }
+  .ar4-card__bookmark[data-saved] { color: #F4C23E !important; border-color: rgba(244, 194, 62, 0.65) !important; background: rgba(244, 194, 62, 0.3) !important; box-shadow: 0 0 10px -2px rgba(244, 194, 62, 0.3) !important; box-shadow: 0 0 8px -2px rgba(244, 194, 62, 0.15) !important; }
 
   .ar4-card__toggles-more { display: inline-flex; align-items: center; }
 
@@ -5965,7 +5965,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 /* ── A. DEFAULT MATERIAL: deep midnight with violet depth ── */
 .ar4-card {
   background:
-    radial-gradient(ellipse at 50% -5%, rgba(133, 103, 223, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% -5%, rgba(133, 103, 223, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 30% 60%, rgba(180, 120, 80, 0.04) 0%, transparent 45%),
     radial-gradient(ellipse at 85% 15%, rgba(106, 60, 255, 0.05) 0%, transparent 45%),
     radial-gradient(ellipse at 10% 85%, rgba(80, 50, 160, 0.04) 0%, transparent 40%),
     linear-gradient(175deg, #100d2e 0%, #0c0a28 35%, #090822 70%, #07061e 100%) !important;
@@ -6020,12 +6020,12 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 
 /* Save button: warm gold material */
 .ar4-card__bookmark[data-saved] {
-  border-color: rgba(252, 215, 92, 0.6) !important;
+  border-color: rgba(252, 215, 92, 0.75) !important;
   background: linear-gradient(135deg, rgba(244, 194, 62, 0.35) 0%, rgba(252, 215, 92, 0.25) 100%) !important;
   color: #FCD75C !important;
   box-shadow:
-    0 0 12px -2px rgba(252, 215, 92, 0.3),
-    0 0 24px -6px rgba(244, 194, 62, 0.15),
+    0 0 16px -2px rgba(252, 215, 92, 0.4),
+    0 0 32px -6px rgba(244, 194, 62, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -6033,7 +6033,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-selected] {
   border-color: rgba(5, 206, 251, 0.3) !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(10, 180, 240, 0.28) 0%, transparent 55%),
     radial-gradient(ellipse at 85% 10%, rgba(34, 211, 238, 0.15) 0%, transparent 45%),
     radial-gradient(ellipse at 15% 90%, rgba(5, 206, 251, 0.12) 0%, transparent 40%),
     linear-gradient(175deg, #080a28 0%, #060824 35%, #04061e 70%, #030518 100%) !important;
@@ -6076,7 +6076,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 /* Compare button: cyan material */
 .ar4-card__toggles [data-sonic-action="compare"].is-active {
   border-color: rgba(5, 206, 251, 0.65) !important;
-  background: linear-gradient(135deg, rgba(5, 206, 251, 0.25) 0%, rgba(34, 211, 238, 0.15) 100%) !important;
+  background: linear-gradient(135deg, rgba(5, 206, 251, 0.35) 0%, rgba(34, 211, 238, 0.2) 100%) !important;
   color: #05CEFB !important;
   box-shadow:
     0 0 12px -2px rgba(5, 206, 251, 0.3),
@@ -6088,8 +6088,8 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-saved][data-selected] {
   border-color: rgba(252, 215, 92, 0.55) !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% -5%, rgba(244, 194, 62, 0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(10, 180, 240, 0.15) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% -5%, rgba(244, 194, 62, 0.08) 0%, transparent 45%),
     linear-gradient(175deg, #0e0c30 0%, #0a0a2a 35%, #080824 70%, #06061e 100%) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
