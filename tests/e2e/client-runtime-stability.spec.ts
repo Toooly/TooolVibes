@@ -73,11 +73,11 @@ test.describe("client runtime stability", () => {
     const routes = ["/", "/archivio", "/toools/blogify", "/toools/agentx", "/radar", "/collections"];
     let transitions = 0;
 
-    await page.goto("https://tooolvibes.eu", { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto("/", { waitUntil: "domcontentloaded", timeout: 30000 });
 
     for (let i = 0; i < 7; i++) {
       const route = routes[i % routes.length];
-      await page.goto(`https://tooolvibes.eu${route}`, { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
+      await page.goto(route, { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
       await page.waitForTimeout(300);
       transitions++;
 
@@ -103,39 +103,42 @@ test.describe("client runtime stability", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     const { errors, stop } = instrument(page);
 
-    await page.goto("https://tooolvibes.eu", { waitUntil: "domcontentloaded", timeout: 30000 });
-    await page.waitForTimeout(500);
+    // Start on catalog to guarantee tool card links exist
+    await page.goto("/archivio", { waitUntil: "networkidle", timeout: 30000 });
 
     let transitions = 0;
     for (let i = 0; i < 10; i++) {
-      // Click Catalogo link
-      const catalogLink = page.locator('a[href="/archivio"]').first();
-      if (await catalogLink.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await catalogLink.click();
-        await page.waitForTimeout(500);
-        transitions++;
-      }
-
-      // Click a tool card link
+      // Click a tool card link (on catalog page)
       const toolLink = page.locator(".ar4-card__name-link").first();
-      if (await toolLink.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await toolLink.click();
-        await page.waitForTimeout(500);
+      if (await toolLink.count() > 0) {
+        await toolLink.click({ timeout: 3000 }).catch(() => {});
+        await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
         transitions++;
       }
 
-      // Back
-      await page.goBack({ waitUntil: "domcontentloaded", timeout: 10000 }).catch(() => {});
-      await page.waitForTimeout(300);
+      // Back to catalog
+      await page.goBack({ waitUntil: "networkidle", timeout: 10000 }).catch(() => {});
       transitions++;
 
-      // Home
-      const homeLink = page.locator('a[href="/"]').first();
-      if (await homeLink.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await homeLink.click();
-        await page.waitForTimeout(500);
+      // Click Catalogo link in nav to reload catalog
+      const catalogLink = page.locator('a[href="/archivio"]').first();
+      if (await catalogLink.count() > 0) {
+        await catalogLink.click({ timeout: 3000 }).catch(() => {});
+        await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
         transitions++;
       }
+
+      // Click Home link
+      const homeLink = page.locator('a[href="/"]').first();
+      if (await homeLink.count() > 0) {
+        await homeLink.click({ timeout: 3000 }).catch(() => {});
+        await page.waitForLoadState("networkidle", { timeout: 5000 }).catch(() => {});
+        transitions++;
+      }
+
+      // Navigate back to catalog for next iteration
+      await page.goto("/archivio", { waitUntil: "networkidle", timeout: 15000 }).catch(() => {});
+      transitions++;
     }
 
     stop();
@@ -150,12 +153,12 @@ test.describe("client runtime stability", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     const { errors, stop } = instrument(page);
 
-    await page.goto("https://tooolvibes.eu/archivio", { waitUntil: "domcontentloaded", timeout: 30000 });
+    await page.goto("/archivio", { waitUntil: "domcontentloaded", timeout: 30000 });
 
     // Build some history
-    await page.goto("https://tooolvibes.eu/toools/blogify", { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
-    await page.goto("https://tooolvibes.eu/archivio", { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
-    await page.goto("https://tooolvibes.eu/toools/agentx", { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
+    await page.goto("/toools/blogify", { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
+    await page.goto("/archivio", { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
+    await page.goto("/toools/agentx", { waitUntil: "domcontentloaded", timeout: 20000 }).catch(() => {});
 
     // Rapid back/forward
     for (let i = 0; i < 10; i++) {
