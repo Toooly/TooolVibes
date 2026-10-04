@@ -2284,3 +2284,57 @@ html:has(.tv-consent-banner) .tv-compare-dock {
     animation: none;
   }
 }
+
+/* ─── COMPARE DOCK: final responsive architecture ─── */
+.tv-compare-dock__inner {
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  min-height: 48px !important;
+}
+
+.tv-compare-dock__count {
+  white-space: nowrap !important;
+  font-variant-numeric: tabular-nums !important;
+  flex-shrink: 0 !important;
+}
+
+.tv-compare-dock__list {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+}
+
+.tv-compare-dock__cta {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  min-height: 36px !important;
+}
+
+/* Compact mode: icon-only add control */
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta {
+  padding: 6px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  font-size: 0 !important;
+}
+
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta::before {
+  content: "+" !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+/* Tool chip: ellipsis */
+.tv-compare-dock__chip {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  max-width: 120px !important;
+}

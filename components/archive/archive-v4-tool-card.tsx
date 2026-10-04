@@ -282,17 +282,28 @@ function ArchiveV4ToolCard({
       {/* Enriched density: shows only PUBLIC canonical Tool metadata
           (levelLabel, readingTime, tags). No PII, no private data.
           tv-density cookie is a presentation hint — NOT authorization. */}
-      {density === "enriched" && (
+      {density === "enriched" && (tool.levelLabel || tool.readingTime || tool.tags.length > 0) && (
         <div className="ar4-card__enriched">
-          {tool.levelLabel ? (
-            <span className="ar4-card__enriched-chip">{tool.levelLabel}</span>
-          ) : null}
-          {tool.readingTime ? (
-            <span className="ar4-card__enriched-chip">{tool.readingTime}</span>
-          ) : null}
-          {tool.tags.slice(0, 2).map((tag) => (
-            <span key={tag} className="ar4-card__enriched-chip">{tag}</span>
-          ))}
+          {(tool.levelLabel || tool.readingTime) && (
+            <div className="ar4-card__enriched-meta">
+              {tool.levelLabel ? (
+                <span className="ar4-card__enriched-label">{tool.levelLabel}</span>
+              ) : null}
+              {tool.levelLabel && tool.readingTime ? (
+                <span className="ar4-card__enriched-sep">·</span>
+              ) : null}
+              {tool.readingTime ? (
+                <span className="ar4-card__enriched-label">{tool.readingTime}</span>
+              ) : null}
+            </div>
+          )}
+          {tool.tags.length > 0 && (
+            <div className="ar4-card__enriched-tags">
+              {tool.tags.slice(0, 2).map((tag) => (
+                <span key={tag} className="ar4-card__enriched-chip">{tag}</span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

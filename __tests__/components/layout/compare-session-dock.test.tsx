@@ -95,7 +95,7 @@ describe("CompareSessionDock states", () => {
     expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(false);
     expect(dock?.hasAttribute("data-ready")).toBe(false);
     expect(dock?.getAttribute("data-count")).toBe("1");
-    expect(screen.getByRole("link", { name: "Aggiungi un altro" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Aggiungi tool" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Togli atlas-ai dal confronto" })).toBeTruthy();
     expect(trayHeight()).toMatch(/^\d+(?:\.\d+)?px$/);
     expect(trayHeight()).not.toBe("0px");

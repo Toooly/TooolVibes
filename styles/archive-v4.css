@@ -3069,7 +3069,7 @@ a.archive-v4-card:focus-visible {
     position: relative;
   }
   .ar4-card__bookmark-icon { width: 20px; height: 20px; }
-  .ar4-card__bookmark[data-saved] { color: var(--tv-accent-primary); }
+  .ar4-card__bookmark[data-saved] { color: #F4C23E !important; border-color: rgba(244, 194, 62, 0.45) !important; background: rgba(244, 194, 62, 0.12) !important; box-shadow: 0 0 8px -2px rgba(244, 194, 62, 0.15) !important; }
 
   .ar4-card__toggles-more { display: inline-flex; align-items: center; }
 
@@ -3771,9 +3771,10 @@ a.archive-v4-card:focus-visible {
   -webkit-tap-highlight-color: transparent !important;
 }
 .ar4-card__bookmark[data-saved] {
-  border-color: rgba(244, 194, 62, 0.4) !important;
-  background: rgba(244, 194, 62, 0.12) !important;
-  color: var(--tv-accent-gold, #F4C23E) !important;
+  border-color: rgba(244, 194, 62, 0.5) !important;
+  background: rgba(244, 194, 62, 0.14) !important;
+  color: #F4C23E !important;
+  box-shadow: 0 0 10px -2px rgba(244, 194, 62, 0.18) !important;
 }
 .ar4-card__bookmark-icon { width: 20px !important; height: 20px !important; }
 
@@ -3789,10 +3790,10 @@ a.archive-v4-card:focus-visible {
   position: relative !important;
 }
 .ar4-card__toggles [data-sonic-action="compare"].is-active {
-  border-color: rgba(57, 210, 246, 0.35) !important;
-  background: rgba(57, 210, 246, 0.1) !important;
-  color: var(--tv-accent-cyan) !important;
-  box-shadow: 0 0 8px -2px rgba(57, 210, 246, 0.2) !important;
+  border-color: rgba(5, 206, 251, 0.45) !important;
+  background: rgba(5, 206, 251, 0.12) !important;
+  color: #05CEFB !important;
+  box-shadow: 0 0 10px -2px rgba(5, 206, 251, 0.22) !important;
 }
 
 /* ── 17. FOCUS-VISIBLE: clean, no violet wash ── */
@@ -4345,7 +4346,7 @@ a.archive-v4-card:focus-visible {
   height: 42px !important;
   opacity: 0.06 !important;
   pointer-events: none !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 42'%3E%3Crect x='3' y='3' width='22' height='36' rx='3' fill='none' stroke='%2339d2f6' stroke-width='2.5'/%3E%3Crect x='31' y='3' width='22' height='36' rx='3' fill='none' stroke='%236a3cff' stroke-width='2.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 42'%3E%3Crect x='3' y='3' width='22' height='36' rx='3' fill='%2305cefb' opacity='0.22'/%3E%3Crect x='31' y='3' width='22' height='36' rx='3' fill='%2305cefb' opacity='0.12'/%3E%3C/svg%3E") no-repeat center !important;
   background-size: contain !important;
   z-index: 0 !important;
 }
@@ -4452,7 +4453,7 @@ a.archive-v4-card:focus-visible {
   height: 42px !important;
   opacity: 0.06 !important;
   pointer-events: none !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 42'%3E%3Crect x='3' y='3' width='22' height='36' rx='3' fill='none' stroke='%2339d2f6' stroke-width='2.5'/%3E%3Crect x='31' y='3' width='22' height='36' rx='3' fill='none' stroke='%236a3cff' stroke-width='2.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 42'%3E%3Crect x='3' y='3' width='22' height='36' rx='3' fill='%2305cefb' opacity='0.22'/%3E%3Crect x='31' y='3' width='22' height='36' rx='3' fill='%2305cefb' opacity='0.12'/%3E%3C/svg%3E") no-repeat center !important;
   background-size: contain !important;
   z-index: 0 !important;
   animation: none !important;
@@ -4765,7 +4766,7 @@ a.archive-v4-card:focus-visible {
 
 /* ── Enriched density: slightly more breathing room ── */
 .ar4-card[data-density="enriched"] {
-  padding-bottom: 16px !important;
+  padding-bottom: 14px !important;
 }
 
 .ar4-card[data-density="enriched"] .ar4-card__enriched {
@@ -4944,9 +4945,10 @@ a.archive-v4-card:focus-visible {
 
 /* Bookmark button: gold active */
 .ar4-card__bookmark[data-saved] {
-  border-color: rgba(252, 215, 92, 0.5) !important;
-  background: rgba(244, 194, 62, 0.15) !important;
+  border-color: rgba(252, 215, 92, 0.55) !important;
+  background: rgba(244, 194, 62, 0.16) !important;
   color: #FCD75C !important;
+  box-shadow: 0 0 10px -2px rgba(252, 215, 92, 0.2) !important;
 }
 
 /* ── 4. COMPARE: LOGO CYAN — strong interior analysis field ── */
@@ -4976,13 +4978,14 @@ a.archive-v4-card:focus-visible {
 .ar4-card[data-selected]::before {
   content: "" !important;
   position: absolute !important;
-  bottom: 8px !important;
-  right: 8px !important;
-  width: 72px !important;
-  height: 54px !important;
+  bottom: 20% !important;
+  right: 6% !important;
+  width: 64px !important;
+  height: 48px !important;
+  transform: rotate(-10deg) !important;
   opacity: 0.15 !important;
   pointer-events: none !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 54'%3E%3Crect x='3' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3'/%3E%3Crect x='41' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3' opacity='0.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 54'%3E%3Crect x='3' y='3' width='28' height='48' rx='3' fill='%2305cefb' opacity='0.25'/%3E%3Crect x='41' y='3' width='28' height='48' rx='3' fill='%2305cefb' opacity='0.15'/%3E%3C/svg%3E") no-repeat center !important;
   background-size: contain !important;
   z-index: 0 !important;
 }
@@ -5047,10 +5050,10 @@ a.archive-v4-card:focus-visible {
 
 /* Compare button active: cyan */
 .ar4-card__toggles [data-sonic-action="compare"].is-active {
-  border-color: rgba(5, 206, 251, 0.45) !important;
-  background: rgba(5, 206, 251, 0.1) !important;
+  border-color: rgba(5, 206, 251, 0.5) !important;
+  background: rgba(5, 206, 251, 0.12) !important;
   color: #05CEFB !important;
-  box-shadow: 0 0 10px -2px rgba(5, 206, 251, 0.2) !important;
+  box-shadow: 0 0 10px -2px rgba(5, 206, 251, 0.22) !important;
 }
 
 /* ── 5. BOTH: Gold outer + Cyan inner — OBVIOUS ── */
@@ -5161,7 +5164,7 @@ a.archive-v4-card:focus-visible {
   height: 54px !important;
   opacity: 0.15 !important;
   pointer-events: none !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 54'%3E%3Crect x='3' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3'/%3E%3Crect x='41' y='3' width='28' height='48' rx='3' fill='none' stroke='%2305cefb' stroke-width='3' opacity='0.5'/%3E%3C/svg%3E") no-repeat center !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 54'%3E%3Crect x='3' y='3' width='28' height='48' rx='3' fill='%2305cefb' opacity='0.25'/%3E%3Crect x='41' y='3' width='28' height='48' rx='3' fill='%2305cefb' opacity='0.15'/%3E%3C/svg%3E") no-repeat center !important;
   background-size: contain !important;
   z-index: 0 !important;
   animation: none !important;
@@ -5210,10 +5213,10 @@ a.archive-v4-card:focus-visible {
 .ar4-card__best {
   display: flex !important;
   align-items: flex-start !important;
-  gap: 7px !important;
+  gap: 6px !important;
   flex-wrap: wrap !important;
-  margin: 8px 0 0 !important;
-  padding: 7px 9px !important;
+  margin: 6px 0 0 !important;
+  padding: 6px 8px !important;
   border-radius: 6px !important;
   background: rgba(133, 103, 223, 0.05) !important;
   border-left: 2px solid rgba(133, 103, 223, 0.25) !important;
@@ -5247,6 +5250,7 @@ a.archive-v4-card:focus-visible {
   white-space: nowrap !important;
   line-height: 1.5 !important;
   flex-shrink: 0 !important;
+  margin-right: 2px !important;
 }
 
 .ar4-card__best-text {
@@ -5257,6 +5261,7 @@ a.archive-v4-card:focus-visible {
   flex: 1 1 80px !important;
   min-width: 0 !important;
   overflow-wrap: anywhere !important;
+  margin-left: 2px !important;
 }
 
 /* ── 9. TYPOGRAPHY + SCORE ── */
@@ -5301,15 +5306,42 @@ a.archive-v4-card:focus-visible {
 /* ── 10. ENRICHED METADATA ── */
 .ar4-card__enriched {
   display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  margin-top: 6px !important;
+}
+
+.ar4-card__enriched-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  line-height: 1.3 !important;
+}
+
+.ar4-card__enriched-label {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+}
+
+.ar4-card__enriched-sep {
+  color: var(--tv-ink-muted-aa, #aaa59b) !important;
+  font-size: 12px !important;
+}
+
+.ar4-card__enriched-tags {
+  display: flex !important;
   flex-wrap: wrap !important;
-  gap: 5px !important;
-  margin-top: 8px !important;
+  gap: 4px !important;
 }
 
 .ar4-card__enriched-chip {
   display: inline-flex !important;
   align-items: center !important;
-  padding: 2px 7px !important;
+  padding: 2px 6px !important;
   border-radius: 4px !important;
   border: 1px solid rgba(133, 103, 223, 0.1) !important;
   background: rgba(133, 103, 223, 0.04) !important;

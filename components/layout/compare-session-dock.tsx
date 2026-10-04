@@ -153,7 +153,7 @@ export function CompareSessionDock() {
             <ChevronUp size={16} aria-hidden="true" />
           </button>
         ) : null}
-        <p className="tv-compare-dock__count">
+        <p className="tv-compare-dock__count" style={{ whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
           {slugs.length}/{MAX_COMPARE_TOOLS}
         </p>
         <ul
@@ -179,7 +179,7 @@ export function CompareSessionDock() {
           prefetch={false}
           className="tv-compare-dock__cta"
         >
-          {ready ? "Confronta" : "Aggiungi un altro"}
+          {ready ? "Confronta" : "Aggiungi tool"}
         </Link>
       </div>
     </div>
