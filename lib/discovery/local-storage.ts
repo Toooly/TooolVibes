@@ -194,29 +194,58 @@ function buildToolUserStates(snapshot: DiscoveryLocalSnapshot): Record<string, T
   );
 }
 
+/**
+ * Singleton fallback snapshot for useSyncExternalStore referential stability.
+ * Object.is() must see the SAME reference on every failed getSnapshot() call
+ * to prevent render loops. All nested arrays/objects are frozen empty
+ * containers — immutable and shared.
+ */
+const FALLBACK_SNAPSHOT = Object.freeze({
+  visitedTools: Object.freeze([] as string[]),
+  exploredCategories: Object.freeze([] as string[]),
+  shortlist: Object.freeze([] as string[]),
+  compare: Object.freeze([] as string[]),
+  shortlistStages: Object.freeze({} as Record<string, string>),
+  decisionMemories: Object.freeze({} as Record<string, ToolDecisionMemory>),
+  decisionOutcomes: Object.freeze({} as Record<string, string>),
+  decisionRevisitAts: Object.freeze({} as Record<string, string>),
+  toolUsages: Object.freeze({} as Record<string, unknown>),
+  toolReplacedBy: Object.freeze({} as Record<string, string>),
+  toolCompareObjectives: Object.freeze({} as Record<string, string>),
+  toolStateMeta: Object.freeze({} as Record<string, string>),
+  compareMeta: Object.freeze({} as Record<string, unknown>),
+}) as DiscoveryLocalSnapshot;
+
+let fallbackNotified = false;
+
 export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
   try {
     return buildDiscoveryLocalSnapshot();
-  } catch {
+  } catch (error) {
     // P0 RUNTIME HARDENING: getSnapshot() must NEVER throw.
     // If getCanonicalToolWorkspaceState() returns malformed state (corrupted
     // localStorage, BFCache stale reference, Supabase session race), return
-    // a safe empty snapshot instead of crashing React via useSyncExternalStore.
-    return {
-      visitedTools: [],
-      exploredCategories: [],
-      shortlist: [],
-      compare: [],
-      shortlistStages: {},
-      decisionMemories: {},
-      decisionOutcomes: {},
-      decisionRevisitAts: {},
-      toolUsages: {},
-      toolReplacedBy: {},
-      toolCompareObjectives: {},
-      toolStateMeta: {},
-      compareMeta: {},
-    };
+    // the singleton fallback instead of crashing React via useSyncExternalStore.
+    //
+    // The fallback is referentially stable (module-level Object.freeze singleton).
+    // useSyncExternalStore sees Object.is(old, new) === true → no render loop.
+    //
+    // Does NOT mutate or overwrite corrupted persisted state.
+    // Does NOT destroy Saved/Compare data.
+    // Recovery: next valid buildDiscoveryLocalSnapshot() call returns
+    // canonical state normally.
+    //
+    // Diagnostic: sanitized signal in dev/test only — no PII, no tokens,
+    // no throw during render.
+    if (!fallbackNotified && process.env.NODE_ENV !== "production") {
+      fallbackNotified = true;
+      console.warn(
+        "[workspace-snapshot] getDiscoveryLocalSnapshot fallback engaged (safe empty snapshot). " +
+          "Error:",
+        error instanceof Error ? error.message : "unknown",
+      );
+    }
+    return FALLBACK_SNAPSHOT;
   }
 }
 
