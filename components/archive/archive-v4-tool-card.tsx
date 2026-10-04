@@ -214,7 +214,12 @@ function ArchiveV4ToolCard({
       data-reduced={reduced || undefined}
       data-sponsored={showSponsoredBadge || undefined}
     >
-      {/* TOP: logo + identity */}
+      {/* STATE LAYERS: explicit decorative layers (aria-hidden, pointer-events:none) */}
+      <div className="ar4-card__save-layer" aria-hidden="true" />
+      <div className="ar4-card__compare-layer" aria-hidden="true" />
+      <div className="ar4-card__state-hotspots" aria-hidden="true" />
+
+      {/* 1. IDENTITY: logo + name + category + badges */}
       <div className="ar4-card__top">
         <span className="ar4-card__avatar" aria-hidden="true">
           {iconUrl && !logoFailed ? (
@@ -273,7 +278,7 @@ function ArchiveV4ToolCard({
         ) : null}
       </div>
 
-      {/* BODY: description + Ideale per */}
+      {/* 2. DESCRIPTION: 2-line editorial block */}
       <p className="ar4-card__desc">
         {tool.tldr || tool.shortDescription || "Scheda in preparazione."}
       </p>
@@ -282,42 +287,36 @@ function ArchiveV4ToolCard({
           <span className="ar4-card__best-icon" aria-hidden="true">
             <Target />
           </span>
-          <span className="ar4-card__best-label">Ideale per</span>
-          <span className="ar4-card__best-text">{bestFor}</span>
+          <span>
+            <span className="ar4-card__best-label">Ideale per</span>{" "}
+            <span className="ar4-card__best-text">{bestFor}</span>
+          </span>
         </p>
       ) : null}
       {/* Compare watermark: filled dual-panel, decorative */}
       {isSelected && <div className="ar4-card__watermark" aria-hidden="true" />}
 
-      {/* Enriched density: shows only PUBLIC canonical Tool metadata
-          (levelLabel, readingTime, tags). No PII, no private data.
-          tv-density cookie is a presentation hint — NOT authorization. */}
+      {/* 4. ENRICHED DECISION META: level · reading time · tags (compact rail) */}
       {density === "enriched" && (tool.levelLabel || tool.readingTime || tool.tags.length > 0) && (
         <div className="ar4-card__enriched">
-          {(tool.levelLabel || tool.readingTime) && (
-            <div className="ar4-card__enriched-meta">
-              {tool.levelLabel ? (
-                <span className="ar4-card__enriched-label">{tool.levelLabel}</span>
-              ) : null}
-              {tool.levelLabel && tool.readingTime ? (
-                <span className="ar4-card__enriched-sep">·</span>
-              ) : null}
-              {tool.readingTime ? (
-                <span className="ar4-card__enriched-label">{tool.readingTime}</span>
-              ) : null}
-            </div>
-          )}
-          {tool.tags.length > 0 && (
-            <div className="ar4-card__enriched-tags">
-              {tool.tags.slice(0, 2).map((tag) => (
-                <span key={tag} className="ar4-card__enriched-chip">{tag}</span>
-              ))}
-            </div>
-          )}
+          <div className="ar4-card__enriched-rail">
+            {tool.levelLabel ? (
+              <span className="ar4-card__enriched-label">{tool.levelLabel}</span>
+            ) : null}
+            {tool.levelLabel && tool.readingTime ? (
+              <span className="ar4-card__enriched-sep">·</span>
+            ) : null}
+            {tool.readingTime ? (
+              <span className="ar4-card__enriched-label">{tool.readingTime}</span>
+            ) : null}
+            {tool.tags.slice(0, 2).map((tag) => (
+              <span key={tag} className="ar4-card__enriched-chip">{tag}</span>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* FOOTER: score + Save + Compare */}
+      {/* 5. FINAL ROW: score left + Save + Compare right */}
       <div className="ar4-card__actions">
         <div className="ar4-card__control-rail" data-has-rank={showRank ? "true" : undefined}>
           {showRank ? (
