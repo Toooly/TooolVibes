@@ -96,8 +96,8 @@ export function CompareToggle({
         } ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
         style={{
           display: "inline-flex",
-          borderColor: isSelected ? "rgba(112,82,255,0.24)" : "var(--line)",
-          background: isSelected ? "#6a3cff" : "rgba(18, 13, 46, 0.92)",
+          borderColor: "var(--line)",
+          background: "rgba(18, 13, 46, 0.92)",
           color: "#f4f1ff",
         }}
         aria-pressed={isSelected}
@@ -117,10 +117,8 @@ export function CompareToggle({
         compact ? "px-2.75 py-1.25 text-xs" : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
       } ${isSelected ? "is-active" : ""} ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
       style={{
-        borderColor: isSelected ? "rgba(112,82,255,0.24)" : "var(--line)",
-        background: isSelected
-          ? "#6a3cff"
-          : "rgba(18, 13, 46, 0.92)",
+        borderColor: "var(--line)",
+        background: "rgba(18, 13, 46, 0.92)",
         color: "#f4f1ff",
       }}
       aria-pressed={isSelected}

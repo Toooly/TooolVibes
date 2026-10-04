@@ -1433,7 +1433,7 @@
   border-radius: 16px;
 }
 
-/* Saved state: cyan border + saved-flag color (in addition to is-saved badge) */
+/* SAVE = TrueVibes Gold / containment (legacy rule — superseded by TRUE REFERENCE B) */
 .ar4-card[data-saved] {
   border-color: var(--tv-grammar-personal-border);
   box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
@@ -4252,7 +4252,7 @@ a.archive-v4-card:focus-visible {
 
 /* ============================================================
    CATALOG DECISION WOW STATES — Final State System (2026-10-03)
-   SAVED = electric violet perimeter + one-shot luminous trace
+   SAVE = TrueVibes Gold / containment (legacy rule — superseded by TRUE REFERENCE B)
    COMPARE = cyan/violet interior field + watermark + depth
    SAVED+COMPARE = outer violet + inner cyan, both clear
    METALLIC + STATES = gold/silver/bronze outer preserved
@@ -4459,43 +4459,7 @@ a.archive-v4-card:focus-visible {
   animation: none !important;
 }
 
-/* ── METALLIC + SAVED + COMPARE: triple state ── */
-.ar4-card[data-tier="primary"][data-saved][data-selected],
-.ar4-card.is-tier-primary[data-saved][data-selected] {
-  border-color: rgba(228, 178, 60, 0.45) !important;
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.3),
-    0 14px 36px rgba(0, 0, 0, 0.22),
-    0 0 0 1px rgba(228, 178, 60, 0.12),
-    0 0 24px -4px rgba(228, 178, 60, 0.12),
-    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
-    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-.ar4-card[data-tier="secondary"][data-saved][data-selected],
-.ar4-card.is-tier-secondary[data-saved][data-selected] {
-  border-color: rgba(207, 214, 228, 0.4) !important;
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.3),
-    0 14px 36px rgba(0, 0, 0, 0.22),
-    0 0 0 1px rgba(207, 214, 228, 0.1),
-    0 0 22px -4px rgba(207, 214, 228, 0.1),
-    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
-    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-.ar4-card[data-tier="tertiary"][data-saved][data-selected],
-.ar4-card.is-tier-tertiary[data-saved][data-selected] {
-  border-color: rgba(210, 154, 107, 0.4) !important;
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.3),
-    0 14px 36px rgba(0, 0, 0, 0.22),
-    0 0 0 1px rgba(210, 154, 107, 0.1),
-    0 0 22px -4px rgba(210, 154, 107, 0.1),
-    inset 0 0 0 1px rgba(57, 210, 246, 0.15),
-    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
+/* REMOVED: stale METALLIC+SAVED+COMPARE triple state — consolidated into TRUE REFERENCE G2 */
 
 /* ── TOUCH FEEDBACK ── */
 .ar4-card__bookmark:active,
@@ -5170,44 +5134,7 @@ a.archive-v4-card:focus-visible {
   animation: none !important;
 }
 
-.ar4-card[data-tier="primary"][data-saved][data-selected],
-.ar4-card.is-tier-primary[data-saved][data-selected] {
-  border-color: rgba(252, 215, 92, 0.5) !important;
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.4),
-    0 14px 40px rgba(0, 0, 0, 0.32),
-    0 0 0 2px rgba(228, 178, 60, 0.25),
-    0 0 25px -3px rgba(228, 178, 60, 0.15),
-    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
-    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
-}
-
-.ar4-card[data-tier="secondary"][data-saved][data-selected],
-.ar4-card.is-tier-secondary[data-saved][data-selected] {
-  border-color: rgba(207, 214, 228, 0.45) !important;
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.4),
-    0 14px 40px rgba(0, 0, 0, 0.32),
-    0 0 0 1px rgba(207, 214, 228, 0.1),
-    0 0 22px -4px rgba(207, 214, 228, 0.1),
-    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
-    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
-}
-
-.ar4-card[data-tier="tertiary"][data-saved][data-selected],
-.ar4-card.is-tier-tertiary[data-saved][data-selected] {
-  border-color: rgba(210, 154, 107, 0.45) !important;
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.4),
-    0 14px 40px rgba(0, 0, 0, 0.32),
-    0 0 0 1px rgba(210, 154, 107, 0.1),
-    0 0 22px -4px rgba(210, 154, 107, 0.1),
-    inset 0 0 0 1px rgba(5, 206, 251, 0.2),
-    inset 0 0 0 2px rgba(244, 194, 62, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
-}
+/* REMOVED: stale tier+both block — consolidated into TRUE REFERENCE G2 */
 
 /* ── 8. IDEALE PER: refined GUI module ── */
 .ar4-card__best {
@@ -6335,6 +6262,44 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
     inset 0 0 0 1px rgba(5, 206, 251, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── G2. PODIUM + SAVE + COMPARE: composed triple state ── */
+/* Save + Compare composed simultaneously. Tier metallic rail + gold containment + cyan interior. */
+.ar4-card[data-tier="primary"][data-saved][data-selected] {
+  border-color: rgba(252, 215, 92, 0.5) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(244, 194, 62, 0.25),
+    0 0 24px -2px rgba(244, 194, 62, 0.15),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.18),
+    inset 0 0 0 2px rgba(244, 194, 62, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.ar4-card[data-tier="secondary"][data-saved][data-selected] {
+  border-color: rgba(252, 215, 92, 0.45) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(244, 194, 62, 0.2),
+    0 0 20px -2px rgba(244, 194, 62, 0.12),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.18),
+    inset 0 0 0 2px rgba(207, 214, 228, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.ar4-card[data-tier="tertiary"][data-saved][data-selected] {
+  border-color: rgba(252, 215, 92, 0.45) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(244, 194, 62, 0.2),
+    0 0 20px -2px rgba(244, 194, 62, 0.12),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.18),
+    inset 0 0 0 2px rgba(210, 154, 107, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 /* ── H. ENRICHED META: single compact horizontal rail ── */
