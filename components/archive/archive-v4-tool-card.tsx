@@ -213,6 +213,9 @@ function ArchiveV4ToolCard({
       data-saved={isSaved || undefined}
       data-reduced={reduced || undefined}
       data-sponsored={showSponsoredBadge || undefined}
+      data-qa-saved={isSaved ? "true" : "false"}
+      data-qa-compared={isSelected ? "true" : "false"}
+      data-qa-tier={effectiveTier === "primary" ? "gold" : effectiveTier === "secondary" ? "silver" : effectiveTier === "tertiary" ? "bronze" : "none"}
     >
       {/* STATE LAYERS: explicit decorative layers (aria-hidden, pointer-events:none) */}
       <div className="ar4-card__save-layer" aria-hidden="true" />
