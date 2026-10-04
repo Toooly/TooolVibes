@@ -58,10 +58,14 @@ export default async function ArchivePage({
   // If absent or invalid → defaults to "compact" (safe guest default).
   // Known limitation: first visit after deploy for already-authenticated
   // users without cookie → paints compact, upgrades once via client sync.
-  const cookieStore = await cookies();
-  const densityCookie = cookieStore.get("tv-density")?.value;
-  const initialDensity: "compact" | "enriched" =
-    densityCookie === "enriched" ? "enriched" : "compact";
+  let initialDensity: "compact" | "enriched" = "compact";
+  try {
+    const cookieStore = await cookies();
+    const densityCookie = cookieStore.get("tv-density")?.value;
+    initialDensity = densityCookie === "enriched" ? "enriched" : "compact";
+  } catch {
+    // cookies() may fail on Cloudflare Workers edge cases — default to compact
+  }
   const [tools, filterGroups] = await Promise.all([
     getPublicToolViews(),
     getPublicToolFilterGroups(),

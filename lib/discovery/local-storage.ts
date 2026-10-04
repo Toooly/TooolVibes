@@ -195,6 +195,32 @@ function buildToolUserStates(snapshot: DiscoveryLocalSnapshot): Record<string, T
 }
 
 export function getDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
+  try {
+    return buildDiscoveryLocalSnapshot();
+  } catch {
+    // P0 RUNTIME HARDENING: getSnapshot() must NEVER throw.
+    // If getCanonicalToolWorkspaceState() returns malformed state (corrupted
+    // localStorage, BFCache stale reference, Supabase session race), return
+    // a safe empty snapshot instead of crashing React via useSyncExternalStore.
+    return {
+      visitedTools: [],
+      exploredCategories: [],
+      shortlist: [],
+      compare: [],
+      shortlistStages: {},
+      decisionMemories: {},
+      decisionOutcomes: {},
+      decisionRevisitAts: {},
+      toolUsages: {},
+      toolReplacedBy: {},
+      toolCompareObjectives: {},
+      toolStateMeta: {},
+      compareMeta: {},
+    };
+  }
+}
+
+function buildDiscoveryLocalSnapshot(): DiscoveryLocalSnapshot {
   const workspace = getCanonicalToolWorkspaceState();
   const shortlistStages = Object.fromEntries(
     workspace.saved.slugs.map((slug) => [slug, workspace.toolStates[slug]?.stage ?? "saved"]),
