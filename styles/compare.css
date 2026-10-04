@@ -2338,3 +2338,99 @@ html:has(.tv-consent-banner) .tv-compare-dock {
   white-space: nowrap !important;
   max-width: 120px !important;
 }
+
+/* ─── COMPARE DOCK: mobile final architecture ─── */
+.tv-compare-dock__inner {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  min-height: 48px !important;
+  width: 100% !important;
+}
+
+.tv-compare-dock__count {
+  white-space: nowrap !important;
+  font-variant-numeric: tabular-nums !important;
+  flex-shrink: 0 !important;
+  font-family: var(--tv-font-family-mono, monospace) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  min-width: 32px !important;
+  text-align: center !important;
+}
+
+.tv-compare-dock__list {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+  flex: 1 1 0% !important;
+}
+
+.tv-compare-dock__chip,
+.tv-compare-dock__list > * {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  max-width: 140px !important;
+  flex-shrink: 1 !important;
+}
+
+/* +N overflow indicator */
+.tv-compare-dock__overflow {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  background: rgba(133, 103, 223, 0.08) !important;
+  border: 1px solid rgba(133, 103, 223, 0.12) !important;
+}
+
+.tv-compare-dock__cta {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  min-height: 36px !important;
+}
+
+/* Compact mode: icon-only add */
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta {
+  padding: 6px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  font-size: 0 !important;
+}
+
+.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta::before {
+  content: "+" !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+/* Expanded: show first chip + overflow count */
+@media (max-width: 429px) {
+  .tv-compare-dock__chip:nth-child(n+2) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 430px) {
+  .tv-compare-dock__chip {
+    max-width: 160px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .tv-compare-dock__chip {
+    max-width: 200px !important;
+  }
+}

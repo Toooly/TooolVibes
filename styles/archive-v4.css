@@ -5235,8 +5235,8 @@ a.archive-v4-card:focus-visible {
 }
 
 .ar4-card__best-icon svg {
-  width: 11px !important;
-  height: 11px !important;
+  width: 12px !important;
+  height: 12px !important;
   color: rgba(139, 108, 255, 0.85) !important;
   stroke-width: 2.2 !important;
 }
@@ -5379,5 +5379,447 @@ a.archive-v4-card:focus-visible {
   .ar4-card.is-unsave-fade,
   .ar4-card.is-uncompare-fade {
     animation: none !important;
+  }
+}
+
+/* ============================================================
+   CATALOG MOBILE FINAL CONVERGENCE — Reference-Locked
+   Source: FINAL-UI-STYLE-REFERENCE.png + TOOOLVIBES-USER-LOGGED.mp4
+   Semantic layers: BASE / EDITORIAL / SAVE / COMPARE / INTERACTION
+   ============================================================ */
+
+/* ── A. BASE MATERIAL: deep midnight ── */
+.ar4-card {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(133, 103, 223, 0.03) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(106, 60, 255, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #0d0b2a 0%, #0b0926 40%, #080820 100%) !important;
+  border: 1px solid rgba(133, 103, 223, 0.15) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(133, 103, 223, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ── B. EDITORIAL/PODIUM: rank badge + top rail + corner glow ── */
+/* Rank badge: visible 01/02/03 medallion */
+.ar4-card[data-tier] {
+  position: relative !important;
+}
+
+.ar4-card[data-tier="primary"]::before,
+.ar4-card[data-tier="secondary"]::before,
+.ar4-card[data-tier="tertiary"]::before {
+  content: attr(data-rank-label) !important;
+  position: absolute !important;
+  top: -2px !important;
+  left: 10px !important;
+  z-index: 2 !important;
+  font-family: var(--tv-font-family-mono, monospace) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  padding: 2px 8px !important;
+  border-radius: 0 0 6px 6px !important;
+  pointer-events: none !important;
+}
+
+.ar4-card[data-tier="primary"]::before,
+.ar4-card.is-tier-primary::before {
+  background: linear-gradient(180deg, #dfa93e 0%, #c4922e 100%) !important;
+  color: #0d0b2a !important;
+  box-shadow: 0 2px 8px rgba(228, 178, 60, 0.3) !important;
+}
+
+.ar4-card[data-tier="secondary"]::before,
+.ar4-card.is-tier-secondary::before {
+  background: linear-gradient(180deg, #cfd6e4 0%, #a8b0c0 100%) !important;
+  color: #0d0b2a !important;
+  box-shadow: 0 2px 8px rgba(207, 214, 228, 0.25) !important;
+}
+
+.ar4-card[data-tier="tertiary"]::before,
+.ar4-card.is-tier-tertiary::before {
+  background: linear-gradient(180deg, #d29a6b 0%, #b8824f 100%) !important;
+  color: #0d0b2a !important;
+  box-shadow: 0 2px 8px rgba(210, 154, 107, 0.25) !important;
+}
+
+/* Metallic top rail */
+.ar4-card[data-tier="primary"]::after,
+.ar4-card[data-tier="secondary"]::after,
+.ar4-card[data-tier="tertiary"]::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 12px !important;
+  right: 12px !important;
+  height: 2px !important;
+  border-radius: 0 0 2px 2px !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.ar4-card[data-tier="primary"]::after,
+.ar4-card.is-tier-primary::after {
+  background: linear-gradient(90deg, transparent, rgba(228, 178, 60, 0.5), transparent) !important;
+}
+
+.ar4-card[data-tier="secondary"]::after,
+.ar4-card.is-tier-secondary::after {
+  background: linear-gradient(90deg, transparent, rgba(207, 214, 228, 0.45), transparent) !important;
+}
+
+.ar4-card[data-tier="tertiary"]::after,
+.ar4-card.is-tier-tertiary::after {
+  background: linear-gradient(90deg, transparent, rgba(210, 154, 107, 0.45), transparent) !important;
+}
+
+/* Podium corner illumination */
+.ar4-card[data-tier="primary"] {
+  border-color: rgba(228, 178, 60, 0.35) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(228, 178, 60, 0.08),
+    0 0 20px -4px rgba(228, 178, 60, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.ar4-card[data-tier="secondary"] {
+  border-color: rgba(207, 214, 228, 0.3) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(207, 214, 228, 0.06),
+    0 0 18px -4px rgba(207, 214, 228, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.ar4-card[data-tier="tertiary"] {
+  border-color: rgba(210, 154, 107, 0.3) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(210, 154, 107, 0.06),
+    0 0 18px -4px rgba(210, 154, 107, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ── C. SAVE: gold containment ── */
+.ar4-card[data-saved] {
+  border-color: rgba(244, 194, 62, 0.55) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(244, 194, 62, 0.25),
+    0 0 24px -2px rgba(244, 194, 62, 0.18),
+    0 0 48px -8px rgba(244, 194, 62, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.08) !important;
+}
+
+/* Save button: gold active */
+.ar4-card__bookmark[data-saved] {
+  border-color: rgba(252, 215, 92, 0.55) !important;
+  background: rgba(244, 194, 62, 0.16) !important;
+  color: #FCD75C !important;
+  box-shadow: 0 0 10px -2px rgba(252, 215, 92, 0.2) !important;
+}
+
+/* ── D. COMPARE: cyan analysis field ── */
+.ar4-card[data-selected] {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(34, 211, 238, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(5, 206, 251, 0.04) 0%, transparent 45%),
+    linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%) !important;
+  border-color: rgba(5, 206, 251, 0.35) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(5, 206, 251, 0.12),
+    0 0 22px -3px rgba(5, 206, 251, 0.08),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Compare watermark: filled translucent dual-panel */
+.ar4-card[data-selected] .ar4-card__watermark {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  right: 6% !important;
+  transform: translateY(-50%) rotate(-10deg) !important;
+  width: 56px !important;
+  height: 42px !important;
+  opacity: 0.12 !important;
+  pointer-events: none !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 42'%3E%3Crect x='3' y='3' width='22' height='36' rx='3' fill='%2305cefb' opacity='0.3'/%3E%3Crect x='31' y='3' width='22' height='36' rx='3' fill='%2305cefb' opacity='0.15'/%3E%3C/svg%3E") no-repeat center !important;
+  background-size: contain !important;
+  z-index: 0 !important;
+}
+
+/* Compare button: cyan active */
+.ar4-card__toggles [data-sonic-action="compare"].is-active {
+  border-color: rgba(5, 206, 251, 0.5) !important;
+  background: rgba(5, 206, 251, 0.12) !important;
+  color: #05CEFB !important;
+  box-shadow: 0 0 10px -2px rgba(5, 206, 251, 0.22) !important;
+}
+
+/* ── E. BOTH: gold outer + cyan inner ── */
+.ar4-card[data-saved][data-selected] {
+  border-color: rgba(252, 215, 92, 0.5) !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    0 0 0 2px rgba(244, 194, 62, 0.22),
+    0 0 20px -2px rgba(244, 194, 62, 0.15),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── PODIUM + SAVE: gold outer editorial + gold inner save ── */
+.ar4-card[data-tier="primary"][data-saved] {
+  border-color: rgba(228, 178, 60, 0.45) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(228, 178, 60, 0.1),
+    0 0 22px -3px rgba(228, 178, 60, 0.12),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.3),
+    inset 0 0 0 2px rgba(252, 215, 92, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.ar4-card[data-tier="secondary"][data-saved] {
+  border-color: rgba(207, 214, 228, 0.4) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(207, 214, 228, 0.08),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.3),
+    inset 0 0 0 2px rgba(252, 215, 92, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.ar4-card[data-tier="tertiary"][data-saved] {
+  border-color: rgba(210, 154, 107, 0.4) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(210, 154, 107, 0.08),
+    inset 0 0 0 1px rgba(244, 194, 62, 0.3),
+    inset 0 0 0 2px rgba(252, 215, 92, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ── PODIUM + COMPARE: metallic outer + cyan inner ── */
+.ar4-card[data-tier][data-selected] {
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    0 14px 40px rgba(0, 0, 0, 0.32),
+    inset 0 0 0 1px rgba(5, 206, 251, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── ENRICHED METADATA RAIL: compact horizontal ── */
+.ar4-card__enriched {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  margin-top: 6px !important;
+  align-items: center !important;
+}
+
+.ar4-card__enriched-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  white-space: nowrap !important;
+}
+
+.ar4-card__enriched-label {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+}
+
+.ar4-card__enriched-sep {
+  color: var(--tv-ink-muted-aa, #aaa59b) !important;
+  font-size: 12px !important;
+}
+
+.ar4-card__enriched-tags {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+}
+
+.ar4-card__enriched-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(133, 103, 223, 0.1) !important;
+  background: rgba(133, 103, 223, 0.04) !important;
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  white-space: nowrap !important;
+}
+
+.ar4-card[data-density="enriched"] {
+  padding-bottom: 12px !important;
+}
+
+/* ── IDEALE PER: clean micro-row ── */
+.ar4-card__best {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  margin: 6px 0 0 !important;
+  padding: 6px 8px !important;
+  border-radius: 6px !important;
+  background: rgba(133, 103, 223, 0.05) !important;
+  border-left: 2px solid rgba(133, 103, 223, 0.25) !important;
+}
+
+.ar4-card__best-icon {
+  flex-shrink: 0 !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(133, 103, 223, 0.2) !important;
+  background: rgba(133, 103, 223, 0.1) !important;
+  display: grid !important;
+  place-items: center !important;
+  margin-top: 1px !important;
+}
+
+.ar4-card__best-icon svg {
+  width: 12px !important;
+  height: 12px !important;
+  color: rgba(139, 108, 255, 0.85) !important;
+  stroke-width: 2.2 !important;
+}
+
+.ar4-card__best-label {
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  color: var(--tv-ink-primary, #fff) !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  line-height: 1.5 !important;
+  flex-shrink: 0 !important;
+  margin-right: 2px !important;
+}
+
+.ar4-card__best-text {
+  color: var(--tv-ink-secondary, #c2beb5) !important;
+  font-size: 12.5px !important;
+  font-weight: 450 !important;
+  line-height: 1.35 !important;
+  flex: 1 1 80px !important;
+  min-width: 0 !important;
+  overflow-wrap: anywhere !important;
+  margin-left: 2px !important;
+}
+
+/* ── SAVE ACKNOWLEDGEMENT: small floating pill ── */
+.tv-save-ack {
+  position: fixed !important;
+  bottom: calc(var(--tv-bottom-nav-total, 3.625rem) + env(safe-area-inset-bottom, 0px) + 12px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 100 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 14px !important;
+  border-radius: 999px !important;
+  background: rgba(244, 194, 62, 0.15) !important;
+  border: 1px solid rgba(244, 194, 62, 0.35) !important;
+  color: #F4C23E !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  animation: ar4-save-ack 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 16px -4px rgba(244, 194, 62, 0.15) !important;
+}
+
+@keyframes ar4-save-ack {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+}
+
+/* ── MOTION: Save trace ── */
+.ar4-card.is-save-trace::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: -2px !important;
+  border-radius: inherit !important;
+  padding: 2px !important;
+  background: conic-gradient(
+    from var(--ar4-save-angle),
+    transparent 0deg,
+    transparent 260deg,
+    rgba(252, 215, 92, 1) 310deg,
+    rgba(244, 194, 62, 0.8) 335deg,
+    rgba(255, 255, 255, 0.5) 352deg,
+    transparent 360deg
+  ) !important;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+  animation: ar4-save-trace 650ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+  z-index: 2 !important;
+}
+
+/* ── MOTION: Compare scan front ── */
+.ar4-card[data-selected].is-compare-fresh {
+  animation: ar4-compare-scan 400ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
+}
+
+@keyframes ar4-compare-scan {
+  0% { background: radial-gradient(ellipse at 0% 50%, rgba(5,206,251,0.2) 0%, transparent 40%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
+  50% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.18) 0%, transparent 55%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
+  100% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.12) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(5,206,251,0.04) 0%, transparent 45%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card.is-save-trace::after,
+  .ar4-card.is-save-trace .ar4-card__bookmark::before,
+  .ar4-card.is-save-trace .ar4-card__bookmark::after,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::after,
+  .ar4-card.is-unsave-fade,
+  .ar4-card.is-uncompare-fade,
+  .tv-save-ack {
+    animation: none !important;
+  }
+  .ar4-card.is-save-trace::after {
+    content: none !important;
   }
 }

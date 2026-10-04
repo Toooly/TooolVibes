@@ -75,6 +75,8 @@ function ArchiveV4ToolCard({
   const [justSaved, setJustSaved] = useState(false);
   const [compareFresh, setCompareFresh] = useState(false);
   const [justUnsaved, setJustUnsaved] = useState(false);
+  const [showSaveAck, setShowSaveAck] = useState(false);
+  const saveAckTimerRef = useRef<number | null>(null);
   const [justUncompared, setJustUncompared] = useState(false);
 
   const saveTimerRef = useRef<number | null>(null);
@@ -87,6 +89,7 @@ function ArchiveV4ToolCard({
       if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
       if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
       if (unsaveTimerRef.current) window.clearTimeout(unsaveTimerRef.current);
+      if (saveAckTimerRef.current) window.clearTimeout(saveAckTimerRef.current);
       const ucTimer = uncompareTimerRef.current;
       if (ucTimer) window.clearTimeout(ucTimer);
     };
@@ -150,6 +153,9 @@ function ArchiveV4ToolCard({
         () => setJustSaved(false),
         SAVE_TRACE_DURATION_MS,
       );
+      setShowSaveAck(true);
+      if (saveAckTimerRef.current) window.clearTimeout(saveAckTimerRef.current);
+      saveAckTimerRef.current = window.setTimeout(() => setShowSaveAck(false), 1500);
     } else {
       setJustUnsaved(true);
       unsaveTimerRef.current = window.setTimeout(() => setJustUnsaved(false), 240);
@@ -200,6 +206,7 @@ function ArchiveV4ToolCard({
       )}
       onClick={handleCardActivate}
       data-density={density}
+      data-rank-label={effectiveTier === "primary" ? "01" : effectiveTier === "secondary" ? "02" : effectiveTier === "tertiary" ? "03" : undefined}
       data-promoted={isPromoted || undefined}
       data-selected={isSelected || undefined}
       data-tier={effectiveTier || undefined}
@@ -279,6 +286,9 @@ function ArchiveV4ToolCard({
           <span className="ar4-card__best-text">{bestFor}</span>
         </p>
       ) : null}
+      {/* Compare watermark: filled dual-panel, decorative */}
+      {isSelected && <div className="ar4-card__watermark" aria-hidden="true" />}
+
       {/* Enriched density: shows only PUBLIC canonical Tool metadata
           (levelLabel, readingTime, tags). No PII, no private data.
           tv-density cookie is a presentation hint — NOT authorization. */}
@@ -356,9 +366,20 @@ function ArchiveV4ToolCard({
           aggiuntivi per te.
         </p>
       ) : null}
+      {/* Save acknowledgement pill */}
+      {showSaveAck && (
+        <div className="tv-save-ack" role="status" aria-live="polite">
+          <svg width="12" height="12" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
+            <path d="M1 1h8v12l-4-3-4 3z" />
+          </svg>
+          <span>Salvato</span>
+        </div>
+      )}
     </article>
   );
 }
+
+
 
 export { ArchiveV4ToolCard };
 export default ArchiveV4ToolCard;
