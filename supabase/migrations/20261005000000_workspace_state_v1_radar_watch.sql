@@ -633,4 +633,4 @@ end;
 $$;
 
 comment on function public.workspace_state_v1_is_valid(jsonb) is
-  'WorkspaceStateV1 validator. Accepts legacy 6-key payloads and optional personalStacks / events / software-memory / radarWatch extras.';
+  'WorkspaceStateV1 validator. Accepts legacy 6-key payloads and optional personalStacks / events / radarWatch extras. key_count is 6..9 and unknown keys are rejected.';
