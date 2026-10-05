@@ -115,8 +115,8 @@ describe("Card State Contract", () => {
     expect(compareLayer).toBeTruthy();
     expect(hotspots).toBeTruthy();
     
-    // Watermark should NOT be mounted
-    expect(card.querySelector(".ar4-card__watermark")).toBeNull();
+    // Watermark is always mounted (CSS controls opacity via data-selected)
+    expect(card.querySelector(".ar4-card__watermark")).toBeTruthy();
     
     // Buttons inactive
     const bookmark = card.querySelector(".ar4-card__bookmark");
@@ -138,8 +138,8 @@ describe("Card State Contract", () => {
     expect(card.hasAttribute("data-saved")).toBe(true);
     expect(card.hasAttribute("data-selected")).toBe(false);
     
-    // Watermark should NOT be mounted
-    expect(card.querySelector(".ar4-card__watermark")).toBeNull();
+    // Watermark is always mounted (CSS controls opacity via data-selected)
+    expect(card.querySelector(".ar4-card__watermark")).toBeTruthy();
     
     // Buttons
     const bookmark = card.querySelector(".ar4-card__bookmark");
@@ -217,7 +217,7 @@ describe("Card State Contract", () => {
     // If these fail, Save and Compare are INVERTED
     expect(card.getAttribute("data-qa-compared")).toBe("false");
     expect(card.hasAttribute("data-selected")).toBe(false);
-    expect(card.querySelector(".ar4-card__watermark")).toBeNull();
+    expect(card.querySelector(".ar4-card__watermark")).toBeTruthy();
     expect(card.querySelector('[data-sonic-action="compare"]')?.getAttribute("aria-pressed")).toBe("false");
   });
 

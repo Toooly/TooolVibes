@@ -6530,3 +6530,211 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
     -webkit-line-clamp: 2 !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOTION & INTERACTION PERFORMANCE PASS (final)
+   All overrides. Existing CSS untouched above.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── GHOST REMOVAL: kill detached floating icon clones ── */
+.ar4-card.is-save-trace .ar4-card__bookmark::after,
+.ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
+  content: none !important;
+  animation: none !important;
+  display: none !important;
+}
+
+.ar4-card.is-save-trace .ar4-card__bookmark::before,
+.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
+  animation: none !important;
+  content: none !important;
+  display: none !important;
+}
+
+/* ── ICON COLOR CONTRACT: semantic gold/cyan (beats mockup-parity lavender) ── */
+.ar4-shell .ar4-card__toggles > .ar4-card__bookmark,
+.ar4-card .ar4-card__bookmark {
+  color: rgba(244, 194, 62, 0.55) !important;
+}
+
+.ar4-shell .ar4-card__toggles > .ar4-card__bookmark[data-saved],
+.ar4-card .ar4-card__bookmark[data-saved],
+.ar4-card[data-saved] .ar4-card__bookmark {
+  color: #FCD75C !important;
+  border-color: rgba(255, 220, 90, 0.55) !important;
+  background: rgba(255, 210, 70, 0.15) !important;
+}
+
+.ar4-shell .ar4-card__toggles > [data-sonic-action="compare"],
+.ar4-card [data-sonic-action="compare"] {
+  color: rgba(5, 206, 251, 0.5) !important;
+}
+
+.ar4-shell .ar4-card__toggles > [data-sonic-action="compare"].is-active,
+.ar4-card [data-sonic-action="compare"].is-active {
+  color: #05CEFB !important;
+  border-color: rgba(5, 206, 251, 0.5) !important;
+  background: rgba(5, 206, 251, 0.1) !important;
+}
+
+/* BOTH: save stays gold, compare stays cyan */
+.ar4-card[data-saved][data-selected] .ar4-card__bookmark {
+  color: #FCD75C !important;
+}
+.ar4-card[data-saved][data-selected] [data-sonic-action="compare"].is-active {
+  color: #05CEFB !important;
+}
+
+/* ── ON-ICON MOTION: compress-rebound-settle on real icon ── */
+@keyframes ar4-icon-activate {
+  0% { transform: scale(1); }
+  27% { transform: scale(0.92); }
+  62% { transform: scale(1.10); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ar4-halo-pulse {
+  0% { transform: scale(0.75); opacity: 0.45; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+.ar4-card.is-save-trace .ar4-card__bookmark svg {
+  animation: ar4-icon-activate 260ms cubic-bezier(.22,.8,.2,1) 1 both !important;
+  will-change: transform !important;
+}
+
+.ar4-card.is-compare-fresh [data-sonic-action="compare"] svg {
+  animation: ar4-icon-activate 260ms cubic-bezier(.22,.8,.2,1) 1 both !important;
+  will-change: transform !important;
+}
+
+/* Halo pulse on actual button (no detached glyph) */
+.ar4-card.is-save-trace .ar4-card__bookmark {
+  position: relative !important;
+}
+.ar4-card.is-save-trace .ar4-card__bookmark::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  inset: -4px !important;
+  border-radius: inherit !important;
+  border: 2px solid rgba(255, 210, 70, 0.5) !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  animation: ar4-halo-pulse 280ms cubic-bezier(.22,.8,.2,1) 1 both !important;
+  will-change: transform, opacity !important;
+}
+
+.ar4-card.is-compare-fresh [data-sonic-action="compare"] {
+  position: relative !important;
+}
+.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  inset: -4px !important;
+  border-radius: inherit !important;
+  border: 2px solid rgba(5, 206, 251, 0.5) !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  animation: ar4-halo-pulse 280ms cubic-bezier(.22,.8,.2,1) 1 both !important;
+  will-change: transform, opacity !important;
+}
+
+/* ── STAGED STATE ONSET: progressive visual layering ── */
+.ar4-card__save-layer {
+  transition: opacity 340ms cubic-bezier(.22,.8,.2,1) 60ms !important;
+}
+
+.ar4-card__compare-layer {
+  transition: opacity 340ms cubic-bezier(.22,.8,.2,1) 60ms !important;
+}
+
+/* Watermark: always mounted, transition opacity */
+.ar4-card__watermark {
+  opacity: 0 !important;
+  transition: opacity 300ms cubic-bezier(.22,.8,.2,1) 100ms, transform 300ms cubic-bezier(.22,.8,.2,1) 100ms !important;
+  transform: scale(0.95) !important;
+}
+.ar4-card[data-selected] .ar4-card__watermark {
+  opacity: 0.38 !important;
+  transform: scale(1) !important;
+}
+
+/* Compare scan front: static gradient, transform-only */
+.ar4-card.is-compare-fresh .ar4-card__compare-layer::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(5, 206, 251, 0.15) 45%, rgba(5, 206, 251, 0.25) 50%, rgba(5, 206, 251, 0.15) 55%, transparent 100%) !important;
+  pointer-events: none !important;
+  animation: ar4-scan-front 350ms cubic-bezier(.22,.8,.2,1) 1 both !important;
+  will-change: transform, opacity !important;
+}
+
+@keyframes ar4-scan-front {
+  0% { transform: translate3d(-130%, 0, 0); opacity: 1; }
+  100% { transform: translate3d(330%, 0, 0); opacity: 0; }
+}
+
+/* ── SAVE TRACE: static conic, transform-only rotation ── */
+.ar4-card.is-save-trace::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: -1px !important;
+  border-radius: inherit !important;
+  padding: 2px !important;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 210, 70, 0.7) 30deg, rgba(255, 255, 255, 0.4) 50deg, transparent 70deg) !important;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+  animation: ar4-trace-rotate 500ms cubic-bezier(.22,.8,.2,1) 1 both !important;
+  will-change: transform, opacity !important;
+  z-index: 2 !important;
+}
+
+@keyframes ar4-trace-rotate {
+  0% { transform: rotate(0deg); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: rotate(360deg); opacity: 0; }
+}
+
+/* ── PERFORMANCE: kill paint-heavy animation triggers ── */
+.ar4-card.is-save-trace .ar4-card__save-layer,
+.ar4-card.is-unsave-fade .ar4-card__save-layer {
+  animation: none !important;
+}
+.ar4-card.is-compare-fresh .ar4-card__compare-layer,
+.ar4-card.is-uncompare-fade .ar4-card__compare-layer {
+  animation: none !important;
+}
+
+/* Card transition: no background (gradients don't interpolate) */
+.ar4-card {
+  transition: border-color 280ms cubic-bezier(.22,.8,.2,1), box-shadow 280ms cubic-bezier(.22,.8,.2,1) !important;
+}
+
+/* ── REDUCED MOTION: immediate semantic state ── */
+@media (prefers-reduced-motion: reduce) {
+  .ar4-card.is-save-trace .ar4-card__bookmark svg,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"] svg,
+  .ar4-card.is-save-trace .ar4-card__bookmark::before,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
+  .ar4-card.is-save-trace::after,
+  .ar4-card.is-compare-fresh .ar4-card__compare-layer::after {
+    animation: none !important;
+  }
+  .ar4-card.is-save-trace .ar4-card__bookmark::before,
+  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
+  .ar4-card.is-save-trace::after,
+  .ar4-card.is-compare-fresh .ar4-card__compare-layer::after {
+    content: none !important;
+  }
+  .ar4-card__save-layer,
+  .ar4-card__compare-layer,
+  .ar4-card__watermark {
+    transition: none !important;
+  }
+}

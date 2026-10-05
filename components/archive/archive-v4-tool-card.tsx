@@ -297,7 +297,7 @@ function ArchiveV4ToolCard({
         </p>
       ) : null}
       {/* Compare watermark: filled dual-panel, decorative */}
-      {isSelected && <div className="ar4-card__watermark" aria-hidden="true" />}
+      <div className="ar4-card__watermark" aria-hidden="true" />
 
       {/* 4. ENRICHED DECISION META: level · reading time · tags (compact rail) */}
       {density === "enriched" && (tool.levelLabel || tool.readingTime || tool.tags.length > 0) && (

@@ -91,7 +91,7 @@ export function CompareToggle({
       <button
         type="button"
         onClick={handleToggle}
-        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-all duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
+        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-colors duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
           isSelected ? "is-active" : ""
         } ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
         style={{
@@ -113,7 +113,7 @@ export function CompareToggle({
     <button
       type="button"
       onClick={handleToggle}
-      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-all duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
+      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-colors duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
         compact ? "px-2.75 py-1.25 text-xs" : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
       } ${isSelected ? "is-active" : ""} ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
       style={{
