@@ -12,10 +12,31 @@
  */
 
 .tv-rx {
+  /* Floating bottom chrome clearance (spec §2-§4).
+     Composed ONLY of the canonical shell/chrome variables and mirrored from
+     `styles/compare.css`'s own `.tv-compare-dock` positioning, so Radar and
+     the Compare Dock can never disagree:
+       --tv-bottom-nav-total        MobileBottomNav reservation
+       --tv-consent-banner-height   consent banner (raises the dock)
+       --tv-tray-height             CompareSessionDock occupied height
+       --tv-compare-gap             shared dock gap
+       env(safe-area-inset-bottom)  device inset
+     No route-specific magic number. */
+  --tv-rx-chrome-clearance: calc(
+    var(--tv-bottom-nav-total, 3.625rem) +
+      env(safe-area-inset-bottom, 0px) +
+      var(--tv-consent-banner-height, 0px) +
+      var(--tv-compare-gap, 0.75rem) +
+      var(--tv-tray-height, 0px)
+  );
   color: var(--tv-color-ink-100, #f5f3ff);
   display: grid;
   gap: 1rem;
   padding: 1rem;
+  /* Reserve the floating chrome so the last scrollable content and the quick
+     preview can reach a fully unobscured position. Scroll padding only — not a
+     permanent blank slab. */
+  padding-block-end: calc(1rem + var(--tv-rx-chrome-clearance));
   max-width: 46rem;
   margin-inline: auto;
 }
@@ -501,9 +522,16 @@
 /* ---------- quick preview ------------------------------------------------ */
 
 .tv-rx-preview {
+  /* Never sit beneath CompareSessionDock + Bottom Nav + safe area (spec §4).
+     The sticky rest position clears the whole floating chrome stack, so the
+     final actions row always reaches a fully unobscured position. */
   position: sticky;
-  bottom: 0.5rem;
+  bottom: calc(var(--tv-rx-chrome-clearance) + 0.5rem);
   z-index: 5;
+  /* Sheet max-height: stay inside the space above the chrome and scroll
+     internally on short viewports instead of growing under the dock. */
+  max-block-size: calc(100dvh - var(--tv-rx-chrome-clearance) - 1.5rem);
+  overflow-y: auto;
   display: grid;
   gap: 0.55rem;
   border: 1px solid var(--tv-color-violet-500, #6a3cff);
@@ -612,10 +640,18 @@
 }
 
 .tv-rx-preview__actions {
+  /* Save / Compare / Apri dettaglio stay pinned to the sheet's own bottom edge
+     when the sheet scrolls internally, so they can never fall beneath the
+     Compare Dock. Control heights untouched (>= 44px). */
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.4rem;
   flex-wrap: wrap;
+  padding-block-start: 0.4rem;
+  background: var(--tv-color-surface-elevated, #1c1440);
 }
 
 .tv-rx-preview__detail {
@@ -901,6 +937,17 @@
 
   .tv-rx-preview {
     position: static;
+    max-block-size: none;
+  }
+}
+
+/* Desktop dock rests at `1rem` (see `styles/compare.css`), so the clearance
+   mirrors that branch instead of the nav + gap stack. */
+@media (min-width: 1280px) {
+  .tv-rx {
+    --tv-rx-chrome-clearance: calc(
+      1rem + var(--tv-consent-banner-height, 0px) + var(--tv-tray-height, 0px)
+    );
   }
 }
 
