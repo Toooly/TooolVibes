@@ -3069,7 +3069,7 @@ a.archive-v4-card:focus-visible {
     position: relative;
   }
   .ar4-card__bookmark-icon { width: 20px; height: 20px; }
-  .ar4-card__bookmark[data-saved] { color: #F4C23E !important; border-color: rgba(244, 194, 62, 0.65) !important; background: rgba(244, 194, 62, 0.3) !important; box-shadow: 0 0 10px -2px rgba(244, 194, 62, 0.3) !important; box-shadow: 0 0 8px -2px rgba(244, 194, 62, 0.15) !important; }
+  .ar4-card__bookmark[data-saved] { color: #F4C23E !important; border-color: rgba(255, 220, 90, 0.75) !important; background: rgba(255, 210, 70, 0.4) !important; box-shadow: 0 0 14px -2px rgba(255, 210, 70, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important; box-shadow: 0 0 8px -2px rgba(244, 194, 62, 0.15) !important; }
 
   .ar4-card__toggles-more { display: inline-flex; align-items: center; }
 
@@ -6020,12 +6020,13 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 
 /* Save button: warm gold material */
 .ar4-card__bookmark[data-saved] {
-  border-color: rgba(252, 215, 92, 0.75) !important;
+  border-color: rgba(255, 225, 100, 0.85) !important;
   background: linear-gradient(135deg, rgba(244, 194, 62, 0.35) 0%, rgba(252, 215, 92, 0.25) 100%) !important;
   color: #FCD75C !important;
   box-shadow:
-    0 0 16px -2px rgba(252, 215, 92, 0.4),
-    0 0 32px -6px rgba(244, 194, 62, 0.22),
+    0 0 20px -2px rgba(255, 215, 80, 0.5),
+    0 0 44px -8px rgba(244, 194, 62, 0.3),
+    0 0 72px -16px rgba(244, 194, 62, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -6033,9 +6034,10 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-selected] {
   border-color: rgba(5, 206, 251, 0.3) !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(10, 180, 240, 0.28) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 10%, rgba(34, 211, 238, 0.15) 0%, transparent 45%),
-    radial-gradient(ellipse at 15% 90%, rgba(5, 206, 251, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 65% 45%, rgba(10, 180, 240, 0.32) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(34, 211, 238, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 15% 90%, rgba(5, 206, 251, 0.14) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(5, 206, 251, 0.1) 0%, transparent 45%),
     linear-gradient(175deg, #080a28 0%, #060824 35%, #04061e 70%, #030518 100%) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
@@ -6051,8 +6053,8 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-selected] .ar4-card__compare-layer {
   opacity: 1 !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(5, 206, 251, 0.20) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(34, 211, 238, 0.12) 0%, transparent 50%) !important;
+    radial-gradient(ellipse at 60% 50%, rgba(5, 206, 251, 0.25) 0%, transparent 65%),
+    radial-gradient(ellipse at 85% 25%, rgba(34, 211, 238, 0.18) 0%, transparent 55%) !important;
   box-shadow: inset 0 0 30px -6px rgba(5, 206, 251, 0.06) !important;
 }
 
@@ -6086,17 +6088,17 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 
 /* ── D. BOTH: gold shell + cyan core ── */
 .ar4-card[data-saved][data-selected] {
-  border-color: rgba(252, 215, 92, 0.55) !important;
+  border-color: rgba(255, 225, 100, 0.7) !important;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(10, 180, 240, 0.15) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% -5%, rgba(244, 194, 62, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 55% 50%, rgba(10, 180, 240, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% -5%, rgba(255, 210, 70, 0.1) 0%, transparent 45%),
     linear-gradient(175deg, #0e0c30 0%, #0a0a2a 35%, #080824 70%, #06061e 100%) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 2px rgba(244, 194, 62, 0.38),
-    0 0 24px -2px rgba(244, 194, 62, 0.18),
-    0 0 48px -8px rgba(244, 194, 62, 0.08),
+    0 0 0 2px rgba(255, 215, 80, 0.5),
+    0 0 28px -2px rgba(255, 210, 70, 0.25),
+    0 0 56px -10px rgba(244, 194, 62, 0.12),
     inset 0 0 0 1px rgba(5, 206, 251, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
@@ -6119,44 +6121,54 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-tier="tertiary"]::before {
   content: attr(data-rank-label) !important;
   position: absolute !important;
-  top: -6px !important;
+  top: -10px !important;
   left: 12px !important;
   z-index: 3 !important;
   font-family: var(--tv-font-family-mono, monospace) !important;
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.06em !important;
-  padding: 3px 10px !important;
-  border-radius: 6px !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  padding: 4px 12px !important;
+  border-radius: 8px !important;
   pointer-events: none !important;
   line-height: 1 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 .ar4-card[data-tier="primary"]::before {
-  background: linear-gradient(135deg, #dfa93e 0%, #c4922e 50%, #dfa93e 100%) !important;
+  background: linear-gradient(165deg, #f0c850 0%, #dfa93e 35%, #c4922e 70%, #b8862a 100%) !important;
   color: #0d0b2a !important;
+  border: 1px solid rgba(255, 235, 150, 0.4) !important;
   box-shadow:
-    0 2px 8px rgba(228, 178, 60, 0.4),
-    0 0 16px -2px rgba(228, 178, 60, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    0 3px 10px rgba(0, 0, 0, 0.45),
+    0 0 20px -2px rgba(228, 178, 60, 0.4),
+    0 0 40px -8px rgba(228, 178, 60, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15) !important;
 }
 
 .ar4-card[data-tier="secondary"]::before {
-  background: linear-gradient(135deg, #cfd6e4 0%, #a8b0c0 50%, #cfd6e4 100%) !important;
+  background: linear-gradient(165deg, #e8edf5 0%, #cfd6e4 35%, #a8b4d0 70%, #96a3be 100%) !important;
   color: #0d0b2a !important;
+  border: 1px solid rgba(230, 235, 245, 0.4) !important;
   box-shadow:
-    0 2px 8px rgba(207, 214, 228, 0.35),
-    0 0 14px -2px rgba(207, 214, 228, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    0 0 16px -2px rgba(207, 214, 228, 0.35),
+    0 0 32px -8px rgba(207, 214, 228, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.12) !important;
 }
 
 .ar4-card[data-tier="tertiary"]::before {
-  background: linear-gradient(135deg, #d29a6b 0%, #b8824f 50%, #d29a6b 100%) !important;
+  background: linear-gradient(165deg, #e0aa7e 0%, #d29a6b 35%, #c07a4a 70%, #b06a3a 100%) !important;
   color: #0d0b2a !important;
+  border: 1px solid rgba(230, 180, 130, 0.4) !important;
   box-shadow:
-    0 2px 8px rgba(210, 154, 107, 0.35),
-    0 0 14px -2px rgba(210, 154, 107, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    0 0 16px -2px rgba(210, 154, 107, 0.35),
+    0 0 32px -8px rgba(210, 154, 107, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* Metallic top rail */
@@ -6233,22 +6245,24 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 }
 
 .ar4-card[data-tier="secondary"][data-saved] {
-  border-color: rgba(252, 215, 92, 0.45) !important;
+  border-color: rgba(255, 225, 100, 0.55) !important;
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.4),
-    0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 2px rgba(244, 194, 62, 0.2),
+    0 3px 10px rgba(0, 0, 0, 0.5),
+    0 12px 36px rgba(0, 0, 0, 0.35),
+    0 0 0 2px rgba(255, 220, 90, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 0 20px -2px rgba(244, 194, 62, 0.12),
     inset 0 0 0 1px rgba(207, 214, 228, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 
 .ar4-card[data-tier="tertiary"][data-saved] {
-  border-color: rgba(252, 215, 92, 0.45) !important;
+  border-color: rgba(255, 225, 100, 0.55) !important;
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.4),
-    0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 2px rgba(244, 194, 62, 0.2),
+    0 3px 10px rgba(0, 0, 0, 0.5),
+    0 12px 36px rgba(0, 0, 0, 0.35),
+    0 0 0 2px rgba(255, 220, 90, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 0 20px -2px rgba(244, 194, 62, 0.12),
     inset 0 0 0 1px rgba(210, 154, 107, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
@@ -6279,11 +6293,12 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 }
 
 .ar4-card[data-tier="secondary"][data-saved][data-selected] {
-  border-color: rgba(252, 215, 92, 0.45) !important;
+  border-color: rgba(255, 225, 100, 0.55) !important;
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.4),
-    0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 2px rgba(244, 194, 62, 0.2),
+    0 3px 10px rgba(0, 0, 0, 0.5),
+    0 12px 36px rgba(0, 0, 0, 0.35),
+    0 0 0 2px rgba(255, 220, 90, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 0 20px -2px rgba(244, 194, 62, 0.12),
     inset 0 0 0 1px rgba(5, 206, 251, 0.18),
     inset 0 0 0 2px rgba(207, 214, 228, 0.12),
@@ -6291,11 +6306,12 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 }
 
 .ar4-card[data-tier="tertiary"][data-saved][data-selected] {
-  border-color: rgba(252, 215, 92, 0.45) !important;
+  border-color: rgba(255, 225, 100, 0.55) !important;
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.4),
-    0 10px 30px rgba(0, 0, 0, 0.3),
-    0 0 0 2px rgba(244, 194, 62, 0.2),
+    0 3px 10px rgba(0, 0, 0, 0.5),
+    0 12px 36px rgba(0, 0, 0, 0.35),
+    0 0 0 2px rgba(255, 220, 90, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 0 20px -2px rgba(244, 194, 62, 0.12),
     inset 0 0 0 1px rgba(5, 206, 251, 0.18),
     inset 0 0 0 2px rgba(210, 154, 107, 0.12),
