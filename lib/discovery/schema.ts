@@ -10,6 +10,9 @@ import {
   MAX_NOTE_LENGTH,
   MAX_WORKSPACE_COLLECTION_TOOLS,
   MAX_WORKSPACE_TOOL_STATES,
+  MAX_RADAR_WATCH_TOOLS,
+  MAX_RADAR_WATCH_CATEGORIES,
+  MAX_RADAR_WATCH_CATEGORY_LENGTH,
   WORKSPACE_SCHEMA_VERSION,
 } from "@/lib/discovery/workspace-constants";
 import {
@@ -156,6 +159,30 @@ export const workspaceRelationshipEventSchema = z
   })
   .strict();
 
+const radarWatchCategorySchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(MAX_RADAR_WATCH_CATEGORY_LENGTH);
+
+export const radarWatchSchema = z
+  .object({
+    slugs: uniqueSlugList(MAX_RADAR_WATCH_TOOLS),
+    categories: z
+      .array(radarWatchCategorySchema)
+      .max(MAX_RADAR_WATCH_CATEGORIES)
+      .superRefine((categories, context) => {
+        if (new Set(categories).size !== categories.length) {
+          context.addIssue({
+            code: "custom",
+            message: "Radar watch categories must not contain duplicates.",
+          });
+        }
+      }),
+    updatedAt: workspaceTimestampSchema.nullable(),
+  })
+  .strict();
+
 export const workspaceStateV1Schema = z
   .object({
     schemaVersion: z.literal(WORKSPACE_SCHEMA_VERSION),
@@ -169,6 +196,11 @@ export const workspaceStateV1Schema = z
       .array(workspaceRelationshipEventSchema)
       .max(MAX_RELATIONSHIP_EVENTS)
       .default([]),
+    radarWatch: radarWatchSchema.default({
+      slugs: [],
+      categories: [],
+      updatedAt: null,
+    }),
   })
   .strict();
 

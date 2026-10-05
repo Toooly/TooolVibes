@@ -99,7 +99,7 @@ describe("Wave 14 — responsive contracts", () => {
 
   it("W14-T9 Radar facet chrome remains CatalogoFacetHead", () => {
     const archive = read("components/archive/definitive-archive.tsx");
-    const radar = read("components/radar/radar-experience.tsx");
+    const radar = read("components/radar/full-radar-experience.tsx");
     expect(archive).toContain("CatalogoFacetHead");
     expect(radar).toContain("CatalogoFacetHead");
     expect(radar).toContain('active="radar"');

@@ -645,6 +645,7 @@ describe("Wave 9 stack from Save", () => {
         "personalStacks",
         "toolStates",
         "events",
+        "radarWatch",
       ].sort(),
     );
     expect(state.stack.slugs).toEqual([]);

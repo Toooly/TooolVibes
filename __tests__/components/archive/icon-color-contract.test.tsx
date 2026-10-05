@@ -58,7 +58,7 @@ describe("Icon Color Contract", () => {
   });
 
   it("SAVE ON: Bookmark uses full gold (#FCD75C), filled icon", () => {
-    const store = { savedSlugs: ["agentx"], compareSlugs: [], toggleSaved: vi.fn(), toggleCompare: vi.fn() };
+    /* store intentionally unused in this contract */
     vi.mocked(vi.fn()).mockImplementation(() => {});
     
     render(<ArchiveV4ToolCard tool={mockTool} />);

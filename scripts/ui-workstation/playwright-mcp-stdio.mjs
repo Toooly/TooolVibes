@@ -4,7 +4,6 @@
 // Tools: browser_open, browser_screenshot, browser_snapshot, browser_click,
 // browser_viewport, browser_close.
 import { spawnSync } from "node:child_process";
-import fs from "node:fs";
 
 function ab(...args) {
   const r = spawnSync("agent-browser", args, { encoding: "utf8", timeout: 120000 });

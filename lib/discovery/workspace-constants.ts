@@ -34,3 +34,17 @@ export const MAX_NOTE_LENGTH = 2000;
 
 export const MAX_RELATIONSHIP_EVENTS = 200;
 export const MAX_RELATIONSHIP_EVENT_ID_LENGTH = 160;
+
+/**
+ * Canonical Radar Watchlist contract — ONE source of truth.
+ *
+ * WATCH ≠ SAVE:
+ *   SAVE  = "voglio tenere questo tool"        (gold, `saved.slugs`)
+ *   WATCH = "segnalami i movimenti attorno a questo tool/categoria"
+ *           (radar telemetry cyan/violet, `radarWatch`)
+ *
+ * Never hardcode these values anywhere except this file.
+ */
+export const MAX_RADAR_WATCH_TOOLS = 100;
+export const MAX_RADAR_WATCH_CATEGORIES = 30;
+export const MAX_RADAR_WATCH_CATEGORY_LENGTH = 64;

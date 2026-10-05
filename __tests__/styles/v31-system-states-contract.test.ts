@@ -23,8 +23,12 @@ const informationSrc = readFileSync(
   resolve(process.cwd(), "components/tool-detail-final/tool-detail-information.tsx"),
   "utf8",
 );
-const radarSrc = readFileSync(
-  resolve(process.cwd(), "components/radar/radar-experience.tsx"),
+const radarFullSrc = readFileSync(
+  resolve(process.cwd(), "components/radar/full-radar-experience.tsx"),
+  "utf8",
+);
+const radarHomeSrc = readFileSync(
+  resolve(process.cwd(), "components/radar/home-radar-preview.tsx"),
   "utf8",
 );
 const radarCss = readFileSync(resolve(process.cwd(), "styles/radar.css"), "utf8");
@@ -120,7 +124,10 @@ describe("V3.1 system states — tool partial data", () => {
 
 describe("V3.1 system states — preserved references", () => {
   it("radar keeps live/empty/stale/error/refreshing signal states", () => {
-    expect(radarSrc).toContain('data-state={model.state}');
+    // The FULL Radar exposes the resolved data state on its root and the
+    // frozen Home preview keeps the refreshing marker.
+    expect(radarFullSrc).toContain("data-state={uiModel.state}");
+    expect(radarHomeSrc).toContain("data-refreshing");
     expect(radarCss).toContain("[data-refreshing");
     expect(radarCss).toContain('data-state="live"');
     expect(radarCss).toContain('data-variant="stale"');

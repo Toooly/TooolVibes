@@ -18,6 +18,16 @@ export type ProductHuntItem = {
   commentsCount: number;
   productHuntUrl: string;
   thumbnailUrl?: string;
+  /**
+   * ISO launch timestamp from the source (`createdAt`). Optional and additive:
+   * older fixtures and cached payloads remain valid without it. When absent the
+   * Radar NEVER infers recency from anything else.
+   */
+  launchedAt?: string;
+  /** Product Hunt topic names (source transparency only — never a category). */
+  topics?: string[];
+  /** Product Hunt post slug (source identity, used for catalog matching). */
+  slug?: string;
 };
 
 export type ProductHuntSource =

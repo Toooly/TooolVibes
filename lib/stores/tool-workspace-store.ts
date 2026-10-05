@@ -42,6 +42,8 @@ export type ToolWorkspaceState = {
   compareSlugs: string[];
   stackSlugs: string[];
   workingStackSlugs: string[];
+  radarWatchSlugs: string[];
+  radarWatchCategories: string[];
   selectedSlug: string | null;
   isCommandOpen: boolean;
   setSelectedSlug: (slug: string | null) => void;
@@ -51,6 +53,9 @@ export type ToolWorkspaceState = {
   addToStack: (slug: string) => boolean;
   removeFromStack: (slug: string) => void;
   reorderStack: (slugs: string[]) => void;
+  toggleRadarWatchSlug: (slug: string) => boolean;
+  toggleRadarWatchCategory: (category: string) => boolean;
+  clearRadarWatch: () => void;
   clearCompare: () => void;
   clearWorkspace: () => void;
 };
@@ -118,6 +123,13 @@ function projectWorkingStackView(state: WorkspaceStateV1) {
   return {
     ...projectWorkspaceCollections(state),
     workingStackSlugs: workingPersonalStackSlugs(state),
+  };
+}
+
+function projectRadarWatchView(state: WorkspaceStateV1) {
+  return {
+    radarWatchSlugs: state.radarWatch.slugs,
+    radarWatchCategories: state.radarWatch.categories,
   };
 }
 
@@ -342,6 +354,17 @@ export function rebaseWorkspaceIntent(
     return [...byId.values()];
   };
 
+  const rebaseRadarWatch = () =>
+    rebaseRadarWatchShape(
+      base,
+      desired,
+      durable,
+      localClearTime,
+      remoteClearTime,
+      timestamp,
+      latestTimestamp,
+    );
+
   return normalizeWorkspaceState({
     ...durable,
     clearedAt: localClearChanged
@@ -353,7 +376,55 @@ export function rebaseWorkspaceIntent(
     personalStacks: rebaseStacks(),
     toolStates,
     events: rebaseEvents(),
+    radarWatch: rebaseRadarWatch(),
   });
+}
+
+function rebaseRadarWatchShape(
+  base: WorkspaceStateV1,
+  desired: WorkspaceStateV1,
+  durable: WorkspaceStateV1,
+  localClearTime: number | null,
+  remoteClearTime: number | null,
+  timestamp: (value: string | null) => number | null,
+  latestTimestamp: (left: string | null, right: string | null) => string | null,
+) {
+  if (JSON.stringify(base.radarWatch) === JSON.stringify(desired.radarWatch)) {
+    return durable.radarWatch;
+  }
+  const desiredTime = timestamp(desired.radarWatch.updatedAt);
+  if (remoteClearTime !== null && (desiredTime === null || desiredTime <= remoteClearTime)) {
+    return durable.radarWatch;
+  }
+  const durableTime = timestamp(durable.radarWatch.updatedAt);
+  if (localClearTime !== null && (durableTime === null || durableTime <= localClearTime)) {
+    return desired.radarWatch;
+  }
+  const removedSlugs = new Set(
+    base.radarWatch.slugs.filter((slug) => !desired.radarWatch.slugs.includes(slug)),
+  );
+  const removedCategories = new Set(
+    base.radarWatch.categories.filter(
+      (category) => !desired.radarWatch.categories.includes(category),
+    ),
+  );
+  return {
+    slugs: [
+      ...durable.radarWatch.slugs.filter((slug) => !removedSlugs.has(slug)),
+      ...desired.radarWatch.slugs.filter(
+        (slug) => !durable.radarWatch.slugs.includes(slug),
+      ),
+    ],
+    categories: [
+      ...durable.radarWatch.categories.filter(
+        (category) => !removedCategories.has(category),
+      ),
+      ...desired.radarWatch.categories.filter(
+        (category) => !durable.radarWatch.categories.includes(category),
+      ),
+    ],
+    updatedAt: latestTimestamp(desired.radarWatch.updatedAt, durable.radarWatch.updatedAt),
+  };
 }
 
 export function getToolWorkspaceStateForOwner(owner: WorkspaceOwner) {
@@ -486,6 +557,8 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
       compareSlugs: [],
       stackSlugs: [],
       workingStackSlugs: [],
+      radarWatchSlugs: [],
+      radarWatchCategories: [],
       selectedSlug: null,
       isCommandOpen: false,
       setSelectedSlug: (slug) => set({ selectedSlug: slug }),
@@ -546,6 +619,31 @@ export const useToolWorkspaceStore = create<ToolWorkspaceState>()(
           dispatchWorkspaceChange({ source: "local", scope: "workspace" });
         }
         set(projectWorkingStackView(next));
+      },
+      toggleRadarWatchSlug: (slug) => {
+        const next = reduceCollections(get(), {
+          type: "radar-watch/toggle-slug",
+          slug,
+          at: nowIso(),
+        });
+        set(projectRadarWatchView(next));
+        return next.radarWatch.slugs.includes(slug);
+      },
+      toggleRadarWatchCategory: (category) => {
+        const next = reduceCollections(get(), {
+          type: "radar-watch/toggle-category",
+          category,
+          at: nowIso(),
+        });
+        set(projectRadarWatchView(next));
+        return next.radarWatch.categories.includes(category);
+      },
+      clearRadarWatch: () => {
+        const next = reduceCollections(get(), {
+          type: "radar-watch/clear",
+          at: nowIso(),
+        });
+        set(projectRadarWatchView(next));
       },
       clearCompare: () => {
         set(

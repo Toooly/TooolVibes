@@ -11,6 +11,7 @@ import "@/styles/shell.css";
 import "@/styles/definitive-home.css";
 import "@/styles/compare.css";
 import "@/styles/radar.css";
+import "@/styles/radar-full.css";
 import "@/styles/tool-detail-final.css";
 import "@/styles/public-routes.css";
 import "@/styles/public-system.css";

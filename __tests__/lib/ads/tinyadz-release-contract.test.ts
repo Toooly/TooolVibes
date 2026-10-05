@@ -28,7 +28,7 @@ describe("TinyAdz release contract", () => {
     expect(read("app/(marketing)/posts/[slug]/page.tsx")).toContain(
       'placement="article-body"',
     );
-    expect(read("components/radar/radar-experience.tsx")).toContain(
+    expect(read("components/radar/full-radar-experience.tsx")).toContain(
       'placement="radar-feed"',
     );
   });

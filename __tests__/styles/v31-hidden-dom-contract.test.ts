@@ -12,8 +12,7 @@ const intentSrc = read("components/home/intent-entry.tsx");
 const homeCss = read("styles/definitive-home.css");
 const archiveSrc = read("components/archive/definitive-archive.tsx");
 const archiveCss = read("styles/archive-v4.css");
-const radarSrc = read("components/radar/radar-experience.tsx");
-const radarCss = read("styles/radar.css");
+const radarFullSrc = read("components/radar/full-radar-experience.tsx");
 const startHereSrc = read("components/home/start-here.tsx");
 const homeSrc = read("components/home/definitive-home.tsx");
 
@@ -47,11 +46,14 @@ describe("v3.1 hidden-dom contract", () => {
   });
 
   it("keeps one radar visual eyebrow plus a single sr-only canonical label", () => {
-    expect(radarSrc).toContain('className="tv-radar__eyebrow-visual"');
-    expect(radarSrc).toContain('className="sr-only"');
-    expect(radarSrc).not.toContain("tv-radar__eyebrow-desktop");
-    expect(radarSrc).not.toContain("tv-radar__eyebrow-mobile");
-    expect(radarCss).toContain(".tv-radar__eyebrow-lead { display: none; }");
+    // The FULL Radar owns a single visual eyebrow (`tv-rx__eyebrow`) with no
+    // desktop/mobile split and one sr-only search label.
+    expect(radarFullSrc).toContain('className="tv-rx__eyebrow"');
+    expect(radarFullSrc).toContain("tv-rx-sr-only");
+    expect(radarFullSrc).not.toContain("tv-rx__eyebrow-desktop");
+    expect(radarFullSrc).not.toContain("tv-rx__eyebrow-mobile");
+    expect(radarFullSrc).not.toContain("tv-radar__eyebrow-desktop");
+    expect(radarFullSrc).not.toContain("tv-radar__eyebrow-mobile");
   });
 
   it("preserves product-intent home lede variants and start-here tab panels", () => {

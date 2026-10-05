@@ -25,12 +25,21 @@ type ProductHuntGraphQlResponse = {
         node?: {
           id?: string;
           name?: string;
+          slug?: string;
           tagline?: string;
           votesCount?: number;
           commentsCount?: number;
+          createdAt?: string;
           url?: string;
           thumbnail?: {
             url?: string;
+          } | null;
+          topics?: {
+            edges?: Array<{
+              node?: {
+                name?: string;
+              } | null;
+            }> | null;
           } | null;
         };
       }>;
@@ -59,12 +68,21 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
         node {
           id
           name
+          slug
           tagline
           votesCount
           commentsCount
+          createdAt
           url
           thumbnail {
             url
+          }
+          topics {
+            edges {
+              node {
+                name
+              }
+            }
           }
         }
       }
@@ -154,6 +172,8 @@ function getDevelopmentQaFixture(
         commentsCount: 32,
         productHuntUrl: "https://www.producthunt.com/posts/fixture-canvas",
         thumbnailUrl: "https://ph-files.imgix.net/sample.png",
+        launchedAt: "2026-01-15T08:00:00.000Z",
+        topics: ["Artificial Intelligence", "Productivity"],
       },
       {
         id: "stable-signal",
@@ -162,6 +182,8 @@ function getDevelopmentQaFixture(
         votesCount: 318,
         commentsCount: 21,
         productHuntUrl: "https://www.producthunt.com/posts/stable-signal",
+        launchedAt: "2026-01-15T06:30:00.000Z",
+        topics: ["Developer Tools"],
       },
       {
         id: "release-lens",
@@ -170,6 +192,7 @@ function getDevelopmentQaFixture(
         votesCount: 207,
         commentsCount: 14,
         productHuntUrl: "https://www.producthunt.com/posts/release-lens",
+        launchedAt: "2026-01-14T18:00:00.000Z",
       },
       {
         id: "long-name-orchestrator",
@@ -245,23 +268,41 @@ function buildResponse(payload: ProductHuntPayload, ttlMs: number) {
   });
 }
 
+/** Hard ceiling on normalized items served to the Radar. */
+const RADAR_MAX_ITEMS = 24;
+
 function normalizeItems(data: ProductHuntGraphQlResponse): ProductHuntItem[] {
   const edges = data.data?.posts?.edges ?? [];
 
   return edges
     .map((edge) => edge.node)
     .filter((node): node is NonNullable<typeof node> => Boolean(node?.id && node?.name))
-    .map((node) => ({
-      id: node.id ?? node.name ?? crypto.randomUUID(),
-      name: node.name ?? "Lancio su Product Hunt",
-      tagline: node.tagline ?? "Nuovo lancio su Product Hunt",
-      votesCount: node.votesCount ?? 0,
-      commentsCount: node.commentsCount ?? 0,
-      productHuntUrl: node.url ?? "https://www.producthunt.com/",
-      thumbnailUrl: node.thumbnail?.url,
-    }))
+    .map((node) => {
+      const topics = Array.isArray(node.topics?.edges)
+        ? node.topics!.edges!
+            .map((topicEdge) => topicEdge?.node?.name?.trim())
+            .filter((name): name is string => Boolean(name))
+        : [];
+      const item: ProductHuntItem = {
+        id: node.id ?? node.name ?? crypto.randomUUID(),
+        name: node.name ?? "Lancio su Product Hunt",
+        tagline: node.tagline ?? "Nuovo lancio su Product Hunt",
+        votesCount: node.votesCount ?? 0,
+        commentsCount: node.commentsCount ?? 0,
+        productHuntUrl: node.url ?? "https://www.producthunt.com/",
+        thumbnailUrl: node.thumbnail?.url,
+      };
+      // Additive source fields: present only when the upstream actually sends
+      // them. NEVER synthesized.
+      if (node.createdAt && !Number.isNaN(new Date(node.createdAt).getTime())) {
+        item.launchedAt = new Date(node.createdAt).toISOString();
+      }
+      if (node.slug) item.slug = node.slug;
+      if (topics.length > 0) item.topics = topics;
+      return item;
+    })
     .sort((left, right) => right.votesCount - left.votesCount)
-    .slice(0, 5);
+    .slice(0, RADAR_MAX_ITEMS);
 }
 
 async function getProductHuntToken(now: number): Promise<{ token: string | null; errorCategory: RadarDiagCategory; detail: string }> {

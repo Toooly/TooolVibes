@@ -21,7 +21,6 @@ describe("graph data integrity", () => {
 
   it("guide topic slugs reference valid tools", () => {
     const guideSlugs = [...guideTopics.matchAll(/"([^"]+)":/g)].map((m) => m[1]);
-    const dirSlugs = [...dir.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
     for (const slug of guideSlugs) {
       // Guide slugs should match tool slugs or be valid guide identifiers
       expect(slug.length).toBeGreaterThan(0);
@@ -36,6 +35,4 @@ describe("graph data integrity", () => {
       expect(slug).not.toBe(topic);
     }
   });
-
-  
 });

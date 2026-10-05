@@ -50,12 +50,13 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
   it("W11-T4 /radar page still renders RadarExperience", () => {
     const page = readSource("app/(marketing)/radar/page.tsx");
     expect(page).toContain("RadarExperience");
-    expect(page).toContain("initialVisual={radarDesktopVisual}");
+    expect(page).toContain("<RadarExperience />");
+    expect(page).toContain("MemberOnlyGate");
   });
 
   it("W11-T6 T7 shared facet chrome is wired into archive and radar", () => {
     const archive = readSource("components/archive/definitive-archive.tsx");
-    const radar = readSource("components/radar/radar-experience.tsx");
+    const radar = readSource("components/radar/full-radar-experience.tsx");
     expect(archive).toContain("CatalogoFacetHead");
     expect(archive).toContain('active="tutti"');
     expect(radar).toContain("CatalogoFacetHead");
@@ -97,17 +98,26 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
   it("W11-T20 radar page title is not Segnale", () => {
     const page = readSource("app/(marketing)/radar/page.tsx");
     expect(page).not.toMatch(/title:\s*"Segnale"/);
-    expect(page).toContain('title: "Radar: lanci da seguire"');
-    const experience = readSource("components/radar/radar-experience.tsx");
+    expect(page).toContain('title: "Radar: cosa sta emergendo adesso"');
+    const experience = readSource("components/radar/full-radar-experience.tsx");
     expect(experience).toContain("CatalogoFacetHead");
     expect(experience).not.toMatch(/<h1[^>]*>\s*Segnale/);
   });
 
-  it("does not add save controls to Radar PH rows", () => {
-    const experience = readSource("components/radar/radar-experience.tsx");
-    expect(experience).not.toContain("ShortlistToggle");
-    expect(experience).not.toContain("SaveOverflow");
+  it("reuses canonical Save/Compare on the FULL Radar without Radar-specific logic", () => {
+    const experience = readSource("components/radar/full-radar-experience.tsx");
+    // Save/Compare live in the Radar submodules and MUST be the canonical ones.
+    const toolRow = readSource("components/radar/radar-tool-row.tsx");
+    const preview = readSource("components/radar/radar-quick-preview.tsx");
+    expect(toolRow).toContain("ShortlistToggle");
+    expect(toolRow).toContain("CompareToggle");
+    expect(preview).toContain("ShortlistToggle");
+    expect(preview).toContain("CompareToggle");
+    // No Radar-specific decision sheet or save overflow forks.
     expect(experience).not.toContain("DecisionSheet");
+    expect(toolRow).not.toContain("SaveOverflow");
+    expect(preview).not.toContain("SaveOverflow");
+    expect(preview).not.toContain("DecisionSheet");
   });
 });
 

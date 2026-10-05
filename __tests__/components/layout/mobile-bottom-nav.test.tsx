@@ -77,20 +77,22 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     cleanup();
   });
 
-  it("renderizza le 4 destinazioni del registry con ordine, label e href canonici", () => {
+  it("renderizza le 5 destinazioni del registry con ordine, label e href canonici", () => {
     renderBottomNav();
 
     const links = within(getBottomNav()).getAllByRole("link");
-    expect(links).toHaveLength(4);
+    expect(links).toHaveLength(5);
     expect(links.map((link) => link.textContent)).toEqual([
       "Home",
       "Catalogo",
+      "Radar",
       "Raccolte",
       "Salvati",
     ]);
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/",
       "/archivio",
+      "/radar",
       "/collections",
       "/shortlist",
     ]);
@@ -103,7 +105,7 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     const links = within(getBottomNav()).getAllByRole("link");
     expect(
       links.map((link) => link.getAttribute("aria-current") ?? "none"),
-    ).toEqual(["none", "none", "page", "none"]);
+    ).toEqual(["none", "none", "none", "page", "none"]);
   });
 
   it("active route sulla home non attiva le altre destinazioni", () => {
@@ -112,7 +114,7 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     const links = within(getBottomNav()).getAllByRole("link");
     expect(
       links.map((link) => link.getAttribute("aria-current") ?? "none"),
-    ).toEqual(["page", "none", "none", "none"]);
+    ).toEqual(["page", "none", "none", "none", "none"]);
   });
 
   it("contract B22 preservato: z-token var(--tv-z-nav) sulla nav", () => {
@@ -154,10 +156,11 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     );
 
     const links = within(getBottomNav()).getAllByRole("link");
-    expect(links).toHaveLength(3);
+    expect(links).toHaveLength(4);
     expect(links.map((link) => link.textContent)).toEqual([
       "Home",
       "Catalogo",
+      "Radar",
       "Raccolte",
     ]);
     expect(
@@ -172,13 +175,14 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     expect(screen.queryByRole("navigation")).toBeNull();
   });
 
-  it("SHELL-07 account keeps the same 4-destination mobile nav", () => {
+  it("SHELL-07 account keeps the same 5-destination mobile nav", () => {
     pathnameState.current = "/account";
     renderBottomNav();
     const links = within(getBottomNav()).getAllByRole("link");
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/",
       "/archivio",
+      "/radar",
       "/collections",
       "/shortlist",
     ]);
@@ -308,32 +312,32 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       /\.mobile-bottom-shell__grid\s*\{([^}]+)\}/,
     )?.[1];
     expect(gridRule).toContain(
-      "grid-template-columns: repeat(4, minmax(0, 1fr))",
+      "grid-template-columns: repeat(5, minmax(0, 1fr))",
     );
   });
 
-  it("quarto item leggibile: griglia a 4 colonne con label completa Salvati", () => {
+  it("quinto item leggibile: griglia a 5 colonne con label completa Salvati", () => {
     savedCountState.current = 2;
     renderBottomNav();
 
     const grid = getBottomNav().querySelector(".mobile-bottom-shell__grid");
     expect(grid).toBeTruthy();
-    expect(grid?.children).toHaveLength(4);
+    expect(grid?.children).toHaveLength(5);
 
     const links = within(getBottomNav()).getAllByRole("link");
-    expect(links).toHaveLength(4);
-    const fourth = links[3];
-    expect(fourth.textContent).toContain("Salvati");
+    expect(links).toHaveLength(5);
+    const last = links[4];
+    expect(last.textContent).toContain("Salvati");
     expect(
-      fourth.querySelector(".mobile-bottom-item__label")?.textContent,
+      last.querySelector(".mobile-bottom-item__label")?.textContent,
     ).toBe("Salvati");
     expect(
-      fourth.querySelector(".mobile-bottom-item__badge")?.textContent,
+      last.querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("2");
   });
 
   it.each([320, 360, 390, 412, 430])(
-    "viewport %ipx: 4 destinazioni e badge Salvati nel DOM",
+    "viewport %ipx: 5 destinazioni e badge Salvati nel DOM",
     (width) => {
       window.innerWidth = width;
       window.innerHeight = 844;
@@ -343,7 +347,7 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
 
       const { unmount } = renderBottomNav();
       const links = within(getBottomNav()).getAllByRole("link");
-      expect(links).toHaveLength(4);
+      expect(links).toHaveLength(5);
       expect(
         within(getBottomNav())
           .getByRole("link", { name: /Salvati/ })
@@ -364,7 +368,7 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       window.dispatchEvent(new Event("resize"));
 
       const { unmount } = renderBottomNav();
-      expect(within(getBottomNav()).getAllByRole("link")).toHaveLength(4);
+      expect(within(getBottomNav()).getAllByRole("link")).toHaveLength(5);
       unmount();
     },
   );

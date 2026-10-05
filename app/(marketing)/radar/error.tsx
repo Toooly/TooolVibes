@@ -2,7 +2,7 @@
 
 import { ErrorRecoveryView } from "@/components/app/error-recovery-view";
 
-export default function SegmentError({
+export default function RadarErrorBoundary({
   error,
   reset,
 }: {

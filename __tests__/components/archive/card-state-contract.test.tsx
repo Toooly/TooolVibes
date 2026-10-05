@@ -6,9 +6,8 @@
  * MUST FAIL if Save and Compare are inverted.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
-import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 // Mock the store
 const mockToggleSaved = vi.fn();

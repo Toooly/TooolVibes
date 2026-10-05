@@ -49,7 +49,7 @@ async function assertState(page, slug, expected) {
     for (const c of cards) {
       const link = c.querySelector(".ar4-card__name-link");
       if (link && link.getAttribute("href")?.includes(slug)) {
-        const cs = getComputedStyle(c);
+        void getComputedStyle(c);
         return {
           qaSaved: c.getAttribute("data-qa-saved"),
           qaCompared: c.getAttribute("data-qa-compared"),

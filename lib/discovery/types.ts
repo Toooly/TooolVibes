@@ -56,6 +56,19 @@ export type WorkspaceOrderedList = {
   updatedAt: string | null;
 };
 
+/**
+ * Radar Watchlist — "segnalami i movimenti".
+ * Distinct from `saved` (Save = gold "voglio tenere").
+ * Watch uses Radar telemetry language (cyan/violet), never gold.
+ */
+export type RadarWatchState = {
+  /** Catalog/PH slugs whose movement the user wants surfaced. */
+  slugs: string[];
+  /** Canonical category filter keys whose movement the user wants surfaced. */
+  categories: string[];
+  updatedAt: string | null;
+};
+
 export type PersonalStack = {
   id: string;
   name: string;
@@ -99,6 +112,7 @@ export type WorkspaceStateV1 = {
   personalStacks: PersonalStack[];
   toolStates: Record<string, WorkspaceToolState>;
   events: WorkspaceRelationshipEvent[];
+  radarWatch: RadarWatchState;
 };
 
 export type WorkspaceState = WorkspaceStateV1;
@@ -157,6 +171,9 @@ export type WorkspaceAction =
   | { type: "stacks/add"; id: string; slug: string; at: string }
   | { type: "stacks/remove"; id: string; slug: string; at: string }
   | { type: "stacks/reorder"; id: string; slugs: string[]; at: string }
+  | { type: "radar-watch/toggle-slug"; slug: string; at: string }
+  | { type: "radar-watch/toggle-category"; category: string; at: string }
+  | { type: "radar-watch/clear"; at: string }
   | { type: "workspace/clear"; at: string }
   | {
       type: "workspace/decide";

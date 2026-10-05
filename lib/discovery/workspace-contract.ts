@@ -14,6 +14,7 @@ import {
   type WorkspaceOrderedList,
   type WorkspaceRelationshipEvent,
   type WorkspaceStateV1,
+  type RadarWatchState,
   type WorkspaceToolState,
   type WorkspaceUsage,
 } from "@/lib/discovery/types";
@@ -26,6 +27,9 @@ import {
   MAX_STACK_NAME_LENGTH,
   MAX_USE_CASE_LENGTH,
   MAX_NOTE_LENGTH,
+  MAX_RADAR_WATCH_TOOLS,
+  MAX_RADAR_WATCH_CATEGORIES,
+  MAX_RADAR_WATCH_CATEGORY_LENGTH,
   MAX_WORKSPACE_COLLECTION_TOOLS,
   WORKSPACE_SCHEMA_VERSION,
 } from "@/lib/discovery/workspace-constants";
@@ -457,6 +461,50 @@ function clonePersonalStack(stack: PersonalStack): PersonalStack {
   };
 }
 
+function normalizeWatchCategory(value: unknown) {
+  if (typeof value !== "string") {
+    return null;
+  }
+  const category = value.trim();
+  return category.length > 0 && category.length <= MAX_RADAR_WATCH_CATEGORY_LENGTH
+    ? category
+    : null;
+}
+
+function normalizeWatchCategoryList(value: unknown) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  const categories = value
+    .map(normalizeWatchCategory)
+    .filter((category): category is string => Boolean(category));
+  return Array.from(new Set(categories)).slice(0, MAX_RADAR_WATCH_CATEGORIES);
+}
+
+export function createEmptyRadarWatchState(): RadarWatchState {
+  return { slugs: [], categories: [], updatedAt: null };
+}
+
+function normalizeRadarWatch(value: unknown): RadarWatchState {
+  const record = isRecord(value) ? value : {};
+  return {
+    slugs: normalizeSlugList(record.slugs, { maxLength: MAX_RADAR_WATCH_TOOLS }),
+    categories: normalizeWatchCategoryList(record.categories),
+    updatedAt: normalizeTimestamp(record.updatedAt),
+  };
+}
+
+function mergeRadarWatch(left: RadarWatchState, right: RadarWatchState): RadarWatchState {
+  return {
+    slugs: Array.from(new Set([...left.slugs, ...right.slugs])).slice(0, MAX_RADAR_WATCH_TOOLS),
+    categories: Array.from(new Set([...left.categories, ...right.categories])).slice(
+      0,
+      MAX_RADAR_WATCH_CATEGORIES,
+    ),
+    updatedAt: maxTimestamp(left.updatedAt, right.updatedAt),
+  };
+}
+
 function normalizeSlugList(
   value: unknown,
   options: {
@@ -524,6 +572,7 @@ export function createEmptyWorkspaceState(): WorkspaceStateV1 {
     personalStacks: [],
     toolStates: {},
     events: [],
+    radarWatch: createEmptyRadarWatchState(),
   };
 }
 
@@ -567,6 +616,7 @@ export function normalizeWorkspaceState(input: unknown): WorkspaceStateV1 {
     personalStacks: normalizePersonalStacks(input.personalStacks),
     toolStates,
     events: normalizeRelationshipEvents(input.events),
+    radarWatch: normalizeRadarWatch(input.radarWatch),
   });
 }
 
@@ -619,6 +669,12 @@ export function toRemoteWorkspaceState(state: WorkspaceStateV1): Record<string, 
   }
   if (stripped.events.length > 0) {
     remote.events = stripped.events;
+  }
+  if (
+    stripped.radarWatch.slugs.length > 0 ||
+    stripped.radarWatch.categories.length > 0
+  ) {
+    remote.radarWatch = stripped.radarWatch;
   }
   return remote;
 }
@@ -937,6 +993,7 @@ export function mergeWorkspaceStates(
     personalStacks: mergePersonalStacks(left.personalStacks, right.personalStacks),
     toolStates,
     events: mergeRelationshipEvents(left.events, right.events),
+    radarWatch: mergeRadarWatch(left.radarWatch, right.radarWatch),
   });
 }
 
@@ -1041,6 +1098,7 @@ export function reduceWorkspaceState(
       personalStacks: [],
       toolStates: {},
       events: [],
+      radarWatch: createEmptyRadarWatchState(),
     });
   }
 
@@ -1295,6 +1353,34 @@ export function reduceWorkspaceState(
     });
   }
 
+  if (action.type === "radar-watch/clear") {
+    return normalizeWorkspaceState({
+      ...state,
+      radarWatch: createEmptyRadarWatchState(),
+    });
+  }
+
+  if (action.type === "radar-watch/toggle-category") {
+    const category = normalizeWatchCategory(action.category);
+    if (!category) {
+      return state;
+    }
+    const exists = state.radarWatch.categories.includes(category);
+    if (!exists && state.radarWatch.categories.length >= MAX_RADAR_WATCH_CATEGORIES) {
+      return state;
+    }
+    return normalizeWorkspaceState({
+      ...state,
+      radarWatch: {
+        ...state.radarWatch,
+        categories: exists
+          ? state.radarWatch.categories.filter((item) => item !== category)
+          : [...state.radarWatch.categories, category],
+        updatedAt: at,
+      },
+    });
+  }
+
   const slug =
     "slug" in action ? normalizeSlug(action.slug) : null;
 
@@ -1303,6 +1389,23 @@ export function reduceWorkspaceState(
   }
 
   switch (action.type) {
+    case "radar-watch/toggle-slug": {
+      const exists = state.radarWatch.slugs.includes(slug);
+      if (!exists && state.radarWatch.slugs.length >= MAX_RADAR_WATCH_TOOLS) {
+        return state;
+      }
+      return normalizeWorkspaceState({
+        ...state,
+        radarWatch: {
+          ...state.radarWatch,
+          slugs: exists
+            ? state.radarWatch.slugs.filter((item) => item !== slug)
+            : [...state.radarWatch.slugs, slug],
+          updatedAt: at,
+        },
+      });
+    }
+
     case "saved/set": {
       const currentlySaved = state.saved.slugs.includes(slug);
 
@@ -1641,6 +1744,8 @@ export function hasWorkspaceData(input: unknown) {
     state.stack.slugs.length > 0 ||
     state.personalStacks.length > 0 ||
     Object.keys(state.toolStates).length > 0 ||
-    state.events.length > 0
+    state.events.length > 0 ||
+    state.radarWatch.slugs.length > 0 ||
+    state.radarWatch.categories.length > 0
   );
 }

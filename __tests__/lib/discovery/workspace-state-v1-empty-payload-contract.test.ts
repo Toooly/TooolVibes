@@ -45,6 +45,8 @@ describe("workspace_state_v1 empty payload contract", () => {
 
     expect(keys).toContain("events");
     expect(empty.events).toEqual([]);
+    expect(keys).toContain("radarWatch");
+    expect(empty.radarWatch).toEqual({ slugs: [], categories: [], updatedAt: null });
     expect(allowList).toEqual(
       expect.arrayContaining([
         "schemaVersion",
@@ -55,11 +57,12 @@ describe("workspace_state_v1 empty payload contract", () => {
         "toolStates",
         "personalStacks",
         "events",
+        "radarWatch",
       ]),
     );
     expect(keys.every((key) => allowList.includes(key))).toBe(true);
-    expect(keys).toHaveLength(8);
-    expect(sql.toLowerCase()).toContain("or key_count > 8");
-    expect(sql.toLowerCase()).not.toContain("or key_count > 7");
+    expect(keys).toHaveLength(9);
+    expect(sql.toLowerCase()).toContain("or key_count > 9");
+    expect(sql.toLowerCase()).not.toContain("or key_count > 8");
   });
 });

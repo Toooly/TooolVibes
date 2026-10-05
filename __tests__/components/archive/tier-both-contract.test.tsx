@@ -3,7 +3,7 @@
 import { render, screen, cleanup } from "@testing-library/react";
     import fs from "fs";
     import path from "path";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
 
 vi.mock("@/lib/stores/tool-workspace-store", () => ({

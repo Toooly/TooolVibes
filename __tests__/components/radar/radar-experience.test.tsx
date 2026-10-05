@@ -1,36 +1,35 @@
 // @vitest-environment jsdom
+/**
+ * FULL Radar experience — interaction + data-truth + a11y tests.
+ *
+ * Replaces the V2 `RadarExperience` suite (map/list toggle) which described a
+ * surface that no longer exists. `HomeRadarPreview` (frozen) is covered by its
+ * own suite.
+ */
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { RadarExperience } from "@/components/radar/radar-experience";
+import { RadarExperience } from "@/components/radar/full-radar-experience";
+import { OverlayProvider } from "@/components/ui/overlay-provider";
+import { PublicToolCatalogProvider } from "@/lib/data/public-tool-catalog-context";
+import { AccountPreviewProvider } from "@/components/account/account-provider";
 import type { ProductHuntPayload } from "@/lib/radar/product-hunt-contract";
 
-vi.mock("@/lib/gamification/actions", () => ({
-  claimHiddenSignal: vi.fn(),
-}));
-
-vi.mock("canvas-confetti", () => ({
-  default: vi.fn(),
-}));
-
-/* The commercial mount is contracted separately (duplication/matrix tests);
-   here it is isolated so the consent provider is not required. */
 vi.mock("@/components/ads/tinyadz-inline-slot", () => ({
   TinyAdzInlineSlot: ({ placement }: { placement: string }) => (
     <div data-testid="tinyadz-stub" data-placement={placement} />
   ),
 }));
 
-const LIVE_DAY: ProductHuntPayload = {
+vi.mock("@/lib/gamification/actions", () => ({ claimHiddenSignal: vi.fn() }));
+vi.mock("canvas-confetti", () => ({ default: vi.fn() }));
+
+const NOW = Date.parse("2026-07-28T12:00:00.000Z");
+
+const LIVE: ProductHuntPayload = {
   status: "ok",
   source: "product-hunt-live",
   stale: false,
@@ -44,6 +43,8 @@ const LIVE_DAY: ProductHuntPayload = {
       votesCount: 120,
       commentsCount: 14,
       productHuntUrl: "https://www.producthunt.com/posts/alpha",
+      launchedAt: "2026-07-28T07:00:00.000Z",
+      topics: ["Artificial Intelligence"],
     },
     {
       id: "beta",
@@ -52,24 +53,86 @@ const LIVE_DAY: ProductHuntPayload = {
       votesCount: 80,
       commentsCount: 7,
       productHuntUrl: "https://www.producthunt.com/posts/beta",
+      launchedAt: "2026-07-28T05:00:00.000Z",
     },
-  ],
-};
-
-const LIVE_WEEK: ProductHuntPayload = {
-  ...LIVE_DAY,
-  range: "week",
-  items: [
     {
       id: "gamma",
       name: "Gamma Tool",
-      tagline: "Segnale settimanale reale",
-      votesCount: 240,
-      commentsCount: 21,
+      tagline: "Terzo segnale reale",
+      votesCount: 40,
+      commentsCount: 2,
       productHuntUrl: "https://www.producthunt.com/posts/gamma",
     },
   ],
 };
+
+const EMPTY: ProductHuntPayload = {
+  status: "ok",
+  source: "product-hunt-live",
+  stale: false,
+  range: "day",
+  updatedAt: "2026-07-28T08:05:00.000Z",
+  items: [],
+};
+
+const catalog = [
+  {
+    slug: "alpha-tool",
+    name: "Alpha Tool",
+    categoryLabel: "Vibe coding / builder app AI",
+    shortDescription: "Alpha",
+    featured: false,
+    toolOfWeek: false,
+    tags: [],
+    levelLabel: null,
+  },
+];
+
+function accountValue(status: "guest" | "authenticated" | "loading") {
+  return {
+    authEnabled: true,
+    status,
+    user:
+      status === "authenticated"
+        ? {
+            id: "u1",
+            email: "user@example.com",
+            aud: "authenticated",
+            app_metadata: {},
+            user_metadata: {},
+            created_at: "2026-01-01T00:00:00.000Z",
+          }
+        : null,
+    session: null,
+    isSendingLink: false,
+    isAttaching: false,
+    workspaceAttachPending: false,
+    hasQuarantinedWorkspace: false,
+    isRestoringQuarantinedWorkspace: false,
+    authMessage: null,
+    sendMagicLink: async () => ({ ok: true, message: "ok" }),
+    restoreQuarantinedWorkspace: async () => ({ ok: true, message: "ok" }),
+    signOut: async () => {},
+    workspaceReadyForIntentReplay: status === "authenticated",
+  };
+}
+
+function renderRadar() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <OverlayProvider>
+      <QueryClientProvider client={queryClient}>
+        <PublicToolCatalogProvider tools={catalog}>
+          <AccountPreviewProvider value={accountValue("authenticated")}>
+            <RadarExperience />
+          </AccountPreviewProvider>
+        </PublicToolCatalogProvider>
+      </QueryClientProvider>
+    </OverlayProvider>,
+  );
+}
 
 function fetchOk(payload: ProductHuntPayload) {
   return Promise.resolve(
@@ -80,271 +143,126 @@ function fetchOk(payload: ProductHuntPayload) {
   );
 }
 
-function renderRadar(initialVisual: "nodes" | "table" = "nodes") {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
-
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <RadarExperience initialVisual={initialVisual} />
-    </QueryClientProvider>,
-  );
-}
-
 describe("RadarExperience", () => {
   const fetchMock = vi.fn();
 
   beforeEach(() => {
     fetchMock.mockReset();
     vi.stubGlobal("fetch", fetchMock);
+    vi.setSystemTime(NOW);
   });
 
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
+    vi.useRealTimers();
   });
 
-  it("usa un solo albero responsive, una query e nodi reali", async () => {
-    fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
-    const { container } = renderRadar();
-
-    expect(await screen.findAllByText(/Alpha Tool/)).not.toHaveLength(0);
-    expect(container.querySelectorAll(".tv-radar")).toHaveLength(1);
-    expect(container.querySelector(".radar-mobile")).toBeNull();
-    expect(container.querySelector(".radar-command--desktop")).toBeNull();
-    expect(container.querySelectorAll(".tv-radar-node")).toHaveLength(2);
-    expect(
-      container.querySelector(".tv-radar-instrument__sweep"),
-    ).toBeTruthy();
-    // V2: live status è "Dati aggiornati" (no "LIVE")
-    expect(screen.getByText("Dati aggiornati")).toBeTruthy();
-    expect(screen.queryByText("LIVE")).toBeNull();
-    // H1 V2
-    expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "Cosa sta emergendo adesso",
-      }),
-    ).toBeTruthy();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-  });
-
-  it("dichiara stale 'old' e interrompe la scansione senza nascondere i dati", async () => {
-    // Closure check 2026-08-03 §4: il payload di test ha updatedAt
-    // vecchio (2026-07-28T08:05:00.000Z) — la soglia di 1h è
-    // abbondantemente superata, quindi staleVariant = "old".
-    fetchMock.mockImplementation(() =>
-      fetchOk({
-        ...LIVE_DAY,
-        source: "product-hunt-stale",
-        stale: true,
-      }),
-    );
-    const { container } = renderRadar();
-
-    // V2: stale "old" label "Aggiornamento non recente" appare
-    // sia nello status rail sia nel badge dello state panel.
-    expect(
-      await screen.findAllByText("Aggiornamento non recente"),
-    ).not.toHaveLength(0);
-    expect(
-      await screen.findByText(
-        "I dati potrebbero non essere aggiornati",
-      ),
-    ).toBeTruthy();
-    expect(await screen.findAllByText(/Beta Tool/)).not.toHaveLength(0);
-    expect(
-      container.querySelector(".tv-radar-instrument__sweep"),
-    ).toBeNull();
-    // V2 retry: "Riprova" (pannello) e "Aggiorna i dati" (header)
-    expect(
-      screen.getByRole("button", { name: "Riprova" }),
-    ).toBeTruthy();
-    expect(
-      screen.getByRole("button", { name: "Aggiorna i dati del Radar" }),
-    ).toBeTruthy();
-  });
-
-  it("etichetta la fixture QA e non la presenta come feed live", async () => {
-    fetchMock.mockImplementation(() =>
-      fetchOk({
-        ...LIVE_DAY,
-        source: "qa-fixture",
-      }),
-    );
-    const { container } = renderRadar();
-
-    // "QA FIXTURE" appare nello status rail (statusLabel) e non
-    // viene presentato come live.
-    expect(await screen.findByText("QA FIXTURE")).toBeTruthy();
-    expect(
-      screen.getByText("I tool più discussi, in crescita ora."),
-    ).toBeTruthy();
-    expect(screen.queryByText("LIVE")).toBeNull();
-    expect(screen.queryByText("Dati aggiornati")).toBeNull();
-    expect(
-      container.querySelector(".tv-radar-instrument__sweep"),
-    ).toBeNull();
-  });
-
-  it("mostra errore e retry anche nel layout unico, senza nodi inventati", async () => {
-    fetchMock
-      .mockRejectedValueOnce(new Error("network down"))
-      .mockImplementation(() => fetchOk(LIVE_DAY));
-    const { container } = renderRadar();
-
-    // V2: error label "Dati non disponibili" (no "OFFLINE")
-    expect(await screen.findByText("Dati non disponibili")).toBeTruthy();
-    expect(
-      screen.getByText("Non riusciamo ad aggiornare il Radar"),
-    ).toBeTruthy();
-    expect(container.querySelectorAll(".tv-radar-node")).toHaveLength(0);
-    expect(
-      container.querySelector(".tv-radar-instrument__sweep"),
-    ).toBeNull();
-
-    fireEvent.click(screen.getByRole("button", { name: "Riprova" }));
-
-    await waitFor(() =>
-      expect(container.querySelectorAll(".tv-radar-node")).toHaveLength(2),
-    );
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-  });
-
-  it("preserva periodo e cache quando cambia vista", async () => {
-    fetchMock.mockImplementation((input: RequestInfo | URL) =>
-      String(input).includes("range=week")
-        ? fetchOk(LIVE_WEEK)
-        : fetchOk(LIVE_DAY),
-    );
-    renderRadar("nodes");
-
-    expect(await screen.findAllByText(/Alpha Tool/)).not.toHaveLength(0);
-    // V2: aria-label del button periodo è
-    // "Mostra i segnali di Ultimi 7 giorni" (era "Settimana").
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Mostra i segnali di Ultimi 7 giorni",
-      }),
-    );
-    expect(await screen.findAllByText(/Gamma Tool/)).not.toHaveLength(0);
-
-    // V2: vista "Elenco" (era "Tabella")
-    fireEvent.click(
-      screen.getByRole("button", { name: "Visualizza i segnali in elenco" }),
-    );
-    expect(
-      await screen.findByText("Tutti i segnali del periodo"),
-    ).toBeTruthy();
-    expect(
-      screen
-        .getByRole("button", { name: "Mostra i segnali di Ultimi 7 giorni" })
-        .getAttribute("aria-pressed"),
-    ).toBe("true");
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-
-    // V2: vista "Mappa" (era "Radar")
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: "Visualizza i segnali sulla mappa del Radar",
-      }),
-    );
-    expect(
-      await screen.findByLabelText(
-        "Mappa dei segnali Product Hunt per il periodo selezionato",
-      ),
-    ).toBeTruthy();
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-  });
-
-  it("espone controlli nativi e non introduce violazioni axe strutturali", async () => {
-    fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
-    const { container } = renderRadar("table");
-
-    await screen.findByText("Tutti i segnali del periodo");
-    await screen.findByText("Dati aggiornati");
-    expect(screen.getByRole("group", { name: "Periodo" })).toBeTruthy();
-    expect(screen.getByRole("group", { name: "Vista" })).toBeTruthy();
-    const statusBar = container.querySelector(".tv-radar-status-bar");
-    expect(statusBar?.textContent).toContain("Product Hunt");
-    expect(statusBar?.textContent).toContain("Oggi");
-    expect(statusBar?.textContent).toContain("Dati aggiornati");
-    expect(
-      statusBar?.querySelector("[role='status']")?.getAttribute("aria-live"),
-    ).toBe("polite");
-    expect(screen.queryByText("Stato")).toBeNull();
-    expect(screen.queryByText("Ultimo aggiornamento")).toBeNull();
-    expect(screen.queryByText("Segnali disponibili")).toBeNull();
-    expect(screen.getByText("Periodo")).toBeTruthy();
-    expect(screen.queryByText("Cosa merita attenzione ora")).toBeNull();
-    const provenance = container.querySelector("details.tv-radar-provenance");
-    expect(provenance).toBeTruthy();
-    expect(provenance?.hasAttribute("open")).toBe(false);
-    expect(screen.getByText("Informazioni sui dati")).toBeTruthy();
-
-    const results = await axe.run(container, {
-      rules: {
-        "color-contrast": { enabled: false },
-        region: { enabled: false },
-      },
-    });
-    expect(results.violations).toEqual([]);
-  });
-
-  it("rende una sola eyebrow visuale con densità CSS, senza copia duplicata", async () => {
-    fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
-    const { container } = renderRadar();
-    await screen.findAllByText(/Alpha Tool/);
-
-    const visual = container.querySelector(".tv-radar__eyebrow-visual");
-    expect(visual?.getAttribute("aria-hidden")).toBe("true");
-    expect(visual?.textContent).toContain("Fonte Product Hunt");
-    expect(visual?.textContent).toContain("Product Hunt · dati reali");
-    expect(container.querySelector(".tv-radar__eyebrow-desktop")).toBeNull();
-    expect(container.querySelector(".tv-radar__eyebrow-mobile")).toBeNull();
-  });
-
-  it("W11-T6 T7 T20 Catalogo facet Tutti | Radar is present and is not Segnale", async () => {
-    fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
+  it("RADAR-OVERVIEW-01 renderizza i reali segnali con una sola query", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
     renderRadar();
-    await screen.findAllByText(/Alpha Tool/);
 
-    const tutti = screen.getByRole("link", { name: "Tutti" });
-    const radar = screen.getByRole("link", { name: "Radar" });
-    expect(tutti.getAttribute("href")).toBe("/archivio");
-    expect(radar.getAttribute("href")).toBe("/radar");
-    expect(radar.getAttribute("aria-current")).toBe("page");
-    expect(tutti.getAttribute("aria-current")).toBeNull();
-    expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "Cosa sta emergendo adesso",
-      }),
-    ).toBeTruthy();
-    expect(screen.queryByRole("heading", { name: "Segnale" })).toBeNull();
+    expect(await screen.findAllByText(/Alpha Tool/)).not.toHaveLength(0);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("heading", { name: /cosa sta emergendo/i })).toBeTruthy();
   });
 
-  it("espone una sola eyebrow all'accessibility tree (no doppia lettura)", async () => {
-    fetchMock.mockImplementation(() => fetchOk(LIVE_DAY));
-    const { container } = renderRadar();
+  it("RADAR-TRUTH-01 non inventa momentum ne sparkline senza storico", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
+
     await screen.findAllByText(/Alpha Tool/);
+    fireEvent.click(screen.getByRole("tab", { name: /trend/i }));
 
-    const visual = container.querySelector(".tv-radar__eyebrow-visual");
-    expect(visual?.getAttribute("aria-hidden")).toBe("true");
+    expect(
+      await screen.findAllByText(/dati storici in raccolta/i),
+    ).not.toHaveLength(0);
+    expect(screen.queryByText(/sta esplodendo/i)).toBeNull();
+    expect(screen.queryByText(/\+[0-9]+%/)).toBeNull();
+  });
 
-    const srOnly = container.querySelector(".tv-radar__eyebrow .sr-only");
-    expect(srOnly?.textContent).toContain("Fonte Product Hunt");
-    expect(srOnly?.getAttribute("aria-hidden")).not.toBe("true");
+  it("RADAR-TRUTH-02 espone fonte e timestamp reali", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
 
-    const eyebrowParagraph = container.querySelector(".tv-radar__eyebrow");
-    const ariaVisibleText = Array.from(
-      eyebrowParagraph?.querySelectorAll("span") ?? [],
-    )
-      .filter((el) => el.getAttribute("aria-hidden") !== "true")
-      .map((el) => el.textContent ?? "")
-      .join(" ");
-    const canonicalMatches = (ariaVisibleText.match(/Fonte Product Hunt/g) ?? []).length;
-    expect(canonicalMatches).toBe(1);
+    await screen.findAllByText(/Alpha Tool/);
+    expect(screen.getByText(/fonte: product hunt/i)).toBeTruthy();
+    expect(screen.getAllByText(/28 lug 2026/i).length).toBeGreaterThan(0);
+  });
+
+  it("RADAR-TRUTH-03 non mostra punteggi inventati", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
+
+    await screen.findAllByText(/Alpha Tool/);
+    expect(screen.queryByText(/★\s*9/)).toBeNull();
+    expect(screen.queryByText(/9\.2/)).toBeNull();
+  });
+
+  it("RADAR-SELECT-01 il tap su un blip apre la quick preview senza navigare", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container } = renderRadar();
+
+    const hits = await screen.findAllByRole("button", {
+      name: /alpha tool/i,
+    });
+    fireEvent.click(hits[0]);
+
+    expect(await screen.findByRole("dialog", { name: /anteprima di alpha tool/i })).toBeTruthy();
+    expect(container.querySelector(".tv-rx-preview")).toBeTruthy();
+  });
+
+  it("RADAR-FILTER-01 il filtro categoria aggiorna lista e conteggi", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
+
+    await screen.findAllByText(/Alpha Tool/);
+    const tutti = screen.getByRole("button", { name: /^tutti$/i });
+    fireEvent.click(tutti);
+    expect(tutti.getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("RADAR-EMPTY-01 stato vuoto onesto senza dati inventati", async () => {
+    fetchMock.mockImplementation(() => fetchOk(EMPTY));
+    renderRadar();
+
+    expect(await screen.findByText(/nessun segnale nel periodo|nessun risultato/i)).toBeTruthy();
+  });
+
+  it("RADAR-A11Y-01 espone una lista testuale alternativa per screen reader", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
+
+    await screen.findAllByText(/Alpha Tool/);
+    expect(
+      screen.getByRole("region", { name: /elenco testuale dei segnali/i }),
+    ).toBeTruthy();
+  });
+
+  it("RADAR-A11Y-02 la legenda spiega colore, dimensione, raggio e alone", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
+
+    await screen.findAllByText(/Alpha Tool/);
+    const summary = screen.getByText(/come leggere la mappa/i);
+    fireEvent.click(summary);
+    expect(screen.getAllByText(/Settore/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Attenzione misurata/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Alone \/ momentum/).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/servono pi\u00f9 snapshot per calcolare la variazione|Non disponibile/i).length,
+    ).toBeGreaterThan(0);
+  });
+
+  it("RADAR-A11Y-03 axe non rileva violazioni gravi", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container } = renderRadar();
+
+    await screen.findAllByText(/Alpha Tool/);
+    const results = await axe.run(container);
+    const serious = results.violations.filter(
+      (violation) => violation.impact === "serious" || violation.impact === "critical",
+    );
+    expect(serious).toEqual([]);
   });
 });

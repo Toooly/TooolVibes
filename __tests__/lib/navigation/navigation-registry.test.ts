@@ -34,6 +34,7 @@ const EXPECTED_SURFACE_INVENTORY: Readonly<
   "bottom-nav": [
     ["Home", "/"],
     ["Catalogo", "/archivio"],
+    ["Radar", "/radar"],
     ["Raccolte", "/collections"],
     ["Salvati", "/shortlist"],
   ],
@@ -152,13 +153,33 @@ describe("V1 public navigation registry", () => {
     const primaryIds = navigationRegistry
       .filter((destination) => destination.scope === "primary")
       .map((destination) => destination.id);
-    expect(primaryIds).toEqual(["home", "catalog", "collections", "shortlist"]);
+    expect(primaryIds).toEqual([
+      "home",
+      "catalog",
+      "collections",
+      "shortlist",
+      "radar",
+    ]);
 
-    for (const surface of ["header-v2-desktop", "bottom-nav"] as const) {
-      const ids = getNavItemsForSurface(surface).map((item) => item.id);
-      expect(new Set(ids).size).toBe(ids.length);
-      expect(ids).toEqual(expect.arrayContaining(primaryIds));
-    }
+    // Every primary destination must be reachable from the mobile Bottom Nav.
+    const bottomIds = getNavItemsForSurface("bottom-nav").map((item) => item.id);
+    expect(new Set(bottomIds).size).toBe(bottomIds.length);
+    expect(bottomIds).toEqual(expect.arrayContaining(primaryIds));
+
+    // The desktop header exposes the subset of primary destinations that
+    // declare a `header-v2-desktop` placement (Radar is Bottom Nav + footer).
+    const headerIds = getNavItemsForSurface("header-v2-desktop").map((item) => item.id);
+    expect(new Set(headerIds).size).toBe(headerIds.length);
+    const headerPrimaries = navigationRegistry
+      .filter(
+        (destination) =>
+          destination.scope === "primary" &&
+          destination.placements.some(
+            (placement) => placement.surface === "header-v2-desktop",
+          ),
+      )
+      .map((destination) => destination.id);
+    expect(headerIds).toEqual(expect.arrayContaining(headerPrimaries));
   });
 });
 
