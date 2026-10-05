@@ -16,6 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshCw, Search } from "lucide-react";
 
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
+import { useAccount } from "@/components/account/account-provider";
 import { CatalogoFacetHead } from "@/components/archive/catalogo-facet-head";
 import { RadarLegend } from "@/components/radar/radar-legend";
 import { RadarMap } from "@/components/radar/radar-map";
@@ -48,6 +49,7 @@ import {
 type CatalogHint = { slug: string; name: string; categoryLabel: string };
 
 export function RadarExperience() {
+  const account = useAccount();
   const { state: urlState, setState: setUrlState } = useRadarUrlState();
   const { payload, isLoading, isFetching, refetch } = useProductHuntRadar(urlState.range);
   const catalogRaw = usePublicToolCatalog();
@@ -180,7 +182,14 @@ export function RadarExperience() {
     "Oggi";
 
   return (
-    <div className="tv-rx" data-state={uiModel.state} data-tab={urlState.tab}>
+    <div
+      className="tv-rx"
+      data-state={uiModel.state}
+      data-tab={urlState.tab}
+      data-qa-radar-auth={account.status}
+      data-qa-radar-mode={urlState.tab}
+      data-qa-radar-ready={!isLoading && uiModel.items.length > 0 ? "true" : "false"}
+    >
       <header className="tv-rx__header">
         <p className="tv-rx__eyebrow">Radar</p>
         <h1 className="tv-rx__title">Cosa sta emergendo adesso</h1>

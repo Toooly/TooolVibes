@@ -2,11 +2,23 @@ import { ClipboardCheck } from "lucide-react";
 
 import type { ResolvedNavItem } from "./selectors";
 
+/**
+ * Destinations that only exist for authenticated members.
+ *
+ * FULL Radar is a logged-only product surface: the guest keeps the frozen
+ * production Bottom Nav and must never see a fifth Radar item. Filtering
+ * happens here, inside the existing auth-aware nav layer, so there is still
+ * exactly one canonical nav component and one destination registry.
+ */
+const AUTH_ONLY_NAV_IDS: ReadonlySet<string> = new Set(["radar"]);
+
 export function applyAuthenticatedPrimaryNav(
   items: readonly ResolvedNavItem[],
   authenticated: boolean,
 ): readonly ResolvedNavItem[] {
-  if (!authenticated) return items;
+  if (!authenticated) {
+    return items.filter((item) => !AUTH_ONLY_NAV_IDS.has(item.id));
+  }
 
   return items.map((item) => {
     if (item.id === "home") {

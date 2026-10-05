@@ -6,18 +6,20 @@ import path from "node:path";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { AccountPreviewProvider } from "@/components/account/account-provider";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { NavigationReleaseProvider } from "@/lib/navigation/navigation-release-context";
 import { resolveNavigationRelease } from "@/lib/navigation/release";
 import { useMobileUIStore } from "@/lib/stores/mobile-ui-store";
 
 /* Router mock minimo: la bottom nav legge solo usePathname. */
-const { pathnameState, compareCountState, savedCountState, headerFlagState } =
+const { pathnameState, compareCountState, savedCountState, headerFlagState, accountStatusState } =
   vi.hoisted(() => ({
     pathnameState: { current: "/" as string },
     compareCountState: { current: 0 as number },
     savedCountState: { current: 0 as number },
     headerFlagState: { current: true as boolean },
+    accountStatusState: { current: "authenticated" as "guest" | "authenticated" | "loading" | "unavailable" },
   }));
 
 vi.mock("next/navigation", () => ({
@@ -55,7 +57,17 @@ vi.mock("@/components/layout/header-chrome-release", () => ({
 }));
 
 function renderBottomNav() {
-  return render(<MobileBottomNav />);
+  return render(
+    <AccountPreviewProvider
+      value={
+        { status: accountStatusState.current } as unknown as React.ComponentProps<
+          typeof AccountPreviewProvider
+        >["value"]
+      }
+    >
+      <MobileBottomNav />
+    </AccountPreviewProvider>,
+  );
 }
 
 function getBottomNav() {
@@ -77,7 +89,31 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     cleanup();
   });
 
-  it("renderizza le 5 destinazioni del registry con ordine, label e href canonici", () => {
+  it("GUEST mantiene la nav di produzione congelata a 4 destinazioni (niente Radar)", () => {
+    accountStatusState.current = "guest";
+    renderBottomNav();
+
+    const links = within(getBottomNav()).getAllByRole("link");
+    expect(links).toHaveLength(4);
+    expect(links.map((link) => link.textContent)).toEqual([
+      "Home",
+      "Catalogo",
+      "Raccolte",
+      "Salvati",
+    ]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/",
+      "/archivio",
+      "/collections",
+      "/shortlist",
+    ]);
+    expect(
+      within(getBottomNav()).queryByRole("link", { name: /Radar/ }),
+    ).toBeNull();
+  });
+
+  it("AUTENTICATO espone le 5 destinazioni canoniche con Radar e Decisioni", () => {
+    accountStatusState.current = "authenticated";
     renderBottomNav();
 
     const links = within(getBottomNav()).getAllByRole("link");
@@ -86,35 +122,37 @@ describe("B29 MobileBottomNav — registry canonico", () => {
       "Home",
       "Catalogo",
       "Radar",
-      "Raccolte",
+      "Decisioni",
       "Salvati",
     ]);
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/",
       "/archivio",
       "/radar",
-      "/collections",
-      "/shortlist",
+      "/account?view=decisioni",
+      "/account?view=salvati",
     ]);
   });
 
   it("active route: solo la destinazione corrente ha aria-current=page", () => {
+    accountStatusState.current = "guest";
     pathnameState.current = "/collections";
     renderBottomNav();
 
     const links = within(getBottomNav()).getAllByRole("link");
     expect(
       links.map((link) => link.getAttribute("aria-current") ?? "none"),
-    ).toEqual(["none", "none", "none", "page", "none"]);
+    ).toEqual(["none", "none", "page", "none"]);
   });
 
   it("active route sulla home non attiva le altre destinazioni", () => {
+    accountStatusState.current = "guest";
     renderBottomNav();
 
     const links = within(getBottomNav()).getAllByRole("link");
     expect(
       links.map((link) => link.getAttribute("aria-current") ?? "none"),
-    ).toEqual(["page", "none", "none", "none", "none"]);
+    ).toEqual(["page", "none", "none", "none"]);
   });
 
   it("contract B22 preservato: z-token var(--tv-z-nav) sulla nav", () => {
@@ -149,9 +187,18 @@ describe("B29 MobileBottomNav — registry canonico", () => {
       TOOOLVIBES_NAV_SHORTLIST_ENABLED: "0",
     });
 
+    accountStatusState.current = "authenticated";
     render(
       <NavigationReleaseProvider value={release}>
-        <MobileBottomNav />
+        <AccountPreviewProvider
+          value={
+            { status: accountStatusState.current } as unknown as React.ComponentProps<
+              typeof AccountPreviewProvider
+            >["value"]
+          }
+        >
+          <MobileBottomNav />
+        </AccountPreviewProvider>
       </NavigationReleaseProvider>,
     );
 
@@ -161,7 +208,7 @@ describe("B29 MobileBottomNav — registry canonico", () => {
       "Home",
       "Catalogo",
       "Radar",
-      "Raccolte",
+      "Decisioni",
     ]);
     expect(
       within(getBottomNav()).queryByRole("link", { name: /Salvati/ }),
@@ -175,7 +222,8 @@ describe("B29 MobileBottomNav — registry canonico", () => {
     expect(screen.queryByRole("navigation")).toBeNull();
   });
 
-  it("SHELL-07 account keeps the same 5-destination mobile nav", () => {
+  it("SHELL-07 AUTENTICATO mantiene 5 destinazioni anche su /account", () => {
+    accountStatusState.current = "authenticated";
     pathnameState.current = "/account";
     renderBottomNav();
     const links = within(getBottomNav()).getAllByRole("link");
@@ -183,6 +231,19 @@ describe("B29 MobileBottomNav — registry canonico", () => {
       "/",
       "/archivio",
       "/radar",
+      "/account?view=decisioni",
+      "/account?view=salvati",
+    ]);
+  });
+
+  it("SHELL-07 GUEST mantiene 4 destinazioni anche su /account", () => {
+    accountStatusState.current = "guest";
+    pathnameState.current = "/account";
+    renderBottomNav();
+    const links = within(getBottomNav()).getAllByRole("link");
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/",
+      "/archivio",
       "/collections",
       "/shortlist",
     ]);
@@ -312,16 +373,18 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       /\.mobile-bottom-shell__grid\s*\{([^}]+)\}/,
     )?.[1];
     expect(gridRule).toContain(
-      "grid-template-columns: repeat(5, minmax(0, 1fr))",
+      "grid-template-columns: repeat(var(--tv-nav-count, 4), minmax(0, 1fr))",
     );
   });
 
   it("quinto item leggibile: griglia a 5 colonne con label completa Salvati", () => {
+    accountStatusState.current = "authenticated";
     savedCountState.current = 2;
     renderBottomNav();
 
     const grid = getBottomNav().querySelector(".mobile-bottom-shell__grid");
     expect(grid).toBeTruthy();
+    expect(grid?.getAttribute("data-nav-count")).toBe("5");
     expect(grid?.children).toHaveLength(5);
 
     const links = within(getBottomNav()).getAllByRole("link");
@@ -345,6 +408,7 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       compareCountState.current = 1;
       savedCountState.current = 1;
 
+      accountStatusState.current = "authenticated";
       const { unmount } = renderBottomNav();
       const links = within(getBottomNav()).getAllByRole("link");
       expect(links).toHaveLength(5);
@@ -367,6 +431,7 @@ describe("B37 MobileBottomNav — geometria shell unica (MOB-701)", () => {
       window.innerHeight = height;
       window.dispatchEvent(new Event("resize"));
 
+      accountStatusState.current = "authenticated";
       const { unmount } = renderBottomNav();
       expect(within(getBottomNav()).getAllByRole("link")).toHaveLength(5);
       unmount();

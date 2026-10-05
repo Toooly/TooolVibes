@@ -248,7 +248,13 @@ export function MobileBottomNav() {
           suppressed && "is-suppressed pointer-events-none opacity-0",
         )}
       >
-        <div className="mobile-bottom-shell__grid">
+        <div
+          className="mobile-bottom-shell__grid"
+          data-nav-count={navItems.length}
+          style={{
+            "--tv-nav-count": String(navItems.length),
+          } as import("react").CSSProperties}
+        >
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = isAuthenticatedNavActive(pathname ?? "", search, item.href);

@@ -44,7 +44,10 @@
 
 .mobile-bottom-shell__grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  /* Column count follows the resolved destination list: the guest keeps the
+     frozen 4-item production nav, the authenticated member gets 5 with Radar.
+     Driven by --tv-nav-count from navItems.length. */
+  grid-template-columns: repeat(var(--tv-nav-count, 4), minmax(0, 1fr));
   height: 100%;
 }
 

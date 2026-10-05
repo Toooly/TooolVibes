@@ -36,6 +36,37 @@ describe("authenticated primary nav", () => {
     expect(applyAuthenticatedPrimaryNav(guest, false)).toEqual(guest);
   });
 
+  it("drops the logged-only Radar destination from the guest nav", () => {
+    const withRadar = [
+      ...guest.slice(0, 2),
+      item("radar", "/radar", "Radar"),
+      ...guest.slice(2),
+    ];
+    const next = applyAuthenticatedPrimaryNav(withRadar, false);
+    expect(next.map((entry) => entry.id)).toEqual([
+      "home",
+      "catalog",
+      "collections",
+      "shortlist",
+    ]);
+  });
+
+  it("keeps Radar for the authenticated member at its canonical slot", () => {
+    const withRadar = [
+      ...guest.slice(0, 2),
+      item("radar", "/radar", "Radar"),
+      ...guest.slice(2),
+    ];
+    const next = applyAuthenticatedPrimaryNav(withRadar, true);
+    expect(next.map((entry) => [entry.id, entry.label])).toEqual([
+      ["home", "Home"],
+      ["catalog", "Catalogo"],
+      ["radar", "Radar"],
+      ["decisions", "Decisioni"],
+      ["shortlist", "Salvati"],
+    ]);
+  });
+
   it("maps auth chrome to Home, Salvati, Decisioni", () => {
     const next = applyAuthenticatedPrimaryNav(guest, true);
     expect(next.map((entry) => [entry.id, entry.href, entry.label])).toEqual([
