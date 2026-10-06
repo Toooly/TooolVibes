@@ -20,23 +20,32 @@ import {
 } from "@/lib/discovery/workspace-contract";
 import { reduceWorkspaceState } from "@/lib/discovery/workspace-contract";
 import type { RadarTool } from "@/lib/radar/radar-domain";
+import { deriveRadarTopicCluster } from "@/lib/radar/radar-topic-clusters";
 
 function tool(overrides: Partial<RadarTool> & { id: string; rank: number }): RadarTool {
-  return {
+  const base = {
     name: overrides.id,
     tagline: "",
+    sourceUrl: "https://www.producthunt.com/posts/x",
     productHuntUrl: "https://www.producthunt.com/posts/x",
+    websiteUrl: null,
     thumbnailUrl: null,
     votesCount: 10,
     commentsCount: 1,
     attention: 11,
     launchedAt: null,
     ageHours: null,
-    topics: [],
+    topics: [] as string[],
+    catalogStatus: "external" as const,
     category: null,
     categoryLabel: null,
     catalogSlug: null,
-    ...overrides,
+  };
+  const merged = { ...base, ...overrides };
+  return {
+    ...merged,
+    topicCluster:
+      overrides.topicCluster ?? deriveRadarTopicCluster(merged.topics),
   };
 }
 

@@ -31,6 +31,8 @@ type ProductHuntGraphQlResponse = {
           commentsCount?: number;
           createdAt?: string;
           url?: string;
+          /** Official product website — `Post.website` (PH GraphQL schema). */
+          website?: string;
           thumbnail?: {
             url?: string;
           } | null;
@@ -74,6 +76,7 @@ const PRODUCT_HUNT_QUERY = /* GraphQL */ `
           commentsCount
           createdAt
           url
+          website
           thumbnail {
             url
           }
@@ -410,6 +413,11 @@ function normalizeItems(data: ProductHuntGraphQlResponse): ProductHuntItem[] {
       }
       if (node.slug) item.slug = node.slug;
       if (topics.length > 0) item.topics = topics;
+      // Verified official website only. Absent when the source omits it —
+      // the external CTA then falls back to the source link (never invented).
+      if (typeof node.website === "string" && /^https?:\/\//i.test(node.website.trim())) {
+        item.websiteUrl = node.website.trim();
+      }
       return item;
     })
     .sort((left, right) => right.votesCount - left.votesCount)

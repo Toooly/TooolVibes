@@ -468,6 +468,165 @@
 .tv-rx-map--skeleton .tv-rx-map__rings span:nth-child(2) { inline-size: 72%; block-size: 72%; }
 .tv-rx-map--skeleton .tv-rx-map__rings span:nth-child(3) { inline-size: 96%; block-size: 96%; }
 
+/* ---------- signal model v2: ring labels + selection context ------------- */
+
+/* §11 — subtle time labels on ONE axis. Sized in viewBox units via the SVG
+   `fontSize` attribute (not CSS) so the typography contract is untouched. */
+.tv-rx-map__time-axis {
+  pointer-events: none;
+}
+
+.tv-rx-map__ring-label {
+  fill: var(--tv-color-ink-500, #8e87b8);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* §18 — selection context. Selected stays full prominence, same cluster stays
+   readable, other clusters step back modestly. Never hidden. Opacity/transform
+   only — no new paint-heavy motion. */
+.tv-rx-blip {
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.tv-rx-blip[data-context="other-cluster"] {
+  opacity: 0.72;
+}
+
+.tv-rx-blip[data-context="same-cluster"] {
+  opacity: 1;
+}
+
+.tv-rx-blip[data-context="selected"] {
+  opacity: 1;
+}
+
+/* §10 — a signal with no `createdAt` is explicitly marked, never invented. */
+.tv-rx-blip[data-age-unknown="true"] .tv-rx-blip__dot {
+  stroke: var(--tv-color-ink-400, #a49dc8);
+  stroke-width: 0.35;
+  stroke-dasharray: 1.2 1.1;
+}
+
+/* ---------- signal model v2: source transparency + CTA matrix ------------ */
+
+.tv-rx-preview__badge {
+  margin: 0.5rem 0 0;
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0.18rem 0.55rem;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  color: var(--tv-color-ink-400, #a49dc8);
+  background: transparent;
+}
+
+/* §4 — an external signal is a real market signal, just not in Catalog yet. */
+.tv-rx-preview__badge[data-catalog-status="external"] {
+  color: var(--tv-color-cyan-500, #22d3ee);
+  border-color: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 38%, transparent);
+}
+
+.tv-rx-preview__badge[data-catalog-status="linked"] {
+  color: var(--tv-color-gold-500, #f4c23e);
+  border-color: color-mix(in srgb, var(--tv-color-gold-500, #f4c23e) 34%, transparent);
+}
+
+/* §8 — source transparency: area / source / topics. */
+.tv-rx-preview__source-list {
+  margin: 0.55rem 0 0;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.tv-rx-preview__source-list > div {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.tv-rx-preview__source-list dt {
+  color: var(--tv-color-ink-500, #8e87b8);
+  min-inline-size: 3.6rem;
+  flex: none;
+}
+
+.tv-rx-preview__source-list dd {
+  margin: 0;
+  color: var(--tv-color-ink-400, #a49dc8);
+}
+
+/* §3/§4 — CTA matrix. Primary is the one real destination for the signal. */
+.tv-rx-preview__primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-block-size: 44px;
+  padding: 0 1rem;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  border: 1px solid var(--tv-color-violet-500, #6a3cff);
+  background: var(--tv-color-violet-500, #6a3cff);
+  color: var(--tv-color-ink-100, #f5f3ff);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+/* §21 — Watch is the internal Radar action and works for BOTH signal types. */
+.tv-rx-preview__watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-block-size: 44px;
+  padding: 0 0.85rem;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  border: 1px solid color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 42%, transparent);
+  background: transparent;
+  color: var(--tv-color-cyan-500, #22d3ee);
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+/* WATCH = cyan/violet telemetry. It is never the gold Save state. */
+.tv-rx-preview__watch[data-watched="true"] {
+  background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 18%, transparent);
+  border-color: var(--tv-color-cyan-500, #22d3ee);
+}
+
+.tv-rx-row__watch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 32px;
+  block-size: 32px;
+  min-block-size: 32px;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  border: 1px solid color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 38%, transparent);
+  background: transparent;
+  color: var(--tv-color-cyan-500, #22d3ee);
+  cursor: pointer;
+  flex: none;
+}
+
+.tv-rx-row__watch[data-watched="true"] {
+  background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 20%, transparent);
+}
+
+.tv-rx-row__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  min-block-size: 32px;
+  padding: 0 0.6rem;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  color: var(--tv-color-ink-100, #f5f3ff);
+  text-decoration: none;
+  font-size: 0.75rem;
+}
+
 /* ---------- legend ------------------------------------------------------ */
 
 .tv-rx-legend {

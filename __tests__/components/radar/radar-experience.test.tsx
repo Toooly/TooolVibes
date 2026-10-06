@@ -249,18 +249,23 @@ describe("RadarExperience", () => {
     ).toBeTruthy();
   });
 
-  it("RADAR-A11Y-02 la legenda spiega colore, dimensione, raggio e alone", async () => {
+  it("RADAR-A11Y-02 la legenda spiega in modo conciso le semantica della mappa", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE));
     renderRadar();
 
     await screen.findAllByText(/Alpha Tool/);
     const summary = screen.getByText(/come leggere la mappa/i);
     fireEvent.click(summary);
-    expect(screen.getAllByText(/Settore/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Attenzione misurata/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Alone \/ momentum/).length).toBeGreaterThan(0);
+    // §17 — concise legend: distance, colour, size, and an honest future-only
+    // movement row. Nothing else is presented as a signal.
+    expect(screen.getAllByText(/Distanza dal centro/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Quando è emerso/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Colore/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Area Radar/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Attenzione relativa/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Movimento/i).length).toBeGreaterThan(0);
     expect(
-      screen.getAllByText(/servono pi\u00f9 snapshot per calcolare la variazione|Non disponibile/i).length,
+      screen.getAllByText(/Disponibile in futuro/i).length,
     ).toBeGreaterThan(0);
   });
 

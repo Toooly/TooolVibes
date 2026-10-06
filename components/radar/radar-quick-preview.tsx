@@ -1,15 +1,24 @@
 "use client";
 
 /**
- * Tool quick preview (spec §10-11, §39).
+ * Tool quick preview (spec §2-§4, §8, §16).
  *
  * Premium compact panel in Radar visual language. Shows ONLY canonical data —
- * no invented score. Reuses the canonical Save (gold) and Compare (cyan)
- * systems. Tool Detail is the canonical `/toools/[slug]` — never a second page.
+ * no invented score.
+ *
+ * CTA MATRIX (spec §26):
+ *   CATALOG-LINKED  → Apri scheda (`/toools/[slug]` ONLY) + Save + Compare + Watch
+ *   EXTERNAL        → NO catalog navigation, NO Save, NO Compare.
+ *                     Badge "Segnale esterno", primary VISITA IL SITO (only when
+ *                     the source provides a verified website) else APRI LA FONTE,
+ *                     secondary PRODUCT HUNT, internal SEGUI NEL RADAR (Watch).
+ *
+ * Save/Compare stay Catalog concepts. External signals use Watch, so canonical
+ * workspace semantics are never corrupted.
  */
 
 import Link from "next/link";
-import { ArrowUpRight, MessageCircle, X } from "lucide-react";
+import { ArrowUpRight, Eye, X } from "lucide-react";
 
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
@@ -21,19 +30,31 @@ export type RadarQuickPreviewProps = {
   onClose: () => void;
   /** True while a historical delta would be needed (never fabricated). */
   historyAvailable: boolean;
+  /** Watch state for this signal (the internal Radar action). */
+  watched: boolean;
+  onToggleWatch: () => void;
 };
 
 export function RadarQuickPreview({
   tool,
   onClose,
   historyAvailable,
+  watched,
+  onToggleWatch,
 }: RadarQuickPreviewProps) {
+  const isExternal = tool.catalogStatus === "external";
+  const externalLinkProps = {
+    target: "_blank" as const,
+    rel: "noopener noreferrer",
+  };
+
   return (
     <aside
       className="tv-rx-preview"
       role="dialog"
       aria-modal="false"
       aria-label={`Anteprima di ${tool.name}`}
+      data-catalog-status={tool.catalogStatus}
     >
       <header className="tv-rx-preview__header">
         {tool.thumbnailUrl ? (
@@ -52,9 +73,7 @@ export function RadarQuickPreview({
         )}
         <div className="tv-rx-preview__title-block">
           <h3 className="tv-rx-preview__title">{tool.name}</h3>
-          <p className="tv-rx-preview__category">
-            {tool.category?.label ?? "Altri segnali"}
-          </p>
+          <p className="tv-rx-preview__category">{tool.topicCluster.label}</p>
         </div>
         <button
           type="button"
@@ -66,26 +85,31 @@ export function RadarQuickPreview({
         </button>
       </header>
 
+      <p className="tv-rx-preview__badge" data-catalog-status={tool.catalogStatus}>
+        {isExternal ? "Segnale esterno · non ancora nel Catalogo" : "Nel Catalogo TooolVibes"}
+      </p>
+
       <p className="tv-rx-preview__tagline">{tool.tagline}</p>
 
+      {/* §16 — explainable position: why this signal sits where it sits. */}
       <dl className="tv-rx-preview__metrics">
         <div>
-          <dt>Posizione</dt>
-          <dd>#{tool.rank} nel periodo</dd>
+          <dt>Area</dt>
+          <dd>{tool.topicCluster.label}</dd>
         </div>
         <div>
-          <dt>Voti</dt>
-          <dd>{tool.votesCount}</dd>
+          <dt>Emerso</dt>
+          <dd>{formatAge(tool.ageHours)}</dd>
         </div>
         <div>
-          <dt>Commenti</dt>
+          <dt>Attenzione</dt>
           <dd>
-            <MessageCircle size={11} aria-hidden="true" /> {tool.commentsCount}
+            {tool.votesCount} voti · {tool.commentsCount} commenti
           </dd>
         </div>
         <div>
-          <dt>Lancio</dt>
-          <dd>{formatAge(tool.ageHours)}</dd>
+          <dt>Posizione</dt>
+          <dd>#{tool.rank} nel periodo</dd>
         </div>
       </dl>
 
@@ -95,52 +119,82 @@ export function RadarQuickPreview({
           : "Dati storici in raccolta: variazione e trend non ancora disponibili."}
       </p>
 
-      {tool.topics.length > 0 ? (
-        <ul className="tv-rx-preview__tags" aria-label="Topic della fonte">
-          {tool.topics.slice(0, 4).map((topic) => (
-            <li key={topic}>{topic}</li>
-          ))}
-        </ul>
-      ) : null}
+      {/* §8 — source transparency: the derived classification is explainable. */}
+      <dl className="tv-rx-preview__source-list">
+        <div>
+          <dt>Fonte</dt>
+          <dd>Product Hunt</dd>
+        </div>
+        <div>
+          <dt>Topics</dt>
+          <dd>{tool.topics.length > 0 ? tool.topics.slice(0, 4).join(" · ") : "—"}</dd>
+        </div>
+      </dl>
 
       <div className="tv-rx-preview__actions">
-        {tool.catalogSlug ? (
+        {isExternal ? (
           <>
+            <a
+              className="tv-rx-preview__primary"
+              href={tool.websiteUrl ?? tool.sourceUrl}
+              {...externalLinkProps}
+            >
+              {tool.websiteUrl ? "Visita il sito" : "Apri la fonte"}
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
+            <button
+              type="button"
+              className="tv-rx-preview__watch"
+              data-watched={watched ? "true" : "false"}
+              aria-pressed={watched}
+              onClick={onToggleWatch}
+            >
+              <Eye size={14} aria-hidden="true" />
+              {watched ? "Seguito" : "Segui nel Radar"}
+            </button>
+            {tool.websiteUrl ? (
+              <a className="tv-rx-preview__source" href={tool.sourceUrl} {...externalLinkProps}>
+                Product Hunt
+                <ArrowUpRight size={12} aria-hidden="true" />
+              </a>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <Link
+              className="tv-rx-preview__primary"
+              href={`/toools/${tool.catalogSlug}`}
+            >
+              Apri scheda
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </Link>
             <ShortlistToggle
-              slug={tool.catalogSlug}
+              slug={tool.catalogSlug ?? tool.id}
               mode="icon"
               toolName={tool.name}
             />
             <CompareToggle
-              slug={tool.catalogSlug}
+              slug={tool.catalogSlug ?? tool.id}
               mode="icon"
               toolName={tool.name}
             />
-            <Link
-              className="tv-rx-preview__detail"
-              href={`/toools/${tool.catalogSlug}`}
+            <button
+              type="button"
+              className="tv-rx-preview__watch"
+              data-watched={watched ? "true" : "false"}
+              aria-pressed={watched}
+              onClick={onToggleWatch}
             >
-              Apri dettaglio
-              <ArrowUpRight size={14} aria-hidden="true" />
-            </Link>
+              <Eye size={14} aria-hidden="true" />
+              {watched ? "Seguito" : "Segui nel Radar"}
+            </button>
+            <a className="tv-rx-preview__source" href={tool.sourceUrl} {...externalLinkProps}>
+              Product Hunt
+              <ArrowUpRight size={12} aria-hidden="true" />
+            </a>
           </>
-        ) : (
-          <Link className="tv-rx-preview__detail" href="/archivio">
-            Vedi nel Catalogo
-            <ArrowUpRight size={14} aria-hidden="true" />
-          </Link>
         )}
       </div>
-
-      <a
-        className="tv-rx-preview__source"
-        href={tool.productHuntUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Fonte: Product Hunt
-        <ArrowUpRight size={12} aria-hidden="true" />
-      </a>
     </aside>
   );
 }

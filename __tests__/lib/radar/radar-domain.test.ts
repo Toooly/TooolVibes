@@ -10,7 +10,6 @@ import { describe, expect, it } from "vitest";
 
 import {
   RADAR_VISUAL_SEMANTICS,
-  UNCATEGORIZED_CATEGORY_ID,
   buildRadarView,
   radarCategoryFromLabel,
 } from "@/lib/radar/radar-domain";
@@ -86,15 +85,17 @@ describe("radar data truth", () => {
     expect(view.snapshot.sourceLabel).toBe("Product Hunt");
   });
 
-  it("RADAR-DATA-03 i conteggi categoria corrispondono al dataset", () => {
+  it("RADAR-DATA-03 i conteggi corrispondono al dataset (catalogo e aree Radar)", () => {
+    // Catalog categories cover CATALOG-LINKED signals only.
     const videoAi = view.categories.find((category) => category.id === "video-ai");
     expect(videoAi?.count).toBe(2);
-    const uncategorized = view.categories.find(
-      (category) => category.id === UNCATEGORIZED_CATEGORY_ID,
-    );
-    expect(uncategorized?.count).toBe(1);
-    const total = view.categories.reduce((sum, category) => sum + category.count, 0);
-    expect(total).toBe(view.tools.length);
+    const catalogTotal = view.categories.reduce((sum, category) => sum + category.count, 0);
+    expect(catalogTotal).toBe(view.catalogLinkedCount);
+
+    // Radar areas cover EVERY signal — external ones no longer collapse.
+    const clusterTotal = view.clusters.reduce((sum, cluster) => sum + cluster.count, 0);
+    expect(clusterTotal).toBe(view.tools.length);
+    expect(view.catalogLinkedCount + view.externalCount).toBe(view.tools.length);
   });
 
   it("RADAR-DATA-04 il tool selezionato corrisponde a un tool reale del Radar", () => {
@@ -110,11 +111,26 @@ describe("radar data truth", () => {
     expect(alpha.attention).toBe(340);
   });
 
-  it("RADAR-DATA-06 nessuna categoria inventata per i tool fuori catalogo", () => {
+  it("RADAR-DATA-06 nessuna categoria di catalogo inventata per i segnali esterni", () => {
     const gamma = view.tools.find((entry) => entry.id === "gamma")!;
     expect(gamma.catalogSlug).toBeNull();
     expect(gamma.categoryLabel).toBeNull();
-    expect(gamma.category?.id).toBe(UNCATEGORIZED_CATEGORY_ID);
+    expect(gamma.category).toBeNull();
+    // The signal is first-class EXTERNAL and still gets a REAL Radar area
+    // derived from its source topics — never a fabricated Catalog entity.
+    expect(gamma.catalogStatus).toBe("external");
+    expect(gamma.topicCluster.id).toBeTruthy();
+  });
+
+  it("RADAR-DATA-06b i segnali collegati al catalogo sono marcati linked", () => {
+    const linked = view.tools.filter((entry) => entry.catalogStatus === "linked");
+    for (const entry of linked) {
+      expect(entry.catalogSlug).toBeTruthy();
+    }
+    const external = view.tools.filter((entry) => entry.catalogStatus === "external");
+    for (const entry of external) {
+      expect(entry.catalogSlug).toBeNull();
+    }
   });
 
   it("RADAR-DATA-07 le etichette fonte sono accurate", () => {

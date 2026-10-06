@@ -37,7 +37,6 @@ import {
   type RadarTool,
   type RadarView,
 } from "@/lib/radar/radar-domain";
-import { layoutRadarPoints } from "@/lib/radar/radar-geometry";
 import {
   RADAR_TABS,
   RADAR_TAB_LABEL,
@@ -89,8 +88,6 @@ export function RadarExperience() {
     () => buildRadarView({ ...snapshotMeta, items: [...uiModel.items] }, catalog),
     [snapshotMeta, uiModel.items, catalog],
   );
-
-  const layout = useMemo(() => layoutRadarPoints(view.tools), [view.tools]);
 
   const radarWatchSlugs = useToolWorkspaceStore((s) => s.radarWatchSlugs);
   const radarWatchCategories = useToolWorkspaceStore((s) => s.radarWatchCategories);
@@ -151,7 +148,7 @@ export function RadarExperience() {
     return {
       total: view.tools.length,
       newInWindow: newCount,
-      categories: view.categories.length,
+      categories: view.clusters.length,
     };
   }, [view]);
 
@@ -170,6 +167,18 @@ export function RadarExperience() {
     setHighlightedId(null);
   }, [setUrlState]);
 
+  // §21 — Watch is the internal Radar action and works for BOTH signal types.
+  // The key is the canonical Catalog slug when the signal is linked, otherwise
+  // the source item id. No fake Catalog Tool is ever created.
+  const watchKeys = useMemo(() => new Set(radarWatchSlugs), [radarWatchSlugs]);
+
+  const handleToggleWatch = useCallback(
+    (tool: RadarTool) => {
+      toggleRadarWatchSlug(watchKeyFor(tool));
+    },
+    [toggleRadarWatchSlug],
+  );
+
   // Keyboard: Escape closes the quick preview.
   useEffect(() => {
     if (!urlState.tool) return;
@@ -180,7 +189,6 @@ export function RadarExperience() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [urlState.tool, handleClosePreview]);
 
-  const radiusBasis = layout.radiusBasis;
   const rangeLabel =
     RADAR_RANGE_OPTIONS.find((option) => option.key === urlState.range)?.label ??
     "Oggi";
@@ -270,7 +278,8 @@ export function RadarExperience() {
               ) : (
                 <RadarMap
                   tools={filteredTools}
-                  categories={view.categories}
+                  clusters={view.clusters}
+                  range={urlState.range}
                   selectedId={urlState.tool}
                   highlightedId={highlightedId}
                   onSelect={handleSelect}
@@ -279,16 +288,14 @@ export function RadarExperience() {
 
               {/* §8/§16 — one contextual filter system, below the map. */}
               <RadarToolbar
-                categories={view.categories}
+                categories={view.clusters}
                 activeCategory={urlState.category}
                 onCategory={(category) => setUrlState({ category })}
                 query={urlState.query}
                 onQuery={(q) => setUrlState({ query: q })}
               />
 
-              {!isLoading && filteredTools.length > 0 ? (
-                <RadarLegend radiusBasis={radiusBasis} />
-              ) : null}
+              {!isLoading && filteredTools.length > 0 ? <RadarLegend /> : null}
 
               {/* §12 — compact metrics rail, never competing with the map. */}
               <RadarSummaryMetrics
@@ -319,6 +326,8 @@ export function RadarExperience() {
                         index={index}
                         selected={urlState.tool === tool.id}
                         onSelect={handleSelect}
+                        watched={watchKeys.has(watchKeyFor(tool))}
+                        onToggleWatch={handleToggleWatch}
                       />
                     ))}
                   </ol>
@@ -334,6 +343,8 @@ export function RadarExperience() {
                 <RadarQuickPreview
                   tool={selectedTool}
                   historyAvailable={view.snapshot.historyAvailable}
+                  watched={watchKeys.has(watchKeyFor(selectedTool))}
+                  onToggleWatch={() => handleToggleWatch(selectedTool)}
                   onClose={handleClosePreview}
                 />
               ) : (
@@ -394,7 +405,7 @@ export function RadarExperience() {
           <RadarWatchPanel
             tools={view.tools}
             watch={watch}
-            categories={view.categories}
+            categories={view.clusters}
             onToggleTool={toggleRadarWatchSlug}
             onToggleCategory={toggleRadarWatchCategory}
             onClear={clearRadarWatch}
@@ -526,10 +537,10 @@ function RadarRailOverview({
 
       <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-cats">
         <h3 id="tv-rx-rail-cats" className="tv-rx-rail__title">
-          Categorie attive
+          Aree Radar attive
         </h3>
         <ul className="tv-rx-rail__cats">
-          {view.categories.map((category) => (
+          {view.clusters.map((category) => (
             <li key={category.id}>
               <span
                 className="tv-rx-rail__swatch"
@@ -544,6 +555,15 @@ function RadarRailOverview({
       </section>
     </div>
   );
+}
+
+/**
+ * Watch key for any signal type: the canonical Catalog slug when the signal is
+ * catalog-linked, otherwise the real source item id. Never invents a Catalog
+ * entity for an external signal (spec §21).
+ */
+function watchKeyFor(tool: RadarTool): string {
+  return tool.catalogSlug ?? tool.id;
 }
 
 function RadarToolbar({
@@ -622,7 +642,7 @@ function RadarSummaryMetrics({
         <dd>{newInWindow}</dd>
       </div>
       <div>
-        <dt>Categorie attive</dt>
+        <dt>Aree attive</dt>
         <dd>{categories}</dd>
       </div>
     </dl>

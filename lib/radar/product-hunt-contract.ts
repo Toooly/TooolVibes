@@ -19,6 +19,11 @@ export type ProductHuntItem = {
   productHuntUrl: string;
   thumbnailUrl?: string;
   /**
+   * Verified official product website when the source provides one
+   * (Product Hunt `Post.website`). `null`/absent = unavailable.
+   */
+  websiteUrl?: string | null;
+  /**
    * ISO launch timestamp from the source (`createdAt`). Optional and additive:
    * older fixtures and cached payloads remain valid without it. When absent the
    * Radar NEVER infers recency from anything else.

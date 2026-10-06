@@ -2,61 +2,186 @@
  * Deterministic radial layout for the Radar map.
  *
  * SEMANTICS (never decorative — see `RADAR_VISUAL_SEMANTICS`):
- *   angle  → category sector (equal sectors over sorted category ids;
- *            uncategorized tools share the "Altri segnali" sector)
- *   radius → recency when `launchedAt` is known (newest → center),
- *            otherwise rank (best rank → center)
- *   size   → attention (votes + comments), clamped
+ *   angle  → RadarTopicCluster sector. Every active cluster owns one angular
+ *            sector; tools of the same cluster share it. Within a sector tools
+ *            are spread by a deterministic index offset so they do not stack.
+ *   radius → AGE WITHIN THE SELECTED RANGE. Center = now / newest, outer edge
+ *            = oldest edge of the range. Items with no `createdAt` are placed
+ *            on an explicit unknown-age band at the outer edge — we never
+ *            invent an age.
+ *   size   → relative attention (votes + comments) with PERCEPTUAL sqrt
+ *            scaling, so area grows with attention instead of radius.
+ *   colour → RadarTopicCluster (consumed by the map, not by this module).
+ *   halo   → none. There is no history yet.
  *
- * DETERMINISM: same input → same output. The only non-semantic term is
- * `collisionJitter`, a deterministic function of (id, index) with fixed
- * amplitude, used solely to reduce overlap. It is documented as
- * non-semantic and disabled entirely when `jitter: false`.
+ * DETERMINISM: same input → same output. The only non-semantic term is the
+ * collision resolution, which moves points TANGENTIALLY only (radius is
+ * preserved exactly) and never exceeds `maxTangentialDeg`. Documented as
+ * non-semantic.
  *
  * All coordinates live in a normalized viewBox space `0..100` with the
  * instrument center at (50, 50). Nothing is ever placed outside the
  * instrument radius.
  */
 
-import type { RadarTool } from "@/lib/radar/radar-domain";
+import type { ProductHuntRange } from "@/lib/radar/product-hunt-contract";
 
 export type RadarPoint = {
   id: string;
-  /** Degrees, 0 = up (12 o'clock), clockwise. */
+  /** Degrees, 0 = up (12 o'clock), clockwise. Post-collision. */
   angleDeg: number;
-  /** 0 = center, 1 = outer ring. */
+  /** 0 = center (newest), 1 = outer edge (oldest). Never changed by collision. */
   radiusRatio: number;
   /** viewBox X in 0..100. */
   x: number;
   /** viewBox Y in 0..100. */
   y: number;
-  /** Blip radius in viewBox units (semantic: attention). */
+  /** Blip radius in viewBox units (semantic: relative attention). */
   size: number;
+  /** RadarTopicCluster id. */
   category: string | null;
+  clusterId: string;
+  rank: number;
+  /** False when the source gave no `createdAt` — rendered on the unknown band. */
+  ageKnown: boolean;
+  /** Hours old, when known. */
+  ageHours: number | null;
+  /** Pre-collision theoretical angle (evidence for `SEMANTICS.json`). */
+  semanticAngleDeg: number;
+  /** Deterministic tangential displacement applied by collision resolution. */
+  collisionOffsetDeg: number;
+};
+
+export type RadarLayoutItem = {
+  id: string;
+  /** Preferred: explicit RadarTopicCluster id. */
+  clusterId?: string | null;
+  /** Accepted: the normalized Radar tool carries the cluster here. */
+  topicCluster?: { id: string } | null;
+  /** Accepted for legacy shapes. */
+  category?: { id: string } | null;
+  /** Real attention: votes + comments. */
+  attention: number;
+  /** Hours since launch; `null` when the source omits `createdAt`. */
+  ageHours: number | null;
   rank: number;
 };
+
+/** Resolves the cluster id from any accepted shape. Never invents one. */
+export function radarLayoutClusterId(item: RadarLayoutItem): string {
+  return (
+    item.clusterId ??
+    item.topicCluster?.id ??
+    item.category?.id ??
+    "other"
+  );
+}
 
 export type RadarLayoutOptions = {
   /** Outer radius in viewBox units. Default 42 (leaves label margin inside 0..100). */
   outerRadius?: number;
-  /** Inner radius ratio floor so the core logo is never covered. Default 0.22. */
+  /** Inner radius ratio floor so the core is never covered. Default 0.12. */
   innerRadiusRatio?: number;
-  /** Enable deterministic non-semantic collision jitter. Default true. */
-  jitter?: boolean;
+  /** Range length in hours, used to map age → radius. Default 24. */
+  rangeHours?: number;
+  /** Strict maximum tangential collision displacement, degrees. Default 14. */
+  maxTangentialDeg?: number;
+  /** Disable collision resolution entirely (tests). */
+  resolveCollisions?: boolean;
+};
+
+export type RadarLayoutResult = {
+  points: readonly RadarPoint[];
+  /** Radius always encodes age within the selected range. */
+  radiusBasis: "age";
+  /** True when at least one signal has no `createdAt`. */
+  hasUnknownAge: boolean;
+  /** Active cluster ids in declared sector order. */
+  clusterOrder: readonly string[];
+  sectorCount: number;
 };
 
 export const RADAR_VIEWBOX_SIZE = 100;
 export const RADAR_CENTER = 50;
 const DEFAULT_OUTER_RADIUS = 42;
-const DEFAULT_INNER_RADIUS_RATIO = 0.22;
-const MIN_BLIP_RADIUS = 1.6;
-const MAX_BLIP_RADIUS = 4.8;
-/** Non-semantic collision jitter amplitude in viewBox units. */
-const JITTER_AMPLITUDE = 1.1;
+const DEFAULT_INNER_RADIUS_RATIO = 0.12;
+const DEFAULT_RANGE_HOURS = 24;
+const DEFAULT_MAX_TANGENTIAL_DEG = 14;
+const COLLISION_ITERATIONS = 4;
+
+/**
+ * Perceptual attention scaling (documented formula, spec §12):
+ *
+ *     t        = sqrt(attention) / sqrt(maxAttentionInDataset)
+ *     visualR  = MIN + t * (MAX - MIN)
+ *
+ * Taking the square root makes the blip AREA (not its radius) grow roughly in
+ * proportion to attention, which is how humans compare magnitudes. Linear
+ * radius scaling makes a 1800-vote tool look only ~2x a 450-vote one; sqrt
+ * scaling makes the difference legible without letting one item dominate.
+ * Displayed vote/comment numbers always remain the real values.
+ */
+export const MIN_BLIP_RADIUS = 1.5;
+export const MAX_BLIP_RADIUS = 5.2;
+
+export function visualRadiusFromAttention(
+  attention: number,
+  maxAttention: number,
+): number {
+  const safeMax = Math.max(maxAttention, 1);
+  const ratio =
+    Math.sqrt(Math.max(0, attention)) / Math.sqrt(safeMax);
+  return MIN_BLIP_RADIUS + ratio * (MAX_BLIP_RADIUS - MIN_BLIP_RADIUS);
+}
+
+/**
+ * Real time boundaries for the ring progression, expressed as a fraction of
+ * the selected range. Labels are the real elapsed time at that ring.
+ * Center ≈ now, outer ring = the oldest edge of the range (spec §10).
+ */
+export const RADAR_TIME_RINGS: Record<
+  ProductHuntRange,
+  readonly { ratio: number; label: string }[]
+> = {
+  day: [
+    { ratio: 0.25, label: "6h" },
+    { ratio: 0.5, label: "12h" },
+    { ratio: 0.75, label: "18h" },
+    { ratio: 1, label: "24h" },
+  ],
+  week: [
+    { ratio: 2 / 7, label: "2g" },
+    { ratio: 4 / 7, label: "4g" },
+    { ratio: 6 / 7, label: "6g" },
+    { ratio: 1, label: "7g" },
+  ],
+  month: [
+    { ratio: 7 / 30, label: "7g" },
+    { ratio: 14 / 30, label: "14g" },
+    { ratio: 21 / 30, label: "21g" },
+    { ratio: 1, label: "30g" },
+  ],
+};
+
+export const RADAR_RANGE_HOURS: Record<ProductHuntRange, number> = {
+  day: 24,
+  week: 168,
+  month: 720,
+};
+
+/** Label for the instrument center ("now"). */
+export const RADAR_RING_CENTER_LABEL = "ORA";
+
+export function radarRingLabels(
+  range: ProductHuntRange,
+): readonly { ratio: number; label: string }[] {
+  return RADAR_TIME_RINGS[range] ?? RADAR_TIME_RINGS.day;
+}
 
 /**
  * Stable 32-bit hash (FNV-1a). Deterministic across runs and platforms —
- * used only for non-semantic jitter, never for meaning.
+ * used only for the direction of non-semantic collision nudges, never for
+ * meaning.
  */
 export function stableHash(value: string): number {
   let hash = 0x811c9dc5;
@@ -67,143 +192,230 @@ export function stableHash(value: string): number {
   return hash >>> 0;
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}
-
 /**
- * Radius ratio: 1 = newest/highest-rank (center) … 0 = oldest/lowest-rank.
- * Documented as semantic. When `launchedAt` is missing for every tool the
- * layout falls back to rank and reports it via `radiusBasis`.
+ * Age → radius ratio. Center = newest, outer edge = oldest.
+ * Unknown age maps to the outer band and is reported separately.
  */
-export function resolveRadiusRatio(
-  tool: RadarTool,
-  basis: "recency" | "rank",
-  span: { min: number; max: number },
+export function resolveAgeRadiusRatio(
+  ageHours: number | null,
+  rangeHours: number,
+  innerRadiusRatio: number,
 ): number {
-  const value =
-    basis === "recency" ? (tool.ageHours ?? Number.POSITIVE_INFINITY) : tool.rank;
-  if (!Number.isFinite(value)) return 0;
-  if (span.max <= span.min) return 1;
-  // Lower value (newer / better rank) → higher ratio (closer to center).
-  const normalized = (span.max - value) / (span.max - span.min);
-  return clamp(normalized, 0, 1);
+  if (ageHours === null || !Number.isFinite(ageHours)) return 1;
+  const span = Math.max(rangeHours, 1);
+  const t = Math.min(1, Math.max(0, ageHours / span));
+  return innerRadiusRatio + (1 - innerRadiusRatio) * t;
 }
 
-function blipRadius(attention: number, maxAttention: number): number {
-  if (maxAttention <= 0) return MIN_BLIP_RADIUS;
-  const ratio = clamp(attention / maxAttention, 0, 1);
-  return MIN_BLIP_RADIUS + ratio * (MAX_BLIP_RADIUS - MIN_BLIP_RADIUS);
+/** Back-compatible helper used by older call sites/tests. */
+export function resolveRadiusRatio(
+  ageHours: number | null,
+  rank: number,
+  itemCount: number,
+  options: { rangeHours?: number; innerRadiusRatio?: number } = {},
+): number {
+  const rangeHours = options.rangeHours ?? DEFAULT_RANGE_HOURS;
+  const innerRadiusRatio = options.innerRadiusRatio ?? DEFAULT_INNER_RADIUS_RATIO;
+  if (ageHours !== null && Number.isFinite(ageHours)) {
+    return resolveAgeRadiusRatio(ageHours, rangeHours, innerRadiusRatio);
+  }
+  // Unknown age: explicit outer band, ordered by rank so it is stable.
+  const safeCount = Math.max(itemCount, 1);
+  const t = Math.min(1, Math.max(0, (rank - 1) / safeCount));
+  return 0.96 + 0.04 * t;
+}
+
+function normalizeAngle(degrees: number): number {
+  const wrapped = degrees % 360;
+  return wrapped < 0 ? wrapped + 360 : wrapped;
+}
+
+function shortestAngleDelta(from: number, to: number): number {
+  let delta = normalizeAngle(to) - normalizeAngle(from);
+  if (delta > 180) delta -= 360;
+  if (delta < -180) delta += 360;
+  return delta;
 }
 
 /**
- * Lays out Radar points. Pure: identical inputs produce identical output.
+ * Deterministic bounded collision resolution.
+ *
+ * Points may only move TANGENTIALLY (rotation about the center), which
+ * preserves `radiusRatio` exactly — the age meaning is never destroyed.
+ * Total displacement per point is capped at `maxTangentialDeg`.
  */
+function resolveCollisions(
+  points: RadarPoint[],
+  outerRadius: number,
+  maxTangentialDeg: number,
+): void {
+  const offsets = new Map<string, number>(points.map((point) => [point.id, 0]));
+
+  const positionOf = (point: RadarPoint, offsetDeg: number) => {
+    const angle = ((point.semanticAngleDeg + offsetDeg - 90) * Math.PI) / 180;
+    const distance = outerRadius * point.radiusRatio;
+    return {
+      x: RADAR_CENTER + distance * Math.cos(angle),
+      y: RADAR_CENTER + distance * Math.sin(angle),
+    };
+  };
+
+  for (let iteration = 0; iteration < COLLISION_ITERATIONS; iteration += 1) {
+    let moved = false;
+    for (let i = 0; i < points.length; i += 1) {
+      for (let j = i + 1; j < points.length; j += 1) {
+        const a = points[i];
+        const b = points[j];
+        const offsetA = offsets.get(a.id) ?? 0;
+        const offsetB = offsets.get(b.id) ?? 0;
+        const pa = positionOf(a, offsetA);
+        const pb = positionOf(b, offsetB);
+        const dx = pa.x - pb.x;
+        const dy = pa.y - pb.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const minSeparation = a.size + b.size + 1.1;
+        if (distance >= minSeparation) continue;
+
+        // Nudge both apart along the tangent. Direction is derived from the
+        // stable id hash so the same dataset always settles the same way.
+        const signA = stableHash(a.id) % 2 === 0 ? 1 : -1;
+        const step = Math.min(3, (minSeparation - distance) * 0.9);
+
+        const nextA = offsetA + signA * step;
+        const nextB = offsetB - signA * step;
+        if (Math.abs(nextA) <= maxTangentialDeg) {
+          offsets.set(a.id, nextA);
+          moved = true;
+        }
+        if (Math.abs(nextB) <= maxTangentialDeg) {
+          offsets.set(b.id, nextB);
+          moved = true;
+        }
+      }
+    }
+    if (!moved) break;
+  }
+
+  for (const point of points) {
+    const offset = offsets.get(point.id) ?? 0;
+    point.collisionOffsetDeg = offset;
+    point.angleDeg = normalizeAngle(point.semanticAngleDeg + offset);
+    const position = positionOf(point, offset);
+    point.x = position.x;
+    point.y = position.y;
+  }
+}
+
 export function layoutRadarPoints(
-  tools: readonly RadarTool[],
+  tools: readonly RadarLayoutItem[],
   options: RadarLayoutOptions = {},
-): { points: RadarPoint[]; radiusBasis: "recency" | "rank"; sectorCount: number } {
+): RadarLayoutResult {
   const outerRadius = options.outerRadius ?? DEFAULT_OUTER_RADIUS;
   const innerRadiusRatio = options.innerRadiusRatio ?? DEFAULT_INNER_RADIUS_RATIO;
-  const jitterEnabled = options.jitter !== false;
+  const rangeHours = options.rangeHours ?? DEFAULT_RANGE_HOURS;
+  const maxTangentialDeg = options.maxTangentialDeg ?? DEFAULT_MAX_TANGENTIAL_DEG;
+  const shouldResolve = options.resolveCollisions !== false;
 
-  if (tools.length === 0) {
-    return { points: [], radiusBasis: "rank", sectorCount: 0 };
-  }
-
-  // --- sector assignment: equal sectors over sorted category ids -----------
-  const sectorIds = Array.from(
-    new Set(tools.map((tool) => tool.category?.id ?? "altri-segnali")),
+  // Active clusters, in declared order — one angular sector each.
+  const clusterOrder = Array.from(
+    new Set(tools.map((tool) => radarLayoutClusterId(tool))),
   ).sort((a, b) => a.localeCompare(b));
-  const sectorIndexById = new Map(sectorIds.map((id, index) => [id, index]));
-  const sectorCount = sectorIds.length;
+  const sectorCount = Math.max(clusterOrder.length, 1);
   const sectorSpanDeg = 360 / sectorCount;
 
-  // --- radius basis: recency only when EVERY tool has a real launch date ---
-  const allHaveLaunchDate = tools.every((tool) => tool.launchedAt !== null);
-  const radiusBasis: "recency" | "rank" = allHaveLaunchDate ? "recency" : "rank";
-
-  const radiusValues = tools.map((tool) =>
-    radiusBasis === "recency" ? (tool.ageHours ?? 0) : tool.rank,
-  );
-  const span = { min: Math.min(...radiusValues), max: Math.max(...radiusValues) };
-
-  const maxAttention = Math.max(...tools.map((tool) => tool.attention), 0);
-
-  // Within a sector, order by rank so neighbouring blips are stable.
-  const bySector = new Map<string, RadarTool[]>();
+  // Deterministic intra-sector distribution: order by age (newest first),
+  // then by rank, then by id. Not semantic — purely to avoid stacking inside
+  // a sector while staying reproducible.
+  const itemsByCluster = new Map<string, RadarLayoutItem[]>();
   for (const tool of tools) {
-    const key = tool.category?.id ?? "altri-segnali";
-    const list = bySector.get(key) ?? [];
-    list.push(tool);
-    bySector.set(key, list);
+    const clusterId = radarLayoutClusterId(tool);
+    const bucket = itemsByCluster.get(clusterId);
+    if (bucket) {
+      bucket.push(tool);
+    } else {
+      itemsByCluster.set(clusterId, [tool]);
+    }
   }
-  for (const list of bySector.values()) {
-    list.sort((a, b) => a.rank - b.rank || a.id.localeCompare(b.id));
+  for (const bucket of itemsByCluster.values()) {
+    bucket.sort((a, b) => {
+      const ageA = a.ageHours ?? Number.POSITIVE_INFINITY;
+      const ageB = b.ageHours ?? Number.POSITIVE_INFINITY;
+      if (ageA !== ageB) return ageA - ageB;
+      if (a.rank !== b.rank) return a.rank - b.rank;
+      return a.id.localeCompare(b.id);
+    });
   }
+
+  const maxAttention = tools.reduce(
+    (max, tool) => Math.max(max, tool.attention),
+    0,
+  );
 
   const points: RadarPoint[] = [];
+  for (const clusterId of clusterOrder) {
+    const bucket = itemsByCluster.get(clusterId) ?? [];
+    const sectorIndex = Math.max(0, clusterOrder.indexOf(clusterId));
+    // Sector is centered on its own arc, starting at 12 o'clock.
+    const sectorStartDeg = sectorIndex * sectorSpanDeg;
 
-  for (const [sectorId, list] of [...bySector.entries()].sort((a, b) =>
-    a[0].localeCompare(b[0]),
-  )) {
-    const sectorIndex = sectorIndexById.get(sectorId) ?? 0;
-    const sectorStart = sectorIndex * sectorSpanDeg;
-    // Keep blips inside the sector: map the sector to 70% of its span.
-    const usableSpan = sectorSpanDeg * 0.7;
-    const sectorPadding = (sectorSpanDeg - usableSpan) / 2;
-
-    list.forEach((tool, index) => {
-      const fraction = list.length === 1 ? 0.5 : index / (list.length - 1);
-      const angleDeg = sectorStart + sectorPadding + fraction * usableSpan;
-
-      const ratio = resolveRadiusRatio(tool, radiusBasis, span);
-      const radialDistance =
-        outerRadius * (innerRadiusRatio + (1 - innerRadiusRatio) * ratio);
-
-      const radians = ((angleDeg - 90) * Math.PI) / 180;
-      let x = RADAR_CENTER + radialDistance * Math.cos(radians);
-      let y = RADAR_CENTER + radialDistance * Math.sin(radians);
-
-      if (jitterEnabled) {
-        // Deterministic, NON-semantic collision relief. Documented as such.
-        const hash = stableHash(`${tool.id}:${index}`);
-        const dx = ((hash & 0xff) / 255 - 0.5) * 2 * JITTER_AMPLITUDE;
-        const dy = (((hash >> 8) & 0xff) / 255 - 0.5) * 2 * JITTER_AMPLITUDE;
-        x = clamp(x + dx, RADAR_CENTER - outerRadius, RADAR_CENTER + outerRadius);
-        y = clamp(y + dy, RADAR_CENTER - outerRadius, RADAR_CENTER + outerRadius);
-      }
+    bucket.forEach((tool, index) => {
+      // Spread within the sector. First item sits at the sector start plus a
+      // half-step so points are never on the sector boundary.
+      const step = bucket.length > 1 ? sectorSpanDeg / (bucket.length + 1) : 0;
+      const intraOffset = bucket.length > 1 ? step * (index + 1) : sectorSpanDeg / 2;
+      const semanticAngleDeg = normalizeAngle(sectorStartDeg + intraOffset);
+      const ageKnown = tool.ageHours !== null && Number.isFinite(tool.ageHours);
+      const radiusRatio = resolveAgeRadiusRatio(
+        tool.ageHours,
+        rangeHours,
+        innerRadiusRatio,
+      );
+      const size = visualRadiusFromAttention(tool.attention, maxAttention);
+      const angle = ((semanticAngleDeg - 90) * Math.PI) / 180;
+      const distance = outerRadius * radiusRatio;
 
       points.push({
         id: tool.id,
-        angleDeg,
-        radiusRatio: ratio,
-        x,
-        y,
-        size: blipRadius(tool.attention, maxAttention),
-        category: tool.category?.id ?? null,
+        angleDeg: semanticAngleDeg,
+        radiusRatio,
+        x: RADAR_CENTER + distance * Math.cos(angle),
+        y: RADAR_CENTER + distance * Math.sin(angle),
+        size,
+        category: clusterId,
+        clusterId,
         rank: tool.rank,
+        ageKnown,
+        ageHours: tool.ageHours,
+        semanticAngleDeg,
+        collisionOffsetDeg: 0,
       });
     });
   }
 
-  return { points, radiusBasis, sectorCount };
+  if (shouldResolve && points.length > 1) {
+    resolveCollisions(points, outerRadius, maxTangentialDeg);
+  }
+
+  return {
+    points,
+    radiusBasis: "age",
+    hasUnknownAge: points.some((point) => !point.ageKnown),
+    clusterOrder,
+    sectorCount,
+  };
 }
 
-/**
- * Data-truth guard used by tests and by the UI in development:
- * every point must be finite and inside the instrument bounds.
- */
 export function assertRadarPointsInBounds(
   points: readonly RadarPoint[],
-  outerRadius = DEFAULT_OUTER_RADIUS,
 ): boolean {
-  const limit = outerRadius + JITTER_AMPLITUDE + 0.001;
   return points.every((point) => {
-    if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return false;
-    if (!Number.isFinite(point.size) || point.size <= 0) return false;
     const dx = point.x - RADAR_CENTER;
     const dy = point.y - RADAR_CENTER;
-    return Math.sqrt(dx * dx + dy * dy) <= limit;
+    return Math.sqrt(dx * dx + dy * dy) <= DEFAULT_OUTER_RADIUS + 0.01;
   });
+}
+
+/** Angle delta helper kept for tests of collision semantics. */
+export function radarAngleDelta(from: number, to: number): number {
+  return shortestAngleDelta(from, to);
 }
