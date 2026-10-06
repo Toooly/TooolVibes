@@ -28,7 +28,7 @@ import {
   RADAR_ZOOM_DEFAULT_MAP_PX,
   RADAR_ZOOM_TARGET_GAP_PX,
 } from "@/lib/radar/radar-camera";
-import { planRadarSpiderfy } from "@/lib/radar/radar-spiderfy";
+import { planRadarSpiderfy, type RadarSpiderGroup } from "@/lib/radar/radar-spiderfy";
 import {
   planRadarClusterFocus,
   planRadarOverview,
@@ -170,6 +170,11 @@ export function RadarExperience() {
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   // §1 — a genuinely ambiguous tap opens a chooser instead of guessing.
   const [ambiguous, setAmbiguous] = useState<readonly RadarTapCandidate[]>([]);
+  // Closure §4 — a collision group too large to fan out safely presents as the
+  // fallback bottom sheet instead of spiderfying.
+  const [chooserGroup, setChooserGroup] = useState<RadarSpiderGroup | null>(null);
+  const chooserRef = useRef<HTMLDivElement | null>(null);
+  const mapFocusRef = useRef<HTMLElement | null>(null);
 
   // §10 — geometry is ALWAYS computed from the full dataset. LOD and cluster
   // focus only decide what is painted, never where anything sits.
@@ -281,7 +286,7 @@ export function RadarExperience() {
       (RADAR_ZOOM_TARGET_GAP_PX * 100) /
       (camera.zoom * RADAR_ZOOM_DEFAULT_MAP_PX);
     const plan = planRadarSpiderfy(cameraNodes, { joinGap });
-    return plan.groups.length > 0 ? plan : null;
+    return plan.groups.length > 0 || plan.chooserGroups.length > 0 ? plan : null;
   }, [camera, cameraNodes]);
 
   const [spiderCollapsed, setSpiderCollapsed] = useState(false);
@@ -298,7 +303,11 @@ export function RadarExperience() {
     );
     if (!stillPresent) setUrlState({ category: null });
   }, [focusedClusterId, setUrlState, view.tools]);
-  const activeSpider = spiderCollapsed ? null : spider;
+  // Closure §6 — exclusive overlay: spiderfy, chooser and Tool preview never
+  // appear together. Choosing a Tool closes the collision presentation first.
+  const collisionOverlayOpen = chooserGroup !== null || ambiguous.length >= 2;
+  const activeSpider =
+    spiderCollapsed || collisionOverlayOpen || Boolean(urlState.tool) ? null : spider;
 
   const handleSelectSector = useCallback(
     (clusterId: string) => {
@@ -311,23 +320,56 @@ export function RadarExperience() {
     setSpiderCollapsed(true);
   }, []);
 
+  const handleSelectChooserGroup = useCallback(
+    (groupKey: string) => {
+      const group = spider?.chooserGroups.find((entry) => entry.key === groupKey);
+      if (!group) return;
+      // Closure §6 — opening the sheet dismisses any Tool preview and spider.
+      mapFocusRef.current =
+        (document.activeElement as HTMLElement | null) ?? null;
+      setAmbiguous([]);
+      setUrlState({ tool: null });
+      setChooserGroup(group);
+    },
+    [setUrlState, spider],
+  );
+
   const handleAmbiguous = useCallback((candidates: readonly RadarTapCandidate[]) => {
+    // Closure §6 — a genuine ambiguity supersedes a fanned group and any
+    // preview; the sheet is the single visible overlay.
+    mapFocusRef.current =
+      (document.activeElement as HTMLElement | null) ?? null;
+    setChooserGroup(null);
+    setSpiderCollapsed(true);
+    setUrlState({ tool: null });
     setAmbiguous(candidates);
-  }, []);
+  }, [setUrlState]);
 
   const handleChooseAmbiguous = useCallback(
     (toolId: string) => {
       setAmbiguous([]);
+      setChooserGroup(null);
       setUrlState({ tool: toolId, tab: "panoramica" });
       setHighlightedId(toolId);
     },
     [setUrlState],
   );
 
+  const handleDismissChooser = useCallback(() => {
+    setAmbiguous([]);
+    setChooserGroup(null);
+    // Closure §7 — focus returns to the originating Radar context.
+    const target = mapFocusRef.current ?? document.querySelector<HTMLElement>(".tv-rx-map__svg");
+    target?.focus?.();
+    mapFocusRef.current = null;
+  }, []);
+
   const handleSelect = useCallback(
     (toolId: string) => {
-      // §12 — exclusive overlay: close the chooser, then open the preview.
+      // Closure §6 — close the collision presentation, then open the preview.
       setAmbiguous([]);
+      setChooserGroup(null);
+      setSpiderCollapsed(true);
       setUrlState({ tool: toolId, tab: "panoramica" });
       setHighlightedId(toolId);
     },
@@ -338,7 +380,23 @@ export function RadarExperience() {
     setUrlState({ tool: null });
     setHighlightedId(null);
     setAmbiguous([]);
+    setChooserGroup(null);
   }, [setUrlState]);
+
+  // Closure §7 — the fallback sheet takes focus while open, Escape closes it,
+  // and focus returns to the Radar when it goes away.
+  useEffect(() => {
+    const open = chooserGroup !== null || ambiguous.length >= 2;
+    if (!open) return;
+    chooserRef.current?.querySelector<HTMLElement>("button")?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      handleDismissChooser();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [chooserGroup, ambiguous.length, handleDismissChooser]);
 
   // §21 — Watch is the internal Radar action and works for BOTH signal types.
   // The key is the canonical Catalog slug when the signal is linked, otherwise
@@ -356,11 +414,13 @@ export function RadarExperience() {
   useEffect(() => {
     if (!urlState.tool) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") handleClosePreview();
+      if (event.key === "Escape" && chooserGroup === null && ambiguous.length === 0) {
+        handleClosePreview();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [urlState.tool, handleClosePreview]);
+  }, [urlState.tool, handleClosePreview, chooserGroup, ambiguous.length]);
 
   const rangeLabel =
     RADAR_RANGE_OPTIONS.find((option) => option.key === urlState.range)?.label ??
@@ -483,12 +543,21 @@ export function RadarExperience() {
                     highlightedId={highlightedId}
                     onSelect={handleSelect}
                     onAmbiguous={handleAmbiguous}
+                    onSelectChooserGroup={handleSelectChooserGroup}
                   />
                   <RadarAmbiguityChooser
-                    candidates={ambiguous}
+                    panelRef={chooserRef}
                     tools={view.tools}
+                    entries={
+                      chooserGroup
+                        ? chooserGroup.memberIds.map((id) => ({ id, ageHours: null }))
+                        : ambiguous.map((candidate) => ({
+                            id: candidate.point.id,
+                            ageHours: candidate.point.ageHours,
+                          }))
+                    }
                     onChoose={handleChooseAmbiguous}
-                    onDismiss={() => setAmbiguous([])}
+                    onDismiss={handleDismissChooser}
                   />
                 </>
               )}
@@ -889,45 +958,62 @@ function RadarToolbar({
  * §1 — ambiguity chooser. Appears only when two hit targets are genuinely
  * indistinguishable at the tapped pixel. Never guesses, never hides options.
  */
+/**
+ * Closure §4/§5 — the FALLBACK bottom sheet. It is no longer the primary
+ * dense-point interaction (that is spiderfy); it is used for a collision group
+ * larger than RADAR_SPIDER_MAX_GROUP and for genuinely indistinguishable taps.
+ *
+ * §5 touch quality: every option is a real <button>, at least 52px tall, and
+ * carries Tool name, Radar area, age and attention. Text selection is disabled
+ * on these interactive controls only — never globally.
+ */
 function RadarAmbiguityChooser({
-  candidates,
+  entries,
   tools,
   onChoose,
   onDismiss,
+  panelRef,
 }: {
-  candidates: readonly RadarTapCandidate[];
+  entries: readonly { id: string; ageHours: number | null }[];
   tools: readonly RadarTool[];
   onChoose: (toolId: string) => void;
   onDismiss: () => void;
+  panelRef?: React.RefObject<HTMLDivElement | null>;
 }) {
-  if (candidates.length < 2) return null;
+  if (entries.length < 2) return null;
   const toolById = new Map(tools.map((tool) => [tool.id, tool]));
   return (
-    <div className="tv-rx-chooser" role="dialog" aria-label={`${candidates.length} segnali in questo punto`}>
+    <div
+      ref={panelRef}
+      className="tv-rx-chooser"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${entries.length} segnali in questo punto`}
+    >
       <p className="tv-rx-chooser__title">
-        {candidates.length} segnali in questo punto
+        {entries.length} segnali in questo punto
       </p>
       <ul className="tv-rx-chooser__list">
-        {candidates.map((candidate) => {
-          const tool = toolById.get(candidate.point.id);
+        {entries.map((entry) => {
+          const tool = toolById.get(entry.id);
+          const ageHours = entry.ageHours ?? tool?.ageHours ?? null;
           return (
-            <li key={candidate.point.id}>
+            <li key={entry.id}>
               <button
                 type="button"
                 className="tv-rx-chooser__option"
-                onClick={() => onChoose(candidate.point.id)}
+                onClick={() => onChoose(entry.id)}
               >
                 <span className="tv-rx-chooser__name">
-                  {tool?.name ?? candidate.point.id}
+                  {tool?.name ?? entry.id}
                 </span>
-                {/* §20 — compact context only: area, age, attention. Never a
-                    full card; the chooser stays a quick disambiguation. */}
+                {/* Closure §5 — compact context only: area, age, attention,
+                    with the entity type shown subtly when useful. */}
                 <span className="tv-rx-chooser__meta">
                   {tool?.topicCluster.label ?? "—"}
-                  {candidate.point.ageHours !== null
-                    ? ` · ${formatChooserAge(candidate.point.ageHours)}`
-                    : ""}
+                  {ageHours !== null ? ` · ${formatChooserAge(ageHours)}` : ""}
                   {tool ? ` · ${tool.votesCount}v ${tool.commentsCount}c` : ""}
+                  {tool?.catalogStatus === "linked" ? " · catalogo" : ""}
                 </span>
               </button>
             </li>

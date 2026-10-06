@@ -25,6 +25,9 @@ import {
 import {
   planRadarSpiderfy,
   radarSpiderNeedsChooser,
+  radarSpiderResidualOverlaps,
+  RADAR_SPIDER_LEG_GAP,
+  RADAR_SPIDER_MAX_GROUP,
   RADAR_SPIDER_RADIUS,
 } from "@/lib/radar/radar-spiderfy";
 
@@ -258,7 +261,7 @@ describe("RADAR-ZOOM-CAMERA semantic zoom (§5-§8)", () => {
   });
 });
 
-describe("RADAR-ZOOM-SPIDERFY residual collisions (§9)", () => {
+describe("RADAR-ZOOM-SPIDERFY residual collisions (§9, closure §1-§4)", () => {
   it("RADAR-ZOOM-SPIDER-01 fans out ONLY the colliding group", () => {
     const plan = planRadarSpiderfy([
       node({ id: "a", x: 50, y: 50, radius: 2 }),
@@ -270,7 +273,7 @@ describe("RADAR-ZOOM-SPIDERFY residual collisions (§9)", () => {
     expect(plan.spideredIds.has("far")).toBe(false);
   });
 
-  it("RADAR-ZOOM-SPIDER-02 the semantic anchor is the mean and never moves", () => {
+  it("RADAR-ZOOM-SPIDER-02 the semantic anchor is the mean and every leg starts on the ring", () => {
     const plan = planRadarSpiderfy([
       node({ id: "a", x: 49, y: 51, radius: 1.5 }),
       node({ id: "b", x: 51, y: 49, radius: 1.5 }),
@@ -278,21 +281,27 @@ describe("RADAR-ZOOM-SPIDERFY residual collisions (§9)", () => {
     const group = plan.groups[0];
     expect(group.anchor.x).toBeCloseTo(50, 10);
     expect(group.anchor.y).toBeCloseTo(50, 10);
-    // Every leg sits exactly on the fan ring around that anchor.
+    // With no obstacles to clear the legs stay exactly on the base fan ring.
     for (const leg of group.legs) {
-      const d = Math.sqrt((leg.x - group.anchor.x) ** 2 + (leg.y - group.anchor.y) ** 2);
+      const d = Math.sqrt(
+        (leg.displayX - group.anchor.x) ** 2 + (leg.displayY - group.anchor.y) ** 2,
+      );
       expect(d).toBeCloseTo(RADAR_SPIDER_RADIUS, 10);
     }
     expect(group.connectors).toHaveLength(group.legs.length);
   });
 
   it("RADAR-ZOOM-SPIDER-03 unrelated signals are never re-laid out", () => {
+    const far = node({ id: "far", x: 80, y: 80, radius: 2 });
     const plan = planRadarSpiderfy([
       node({ id: "a", x: 50, y: 50, radius: 2 }),
       node({ id: "b", x: 50.1, y: 50, radius: 2 }),
-      node({ id: "far", x: 80, y: 80, radius: 2 }),
+      far,
     ]);
     expect(plan.groups.some((g) => g.memberIds.includes("far"))).toBe(false);
+    // The unrelated node keeps its exact semantic position (closure §2).
+    const leg = plan.groups[0].legs.find((entry) => entry.id === "far");
+    expect(leg).toBeUndefined();
   });
 
   it("RADAR-ZOOM-SPIDER-04 is deterministic", () => {
@@ -306,18 +315,134 @@ describe("RADAR-ZOOM-SPIDERFY residual collisions (§9)", () => {
     expect(JSON.stringify(a)).toBe(JSON.stringify(b));
   });
 
-  it("RADAR-ZOOM-SPIDER-05 huge coincident groups fall back to the chooser (§10)", () => {
+  it("RADAR-ZOOM-SPIDER-05 a group above the threshold routes to the chooser, never spiderfy (§4)", () => {
     const plan = planRadarSpiderfy(
       Array.from({ length: 8 }, (_, index) =>
         node({ id: `x${index}`, x: 50, y: 50, radius: 1 }),
       ),
     );
-    expect(plan.groups).toHaveLength(1);
-    expect(radarSpiderNeedsChooser(plan.groups[0])).toBe(true);
+    // The old behaviour spiderfied 8 legs; §4 sends it to the bottom sheet.
+    expect(plan.groups).toHaveLength(0);
+    expect(plan.chooserGroups).toHaveLength(1);
+    expect(plan.spideredIds.size).toBe(0);
+    const group = plan.chooserGroups[0];
+    expect(group.needsChooser).toBe(true);
+    expect(radarSpiderNeedsChooser(group)).toBe(true);
+    expect(group.memberIds).toHaveLength(8);
   });
 
   it("RADAR-ZOOM-SPIDER-06 empty and single-node sets are safe", () => {
     expect(planRadarSpiderfy([]).groups).toHaveLength(0);
+    expect(planRadarSpiderfy([]).chooserGroups).toHaveLength(0);
     expect(planRadarSpiderfy([node({ id: "only" })]).groups).toHaveLength(0);
+  });
+
+  it("RADAR-ZOOM-SPIDER-07 semantic coordinates are never moved (closure §2)", () => {
+    const input = [
+      node({ id: "a", x: 50, y: 50, radius: 2 }),
+      node({ id: "b", x: 50.1, y: 50, radius: 2 }),
+      node({ id: "c", x: 50, y: 50.1, radius: 2 }),
+    ];
+    const plan = planRadarSpiderfy(input);
+    for (const leg of plan.groups[0].legs) {
+      const original = input.find((entry) => entry.id === leg.id)!;
+      expect(leg.semanticX).toBe(original.x);
+      expect(leg.semanticY).toBe(original.y);
+    }
+  });
+
+  it("RADAR-ZOOM-SPIDER-08 a leg expands to clear a NON-member neighbour (the Produttività defect)", () => {
+    // Four members collide with each other. A fifth signal sits far enough from
+    // their SEMANTIC positions to stay out of the group, but lands inside the
+    // naive fan ring — a 4-leg ring is hit from every angle at this distance.
+    // A members-only ring leaves that residual overlap; the closure contract
+    // requires the leg to clear it.
+    const outsider = node({ id: "outsider", x: 56.5, y: 50, radius: 2 });
+    const members = [
+      node({ id: "a", x: 50, y: 50, radius: 2 }),
+      node({ id: "b", x: 50.2, y: 50, radius: 2 }),
+      node({ id: "c", x: 50, y: 50.2, radius: 2 }),
+      node({ id: "d", x: 50.1, y: 50.1, radius: 2 }),
+    ];
+    const probe = planRadarSpiderfy([...members, outsider]);
+
+    // Guard: the outsider must NOT have joined the collision group.
+    expect(probe.groups).toHaveLength(1);
+    expect(probe.groups[0].memberIds).not.toContain("outsider");
+    // Guard: a naive ring WOULD have collided (this is the defect being fixed).
+    expect(probe.groups[0].expanded).toBe(true);
+    // The non-member is untouched (closure §2).
+    expect(probe.spideredIds.has("outsider")).toBe(false);
+    // And no fanned leg now collides with it.
+    for (const leg of probe.groups[0].legs) {
+      const d = Math.sqrt((leg.displayX - outsider.x) ** 2 + (leg.displayY - outsider.y) ** 2);
+      expect(d - 2 - outsider.radius).toBeGreaterThanOrEqual(RADAR_SPIDER_LEG_GAP);
+    }
+  });
+
+  it("RADAR-ZOOM-SPIDER-09 residual visual overlap is zero after placement (closure §8)", () => {
+    // Four mutually colliding signals plus one independent neighbour sitting
+    // just outside the group, close enough to be hit by a naive ring.
+    const input = [
+      node({ id: "a", x: 50, y: 50, radius: 3 }),
+      node({ id: "b", x: 50.2, y: 50, radius: 3 }),
+      node({ id: "c", x: 50, y: 50.2, radius: 3 }),
+      node({ id: "d", x: 50.1, y: 50.1, radius: 3 }),
+      node({ id: "neighbour", x: 58, y: 50, radius: 3 }),
+    ];
+    const plan = planRadarSpiderfy(input);
+    expect(plan.groups).toHaveLength(1);
+    expect(plan.groups[0].memberIds).not.toContain("neighbour");
+    expect(radarSpiderResidualOverlaps(plan.groups[0], input)).toBe(0);
+  });
+
+  it("RADAR-ZOOM-SPIDER-10 every connector runs semantic anchor -> display point (closure §2)", () => {
+    const plan = planRadarSpiderfy([
+      node({ id: "a", x: 50, y: 50, radius: 2 }),
+      node({ id: "b", x: 50.1, y: 50, radius: 2 }),
+      node({ id: "c", x: 50, y: 50.1, radius: 2 }),
+    ]);
+    const group = plan.groups[0];
+    group.legs.forEach((leg, index) => {
+      const connector = group.connectors[index];
+      expect(connector.from.x).toBeCloseTo(group.anchor.x, 10);
+      expect(connector.from.y).toBeCloseTo(group.anchor.y, 10);
+      expect(connector.to.x).toBeCloseTo(leg.displayX, 10);
+      expect(connector.to.y).toBeCloseTo(leg.displayY, 10);
+    });
+  });
+
+  it("RADAR-ZOOM-SPIDER-11 the threshold is exactly MAX_GROUP, not a fixture id (§4)", () => {
+    const atLimit = planRadarSpiderfy(
+      Array.from({ length: RADAR_SPIDER_MAX_GROUP }, (_, index) =>
+        node({ id: `m${index}`, x: 50, y: 50, radius: 1 }),
+      ),
+    );
+    expect(atLimit.groups).toHaveLength(1);
+    expect(atLimit.chooserGroups).toHaveLength(0);
+    expect(atLimit.groups[0].needsChooser).toBe(false);
+
+    const overLimit = planRadarSpiderfy(
+      Array.from({ length: RADAR_SPIDER_MAX_GROUP + 1 }, (_, index) =>
+        node({ id: `n${index}`, x: 50, y: 50, radius: 1 }),
+      ),
+    );
+    expect(overLimit.groups).toHaveLength(0);
+    expect(overLimit.chooserGroups).toHaveLength(1);
+    expect(overLimit.chooserGroups[0].memberIds).toHaveLength(RADAR_SPIDER_MAX_GROUP + 1);
+  });
+
+  it("RADAR-ZOOM-SPIDER-12 a QA-only 7+ coincident fixture resolves to exactly one sheet (§9)", () => {
+    // QA-only collision fixture: 7 signals at the same pixel. Must not ship.
+    const fixture = Array.from({ length: 7 }, (_, index) =>
+      node({ id: `co${index}`, x: 50, y: 50, radius: 2 }),
+    );
+    const plan = planRadarSpiderfy(fixture);
+    expect(plan.groups).toHaveLength(0);
+    expect(plan.chooserGroups).toHaveLength(1);
+    const members = plan.chooserGroups[0].memberIds;
+    // Every member is represented exactly once.
+    expect(new Set(members).size).toBe(7);
+    expect(members.length).toBe(7);
   });
 });

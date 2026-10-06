@@ -1889,3 +1889,18 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+/* ---------- closure §5: fallback sheet touch targets ---------------------- */
+/* The fallback bottom sheet rows are a 52px minimum touch target (closure §5).
+   Declared last and with extra specificity so a shared 44px button token can
+   never win it. Scoped to these interactive controls only — text selection is
+   still not disabled globally. */
+/* app/globals.css gives button:not(...) a 44px min-height at specificity
+   (0,2,1). Repeating the panel class lifts this to (0,3,0) so the 52px sheet
+   target wins on specificity alone, with no flag of any kind. */
+.tv-rx-chooser.tv-rx-chooser .tv-rx-chooser__option,
+.tv-rx-chooser.tv-rx-chooser .tv-rx-chooser__dismiss {
+  min-block-size: 52px;
+  min-height: 52px;
+}

@@ -88,6 +88,11 @@ export type RadarMapProps = {
   /** Tapping empty space collapses an open spider (spec §9). */
   onCollapseSpider?: () => void;
   /**
+   * Closure §4 — a collision group too large to fan out safely (more than
+   * RADAR_SPIDER_MAX_GROUP members) opens the fallback bottom sheet instead.
+   */
+  onSelectChooserGroup?: (groupId: string) => void;
+  /**
    * When set, the map is in CLUSTER FOCUS: every member of this cluster is
    * prominent and all other sectors are dimmed for compass context only.
    */
@@ -109,6 +114,7 @@ export function RadarMap({
   hiddenCounts,
   onSelectSector,
   onCollapseSpider,
+  onSelectChooserGroup,
   focusedClusterId,
 }: RadarMapProps) {
   const titleId = useId();
@@ -147,11 +153,23 @@ export function RadarMap({
   const spiderLegById = new Map<string, { x: number; y: number }>();
   for (const group of spider?.groups ?? []) {
     for (const leg of group.legs) {
-      spiderLegById.set(leg.id, { x: leg.x, y: leg.y });
+      // Closure §2 — painting uses the DERIVED display point. The semantic
+      // position (semanticX/semanticY) is never used for drawing.
+      spiderLegById.set(leg.id, { x: leg.displayX, y: leg.displayY });
     }
   }
 
-  // §1 — the single place a physical tap becomes a selection.
+  // Closure §2 — taps must land where the user SEES the marker. Once a group
+  // has been spiderfied the painted position differs from the semantic one, so
+  // hit-testing runs against the display coordinates as well.
+  const tapPoints = layout.points.map((entry) => {
+    const display = spiderLegById.get(entry.id);
+    return display ? { ...entry, x: display.x, y: display.y } : entry;
+  });
+
+  // Closure §6 — a spider that has been collapsed stops painting entirely.
+  const activeSpiderGroups = spider?.groups ?? [];
+
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<SVGSVGElement>) => {
       const svg = svgRef.current;
@@ -187,7 +205,7 @@ export function RadarMap({
       }
 
       // Only visible, interactive points may be selected.
-      const visiblePoints = layout.points.filter((point) => {
+      const visiblePoints = tapPoints.filter((point) => {
         if (visibleIds && !visibleIds.has(point.id)) return false;
         if (interactiveIds && !interactiveIds.has(point.id)) return false;
         return true;
@@ -202,6 +220,24 @@ export function RadarMap({
       if (spider && spider.spideredIds.size > 0) {
         onCollapseSpider?.();
       }
+      // Closure §4 — a collision group that is too large to fan out is
+      // presented as the fallback bottom sheet rather than spiderfied.
+      if (spider && onSelectChooserGroup) {
+        for (const group of spider.chooserGroups) {
+          const hit = group.memberIds.some((id) => {
+            const entry = tapPoints.find((point) => point.id === id);
+            return (
+              entry &&
+              Math.sqrt((entry.x - pointerX) ** 2 + (entry.y - pointerY) ** 2) <=
+                RADAR_HIT_RADIUS_VIEWBOX
+            );
+          });
+          if (hit) {
+            onSelectChooserGroup(group.key);
+            return;
+          }
+        }
+      }
       if (resolution.kind === "ambiguous" && onAmbiguous) {
         onAmbiguous(resolution.candidates);
       }
@@ -210,11 +246,12 @@ export function RadarMap({
       focusedClusterId,
       interactiveIds,
       layout.clusterOrder,
-      layout.points,
       onAmbiguous,
       onCollapseSpider,
       onSelect,
+      onSelectChooserGroup,
       onSelectSector,
+      tapPoints,
       spider,
       visibleIds,
     ],
@@ -550,13 +587,14 @@ export function RadarMap({
           })}
         </g>
 
-        {/* §9 — restrained connectors from a spider anchor to its legs. */}
-        {spider && spider.groups.length > 0 ? (
+        {/* Closure §2/§3 — restrained connectors: semantic anchor -> display
+            point. Thin, low opacity, no bright spokes, no bloom. */}
+        {activeSpiderGroups.length > 0 ? (
           <g className="tv-rx-spider" aria-hidden="true">
-            {spider.groups.flatMap((group) =>
+            {activeSpiderGroups.flatMap((group) =>
               group.connectors.map((connector, index) => (
                 <line
-                  key={`${group.key}:${index}`}
+                  key={`${group.key}-${index}`}
                   x1={connector.from.x}
                   y1={connector.from.y}
                   x2={connector.to.x}
@@ -567,7 +605,6 @@ export function RadarMap({
             )}
           </g>
         ) : null}
-
         </g>
       </svg>
     </div>
