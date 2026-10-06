@@ -28,10 +28,14 @@ export type RadarUiState =
  * I periodi sono esposti in italiano secondo il contratto V2: rolling
  * `Oggi` / `Ultimi 7 giorni` / `Ultimi 30 giorni`.
  */
+/**
+ * Compact range control (spec §3): 24H / 7G / 30G. The default is WEEK — a
+ * week of signals is the smallest window that shows real market movement.
+ */
 export const RADAR_RANGE_OPTIONS = [
-  { key: "day", label: "Oggi" },
-  { key: "week", label: "Ultimi 7 giorni" },
-  { key: "month", label: "Ultimi 30 giorni" },
+  { key: "day", label: "24H" },
+  { key: "week", label: "7G" },
+  { key: "month", label: "30G" },
 ] as const satisfies ReadonlyArray<{
   key: ProductHuntRange;
   label: string;

@@ -86,7 +86,7 @@ export function RadarQuickPreview({
       </header>
 
       <p className="tv-rx-preview__badge" data-catalog-status={tool.catalogStatus}>
-        {isExternal ? "Segnale esterno · non ancora nel Catalogo" : "Nel Catalogo TooolVibes"}
+        {isExternal ? "Segnale esterno · Product Hunt" : "Nel Catalogo TooolVibes"}
       </p>
 
       <p className="tv-rx-preview__tagline">{tool.tagline}</p>

@@ -132,7 +132,10 @@ describe("RADAR-SIGNAL-V2 semantic evidence", () => {
     });
     expect(JSON.stringify(again.points)).toBe(JSON.stringify(layout.points));
     expect(layout.radiusBasis).toBe("age");
-    expect(layout.sectorCount).toBe(view.clusters.length);
+    // The compass is permanent (spec §2) — it is NOT sized to the active set.
+    expect(layout.sectorCount).toBe(8);
+    expect(layout.clusterOrder).toHaveLength(8);
+    expect(view.clusters.length).toBeGreaterThanOrEqual(4);
   });
 
   it("RADAR-SIGNAL-V2-05 writes the §25 semantic evidence artifact", () => {

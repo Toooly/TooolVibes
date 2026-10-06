@@ -23,6 +23,13 @@ export function RadarLegend() {
           <dt>Dimensione</dt>
           <dd>Attenzione relativa (voti + commenti).</dd>
         </div>
+        <div className="tv-rx-legend__row">
+          <dt>Tipo</dt>
+          <dd>
+            Punto pieno = segnale esterno. Punto con marcatore = nel Catalogo
+            TooolVibes.
+          </dd>
+        </div>
         <div className="tv-rx-legend__row" data-unavailable="true">
           <dt>Movimento</dt>
           <dd>Disponibile in futuro, quando esistono dati storici reali.</dd>

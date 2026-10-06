@@ -18,7 +18,7 @@ import { RefreshCw, Search } from "lucide-react";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { useAccount } from "@/components/account/account-provider";
 import { RadarLegend } from "@/components/radar/radar-legend";
-import { RadarMap } from "@/components/radar/radar-map";
+import { RadarMap, type RadarTapCandidate } from "@/components/radar/radar-map";
 import {
   RadarInsightStrip,
   RadarPerTePanel,
@@ -150,6 +150,26 @@ export function RadarExperience() {
   }, [view]);
 
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
+  // §1 — a genuinely ambiguous tap opens a chooser instead of guessing.
+  const [ambiguous, setAmbiguous] = useState<readonly RadarTapCandidate[]>([]);
+
+  const visibleIds = useMemo(
+    () => new Set(filteredTools.map((tool) => tool.id)),
+    [filteredTools],
+  );
+
+  const handleAmbiguous = useCallback((candidates: readonly RadarTapCandidate[]) => {
+    setAmbiguous(candidates);
+  }, []);
+
+  const handleChooseAmbiguous = useCallback(
+    (toolId: string) => {
+      setAmbiguous([]);
+      setUrlState({ tool: toolId, tab: "panoramica" });
+      setHighlightedId(toolId);
+    },
+    [setUrlState],
+  );
 
   const handleSelect = useCallback(
     (toolId: string) => {
@@ -162,6 +182,7 @@ export function RadarExperience() {
   const handleClosePreview = useCallback(() => {
     setUrlState({ tool: null });
     setHighlightedId(null);
+    setAmbiguous([]);
   }, [setUrlState]);
 
   // §21 — Watch is the internal Radar action and works for BOTH signal types.
@@ -219,7 +240,24 @@ export function RadarExperience() {
         <span className="tv-rx-telemetry__sep" aria-hidden="true">
           &middot;
         </span>
-        <span className="tv-rx-telemetry__range">{rangeLabel}</span>
+        <span
+          className="tv-rx-range"
+          role="group"
+          aria-label="Intervallo temporale"
+        >
+          {RADAR_RANGE_OPTIONS.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              className="tv-rx-range__option"
+              data-active={option.key === urlState.range ? "true" : undefined}
+              aria-pressed={option.key === urlState.range}
+              onClick={() => setUrlState({ range: option.key })}
+            >
+              {option.label}
+            </button>
+          ))}
+        </span>
         <span className="tv-rx-telemetry__time">
           Aggiornato {uiModel.updatedAtLabel}
         </span>
@@ -273,14 +311,24 @@ export function RadarExperience() {
                   onClear={() => setUrlState({ category: null, query: null })}
                 />
               ) : (
-                <RadarMap
-                  tools={filteredTools}
-                  clusters={view.clusters}
-                  range={urlState.range}
-                  selectedId={urlState.tool}
-                  highlightedId={highlightedId}
-                  onSelect={handleSelect}
-                />
+                <>
+                  <RadarMap
+                    layoutTools={view.tools}
+                    visibleIds={visibleIds}
+                    clusters={view.clusters}
+                    range={urlState.range}
+                    selectedId={urlState.tool}
+                    highlightedId={highlightedId}
+                    onSelect={handleSelect}
+                    onAmbiguous={handleAmbiguous}
+                  />
+                  <RadarAmbiguityChooser
+                    candidates={ambiguous}
+                    tools={view.tools}
+                    onChoose={handleChooseAmbiguous}
+                    onDismiss={() => setAmbiguous([])}
+                  />
+                </>
               )}
 
               {/* §8/§16 — one contextual filter system, below the map. */}
@@ -615,6 +663,46 @@ function RadarToolbar({
           placeholder="Cerca nel Radar"
         />
       </label>
+    </div>
+  );
+}
+
+/**
+ * §1 — ambiguity chooser. Appears only when two hit targets are genuinely
+ * indistinguishable at the tapped pixel. Never guesses, never hides options.
+ */
+function RadarAmbiguityChooser({
+  candidates,
+  tools,
+  onChoose,
+  onDismiss,
+}: {
+  candidates: readonly RadarTapCandidate[];
+  tools: readonly RadarTool[];
+  onChoose: (toolId: string) => void;
+  onDismiss: () => void;
+}) {
+  if (candidates.length < 2) return null;
+  const nameById = new Map(tools.map((tool) => [tool.id, tool.name]));
+  return (
+    <div className="tv-rx-chooser" role="dialog" aria-label="Quale segnale vuoi aprire?">
+      <p className="tv-rx-chooser__title">Quale segnale vuoi aprire?</p>
+      <ul className="tv-rx-chooser__list">
+        {candidates.map((candidate) => (
+          <li key={candidate.point.id}>
+            <button
+              type="button"
+              className="tv-rx-chooser__option"
+              onClick={() => onChoose(candidate.point.id)}
+            >
+              {nameById.get(candidate.point.id) ?? candidate.point.id}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <button type="button" className="tv-rx-chooser__dismiss" onClick={onDismiss}>
+        Annulla
+      </button>
     </div>
   );
 }

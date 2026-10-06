@@ -8,23 +8,33 @@
  *
  * TRUTH RULES:
  *   1. A cluster is derived ONLY from REAL Product Hunt topic names.
- *   2. The mapping table below is explicit and inspectable — one array per
- *      cluster, no heuristics, no fuzzy inference, no machine learning.
+ *   2. The table below is explicit and inspectable — one entry per topic, with
+ *      a declared WEIGHT. No heuristics, no fuzzy inference, no ML.
  *   3. Unmapped topics fall through to `other` ("Altro"). We never invent a
  *      classification.
  *   4. This taxonomy NEVER overwrites Catalog category. Catalog taxonomy stays
  *      owned by `lib/data/tooolvibes-directory.ts`.
  *
- * SELECTION RULE (deterministic):
- *   Clusters are evaluated in the declared `RADAR_TOPIC_CLUSTER_PRIORITY` order
- *   and the FIRST cluster with at least one matching topic wins. The order
- *   encodes specificity: narrow, concrete topics outrank broad umbrella topics
- *   (notably `Artificial Intelligence`, which appears on 70% of live items and
- *   therefore sits LAST so it cannot swallow the map).
+ * SCORING (spec §4 — weighted, not first-match-wins):
+ *   Each topic carries a weight that expresses how strongly it names the
+ *   product's OWN category:
+ *     4 = the product's primary category ("Productivity", "Developer Tools")
+ *     3 = a clear category ("Analytics", "Email", "Security")
+ *     2 = a platform / channel ("iOS", "GitHub", "Amazon")
+ *     1 = an umbrella technology wave ("Artificial Intelligence", "SaaS")
+ *   Generic umbrella topics carry weight 1 precisely so they cannot dominate:
+ *   "Artificial Intelligence" alone appears on ~70% of live items and would
+ *   otherwise swallow the entire map.
  *
- * Source of the vocabulary: the live Product Hunt feed behind
- * `https://tooolvibes.eu/api/product-hunt` on 2026-10-06 (54 distinct topics
- * across 60 items in the day/week/month windows).
+ *   Cluster ranking key (all deterministic):
+ *     1. highest single topic weight in the cluster   (strongest evidence)
+ *     2. highest sum of topic weights                 (broadest evidence)
+ *     3. earliest source-topic index                  (the source's own order)
+ *     4. declared `RADAR_TOPIC_CLUSTER_PRIORITY` index (final determinism)
+ *
+ * Source of the vocabulary and of the QA cases: the live Product Hunt feed
+ * behind `https://tooolvibes.eu/api/product-hunt` on 2026-10-06 (54 distinct
+ * topics across 60 items in the day/week/month windows).
  */
 
 export type RadarTopicClusterId =
@@ -37,19 +47,25 @@ export type RadarTopicClusterId =
   | "ai-agents"
   | "other";
 
+/** Declared evidence strength of one source topic. */
+export type RadarTopicWeight = 1 | 2 | 3 | 4;
+
+export const RADAR_TOPIC_WEIGHT_MIN = 1;
+export const RADAR_TOPIC_WEIGHT_MAX = 4;
+
 export type RadarTopicCluster = {
   id: RadarTopicClusterId;
   /** Italian UI label (the product surface is Italian). */
   label: string;
   /** Palette slot index into `RADAR_CATEGORY_PALETTE` (deterministic). */
   colorIndex: number;
-  /** Exact Product Hunt topic names that map to this cluster. */
-  topics: readonly string[];
+  /** Exact Product Hunt topic name → declared weight. */
+  topics: Readonly<Record<string, RadarTopicWeight>>;
 };
 
 /**
- * Declared evaluation order = declared specificity. Index 0 is evaluated first.
- * `other` is never consulted here; it is the terminal fallback.
+ * Declared evaluation order. Index 0 has the highest precedence ONLY as the
+ * final determinism tiebreak — weights decide first.
  */
 export const RADAR_TOPIC_CLUSTER_PRIORITY: readonly RadarTopicClusterId[] = [
   "video-image",
@@ -66,97 +82,116 @@ export const RADAR_TOPIC_CLUSTERS: readonly RadarTopicCluster[] = [
     id: "video-image",
     label: "Video & Immagini",
     colorIndex: 0,
-    topics: ["Video", "Animation", "Audio", "Music", "Photos"],
+    topics: {
+      Video: 4,
+      Animation: 4,
+      Photos: 4,
+      Audio: 3,
+      Music: 3,
+    },
   },
   {
     id: "design-creative",
     label: "Design & Creatività",
     colorIndex: 1,
-    topics: ["Design Tools", "Writing", "Lifestyle", "Design"],
+    topics: {
+      "Design Tools": 4,
+      Design: 4,
+      Writing: 4,
+      Lifestyle: 1,
+    },
   },
   {
     id: "no-code-automation",
     label: "No-code & Automazione",
     colorIndex: 2,
-    topics: [
-      "No-Code",
-      "Low-Code",
-      "Spreadsheets",
-      "Task Management",
-      "Notes",
-      "Calendar",
-      "Automation",
-    ],
+    topics: {
+      "No-Code": 4,
+      "Low-Code": 4,
+      Spreadsheets: 3,
+      "Task Management": 3,
+      Notes: 3,
+      Calendar: 3,
+      Automation: 3,
+    },
   },
   {
     id: "marketing-growth",
     label: "Marketing & Growth",
     colorIndex: 3,
-    topics: [
-      "Marketing",
-      "Marketing automation",
-      "SEO",
-      "Social Media",
-      "LinkedIn",
-      "Sales",
-      "Email",
-      "Customer Communication",
-      "Customer Success",
-      "Messaging",
-      "E-Commerce",
-      "Amazon",
-    ],
+    topics: {
+      Marketing: 4,
+      Sales: 4,
+      Email: 4,
+      SEO: 4,
+      "Marketing automation": 3,
+      "Customer Communication": 3,
+      "Customer Success": 3,
+      "E-Commerce": 3,
+      "Social Media": 2,
+      LinkedIn: 2,
+      Messaging: 2,
+      Amazon: 2,
+    },
   },
   {
     id: "productivity",
     label: "Produttività",
     colorIndex: 4,
-    topics: ["Productivity", "Career"],
+    topics: {
+      Productivity: 4,
+      Career: 3,
+    },
   },
   {
     id: "developer-coding",
     label: "Sviluppo & Coding",
     colorIndex: 5,
-    topics: [
-      "Developer Tools",
-      "Software Engineering",
-      "Development",
-      "GitHub",
-      "Open Source",
-      "API",
-      "Security",
-      "Privacy",
-      "Data",
-      "Data & Analytics",
-      "Analytics",
-      "Business Intelligence",
-      "SaaS",
-      "Payments",
-      "Fintech",
-      "Finance",
-      "Legal",
-      "Business",
-      "iOS",
-      "Android",
-      "Mac",
-      "Apple",
-      "iMessage Apps",
-      "Menu Bar Apps",
-      "Education",
-      "Online Learning",
-    ],
+    topics: {
+      "Developer Tools": 4,
+      "Software Engineering": 4,
+      Development: 3,
+      Security: 3,
+      Privacy: 3,
+      Analytics: 3,
+      "Business Intelligence": 3,
+      Payments: 3,
+      Fintech: 3,
+      Finance: 3,
+      Legal: 3,
+      Education: 3,
+      "Online Learning": 3,
+      GitHub: 2,
+      "Open Source": 2,
+      API: 2,
+      Data: 2,
+      "Data & Analytics": 2,
+      iOS: 2,
+      Android: 2,
+      Mac: 2,
+      Apple: 2,
+      "iMessage Apps": 2,
+      "Menu Bar Apps": 2,
+      SaaS: 1,
+      Business: 1,
+    },
   },
   {
     id: "ai-agents",
     label: "Agenti & AI",
     colorIndex: 6,
-    topics: ["Artificial Intelligence", "OpenAI Day", "Machine Learning", "AI"],
+    topics: {
+      "Artificial Intelligence": 1,
+      "OpenAI Day": 1,
+      "Machine Learning": 1,
+      AI: 1,
+    },
   },
   {
     id: "other",
     label: "Altro",
     colorIndex: 7,
-    topics: [],
+    topics: {},
   },
 ] as const;
 
@@ -164,38 +199,66 @@ const CLUSTER_BY_ID = new Map<RadarTopicClusterId, RadarTopicCluster>(
   RADAR_TOPIC_CLUSTERS.map((cluster) => [cluster.id, cluster]),
 );
 
-/**
- * Exact, case-folded lookup. A topic maps to at most one cluster.
- * Built once; the table is small and static.
- */
-const CLUSTER_BY_TOPIC = new Map<string, RadarTopicCluster>();
+type TopicEntry = {
+  cluster: RadarTopicCluster;
+  weight: RadarTopicWeight;
+};
+
+/** Exact, case-folded lookup. A topic maps to at most one cluster. */
+const TOPIC_ENTRIES = new Map<string, TopicEntry>();
 for (const cluster of RADAR_TOPIC_CLUSTERS) {
-  for (const topic of cluster.topics) {
+  for (const [topic, weight] of Object.entries(cluster.topics)) {
     const key = topic.trim().toLocaleLowerCase();
-    if (!CLUSTER_BY_TOPIC.has(key)) {
-      CLUSTER_BY_TOPIC.set(key, cluster);
+    if (!TOPIC_ENTRIES.has(key)) {
+      TOPIC_ENTRIES.set(key, { cluster, weight });
     }
   }
 }
+
+export type RadarClusterScore = {
+  clusterId: RadarTopicClusterId;
+  label: string;
+  /** Strongest single matched topic weight — the primary ranking key. */
+  score: number;
+  /** Sum of matched topic weights — the secondary ranking key. */
+  total: number;
+  /** Earliest index of a matched topic in the item's own source list. */
+  firstSourceIndex: number;
+  topics: readonly { topic: string; weight: RadarTopicWeight }[];
+};
 
 export type RadarTopicClusterResult = {
   id: RadarTopicClusterId;
   label: string;
   colorIndex: number;
-  /** The real source topics that produced the classification (for explainability). */
+  /** Source topics of the WINNING cluster (explainability). */
   matchedTopics: readonly string[];
-  /** Every source topic we did not classify (shown as source transparency). */
+  /** Source topics that map to no cluster at all. */
   unmatchedTopics: readonly string[];
+  /**
+   * 0..1 margin of the winner over the runner-up
+   * (`(winnerScore - runnerUpScore) / winnerScore`). 1 = unopposed.
+   */
+  clusterConfidence: number;
+  /**
+   * 0..1 absolute strength of the winning evidence (`winnerScore / 4`).
+   * Separates "won decisively" from "won narrowly on a weak umbrella topic".
+   */
+  clusterStrength: number;
+  /** Auditable per-cluster breakdown, best first. */
+  clusterEvidence: readonly RadarClusterScore[];
 };
 
 export function getRadarTopicCluster(
   id: RadarTopicClusterId,
 ): RadarTopicCluster {
-  return CLUSTER_BY_ID.get(id) ?? (CLUSTER_BY_ID.get("other") as RadarTopicCluster);
+  return (
+    CLUSTER_BY_ID.get(id) ?? (CLUSTER_BY_ID.get("other") as RadarTopicCluster)
+  );
 }
 
 /**
- * Deterministic classification of a real Product Hunt topic list.
+ * Deterministic weighted classification of a real Product Hunt topic list.
  * Same input → same output, on every platform, forever.
  */
 export function deriveRadarTopicCluster(
@@ -206,50 +269,99 @@ export function deriveRadarTopicCluster(
     .filter(Boolean);
 
   const unmatched: string[] = [];
-  const matchesByCluster = new Map<RadarTopicClusterId, string[]>();
+  const byCluster = new Map<RadarTopicClusterId, { topic: string; weight: RadarTopicWeight; index: number }[]>();
 
-  for (const topic of normalized) {
-    const cluster = CLUSTER_BY_TOPIC.get(topic.toLocaleLowerCase());
-    if (!cluster) {
+  normalized.forEach((topic, index) => {
+    const entry = TOPIC_ENTRIES.get(topic.toLocaleLowerCase());
+    if (!entry) {
       unmatched.push(topic);
-      continue;
+      return;
     }
-    const bucket = matchesByCluster.get(cluster.id);
+    const bucket = byCluster.get(entry.cluster.id);
+    const record = { topic, weight: entry.weight, index };
     if (bucket) {
-      bucket.push(topic);
+      bucket.push(record);
     } else {
-      matchesByCluster.set(cluster.id, [topic]);
+      byCluster.set(entry.cluster.id, [record]);
     }
-  }
+  });
 
-  for (const clusterId of RADAR_TOPIC_CLUSTER_PRIORITY) {
-    const matched = matchesByCluster.get(clusterId);
-    if (matched && matched.length > 0) {
+  const evidence: RadarClusterScore[] = [...byCluster.entries()].map(
+    ([clusterId, records]) => {
       const cluster = getRadarTopicCluster(clusterId);
       return {
-        id: cluster.id,
+        clusterId,
         label: cluster.label,
-        colorIndex: cluster.colorIndex,
-        matchedTopics: matched,
-        unmatchedTopics: unmatched,
+        score: records.reduce((max, record) => Math.max(max, record.weight), 0),
+        total: records.reduce((sum, record) => sum + record.weight, 0),
+        firstSourceIndex: records.reduce(
+          (min, record) => Math.min(min, record.index),
+          Number.POSITIVE_INFINITY,
+        ),
+        topics: records.map((record) => ({
+          topic: record.topic,
+          weight: record.weight,
+        })),
       };
+    },
+  );
+
+  const priorityIndex = (id: RadarTopicClusterId): number => {
+    const index = RADAR_TOPIC_CLUSTER_PRIORITY.indexOf(id);
+    return index === -1 ? RADAR_TOPIC_CLUSTER_PRIORITY.length : index;
+  };
+
+  evidence.sort((a, b) => {
+    if (a.score !== b.score) return b.score - a.score;
+    if (a.total !== b.total) return b.total - a.total;
+    if (a.firstSourceIndex !== b.firstSourceIndex) {
+      return a.firstSourceIndex - b.firstSourceIndex;
     }
-  }
+    return priorityIndex(a.clusterId) - priorityIndex(b.clusterId);
+  });
 
   const other = getRadarTopicCluster("other");
+  const winner = evidence[0];
+
+  if (!winner) {
+    return {
+      id: other.id,
+      label: other.label,
+      colorIndex: other.colorIndex,
+      matchedTopics: [],
+      unmatchedTopics: unmatched,
+      clusterConfidence: 0,
+      clusterStrength: 0,
+      clusterEvidence: [],
+    };
+  }
+
+  const runnerUpScore = evidence[1]?.score ?? 0;
+  const clusterConfidence =
+    winner.score > 0
+      ? Math.min(1, Math.max(0, (winner.score - runnerUpScore) / winner.score))
+      : 0;
+  const clusterStrength = Math.min(
+    1,
+    Math.max(0, winner.score / RADAR_TOPIC_WEIGHT_MAX),
+  );
+
   return {
-    id: other.id,
-    label: other.label,
-    colorIndex: other.colorIndex,
-    matchedTopics: [],
+    id: winner.clusterId,
+    label: winner.label,
+    colorIndex: getRadarTopicCluster(winner.clusterId).colorIndex,
+    matchedTopics: winner.topics.map((entry) => entry.topic),
     unmatchedTopics: unmatched,
+    clusterConfidence,
+    clusterStrength,
+    clusterEvidence: evidence,
   };
 }
 
 /**
- * Stable angular sector for a cluster: clusters are ordered by
- * `RADAR_TOPIC_CLUSTER_PRIORITY` (with `other` last) and share the circle
- * equally. One cluster → one sector. Never decorative.
+ * The ONE FIXED global compass: every cluster owns a permanent angular sector,
+ * independent of the current dataset, filter or time range. This is what keeps
+ * a point's x/y stable when the user filters (spec §2).
  */
 export function radarTopicClusterOrder(): readonly RadarTopicClusterId[] {
   return [...RADAR_TOPIC_CLUSTER_PRIORITY, "other"];
@@ -260,3 +372,6 @@ export function radarTopicClusterSectorIndex(
 ): number {
   return Math.max(0, radarTopicClusterOrder().indexOf(id));
 }
+
+/** Total number of permanent compass sectors. */
+export const RADAR_COMPASS_SECTORS = radarTopicClusterOrder().length;

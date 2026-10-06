@@ -39,7 +39,7 @@ export type RadarUrlState = {
 
 export const DEFAULT_RADAR_URL_STATE: RadarUrlState = {
   tab: "panoramica",
-  range: "day",
+  range: "week",
   category: null,
   tool: null,
   query: null,

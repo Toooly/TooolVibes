@@ -468,6 +468,42 @@
 .tv-rx-map--skeleton .tv-rx-map__rings span:nth-child(2) { inline-size: 72%; block-size: 72%; }
 .tv-rx-map--skeleton .tv-rx-map__rings span:nth-child(3) { inline-size: 96%; block-size: 96%; }
 
+/* ---------- §3 compact range control ------------------------------------ */
+
+.tv-rx-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  background: color-mix(in srgb, var(--tv-color-surface-base, #0b0620) 60%, transparent);
+  flex: none;
+}
+
+.tv-rx-range__option {
+  min-block-size: 26px;
+  padding: 0 0.55rem;
+  border: 0;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  background: transparent;
+  color: var(--tv-color-ink-400, #a49dc8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.tv-rx-range__option:hover {
+  color: var(--tv-color-ink-100, #f5f3ff);
+}
+
+.tv-rx-range__option[data-active="true"] {
+  background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 20%, transparent);
+  color: var(--tv-color-cyan-500, #22d3ee);
+}
+
 /* ---------- signal model v2: ring labels + selection context ------------- */
 
 /* §11 — subtle time labels on ONE axis. Sized in viewBox units via the SVG
@@ -506,6 +542,72 @@
   stroke: var(--tv-color-ink-400, #a49dc8);
   stroke-width: 0.35;
   stroke-dasharray: 1.2 1.1;
+}
+
+/* ---------- semantic precision: entity marker + ambiguity chooser ---------- */
+
+/* §5 — entity type, WITHOUT changing the cluster colour. An external signal is
+   a solid cluster-coloured dot; a catalog-linked signal keeps that colour and
+   adds a neutral inner marker. The colour always means "area", never "type". */
+.tv-rx-blip__entity {
+  fill: var(--tv-color-ink-100, #f5f3ff);
+  stroke: var(--tv-color-surface-base, #0b0620);
+  stroke-width: 0.18;
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+/* §1 — ambiguity chooser. Appears only for genuinely indistinguishable taps. */
+.tv-rx-chooser {
+  position: absolute;
+  inset-inline: 0;
+  z-index: 3;
+  margin: 0.5rem auto 0;
+  max-inline-size: 22rem;
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  border-radius: var(--tv-radius-px-lg, 16px);
+  background: var(--tv-color-surface-raised, #120c2e);
+  padding: 0.75rem 0.85rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.tv-rx-chooser__title {
+  margin: 0;
+  color: var(--tv-color-ink-100, #f5f3ff);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.tv-rx-chooser__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tv-rx-chooser__option,
+.tv-rx-chooser__dismiss {
+  inline-size: 100%;
+  min-block-size: 44px;
+  border-radius: var(--tv-radius-px-md, 12px);
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  background: transparent;
+  color: var(--tv-color-ink-100, #f5f3ff);
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-align: start;
+  padding-inline: 0.85rem;
+}
+
+.tv-rx-chooser__option:hover {
+  border-color: var(--tv-color-cyan-500, #22d3ee);
+}
+
+.tv-rx-chooser__dismiss {
+  color: var(--tv-color-ink-400, #a49dc8);
+  text-align: center;
 }
 
 /* ---------- signal model v2: source transparency + CTA matrix ------------ */

@@ -23,7 +23,10 @@ import {
   stableHash,
   visualRadiusFromAttention,
   type RadarLayoutItem,
+  RADAR_COMPASS_SECTOR_COUNT,
+  RADAR_COMPASS_SECTOR_SPAN_DEG,
 } from "@/lib/radar/radar-geometry";
+import { radarTopicClusterSectorIndex } from "@/lib/radar/radar-topic-clusters";
 
 function item(overrides: Partial<RadarLayoutItem> & { id: string }): RadarLayoutItem {
   return {
@@ -168,7 +171,8 @@ describe("RADAR-GEO-V2 semantic layout", () => {
   it("RADAR-GEO-V2-10 no NaN, nothing outside the instrument, empty-safe", () => {
     const empty = layoutRadarPoints([]);
     expect(empty.points).toHaveLength(0);
-    expect(empty.sectorCount).toBe(1);
+    // The compass is permanent: an empty dataset does not shrink it.
+    expect(empty.sectorCount).toBe(RADAR_COMPASS_SECTOR_COUNT);
     expect(assertRadarPointsInBounds(empty.points)).toBe(true);
 
     const items = Array.from({ length: 20 }, (_, index) =>
@@ -221,13 +225,80 @@ describe("RADAR-GEO-V2 semantic layout", () => {
     expect(stableHash("")).toBe(0x811c9dc5);
   });
 
-  it("RADAR-GEO-V2-13 one cluster produces one sector, not many fake ones", () => {
-    const layout = layoutRadarPoints([
+  it("RADAR-GEO-V2-13 the compass is permanent and never dataset-dependent", () => {
+    // Spec §2 supersedes the earlier "one cluster = one sector" rule: sector
+    // angles must NOT change when the dataset (or a filter) changes, otherwise
+    // points move and the user loses their spatial memory.
+    const oneCluster = layoutRadarPoints([
       item({ id: "x", clusterId: "ai-agents", ageHours: 1 }),
       item({ id: "y", clusterId: "ai-agents", ageHours: 2 }),
       item({ id: "z", clusterId: "ai-agents", ageHours: 3 }),
     ], { resolveCollisions: false });
-    expect(layout.sectorCount).toBe(1);
-    expect(layout.clusterOrder).toEqual(["ai-agents"]);
+
+    expect(oneCluster.sectorCount).toBe(RADAR_COMPASS_SECTOR_COUNT);
+    expect(oneCluster.clusterOrder).toHaveLength(RADAR_COMPASS_SECTOR_COUNT);
+
+    // …and a single cluster's points stay inside that cluster's own permanent
+    // sector rather than spreading over the whole circle.
+    const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
+    const sectorStart = radarTopicClusterSectorIndex("ai-agents") * span;
+    for (const point of oneCluster.points) {
+      expect(point.semanticAngleDeg).toBeGreaterThanOrEqual(sectorStart - 0.001);
+      expect(point.semanticAngleDeg).toBeLessThan(sectorStart + span + 0.001);
+    }
+  });
+
+  it("RADAR-GEO-V2-14 filtering never moves an existing point", () => {
+    // Spec §2: matching x/y before filter == x/y after filter.
+    const all = Array.from({ length: 12 }, (_, index) =>
+      item({
+        id: `s${index}`,
+        clusterId: ["video-image", "ai-agents", "marketing-growth", "productivity"][index % 4],
+        ageHours: index * 1.5,
+        attention: 40 + index * 23,
+      }),
+    );
+    const before = layoutRadarPoints(all, { resolveCollisions: true });
+    const visible = all.filter((entry) => entry.clusterId === "ai-agents");
+    // The same geometry function over the FULL set gives identical coordinates;
+    // the map only decides which of them to paint.
+    const after = layoutRadarPoints(all, { resolveCollisions: true });
+    const visibleIds = new Set(visible.map((entry) => entry.id));
+
+    for (const point of before.points) {
+      const match = after.points.find((entry) => entry.id === point.id)!;
+      expect(match.x).toBeCloseTo(point.x, 10);
+      expect(match.y).toBeCloseTo(point.y, 10);
+    }
+    // And the filter itself is a pure visibility mask over those same points.
+    expect(before.points.filter((point) => visibleIds.has(point.id)).length).toBe(
+      visible.length,
+    );
+  });
+
+  it("RADAR-GEO-V2-15 time range never rotates the compass", () => {
+    // Spec §2: DAY/WEEK/MONTH must not rotate sectors — radius is the only
+    // dimension the range is allowed to change.
+    const tools = [
+      item({ id: "r1", clusterId: "video-image", ageHours: 2 }),
+      item({ id: "r2", clusterId: "developer-coding", ageHours: 20 }),
+      item({ id: "r3", clusterId: "productivity", ageHours: 100 }),
+    ];
+    const day = layoutRadarPoints(tools, { rangeHours: 24, resolveCollisions: false });
+    const week = layoutRadarPoints(tools, { rangeHours: 168, resolveCollisions: false });
+    const month = layoutRadarPoints(tools, { rangeHours: 720, resolveCollisions: false });
+
+    for (const id of ["r1", "r2", "r3"]) {
+      const a = day.points.find((point) => point.id === id)!;
+      const b = week.points.find((point) => point.id === id)!;
+      const c = month.points.find((point) => point.id === id)!;
+      expect(b.semanticAngleDeg).toBeCloseTo(a.semanticAngleDeg, 10);
+      expect(c.semanticAngleDeg).toBeCloseTo(a.semanticAngleDeg, 10);
+    }
+    // Radius DOES respond to the range (age within the selected window).
+    const oldInDay = day.points.find((point) => point.id === "r3")!;
+    const oldInMonth = month.points.find((point) => point.id === "r3")!;
+    expect(oldInDay.radiusRatio).toBe(1);
+    expect(oldInMonth.radiusRatio).toBeLessThan(1);
   });
 });

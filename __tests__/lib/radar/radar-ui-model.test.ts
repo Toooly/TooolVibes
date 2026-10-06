@@ -496,10 +496,11 @@ describe("Radar UI model", () => {
   });
 
   it("usa i label di periodo V2 (rolling)", () => {
+    // Spec §3 — compact 24H / 7G / 30G control.
     expect(RADAR_RANGE_OPTIONS).toEqual([
-      { key: "day", label: "Oggi" },
-      { key: "week", label: "Ultimi 7 giorni" },
-      { key: "month", label: "Ultimi 30 giorni" },
+      { key: "day", label: "24H" },
+      { key: "week", label: "7G" },
+      { key: "month", label: "30G" },
     ]);
   });
 });

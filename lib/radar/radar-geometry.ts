@@ -2,9 +2,12 @@
  * Deterministic radial layout for the Radar map.
  *
  * SEMANTICS (never decorative — see `RADAR_VISUAL_SEMANTICS`):
- *   angle  → RadarTopicCluster sector. Every active cluster owns one angular
- *            sector; tools of the same cluster share it. Within a sector tools
- *            are spread by a deterministic index offset so they do not stack.
+ *   angle  → RadarTopicCluster sector on ONE FIXED GLOBAL COMPASS. Every
+ *            cluster owns a permanent angular sector, computed the same way for
+ *            every dataset, filter and time range. Filtering or searching NEVER
+ *            recomputes geometry, so a point's x/y is identical before and
+ *            after any filter. Within a sector tools are spread by a
+ *            deterministic index offset so they do not stack.
  *   radius → AGE WITHIN THE SELECTED RANGE. Center = now / newest, outer edge
  *            = oldest edge of the range. Items with no `createdAt` are placed
  *            on an explicit unknown-age band at the outer edge — we never
@@ -25,6 +28,10 @@
  */
 
 import type { ProductHuntRange } from "@/lib/radar/product-hunt-contract";
+import {
+  radarTopicClusterOrder,
+  radarTopicClusterSectorIndex,
+} from "@/lib/radar/radar-topic-clusters";
 
 export type RadarPoint = {
   id: string;
@@ -103,6 +110,12 @@ export type RadarLayoutResult = {
 
 export const RADAR_VIEWBOX_SIZE = 100;
 export const RADAR_CENTER = 50;
+/**
+ * The permanent compass: 8 sectors (one per RadarTopicCluster) shared by every
+ * dataset. Sector angles never depend on which clusters happen to be present.
+ */
+export const RADAR_COMPASS_SECTOR_COUNT = 8;
+export const RADAR_COMPASS_SECTOR_SPAN_DEG = 360 / RADAR_COMPASS_SECTOR_COUNT;
 const DEFAULT_OUTER_RADIUS = 42;
 const DEFAULT_INNER_RADIUS_RATIO = 0.12;
 const DEFAULT_RANGE_HOURS = 24;
@@ -316,12 +329,11 @@ export function layoutRadarPoints(
   const maxTangentialDeg = options.maxTangentialDeg ?? DEFAULT_MAX_TANGENTIAL_DEG;
   const shouldResolve = options.resolveCollisions !== false;
 
-  // Active clusters, in declared order — one angular sector each.
-  const clusterOrder = Array.from(
-    new Set(tools.map((tool) => radarLayoutClusterId(tool))),
-  ).sort((a, b) => a.localeCompare(b));
-  const sectorCount = Math.max(clusterOrder.length, 1);
-  const sectorSpanDeg = 360 / sectorCount;
+  // ONE FIXED GLOBAL COMPASS. The sector order is declared, not derived from
+  // the dataset, so filtering/searching can never move an existing point.
+  const clusterOrder = radarTopicClusterOrder();
+  const sectorCount = RADAR_COMPASS_SECTOR_COUNT;
+  const sectorSpanDeg = RADAR_COMPASS_SECTOR_SPAN_DEG;
 
   // Deterministic intra-sector distribution: order by age (newest first),
   // then by rank, then by id. Not semantic — purely to avoid stacking inside
@@ -354,7 +366,7 @@ export function layoutRadarPoints(
   const points: RadarPoint[] = [];
   for (const clusterId of clusterOrder) {
     const bucket = itemsByCluster.get(clusterId) ?? [];
-    const sectorIndex = Math.max(0, clusterOrder.indexOf(clusterId));
+    const sectorIndex = radarTopicClusterSectorIndex(clusterId);
     // Sector is centered on its own arc, starting at 12 o'clock.
     const sectorStartDeg = sectorIndex * sectorSpanDeg;
 
@@ -413,6 +425,107 @@ export function assertRadarPointsInBounds(
     const dy = point.y - RADAR_CENTER;
     return Math.sqrt(dx * dx + dy * dy) <= DEFAULT_OUTER_RADIUS + 0.01;
   });
+}
+
+/* ---------------------------------------------------------------------------
+ * Central pointer resolution (spec §1).
+ *
+ * WHY: the blip hit targets are 44px discs on a dense map, so they physically
+ * overlap. Letting the browser dispatch a click to whatever element happens to
+ * be on top makes a tap on tool A sometimes select its neighbour B.
+ *
+ * `resolveRadarTap` is the ONE place a physical tap becomes a selection. It
+ * compares the pointer against EVERY point's true centre, ranks candidates
+ * deterministically (distance, then id) and only reports `ambiguous` when the
+ * two best candidates are genuinely indistinguishable at that pixel.
+ * ------------------------------------------------------------------------- */
+
+export type RadarTapCandidate = {
+  point: RadarPoint;
+  /** Distance from the pointer to the point's true centre, viewBox units. */
+  distance: number;
+};
+
+export type RadarTapResolution =
+  | { kind: "none"; candidates: readonly RadarTapCandidate[] }
+  | { kind: "selected"; id: string; candidates: readonly RadarTapCandidate[] }
+  | { kind: "ambiguous"; candidates: readonly RadarTapCandidate[] };
+
+export type RadarTapOptions = {
+  /** Hit radius in viewBox units. Default `HIT_RADIUS_VIEWBOX` (44px). */
+  hitRadius?: number;
+  /**
+   * Two candidates closer than this (in distance-to-pointer) are treated as
+   * indistinguishable and the chooser is offered. Default 1.6 viewBox units.
+   */
+  ambiguityEpsilon?: number;
+  /** Max candidates reported. Default 4. */
+  maxCandidates?: number;
+};
+
+/** Default hit radius in viewBox units (≈44px at a 320px render). */
+export const RADAR_HIT_RADIUS_VIEWBOX = 7;
+
+/**
+ * Deterministic nearest-candidate tap resolution.
+ *
+ * Ranking: ascending distance to the pointer, then ascending point id.
+ * Same pointer + same points → same result, always.
+ */
+export function resolveRadarTap(
+  points: readonly RadarPoint[],
+  pointerX: number,
+  pointerY: number,
+  options: RadarTapOptions = {},
+): RadarTapResolution {
+  const hitRadius = options.hitRadius ?? RADAR_HIT_RADIUS_VIEWBOX;
+  // Ambiguity epsilon is expressed in viewBox units and deliberately kept BELOW
+  // the smallest visual blip radius (1.5). Tapping a signal's own centre must
+  // always be decisive; only genuinely indistinguishable neighbours (a tie, or
+  // two overlapping centres) raise the chooser.
+  const epsilon = options.ambiguityEpsilon ?? 0.75;
+  const maxCandidates = options.maxCandidates ?? 4;
+
+  if (
+    !Number.isFinite(pointerX) ||
+    !Number.isFinite(pointerY) ||
+    points.length === 0
+  ) {
+    return { kind: "none", candidates: [] };
+  }
+
+  const scored: RadarTapCandidate[] = [];
+  for (const point of points) {
+    const dx = point.x - pointerX;
+    const dy = point.y - pointerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance <= hitRadius) {
+      scored.push({ point, distance });
+    }
+  }
+
+  scored.sort((a, b) => {
+    if (a.distance !== b.distance) return a.distance - b.distance;
+    return a.point.id.localeCompare(b.point.id);
+  });
+
+  const candidates = scored.slice(0, maxCandidates);
+
+  if (candidates.length === 0) {
+    return { kind: "none", candidates: [] };
+  }
+  if (candidates.length === 1) {
+    return { kind: "selected", id: candidates[0].point.id, candidates };
+  }
+
+  const best = candidates[0];
+  const runnerUp = candidates[1];
+  if (best.distance - runnerUp.distance >= epsilon) {
+    // The nearest centre is clearly nearer — never a coin toss.
+    return { kind: "selected", id: best.point.id, candidates };
+  }
+
+  return { kind: "ambiguous", candidates };
 }
 
 /** Angle delta helper kept for tests of collision semantics. */
