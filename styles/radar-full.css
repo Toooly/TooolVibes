@@ -48,80 +48,119 @@
   font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.2rem;
 }
 
+/* §14 — display identity preserved, vertical cost tightened so the Radar
+   enters the first viewport at 390 under normal consent-dismissed state. */
 .tv-rx__title {
   font-family: var(--tv-font-display, "Anton", sans-serif);
-  font-size: clamp(1.6rem, 7vw, 2.4rem);
-  line-height: 1.05;
-  margin: 0 0 0.5rem;
+  font-size: clamp(1.35rem, 5.6vw, 1.85rem);
+  line-height: 1.02;
+  margin: 0 0 0.3rem;
   color: var(--tv-color-ink-100, #f5f3ff);
+  letter-spacing: 0.01em;
 }
 
 .tv-rx__lede {
   color: var(--tv-color-ink-300, #cbc6e8);
-  margin: 0 0 0.75rem;
-  line-height: 1.5;
+  margin: 0 0 0.45rem;
+  line-height: 1.4;
+  font-size: 0.8125rem;
   max-width: 34rem;
 }
 
-.tv-rx__freshness {
+/* ---------- §4 compact telemetry strip ---------------------------------
+   One dense line: source · state · range · freshness · refresh.
+   Replaces the previous vertically expensive source card. At 320px it
+   may wrap to two lines; it is never a large content card. */
+.tv-rx-telemetry {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
+  gap: 0.3rem 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.3;
   color: var(--tv-color-ink-300, #cbc6e8);
   border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  background: var(--tv-color-surface-raised, #120c2e);
-  border-radius: var(--tv-radius-px-md, 12px);
-  padding: 0.6rem 0.75rem;
+  border-radius: var(--tv-radius-px-pill, 999px);
+  background: color-mix(in srgb, var(--tv-color-surface-raised, #120c2e) 88%, transparent);
+  padding: 0.3rem 0.3rem 0.3rem 0.55rem;
+  margin: 0;
 }
 
-.tv-rx__freshness-dot {
-  inline-size: 8px;
-  block-size: 8px;
+.tv-rx-telemetry__dot {
+  inline-size: 6px;
+  block-size: 6px;
   border-radius: 50%;
-  background: var(--tv-color-cyan-500, #22d3ee);
+  background: var(--tv-color-green-500, #22c55e);
   flex: none;
 }
 
-.tv-rx__freshness-dot[data-state="stale"] {
+.tv-rx-telemetry__dot[data-state="stale"] {
   background: var(--tv-color-amber-500, #f59e0b);
 }
 
-.tv-rx__freshness-dot[data-state="error"],
-.tv-rx__freshness-dot[data-state="missing-token"] {
-  background: var(--tv-color-red-500, #f87171);
+.tv-rx-telemetry__dot[data-state="error"],
+.tv-rx-telemetry__dot[data-state="missing-token"] {
+  background: var(--tv-color-red-500, #ef4444);
 }
 
-.tv-rx__freshness-time {
+.tv-rx-telemetry__source {
+  color: var(--tv-color-ink-100, #f5f3ff);
+  font-weight: 600;
+}
+
+.tv-rx-telemetry__sep {
   color: var(--tv-color-ink-500, #8e87b8);
 }
 
-.tv-rx__refresh {
-  margin-inline-start: auto;
+.tv-rx-telemetry__state {
+  color: var(--tv-color-cyan-500, #22d3ee);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tv-rx-telemetry__range,
+.tv-rx-telemetry__time {
+  color: var(--tv-color-ink-400, #a49dc8);
+}
+
+.tv-rx-telemetry__time {
+  flex: 1 1 auto;
+}
+
+/* §4 — refresh is a compact icon control, not a full-width labelled button. */
+.tv-rx-telemetry__refresh {
+  inline-size: 30px;
+  block-size: 30px;
+  min-block-size: 30px;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  color: var(--tv-color-cyan-500, #22d3ee);
+  justify-content: center;
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  border-radius: 50%;
   background: transparent;
-  border: 1px solid currentColor;
-  border-radius: var(--tv-radius-px-pill, 999px);
-  padding: 0.35rem 0.7rem;
-  font-size: 0.75rem;
+  color: var(--tv-color-cyan-500, #22d3ee);
   cursor: pointer;
-  min-block-size: 44px;
+  flex: none;
+  /* 44px effective touch target without inflating the strip. */
+  position: relative;
 }
 
-.tv-rx__refresh:disabled {
-  opacity: 0.55;
-  cursor: progress;
+.tv-rx-telemetry__refresh::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
 }
 
-/* ---------- tabs -------------------------------------------------------- */
-
+.tv-rx-telemetry__refresh:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+/* §15 — compact horizontally efficient segmented mode rail. */
 .tv-rx__tabs {
   display: flex;
   gap: 0.4rem;
@@ -135,6 +174,7 @@
 }
 
 .tv-rx__tab {
+  flex: 0 0 auto;
   flex: none;
   min-block-size: 44px;
   padding: 0.5rem 0.9rem;
@@ -229,12 +269,7 @@
 
 /* ---------- radar map --------------------------------------------------- */
 
-.tv-rx-map {
-  inline-size: min(100%, 26rem);
-  margin-inline: auto;
-  aspect-ratio: 1;
-  position: relative;
-}
+/* ---------- §5/§18 radar map scale -------------------------------------
 
 .tv-rx-map__svg {
   inline-size: 100%;
@@ -350,6 +385,7 @@
 
 /* ---------- metrics / insights ------------------------------------------ */
 
+/* §12 — tight 3-column information rail. */
 .tv-rx-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -357,6 +393,7 @@
   margin: 0;
 }
 
+/* §12 — compact information rail: readable 3-up, never competing with the map. */
 .tv-rx-metrics > div {
   border: 1px solid var(--tv-color-surface-elevated, #1c1440);
   background: var(--tv-color-surface-raised, #120c2e);
@@ -460,11 +497,11 @@
 .tv-rx-row {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   border: 1px solid var(--tv-color-surface-elevated, #1c1440);
   background: var(--tv-color-surface-raised, #120c2e);
   border-radius: var(--tv-radius-px-md, 12px);
-  padding: 0.35rem 0.5rem;
+  padding: 0.2rem 0.45rem;
 }
 
 .tv-rx-row[data-selected="true"] {
@@ -917,18 +954,246 @@
   border: 0;
 }
 
+
+/* ---------- §2/§17 stage + intelligence rail ----------------------------
+   Mobile: `display: contents` on the main column lets each block take an
+   explicit `order`, so the map is the first object in the panel and the
+   sticky quick-preview sheet sits directly beneath it.
+   Desktop (>=1024): a genuine intelligence workspace — 60/65% Radar on the
+   left, 35/40% rail on the right. The dead empty region is gone. */
+.tv-rx__stage {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.tv-rx__main {
+  display: contents;
+}
+
+/* §2 mobile information order — Radar first, controls after. */
+.tv-rx-map,
+.tv-rx-map--skeleton,
+.tv-rx-state {
+  order: 1;
+}
+
+.tv-rx__rail {
+  order: 2;
+}
+
+.tv-rx-toolbar {
+  order: 3;
+}
+
+.tv-rx-legend {
+  order: 4;
+}
+
+.tv-rx-metrics {
+  order: 5;
+}
+
+.tv-rx-insights {
+  order: 6;
+}
+
+.tv-rx-section {
+  order: 7;
+}
+
+/* §19 — the Overview rail is desktop intelligence; mobile keeps the map +
+   list as the primary surface. The quick preview is not inside this block. */
+.tv-rx-rail {
+  display: none;
+  gap: 0.75rem;
+}
+
+.tv-rx-rail__block {
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  background: var(--tv-color-surface-raised, #120c2e);
+  border-radius: var(--tv-radius-px-md, 12px);
+  padding: 0.7rem 0.8rem;
+}
+
+.tv-rx-rail__title {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tv-color-cyan-500, #22d3ee);
+}
+
+.tv-rx-rail__dl {
+  margin: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.tv-rx-rail__dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.tv-rx-rail__dl dt {
+  color: var(--tv-color-ink-400, #a49dc8);
+}
+
+.tv-rx-rail__dl dd {
+  margin: 0;
+  color: var(--tv-color-ink-100, #f5f3ff);
+  text-align: end;
+}
+
+.tv-rx-rail__list,
+.tv-rx-rail__cats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.tv-rx-rail__signal {
+  inline-size: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  min-block-size: 44px;
+  padding: 0.15rem 0.2rem;
+  border-radius: var(--tv-radius-px-sm, 8px);
+}
+
+.tv-rx-rail__signal:hover {
+  background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 8%, transparent);
+}
+
+.tv-rx-rail__rank {
+  color: var(--tv-color-ink-500, #8e87b8);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  flex: none;
+}
+
+.tv-rx-rail__meta {
+  display: block;
+  color: var(--tv-color-ink-400, #a49dc8);
+  font-size: 0.75rem;
+}
+
+.tv-rx-rail__signal-value {
+  margin-inline-start: auto;
+  color: var(--tv-color-cyan-500, #22d3ee);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+
+.tv-rx-rail__cats li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  min-block-size: 28px;
+}
+
+.tv-rx-rail__swatch {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 2px;
+  background: var(--tv-color-cyan-500, #22d3ee);
+  flex: none;
+}
+
+.tv-rx-rail__swatch[data-color-index="1"] { background: #22d3ee; }
+.tv-rx-rail__swatch[data-color-index="2"] { background: #6a3cff; }
+.tv-rx-rail__swatch[data-color-index="3"] { background: #ec4899; }
+.tv-rx-rail__swatch[data-color-index="4"] { background: #22c55e; }
+.tv-rx-rail__swatch[data-color-index="5"] { background: #3b82f6; }
+.tv-rx-rail__swatch[data-color-index="6"] { background: #f59e0b; }
+.tv-rx-rail__swatch[data-color-index="7"] { background: #a78bfa; }
+.tv-rx-rail__swatch[data-color-index="0"] { background: #2dd4bf; }
+
+.tv-rx-rail__count {
+  margin-inline-start: auto;
+  color: var(--tv-color-ink-400, #a49dc8);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- §9 history-unavailable module ------------------------------
+   Compact premium state. No empty chart, no fabricated points. */
+.tv-rx-hist {
+  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
+  border-left: 3px solid var(--tv-color-gold-500, #f4c23e);
+  background: var(--tv-color-surface-raised, #120c2e);
+  border-radius: var(--tv-radius-px-md, 12px);
+  padding: 0.75rem 0.85rem;
+}
+
+.tv-rx-hist__head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.tv-rx-hist__marker {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--tv-color-gold-500, #f4c23e);
+  flex: none;
+}
+
+.tv-rx-hist__title {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--tv-color-ink-100, #f5f3ff);
+}
+
+.tv-rx-hist__body {
+  margin: 0.35rem 0 0.5rem;
+  color: var(--tv-color-ink-400, #a49dc8);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.tv-rx-hist__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tv-rx-hist__list li {
+  border: 1px solid color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 30%, transparent);
+  color: var(--tv-color-cyan-500, #22d3ee);
+  border-radius: var(--tv-radius-px-pill, 999px);
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+}
 /* ---------- responsive --------------------------------------------------- */
 
 @media (min-width: 48rem) {
   .tv-rx {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    align-items: start;
-    max-width: 72rem;
-    gap: 1.25rem;
+    max-width: 62rem;
+    gap: 1rem;
+  }
+
+  /* §5 — at tablet the map grows with the container. */
+  .tv-rx-map {
+    inline-size: min(100%, 30rem);
   }
 
   .tv-rx__header,
-  .tv-rx__freshness,
+  .tv-rx-telemetry,
   .tv-rx__tabs,
   .tv-rx-provenance,
   .tv-rx-sr-list {
@@ -941,6 +1206,59 @@
   }
 }
 
+
+/* ---------- §17/§18 desktop intelligence workspace (>=1024) -----------
+   LEFT  ~62%  large Radar instrument (560–650px)
+   RIGHT ~38%  persistent intelligence rail
+   The previous layout left a large dead empty region; this fills it with
+   real current-snapshot intelligence. */
+@media (min-width: 64rem) {
+  .tv-rx {
+    max-width: 80rem;
+  }
+
+  .tv-rx__stage {
+    grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .tv-rx__main {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  /* §2 mobile order is irrelevant once the columns take over. */
+  .tv-rx-map,
+  .tv-rx-map--skeleton,
+  .tv-rx-state,
+  .tv-rx__rail,
+  .tv-rx-toolbar,
+  .tv-rx-legend,
+  .tv-rx-metrics,
+  .tv-rx-insights,
+  .tv-rx-section {
+    order: initial;
+  }
+
+  /* §18 — genuine instrument scale, still circular (aspect-ratio 1). */
+  .tv-rx-map {
+    inline-size: min(100%, 38rem);
+  }
+
+  /* §19 — the rail is persistent on desktop, never a modal. */
+  .tv-rx-rail {
+    display: grid;
+    position: sticky;
+    top: 1rem;
+  }
+
+  .tv-rx-preview {
+    position: static;
+    max-block-size: none;
+  }
+}
 /* Desktop dock rests at `1rem` (see `styles/compare.css`), so the clearance
    mirrors that branch instead of the nav + gap stack. */
 @media (min-width: 1280px) {

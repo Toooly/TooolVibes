@@ -147,6 +147,22 @@ let productHuntTokenCache: { token: string; expiresAt: number } | null = null;
 const FALLBACK_TTL_MS = 5 * 60 * 1000;
 const RADAR_QA_FIXTURE_ENV_KEY = "TOOOLVIBES_RADAR_QA_FIXTURE";
 
+/**
+ * §6 — VISUAL-QA-ONLY density fixture.
+ *
+ * Purpose: design/QA of blip density, collision, category distribution, blip
+ * scale, selected state and map readability. ~14 tools across 6 canonical
+ * categories with deterministic varied votes / comments / launch dates.
+ *
+ * NEVER shipped as production data:
+ *   - gated behind `NODE_ENV === "development"` AND an explicit env opt-in
+ *   - labelled `source: "qa-fixture"` so the UI renders "QA FIXTURE"
+ *   - Product Hunt truth rules and production normalization are untouched
+ *
+ * Every matched item uses a REAL catalog slug so `matchRadarItemToCatalog`
+ * derives the canonical category cluster. Two unmatched items exercise the
+ * documented "Altri segnali" sector and the long-name / zero-attention edges.
+ */
 function getDevelopmentQaFixture(
   range: ProductHuntRange,
 ): ProductHuntPayload | null {
@@ -164,68 +180,163 @@ function getDevelopmentQaFixture(
     range,
     updatedAt: "2026-01-15T10:00:00.000Z",
     items: [
+      // ---- 1. Vibe coding -------------------------------------------------
       {
-        id: "fixture-canvas",
-        name: "Fixture Canvas",
-        tagline: "Segnale deterministico per il QA visuale locale.",
-        votesCount: 420,
-        commentsCount: 32,
-        productHuntUrl: "https://www.producthunt.com/posts/fixture-canvas",
-        thumbnailUrl: "https://ph-files.imgix.net/sample.png",
-        launchedAt: "2026-01-15T08:00:00.000Z",
-        topics: ["Artificial Intelligence", "Productivity"],
+        id: "qa-blink",
+        slug: "blink",
+        name: "Blink",
+        tagline: "Vibe coding con agenti sul progetto.",
+        votesCount: 842,
+        commentsCount: 96,
+        productHuntUrl: "https://www.producthunt.com/posts/blink",
+        launchedAt: "2026-01-15T07:40:00.000Z",
+        topics: ["Artificial Intelligence", "Developer Tools"],
       },
       {
-        id: "stable-signal",
-        name: "Stable Signal",
-        tagline: "Dato ripetibile per verificare il layout responsive.",
-        votesCount: 318,
-        commentsCount: 21,
-        productHuntUrl: "https://www.producthunt.com/posts/stable-signal",
-        launchedAt: "2026-01-15T06:30:00.000Z",
+        id: "qa-vibecode",
+        slug: "vibecode",
+        name: "Vibecode",
+        tagline: "Builder app AI in vibe coding.",
+        votesCount: 512,
+        commentsCount: 41,
+        productHuntUrl: "https://www.producthunt.com/posts/vibecode",
+        launchedAt: "2026-01-14T09:15:00.000Z",
         topics: ["Developer Tools"],
       },
+      // ---- 2. No-code -----------------------------------------------------
       {
-        id: "release-lens",
-        name: "Release Lens",
-        tagline: "Terzo elemento fisso della classifica di test.",
-        votesCount: 207,
-        commentsCount: 14,
-        productHuntUrl: "https://www.producthunt.com/posts/release-lens",
-        launchedAt: "2026-01-14T18:00:00.000Z",
+        id: "qa-weweb",
+        slug: "weweb",
+        name: "WeWeb",
+        tagline: "Builder web app no-code.",
+        votesCount: 674,
+        commentsCount: 58,
+        productHuntUrl: "https://www.producthunt.com/posts/weweb",
+        launchedAt: "2026-01-13T16:05:00.000Z",
+        topics: ["No-Code"],
       },
       {
-        id: "long-name-orchestrator",
+        id: "qa-notionapps",
+        slug: "notionapps",
+        name: "NotionApps",
+        tagline: "App no-code sopra Notion.",
+        votesCount: 233,
+        commentsCount: 77,
+        productHuntUrl: "https://www.producthunt.com/posts/notionapps",
+        launchedAt: "2026-01-12T11:30:00.000Z",
+        topics: ["No-Code", "Productivity"],
+      },
+      // ---- 3. Builder siti AI ---------------------------------------------
+      {
+        id: "qa-meku",
+        slug: "meku",
+        name: "Meku",
+        tagline: "Builder siti AI in vibe coding.",
+        votesCount: 388,
+        commentsCount: 25,
+        productHuntUrl: "https://www.producthunt.com/posts/meku",
+        launchedAt: "2026-01-15T05:50:00.000Z",
+        topics: ["Artificial Intelligence"],
+      },
+      {
+        id: "qa-wegic",
+        slug: "wegic",
+        name: "Wegic",
+        tagline: "Siti generati da un brief.",
+        votesCount: 129,
+        commentsCount: 12,
+        productHuntUrl: "https://www.producthunt.com/posts/wegic",
+        launchedAt: "2026-01-10T08:20:00.000Z",
+        topics: ["Design Tools"],
+      },
+      // ---- 4. Immagini AI -------------------------------------------------
+      {
+        id: "qa-betterpic",
+        slug: "betterpic",
+        name: "BetterPic",
+        tagline: "Ritratti AI professionali.",
+        votesCount: 596,
+        commentsCount: 33,
+        productHuntUrl: "https://www.producthunt.com/posts/betterpic",
+        launchedAt: "2026-01-14T19:45:00.000Z",
+        topics: ["Artificial Intelligence", "Photos"],
+      },
+      {
+        id: "qa-imagine-art",
+        slug: "imagine-art",
+        name: "Imagine Art",
+        tagline: "Suite creativa immagini AI.",
+        votesCount: 451,
+        commentsCount: 210,
+        productHuntUrl: "https://www.producthunt.com/posts/imagine-art",
+        launchedAt: "2026-01-11T13:10:00.000Z",
+        topics: ["Artificial Intelligence", "Design Tools"],
+      },
+      // ---- 5. Video AI ----------------------------------------------------
+      {
+        id: "qa-muse-ai",
+        slug: "muse-ai",
+        name: "Muse AI",
+        tagline: "Hosting video AI.",
+        votesCount: 318,
+        commentsCount: 19,
+        productHuntUrl: "https://www.producthunt.com/posts/muse-ai",
+        launchedAt: "2026-01-15T09:05:00.000Z",
+        topics: ["Video"],
+      },
+      {
+        id: "qa-vibrantsnap",
+        slug: "vibrantsnap",
+        name: "VibrantSnap",
+        tagline: "Clip video generati da testo.",
+        votesCount: 87,
+        commentsCount: 64,
+        productHuntUrl: "https://www.producthunt.com/posts/vibrantsnap",
+        launchedAt: "2026-01-09T17:25:00.000Z",
+        topics: ["Video", "Marketing"],
+      },
+      // ---- 6. Agenti AI ---------------------------------------------------
+      {
+        id: "qa-flowise",
+        slug: "flowise",
+        name: "Flowise",
+        tagline: "Agenti AI su misura.",
+        votesCount: 729,
+        commentsCount: 88,
+        productHuntUrl: "https://www.producthunt.com/posts/flowise",
+        launchedAt: "2026-01-13T06:35:00.000Z",
+        topics: ["Artificial Intelligence"],
+      },
+      {
+        id: "qa-agentx",
+        slug: "agentx",
+        name: "AgentX",
+        tagline: "Agenti operativi per i team.",
+        votesCount: 204,
+        commentsCount: 151,
+        productHuntUrl: "https://www.producthunt.com/posts/agentx",
+        launchedAt: "2026-01-08T10:00:00.000Z",
+        topics: ["Artificial Intelligence"],
+      },
+      // ---- "Altri segnali" edges (no catalog match) -----------------------
+      {
+        id: "qa-long-name",
         name: "Ultra Long Named Decision Orchestrator Platform X",
         tagline:
           "Tagline molto lunga per stressare wrapping tipografico su mobile e tablet senza collidere con metriche o rank.",
-        votesCount: 88,
-        commentsCount: 120,
+        votesCount: 63,
+        commentsCount: 222,
         productHuntUrl: "https://www.producthunt.com/posts/long-name-orchestrator",
+        launchedAt: "2026-01-07T12:00:00.000Z",
       },
       {
-        id: "quiet-launch",
+        id: "qa-quiet-launch",
         name: "Quiet",
         tagline: "Short.",
         votesCount: 0,
         commentsCount: 0,
         productHuntUrl: "https://www.producthunt.com/posts/quiet-launch",
-      },
-      {
-        id: "talky-beta",
-        name: "Talky Beta",
-        tagline: "Alto rapporto discussione/voto nel set corrente.",
-        votesCount: 12,
-        commentsCount: 96,
-        productHuntUrl: "https://www.producthunt.com/posts/talky-beta",
-      },
-      {
-        id: "no-thumb-signal",
-        name: "NoThumb Signal",
-        tagline: "Senza thumbnail per verificare fallback glyph.",
-        votesCount: 55,
-        commentsCount: 3,
-        productHuntUrl: "https://www.producthunt.com/posts/no-thumb-signal",
+        launchedAt: "2026-01-15T09:55:00.000Z",
       },
     ],
   };

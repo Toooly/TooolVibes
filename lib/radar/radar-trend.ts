@@ -20,10 +20,18 @@
 import type { RadarTool } from "@/lib/radar/radar-domain";
 
 export type RadarTrendKey =
-  | "acceleration"
+  | "top-voted"
+  | "discussion"
   | "new-entries"
-  | "cooling"
-  | "discussion";
+  | "acceleration"
+  | "cooling";
+
+/**
+ * Presentation group (visual convergence §9).
+ * `today`    → current-snapshot intelligence, always real.
+ * `movement` → requires historical snapshots; currently unavailable.
+ */
+export type RadarTrendGroup = "today" | "movement";
 
 export type RadarTrendSignal = {
   key: "votes" | "comments" | "attention" | "recency" | "rank";
@@ -42,6 +50,7 @@ export type RadarTrendEntry = {
 
 export type RadarTrendSection = {
   key: RadarTrendKey;
+  group: RadarTrendGroup;
   title: string;
   description: string;
   /** False → render the honest "Dati storici in raccolta" state instead of entries. */
@@ -115,8 +124,36 @@ export function buildRadarTrendSections(
 ): RadarTrendSection[] {
   const withLaunchDate = tools.filter((tool) => tool.launchedAt !== null);
 
+  const topVoted: RadarTrendSection = {
+    key: "top-voted",
+    group: "today",
+    title: "Più votati",
+    description: "Ordinati per numero reale di voti sul periodo.",
+    available: tools.length > 0,
+    unavailableReason:
+      tools.length === 0 ? "Nessun segnale nel periodo selezionato." : undefined,
+    entries: tools
+      .slice()
+      .sort(
+        (a, b) =>
+          b.votesCount - a.votesCount ||
+          b.commentsCount - a.commentsCount ||
+          a.rank - b.rank,
+      )
+      .slice(0, 6)
+      .map((tool) => {
+        const signals = baseSignals(tool);
+        return {
+          tool,
+          signals,
+          explanation: `${tool.votesCount} voti · ${tool.commentsCount} commenti · #${tool.rank} nel periodo`,
+        };
+      }),
+  };
+
   const acceleration: RadarTrendSection = {
     key: "acceleration",
+    group: "movement",
     title: "In accelerazione",
     description: `Crescita misurata rispetto allo snapshot precedente.`,
     available: options.historyAvailable,
@@ -126,6 +163,7 @@ export function buildRadarTrendSections(
 
   const cooling: RadarTrendSection = {
     key: "cooling",
+    group: "movement",
     title: "In raffreddamento",
     description: "Calo misurato rispetto allo snapshot precedente.",
     available: options.historyAvailable,
@@ -135,6 +173,7 @@ export function buildRadarTrendSections(
 
   const newEntries: RadarTrendSection = {
     key: "new-entries",
+    group: "today",
     title: "Nuovi ingressi",
     description: `Lanci con data di pubblicazione ${options.rangeLabel}.`,
     available: withLaunchDate.length > 0,
@@ -158,6 +197,7 @@ export function buildRadarTrendSections(
 
   const discussion: RadarTrendSection = {
     key: "discussion",
+    group: "today",
     title: "Più discussi",
     description: "Ordinati per numero reale di commenti sul periodo.",
     available: tools.length > 0,
@@ -182,7 +222,8 @@ export function buildRadarTrendSections(
       }),
   };
 
-  return [acceleration, newEntries, discussion, cooling];
+  // §9 — current-snapshot intelligence first, movement (history) last.
+  return [topVoted, discussion, newEntries, acceleration, cooling];
 }
 
 /**

@@ -68,7 +68,7 @@ export const navigationRegistry: readonly NavDestination[] = [
     scope: "primary",
     scopeDecision: "Stack operativi in navigazione primaria: combinazioni, non liste.",
     placements: [
-      { surface: "header-v2-desktop", order: 2, icon: Layers3 },
+      { surface: "header-v2-desktop", order: 3, icon: Layers3 },
       { surface: "bottom-nav", order: 3, icon: Layers3 },
       { surface: "footer-v2-product", order: 4, icon: Layers3 },
     ],
@@ -85,7 +85,7 @@ export const navigationRegistry: readonly NavDestination[] = [
     scope: "primary",
     scopeDecision: "Libreria di candidati, disponibile senza account.",
     placements: [
-      { surface: "header-v2-desktop", order: 3, icon: Bookmark },
+      { surface: "header-v2-desktop", order: 4, icon: Bookmark },
       { surface: "bottom-nav", order: 4, icon: Bookmark },
       { surface: "footer-v2-product", order: 3, icon: Bookmark },
     ],
@@ -101,8 +101,9 @@ export const navigationRegistry: readonly NavDestination[] = [
     releaseFlag: "radar",
     scope: "primary",
     scopeDecision:
-      "Intelligenza di mercato: tab primaria del Bottom Nav (spec §37) oltre che facet del Catalogo e footer.",
+      "Intelligenza di mercato: destinazione primaria autenticata (header desktop + Bottom Nav, spec §37/§20) oltre che footer. Guest: assente.",
     placements: [
+      { surface: "header-v2-desktop", order: 2, icon: Radar },
       { surface: "bottom-nav", order: 2, icon: Radar },
       { surface: "footer-v2-product", order: 1, icon: Radar },
     ],

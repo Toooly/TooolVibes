@@ -96,9 +96,12 @@ export function CompareToggle({
         } ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
         style={{
           display: "inline-flex",
-          borderColor: "var(--line)",
-          background: "rgba(18, 13, 46, 0.92)",
-          color: "#f4f1ff",
+          // COMPARE = Logo Cyan (#22D3EE) — canonical Catalog semantics
+          // (styles/archive-v4.css "COMPARE = Logo Cyan"). OFF is a
+          // restrained cyan tint, ON is full cyan.
+          borderColor: isSelected ? "#22d3ee" : "rgba(34, 211, 238, 0.3)",
+          background: isSelected ? "#22d3ee" : "rgba(34, 211, 238, 0.1)",
+          color: isSelected ? "#0b0620" : "#22d3ee",
         }}
         aria-pressed={isSelected}
         aria-label={ariaLabel}
@@ -117,9 +120,10 @@ export function CompareToggle({
         compact ? "px-2.75 py-1.25 text-xs" : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
       } ${isSelected ? "is-active" : ""} ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
       style={{
-        borderColor: "var(--line)",
-        background: "rgba(18, 13, 46, 0.92)",
-        color: "#f4f1ff",
+        // COMPARE = Logo Cyan — same canonical semantics as icon mode.
+        borderColor: isSelected ? "#22d3ee" : "rgba(34, 211, 238, 0.3)",
+        background: isSelected ? "#22d3ee" : "rgba(34, 211, 238, 0.1)",
+        color: isSelected ? "#0b0620" : "#22d3ee",
       }}
       aria-pressed={isSelected}
       data-sonic-action="compare"

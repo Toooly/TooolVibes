@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { applyAuthenticatedPrimaryNav } from "@/lib/navigation/account-primary-nav";
 import { navigationRegistry } from "@/lib/navigation/destinations";
 import {
   NavigationReleaseConfigError,
@@ -28,6 +29,7 @@ const EXPECTED_SURFACE_INVENTORY: Readonly<
   "header-v2-desktop": [
     ["Home", "/"],
     ["Catalogo", "/archivio"],
+    ["Radar", "/radar"],
     ["Raccolte", "/collections"],
     ["Salvati", "/shortlist"],
   ],
@@ -166,8 +168,8 @@ describe("V1 public navigation registry", () => {
     expect(new Set(bottomIds).size).toBe(bottomIds.length);
     expect(bottomIds).toEqual(expect.arrayContaining(primaryIds));
 
-    // The desktop header exposes the subset of primary destinations that
-    // declare a `header-v2-desktop` placement (Radar is Bottom Nav + footer).
+    // The desktop header exposes every primary destination that declares a
+    // `header-v2-desktop` placement — including Radar (visual convergence §20).
     const headerIds = getNavItemsForSurface("header-v2-desktop").map((item) => item.id);
     expect(new Set(headerIds).size).toBe(headerIds.length);
     const headerPrimaries = navigationRegistry
@@ -180,6 +182,30 @@ describe("V1 public navigation registry", () => {
       )
       .map((destination) => destination.id);
     expect(headerIds).toEqual(expect.arrayContaining(headerPrimaries));
+    // Visual convergence §20 — Radar is a primary destination on the
+    // authenticated desktop header, sourced from the SAME registry as the
+    // Bottom Nav (no Radar-only desktop link).
+    expect(headerIds).toContain("radar");
+    expect(headerIds.indexOf("radar")).toBeGreaterThan(headerIds.indexOf("catalog"));
+  });
+
+  it("keeps Radar out of the guest primary nav on both desktop and mobile", () => {
+    const guestHeader = applyAuthenticatedPrimaryNav(
+      getNavItemsForSurface("header-v2-desktop"),
+      false,
+    );
+    const guestBottom = applyAuthenticatedPrimaryNav(
+      getNavItemsForSurface("bottom-nav"),
+      false,
+    );
+    expect(guestHeader.map((item) => item.id)).not.toContain("radar");
+    expect(guestBottom.map((item) => item.id)).not.toContain("radar");
+
+    const loggedHeader = applyAuthenticatedPrimaryNav(
+      getNavItemsForSurface("header-v2-desktop"),
+      true,
+    );
+    expect(loggedHeader.map((item) => item.id)).toContain("radar");
   });
 });
 

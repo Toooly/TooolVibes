@@ -17,7 +17,6 @@ import { RefreshCw, Search } from "lucide-react";
 
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { useAccount } from "@/components/account/account-provider";
-import { CatalogoFacetHead } from "@/components/archive/catalogo-facet-head";
 import { RadarLegend } from "@/components/radar/radar-legend";
 import { RadarMap } from "@/components/radar/radar-map";
 import {
@@ -32,7 +31,12 @@ import { usePublicToolCatalog } from "@/lib/data/public-tool-catalog-context";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 import { RADAR_RANGE_OPTIONS, resolveRadarUiModel } from "@/lib/radar/radar-ui-model";
-import { buildRadarView, UNCATEGORIZED_CATEGORY_ID } from "@/lib/radar/radar-domain";
+import {
+  buildRadarView,
+  UNCATEGORIZED_CATEGORY_ID,
+  type RadarTool,
+  type RadarView,
+} from "@/lib/radar/radar-domain";
 import { layoutRadarPoints } from "@/lib/radar/radar-geometry";
 import {
   RADAR_TABS,
@@ -197,27 +201,32 @@ export function RadarExperience() {
           La tua mappa AI personale: esplora trend, scopri opportunit&agrave; e
           costruisci il tuo vantaggio con l&apos;AI.
         </p>
-        <CatalogoFacetHead active="radar" />
       </header>
 
-      {/* Freshness (spec §22) — real timestamps only. */}
-      <p className="tv-rx__freshness" aria-live="polite">
-        <span className="tv-rx__freshness-dot" data-state={uiModel.state} aria-hidden="true" />
-        <span>
-          Fonte: {view.snapshot.sourceLabel} &middot; {rangeLabel} &middot;{" "}
-          {uiModel.statusLabel}
+      {/* §4 compact telemetry strip — real timestamps only (spec §22). */}
+      <p className="tv-rx-telemetry" aria-live="polite">
+        <span className="tv-rx-telemetry__dot" data-state={uiModel.state} aria-hidden="true" />
+        <span className="tv-rx-telemetry__source">{view.snapshot.sourceLabel}</span>
+        <span className="tv-rx-telemetry__sep" aria-hidden="true">
+          &middot;
         </span>
-        <span className="tv-rx__freshness-time">
+        <span className="tv-rx-telemetry__state">{uiModel.statusLabel}</span>
+        <span className="tv-rx-telemetry__sep" aria-hidden="true">
+          &middot;
+        </span>
+        <span className="tv-rx-telemetry__range">{rangeLabel}</span>
+        <span className="tv-rx-telemetry__time">
           Aggiornato {uiModel.updatedAtLabel}
         </span>
         <button
           type="button"
-          className="tv-rx__refresh"
+          className="tv-rx-telemetry__refresh"
           onClick={() => refetch()}
           disabled={isFetching}
+          aria-label={isFetching ? "Aggiornamento in corso" : "Aggiorna i dati"}
+          title={isFetching ? "Aggiornamento in corso" : "Aggiorna i dati"}
         >
-          <RefreshCw size={12} aria-hidden="true" />
-          {isFetching ? "Aggiornamento in corso…" : "Aggiorna i dati"}
+          <RefreshCw size={13} aria-hidden="true" />
         </button>
       </p>
 
@@ -247,67 +256,98 @@ export function RadarExperience() {
           aria-labelledby="tv-rx-tab-panoramica"
           className="tv-rx__panel"
         >
-          <RadarToolbar
-            categories={view.categories}
-            activeCategory={urlState.category}
-            onCategory={(category) => setUrlState({ category })}
-            query={urlState.query}
-            onQuery={(q) => setUrlState({ query: q })}
-          />
+          <div className="tv-rx__stage">
+            <div className="tv-rx__main">
+              {/* §2/§5 — the Radar is the hero: it renders before any control. */}
+              {isLoading ? (
+                <RadarMapSkeleton />
+              ) : filteredTools.length === 0 ? (
+                <RadarEmptyState
+                  state={uiModel.state}
+                  hasQuery={Boolean(query)}
+                  onClear={() => setUrlState({ category: null, query: null })}
+                />
+              ) : (
+                <RadarMap
+                  tools={filteredTools}
+                  categories={view.categories}
+                  selectedId={urlState.tool}
+                  highlightedId={highlightedId}
+                  onSelect={handleSelect}
+                />
+              )}
 
-          {isLoading ? (
-            <RadarMapSkeleton />
-          ) : filteredTools.length === 0 ? (
-            <RadarEmptyState
-              state={uiModel.state}
-              hasQuery={Boolean(query)}
-              onClear={() => setUrlState({ category: null, query: null })}
-            />
-          ) : (
-            <>
-              <RadarMap
-                tools={filteredTools}
+              {/* §8/§16 — one contextual filter system, below the map. */}
+              <RadarToolbar
                 categories={view.categories}
-                selectedId={urlState.tool}
-                highlightedId={highlightedId}
-                onSelect={handleSelect}
+                activeCategory={urlState.category}
+                onCategory={(category) => setUrlState({ category })}
+                query={urlState.query}
+                onQuery={(q) => setUrlState({ query: q })}
               />
-              <RadarLegend radiusBasis={radiusBasis} />
-            </>
-          )}
 
-          <RadarSummaryMetrics
-            total={summary.total}
-            newInWindow={summary.newInWindow}
-            categories={summary.categories}
-          />
+              {!isLoading && filteredTools.length > 0 ? (
+                <RadarLegend radiusBasis={radiusBasis} />
+              ) : null}
 
-          <RadarInsightStrip view={view} />
+              {/* §12 — compact metrics rail, never competing with the map. */}
+              <RadarSummaryMetrics
+                total={summary.total}
+                newInWindow={summary.newInWindow}
+                categories={summary.categories}
+              />
 
-          {filteredTools.length > 0 ? (
-            <section className="tv-rx-section" aria-labelledby="tv-rx-list-title">
-              <header className="tv-rx-section__head">
-                <h2 id="tv-rx-list-title" className="tv-rx-section__title">
-                  Tool nel Radar
-                </h2>
-                <p className="tv-rx-section__desc">
-                  {filteredTools.length} {filteredTools.length === 1 ? "segnale" : "segnali"}
-                  {urlState.category ? " nella categoria selezionata" : " nel periodo"}
-                </p>
-              </header>
-              <ol className="tv-rx-list">
-                {filteredTools.map((tool, index) => (
-                  <RadarToolRow
-                    key={tool.id}
-                    tool={tool}
-                    index={index}
-                    selected={urlState.tool === tool.id}
-                    onSelect={handleSelect}
-                  />
-                ))}
-              </ol>
-            </section>
-          ) : null}
+              <RadarInsightStrip view={view} />
+
+              {filteredTools.length > 0 ? (
+                <section className="tv-rx-section" aria-labelledby="tv-rx-list-title">
+                  <header className="tv-rx-section__head">
+                    <h2 id="tv-rx-list-title" className="tv-rx-section__title">
+                      Tool nel Radar
+                    </h2>
+                    <p className="tv-rx-section__desc">
+                      {filteredTools.length}{" "}
+                      {filteredTools.length === 1 ? "segnale" : "segnali"}
+                      {urlState.category ? " nella categoria selezionata" : " nel periodo"}
+                    </p>
+                  </header>
+                  <ol className="tv-rx-list">
+                    {filteredTools.map((tool, index) => (
+                      <RadarToolRow
+                        key={tool.id}
+                        tool={tool}
+                        index={index}
+                        selected={urlState.tool === tool.id}
+                        onSelect={handleSelect}
+                      />
+                    ))}
+                  </ol>
+                </section>
+              ) : null}
+            </div>
+
+            {/* §19 — desktop intelligence rail: selected Tool preview when
+                one is chosen, otherwise meaningful Overview intelligence.
+                On mobile this stays the sticky quick-preview sheet. */}
+            <aside className="tv-rx__rail" aria-label="Pannello intelligenza">
+              {selectedTool ? (
+                <RadarQuickPreview
+                  tool={selectedTool}
+                  historyAvailable={view.snapshot.historyAvailable}
+                  onClose={handleClosePreview}
+                />
+              ) : (
+                <RadarRailOverview
+                  view={view}
+                  tools={filteredTools}
+                  rangeLabel={rangeLabel}
+                  statusLabel={uiModel.statusLabel}
+                  updatedAtLabel={uiModel.updatedAtLabel}
+                  onSelect={handleSelect}
+                />
+              )}
+            </aside>
+          </div>
         </div>
       ) : null}
 
@@ -362,14 +402,6 @@ export function RadarExperience() {
         </div>
       ) : null}
 
-      {selectedTool ? (
-        <RadarQuickPreview
-          tool={selectedTool}
-          historyAvailable={view.snapshot.historyAvailable}
-          onClose={handleClosePreview}
-        />
-      ) : null}
-
       <TinyAdzInlineSlot placement="radar-feed" />
 
       <details className="tv-rx-provenance">
@@ -405,6 +437,110 @@ export function RadarExperience() {
             </li>
           ))}
         </ol>
+      </section>
+    </div>
+  );
+}
+
+/**
+ * §19 — desktop intelligence rail when no Tool is selected.
+ * Real current-snapshot signals only: never invented history or momentum.
+ */
+function RadarRailOverview({
+  view,
+  tools,
+  rangeLabel,
+  statusLabel,
+  updatedAtLabel,
+  onSelect,
+}: {
+  view: RadarView;
+  tools: readonly RadarTool[];
+  rangeLabel: string;
+  statusLabel: string;
+  updatedAtLabel: string;
+  onSelect: (toolId: string) => void;
+}) {
+  const top = tools.slice(0, 4);
+  return (
+    <div className="tv-rx-rail">
+      <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-fresh">
+        <h3 id="tv-rx-rail-fresh" className="tv-rx-rail__title">
+          Fonte e freschezza
+        </h3>
+        <dl className="tv-rx-rail__dl">
+          <div>
+            <dt>Fonte</dt>
+            <dd>{view.snapshot.sourceLabel}</dd>
+          </div>
+          <div>
+            <dt>Stato</dt>
+            <dd>{statusLabel}</dd>
+          </div>
+          <div>
+            <dt>Aggiornato</dt>
+            <dd>{updatedAtLabel}</dd>
+          </div>
+          <div>
+            <dt>Finestra</dt>
+            <dd>{rangeLabel}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-signals">
+        <h3 id="tv-rx-rail-signals" className="tv-rx-rail__title">
+          Segnali in evidenza
+        </h3>
+        {top.length === 0 ? (
+          <p className="tv-rx-honest" role="status">
+            Nessun segnale nel periodo selezionato.
+          </p>
+        ) : (
+          <ol className="tv-rx-rail__list">
+            {top.map((tool, index) => (
+              <li key={tool.id}>
+                <button
+                  type="button"
+                  className="tv-rx-rail__signal"
+                  onClick={() => onSelect(tool.id)}
+                >
+                  <span className="tv-rx-rail__rank" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    <strong>{tool.name}</strong>
+                    <span className="tv-rx-rail__meta">
+                      {tool.category?.label ?? "Altri segnali"}
+                    </span>
+                  </span>
+                  <span className="tv-rx-rail__signal-value">
+                    {tool.votesCount} voti
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+
+      <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-cats">
+        <h3 id="tv-rx-rail-cats" className="tv-rx-rail__title">
+          Categorie attive
+        </h3>
+        <ul className="tv-rx-rail__cats">
+          {view.categories.map((category) => (
+            <li key={category.id}>
+              <span
+                className="tv-rx-rail__swatch"
+                data-color-index={category.colorIndex}
+                aria-hidden="true"
+              />
+              {category.label}
+              <span className="tv-rx-rail__count">{category.count}</span>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );

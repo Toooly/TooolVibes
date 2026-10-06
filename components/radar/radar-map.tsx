@@ -129,6 +129,8 @@ export function RadarMap({
                 data-selected={isSelected ? "true" : undefined}
                 data-highlighted={isHighlighted ? "true" : undefined}
                 data-category={tool.category?.id ?? "altri-segnali"}
+                onClick={() => onSelect(tool.id)}
+                style={{ cursor: "pointer" }}
               >
                 {/* 44px effective touch target (transparent). */}
                 <circle
@@ -139,7 +141,6 @@ export function RadarMap({
                   role="button"
                   tabIndex={0}
                   aria-label={`${tool.name}. ${tool.category?.label ?? "Altri segnali"}. ${tool.votesCount} voti, ${tool.commentsCount} commenti, posizione ${tool.rank}.`}
-                  onClick={() => onSelect(tool.id)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
@@ -148,6 +149,7 @@ export function RadarMap({
                   }}
                 />
                 <circle
+                  style={{ pointerEvents: "none" }}
                   cx={point.x}
                   cy={point.y}
                   r={point.size}

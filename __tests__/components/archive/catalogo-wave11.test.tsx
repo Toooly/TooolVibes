@@ -54,13 +54,16 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
     expect(page).toContain("MemberOnlyGate");
   });
 
-  it("W11-T6 T7 shared facet chrome is wired into archive and radar", () => {
+  it("W11-T6 T7 facet chrome stays canonical for archive only", () => {
+    // Visual convergence §3 — the "Tutti / Radar" lens control duplicated page
+    // identity above the Radar source block and stacked a third pill row before
+    // the map. It is removed from Radar; the shared facet component remains the
+    // canonical Catalogo lens on /archivio.
     const archive = readSource("components/archive/definitive-archive.tsx");
     const radar = readSource("components/radar/full-radar-experience.tsx");
     expect(archive).toContain("CatalogoFacetHead");
     expect(archive).toContain('active="tutti"');
-    expect(radar).toContain("CatalogoFacetHead");
-    expect(radar).toContain('active="radar"');
+    expect(radar).not.toContain("CatalogoFacetHead");
   });
 
   it("W11-T10 tray is not in archive source", () => {
@@ -100,7 +103,8 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
     expect(page).not.toMatch(/title:\s*"Segnale"/);
     expect(page).toContain('title: "Radar: cosa sta emergendo adesso"');
     const experience = readSource("components/radar/full-radar-experience.tsx");
-    expect(experience).toContain("CatalogoFacetHead");
+    // §3 — no redundant Catalogo lens control on the Radar surface.
+    expect(experience).not.toContain("CatalogoFacetHead");
     expect(experience).not.toMatch(/<h1[^>]*>\s*Segnale/);
   });
 

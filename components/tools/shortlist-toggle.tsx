@@ -103,9 +103,12 @@ export function ShortlistToggle({
             isSaved ? "is-active" : ""
           } ${isFresh ? "is-fresh" : ""}`}
           style={{
-            borderColor: isSaved ? "rgba(112,82,255,0.24)" : "var(--line)",
-            background: isSaved ? "#6a3cff" : "rgba(18, 13, 46, 0.92)",
-            color: "#f4f1ff",
+            // SAVE = TrueVibes Gold (#F4C23E) — canonical Catalog semantics
+            // (styles/archive-v4.css "SAVE = TrueVibes Gold"). OFF is a
+            // restrained gold tint, ON is full gold. Never violet.
+            borderColor: isSaved ? "#f4c23e" : "rgba(244, 194, 62, 0.3)",
+            background: isSaved ? "#f4c23e" : "rgba(244, 194, 62, 0.1)",
+            color: isSaved ? "#0b0620" : "#f4c23e",
             touchAction: "manipulation",
           }}
           aria-pressed={isSaved}
@@ -114,7 +117,7 @@ export function ShortlistToggle({
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
             <path
-              d="M12 21l-1.1-1C6 15.6 3 13 3 9.8 3 7.2 5.1 5 7.7 5c1.5 0 3 .7 4 1.9 1-1.2 2.5-1.9 4-1.9C18.9 5 21 7.2 21 9.8c0 3.2-3 5.8-7.9 10.2L12 21z"
+              d="M6 3.5h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.5a1 1 0 0 1 1-1z"
               stroke="currentColor"
               strokeWidth="1.4"
               fill={isSaved ? "currentColor" : "none"}
@@ -141,11 +144,10 @@ export function ShortlistToggle({
             : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
         }`}
         style={{
-          borderColor: isSaved ? "rgba(112,82,255,0.24)" : "var(--line)",
-          background: isSaved
-            ? "#6a3cff"
-            : "rgba(18, 13, 46, 0.92)",
-          color: "#f4f1ff",
+          // SAVE = TrueVibes Gold — same canonical semantics as icon mode.
+          borderColor: isSaved ? "#f4c23e" : "rgba(244, 194, 62, 0.3)",
+          background: isSaved ? "#f4c23e" : "rgba(244, 194, 62, 0.1)",
+          color: isSaved ? "#0b0620" : "#f4c23e",
           touchAction: "manipulation",
         }}
         aria-pressed={isSaved}

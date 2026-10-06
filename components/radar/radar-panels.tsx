@@ -77,12 +77,57 @@ export function RadarTrendPanel({
   onSelect: (toolId: string) => void;
 }) {
   const sections = buildRadarTrendSections(tools, { historyAvailable, rangeLabel });
+  const today = sections.filter((section) => section.group === "today");
+  const movement = sections.filter((section) => section.group === "movement");
+  const movementAvailable = movement.some((section) => section.available);
   return (
     <div className="tv-rx-trend">
-      {sections.map((section) => (
+      <p className="tv-rx-subtitle">Oggi</p>
+      {today.map((section) => (
         <TrendSection key={section.key} section={section} onSelect={onSelect} />
       ))}
+
+      <p className="tv-rx-subtitle">Movimento nel tempo</p>
+      {movementAvailable ? (
+        movement.map((section) => (
+          <TrendSection key={section.key} section={section} onSelect={onSelect} />
+        ))
+      ) : (
+        <HistoryUnavailableModule />
+      )}
     </div>
+  );
+}
+
+/**
+ * §9 — premium compact "history unavailable" module.
+ * Historical snapshots do not exist yet, so no acceleration/cooling claim and
+ * no chart points are ever fabricated. Lists the future signals explicitly.
+ */
+function HistoryUnavailableModule() {
+  return (
+    <section
+      className="tv-rx-hist"
+      aria-labelledby="tv-rx-hist-title"
+      data-history="false"
+    >
+      <header className="tv-rx-hist__head">
+        <span className="tv-rx-hist__marker" aria-hidden="true" />
+        <h3 id="tv-rx-hist-title" className="tv-rx-hist__title">
+          Dati storici in raccolta
+        </h3>
+      </header>
+      <p className="tv-rx-hist__body">
+        {RADAR_HISTORY_UNAVAILABLE_REASON} La raccolta degli snapshot è già
+        attiva: da qui a poco il movimento diventerà leggibile.
+      </p>
+      <ul className="tv-rx-hist__list">
+        <li>variazione attenzione</li>
+        <li>movimento ranking</li>
+        <li>accelerazione</li>
+        <li>raffreddamento</li>
+      </ul>
+    </section>
   );
 }
 
@@ -123,9 +168,6 @@ function TrendSection({
                 <span className="tv-rx-trend__why">{entry.explanation}</span>
                 <span className="tv-rx-trend__why-label">Perchè è in questa lista</span>
               </button>
-              <span className="tv-rx-trend__chart" data-history="false">
-                Dati storici in raccolta
-              </span>
             </li>
           ))}
         </ol>

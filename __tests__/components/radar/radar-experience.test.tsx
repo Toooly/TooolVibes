@@ -186,7 +186,17 @@ describe("RadarExperience", () => {
     renderRadar();
 
     await screen.findAllByText(/Alpha Tool/);
-    expect(screen.getByText(/fonte: product hunt/i)).toBeTruthy();
+    // §4 telemetry strip — real source label and real refresh affordance.
+    // The "Fonte:" prefix was dropped by the compact strip; the source value
+    // itself is still the canonical Product Hunt label.
+    const source = document.querySelector(".tv-rx-telemetry__source");
+    expect(source?.textContent ?? "").toMatch(/product hunt/i);
+    expect(
+      screen.getByRole("button", { name: /aggiorna i dati/i }),
+    ).toBeTruthy();
+    // The whole telemetry strip is one compact control row, not a content card.
+    expect(document.querySelector(".tv-rx-telemetry")).toBeTruthy();
+    expect(document.querySelector(".tv-rx__freshness")).toBeNull();
     expect(screen.getAllByText(/28 lug 2026/i).length).toBeGreaterThan(0);
   });
 

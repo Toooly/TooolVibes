@@ -97,12 +97,15 @@ describe("Wave 14 — responsive contracts", () => {
     expect(css).toMatch(/\.tv-stack-pick--compact input,[\s\S]*?min-height:\s*2\.75rem/);
   });
 
-  it("W14-T9 Radar facet chrome remains CatalogoFacetHead", () => {
+  it("W14-T9 facet chrome stays on archive; Radar owns its own hero", () => {
+    // Visual convergence §3 — the "Tutti / Radar" lens control duplicated page
+    // identity and stacked a third pill row before the map. Removed from Radar;
+    // the shared Catalogo facet component remains canonical on /archivio.
     const archive = read("components/archive/definitive-archive.tsx");
     const radar = read("components/radar/full-radar-experience.tsx");
     expect(archive).toContain("CatalogoFacetHead");
-    expect(radar).toContain("CatalogoFacetHead");
-    expect(radar).toContain('active="radar"');
+    expect(archive).toContain('active="tutti"');
+    expect(radar).not.toContain("CatalogoFacetHead");
   });
 
   it("W14-T10 Trova / Vai / Fai grouping stays in the palette", () => {
