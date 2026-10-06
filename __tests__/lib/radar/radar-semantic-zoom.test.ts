@@ -9,6 +9,9 @@ import { describe, expect, it } from "vitest";
 
 import {
   computeRadarCamera,
+  radarCameraToGlobal,
+  radarCameraToView,
+  radarCameraZoom,
   RADAR_ZOOM_ALGORITHM,
   RADAR_ZOOM_BASE,
   RADAR_ZOOM_LADDER,
@@ -22,6 +25,12 @@ import {
   RADAR_OVERVIEW_ALGORITHM,
   type RadarLodInput,
 } from "@/lib/radar/radar-lod";
+import {
+  RADAR_HIT_RADIUS_VIEWBOX,
+  RADAR_TAP_AMBIGUITY_EPSILON,
+  resolveRadarTap,
+  type RadarPoint,
+} from "@/lib/radar/radar-geometry";
 import {
   planRadarSpiderfy,
   radarSpiderNeedsChooser,
@@ -444,5 +453,124 @@ describe("RADAR-ZOOM-SPIDERFY residual collisions (§9, closure §1-§4)", () =>
     // Every member is represented exactly once.
     expect(new Set(members).size).toBe(7);
     expect(members.length).toBe(7);
+  });
+});
+
+
+/**
+ * Zoom hit-testing (the physical defect: "lo zoom non funziona, non riesco a
+ * schiacciare i dots").
+ *
+ * The camera paints a GLOBAL point p at `zoom * (p - center) + 50`. The old
+ * handler compared the raw viewBox pointer against global coordinates, so at
+ * any zoom other than 1 a tap never landed on the signal the user could see.
+ */
+describe("RADAR-ZOOM-TAP camera-aware hit-testing", () => {
+  const nodes = [
+    node({ id: "a", x: 40, y: 50, radius: 2 }),
+    node({ id: "b", x: 44, y: 50, radius: 2 }),
+    node({ id: "c", x: 48, y: 50, radius: 2 }),
+  ];
+  // `resolveRadarTap` only reads id/x/y, but it is typed against RadarPoint.
+  const points = nodes.map(
+    (entry, index): RadarPoint => ({
+      id: entry.id,
+      x: entry.x,
+      y: entry.y,
+      size: entry.radius,
+      angleDeg: 0,
+      radiusRatio: 0.5,
+      category: "developer-coding",
+      clusterId: "developer-coding",
+      rank: index + 1,
+      ageKnown: true,
+      ageHours: 6,
+      semanticAngleDeg: 0,
+      collisionOffsetDeg: 0,
+    }),
+  );
+
+  it("RADAR-ZOOM-TAP-01 the camera mapping round-trips at every zoom", () => {
+    for (const zoom of [1, 1.4, 2, 2.6]) {
+      const camera = {
+        zoom,
+        center: { x: 44, y: 50 },
+        frame: { x: 0, y: 0, width: 100, height: 100 },
+        transform: "",
+        targetGapPx: 9,
+        minimumEdgeGapPx: 0,
+        residualCollisionIds: [] as readonly (readonly string[])[],
+        spiderfyRequired: false,
+        algorithm: "test",
+      };
+      for (const n of nodes) {
+        const view = radarCameraToView(n.x, n.y, camera);
+        const back = radarCameraToGlobal(view.x, view.y, camera);
+        expect(back.x).toBeCloseTo(n.x, 10);
+        expect(back.y).toBeCloseTo(n.y, 10);
+      }
+    }
+  });
+
+  it("RADAR-ZOOM-TAP-02 a tap on the PAINTED dot selects that dot at zoom 2.6", () => {
+    const camera = {
+      zoom: 2.6,
+      center: { x: 44, y: 50 },
+      frame: { x: 0, y: 0, width: 100, height: 100 },
+      transform: "",
+      targetGapPx: 9,
+      minimumEdgeGapPx: 0,
+      residualCollisionIds: [] as readonly (readonly string[])[],
+      spiderfyRequired: true,
+      algorithm: "test",
+    };
+    for (const target of nodes) {
+      // Where the user SEES the dot after the camera transform.
+      const painted = radarCameraToView(target.x, target.y, camera);
+      // What the pointer handler computes from that screen position.
+      const global = radarCameraToGlobal(painted.x, painted.y, camera);
+      const zoom = radarCameraZoom(camera);
+      const resolution = resolveRadarTap(points, global.x, global.y, {
+        hitRadius: RADAR_HIT_RADIUS_VIEWBOX / zoom,
+        ambiguityEpsilon: RADAR_TAP_AMBIGUITY_EPSILON / zoom,
+      });
+      // The regression: without the inversion this returned "none" or the
+      // wrong neighbour. Every painted tap must resolve to its own signal.
+      expect(resolution.kind).toBe("selected");
+      if (resolution.kind === "selected") {
+        expect(resolution.id).toBe(target.id);
+      }
+    }
+  });
+
+  it("RADAR-ZOOM-TAP-03 the physical touch target stays constant across zoom", () => {
+    // Hit radii live in global units at zoom 1; dividing by zoom keeps the
+    // rendered target the same size on screen instead of ballooning.
+    for (const zoom of [1, 1.6, 2.6]) {
+      const onScreen = (RADAR_HIT_RADIUS_VIEWBOX / zoom) * zoom;
+      expect(onScreen).toBeCloseTo(RADAR_HIT_RADIUS_VIEWBOX, 10);
+    }
+  });
+
+  it("RADAR-ZOOM-TAP-04 at zoom 1 the mapping is the identity", () => {
+    const camera = null;
+    expect(radarCameraZoom(camera)).toBe(1);
+    for (const n of nodes) {
+      const view = radarCameraToView(n.x, n.y, camera);
+      expect(view.x).toBeCloseTo(n.x, 10);
+      expect(view.y).toBeCloseTo(n.y, 10);
+      const back = radarCameraToGlobal(n.x, n.y, camera);
+      expect(back.x).toBeCloseTo(n.x, 10);
+    }
+  });
+
+  it("RADAR-ZOOM-TAP-05 the mapping is deterministic and safe on malformed cameras", () => {
+    const broken = { zoom: 0, center: { x: 0, y: 0 } } as never;
+    expect(radarCameraZoom(broken)).toBe(1);
+    const a = radarCameraToGlobal(60, 60, broken);
+    const b = radarCameraToGlobal(60, 60, broken);
+    expect(a).toEqual(b);
+    expect(Number.isFinite(a.x)).toBe(true);
+    expect(RADAR_ZOOM_BASE).toBe(1);
   });
 });

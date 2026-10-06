@@ -291,19 +291,19 @@
 
 /* Field gradient stops — static color, no animation. */
 .tv-rx-map__field-stop--core {
-  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 26%, transparent);
+  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 34%, transparent);
 }
 
 .tv-rx-map__field-stop--mid {
   stop-color: color-mix(
     in srgb,
-    var(--tv-color-surface-base, #0b0620) 82%,
-    var(--tv-color-violet-500, #6a3cff) 18%
+    var(--tv-color-surface-base, #0b0620) 78%,
+    var(--tv-color-violet-500, #6a3cff) 22%
   );
 }
 
 .tv-rx-map__field-stop--edge {
-  stop-color: color-mix(in srgb, var(--tv-color-surface-base, #0b0620) 88%, transparent);
+  stop-color: color-mix(in srgb, var(--tv-color-surface-base, #0b0620) 94%, transparent);
 }
 
 .tv-rx-map__field {
@@ -321,12 +321,12 @@
    inner rings clearer. Blips stay above them (see .tv-rx-map__points). */
 .tv-rx-map__ring {
   fill: none;
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 55%, transparent);
-  stroke-width: 0.45;
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 62%, transparent);
+  stroke-width: 0.5;
 }
 
 .tv-rx-map__ring[data-ring-outer="true"] {
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 30%, transparent);
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 24%, transparent);
   stroke-width: 0.4;
 }
 
@@ -346,9 +346,9 @@
 
 /* §5 — subtle static core: soft illumination plus a small solid anchor. */
 .tv-rx-map__core-glow {
-  /* §14 — refined twice (24%, then ~19%) so the core anchors the instrument
-     as NOW/origin without ever competing with an important signal. Static. */
-  opacity: 0.34;
+  /* Refined again so the core anchors the instrument as NOW/origin without
+     ever competing with an important signal. Static, no pulsing. */
+  opacity: 0.3;
 }
 
 .tv-rx-map__glow-stop--in {
@@ -372,6 +372,18 @@
 /* §7 — blips read above the grid/rings. */
 .tv-rx-map__points {
   position: relative;
+}
+
+/* Semantic zoom camera. `transform-box: view-box` + `transform-origin: 0 0`
+   reproduce the SVG transform attribute exactly, so animating the CSS
+   `transform` property is safe and pixel-identical to the static fallback.
+   Transform/opacity only — the global reduced-motion kill-switch below
+   shortens this to nothing. */
+.tv-rx-map__camera {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  transition: transform 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
 }
 
 /* §8 — the hit target is invisible and must never paint a browser box.
@@ -432,6 +444,16 @@
 /* §8/§9 — designed SELECTED state: restrained local halo in the tool's own
    category colour plus a thin selection ring in the shared brand accent that
    the quick preview uses. A thin SVG ring, never a white rounded rectangle. */
+.tv-rx-blip__glint {
+  pointer-events: none;
+  /* Static specular highlight: material quality for the dot, never a glow. */
+  opacity: 0.26;
+}
+
+.tv-rx-blip[data-selected="true"] .tv-rx-blip__glint {
+  opacity: 0.4;
+}
+
 .tv-rx-blip__halo {
   pointer-events: none;
   opacity: 0.22;

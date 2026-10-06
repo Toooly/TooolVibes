@@ -34,13 +34,18 @@ import {
   RADAR_CENTER,
   RADAR_COMPASS_SECTOR_SPAN_DEG,
   RADAR_HIT_RADIUS_VIEWBOX,
+  RADAR_TAP_AMBIGUITY_EPSILON,
   RADAR_RING_CENTER_LABEL,
   type RadarPoint,
   type RadarTapCandidate,
 } from "@/lib/radar/radar-geometry";
 import type { ProductHuntRange } from "@/lib/radar/product-hunt-contract";
 import { radarOverviewHiddenLabel } from "@/lib/radar/radar-lod";
-import type { RadarCameraPlan } from "@/lib/radar/radar-camera";
+import {
+  radarCameraToGlobal,
+  radarCameraZoom,
+  type RadarCameraPlan,
+} from "@/lib/radar/radar-camera";
 import type { RadarSpiderPlan } from "@/lib/radar/radar-spiderfy";
 
 /** Width of the transparent sector-rim affordance, viewBox units (§4). */
@@ -121,6 +126,7 @@ export function RadarMap({
   const fieldId = useId();
   const glowId = useId();
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const cameraRef = useRef<SVGGElement | null>(null);
 
   // §2 — layout is computed from the FULL set, once per dataset.
   const layout = layoutRadarPoints(layoutTools, {
@@ -181,15 +187,42 @@ export function RadarMap({
       const pointerX = ((event.clientX - rect.left) / rect.width) * 100;
       const pointerY = ((event.clientY - rect.top) / rect.height) * 100;
 
+      // THE zoom tap fix. The camera paints a GLOBAL point p at
+      // `zoom * (p - center) + 50`, so the raw viewBox coordinate is NOT the
+      // global coordinate once the camera has zoomed in. Invert it here so a
+      // tap lands on the signal the user actually sees.
+      //
+      // The mapping is taken from the camera group's REAL screen matrix rather
+      // than recomputed from `zoom`/`center`, so it is exact whether the
+      // transform is applied through the SVG attribute or the CSS property.
+      const zoom = radarCameraZoom(camera);
+      let global = radarCameraToGlobal(pointerX, pointerY, camera);
+      const ctm = cameraRef.current?.getScreenCTM?.() ?? null;
+      if (ctm) {
+        try {
+          const local = new DOMPoint(event.clientX, event.clientY).matrixTransform(ctm.inverse());
+          if (Number.isFinite(local.x) && Number.isFinite(local.y)) {
+            global = { x: local.x, y: local.y };
+          }
+        } catch {
+          // Singular matrix — fall back to the analytic mapping above.
+        }
+      }
+      // Hit radii are defined in global units at zoom 1 (a ~50px touch target).
+      // Dividing by the zoom keeps that target the same physical size on screen
+      // at every zoom level instead of ballooning with the camera.
+      const hitRadius = RADAR_HIT_RADIUS_VIEWBOX / zoom;
+      const ambiguityEpsilon = RADAR_TAP_AMBIGUITY_EPSILON / zoom;
+
       // §4 — the sector rim is a CLUSTER FOCUS entry point. It is resolved
       // before signal candidates so a rim tap never opens the chooser.
       if (onSelectSector && !focusedClusterId) {
         const radius = Math.sqrt(
-          (pointerX - RADAR_CENTER) * (pointerX - RADAR_CENTER) +
-            (pointerY - RADAR_CENTER) * (pointerY - RADAR_CENTER),
+          (global.x - RADAR_CENTER) * (global.x - RADAR_CENTER) +
+            (global.y - RADAR_CENTER) * (global.y - RADAR_CENTER),
         );
         if (radius > 30) {
-          const raw = (Math.atan2(pointerY - RADAR_CENTER, pointerX - RADAR_CENTER) * 180) / Math.PI + 90;
+          const raw = (Math.atan2(global.y - RADAR_CENTER, global.x - RADAR_CENTER) * 180) / Math.PI + 90;
           const angle = ((raw % 360) + 360) % 360;
           const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
           const sectorIndex = Math.min(
@@ -210,7 +243,10 @@ export function RadarMap({
         if (interactiveIds && !interactiveIds.has(point.id)) return false;
         return true;
       });
-      const resolution = resolveRadarTap(visiblePoints, pointerX, pointerY);
+      const resolution = resolveRadarTap(visiblePoints, global.x, global.y, {
+        hitRadius,
+        ambiguityEpsilon,
+      });
 
       if (resolution.kind === "selected") {
         onSelect(resolution.id);
@@ -228,8 +264,8 @@ export function RadarMap({
             const entry = tapPoints.find((point) => point.id === id);
             return (
               entry &&
-              Math.sqrt((entry.x - pointerX) ** 2 + (entry.y - pointerY) ** 2) <=
-                RADAR_HIT_RADIUS_VIEWBOX
+              Math.sqrt((entry.x - global.x) ** 2 + (entry.y - global.y) ** 2) <=
+                hitRadius
             );
           });
           if (hit) {
@@ -243,6 +279,7 @@ export function RadarMap({
       }
     },
     [
+      camera,
       focusedClusterId,
       interactiveIds,
       layout.clusterOrder,
@@ -287,7 +324,23 @@ export function RadarMap({
         </defs>
 
         {/* §5 — pure camera transform. Semantic coordinates are unchanged. */}
-        <g transform={camera?.transform ?? undefined} className="tv-rx-map__camera">
+        {/* §5 — pure camera transform. Semantic coordinates are unchanged.
+            The attribute is the fallback; the CSS property is what animates
+            (an SVG `transform` ATTRIBUTE is not transitionable). */}
+        <g
+          ref={cameraRef}
+          transform={camera?.transform ?? undefined}
+          style={
+            camera
+              ? {
+                  transform: camera.transform,
+                  transformBox: "view-box",
+                  transformOrigin: "0 0",
+                }
+              : undefined
+          }
+          className="tv-rx-map__camera"
+        >
 
         {/* Static translucent instrument field. No animated gradient, no blur. */}
         <circle
@@ -548,8 +601,20 @@ export function RadarMap({
                   r={point.size}
                   fill={color}
                   stroke="var(--tv-color-surface-base, #0b0620)"
-                  strokeWidth={0.3}
+                  strokeWidth={0.42}
+                  strokeOpacity={0.85}
                   className="tv-rx-blip__dot"
+                  aria-hidden="true"
+                />
+                {/* Static specular highlight — gives the dot a bead/material
+                    quality without any animation or extra glow. */}
+                <circle
+                  style={{ pointerEvents: "none" }}
+                  cx={point.x - point.size * 0.28}
+                  cy={point.y - point.size * 0.28}
+                  r={Math.max(point.size * 0.3, 0.5)}
+                  fill="var(--tv-color-ink-100, #f5f3ff)"
+                  className="tv-rx-blip__glint"
                   aria-hidden="true"
                 />
                 {/* §5 — entity type marker, WITHOUT changing the cluster colour:

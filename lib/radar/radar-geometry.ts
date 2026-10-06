@@ -134,8 +134,8 @@ const COLLISION_ITERATIONS = 4;
  * scaling makes the difference legible without letting one item dominate.
  * Displayed vote/comment numbers always remain the real values.
  */
-export const MIN_BLIP_RADIUS = 1.5;
-export const MAX_BLIP_RADIUS = 5.2;
+export const MIN_BLIP_RADIUS = 1.9;
+export const MAX_BLIP_RADIUS = 5.6;
 
 export function visualRadiusFromAttention(
   attention: number,
@@ -465,6 +465,12 @@ export type RadarTapOptions = {
 
 /** Default hit radius in viewBox units (≈44px at a 320px render). */
 export const RADAR_HIT_RADIUS_VIEWBOX = 7;
+/**
+ * Below this edge gap (in the same units as `hitRadius`) two candidates are
+ * treated as indistinguishable and the tap is reported `ambiguous` instead of
+ * guessing. Scales with the camera zoom alongside `hitRadius`.
+ */
+export const RADAR_TAP_AMBIGUITY_EPSILON = 0.75;
 
 /**
  * Deterministic nearest-candidate tap resolution.
@@ -483,7 +489,7 @@ export function resolveRadarTap(
   // the smallest visual blip radius (1.5). Tapping a signal's own centre must
   // always be decisive; only genuinely indistinguishable neighbours (a tie, or
   // two overlapping centres) raise the chooser.
-  const epsilon = options.ambiguityEpsilon ?? 0.75;
+  const epsilon = options.ambiguityEpsilon ?? RADAR_TAP_AMBIGUITY_EPSILON;
   const maxCandidates = options.maxCandidates ?? 4;
 
   if (

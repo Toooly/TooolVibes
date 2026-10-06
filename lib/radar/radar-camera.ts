@@ -66,6 +66,51 @@ export type RadarCameraFrame = {
   height: number;
 };
 
+/**
+ * Forward/inverse of the camera transform.
+ *
+ * The camera paints a GLOBAL point `p` at the viewBox coordinate
+ * `zoom * (p - center) + RADAR_CENTER`. Hit-testing must therefore invert that
+ * mapping: a pointer at viewBox coordinate `v` corresponds to the global point
+ * `(v - RADAR_CENTER) / zoom + center`.
+ *
+ * Without this inversion a tap lands nowhere near the signal the user sees as
+ * soon as `zoom !== 1` — the dots become unclickable exactly when the camera
+ * zooms in. These two helpers are the single place that mapping lives.
+ */
+export function radarCameraToView(
+  globalX: number,
+  globalY: number,
+  camera: RadarCameraPlan | null | undefined,
+): { x: number; y: number } {
+  const zoom = camera && Number.isFinite(camera.zoom) && camera.zoom > 0 ? camera.zoom : 1;
+  const centerX = camera?.center?.x ?? 50;
+  const centerY = camera?.center?.y ?? 50;
+  return {
+    x: zoom * (globalX - centerX) + 50,
+    y: zoom * (globalY - centerY) + 50,
+  };
+}
+
+export function radarCameraToGlobal(
+  viewX: number,
+  viewY: number,
+  camera: RadarCameraPlan | null | undefined,
+): { x: number; y: number } {
+  const zoom = camera && Number.isFinite(camera.zoom) && camera.zoom > 0 ? camera.zoom : 1;
+  const centerX = camera?.center?.x ?? 50;
+  const centerY = camera?.center?.y ?? 50;
+  return {
+    x: (viewX - 50) / zoom + centerX,
+    y: (viewY - 50) / zoom + centerY,
+  };
+}
+
+/** Current camera zoom, safe for `null`/malformed plans. */
+export function radarCameraZoom(camera: RadarCameraPlan | null | undefined): number {
+  return camera && Number.isFinite(camera.zoom) && camera.zoom > 0 ? camera.zoom : 1;
+}
+
 export type RadarCameraPlan = {
   zoom: number;
   /** The equivalent viewBox window over the GLOBAL coordinate space. */
