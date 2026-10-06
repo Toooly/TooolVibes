@@ -12,7 +12,7 @@
  * frozen (Home is a frozen system).
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RefreshCw, Search } from "lucide-react";
 
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
@@ -24,11 +24,18 @@ import {
   RADAR_RANGE_HOURS,
 } from "@/lib/radar/radar-geometry";
 import {
+  computeRadarCamera,
+  RADAR_ZOOM_DEFAULT_MAP_PX,
+  RADAR_ZOOM_TARGET_GAP_PX,
+} from "@/lib/radar/radar-camera";
+import { planRadarSpiderfy } from "@/lib/radar/radar-spiderfy";
+import {
   planRadarClusterFocus,
-  planRadarLod,
-  RADAR_LOD_BUDGET_DESKTOP,
-  RADAR_LOD_BUDGET_MOBILE,
+  planRadarOverview,
+  RADAR_OVERVIEW_BUDGET_MOBILE,
+  RADAR_OVERVIEW_BUDGET_DESKTOP,
   type RadarLodInput,
+  type RadarLodPlan,
 } from "@/lib/radar/radar-lod";
 import {
   RadarInsightStrip,
@@ -188,45 +195,54 @@ export function RadarExperience() {
     });
   }, [layout.points, view.tools]);
 
-  // §3/§24 — the overview budget is a VIEWPORT budget, not a dataset budget.
-  const lodBudget = useIsWideViewport()
-    ? RADAR_LOD_BUDGET_DESKTOP
-    : RADAR_LOD_BUDGET_MOBILE;
+  // §3 — Level-0 OVERVIEW is CLUSTER-FIRST: one lead real signal per active
+  // cluster plus catalog-linked exceptions. Free-standing +N stacks are no
+  // longer spatial objects; the hidden count rides on the cluster chip and a
+  // small "+N" badge on the representative node. Target 6-9 nodes on mobile.
+  const overviewBudget = useIsWideViewport()
+    ? RADAR_OVERVIEW_BUDGET_DESKTOP
+    : RADAR_OVERVIEW_BUDGET_MOBILE;
 
-  const lodPlan = useMemo(
-    () =>
-      planRadarLod(lodInputs, {
-        budget: lodBudget,
-        selectedId: urlState.tool,
-      }),
-    [lodInputs, lodBudget, urlState.tool],
+  const overviewPlan = useMemo(
+    () => planRadarOverview(lodInputs, { budget: overviewBudget }),
+    [lodInputs, overviewBudget],
   );
 
-  // §9 — `urlState.category` IS the canonical cluster focus state. Tapping a
-  // chip and tapping a +N stack are exactly the same mode.
+  // §4 — `urlState.category` IS the canonical cluster focus state. Tapping a
+  // chip and tapping a sector rim are exactly the same mode.
   const focusedClusterId = urlState.category;
 
-  // §1/§3/§5 — CLUSTER FOCUS paints the focused cluster's real signals plus
-  // exactly ONE contextual node per other active cluster (its `+N` stack when
-  // Overview has one, else its canonical Overview representative). Context is
-  // dimmed and non-interactive. This keeps focus LIGHTER than Overview, never
-  // denser — the defect this pass fixes.
+  // §7 — Cluster Focus shows EVERY real signal of the cluster and keeps one
+  // dimmed, non-interactive contextual representative per other cluster. The
+  // cluster-first Overview supplies those representatives (no free stacks).
+  const focusOverview = useMemo<RadarLodPlan>(
+    () => ({
+      individualIds: overviewPlan.representativeIds,
+      aggregates: [],
+      budget: overviewPlan.budget,
+      perClusterCap: 1,
+      algorithm: overviewPlan.algorithm,
+    }),
+    [overviewPlan],
+  );
+
   const focusPlan = useMemo(
     () =>
       focusedClusterId
-        ? planRadarClusterFocus(lodInputs, focusedClusterId, lodPlan)
+        ? planRadarClusterFocus(lodInputs, focusedClusterId, focusOverview)
         : null,
-    [focusedClusterId, lodInputs, lodPlan],
+    [focusedClusterId, lodInputs, focusOverview],
   );
 
   const renderIds = useMemo(
-    () => (focusPlan ? focusPlan.visibleIds : lodPlan.individualIds),
-    [focusPlan, lodPlan.individualIds],
+    () => (focusPlan ? focusPlan.visibleIds : overviewPlan.representativeIds),
+    [focusPlan, overviewPlan.representativeIds],
   );
 
-  const aggregates = useMemo(
-    () => (focusPlan ? focusPlan.contextAggregates : lodPlan.aggregates),
-    [focusPlan, lodPlan.aggregates],
+  // §3 — hidden counts only exist in the Overview representation.
+  const hiddenCounts = useMemo(
+    () => (focusPlan ? null : overviewPlan.hiddenCounts),
+    [focusPlan, overviewPlan.hiddenCounts],
   );
 
   // §6 — only the focused cluster is interactive while it is focused.
@@ -235,12 +251,65 @@ export function RadarExperience() {
     [focusPlan],
   );
 
-  const handleSelectAggregate = useCallback(
+  // §4-§6 — the semantic camera. A pure viewport transform: the coordinates
+  // never change, so spatial memory stays true.
+  const cameraNodes = useMemo(() => {
+    if (!focusPlan) return [];
+    return layout.points
+      .filter((point) => focusPlan.focusedIds.has(point.id))
+      .map((point) => ({
+        id: point.id,
+        x: point.x,
+        y: point.y,
+        radius: point.size,
+      }));
+  }, [focusPlan, layout.points]);
+
+  const camera = useMemo(
+    () =>
+      focusedClusterId && cameraNodes.length > 0
+        ? computeRadarCamera(cameraNodes, { mapPx: RADAR_ZOOM_DEFAULT_MAP_PX })
+        : null,
+    [focusedClusterId, cameraNodes],
+  );
+
+  // §9 — collisions the camera cannot separate fan out around their own
+  // semantic anchor instead of opening the chooser.
+  const spider = useMemo(() => {
+    if (!camera || !camera.spiderfyRequired || cameraNodes.length < 2) return null;
+    const joinGap =
+      (RADAR_ZOOM_TARGET_GAP_PX * 100) /
+      (camera.zoom * RADAR_ZOOM_DEFAULT_MAP_PX);
+    const plan = planRadarSpiderfy(cameraNodes, { joinGap });
+    return plan.groups.length > 0 ? plan : null;
+  }, [camera, cameraNodes]);
+
+  const [spiderCollapsed, setSpiderCollapsed] = useState(false);
+  useEffect(() => {
+    setSpiderCollapsed(false);
+  }, [focusedClusterId, urlState.range]);
+
+  // §18 — if the focused cluster has no signals in the newly selected range,
+  // return to Overview instead of leaving the camera pointing at nothing.
+  useEffect(() => {
+    if (!focusedClusterId) return;
+    const stillPresent = view.tools.some(
+      (tool) => tool.topicCluster.id === focusedClusterId,
+    );
+    if (!stillPresent) setUrlState({ category: null });
+  }, [focusedClusterId, setUrlState, view.tools]);
+  const activeSpider = spiderCollapsed ? null : spider;
+
+  const handleSelectSector = useCallback(
     (clusterId: string) => {
       setUrlState({ category: clusterId === urlState.category ? null : clusterId });
     },
     [setUrlState, urlState.category],
   );
+
+  const handleCollapseSpider = useCallback(() => {
+    setSpiderCollapsed(true);
+  }, []);
 
   const handleAmbiguous = useCallback((candidates: readonly RadarTapCandidate[]) => {
     setAmbiguous(candidates);
@@ -257,6 +326,8 @@ export function RadarExperience() {
 
   const handleSelect = useCallback(
     (toolId: string) => {
+      // §12 — exclusive overlay: close the chooser, then open the preview.
+      setAmbiguous([]);
       setUrlState({ tool: toolId, tab: "panoramica" });
       setHighlightedId(toolId);
     },
@@ -400,8 +471,11 @@ export function RadarExperience() {
                     layoutTools={view.tools}
                     visibleIds={renderIds}
                     interactiveIds={interactiveIds}
-                    aggregates={aggregates}
-                    onSelectAggregate={handleSelectAggregate}
+                    hiddenCounts={hiddenCounts}
+                    camera={camera}
+                    spider={activeSpider}
+                    onSelectSector={handleSelectSector}
+                    onCollapseSpider={handleCollapseSpider}
                     focusedClusterId={focusedClusterId}
                     clusters={view.clusters}
                     range={urlState.range}
@@ -472,7 +546,7 @@ export function RadarExperience() {
                 one is chosen, otherwise meaningful Overview intelligence.
                 On mobile this stays the sticky quick-preview sheet. */}
             <aside className="tv-rx__rail" aria-label="Pannello intelligenza">
-              {selectedTool ? (
+              {selectedTool && ambiguous.length === 0 ? (
                 <RadarQuickPreview
                   tool={selectedTool}
                   historyAvailable={view.snapshot.historyAvailable}
@@ -740,9 +814,29 @@ function RadarToolbar({
   query: string | null;
   onQuery: (query: string | null) => void;
 }) {
+  const chipsRef = useRef<HTMLUListElement | null>(null);
+
+  // §15 — bring the active chip into the horizontal centre (smooth unless the
+  // user prefers reduced motion).
+  useEffect(() => {
+    const list = chipsRef.current;
+    if (!list || activeCategory === null) return;
+    const active = list.querySelector<HTMLElement>('[data-active="true"]');
+    if (!active || typeof active.scrollIntoView !== "function") return;
+    const reduce =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    active.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [activeCategory]);
+
   return (
     <div className="tv-rx-toolbar">
-      <ul className="tv-rx-chips" aria-label="Filtra per categoria">
+      <div className="tv-rx-chips-wrap">
+      <ul className="tv-rx-chips" ref={chipsRef} aria-label="Filtra per categoria">
         <li>
           <button
             type="button"
@@ -775,6 +869,7 @@ function RadarToolbar({
           </li>
         ))}
       </ul>
+      </div>
 
       <label className="tv-rx-search">
         <span className="tv-rx-sr-only">Cerca un tool nel Radar</span>

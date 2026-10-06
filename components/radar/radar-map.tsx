@@ -39,16 +39,12 @@ import {
   type RadarTapCandidate,
 } from "@/lib/radar/radar-geometry";
 import type { ProductHuntRange } from "@/lib/radar/product-hunt-contract";
-import {
-  radarAggregateLabel,
-  type RadarAggregate,
-} from "@/lib/radar/radar-lod";
+import { radarOverviewHiddenLabel } from "@/lib/radar/radar-lod";
+import type { RadarCameraPlan } from "@/lib/radar/radar-camera";
+import type { RadarSpiderPlan } from "@/lib/radar/radar-spiderfy";
 
-/**
- * Aggregate stack hit target in viewBox units. Slightly smaller than the signal
- * hit radius so a stack is not accidentally easier to hit than a real signal.
- */
-const RADAR_AGGREGATE_HIT_RADIUS = 6;
+/** Width of the transparent sector-rim affordance, viewBox units (§4). */
+const RADAR_SECTOR_HIT_WIDTH = 9;
 
 export type RadarMapProps = {
   /**
@@ -73,12 +69,24 @@ export type RadarMapProps = {
   /** Fired when a tap is genuinely ambiguous — parent shows the chooser. */
   onAmbiguous?: (candidates: readonly RadarTapCandidate[]) => void;
   /**
-   * Overview level-of-detail stacks (spec §5-§7). These are NOT Tools — they
-   * stand for "N altri segnali in quest'area" at a deterministic position.
+   * Level-1 semantic camera (spec §4-§5). A viewport transform only — the
+   * semantic coordinates in `layoutTools` are never recomputed.
    */
-  aggregates?: readonly RadarAggregate[];
-  /** Tapping a stack enters CLUSTER FOCUS (spec §8), never the chooser. */
-  onSelectAggregate?: (clusterId: string) => void;
+  camera?: RadarCameraPlan | null;
+  /**
+   * Residual-collision fan-out (spec §9). Spiderfied nodes draw at their leg
+   * position; their semantic anchor is untouched.
+   */
+  spider?: RadarSpiderPlan | null;
+  /**
+   * Level-0 hidden counts per cluster (spec §3) — shown as a small "+N" badge
+   * on the representative node instead of a free-standing stack marker.
+   */
+  hiddenCounts?: ReadonlyMap<string, number> | null;
+  /** Tapping a sector rim / affordance enters CLUSTER FOCUS (spec §4). */
+  onSelectSector?: (clusterId: string) => void;
+  /** Tapping empty space collapses an open spider (spec §9). */
+  onCollapseSpider?: () => void;
   /**
    * When set, the map is in CLUSTER FOCUS: every member of this cluster is
    * prominent and all other sectors are dimmed for compass context only.
@@ -96,8 +104,11 @@ export function RadarMap({
   highlightedId,
   onSelect,
   onAmbiguous,
-  aggregates,
-  onSelectAggregate,
+  camera,
+  spider,
+  hiddenCounts,
+  onSelectSector,
+  onCollapseSpider,
   focusedClusterId,
 }: RadarMapProps) {
   const titleId = useId();
@@ -131,6 +142,15 @@ export function RadarMap({
 
   const isVisible = (id: string) => !visibleIds || visibleIds.has(id);
 
+  // §9 — draw positions: spider legs override the global coordinate for
+  // presentation only. The semantic point is never mutated.
+  const spiderLegById = new Map<string, { x: number; y: number }>();
+  for (const group of spider?.groups ?? []) {
+    for (const leg of group.legs) {
+      spiderLegById.set(leg.id, { x: leg.x, y: leg.y });
+    }
+  }
+
   // §1 — the single place a physical tap becomes a selection.
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<SVGSVGElement>) => {
@@ -143,17 +163,24 @@ export function RadarMap({
       const pointerX = ((event.clientX - rect.left) / rect.width) * 100;
       const pointerY = ((event.clientY - rect.top) / rect.height) * 100;
 
-      // §8 — an aggregate stack is a CLUSTER FOCUS entry point, not a signal.
-      // It is resolved before signal candidates so tapping +N never opens the
-      // ambiguity chooser. While a cluster is focused every visible stack is
-      // CONTEXT and therefore non-interactive (spec §6) — focus is left via the
-      // "Tutti" chip, not by tapping a dimmed neighbour.
-      if (onSelectAggregate && aggregates && !focusedClusterId) {
-        for (const aggregate of aggregates) {
-          const dx = pointerX - aggregate.x;
-          const dy = pointerY - aggregate.y;
-          if (Math.sqrt(dx * dx + dy * dy) <= RADAR_AGGREGATE_HIT_RADIUS) {
-            onSelectAggregate(aggregate.clusterId);
+      // §4 — the sector rim is a CLUSTER FOCUS entry point. It is resolved
+      // before signal candidates so a rim tap never opens the chooser.
+      if (onSelectSector && !focusedClusterId) {
+        const radius = Math.sqrt(
+          (pointerX - RADAR_CENTER) * (pointerX - RADAR_CENTER) +
+            (pointerY - RADAR_CENTER) * (pointerY - RADAR_CENTER),
+        );
+        if (radius > 30) {
+          const raw = (Math.atan2(pointerY - RADAR_CENTER, pointerX - RADAR_CENTER) * 180) / Math.PI + 90;
+          const angle = ((raw % 360) + 360) % 360;
+          const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
+          const sectorIndex = Math.min(
+            layout.clusterOrder.length - 1,
+            Math.floor(angle / span),
+          );
+          const clusterId = layout.clusterOrder[sectorIndex];
+          if (clusterId) {
+            onSelectSector(clusterId);
             return;
           }
         }
@@ -171,18 +198,24 @@ export function RadarMap({
         onSelect(resolution.id);
         return;
       }
+      // §9 — tapping empty space collapses an open spider.
+      if (spider && spider.spideredIds.size > 0) {
+        onCollapseSpider?.();
+      }
       if (resolution.kind === "ambiguous" && onAmbiguous) {
         onAmbiguous(resolution.candidates);
       }
     },
     [
-      aggregates,
       focusedClusterId,
       interactiveIds,
+      layout.clusterOrder,
       layout.points,
       onAmbiguous,
+      onCollapseSpider,
       onSelect,
-      onSelectAggregate,
+      onSelectSector,
+      spider,
       visibleIds,
     ],
   );
@@ -215,6 +248,9 @@ export function RadarMap({
             <stop offset="100%" className="tv-rx-map__glow-stop tv-rx-map__glow-stop--out" />
           </radialGradient>
         </defs>
+
+        {/* §5 — pure camera transform. Semantic coordinates are unchanged. */}
+        <g transform={camera?.transform ?? undefined} className="tv-rx-map__camera">
 
         {/* Static translucent instrument field. No animated gradient, no blur. */}
         <circle
@@ -269,7 +305,7 @@ export function RadarMap({
             low-opacity arc per canonical sector, in that cluster's colour.
             Static, no filled wedge, no rainbow. In cluster focus the owning
             segment reads slightly clearer and the others soften. */}
-        <g className="tv-rx-map__compass" aria-hidden="true">
+        <g className="tv-rx-map__compass">
           {layout.clusterOrder.map((clusterId, index) => {
             const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
             const start = index * span + span * 0.12;
@@ -284,23 +320,48 @@ export function RadarMap({
             const color =
               colorByCluster.get(clusterId) ??
               RADAR_CATEGORY_PALETTE[index % RADAR_CATEGORY_PALETTE.length];
+            const arcPath = `M ${x1.toFixed(3)} ${y1.toFixed(3)} A ${r} ${r} 0 0 1 ${x2.toFixed(3)} ${y2.toFixed(3)}`;
             return (
-              <path
-                key={`rim-${clusterId}`}
-                d={`M ${x1.toFixed(3)} ${y1.toFixed(3)} A ${r} ${r} 0 0 1 ${x2.toFixed(3)} ${y2.toFixed(3)}`}
-                className="tv-rx-map__compass-arc"
-                data-focused={
-                  focusedClusterId && clusterId === focusedClusterId
-                    ? "true"
-                    : undefined
-                }
-                data-dimmed={
-                  focusedClusterId && clusterId !== focusedClusterId
-                    ? "true"
-                    : undefined
-                }
-                stroke={color}
-              />
+              <g key={`rim-${clusterId}`}>
+                <path
+                  d={arcPath}
+                  className="tv-rx-map__compass-arc"
+                  data-focused={
+                    focusedClusterId && clusterId === focusedClusterId
+                      ? "true"
+                      : undefined
+                  }
+                  data-dimmed={
+                    focusedClusterId && clusterId !== focusedClusterId
+                      ? "true"
+                      : undefined
+                  }
+                  stroke={color}
+                  aria-hidden="true"
+                />
+                {onSelectSector ? (
+                  <path
+                    d={arcPath}
+                    className="tv-rx-map__compass-hit"
+                    strokeWidth={RADAR_SECTOR_HIT_WIDTH}
+                    fill="none"
+                    role="button"
+                    tabIndex={focusedClusterId ? -1 : 0}
+                    aria-disabled={focusedClusterId ? true : undefined}
+                    aria-label={`Apri il settore ${labelByCluster.get(clusterId) ?? clusterId}`}
+                    onPointerDown={(event) => {
+                      event.stopPropagation();
+                      if (!focusedClusterId) onSelectSector(clusterId);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        if (!focusedClusterId) onSelectSector(clusterId);
+                      }
+                    }}
+                  />
+                ) : null}
+              </g>
             );
           })}
         </g>
@@ -350,8 +411,14 @@ export function RadarMap({
         <g className="tv-rx-map__points">
           {layoutTools.map((tool) => {
             if (!isVisible(tool.id)) return null;
-            const point = pointById.get(tool.id);
-            if (!point) return null;
+            const basePoint = pointById.get(tool.id);
+            if (!basePoint) return null;
+            // §9 — a spiderfied leg draws at its fan-out position. The semantic
+            // coordinate in `basePoint` is never mutated.
+            const point: RadarPoint = {
+              ...basePoint,
+              ...(spiderLegById.get(tool.id) ?? {}),
+            };
             const color =
               colorByCluster.get(tool.topicCluster.id) ??
               RADAR_CATEGORY_PALETTE[
@@ -462,98 +529,46 @@ export function RadarMap({
                     aria-hidden="true"
                   />
                 ) : null}
+                {(() => {
+                  const hidden = hiddenCounts?.get(tool.topicCluster.id) ?? 0;
+                  if (hidden <= 0) return null;
+                  return (
+                    <text
+                      style={{ pointerEvents: "none" }}
+                      x={point.x + point.size + 1.6}
+                      y={point.y - point.size - 0.9}
+                      textAnchor="start"
+                      className="tv-rx-map__hidden-badge"
+                      fontSize="2.9"
+                    >
+                      {radarOverviewHiddenLabel(hidden)}
+                    </text>
+                  );
+                })()}
               </g>
             );
           })}
         </g>
 
-        {/* §5/§6 — aggregate stacks. NOT Tools: a refined stack marker with the
-            cluster colour on the rim, dark instrument material, and +N in the
-            centre. No fake attention size, no catalog marker, no glow. */}
-        {aggregates && aggregates.length > 0 ? (
-          <g className="tv-rx-aggregates">
-            {aggregates
-              .filter(
-                (aggregate) =>
-                  !focusedClusterId || aggregate.clusterId !== focusedClusterId,
-              )
-              .map((aggregate) => {
-                const color =
-                  colorByCluster.get(aggregate.clusterId) ??
-                  RADAR_CATEGORY_PALETTE[0];
-                const label = radarAggregateLabel(
-                  aggregate.count,
-                  labelByCluster.get(aggregate.clusterId) ??
-                    aggregate.clusterId,
-                );
-                // §6 — while a cluster is focused every visible stack is pure
-                // CONTEXT and must not accept taps or keyboard focus.
-                const aggregateInteractive = !focusedClusterId;
-                return (
-                  <g
-                    key={aggregate.id}
-                    className="tv-rx-agg"
-                    data-cluster={aggregate.clusterId}
-                    data-focus={
-                      focusedClusterId &&
-                      aggregate.clusterId !== focusedClusterId
-                        ? "out"
-                        : undefined
-                    }
-                  >
-                    <circle
-                      cx={aggregate.x}
-                      cy={aggregate.y}
-                      r={RADAR_AGGREGATE_HIT_RADIUS}
-                      className="tv-rx-agg__hit"
-                      role="button"
-                      data-interactive={aggregateInteractive ? "true" : "false"}
-                      aria-disabled={aggregateInteractive ? undefined : true}
-                      tabIndex={aggregateInteractive ? 0 : -1}
-                      aria-label={label}
-                      onKeyDown={
-                        aggregateInteractive
-                          ? (event) => {
-                              if (event.key === "Enter" || event.key === " ") {
-                                event.preventDefault();
-                                onSelectAggregate?.(aggregate.clusterId);
-                              }
-                            }
-                          : undefined
-                      }
-                    />
-                    <circle
-                      style={{ pointerEvents: "none" }}
-                      cx={aggregate.x}
-                      cy={aggregate.y}
-                      r={4.2}
-                      className="tv-rx-agg__stack"
-                      aria-hidden="true"
-                    />
-                    <circle
-                      style={{ pointerEvents: "none" }}
-                      cx={aggregate.x}
-                      cy={aggregate.y}
-                      r={2.9}
-                      className="tv-rx-agg__core"
-                      stroke={color}
-                      aria-hidden="true"
-                    />
-                    <text
-                      style={{ pointerEvents: "none" }}
-                      x={aggregate.x}
-                      y={aggregate.y + 1.15}
-                      textAnchor="middle"
-                      className="tv-rx-agg__count"
-                      fontSize="3"
-                    >
-                      +{aggregate.count}
-                    </text>
-                  </g>
-                );
-              })}
+        {/* §9 — restrained connectors from a spider anchor to its legs. */}
+        {spider && spider.groups.length > 0 ? (
+          <g className="tv-rx-spider" aria-hidden="true">
+            {spider.groups.flatMap((group) =>
+              group.connectors.map((connector, index) => (
+                <line
+                  key={`${group.key}:${index}`}
+                  x1={connector.from.x}
+                  y1={connector.from.y}
+                  x2={connector.to.x}
+                  y2={connector.to.y}
+                  className="tv-rx-spider__leg"
+                />
+              )),
+            )}
           </g>
         ) : null}
+
+        </g>
       </svg>
     </div>
   );

@@ -346,9 +346,9 @@
 
 /* §5 — subtle static core: soft illumination plus a small solid anchor. */
 .tv-rx-map__core-glow {
-  /* §16 — refined 24% quieter so the core anchors the instrument without
-     reading as a large interactive blip. Static, no motion. */
-  opacity: 0.42;
+  /* §14 — refined twice (24%, then ~19%) so the core anchors the instrument
+     as NOW/origin without ever competing with an important signal. Static. */
+  opacity: 0.34;
 }
 
 .tv-rx-map__glow-stop--in {
@@ -421,6 +421,9 @@
 
 .tv-rx-blip__dot {
   pointer-events: none;
+  /* §13 — NORMAL signals sit at restrained intensity so a handful of bright
+     points never wash out together. SELECTED restores 100% below. */
+  opacity: 0.88;
   transition: transform 160ms ease, opacity 160ms ease;
   transform-box: fill-box;
   transform-origin: center;
@@ -449,6 +452,7 @@
 }
 
 .tv-rx-blip[data-selected="true"] .tv-rx-blip__dot {
+  opacity: 1;
   transform: scale(1.2);
 }
 
@@ -683,18 +687,23 @@
 }
 
 /* §1 — ambiguity chooser. Appears only for genuinely indistinguishable taps. */
+/* §10 — the chooser is a FALLBACK and renders as a real bottom sheet, never a
+   floating box over the Radar. */
 .tv-rx-chooser {
-  position: absolute;
+  position: fixed;
   inset-inline: 0;
-  z-index: 3;
-  margin: 0.5rem auto 0;
-  max-inline-size: 22rem;
+  bottom: 0;
+  z-index: 60;
+  margin: 0;
+  max-inline-size: none;
   border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  border-radius: var(--tv-radius-px-lg, 16px);
+  border-bottom: 0;
+  border-radius: var(--tv-radius-px-lg, 16px) var(--tv-radius-px-lg, 16px) 0 0;
   background: var(--tv-color-surface-raised, #120c2e);
-  padding: 0.75rem 0.85rem;
+  padding: 0.85rem 0.85rem calc(0.85rem + env(safe-area-inset-bottom, 0px));
   display: grid;
   gap: 0.55rem;
+  box-shadow: var(--tv-shadow-floating, 0 -8px 32px rgba(0, 0, 0, 0.4));
 }
 
 .tv-rx-chooser__title {
@@ -712,14 +721,20 @@
   gap: 0.35rem;
 }
 
+/* §11 — touch quality on the interactive controls only. Text selection is
+   NEVER disabled globally. */
 .tv-rx-chooser__option,
 .tv-rx-chooser__dismiss {
   inline-size: 100%;
-  min-block-size: 44px;
+  min-block-size: 52px;
   border-radius: var(--tv-radius-px-md, 12px);
   border: 1px solid var(--tv-color-surface-elevated, #1c1440);
   background: transparent;
   color: var(--tv-color-ink-100, #f5f3ff);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
   cursor: pointer;
   font-size: 0.875rem;
   text-align: start;
@@ -733,6 +748,60 @@
 .tv-rx-chooser__dismiss {
   color: var(--tv-color-ink-400, #a49dc8);
   text-align: center;
+}
+
+/* ---------- semantic zoom: camera, spiderfy, badges, chip rail ---------- */
+
+/* §4 — the sector rim is a Cluster Focus affordance. Invisible wide stroke so
+   a rim tap is an easy target; the visible arc stays restrained. */
+.tv-rx-map__compass-hit {
+  fill: none;
+  stroke: transparent;
+  cursor: pointer;
+}
+
+/* §9 — thin restrained connectors from a spider anchor to its legs. */
+.tv-rx-spider__leg {
+  stroke: color-mix(in srgb, var(--tv-color-ink-500, #8e87b8) 42%, transparent);
+  stroke-width: 0.22;
+  stroke-linecap: round;
+}
+
+/* §3 — the hidden count rides on the representative node, never as a
+   free-standing spatial object. */
+.tv-rx-map__hidden-badge {
+  fill: var(--tv-color-ink-400, #a49dc8);
+  letter-spacing: 0.04em;
+  font-weight: 650;
+}
+
+/* §15 — a subtle edge fade signals that more chips sit off-screen. */
+.tv-rx-chips-wrap {
+  position: relative;
+  min-inline-size: 0;
+}
+
+.tv-rx-chips-wrap {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 0.9rem,
+    #000 calc(100% - 0.9rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 0.9rem,
+    #000 calc(100% - 0.9rem),
+    transparent 100%
+  );
+}
+
+/* §15 — full cluster names stay readable; the rail scrolls instead of
+   truncating. */
+.tv-rx-chip {
+  white-space: nowrap;
 }
 
 /* ---------- signal model v2: source transparency + CTA matrix ------------ */

@@ -359,3 +359,144 @@ export function planRadarClusterFocus(
     duplicateRepresentationCount,
   };
 }
+
+
+/* ------------------------------------------------------------------ *
+ * LEVEL 0 — CLUSTER-FIRST OVERVIEW (spec §3)
+ *
+ * The Overview must be substantially calmer than "one node per budget
+ * slot + free-standing +N stacks". Standalone aggregate stacks are NOT
+ * rendered as equally weighted spatial objects any more. Instead:
+ *
+ *   - exactly ONE lead real signal per active RadarTopicCluster, and
+ *   - only genuinely important exceptions (catalog-linked signals) when
+ *     the node budget still allows it,
+ *
+ * with the hidden-count semantics carried by the cluster chip count and a
+ * small attached count badge on the representative node. Target 6-9
+ * spatial nodes on a normal mobile Overview; negative space is desirable.
+ *
+ * Nothing is removed from the dataset — this is DISPLAY representation only.
+ * ------------------------------------------------------------------ */
+
+export const RADAR_OVERVIEW_BUDGET_MOBILE = 9;
+export const RADAR_OVERVIEW_BUDGET_DESKTOP = 14;
+/** At most this many catalog-linked exceptions per cluster. */
+export const RADAR_OVERVIEW_MAX_EXTRAS_PER_CLUSTER = 2;
+
+export const RADAR_OVERVIEW_ALGORITHM = [
+  "Radar Level-0 overview representation (cluster-first).",
+  "1. One lead real signal per active cluster = highest attention, then the",
+  "   newest ageHours (unknown age first), then id ascending.",
+  "2. Genuinely important exceptions: catalog-linked signals that are not the",
+  "   lead may join while the node budget allows, at most",
+  "   " + String(RADAR_OVERVIEW_MAX_EXTRAS_PER_CLUSTER) + " per cluster, attention descending.",
+  "3. Every remaining real signal is counted in its cluster's hidden count and",
+  "   surfaced by the chip count and the representative's +N badge — never as",
+  "   a free-standing spatial object.",
+  "4. Same input -> same representation. No signal is dropped from the dataset.",
+].join("\n");
+
+export type RadarOverviewPlan = {
+  /** The spatial nodes drawn in the Overview. */
+  representativeIds: ReadonlySet<string>;
+  /** Per cluster: real signals NOT drawn as spatial nodes. */
+  hiddenCounts: ReadonlyMap<string, number>;
+  /** Per cluster: how many spatial nodes that cluster contributes. */
+  nodesPerCluster: ReadonlyMap<string, number>;
+  maxNodesPerCluster: number;
+  totalHidden: number;
+  budget: number;
+  algorithm: string;
+};
+
+function overviewOrder(
+  a: RadarLodInput,
+  b: RadarLodInput,
+): number {
+  if (a.attention !== b.attention) return b.attention - a.attention;
+  const ageA = a.ageHours ?? Number.NEGATIVE_INFINITY;
+  const ageB = b.ageHours ?? Number.NEGATIVE_INFINITY;
+  // Newest first: negative infinity (unknown) sorts with the newest.
+  const rankA = a.ageHours === null ? Number.NEGATIVE_INFINITY : a.ageHours;
+  const rankB = b.ageHours === null ? Number.NEGATIVE_INFINITY : b.ageHours;
+  if (rankA !== rankB) return rankA - rankB;
+  void ageA;
+  void ageB;
+  return a.id.localeCompare(b.id);
+}
+
+/**
+ * Deterministic Level-0 representation. Same input → same plan.
+ */
+export function planRadarOverview(
+  items: readonly RadarLodInput[],
+  options: { budget?: number } = {},
+): RadarOverviewPlan {
+  const budget = Math.max(
+    1,
+    options.budget ?? RADAR_OVERVIEW_BUDGET_MOBILE,
+  );
+
+  const byCluster = new Map<string, RadarLodInput[]>();
+  for (const item of items) {
+    const bucket = byCluster.get(item.clusterId);
+    if (bucket) {
+      bucket.push(item);
+    } else {
+      byCluster.set(item.clusterId, [item]);
+    }
+  }
+
+  const representativeIds = new Set<string>();
+  const nodesPerCluster = new Map<string, number>();
+
+  // Phase 1 — one lead per active cluster (always, so every area is visible).
+  for (const [clusterId, bucket] of byCluster) {
+    const ordered = [...bucket].sort(overviewOrder);
+    const lead = ordered[0];
+    if (!lead) continue;
+    representativeIds.add(lead.id);
+    nodesPerCluster.set(clusterId, 1);
+  }
+
+  // Phase 2 — catalog-linked exceptions while the budget allows.
+  const extras = items
+    .filter(
+      (item) => item.catalogStatus === "linked" && !representativeIds.has(item.id),
+    )
+    .sort(overviewOrder);
+  for (const extra of extras) {
+    if (representativeIds.size >= budget) break;
+    const shown = nodesPerCluster.get(extra.clusterId) ?? 0;
+    if (shown > RADAR_OVERVIEW_MAX_EXTRAS_PER_CLUSTER) continue;
+    representativeIds.add(extra.id);
+    nodesPerCluster.set(extra.clusterId, shown + 1);
+  }
+
+  // If the lead-only pass already overflowed the budget (many active clusters),
+  // keep every lead anyway — losing an entire market area would be worse than
+  // a slightly busier ring. `maxNodesPerCluster` stays 1 in that case.
+  const hiddenCounts = new Map<string, number>();
+  let totalHidden = 0;
+  for (const [clusterId, bucket] of byCluster) {
+    const hidden = bucket.filter((item) => !representativeIds.has(item.id)).length;
+    hiddenCounts.set(clusterId, hidden);
+    totalHidden += hidden;
+  }
+
+  return {
+    representativeIds,
+    hiddenCounts,
+    nodesPerCluster,
+    maxNodesPerCluster: Math.max(0, ...nodesPerCluster.values()),
+    totalHidden,
+    budget,
+    algorithm: RADAR_OVERVIEW_ALGORITHM,
+  };
+}
+
+/** "5 in più" badge text for a representative node (§3). */
+export function radarOverviewHiddenLabel(hidden: number): string {
+  return hidden > 0 ? `+${hidden}` : "";
+}
