@@ -269,42 +269,152 @@
 
 /* ---------- radar map --------------------------------------------------- */
 
-/* ---------- §5/§18 radar map scale -------------------------------------
+/* ---------- radar map: instrument field ---------------------------------
+   §2/§6 — a STATIC translucent midnight/violet field, not an opaque black
+   disk. Layers: center illumination -> atmospheric tint -> edge falloff.
+   No animated gradient, no blur, no sweep, no box-shadow stack. */
+
+.tv-rx-map {
+  position: relative;
+  inline-size: min(100%, 22.5rem);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
 
 .tv-rx-map__svg {
   inline-size: 100%;
   block-size: 100%;
+  display: block;
   overflow: visible;
+  outline: none;
 }
 
+/* Field gradient stops — static color, no animation. */
+.tv-rx-map__field-stop--core {
+  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 26%, transparent);
+}
+
+.tv-rx-map__field-stop--mid {
+  stop-color: color-mix(
+    in srgb,
+    var(--tv-color-surface-base, #0b0620) 82%,
+    var(--tv-color-violet-500, #6a3cff) 18%
+  );
+}
+
+.tv-rx-map__field-stop--edge {
+  stop-color: color-mix(in srgb, var(--tv-color-surface-base, #0b0620) 88%, transparent);
+}
+
+.tv-rx-map__field {
+  opacity: 0.95;
+}
+
+/* Instrument bezel: the outer boundary of the field. */
+.tv-rx-map__field-rim {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 38%, transparent);
+  stroke-width: 0.55;
+}
+
+/* §3 — the 4 canonical rings, now visibly readable. Outer rings softer,
+   inner rings clearer. Blips stay above them (see .tv-rx-map__points). */
 .tv-rx-map__ring {
   fill: none;
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 26%, transparent);
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 55%, transparent);
+  stroke-width: 0.45;
+}
+
+.tv-rx-map__ring[data-ring-outer="true"] {
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 30%, transparent);
   stroke-width: 0.4;
 }
 
-.tv-rx-map__axis,
+/* §4 — restrained telemetry lines. Axes are quiet cyan hairlines; sector
+   dividers are faint dashed violet so the field never becomes a spider chart
+   and no wedge is filled. */
+.tv-rx-map__axis {
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 24%, transparent);
+  stroke-width: 0.32;
+}
+
 .tv-rx-map__sector {
-  stroke: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 28%, transparent);
-  stroke-width: 0.3;
+  stroke: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 38%, transparent);
+  stroke-width: 0.28;
+  stroke-dasharray: 1.7 1.9;
+}
+
+/* §5 — subtle static core: soft illumination plus a small solid anchor. */
+.tv-rx-map__core-glow {
+  opacity: 0.55;
+}
+
+.tv-rx-map__glow-stop--in {
+  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 72%, transparent);
+}
+
+.tv-rx-map__glow-stop--out {
+  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 0%, transparent);
 }
 
 .tv-rx-map__core {
-  fill: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 45%, transparent);
-  stroke: var(--tv-color-violet-500, #6a3cff);
-  stroke-width: 0.4;
+  fill: color-mix(
+    in srgb,
+    var(--tv-color-violet-500, #6a3cff) 58%,
+    var(--tv-color-ink-100, #f5f3ff) 22%
+  );
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 62%, transparent);
+  stroke-width: 0.5;
+}
+
+/* §7 — blips read above the grid/rings. */
+.tv-rx-map__points {
+  position: relative;
+}
+
+/* §8 — the hit target is invisible and must never paint a browser box.
+   A click/`focus` shows nothing; only genuine keyboard `:focus-visible`
+   shows a designed, TooolVibes-coherent indicator. */
+/* §8 — an `outline` around an SVG circle renders as a rounded RECTANGLE,
+   which is exactly the "white square / browser focus box" defect. The blip is
+   circular, so its indicators are circular too: both SELECTED and KEYBOARD
+   FOCUS are expressed as SVG strokes on the circular hit target.
+
+   `styles/visual-system.css` paints a global gold `:focus-visible` outline for
+   `[tabindex]` at equal specificity; these rules are declared later AND carry
+   an extra class so they win for this circular target only. Every other
+   control in the product keeps the canonical gold focus ring. */
+.tv-rx-map .tv-rx-blip,
+.tv-rx-map .tv-rx-blip__hit,
+.tv-rx-map .tv-rx-map__svg,
+.tv-rx-map .tv-rx-blip__hit:focus,
+.tv-rx-map .tv-rx-blip__hit:focus:not(:focus-visible),
+.tv-rx-map .tv-rx-blip__hit:focus-visible {
+  outline: none;
+  outline-style: none;
+  outline-width: 0;
+  outline-color: transparent;
 }
 
 .tv-rx-blip__hit {
   fill: transparent;
   stroke: none;
   cursor: pointer;
-  outline: none;
 }
 
-.tv-rx-blip__hit:focus-visible {
+/* Mouse/touch selection paints no focus indicator at all. */
+.tv-rx-map .tv-rx-blip__hit:focus:not(:focus-visible) {
+  stroke: none;
+}
+
+/* Genuine keyboard focus keeps a clearly visible, TooolVibes-coherent
+   indicator: a dashed telemetry ring in the cyan family (the same language as
+   the sector lines), following the instrument's own geometry. */
+.tv-rx-map .tv-rx-blip__hit:focus-visible {
   stroke: var(--tv-color-cyan-500, #22d3ee);
-  stroke-width: 0.6;
+  stroke-width: 1.1;
+  stroke-dasharray: 2.2 1.5;
+  stroke-linecap: round;
 }
 
 .tv-rx-blip__dot {
@@ -314,12 +424,29 @@
   transform-origin: center;
 }
 
-.tv-rx-blip[data-selected="true"] .tv-rx-blip__dot {
-  transform: scale(1.35);
+/* §8/§9 — designed SELECTED state: restrained local halo in the tool's own
+   category colour plus a thin selection ring in the shared brand accent that
+   the quick preview uses. A thin SVG ring, never a white rounded rectangle. */
+.tv-rx-blip__halo {
+  pointer-events: none;
+  opacity: 0.22;
 }
 
+.tv-rx-blip__ring {
+  pointer-events: none;
+  stroke: var(--tv-color-violet-500, #6a3cff);
+  stroke-width: 0.7;
+  opacity: 0.95;
+}
+
+/* §8 — highlighted is a light nudge; SELECTED must outrank it so the dot
+   lands inside the required 1.15-1.25 band (declared after highlight). */
 .tv-rx-blip[data-highlighted="true"] .tv-rx-blip__dot {
   opacity: 1;
+  transform: scale(1.12);
+}
+
+.tv-rx-blip[data-selected="true"] .tv-rx-blip__dot {
   transform: scale(1.2);
 }
 
@@ -775,8 +902,25 @@
   padding: 0.65rem 0.75rem;
 }
 
+/* §11 — tool name is the primary title; the reason is the signal line and
+   the explicit "Perché..." stays visible beneath it. */
+.tv-rx-perte__name {
+  display: block;
+  color: var(--tv-color-ink-100, #f5f3ff);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.tv-rx-perte__signal {
+  margin: 0.15rem 0 0;
+  color: var(--tv-color-ink-400, #a49dc8);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
 .tv-rx-perte__why {
-  margin: 0.2rem 0 0;
+  margin: 0.25rem 0 0;
   color: var(--tv-color-cyan-500, #22d3ee);
   font-size: 0.8125rem;
 }

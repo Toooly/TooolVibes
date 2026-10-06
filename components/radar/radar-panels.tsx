@@ -242,9 +242,11 @@ export function RadarPerTePanel({
           {model.cards.map((card) => (
             <li key={card.tool.id} className="tv-rx-perte__card">
               <div>
-                <strong>{card.title}</strong>
+                <strong className="tv-rx-perte__name">{card.tool.name}</strong>
+                <p className="tv-rx-perte__signal">{card.title}</p>
                 <p className="tv-rx-perte__why">{card.explanation}</p>
                 <p className="tv-rx-perte__meta">
+                  {card.tool.category?.label ?? card.tool.categoryLabel} ·{" "}
                   {card.tool.votesCount} voti · {card.tool.commentsCount} commenti
                 </p>
               </div>

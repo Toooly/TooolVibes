@@ -44,6 +44,8 @@ export function RadarMap({
   compact = false,
 }: RadarMapProps) {
   const titleId = useId();
+  const fieldId = useId();
+  const glowId = useId();
   const layout = layoutRadarPoints(tools, { jitter: true });
 
   if (process.env.NODE_ENV !== "production") {
@@ -77,14 +79,46 @@ export function RadarMap({
           , dimensione = attenzione (voti + commenti), colore = categoria.
         </title>
 
+        <defs>
+          <radialGradient id={fieldId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" className="tv-rx-map__field-stop tv-rx-map__field-stop--core" />
+            <stop offset="55%" className="tv-rx-map__field-stop tv-rx-map__field-stop--mid" />
+            <stop offset="100%" className="tv-rx-map__field-stop tv-rx-map__field-stop--edge" />
+          </radialGradient>
+          <radialGradient id={glowId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" className="tv-rx-map__glow-stop tv-rx-map__glow-stop--in" />
+            <stop offset="100%" className="tv-rx-map__glow-stop tv-rx-map__glow-stop--out" />
+          </radialGradient>
+        </defs>
+
+        {/* §2/§6 — static translucent instrument field: center illumination
+            and edge falloff. No animated gradient, no blur, no sweep. */}
+        <circle
+          cx={RADAR_CENTER}
+          cy={RADAR_CENTER}
+          r={42}
+          className="tv-rx-map__field"
+          fill={`url(#${fieldId})`}
+          aria-hidden="true"
+        />
+        <circle
+          cx={RADAR_CENTER}
+          cy={RADAR_CENTER}
+          r={42}
+          className="tv-rx-map__field-rim"
+          aria-hidden="true"
+        />
+
         <g className="tv-rx-map__grid" aria-hidden="true">
-          {rings.map((ratio) => (
+          {rings.map((ratio, index) => (
             <circle
               key={ratio}
               cx={RADAR_CENTER}
               cy={RADAR_CENTER}
               r={42 * ratio}
               className="tv-rx-map__ring"
+              data-ring-index={String(index)}
+              data-ring-outer={index >= rings.length - 2 ? "true" : undefined}
             />
           ))}
           <line x1="8" y1="50" x2="92" y2="50" className="tv-rx-map__axis" />
@@ -105,6 +139,16 @@ export function RadarMap({
           })}
         </g>
 
+        {/* §5 — subtle static core: a soft glow plus a small solid anchor.
+            Purely static gradient/opacity; no pulsing. */}
+        <circle
+          cx={RADAR_CENTER}
+          cy={RADAR_CENTER}
+          r={15}
+          className="tv-rx-map__core-glow"
+          fill={`url(#${glowId})`}
+          aria-hidden="true"
+        />
         <circle
           cx={RADAR_CENTER}
           cy={RADAR_CENTER}
@@ -148,6 +192,28 @@ export function RadarMap({
                     }
                   }}
                 />
+                {(isSelected || isHighlighted) && (
+                  <circle
+                    style={{ pointerEvents: "none" }}
+                    cx={point.x}
+                    cy={point.y}
+                    r={point.size * 2.7}
+                    fill={color}
+                    className="tv-rx-blip__halo"
+                    aria-hidden="true"
+                  />
+                )}
+                {isSelected && (
+                  <circle
+                    style={{ pointerEvents: "none" }}
+                    cx={point.x}
+                    cy={point.y}
+                    r={point.size * 1.95}
+                    fill="none"
+                    className="tv-rx-blip__ring"
+                    aria-hidden="true"
+                  />
+                )}
                 <circle
                   style={{ pointerEvents: "none" }}
                   cx={point.x}
