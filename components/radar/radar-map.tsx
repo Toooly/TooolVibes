@@ -39,6 +39,16 @@ import {
   type RadarTapCandidate,
 } from "@/lib/radar/radar-geometry";
 import type { ProductHuntRange } from "@/lib/radar/product-hunt-contract";
+import {
+  radarAggregateLabel,
+  type RadarAggregate,
+} from "@/lib/radar/radar-lod";
+
+/**
+ * Aggregate stack hit target in viewBox units. Slightly smaller than the signal
+ * hit radius so a stack is not accidentally easier to hit than a real signal.
+ */
+const RADAR_AGGREGATE_HIT_RADIUS = 6;
 
 export type RadarMapProps = {
   /**
@@ -56,6 +66,18 @@ export type RadarMapProps = {
   onSelect: (toolId: string) => void;
   /** Fired when a tap is genuinely ambiguous — parent shows the chooser. */
   onAmbiguous?: (candidates: readonly RadarTapCandidate[]) => void;
+  /**
+   * Overview level-of-detail stacks (spec §5-§7). These are NOT Tools — they
+   * stand for "N altri segnali in quest'area" at a deterministic position.
+   */
+  aggregates?: readonly RadarAggregate[];
+  /** Tapping a stack enters CLUSTER FOCUS (spec §8), never the chooser. */
+  onSelectAggregate?: (clusterId: string) => void;
+  /**
+   * When set, the map is in CLUSTER FOCUS: every member of this cluster is
+   * prominent and all other sectors are dimmed for compass context only.
+   */
+  focusedClusterId?: string | null;
 };
 
 export function RadarMap({
@@ -67,6 +89,9 @@ export function RadarMap({
   highlightedId,
   onSelect,
   onAmbiguous,
+  aggregates,
+  onSelectAggregate,
+  focusedClusterId,
 }: RadarMapProps) {
   const titleId = useId();
   const fieldId = useId();
@@ -85,13 +110,16 @@ export function RadarMap({
     }
   }
 
-  const colorByCluster = new Map(
+  const colorByCluster = new Map<string, string>(
     clusters.map((cluster) => [
-      cluster.id,
+      cluster.id as string,
       RADAR_CATEGORY_PALETTE[cluster.colorIndex % RADAR_CATEGORY_PALETTE.length],
     ]),
   );
   const pointById = new Map(layout.points.map((point) => [point.id, point]));
+  const labelByCluster = new Map<string, string>(
+    clusters.map((cluster) => [cluster.id as string, cluster.label]),
+  );
   const rings = radarRingLabels(range);
 
   const isVisible = (id: string) => !visibleIds || visibleIds.has(id);
@@ -108,6 +136,21 @@ export function RadarMap({
       const pointerX = ((event.clientX - rect.left) / rect.width) * 100;
       const pointerY = ((event.clientY - rect.top) / rect.height) * 100;
 
+      // §8 — an aggregate stack is a CLUSTER FOCUS entry point, not a signal.
+      // It is resolved before signal candidates so tapping +N never opens the
+      // ambiguity chooser.
+      if (onSelectAggregate && aggregates) {
+        for (const aggregate of aggregates) {
+          if (focusedClusterId && aggregate.clusterId === focusedClusterId) continue;
+          const dx = pointerX - aggregate.x;
+          const dy = pointerY - aggregate.y;
+          if (Math.sqrt(dx * dx + dy * dy) <= RADAR_AGGREGATE_HIT_RADIUS) {
+            onSelectAggregate(aggregate.clusterId);
+            return;
+          }
+        }
+      }
+
       // Only visible points may be selected.
       const visiblePoints = layout.points.filter(
         (point) => !visibleIds || visibleIds.has(point.id),
@@ -122,7 +165,15 @@ export function RadarMap({
         onAmbiguous(resolution.candidates);
       }
     },
-    [layout.points, onAmbiguous, onSelect, visibleIds],
+    [
+      aggregates,
+      focusedClusterId,
+      layout.points,
+      onAmbiguous,
+      onSelect,
+      onSelectAggregate,
+      visibleIds,
+    ],
   );
 
   return (
@@ -203,6 +254,46 @@ export function RadarMap({
           })}
         </g>
 
+        {/* §14 — the outer rim is a subtle fixed cluster compass: one short
+            low-opacity arc per canonical sector, in that cluster's colour.
+            Static, no filled wedge, no rainbow. In cluster focus the owning
+            segment reads slightly clearer and the others soften. */}
+        <g className="tv-rx-map__compass" aria-hidden="true">
+          {layout.clusterOrder.map((clusterId, index) => {
+            const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
+            const start = index * span + span * 0.12;
+            const end = index * span + span * 0.88;
+            const a1 = ((start - 90) * Math.PI) / 180;
+            const a2 = ((end - 90) * Math.PI) / 180;
+            const r = 42;
+            const x1 = RADAR_CENTER + r * Math.cos(a1);
+            const y1 = RADAR_CENTER + r * Math.sin(a1);
+            const x2 = RADAR_CENTER + r * Math.cos(a2);
+            const y2 = RADAR_CENTER + r * Math.sin(a2);
+            const color =
+              colorByCluster.get(clusterId) ??
+              RADAR_CATEGORY_PALETTE[index % RADAR_CATEGORY_PALETTE.length];
+            return (
+              <path
+                key={`rim-${clusterId}`}
+                d={`M ${x1.toFixed(3)} ${y1.toFixed(3)} A ${r} ${r} 0 0 1 ${x2.toFixed(3)} ${y2.toFixed(3)}`}
+                className="tv-rx-map__compass-arc"
+                data-focused={
+                  focusedClusterId && clusterId === focusedClusterId
+                    ? "true"
+                    : undefined
+                }
+                data-dimmed={
+                  focusedClusterId && clusterId !== focusedClusterId
+                    ? "true"
+                    : undefined
+                }
+                stroke={color}
+              />
+            );
+          })}
+        </g>
+
         {/* §11 — minimal time labels along ONE axis only (12 o'clock). */}
         <g className="tv-rx-map__time-axis" aria-hidden="true">
           <text
@@ -232,7 +323,7 @@ export function RadarMap({
         <circle
           cx={RADAR_CENTER}
           cy={RADAR_CENTER}
-          r={15}
+          r={14}
           className="tv-rx-map__core-glow"
           fill={`url(#${glowId})`}
           aria-hidden="true"
@@ -260,13 +351,19 @@ export function RadarMap({
             const selectedClusterId = selectedId
               ? (pointById.get(selectedId)?.clusterId ?? null)
               : null;
-            const context = isSelected
-              ? "selected"
-              : selectedClusterId === null
-                ? "idle"
-                : tool.topicCluster.id === selectedClusterId
-                  ? "same-cluster"
-                  : "other-cluster";
+            const isFocusOut =
+              focusedClusterId !== null &&
+              focusedClusterId !== undefined &&
+              tool.topicCluster.id !== focusedClusterId;
+            const context = isFocusOut
+              ? "focus-out"
+              : isSelected
+                ? "selected"
+                : selectedClusterId === null
+                  ? "idle"
+                  : tool.topicCluster.id === selectedClusterId
+                    ? "same-cluster"
+                    : "other-cluster";
             return (
               <g
                 key={tool.id}
@@ -278,6 +375,7 @@ export function RadarMap({
                 data-context={context}
                 data-age-unknown={point.ageKnown ? undefined : "true"}
                 data-catalog-status={tool.catalogStatus}
+                data-focus={isFocusOut ? "out" : undefined}
               >
                 {/* 44px effective touch target (transparent). Keyboard-only
                     focus; pointer selection is resolved centrally above. */}
@@ -318,12 +416,16 @@ export function RadarMap({
                     aria-hidden="true"
                   />
                 )}
+                {/* §13 — a restrained instrument keyline separates touching
+                    same-colour shapes. Surface token, never a white ring. */}
                 <circle
                   style={{ pointerEvents: "none" }}
                   cx={point.x}
                   cy={point.y}
                   r={point.size}
                   fill={color}
+                  stroke="var(--tv-color-surface-base, #0b0620)"
+                  strokeWidth={0.3}
                   className="tv-rx-blip__dot"
                   aria-hidden="true"
                 />
@@ -345,6 +447,85 @@ export function RadarMap({
             );
           })}
         </g>
+
+        {/* §5/§6 — aggregate stacks. NOT Tools: a refined stack marker with the
+            cluster colour on the rim, dark instrument material, and +N in the
+            centre. No fake attention size, no catalog marker, no glow. */}
+        {aggregates && aggregates.length > 0 ? (
+          <g className="tv-rx-aggregates">
+            {aggregates
+              .filter(
+                (aggregate) =>
+                  !focusedClusterId || aggregate.clusterId !== focusedClusterId,
+              )
+              .map((aggregate) => {
+                const color =
+                  colorByCluster.get(aggregate.clusterId) ??
+                  RADAR_CATEGORY_PALETTE[0];
+                const label = radarAggregateLabel(
+                  aggregate.count,
+                  labelByCluster.get(aggregate.clusterId) ??
+                    aggregate.clusterId,
+                );
+                return (
+                  <g
+                    key={aggregate.id}
+                    className="tv-rx-agg"
+                    data-cluster={aggregate.clusterId}
+                    data-focus={
+                      focusedClusterId &&
+                      aggregate.clusterId !== focusedClusterId
+                        ? "out"
+                        : undefined
+                    }
+                  >
+                    <circle
+                      cx={aggregate.x}
+                      cy={aggregate.y}
+                      r={RADAR_AGGREGATE_HIT_RADIUS}
+                      className="tv-rx-agg__hit"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={label}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          onSelectAggregate?.(aggregate.clusterId);
+                        }
+                      }}
+                    />
+                    <circle
+                      style={{ pointerEvents: "none" }}
+                      cx={aggregate.x}
+                      cy={aggregate.y}
+                      r={4.2}
+                      className="tv-rx-agg__stack"
+                      aria-hidden="true"
+                    />
+                    <circle
+                      style={{ pointerEvents: "none" }}
+                      cx={aggregate.x}
+                      cy={aggregate.y}
+                      r={2.9}
+                      className="tv-rx-agg__core"
+                      stroke={color}
+                      aria-hidden="true"
+                    />
+                    <text
+                      style={{ pointerEvents: "none" }}
+                      x={aggregate.x}
+                      y={aggregate.y + 1.15}
+                      textAnchor="middle"
+                      className="tv-rx-agg__count"
+                      fontSize="3"
+                    >
+                      +{aggregate.count}
+                    </text>
+                  </g>
+                );
+              })}
+          </g>
+        ) : null}
       </svg>
     </div>
   );

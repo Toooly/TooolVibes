@@ -39,7 +39,9 @@ export type RadarUrlState = {
 
 export const DEFAULT_RADAR_URL_STATE: RadarUrlState = {
   tab: "panoramica",
-  range: "week",
+  // §11 — physical evidence: 24H has enough density to be useful and is much
+  // clearer than 7G/30G. The headline is "Cosa sta emergendo adesso".
+  range: "day",
   category: null,
   tool: null,
   query: null,

@@ -243,8 +243,11 @@ describe("RADAR-ENTITY visual type without touching cluster colour (§5)", () =>
     expect("Nel Catalogo TooolVibes").toBeTruthy();
   });
 
-  it("RADAR-ENTITY-04 default range is WEEK (7G) — spec §3", () => {
-    expect(DEFAULT_RADAR_URL_STATE.range).toBe("week");
+  it("RADAR-ENTITY-04 default range is DAY (24H) — physical evidence §11", () => {
+    // §11 of the hierarchy pass deliberately reverts the default from 7G back
+    // to 24H: the physical recording shows 24H is already dense enough and much
+    // clearer, and the headline is "Cosa sta emergendo adesso".
+    expect(DEFAULT_RADAR_URL_STATE.range).toBe("day");
     expect(DEFAULT_RADAR_URL_STATE.tab).toBe("panoramica");
     // …and a missing `r` param therefore lands on the week window.
     expect(DEFAULT_RADAR_URL_STATE.category).toBeNull();

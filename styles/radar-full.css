@@ -346,7 +346,9 @@
 
 /* §5 — subtle static core: soft illumination plus a small solid anchor. */
 .tv-rx-map__core-glow {
-  opacity: 0.55;
+  /* §16 — refined 24% quieter so the core anchors the instrument without
+     reading as a large interactive blip. Static, no motion. */
+  opacity: 0.42;
 }
 
 .tv-rx-map__glow-stop--in {
@@ -502,6 +504,129 @@
 .tv-rx-range__option[data-active="true"] {
   background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 20%, transparent);
   color: var(--tv-color-cyan-500, #22d3ee);
+}
+
+/* ---------- instrument hierarchy: LOD, compass rim, stack markers ------- */
+
+/* §14 — outer rim as a subtle fixed cluster compass: short low-opacity arcs,
+   one per canonical sector, in the sector's own colour. Static, no wedge. */
+.tv-rx-map__compass-arc {
+  fill: none;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  opacity: 0.34;
+  transition: opacity 180ms ease;
+}
+
+.tv-rx-map__compass-arc[data-focused="true"] {
+  opacity: 0.85;
+}
+
+.tv-rx-map__compass-arc[data-dimmed="true"] {
+  opacity: 0.12;
+}
+
+/* §8 — cluster focus: out-of-focus sectors soften to preserve compass
+   context without competing with the focused area. */
+.tv-rx-blip[data-focus="out"] {
+  opacity: 0.16;
+}
+
+.tv-rx-agg[data-focus="out"] {
+  opacity: 0.16;
+}
+
+/* §6 — aggregate stack marker. Distinct from a signal: dark instrument
+   material, cluster-coloured rim, +N in the centre. No glow, no fake size. */
+.tv-rx-agg {
+  cursor: pointer;
+  transition: opacity 180ms ease;
+}
+
+.tv-rx-agg__hit {
+  fill: transparent;
+  stroke: none;
+  outline: none;
+}
+
+.tv-rx-agg__hit:focus,
+.tv-rx-agg__hit:focus:not(:focus-visible) {
+  outline: none;
+  stroke: none;
+}
+
+.tv-rx-agg__hit:focus-visible {
+  outline: none;
+  stroke: var(--tv-color-cyan-500, #22d3ee);
+  stroke-width: 1.1;
+  stroke-dasharray: 2.2 1.5;
+  stroke-linecap: round;
+}
+
+.tv-rx-agg__stack {
+  fill: var(--tv-color-surface-base, #0b0620);
+  stroke: color-mix(in srgb, var(--tv-color-ink-500, #8e87b8) 26%, transparent);
+  stroke-width: 0.35;
+}
+
+.tv-rx-agg__core {
+  fill: color-mix(
+    in srgb,
+    var(--tv-color-surface-elevated, #1c1440) 82%,
+    transparent
+  );
+  stroke-width: 0.75;
+}
+
+.tv-rx-agg__count {
+  fill: var(--tv-color-ink-100, #f5f3ff);
+  letter-spacing: 0.02em;
+}
+
+/* §15 — chip swatches map a chip to its sector/blip colour. Small marker
+   only: the chip body stays quiet. Selected chips get a stronger rim. */
+.tv-rx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tv-rx-chip__swatch {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--tv-color-ink-500, #8e87b8) 34%, transparent);
+}
+
+.tv-rx-chip__swatch[data-color-index="0"] { background: #22D3EE; }
+.tv-rx-chip__swatch[data-color-index="1"] { background: #6a3cff; }
+.tv-rx-chip__swatch[data-color-index="2"] { background: #ec4899; }
+.tv-rx-chip__swatch[data-color-index="3"] { background: #22c55e; }
+.tv-rx-chip__swatch[data-color-index="4"] { background: #3b82f6; }
+.tv-rx-chip__swatch[data-color-index="5"] { background: #f59e0b; }
+.tv-rx-chip__swatch[data-color-index="6"] { background: #a78bfa; }
+.tv-rx-chip__swatch[data-color-index="7"] { background: #14b8a6; }
+
+.tv-rx-chip[data-active="true"] {
+  border-color: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 62%, transparent);
+  background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 14%, transparent);
+}
+
+/* §20 — chooser options carry compact context, never a full card. */
+.tv-rx-chooser__name {
+  display: block;
+  color: var(--tv-color-ink-100, #f5f3ff);
+  font-size: 0.8125rem;
+  text-align: start;
+}
+
+.tv-rx-chooser__meta {
+  display: block;
+  margin-block-start: 0.1rem;
+  color: var(--tv-color-ink-500, #8e87b8);
+  font-size: 0.75rem;
+  text-align: start;
 }
 
 /* ---------- signal model v2: ring labels + selection context ------------- */

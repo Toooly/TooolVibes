@@ -20,6 +20,16 @@ import { useAccount } from "@/components/account/account-provider";
 import { RadarLegend } from "@/components/radar/radar-legend";
 import { RadarMap, type RadarTapCandidate } from "@/components/radar/radar-map";
 import {
+  layoutRadarPoints,
+  RADAR_RANGE_HOURS,
+} from "@/lib/radar/radar-geometry";
+import {
+  planRadarLod,
+  RADAR_LOD_BUDGET_DESKTOP,
+  RADAR_LOD_BUDGET_MOBILE,
+  type RadarLodInput,
+} from "@/lib/radar/radar-lod";
+import {
   RadarInsightStrip,
   RadarPerTePanel,
   RadarTrendPanel,
@@ -153,9 +163,71 @@ export function RadarExperience() {
   // §1 — a genuinely ambiguous tap opens a chooser instead of guessing.
   const [ambiguous, setAmbiguous] = useState<readonly RadarTapCandidate[]>([]);
 
-  const visibleIds = useMemo(
-    () => new Set(filteredTools.map((tool) => tool.id)),
-    [filteredTools],
+  // §10 — geometry is ALWAYS computed from the full dataset. LOD and cluster
+  // focus only decide what is painted, never where anything sits.
+  const rangeHours = RADAR_RANGE_HOURS[urlState.range] ?? RADAR_RANGE_HOURS.day;
+  const layout = useMemo(
+    () => layoutRadarPoints(view.tools, { rangeHours }),
+    [view.tools, rangeHours],
+  );
+
+  const lodInputs = useMemo<RadarLodInput[]>(() => {
+    const byId = new Map(layout.points.map((point) => [point.id, point]));
+    return view.tools.map((tool) => {
+      const point = byId.get(tool.id);
+      return {
+        id: tool.id,
+        clusterId: tool.topicCluster.id,
+        attention: tool.attention,
+        ageHours: tool.ageHours,
+        catalogStatus: tool.catalogStatus,
+        semanticAngleDeg: point?.semanticAngleDeg ?? 0,
+        radiusRatio: point?.radiusRatio ?? 0,
+      };
+    });
+  }, [layout.points, view.tools]);
+
+  // §3/§24 — the overview budget is a VIEWPORT budget, not a dataset budget.
+  const lodBudget = useIsWideViewport()
+    ? RADAR_LOD_BUDGET_DESKTOP
+    : RADAR_LOD_BUDGET_MOBILE;
+
+  const lodPlan = useMemo(
+    () =>
+      planRadarLod(lodInputs, {
+        budget: lodBudget,
+        selectedId: urlState.tool,
+      }),
+    [lodInputs, lodBudget, urlState.tool],
+  );
+
+  // §9 — `urlState.category` IS the canonical cluster focus state. Tapping a
+  // chip and tapping a +N stack are exactly the same mode.
+  const focusedClusterId = urlState.category;
+
+  const renderIds = useMemo(() => {
+    if (focusedClusterId) {
+      // §8 — cluster focus paints every signal so the compass context stays;
+      // the map dims the out-of-focus sectors itself.
+      return new Set(view.tools.map((tool) => tool.id));
+    }
+    return lodPlan.individualIds;
+  }, [focusedClusterId, lodPlan.individualIds, view.tools]);
+
+  const aggregates = useMemo(() => {
+    if (focusedClusterId) {
+      return lodPlan.aggregates.filter(
+        (aggregate) => aggregate.clusterId !== focusedClusterId,
+      );
+    }
+    return lodPlan.aggregates;
+  }, [focusedClusterId, lodPlan.aggregates]);
+
+  const handleSelectAggregate = useCallback(
+    (clusterId: string) => {
+      setUrlState({ category: clusterId === urlState.category ? null : clusterId });
+    },
+    [setUrlState, urlState.category],
   );
 
   const handleAmbiguous = useCallback((candidates: readonly RadarTapCandidate[]) => {
@@ -314,7 +386,10 @@ export function RadarExperience() {
                 <>
                   <RadarMap
                     layoutTools={view.tools}
-                    visibleIds={visibleIds}
+                    visibleIds={renderIds}
+                    aggregates={aggregates}
+                    onSelectAggregate={handleSelectAggregate}
+                    focusedClusterId={focusedClusterId}
                     clusters={view.clusters}
                     range={urlState.range}
                     selectedId={urlState.tool}
@@ -607,6 +682,29 @@ function RadarRailOverview({
  * catalog-linked, otherwise the real source item id. Never invents a Catalog
  * entity for an external signal (spec §21).
  */
+/**
+ * §3/§24 — the overview display budget is a viewport budget: mobile shows a
+ * calmer instrument, desktop a larger one, and neither shows every signal.
+ */
+const RADAR_WIDE_VIEWPORT_QUERY = "(min-width: 64rem)";
+
+function useIsWideViewport(): boolean {
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    // Guarded: `matchMedia` is absent during SSR and in some test runtimes.
+    // Falling back to the mobile budget is the safe default.
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return;
+    }
+    const media = window.matchMedia(RADAR_WIDE_VIEWPORT_QUERY);
+    const sync = () => setWide(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+  return wide;
+}
+
 function watchKeyFor(tool: RadarTool): string {
   return tool.catalogSlug ?? tool.id;
 }
@@ -618,7 +716,12 @@ function RadarToolbar({
   query,
   onQuery,
 }: {
-  categories: readonly { id: string; label: string; count: number }[];
+  categories: readonly {
+    id: string;
+    label: string;
+    count: number;
+    colorIndex?: number;
+  }[];
   activeCategory: string | null;
   onCategory: (category: string | null) => void;
   query: string | null;
@@ -647,6 +750,13 @@ function RadarToolbar({
               aria-pressed={activeCategory === category.id}
               onClick={() => onCategory(category.id)}
             >
+              {/* §15 — a small cluster-colour swatch ties the chip to its
+                  sector and blips. Never a full bright fill. */}
+              <span
+                className="tv-rx-chip__swatch"
+                data-color-index={category.colorIndex ?? 0}
+                aria-hidden="true"
+              />
               {category.label} {category.count}
             </button>
           </li>
@@ -683,28 +793,51 @@ function RadarAmbiguityChooser({
   onDismiss: () => void;
 }) {
   if (candidates.length < 2) return null;
-  const nameById = new Map(tools.map((tool) => [tool.id, tool.name]));
+  const toolById = new Map(tools.map((tool) => [tool.id, tool]));
   return (
-    <div className="tv-rx-chooser" role="dialog" aria-label="Quale segnale vuoi aprire?">
-      <p className="tv-rx-chooser__title">Quale segnale vuoi aprire?</p>
+    <div className="tv-rx-chooser" role="dialog" aria-label={`${candidates.length} segnali in questo punto`}>
+      <p className="tv-rx-chooser__title">
+        {candidates.length} segnali in questo punto
+      </p>
       <ul className="tv-rx-chooser__list">
-        {candidates.map((candidate) => (
-          <li key={candidate.point.id}>
-            <button
-              type="button"
-              className="tv-rx-chooser__option"
-              onClick={() => onChoose(candidate.point.id)}
-            >
-              {nameById.get(candidate.point.id) ?? candidate.point.id}
-            </button>
-          </li>
-        ))}
+        {candidates.map((candidate) => {
+          const tool = toolById.get(candidate.point.id);
+          return (
+            <li key={candidate.point.id}>
+              <button
+                type="button"
+                className="tv-rx-chooser__option"
+                onClick={() => onChoose(candidate.point.id)}
+              >
+                <span className="tv-rx-chooser__name">
+                  {tool?.name ?? candidate.point.id}
+                </span>
+                {/* §20 — compact context only: area, age, attention. Never a
+                    full card; the chooser stays a quick disambiguation. */}
+                <span className="tv-rx-chooser__meta">
+                  {tool?.topicCluster.label ?? "—"}
+                  {candidate.point.ageHours !== null
+                    ? ` · ${formatChooserAge(candidate.point.ageHours)}`
+                    : ""}
+                  {tool ? ` · ${tool.votesCount}v ${tool.commentsCount}c` : ""}
+                </span>
+              </button>
+            </li>
+          );
+        })}
       </ul>
       <button type="button" className="tv-rx-chooser__dismiss" onClick={onDismiss}>
         Annulla
       </button>
     </div>
   );
+}
+
+function formatChooserAge(ageHours: number | null): string {
+  if (ageHours === null || !Number.isFinite(ageHours)) return "età ignota";
+  if (ageHours < 1) return "<1h";
+  if (ageHours < 48) return `${Math.round(ageHours)}h`;
+  return `${Math.round(ageHours / 24)}g`;
 }
 
 function RadarSummaryMetrics({
