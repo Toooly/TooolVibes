@@ -33,7 +33,6 @@ import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 import { RADAR_RANGE_OPTIONS, resolveRadarUiModel } from "@/lib/radar/radar-ui-model";
 import {
   buildRadarView,
-  UNCATEGORIZED_CATEGORY_ID,
   type RadarTool,
   type RadarView,
 } from "@/lib/radar/radar-domain";
@@ -119,12 +118,10 @@ export function RadarExperience() {
   const filteredTools = useMemo(() => {
     let tools = view.tools;
     if (urlState.category) {
-      tools = tools.filter((tool) => {
-        if (urlState.category === UNCATEGORIZED_CATEGORY_ID) {
-          return tool.category === null || tool.category.id === UNCATEGORIZED_CATEGORY_ID;
-        }
-        return tool.category?.id === urlState.category;
-      });
+      // §19 — the filter chips are RadarTopicCluster ids (the Radar taxonomy),
+      // NOT Catalog category ids. Matching against `tool.category` silently
+      // dropped every external signal and rendered an empty map.
+      tools = tools.filter((tool) => tool.topicCluster.id === urlState.category);
     }
     if (query) {
       tools = tools.filter(
