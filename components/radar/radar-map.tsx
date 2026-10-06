@@ -58,6 +58,12 @@ export type RadarMapProps = {
   layoutTools: readonly RadarTool[];
   /** Ids currently visible (filter/search). `null`/absent = all visible. */
   visibleIds?: ReadonlySet<string> | null;
+  /**
+   * Ids that may actually be selected. Cluster FOCUS sets this to the focused
+   * cluster only — its contextual neighbours are painted but NON-INTERACTIVE
+   * (spec §6). `null`/absent = everything visible is interactive.
+   */
+  interactiveIds?: ReadonlySet<string> | null;
   clusters: readonly RadarClusterSummary[];
   /** Selected time range — radius encodes age inside it. */
   range: ProductHuntRange;
@@ -83,6 +89,7 @@ export type RadarMapProps = {
 export function RadarMap({
   layoutTools,
   visibleIds,
+  interactiveIds,
   clusters,
   range,
   selectedId,
@@ -138,10 +145,11 @@ export function RadarMap({
 
       // §8 — an aggregate stack is a CLUSTER FOCUS entry point, not a signal.
       // It is resolved before signal candidates so tapping +N never opens the
-      // ambiguity chooser.
-      if (onSelectAggregate && aggregates) {
+      // ambiguity chooser. While a cluster is focused every visible stack is
+      // CONTEXT and therefore non-interactive (spec §6) — focus is left via the
+      // "Tutti" chip, not by tapping a dimmed neighbour.
+      if (onSelectAggregate && aggregates && !focusedClusterId) {
         for (const aggregate of aggregates) {
-          if (focusedClusterId && aggregate.clusterId === focusedClusterId) continue;
           const dx = pointerX - aggregate.x;
           const dy = pointerY - aggregate.y;
           if (Math.sqrt(dx * dx + dy * dy) <= RADAR_AGGREGATE_HIT_RADIUS) {
@@ -151,10 +159,12 @@ export function RadarMap({
         }
       }
 
-      // Only visible points may be selected.
-      const visiblePoints = layout.points.filter(
-        (point) => !visibleIds || visibleIds.has(point.id),
-      );
+      // Only visible, interactive points may be selected.
+      const visiblePoints = layout.points.filter((point) => {
+        if (visibleIds && !visibleIds.has(point.id)) return false;
+        if (interactiveIds && !interactiveIds.has(point.id)) return false;
+        return true;
+      });
       const resolution = resolveRadarTap(visiblePoints, pointerX, pointerY);
 
       if (resolution.kind === "selected") {
@@ -168,6 +178,7 @@ export function RadarMap({
     [
       aggregates,
       focusedClusterId,
+      interactiveIds,
       layout.points,
       onAmbiguous,
       onSelect,
@@ -355,6 +366,8 @@ export function RadarMap({
               focusedClusterId !== null &&
               focusedClusterId !== undefined &&
               tool.topicCluster.id !== focusedClusterId;
+            // §6 — contextual neighbours are painted but never selectable.
+            const isInteractive = !interactiveIds || interactiveIds.has(tool.id);
             const context = isFocusOut
               ? "focus-out"
               : isSelected
@@ -385,14 +398,20 @@ export function RadarMap({
                   r={RADAR_HIT_RADIUS_VIEWBOX}
                   className="tv-rx-blip__hit"
                   role="button"
-                  tabIndex={0}
+                  data-interactive={isInteractive ? "true" : "false"}
+                  aria-disabled={isInteractive ? undefined : true}
+                  tabIndex={isInteractive ? 0 : -1}
                   aria-label={blipAriaLabel(tool, point)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      onSelect(tool.id);
-                    }
-                  }}
+                  onKeyDown={
+                    isInteractive
+                      ? (event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            onSelect(tool.id);
+                          }
+                        }
+                      : undefined
+                  }
                 />
                 {(isSelected || isHighlighted) && (
                   <circle
@@ -467,6 +486,9 @@ export function RadarMap({
                   labelByCluster.get(aggregate.clusterId) ??
                     aggregate.clusterId,
                 );
+                // §6 — while a cluster is focused every visible stack is pure
+                // CONTEXT and must not accept taps or keyboard focus.
+                const aggregateInteractive = !focusedClusterId;
                 return (
                   <g
                     key={aggregate.id}
@@ -485,14 +507,20 @@ export function RadarMap({
                       r={RADAR_AGGREGATE_HIT_RADIUS}
                       className="tv-rx-agg__hit"
                       role="button"
-                      tabIndex={0}
+                      data-interactive={aggregateInteractive ? "true" : "false"}
+                      aria-disabled={aggregateInteractive ? undefined : true}
+                      tabIndex={aggregateInteractive ? 0 : -1}
                       aria-label={label}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          onSelectAggregate?.(aggregate.clusterId);
-                        }
-                      }}
+                      onKeyDown={
+                        aggregateInteractive
+                          ? (event) => {
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                onSelectAggregate?.(aggregate.clusterId);
+                              }
+                            }
+                          : undefined
+                      }
                     />
                     <circle
                       style={{ pointerEvents: "none" }}

@@ -9,6 +9,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  planRadarClusterFocus,
   planRadarLod,
   radarAggregateLabel,
   radarClusterFocusMembers,
@@ -258,5 +259,198 @@ describe("RADAR-LOD cluster focus (§8/§9/§22)", () => {
     expect(radarLodPerClusterCap(17, 8)).toBe(3);
     expect(radarLodPerClusterCap(11, 1)).toBe(11);
     expect(radarLodPerClusterCap(4, 20)).toBe(2);
+  });
+});
+
+
+describe("RADAR-FOCUS-V2 progressive density (cluster focus)", () => {
+  /** One real signal in `video-image`, the rest spread over the other areas. */
+  function makeFocusedCase(): RadarLodInput[] {
+    const items: RadarLodInput[] = [
+      {
+        id: "solo-video",
+        clusterId: "video-image",
+        attention: 300,
+        ageHours: 3,
+        catalogStatus: "external",
+        semanticAngleDeg: 10,
+        radiusRatio: 0.2,
+      },
+    ];
+    const others = [
+      "design-creative",
+      "no-code-automation",
+      "marketing-growth",
+      "productivity",
+      "developer-coding",
+      "ai-agents",
+      "other",
+    ];
+    let index = 0;
+    for (const clusterId of others) {
+      for (let k = 0; k < 3; k += 1) {
+        items.push({
+          id: `${clusterId}-${k}`,
+          clusterId,
+          attention: 100 + index * 37,
+          ageHours: (index * 5) % 200,
+          catalogStatus: index % 4 === 0 ? "linked" : "external",
+          semanticAngleDeg: (index * 21) % 360,
+          radiusRatio: 0.15 + (index % 7) * 0.1,
+        });
+        index += 1;
+      }
+    }
+    return items;
+  }
+
+  const CASE = makeFocusedCase();
+  const CASE_OVERVIEW = planRadarLod(CASE, {
+    budget: RADAR_LOD_BUDGET_MOBILE,
+  });
+  const ACTIVE_CLUSTERS = new Set(CASE.map((item) => item.clusterId));
+
+  it("RADAR-FOCUS-V2-01 the focused cluster paints ALL of its real signals", () => {
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const expected = CASE.filter((item) => item.clusterId === clusterId).length;
+      const plan = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      // §9 — visibleFocusedSignals == clusterSignalCount
+      expect(plan.focusedIds.size).toBe(expected);
+      for (const item of CASE) {
+        if (item.clusterId !== clusterId) continue;
+        expect(plan.focusedIds.has(item.id)).toBe(true);
+      }
+    }
+  });
+
+  it("RADAR-FOCUS-V2-02 no signal is ever both an individual and inside a stack", () => {
+    // §2 — the explicit duplicate-representation invariant.
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const plan = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      expect(plan.duplicateRepresentationCount).toBe(0);
+
+      const aggregated = new Set<string>();
+      for (const aggregate of plan.contextAggregates) {
+        for (const member of aggregate.memberIds) aggregated.add(member);
+      }
+      for (const id of plan.visibleIds) {
+        expect(aggregated.has(id)).toBe(false);
+      }
+      // And a stack never contains a focused signal.
+      for (const aggregate of plan.contextAggregates) {
+        for (const member of aggregate.memberIds) {
+          expect(plan.focusedIds.has(member)).toBe(false);
+        }
+      }
+    }
+  });
+
+  it("RADAR-FOCUS-V2-03 the focus budget is signals + one context node per area", () => {
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const plan = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      const otherActive = ACTIVE_CLUSTERS.size - 1;
+      const focusedCount = CASE.filter((item) => item.clusterId === clusterId).length;
+      // §3 — never "all signals + aggregates".
+      expect(plan.visibleNodeCount).toBeLessThanOrEqual(focusedCount + otherActive);
+      expect(plan.visibleNodeCount).toBeGreaterThanOrEqual(focusedCount);
+    }
+  });
+
+  it("RADAR-FOCUS-V2-04 a one-signal area yields ~8 nodes, not 27", () => {
+    // The exact defect from the measured evidence: focusing `Video & Immagini`
+    // (1 real signal) reported 24 individuals + 3 stacks = 27 nodes / 17 overlaps.
+    const plan = planRadarClusterFocus(CASE, "video-image", CASE_OVERVIEW);
+    expect(plan.focusedIds.size).toBe(1);
+    expect(plan.visibleNodeCount).toBeLessThanOrEqual(1 + (ACTIVE_CLUSTERS.size - 1));
+    expect(plan.visibleNodeCount).toBeLessThan(10);
+    // Definitely not the old behaviour.
+    expect(plan.visibleNodeCount).toBeLessThan(27);
+  });
+
+  it("RADAR-FOCUS-V2-05 every other active area contributes exactly one context node", () => {
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const plan = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      const otherActive = ACTIVE_CLUSTERS.size - 1;
+      expect(plan.contextNodeCount).toBe(otherActive);
+      // One node per other cluster — counted by cluster, not by id.
+      const clusters = new Set<string>(plan.contextIds);
+      for (const aggregate of plan.contextAggregates) clusters.add(aggregate.clusterId);
+      expect(clusters.size).toBe(otherActive);
+      expect(clusters.has(clusterId)).toBe(false);
+    }
+  });
+
+  it("RADAR-FOCUS-V2-06 context is the +N stack or the representative, never both", () => {
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const plan = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      const stackClusters = new Set(plan.contextAggregates.map((a) => a.clusterId));
+      for (const id of plan.contextIds) {
+        const item = CASE.find((entry) => entry.id === id)!;
+        // A cluster shown as a stack must NOT also show an individual.
+        expect(stackClusters.has(item.clusterId)).toBe(false);
+      }
+      for (const aggregate of plan.contextAggregates) {
+        const reps = [...plan.contextIds].filter(
+          (id) => CASE.find((entry) => entry.id === id)?.clusterId === aggregate.clusterId,
+        );
+        expect(reps).toHaveLength(0);
+      }
+    }
+  });
+
+  it("RADAR-FOCUS-V2-07 focus never moves a point (maxCoordinateDelta = 0)", () => {
+    const first = layoutRadarPoints(asLayout(CASE));
+    const second = layoutRadarPoints(asLayout(CASE));
+    let maxCoordinateDelta = 0;
+    for (const point of first.points) {
+      const again = second.points.find((entry) => entry.id === point.id)!;
+      maxCoordinateDelta = Math.max(
+        maxCoordinateDelta,
+        Math.abs(point.x - again.x),
+        Math.abs(point.y - again.y),
+        Math.abs(point.radiusRatio - again.radiusRatio),
+      );
+    }
+    expect(maxCoordinateDelta).toBe(0);
+    // The focus plan only selects ids — it never synthesises a coordinate.
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const plan = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      for (const id of plan.visibleIds) {
+        expect(CASE.some((item) => item.id === id)).toBe(true);
+      }
+    }
+  });
+
+  it("RADAR-FOCUS-V2-08 only the focused area is interactive (§6)", () => {
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const plan = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      expect([...plan.interactiveIds].sort()).toEqual([...plan.focusedIds].sort());
+      for (const id of plan.contextIds) {
+        expect(plan.interactiveIds.has(id)).toBe(false);
+      }
+    }
+  });
+
+  it("RADAR-FOCUS-V2-09 the focus plan is deterministic", () => {
+    for (const clusterId of ACTIVE_CLUSTERS) {
+      const a = planRadarClusterFocus(CASE, clusterId, CASE_OVERVIEW);
+      const b = planRadarClusterFocus([...CASE].reverse(), clusterId, CASE_OVERVIEW);
+      expect([...a.visibleIds].sort()).toEqual([...b.visibleIds].sort());
+      expect(a.visibleNodeCount).toBe(b.visibleNodeCount);
+      expect(a.duplicateRepresentationCount).toBe(b.duplicateRepresentationCount);
+    }
+  });
+
+  it("RADAR-FOCUS-V2-10 the real 24-signal case stays lighter than Overview", () => {
+    const items = makeItems(24);
+    const overview = planRadarLod(items, { budget: RADAR_LOD_BUDGET_MOBILE });
+    const overviewNodes =
+      overview.individualIds.size + overview.aggregates.length;
+    for (const clusterId of new Set(items.map((item) => item.clusterId))) {
+      const plan = planRadarClusterFocus(items, clusterId, overview);
+      // The whole point of the pass: focus must never be denser than Overview.
+      expect(plan.visibleNodeCount).toBeLessThanOrEqual(overviewNodes);
+      expect(plan.duplicateRepresentationCount).toBe(0);
+    }
   });
 });

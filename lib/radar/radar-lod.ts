@@ -256,3 +256,106 @@ export function radarLodPerClusterCap(
 /** Compass span re-export so callers need one import. */
 export const RADAR_LOD_SECTOR_SPAN_DEG = RADAR_COMPASS_SECTOR_SPAN_DEG;
 export { radarTopicClusterSectorIndex };
+
+
+/**
+ * CLUSTER FOCUS plan (progressive detail, one level deep — never nested).
+ *
+ * A focused cluster paints ALL of its real signals at their EXISTING semantic
+ * coordinates. Every other active cluster contributes exactly ONE contextual
+ * node so the compass stays legible without re-blooming the map:
+ *   - its Overview `+N` aggregate when it has one, else
+ *   - at most its canonical Overview representative (highest attention).
+ *
+ * Context nodes are dimmed and NON-INTERACTIVE. Context is never a second
+ * focus level.
+ *
+ * INVARIANT (§2 — no duplicate representation): a signal is never painted both
+ * as an individual node and inside a visible aggregate in the same state.
+ * `duplicateRepresentationCount` is computed from the plan and must be 0.
+ */
+export type RadarClusterFocusPlan = {
+  /** Every real signal of the focused cluster. All interactive. */
+  focusedIds: ReadonlySet<string>;
+  /** One representative per other cluster that has no aggregate. */
+  contextIds: ReadonlySet<string>;
+  /** One `+N` stack per other cluster that has leftovers in Overview. */
+  contextAggregates: readonly RadarAggregate[];
+  /** Everything painted in this state. */
+  visibleIds: ReadonlySet<string>;
+  /** Interactive ids — the focused cluster only (§6). */
+  interactiveIds: ReadonlySet<string>;
+  /** Focused signals + context nodes. */
+  visibleNodeCount: number;
+  contextNodeCount: number;
+  /** Always 0 — asserted explicitly so it can never regress. */
+  duplicateRepresentationCount: number;
+};
+
+export function planRadarClusterFocus(
+  items: readonly RadarLodInput[],
+  clusterId: string,
+  overview: RadarLodPlan,
+): RadarClusterFocusPlan {
+  const focusedIds = new Set<string>();
+  for (const item of items) {
+    if (item.clusterId === clusterId) focusedIds.add(item.id);
+  }
+
+  const overviewAggregateByCluster = new Map<string, RadarAggregate>();
+  for (const aggregate of overview.aggregates) {
+    overviewAggregateByCluster.set(aggregate.clusterId, aggregate);
+  }
+
+  const contextAggregates: RadarAggregate[] = [];
+  const contextIds = new Set<string>();
+  const activeClusters = new Set(items.map((item) => item.clusterId));
+
+  for (const active of radarTopicClusterOrder()) {
+    if (!activeClusters.has(active) || active === clusterId) continue;
+    const aggregate = overviewAggregateByCluster.get(active);
+    if (aggregate) {
+      // §5 — show the `+N` stack and NOTHING else from that cluster.
+      contextAggregates.push(aggregate);
+      continue;
+    }
+    // §5 — no aggregate: at most its canonical Overview representative.
+    const candidates = items.filter(
+      (item) => item.clusterId === active && overview.individualIds.has(item.id),
+    );
+    const pool = candidates.length > 0
+      ? candidates
+      : items.filter((item) => item.clusterId === active);
+    const pick = [...pool].sort(
+      (a, b) =>
+        b.attention - a.attention ||
+        (a.ageHours ?? Number.POSITIVE_INFINITY) - (b.ageHours ?? Number.POSITIVE_INFINITY) ||
+        a.id.localeCompare(b.id),
+    )[0];
+    if (pick) contextIds.add(pick.id);
+  }
+
+  const visibleIds = new Set<string>([...focusedIds, ...contextIds]);
+  const interactiveIds = new Set<string>(focusedIds);
+
+  // §2 invariant — computed, not assumed.
+  const aggregated = new Set<string>();
+  for (const aggregate of contextAggregates) {
+    for (const member of aggregate.memberIds) aggregated.add(member);
+  }
+  let duplicateRepresentationCount = 0;
+  for (const id of visibleIds) {
+    if (aggregated.has(id)) duplicateRepresentationCount += 1;
+  }
+
+  return {
+    focusedIds,
+    contextIds,
+    contextAggregates,
+    visibleIds,
+    interactiveIds,
+    visibleNodeCount: focusedIds.size + contextIds.size + contextAggregates.length,
+    contextNodeCount: contextIds.size + contextAggregates.length,
+    duplicateRepresentationCount,
+  };
+}

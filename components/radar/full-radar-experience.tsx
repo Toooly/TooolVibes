@@ -24,6 +24,7 @@ import {
   RADAR_RANGE_HOURS,
 } from "@/lib/radar/radar-geometry";
 import {
+  planRadarClusterFocus,
   planRadarLod,
   RADAR_LOD_BUDGET_DESKTOP,
   RADAR_LOD_BUDGET_MOBILE,
@@ -205,23 +206,34 @@ export function RadarExperience() {
   // chip and tapping a +N stack are exactly the same mode.
   const focusedClusterId = urlState.category;
 
-  const renderIds = useMemo(() => {
-    if (focusedClusterId) {
-      // §8 — cluster focus paints every signal so the compass context stays;
-      // the map dims the out-of-focus sectors itself.
-      return new Set(view.tools.map((tool) => tool.id));
-    }
-    return lodPlan.individualIds;
-  }, [focusedClusterId, lodPlan.individualIds, view.tools]);
+  // §1/§3/§5 — CLUSTER FOCUS paints the focused cluster's real signals plus
+  // exactly ONE contextual node per other active cluster (its `+N` stack when
+  // Overview has one, else its canonical Overview representative). Context is
+  // dimmed and non-interactive. This keeps focus LIGHTER than Overview, never
+  // denser — the defect this pass fixes.
+  const focusPlan = useMemo(
+    () =>
+      focusedClusterId
+        ? planRadarClusterFocus(lodInputs, focusedClusterId, lodPlan)
+        : null,
+    [focusedClusterId, lodInputs, lodPlan],
+  );
 
-  const aggregates = useMemo(() => {
-    if (focusedClusterId) {
-      return lodPlan.aggregates.filter(
-        (aggregate) => aggregate.clusterId !== focusedClusterId,
-      );
-    }
-    return lodPlan.aggregates;
-  }, [focusedClusterId, lodPlan.aggregates]);
+  const renderIds = useMemo(
+    () => (focusPlan ? focusPlan.visibleIds : lodPlan.individualIds),
+    [focusPlan, lodPlan.individualIds],
+  );
+
+  const aggregates = useMemo(
+    () => (focusPlan ? focusPlan.contextAggregates : lodPlan.aggregates),
+    [focusPlan, lodPlan.aggregates],
+  );
+
+  // §6 — only the focused cluster is interactive while it is focused.
+  const interactiveIds = useMemo(
+    () => (focusPlan ? focusPlan.interactiveIds : null),
+    [focusPlan],
+  );
 
   const handleSelectAggregate = useCallback(
     (clusterId: string) => {
@@ -387,6 +399,7 @@ export function RadarExperience() {
                   <RadarMap
                     layoutTools={view.tools}
                     visibleIds={renderIds}
+                    interactiveIds={interactiveIds}
                     aggregates={aggregates}
                     onSelectAggregate={handleSelectAggregate}
                     focusedClusterId={focusedClusterId}
