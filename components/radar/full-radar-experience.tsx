@@ -13,7 +13,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, RefreshCw, Search } from "lucide-react";
 
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { useAccount } from "@/components/account/account-provider";
@@ -24,11 +24,16 @@ import {
   RADAR_RANGE_HOURS,
 } from "@/lib/radar/radar-geometry";
 import {
-  computeRadarCamera,
   RADAR_ZOOM_DEFAULT_MAP_PX,
   RADAR_ZOOM_TARGET_GAP_PX,
 } from "@/lib/radar/radar-camera";
 import { planRadarSpiderfy, type RadarSpiderGroup } from "@/lib/radar/radar-spiderfy";
+import {
+  planRadarSectorLens,
+  type RadarLensItem,
+  type RadarLensPlan,
+} from "@/lib/radar/radar-lens";
+import type { RadarPoint2 } from "@/lib/radar/radar-projection";
 import {
   planRadarClusterFocus,
   planRadarOverview,
@@ -256,38 +261,82 @@ export function RadarExperience() {
     [focusPlan],
   );
 
-  // §4-§6 — the semantic camera. A pure viewport transform: the coordinates
-  // never change, so spatial memory stays true.
-  const cameraNodes = useMemo(() => {
-    if (!focusPlan) return [];
-    return layout.points
-      .filter((point) => focusPlan.focusedIds.has(point.id))
-      .map((point) => ({
-        id: point.id,
-        x: point.x,
-        y: point.y,
-        radius: point.size,
-      }));
-  }, [focusPlan, layout.points]);
-
-  const camera = useMemo(
-    () =>
-      focusedClusterId && cameraNodes.length > 0
-        ? computeRadarCamera(cameraNodes, { mapPx: RADAR_ZOOM_DEFAULT_MAP_PX })
-        : null,
-    [focusedClusterId, cameraNodes],
+  // Spec §4-§8 — the SECTOR LENS. A display-only angular magnification of the
+  // focused cluster's permanent 45 degree semantic sector into 120-220 degrees
+  // of display space. The semantic coordinates are never recomputed and RADIUS
+  // still encodes age (spec §5). The smallest lens width that yields a 12px
+  // marker gap wins (spec §7); residuals get a bounded local display relaxation
+  // (spec §9).
+  const pointById = useMemo(
+    () => new Map(layout.points.map((point) => [point.id, point])),
+    [layout.points],
   );
 
-  // §9 — collisions the camera cannot separate fan out around their own
-  // semantic anchor instead of opening the chooser.
+  const lensItems = useMemo<RadarLensItem[]>(() => {
+    if (!focusedClusterId) return [];
+    return layout.points
+      .filter((point) => point.clusterId === focusedClusterId)
+      .map((point) => ({
+        id: point.id,
+        clusterId: point.clusterId,
+        semanticAngleDeg: point.semanticAngleDeg,
+        radiusRatio: point.radiusRatio,
+        radius: point.size,
+      }));
+  }, [focusedClusterId, layout.points]);
+
+  const lensPlan = useMemo<RadarLensPlan | null>(() => {
+    if (!focusedClusterId || lensItems.length === 0) return null;
+    return planRadarSectorLens(lensItems, {
+      clusterId: focusedClusterId,
+      rect: {
+        left: 0,
+        top: 0,
+        width: RADAR_ZOOM_DEFAULT_MAP_PX,
+        height: RADAR_ZOOM_DEFAULT_MAP_PX,
+      },
+      outerRadius: 42,
+      center: { x: 50, y: 50 },
+    });
+  }, [focusedClusterId, lensItems]);
+
+  // Spec §10 — spiderfy is LAST RESORT: only the anchors the lens and its
+  // relaxation could not separate.
   const spider = useMemo(() => {
-    if (!camera || !camera.spiderfyRequired || cameraNodes.length < 2) return null;
-    const joinGap =
-      (RADAR_ZOOM_TARGET_GAP_PX * 100) /
-      (camera.zoom * RADAR_ZOOM_DEFAULT_MAP_PX);
-    const plan = planRadarSpiderfy(cameraNodes, { joinGap });
+    if (!lensPlan || lensPlan.residualCollisionIds.length < 2) return null;
+    const residual = new Set(lensPlan.residualCollisionIds);
+    const nodes = lensPlan.nodes
+      .filter((node) => residual.has(node.id))
+      .map((node) => ({
+        id: node.id,
+        x: node.displayX,
+        y: node.displayY,
+        radius: pointById.get(node.id)?.size ?? 1.5,
+      }));
+    if (nodes.length < 2) return null;
+    const plan = planRadarSpiderfy(nodes, {
+      joinGap: (RADAR_ZOOM_TARGET_GAP_PX * 100) / RADAR_ZOOM_DEFAULT_MAP_PX,
+    });
     return plan.groups.length > 0 || plan.chooserGroups.length > 0 ? plan : null;
-  }, [camera, cameraNodes]);
+  }, [lensPlan, pointById]);
+
+  // Spec §1/§3 — ONE display map for painting AND hit-testing.
+  const displayOverrides = useMemo<Map<string, RadarPoint2>>(() => {
+    const map = new Map<string, RadarPoint2>();
+    for (const node of lensPlan?.nodes ?? []) {
+      map.set(node.id, { x: node.displayX, y: node.displayY });
+    }
+    for (const group of spider?.groups ?? []) {
+      for (const leg of group.legs) {
+        map.set(leg.id, { x: leg.displayX, y: leg.displayY });
+      }
+    }
+    return map;
+  }, [lensPlan, spider]);
+
+  // Spec §4 — the Sector Lens replaces the old camera zoom as the separation
+  // mechanism, so there is exactly one transform at a time.
+  const camera = null;
 
   const [spiderCollapsed, setSpiderCollapsed] = useState(false);
   useEffect(() => {
@@ -533,6 +582,7 @@ export function RadarExperience() {
                     interactiveIds={interactiveIds}
                     hiddenCounts={hiddenCounts}
                     camera={camera}
+                    displayOverrides={displayOverrides}
                     spider={activeSpider}
                     onSelectSector={handleSelectSector}
                     onCollapseSpider={handleCollapseSpider}
@@ -561,6 +611,37 @@ export function RadarExperience() {
                   />
                 </>
               )}
+
+              {/* Spec §19 — a compact contextual indicator, integrated with
+                  the existing controls rather than another large card. */}
+              {focusedClusterId ? (
+                <div className="tv-rx-focusbar">
+                  <p className="tv-rx-focusbar__label">
+                    <span
+                      className="tv-rx-chip__swatch"
+                      data-color-index={
+                        view.clusters.find((c) => c.id === focusedClusterId)
+                          ?.colorIndex ?? 0
+                      }
+                      aria-hidden="true"
+                    />
+                    <span>
+                      {view.clusters.find((c) => c.id === focusedClusterId)
+                        ?.label ?? focusedClusterId}
+                      {" · "}
+                      {lensItems.length} {lensItems.length === 1 ? "segnale" : "segnali"}
+                    </span>
+                  </p>
+                  <button
+                    type="button"
+                    className="tv-rx-focusbar__back"
+                    onClick={() => setUrlState({ category: null })}
+                  >
+                    <ArrowLeft size={13} aria-hidden="true" />
+                    Panoramica
+                  </button>
+                </div>
+              ) : null}
 
               {/* §8/§16 — one contextual filter system, below the map. */}
               <RadarToolbar

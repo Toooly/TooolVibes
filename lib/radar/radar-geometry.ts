@@ -137,6 +137,19 @@ const COLLISION_ITERATIONS = 4;
 export const MIN_BLIP_RADIUS = 1.9;
 export const MAX_BLIP_RADIUS = 5.6;
 
+/**
+ * Spec §16 — Level-0 Overview compresses the VISUAL radius range by ~20% so a
+ * high-attention marker stops dominating the quiet overview. The underlying
+ * attention value and its sqrt ordering are untouched; only the rendering scale
+ * differs between Overview and Sector Lens.
+ */
+export const RADAR_OVERVIEW_RADIUS_COMPRESSION = 0.8;
+
+export function compressVisualRadiusForOverview(radius: number): number {
+  const mid = (MIN_BLIP_RADIUS + MAX_BLIP_RADIUS) / 2;
+  return mid + (radius - mid) * RADAR_OVERVIEW_RADIUS_COMPRESSION;
+}
+
 export function visualRadiusFromAttention(
   attention: number,
   maxAttention: number,

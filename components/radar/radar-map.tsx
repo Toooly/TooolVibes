@@ -28,6 +28,7 @@ import {
 } from "@/lib/radar/radar-domain";
 import {
   assertRadarPointsInBounds,
+  compressVisualRadiusForOverview,
   layoutRadarPoints,
   radarRingLabels,
   resolveRadarTap,
@@ -42,10 +43,14 @@ import {
 import type { ProductHuntRange } from "@/lib/radar/product-hunt-contract";
 import { radarOverviewHiddenLabel } from "@/lib/radar/radar-lod";
 import {
-  radarCameraToGlobal,
   radarCameraZoom,
   type RadarCameraPlan,
 } from "@/lib/radar/radar-camera";
+import {
+  radarScreenToViewBox,
+  radarViewBoxToDisplay,
+  type RadarPoint2,
+} from "@/lib/radar/radar-projection";
 import type { RadarSpiderPlan } from "@/lib/radar/radar-spiderfy";
 
 /** Width of the transparent sector-rim affordance, viewBox units (§4). */
@@ -98,6 +103,12 @@ export type RadarMapProps = {
    */
   onSelectChooserGroup?: (groupId: string) => void;
   /**
+   * Spec §1/§3 — the canonical DISPLAY positions for every marker that has been
+   * displaced (Sector Lens and/or spiderfy). Painting AND hit-testing both use
+   * these; the semantic coordinate is never touched.
+   */
+  displayOverrides?: ReadonlyMap<string, RadarPoint2> | null;
+  /**
    * When set, the map is in CLUSTER FOCUS: every member of this cluster is
    * prominent and all other sectors are dimmed for compass context only.
    */
@@ -120,6 +131,7 @@ export function RadarMap({
   onSelectSector,
   onCollapseSpider,
   onSelectChooserGroup,
+  displayOverrides,
   focusedClusterId,
 }: RadarMapProps) {
   const titleId = useId();
@@ -154,22 +166,15 @@ export function RadarMap({
 
   const isVisible = (id: string) => !visibleIds || visibleIds.has(id);
 
-  // §9 — draw positions: spider legs override the global coordinate for
-  // presentation only. The semantic point is never mutated.
-  const spiderLegById = new Map<string, { x: number; y: number }>();
-  for (const group of spider?.groups ?? []) {
-    for (const leg of group.legs) {
-      // Closure §2 — painting uses the DERIVED display point. The semantic
-      // position (semanticX/semanticY) is never used for drawing.
-      spiderLegById.set(leg.id, { x: leg.displayX, y: leg.displayY });
-    }
-  }
+  // Spec §1/§3 — ONE display map drives both painting and hit-testing. The
+  // Sector Lens and spiderfy both contribute display positions; the semantic
+  // coordinate is never mutated.
+  const displayPointById = new Map<string, RadarPoint2>(displayOverrides ?? []);
 
-  // Closure §2 — taps must land where the user SEES the marker. Once a group
-  // has been spiderfied the painted position differs from the semantic one, so
-  // hit-testing runs against the display coordinates as well.
+  // Spec §1 — taps must land where the user SEES the marker. `tapPoints` are
+  // the DISPLAY positions, never the semantic ones.
   const tapPoints = layout.points.map((entry) => {
-    const display = spiderLegById.get(entry.id);
+    const display = displayPointById.get(entry.id);
     return display ? { ...entry, x: display.x, y: display.y } : entry;
   });
 
@@ -183,9 +188,14 @@ export function RadarMap({
       const rect = svg.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return;
 
-      // viewBox is 0..100 and the SVG is square (aspect-ratio 1 container).
-      const pointerX = ((event.clientX - rect.left) / rect.width) * 100;
-      const pointerY = ((event.clientY - rect.top) / rect.height) * 100;
+      // Spec §1/§2 — SCREEN -> VIEWBOX -> DISPLAY through the canonical
+      // projection. The camera group's real screen matrix is authoritative; the
+      // analytic mapping is the fallback and lives in `radar-projection` so the
+      // transform maths exists in exactly one place.
+      const view = radarScreenToViewBox(
+        { x: event.clientX, y: event.clientY },
+        rect,
+      );
 
       // THE zoom tap fix. The camera paints a GLOBAL point p at
       // `zoom * (p - center) + 50`, so the raw viewBox coordinate is NOT the
@@ -196,7 +206,7 @@ export function RadarMap({
       // than recomputed from `zoom`/`center`, so it is exact whether the
       // transform is applied through the SVG attribute or the CSS property.
       const zoom = radarCameraZoom(camera);
-      let global = radarCameraToGlobal(pointerX, pointerY, camera);
+      let global = radarViewBoxToDisplay(view, camera);
       const ctm = cameraRef.current?.getScreenCTM?.() ?? null;
       if (ctm) {
         try {
@@ -507,8 +517,14 @@ export function RadarMap({
             // coordinate in `basePoint` is never mutated.
             const point: RadarPoint = {
               ...basePoint,
-              ...(spiderLegById.get(tool.id) ?? {}),
+              ...(displayPointById.get(tool.id) ?? {}),
             };
+            // Spec §16 — Level-0 Overview compresses the RENDERED radius range
+            // ~20% so a high-attention marker cannot dominate the quiet
+            // overview. The attention value and its sqrt ordering are untouched.
+            const drawnRadius = focusedClusterId
+              ? point.size
+              : compressVisualRadiusForOverview(point.size);
             const color =
               colorByCluster.get(tool.topicCluster.id) ??
               RADAR_CATEGORY_PALETTE[
@@ -538,6 +554,7 @@ export function RadarMap({
               <g
                 key={tool.id}
                 className="tv-rx-blip"
+                style={{ transform: `translate(${point.x}px, ${point.y}px)` }}
                 data-selected={isSelected ? "true" : undefined}
                 data-highlighted={isHighlighted ? "true" : undefined}
                 data-category={tool.topicCluster.id}
@@ -550,8 +567,8 @@ export function RadarMap({
                 {/* 44px effective touch target (transparent). Keyboard-only
                     focus; pointer selection is resolved centrally above. */}
                 <circle
-                  cx={point.x}
-                  cy={point.y}
+                  cx={0}
+                  cy={0}
                   r={RADAR_HIT_RADIUS_VIEWBOX}
                   className="tv-rx-blip__hit"
                   role="button"
@@ -573,9 +590,9 @@ export function RadarMap({
                 {(isSelected || isHighlighted) && (
                   <circle
                     style={{ pointerEvents: "none" }}
-                    cx={point.x}
-                    cy={point.y}
-                    r={point.size * 2.7}
+                    cx={0}
+                    cy={0}
+                    r={drawnRadius * 2.7}
                     fill={color}
                     className="tv-rx-blip__halo"
                     aria-hidden="true"
@@ -584,9 +601,9 @@ export function RadarMap({
                 {isSelected && (
                   <circle
                     style={{ pointerEvents: "none" }}
-                    cx={point.x}
-                    cy={point.y}
-                    r={point.size * 1.95}
+                    cx={0}
+                    cy={0}
+                    r={drawnRadius * 1.95}
                     fill="none"
                     className="tv-rx-blip__ring"
                     aria-hidden="true"
@@ -596,9 +613,9 @@ export function RadarMap({
                     same-colour shapes. Surface token, never a white ring. */}
                 <circle
                   style={{ pointerEvents: "none" }}
-                  cx={point.x}
-                  cy={point.y}
-                  r={point.size}
+                  cx={0}
+                  cy={0}
+                  r={drawnRadius}
                   fill={color}
                   stroke="var(--tv-color-surface-base, #0b0620)"
                   strokeWidth={0.42}
@@ -610,9 +627,9 @@ export function RadarMap({
                     quality without any animation or extra glow. */}
                 <circle
                   style={{ pointerEvents: "none" }}
-                  cx={point.x - point.size * 0.28}
-                  cy={point.y - point.size * 0.28}
-                  r={Math.max(point.size * 0.3, 0.5)}
+                  cx={-drawnRadius * 0.28}
+                  cy={-drawnRadius * 0.28}
+                  r={Math.max(drawnRadius * 0.3, 0.5)}
                   fill="var(--tv-color-ink-100, #f5f3ff)"
                   className="tv-rx-blip__glint"
                   aria-hidden="true"
@@ -624,9 +641,9 @@ export function RadarMap({
                 {tool.catalogStatus === "linked" ? (
                   <circle
                     style={{ pointerEvents: "none" }}
-                    cx={point.x}
-                    cy={point.y}
-                    r={Math.max(point.size * 0.42, 0.75)}
+                    cx={0}
+                    cy={0}
+                    r={Math.max(drawnRadius * 0.42, 0.75)}
                     className="tv-rx-blip__entity"
                     aria-hidden="true"
                   />
@@ -637,8 +654,8 @@ export function RadarMap({
                   return (
                     <text
                       style={{ pointerEvents: "none" }}
-                      x={point.x + point.size + 1.6}
-                      y={point.y - point.size - 0.9}
+                      x={drawnRadius + 1.6}
+                      y={-drawnRadius - 0.9}
                       textAnchor="start"
                       className="tv-rx-map__hidden-badge"
                       fontSize="2.9"
