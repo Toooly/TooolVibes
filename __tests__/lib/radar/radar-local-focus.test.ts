@@ -1,10 +1,11 @@
 /**
- * Radar Local Cluster Mode — PASS 1 layout engine tests.
+ * Radar Local Cluster Mode — PASS 1B layout engine tests (all-pair clearance).
  *
  * The engine is a pure deterministic planner: it must preserve semantic time
  * radius exactly, place nodes angularly inside the usable arc (top corridor
- * reserved for time labels), and report honest collision diagnostics. These
- * tests pin the contract so no caller can drift it.
+ * reserved for time labels), and guarantee the physical edge-gap target for
+ * EVERY marker pair — adjacent or not — whenever that is physically possible.
+ * These tests pin the contract so no caller can drift it.
  */
 
 import { describe, expect, it } from "vitest";
@@ -16,12 +17,14 @@ import {
   RADAR_LOCAL_ARC_START_DEG,
   RADAR_LOCAL_DEFAULT_OUTER_RADIUS,
   RADAR_LOCAL_MIN_GAP_PX,
+  RADAR_LOCAL_REFERENCE_RADAR_PX,
   RADAR_LOCAL_TARGET_GAP_PX,
   RADAR_LOCAL_TOP_CORRIDOR_DEG,
   RADAR_LOCAL_USABLE_SPAN_DEG,
   type RadarLocalFocusPlan,
   type RadarLocalFocusSignal,
 } from "@/lib/radar/radar-local-focus";
+import { radarScreenEdgeGapPx } from "@/lib/radar/radar-projection";
 
 const SINGLE: RadarLocalFocusSignal[] = [
   { id: "solo", semanticAngle: 200, radiusRatio: 0.62, radius: 2.4 },
@@ -114,6 +117,26 @@ const REDUCED_GAP: RadarLocalFocusSignal[] = Array.from({ length: 10 }, (_, inde
   radius: 7.5,
 }));
 
+/**
+ * Stated defect reproduction: A and C share an INNER semantic radius, B sits
+ * between them on a SUBSTANTIALLY larger outer radius, D rides the outer
+ * radius after C. A/C are non-adjacent in stable order yet can physically
+ * approach; adjacent-only constraints would collapse them to the same angle.
+ */
+const NON_ADJACENT_PATHOLOGY: RadarLocalFocusSignal[] = [
+  { id: "path-c", semanticAngle: 180, radiusRatio: 0.24, radius: 2.5 },
+  { id: "path-b", semanticAngle: 140, radiusRatio: 0.9, radius: 2.0 },
+  { id: "path-d", semanticAngle: 220, radiusRatio: 0.9, radius: 2.0 },
+  { id: "path-a", semanticAngle: 100, radiusRatio: 0.24, radius: 2.5 },
+];
+
+const REFERENCE_RECT = {
+  left: 0,
+  top: 0,
+  width: RADAR_LOCAL_REFERENCE_RADAR_PX,
+  height: RADAR_LOCAL_REFERENCE_RADAR_PX,
+};
+
 function semanticRadiusOf(signal: RadarLocalFocusSignal): number {
   return RADAR_LOCAL_DEFAULT_OUTER_RADIUS * signal.radiusRatio;
 }
@@ -189,6 +212,60 @@ function expectExactDisplayGeometry(plan: RadarLocalFocusPlan): void {
   }
 }
 
+/** Independent physical edge gap for EVERY final pair, via the frozen probe. */
+function allPairGaps(
+  signals: readonly RadarLocalFocusSignal[],
+  plan: RadarLocalFocusPlan,
+): number[] {
+  const radiusById = new Map(signals.map((signal) => [signal.id, signal.radius]));
+  const gaps: number[] = [];
+  for (let i = 0; i < plan.nodes.length; i += 1) {
+    const a = plan.nodes[i];
+    const pointA = {
+      x: a.displayX,
+      y: a.displayY,
+      radius: radiusById.get(a.id)!,
+    };
+    for (let j = i + 1; j < plan.nodes.length; j += 1) {
+      const b = plan.nodes[j];
+      const pointB = {
+        x: b.displayX,
+        y: b.displayY,
+        radius: radiusById.get(b.id)!,
+      };
+      gaps.push(radarScreenEdgeGapPx(pointA, pointB, REFERENCE_RECT));
+    }
+  }
+  return gaps;
+}
+
+/**
+ * All-pair contract: the planner's physical edge gap must match its
+ * diagnostics for EVERY pair (no hidden non-adjacent violations), and on
+ * feasible layouts every pair must reach the achieved gap floor.
+ */
+function expectAllPairContract(
+  signals: readonly RadarLocalFocusSignal[],
+  plan: RadarLocalFocusPlan,
+  options?: { enforceFloor?: boolean },
+): void {
+  const gaps = allPairGaps(signals, plan);
+  if (gaps.length === 0) {
+    expect(plan.minimumEdgeGapPx).toBe(Number.POSITIVE_INFINITY);
+    expect(plan.visualOverlapCount).toBe(0);
+    return;
+  }
+  const measuredMin = Math.min(...gaps);
+  expect(plan.minimumEdgeGapPx).toBeCloseTo(measuredMin, 10);
+  expect(plan.visualOverlapCount).toBe(gaps.filter((gap) => gap < 0).length);
+  if (options?.enforceFloor) {
+    for (const gap of gaps) {
+      expect(gap).toBeGreaterThanOrEqual(RADAR_LOCAL_MIN_GAP_PX);
+      expect(gap).toBeGreaterThanOrEqual(plan.gapTargetPx - 1e-9);
+    }
+  }
+}
+
 describe("RADAR-LOCAL focused-cluster layout engine", () => {
   it("RADAR-LOCAL-01 places a single signal at the arc centre with exact semantic radius", () => {
     const plan = planRadarLocalFocus(SINGLE);
@@ -206,6 +283,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectRadiiPreserved(SINGLE, plan);
     expectInsideLegalArc(plan);
     expectExactDisplayGeometry(plan);
+    expectAllPairContract(SINGLE, plan, { enforceFloor: true });
   });
 
   it("RADAR-LOCAL-02 keeps two signals clear without stretching to the arc extremes", () => {
@@ -233,6 +311,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectStableOrder(PAIR, plan);
     expectInsideLegalArc(plan);
     expectExactDisplayGeometry(plan);
+    expectAllPairContract(PAIR, plan, { enforceFloor: true });
   });
 
   it("RADAR-LOCAL-03 places six signals with marker clearance, centred in the usable arc", () => {
@@ -248,6 +327,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectStableOrder(SIX, plan);
     expectInsideLegalArc(plan);
     expectExactDisplayGeometry(plan);
+    expectAllPairContract(SIX, plan, { enforceFloor: true });
   });
 
   it("RADAR-LOCAL-04 places seven signals with marker clearance and stable order", () => {
@@ -260,6 +340,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectStableOrder(SEVEN, plan);
     expectInsideLegalArc(plan);
     expectExactDisplayGeometry(plan);
+    expectAllPairContract(SEVEN, plan, { enforceFloor: true });
   });
 
   it("RADAR-LOCAL-05 eight same-radius signals keep zero radius delta, zero overlap, >=14px gap and determinism", () => {
@@ -274,6 +355,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expect(plan.layoutStatus).toBe("ok");
     expectStableOrder(EIGHT_SAME_RADIUS, plan);
     expectInsideLegalArc(plan);
+    expectAllPairContract(EIGHT_SAME_RADIUS, plan, { enforceFloor: true });
     expect(planRadarLocalFocus(EIGHT_SAME_RADIUS)).toEqual(plan);
   });
 
@@ -287,6 +369,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectStableOrder(TWELVE_MIXED, plan);
     expectInsideLegalArc(plan);
     expectExactDisplayGeometry(plan);
+    expectAllPairContract(TWELVE_MIXED, plan, { enforceFloor: true });
     for (const node of plan.nodes) {
       const source = TWELVE_MIXED.find((signal) => signal.id === node.id)!;
       expect(node.semanticAngle).toBe(source.semanticAngle);
@@ -309,6 +392,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectStableOrder(IDENTICAL_ANGLES, plan);
     expectRadiiPreserved(IDENTICAL_ANGLES, plan);
     expectInsideLegalArc(plan);
+    expectAllPairContract(IDENTICAL_ANGLES, plan, { enforceFloor: true });
   });
 
   it("RADAR-LOCAL-08 mixed large/small marker radii drive marker-aware angular spacing", () => {
@@ -319,6 +403,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectStableOrder(MIXED_MARKERS, plan);
     expectRadiiPreserved(MIXED_MARKERS, plan);
     expectInsideLegalArc(plan);
+    expectAllPairContract(MIXED_MARKERS, plan, { enforceFloor: true });
     const gaps: number[] = [];
     for (let index = 1; index < plan.nodes.length; index += 1) {
       gaps.push(
@@ -339,7 +424,16 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
   });
 
   it("RADAR-LOCAL-10 is deterministic: two executions are deep-equal", () => {
-    for (const signals of [SINGLE, PAIR, SIX, SEVEN, EIGHT_SAME_RADIUS, TWELVE_MIXED, MIXED_MARKERS]) {
+    for (const signals of [
+      SINGLE,
+      PAIR,
+      SIX,
+      SEVEN,
+      EIGHT_SAME_RADIUS,
+      TWELVE_MIXED,
+      MIXED_MARKERS,
+      NON_ADJACENT_PATHOLOGY,
+    ]) {
       const first = planRadarLocalFocus(signals.map((signal) => ({ ...signal })));
       const second = planRadarLocalFocus(signals.map((signal) => ({ ...signal })));
       expect(second).toEqual(first);
@@ -356,7 +450,16 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
   });
 
   it("RADAR-LOCAL-12 respects the top corridor around the time-label axis", () => {
-    for (const signals of [SINGLE, PAIR, SIX, SEVEN, EIGHT_SAME_RADIUS, TWELVE_MIXED, MIXED_MARKERS]) {
+    for (const signals of [
+      SINGLE,
+      PAIR,
+      SIX,
+      SEVEN,
+      EIGHT_SAME_RADIUS,
+      TWELVE_MIXED,
+      MIXED_MARKERS,
+      NON_ADJACENT_PATHOLOGY,
+    ]) {
       const plan = planRadarLocalFocus(signals);
       expectInsideLegalArc(plan);
       expect(plan.topCorridorDeg).toBe(RADAR_LOCAL_TOP_CORRIDOR_DEG);
@@ -380,6 +483,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expect(plan.nodes).toHaveLength(2);
     expectStableOrder(INSEPARABLE_PAIR, plan);
     expectRadiiPreserved(INSEPARABLE_PAIR, plan);
+    expectAllPairContract(INSEPARABLE_PAIR, plan);
   });
 
   it("RADAR-LOCAL-14 reports residual-collision for impossible dense packing and keeps every node in the arc", () => {
@@ -390,6 +494,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectInsideLegalArc(plan);
     expectStableOrder(OVER_DENSE, plan);
     expectRadiiPreserved(OVER_DENSE, plan);
+    expectAllPairContract(OVER_DENSE, plan);
   });
 
   it("RADAR-LOCAL-15 retries toward the 14px floor when the 18px target cannot fit", () => {
@@ -403,6 +508,7 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expectInsideLegalArc(plan);
     expectStableOrder(REDUCED_GAP, plan);
     expectRadiiPreserved(REDUCED_GAP, plan);
+    expectAllPairContract(REDUCED_GAP, plan, { enforceFloor: true });
   });
 
   it("RADAR-LOCAL-16 keeps negative space for sparse clusters and grows coverage with density", () => {
@@ -415,5 +521,59 @@ describe("RADAR-LOCAL focused-cluster layout engine", () => {
     expect(pair.comfortExpansionDeg).toBeGreaterThan(0);
     expect(pair.comfortExpansionDeg).toBeLessThanOrEqual(22);
     expect(planRadarLocalFocus(SINGLE).occupiedAngularSpanDeg).toBe(0);
+  });
+
+  it("RADAR-LOCAL-17 guarantees non-adjacent all-pair clearance for inner A/C flanking outer B", () => {
+    const plan = planRadarLocalFocus(NON_ADJACENT_PATHOLOGY);
+    expect(plan.layoutStatus).toBe("ok");
+    expect(plan.layoutStatus).not.toBe("residual-collision");
+    expect(plan.visualOverlapCount).toBe(0);
+    expect(plan.minimumEdgeGapPx).toBeGreaterThanOrEqual(RADAR_LOCAL_MIN_GAP_PX);
+    expect(plan.minimumEdgeGapPx).toBeGreaterThanOrEqual(RADAR_LOCAL_TARGET_GAP_PX);
+    expect(plan.nodes.map((node) => node.id)).toEqual([
+      "path-a",
+      "path-b",
+      "path-c",
+      "path-d",
+    ]);
+    expectRadiiPreserved(NON_ADJACENT_PATHOLOGY, plan);
+    expect(semanticRadiusMaxDelta(NON_ADJACENT_PATHOLOGY, plan)).toBe(0);
+    expectStableOrder(NON_ADJACENT_PATHOLOGY, plan);
+    expectInsideLegalArc(plan);
+    expectExactDisplayGeometry(plan);
+    const radiusById = new Map(
+      NON_ADJACENT_PATHOLOGY.map((signal) => [signal.id, signal.radius]),
+    );
+    const nodeA = plan.nodes.find((node) => node.id === "path-a")!;
+    const nodeC = plan.nodes.find((node) => node.id === "path-c")!;
+    const acGap = radarScreenEdgeGapPx(
+      { x: nodeA.displayX, y: nodeA.displayY, radius: radiusById.get("path-a")! },
+      { x: nodeC.displayX, y: nodeC.displayY, radius: radiusById.get("path-c")! },
+      REFERENCE_RECT,
+    );
+    expect(acGap).toBeGreaterThanOrEqual(RADAR_LOCAL_MIN_GAP_PX);
+    expect(acGap).toBeGreaterThanOrEqual(RADAR_LOCAL_TARGET_GAP_PX);
+    expectAllPairContract(NON_ADJACENT_PATHOLOGY, plan, { enforceFloor: true });
+  });
+
+  it("RADAR-LOCAL-18 every normal fixture clears EVERY pair at the achieved gap floor", () => {
+    for (const signals of [
+      PAIR,
+      SIX,
+      SEVEN,
+      EIGHT_SAME_RADIUS,
+      TWELVE_MIXED,
+      IDENTICAL_ANGLES,
+      MIXED_MARKERS,
+      REDUCED_GAP,
+      NON_ADJACENT_PATHOLOGY,
+    ]) {
+      const plan = planRadarLocalFocus(signals);
+      expectAllPairContract(signals, plan, { enforceFloor: true });
+    }
+    for (const signals of [INSEPARABLE_PAIR, OVER_DENSE]) {
+      const plan = planRadarLocalFocus(signals);
+      expectAllPairContract(signals, plan);
+    }
   });
 });

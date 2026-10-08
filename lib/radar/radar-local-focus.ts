@@ -1,5 +1,6 @@
 /**
- * RADAR LOCAL CLUSTER MODE — PASS 1: deterministic local focus layout.
+ * RADAR LOCAL CLUSTER MODE — PASS 1B: deterministic local focus layout with
+ * ALL-PAIR clearance guarantees.
  *
  * A focused cluster is laid out on a LOCAL arc, not as a uniform clock face.
  * The engine is pure and deterministic: same input -> same plan, always.
@@ -16,17 +17,27 @@
  *   STABLE ORDERING: signals are ordered by `semanticAngle` ascending, then
  *   `id` ascending. Display placement preserves that order monotonically.
  *
- *   MARKER-AWARE SPACING: for each adjacent ordered pair the engine finds the
- *   MINIMUM angular separation whose physical edge-to-edge gap reaches the
- *   target, measured with the frozen `radarScreenEdgeGapPx` against the
- *   physical reference instrument (390px viewport, 358px Radar). The search
- *   is a fixed-iteration binary search over the candidate angular delta.
+ *   MARKER-AWARE SPACING: for EVERY ordered pair (not only adjacent ones) the
+ *   engine finds the MINIMUM angular separation whose physical edge-to-edge
+ *   gap reaches the target, measured with the frozen `radarScreenEdgeGapPx`
+ *   against the physical reference instrument (390px viewport, 358px Radar).
+ *   The search is a fixed-iteration binary search over the candidate angular
+ *   delta.
+ *
+ *   ALL-PAIR CONSTRAINTS: the minimal legal monotonic angular run is built
+ *   from those requirements with a difference-constraint sweep:
+ *   position[0] = 0 and position[j] = max over every i < j of
+ *   position[i] + requiredSeparationDeg(i, j). Every pairwise clearance
+ *   constraint is therefore satisfied by construction, including
+ *   non-adjacent pairs (e.g. two inner nodes flanking an outer node).
  *
  *   NEGATIVE SPACE: a bounded comfort expansion widens each internal gap up to
- *   RADAR_LOCAL_COMFORT_EXPANSION_DEG (capped by the remaining slack), so
- *   sparse clusters stay centred and do NOT stretch to the arc extremes while
- *   dense clusters naturally use more of the circumference. Identical
- *   same-radius dense sets may end up evenly distributed; that is acceptable.
+ *   RADAR_LOCAL_COMFORT_EXPANSION_DEG (capped by the remaining slack). Uniform
+ *   per-gap expansion only INCREASES every pairwise separation, so it never
+ *   relaxes an all-pair constraint: sparse clusters stay centred and do NOT
+ *   stretch to the arc extremes while dense clusters naturally use more of
+ *   the circumference. Identical same-radius dense sets may end up evenly
+ *   distributed; that is acceptable.
  *
  *   RESIDUAL COLLISION: the target gap is tried first (18 CSS px). When it
  *   cannot fit, the engine retries toward the hard floor (14 CSS px). When not
@@ -107,13 +118,20 @@ export type RadarLocalFocusPlan = {
   minimumEdgeGapPx: number;
   /** Marker pairs whose edge gap is negative. */
   visualOverlapCount: number;
-  /** Edge-gap target the layout was actually placed at (18 or the 14 floor). */
+  /**
+   * Edge-gap floor the placement was built at (18 CSS px, or the largest
+   * feasible target found toward the 14 CSS px floor). On every non-residual
+   * plan ALL pairs reach this floor.
+   */
   gapTargetPx: number;
   /** Comfort expansion applied to each internal gap, degrees. */
   comfortExpansionDeg: number;
   /** Angular span occupied by the run, degrees. */
   occupiedAngularSpanDeg: number;
-  /** Smallest required adjacent separation at `gapTargetPx`, degrees. */
+  /**
+   * Smallest required pairwise separation at `gapTargetPx` across ALL ordered
+   * pairs, degrees. Infinity when some pair can never reach the target.
+   */
   minimumRequiredSeparationDeg: number;
   arcStartDeg: number;
   arcEndDeg: number;
@@ -131,19 +149,23 @@ export type RadarLocalFocusOptions = {
 };
 
 export const RADAR_LOCAL_ALGORITHM = [
-  "Radar Local Cluster Mode (deterministic angular layout, PASS 1).",
+  "Radar Local Cluster Mode (deterministic angular layout, PASS 1B).",
   "1. Signals are ordered by semanticAngle ascending, then id ascending; the",
   "   display placement preserves that order monotonically.",
   "2. Semantic time radius is preserved exactly: focusDisplayRadius ===",
   "   semanticRadius === outerRadius * radiusRatio. Only angles move.",
   "3. The top corridor (70 deg about 12 o'clock) is reserved for time labels;",
   "   nodes live in the usable 35..325 deg arc (290 deg).",
-  "4. Each adjacent pair gets the MINIMUM angular separation whose physical",
-  "   edge-to-edge gap reaches the target, via a fixed-iteration binary search",
-  "   measured with radarScreenEdgeGapPx on the 358px reference instrument.",
+  "4. EVERY ordered pair (not only adjacent ones) gets the MINIMUM angular",
+  "   separation whose physical edge-to-edge gap reaches the target, via a",
+  "   fixed-iteration binary search with radarScreenEdgeGapPx on the 358px",
+  "   reference instrument. The minimal monotonic run position[j] = max over",
+  "   i < j of position[i] + required(i, j) satisfies ALL pairwise clearance",
+  "   constraints by construction.",
   "5. A bounded comfort expansion widens internal gaps up to 22 deg (capped by",
-  "   the remaining slack): sparse clusters keep negative space and stay",
-  "   centred; dense clusters use more of the circumference.",
+  "   the remaining slack) and only increases pairwise separations, so sparse",
+  "   clusters keep negative space and stay centred while dense clusters use",
+  "   more of the circumference.",
   "6. The 18 CSS px target is tried first; if it cannot fit, the engine retries",
   "   toward the 14 CSS px floor. If the floor cannot fit either, every node",
   "   stays inside the legal arc and the plan reports residual-collision.",
@@ -223,85 +245,107 @@ function requiredSeparationDeg(
   return hi;
 }
 
-function requiredSeparations(
+/**
+ * Upper-triangular requirement matrix: `matrix[i][j]` (i < j) is the minimum
+ * angular separation the ordered pair (i, j) needs to reach `targetGapPx`.
+ */
+function requiredMatrix(
   ordered: readonly OrderedSignal[],
   targetGapPx: number,
   geometry: LayoutGeometry,
-): number[] {
-  const separations: number[] = [];
-  for (let index = 0; index + 1 < ordered.length; index += 1) {
-    separations.push(
-      requiredSeparationDeg(ordered[index], ordered[index + 1], targetGapPx, geometry),
-    );
-  }
-  return separations;
-}
-
-function totalRequiredSpan(separations: readonly number[]): number {
-  let total = 0;
-  for (const separation of separations) total += separation;
-  return total;
-}
-
-function fitsInUsableArc(separations: readonly number[]): boolean {
-  return totalRequiredSpan(separations) <= RADAR_LOCAL_USABLE_SPAN_DEG + 1e-9;
-}
-
-function cappedSpan(separations: readonly number[]): number {
-  return totalRequiredSpan(
-    separations.map((separation) =>
-      Math.min(
-        separation === Number.POSITIVE_INFINITY
-          ? RADAR_LOCAL_MAX_PAIR_SEPARATION_DEG
-          : separation,
-        RADAR_LOCAL_MAX_PAIR_SEPARATION_DEG,
-      ),
-    ),
+): number[][] {
+  const count = ordered.length;
+  const matrix: number[][] = Array.from({ length: count }, () =>
+    new Array<number>(count).fill(0),
   );
+  for (let i = 0; i < count; i += 1) {
+    for (let j = i + 1; j < count; j += 1) {
+      matrix[i][j] = requiredSeparationDeg(ordered[i], ordered[j], targetGapPx, geometry);
+    }
+  }
+  return matrix;
 }
 
 /**
- * Places the ordered run along the usable arc, centred at the arc midpoint.
+ * Minimal legal monotonic angular run for the all-pair difference constraints:
+ * position[0] = 0, position[j] = max over every i < j of
+ * position[i] + matrix[i][j]. The run is the tightest left-anchored layout
+ * that satisfies EVERY pairwise separation requirement.
+ */
+function minimalRunPositions(matrix: readonly number[][]): number[] {
+  const count = matrix.length;
+  const positions = new Array<number>(count).fill(0);
+  for (let j = 1; j < count; j += 1) {
+    let farthest = 0;
+    for (let i = 0; i < j; i += 1) {
+      const candidate = positions[i] + matrix[i][j];
+      if (candidate > farthest) farthest = candidate;
+    }
+    positions[j] = farthest;
+  }
+  return positions;
+}
+
+/** Angular span of the minimal run, degrees (0 for fewer than two nodes). */
+function runSpanDeg(matrix: readonly number[][]): number {
+  if (matrix.length < 2) return 0;
+  const positions = minimalRunPositions(matrix);
+  return positions[positions.length - 1];
+}
+
+function cappedRequired(value: number): number {
+  return value === Number.POSITIVE_INFINITY
+    ? RADAR_LOCAL_MAX_PAIR_SEPARATION_DEG
+    : Math.min(value, RADAR_LOCAL_MAX_PAIR_SEPARATION_DEG);
+}
+
+/**
+ * Places the minimal run along the usable arc, centred at the arc midpoint.
  * Comfort expansion widens each internal gap up to `comfortExpansionDeg` but
- * never beyond the remaining slack; when the raw separations alone exceed the
- * arc (residual-collision) they are scaled down proportionally so every node
- * stays inside the legal arc, in order.
+ * never beyond the remaining slack; uniform per-gap expansion only increases
+ * every pairwise separation, so all-pair constraints survive it. When the
+ * capped requirements alone exceed the arc (residual-collision) the gaps are
+ * scaled down proportionally so every node stays inside the legal arc, in
+ * order.
  */
 function placeAlongArc(
-  ordered: readonly OrderedSignal[],
-  separations: readonly number[],
+  matrix: readonly number[][],
   comfortExpansionDeg: number,
-): number[] {
-  const count = ordered.length;
-  if (count === 0) return [];
-  if (count === 1) return [RADAR_LOCAL_ARC_MID_DEG];
+): { angles: number[]; expansionDeg: number } {
+  const count = matrix.length;
+  if (count === 0) return { angles: [], expansionDeg: 0 };
+  if (count === 1) return { angles: [RADAR_LOCAL_ARC_MID_DEG], expansionDeg: 0 };
 
-  const placed = separations.map((separation) =>
-    Math.min(
-      separation === Number.POSITIVE_INFINITY
-        ? RADAR_LOCAL_MAX_PAIR_SEPARATION_DEG
-        : separation,
-      RADAR_LOCAL_MAX_PAIR_SEPARATION_DEG,
-    ),
-  );
-  const total = totalRequiredSpan(placed);
-  const expansion =
-    count > 1 ? Math.min(comfortExpansionDeg, (RADAR_LOCAL_USABLE_SPAN_DEG - total) / (count - 1)) : 0;
-  const gaps = placed.map((separation) =>
-    total > RADAR_LOCAL_USABLE_SPAN_DEG + 1e-9
-      ? (separation * RADAR_LOCAL_USABLE_SPAN_DEG) / total
-      : separation + expansion,
-  );
+  const capped = matrix.map((row) => row.map(cappedRequired));
+  const positions = minimalRunPositions(capped);
+  const span = positions[count - 1] - positions[0];
 
-  let span = 0;
-  for (const gap of gaps) span += gap;
-  let current = RADAR_LOCAL_ARC_MID_DEG - span / 2;
+  const gaps: number[] = [];
+  let expansionDeg = 0;
+  if (span > RADAR_LOCAL_USABLE_SPAN_DEG + 1e-9) {
+    const scale = RADAR_LOCAL_USABLE_SPAN_DEG / span;
+    for (let index = 0; index + 1 < count; index += 1) {
+      gaps.push((positions[index + 1] - positions[index]) * scale);
+    }
+  } else {
+    expansionDeg = Math.max(
+      0,
+      Math.min(comfortExpansionDeg, (RADAR_LOCAL_USABLE_SPAN_DEG - span) / (count - 1)),
+    );
+    for (let index = 0; index + 1 < count; index += 1) {
+      gaps.push(positions[index + 1] - positions[index] + expansionDeg);
+    }
+  }
+
+  let placedSpan = 0;
+  for (const gap of gaps) placedSpan += gap;
+  let current = RADAR_LOCAL_ARC_MID_DEG - placedSpan / 2;
   const angles: number[] = [];
   for (let index = 0; index < count; index += 1) {
     angles.push(Math.min(Math.max(current, RADAR_LOCAL_ARC_START_DEG), RADAR_LOCAL_ARC_END_DEG));
     current += gaps[index];
   }
-  return angles;
+  return { angles, expansionDeg };
 }
 
 function measure(
@@ -323,11 +367,27 @@ function measure(
   return { minimumEdgeGapPx, visualOverlapCount };
 }
 
+function minimumRequiredSeparation(
+  matrix: readonly number[][],
+): number {
+  if (matrix.length < 2) return 0;
+  let minimum = Number.POSITIVE_INFINITY;
+  for (let i = 0; i < matrix.length; i += 1) {
+    for (let j = i + 1; j < matrix.length; j += 1) {
+      const required = matrix[i][j];
+      if (required < minimum) minimum = required;
+    }
+  }
+  return minimum;
+}
+
 /**
  * Deterministic local focus layout for one focused cluster.
  *
  * Every node keeps its semantic time radius EXACTLY (`focusDisplayRadius ===
  * semanticRadius`); only the display angle is planned. Same input -> same plan.
+ * The placement satisfies the physical edge-gap target for EVERY marker pair,
+ * adjacent or not, whenever that is physically possible inside the usable arc.
  */
 export function planRadarLocalFocus(
   signals: readonly RadarLocalFocusSignal[],
@@ -356,32 +416,34 @@ export function planRadarLocalFocus(
     }))
     .sort(compareSignals);
 
-  const separationsAtTarget = requiredSeparations(ordered, targetGapPx, geometry);
+  const matrixAtTarget = requiredMatrix(ordered, targetGapPx, geometry);
   let gapTargetPx = targetGapPx;
-  let separations = separationsAtTarget;
+  let matrix = matrixAtTarget;
   let layoutStatus: RadarLocalFocusLayoutStatus = "ok";
 
-  if (!fitsInUsableArc(separationsAtTarget)) {
-    const floorSeparations = requiredSeparations(ordered, minGapPx, geometry);
-    if (fitsInUsableArc(floorSeparations)) {
+  if (runSpanDeg(matrixAtTarget) > RADAR_LOCAL_USABLE_SPAN_DEG + 1e-9) {
+    const floorMatrix = requiredMatrix(ordered, minGapPx, geometry);
+    if (runSpanDeg(floorMatrix) <= RADAR_LOCAL_USABLE_SPAN_DEG + 1e-9) {
       layoutStatus = "reduced-gap";
       let lo = minGapPx;
       let hi = targetGapPx;
       for (let iteration = 0; iteration < RADAR_LOCAL_GAP_SEARCH_ITERATIONS; iteration += 1) {
         const mid = (lo + hi) / 2;
-        if (fitsInUsableArc(requiredSeparations(ordered, mid, geometry))) lo = mid;
+        const midMatrix = requiredMatrix(ordered, mid, geometry);
+        if (runSpanDeg(midMatrix) <= RADAR_LOCAL_USABLE_SPAN_DEG + 1e-9) lo = mid;
         else hi = mid;
       }
       gapTargetPx = lo;
-      separations = requiredSeparations(ordered, lo, geometry);
+      matrix = requiredMatrix(ordered, lo, geometry);
     } else {
       layoutStatus = "residual-collision";
       gapTargetPx = minGapPx;
-      separations = floorSeparations;
+      matrix = floorMatrix;
     }
   }
 
-  const focusDisplayAngles = placeAlongArc(ordered, separations, comfortExpansionDeg);
+  const { angles: focusDisplayAngles, expansionDeg: appliedComfortExpansionDeg } =
+    placeAlongArc(matrix, comfortExpansionDeg);
   const nodes: RadarLocalFocusNode[] = ordered.map((signal, index) => {
     const focusDisplayRadius = signal.semanticRadius;
     const focusDisplayAngle = focusDisplayAngles[index];
@@ -398,26 +460,10 @@ export function planRadarLocalFocus(
   });
 
   const { minimumEdgeGapPx, visualOverlapCount } = measure(nodes, ordered, geometry);
-  const span = cappedSpan(separations);
-  const minimumRequiredSeparationDeg =
-    ordered.length < 2
-      ? 0
-      : separations.includes(Number.POSITIVE_INFINITY)
-        ? Number.POSITIVE_INFINITY
-        : Math.min(...separations);
   const occupiedAngularSpanDeg =
     ordered.length < 2
       ? 0
       : focusDisplayAngles[focusDisplayAngles.length - 1] - focusDisplayAngles[0];
-  const appliedComfortExpansionDeg =
-    ordered.length < 2 ||
-    layoutStatus === "residual-collision" ||
-    span > RADAR_LOCAL_USABLE_SPAN_DEG + 1e-9
-      ? 0
-      : Math.min(
-          comfortExpansionDeg,
-          (RADAR_LOCAL_USABLE_SPAN_DEG - span) / (ordered.length - 1),
-        );
 
   return {
     nodes,
@@ -428,7 +474,7 @@ export function planRadarLocalFocus(
     gapTargetPx,
     comfortExpansionDeg: appliedComfortExpansionDeg,
     occupiedAngularSpanDeg,
-    minimumRequiredSeparationDeg,
+    minimumRequiredSeparationDeg: minimumRequiredSeparation(matrix),
     arcStartDeg: RADAR_LOCAL_ARC_START_DEG,
     arcEndDeg: RADAR_LOCAL_ARC_END_DEG,
     topCorridorDeg: RADAR_LOCAL_TOP_CORRIDOR_DEG,
