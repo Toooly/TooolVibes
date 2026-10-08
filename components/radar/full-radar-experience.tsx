@@ -28,19 +28,16 @@ import {
   RADAR_ZOOM_TARGET_GAP_PX,
 } from "@/lib/radar/radar-camera";
 import { planRadarSpiderfy, type RadarSpiderGroup } from "@/lib/radar/radar-spiderfy";
-import {
-  planRadarSectorLens,
-  type RadarLensItem,
-  type RadarLensPlan,
-} from "@/lib/radar/radar-lens";
 import type { RadarPoint2 } from "@/lib/radar/radar-projection";
 import {
-  planRadarClusterFocus,
+  planRadarLocalFocus,
+  type RadarLocalFocusSignal,
+} from "@/lib/radar/radar-local-focus";
+import {
   planRadarOverview,
   RADAR_OVERVIEW_BUDGET_MOBILE,
   RADAR_OVERVIEW_BUDGET_DESKTOP,
   type RadarLodInput,
-  type RadarLodPlan,
 } from "@/lib/radar/radar-lod";
 import {
   RadarInsightStrip,
@@ -222,73 +219,57 @@ export function RadarExperience() {
   // chip and tapping a sector rim are exactly the same mode.
   const focusedClusterId = urlState.category;
 
-  // §7 — Cluster Focus shows EVERY real signal of the cluster and keeps one
-  // dimmed, non-interactive contextual representative per other cluster. The
-  // cluster-first Overview supplies those representatives (no free stacks).
-  const focusOverview = useMemo<RadarLodPlan>(
-    () => ({
-      individualIds: overviewPlan.representativeIds,
-      aggregates: [],
-      budget: overviewPlan.budget,
-      perClusterCap: 1,
-      algorithm: overviewPlan.algorithm,
-    }),
-    [overviewPlan],
-  );
-
-  const focusPlan = useMemo(
-    () =>
-      focusedClusterId
-        ? planRadarClusterFocus(lodInputs, focusedClusterId, focusOverview)
-        : null,
-    [focusedClusterId, lodInputs, focusOverview],
-  );
+  // §2/§3 — LOCAL CLUSTER MODE: when a cluster is focused, render ONLY its
+  // real signals (no non-focused Tool ghosts). Every focused signal is
+  // interactive.
+  const localSignalIds = useMemo(() => {
+    if (!focusedClusterId) return null;
+    return new Set(
+      layout.points
+        .filter((point) => point.clusterId === focusedClusterId)
+        .map((point) => point.id),
+    );
+  }, [focusedClusterId, layout.points]);
 
   const renderIds = useMemo(
-    () => (focusPlan ? focusPlan.visibleIds : overviewPlan.representativeIds),
-    [focusPlan, overviewPlan.representativeIds],
+    () => localSignalIds ?? overviewPlan.representativeIds,
+    [localSignalIds, overviewPlan.representativeIds],
   );
 
   // §3 — hidden counts only exist in the Overview representation.
   const hiddenCounts = useMemo(
-    () => (focusPlan ? null : overviewPlan.hiddenCounts),
-    [focusPlan, overviewPlan.hiddenCounts],
+    () => (focusedClusterId ? null : overviewPlan.hiddenCounts),
+    [focusedClusterId, overviewPlan.hiddenCounts],
   );
 
   // §6 — only the focused cluster is interactive while it is focused.
-  const interactiveIds = useMemo(
-    () => (focusPlan ? focusPlan.interactiveIds : null),
-    [focusPlan],
-  );
+  const interactiveIds = useMemo(() => localSignalIds, [localSignalIds]);
 
-  // Spec §4-§8 — the SECTOR LENS. A display-only angular magnification of the
-  // focused cluster's permanent 45 degree semantic sector into 120-220 degrees
-  // of display space. The semantic coordinates are never recomputed and RADIUS
-  // still encodes age (spec §5). The smallest lens width that yields a 12px
-  // marker gap wins (spec §7); residuals get a bounded local display relaxation
-  // (spec §9).
+  // §2 — LOCAL CLUSTER PLANNER. All real signals of the focused cluster are
+  // laid out by the deterministic `planRadarLocalFocus` engine. Semantic
+  // coordinates are never recomputed; only display angles move. The planner
+  // output feeds the canonical display-override channel used for BOTH painting
+  // and hit-testing.
   const pointById = useMemo(
     () => new Map(layout.points.map((point) => [point.id, point])),
     [layout.points],
   );
 
-  const lensItems = useMemo<RadarLensItem[]>(() => {
+  const localSignals = useMemo<RadarLocalFocusSignal[]>(() => {
     if (!focusedClusterId) return [];
     return layout.points
       .filter((point) => point.clusterId === focusedClusterId)
       .map((point) => ({
         id: point.id,
-        clusterId: point.clusterId,
-        semanticAngleDeg: point.semanticAngleDeg,
+        semanticAngle: point.semanticAngleDeg,
         radiusRatio: point.radiusRatio,
         radius: point.size,
       }));
   }, [focusedClusterId, layout.points]);
 
-  const lensPlan = useMemo<RadarLensPlan | null>(() => {
-    if (!focusedClusterId || lensItems.length === 0) return null;
-    return planRadarSectorLens(lensItems, {
-      clusterId: focusedClusterId,
+  const localPlan = useMemo(() => {
+    if (!focusedClusterId || localSignals.length === 0) return null;
+    return planRadarLocalFocus(localSignals, {
       rect: {
         left: 0,
         top: 0,
@@ -298,32 +279,29 @@ export function RadarExperience() {
       outerRadius: 42,
       center: { x: 50, y: 50 },
     });
-  }, [focusedClusterId, lensItems]);
+  }, [focusedClusterId, localSignals]);
 
-  // Spec §10 — spiderfy is LAST RESORT: only the anchors the lens and its
-  // relaxation could not separate.
+  // §14 — residual collision: the existing spiderfy/chooser fallback handles
+  // physically impossible packings. The Local planner itself is never modified.
   const spider = useMemo(() => {
-    if (!lensPlan || lensPlan.residualCollisionIds.length < 2) return null;
-    const residual = new Set(lensPlan.residualCollisionIds);
-    const nodes = lensPlan.nodes
-      .filter((node) => residual.has(node.id))
-      .map((node) => ({
-        id: node.id,
-        x: node.displayX,
-        y: node.displayY,
-        radius: pointById.get(node.id)?.size ?? 1.5,
-      }));
+    if (!localPlan || localPlan.layoutStatus !== "residual-collision") return null;
+    const nodes = localPlan.nodes.map((node) => ({
+      id: node.id,
+      x: node.displayX,
+      y: node.displayY,
+      radius: pointById.get(node.id)?.size ?? 1.5,
+    }));
     if (nodes.length < 2) return null;
     const plan = planRadarSpiderfy(nodes, {
       joinGap: (RADAR_ZOOM_TARGET_GAP_PX * 100) / RADAR_ZOOM_DEFAULT_MAP_PX,
     });
     return plan.groups.length > 0 || plan.chooserGroups.length > 0 ? plan : null;
-  }, [lensPlan, pointById]);
+  }, [localPlan, pointById]);
 
   // Spec §1/§3 — ONE display map for painting AND hit-testing.
   const displayOverrides = useMemo<Map<string, RadarPoint2>>(() => {
     const map = new Map<string, RadarPoint2>();
-    for (const node of lensPlan?.nodes ?? []) {
+    for (const node of localPlan?.nodes ?? []) {
       map.set(node.id, { x: node.displayX, y: node.displayY });
     }
     for (const group of spider?.groups ?? []) {
@@ -332,7 +310,7 @@ export function RadarExperience() {
       }
     }
     return map;
-  }, [lensPlan, spider]);
+  }, [localPlan, spider]);
 
   // Spec §4 — the Sector Lens replaces the old camera zoom as the separation
   // mechanism, so there is exactly one transform at a time.
@@ -587,6 +565,7 @@ export function RadarExperience() {
                     onSelectSector={handleSelectSector}
                     onCollapseSpider={handleCollapseSpider}
                     focusedClusterId={focusedClusterId}
+                    visualMode={focusedClusterId ? "local" : "global"}
                     clusters={view.clusters}
                     range={urlState.range}
                     selectedId={urlState.tool}
@@ -629,7 +608,7 @@ export function RadarExperience() {
                       {view.clusters.find((c) => c.id === focusedClusterId)
                         ?.label ?? focusedClusterId}
                       {" · "}
-                      {lensItems.length} {lensItems.length === 1 ? "segnale" : "segnali"}
+                      {localSignals.length} {localSignals.length === 1 ? "segnale" : "segnali"}
                     </span>
                   </p>
                   <button

@@ -113,6 +113,12 @@ export type RadarMapProps = {
    * prominent and all other sectors are dimmed for compass context only.
    */
   focusedClusterId?: string | null;
+  /**
+   * Explicit visual mode (PASS 2 §3). "global" renders the approved Overview;
+   * "local" renders only the focused cluster's real signals with a
+   * single-colour rim and restrained core.
+   */
+  visualMode?: "global" | "local";
 };
 
 export function RadarMap({
@@ -133,6 +139,7 @@ export function RadarMap({
   onSelectChooserGroup,
   displayOverrides,
   focusedClusterId,
+  visualMode = "global",
 }: RadarMapProps) {
   const titleId = useId();
   const fieldId = useId();
@@ -305,7 +312,7 @@ export function RadarMap({
   );
 
   return (
-    <div className="tv-rx-map" data-basis={layout.radiusBasis}>
+    <div className="tv-rx-map" data-basis={layout.radiusBasis} data-visual-mode={visualMode}>
       <svg
         ref={svgRef}
         className="tv-rx-map__svg"
@@ -401,11 +408,22 @@ export function RadarMap({
           })}
         </g>
 
-        {/* §14 — the outer rim is a subtle fixed cluster compass: one short
-            low-opacity arc per canonical sector, in that cluster's colour.
-            Static, no filled wedge, no rainbow. In cluster focus the owning
-            segment reads slightly clearer and the others soften. */}
-        <g className="tv-rx-map__compass">
+        {/* §4 — LOCAL MODE: restrained single-colour rim in the focused
+            cluster colour. GLOBAL: subtle fixed cluster compass arcs. */}
+        {visualMode === "local" && focusedClusterId ? (
+          <circle
+            cx={RADAR_CENTER}
+            cy={RADAR_CENTER}
+            r={42}
+            className="tv-rx-map__local-rim"
+            stroke={
+              colorByCluster.get(focusedClusterId) ??
+              "var(--tv-color-cyan-500, #22d3ee)"
+            }
+            aria-hidden="true"
+          />
+        ) : null}
+        <g className="tv-rx-map__compass" data-visual-mode={visualMode}>
           {layout.clusterOrder.map((clusterId, index) => {
             const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
             const start = index * span + span * 0.12;

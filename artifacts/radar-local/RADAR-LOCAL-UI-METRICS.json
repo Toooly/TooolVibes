@@ -1,0 +1,111 @@
+{
+  "generatedAt": "2026-10-08T20:38:23.232Z",
+  "productSha": "ad9607d07bf4b2f4436c6cf0d7dc539633204e1f",
+  "referenceViewportPx": 390,
+  "referenceRadarPx": 358,
+  "plannerFloorPx": 14,
+  "plannerTargetPx": 18,
+  "clusters": {
+    "design-creative": {
+      "label": "Design & Creatività",
+      "signalCount": 4,
+      "minimumEdgeGapPx": 30.50,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    },
+    "marketing-growth": {
+      "label": "Marketing & Growth",
+      "signalCount": 5,
+      "minimumEdgeGapPx": 34.48,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    },
+    "productivity": {
+      "label": "Produttività",
+      "signalCount": 6,
+      "minimumEdgeGapPx": 35.11,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    },
+    "developer-coding": {
+      "label": "Sviluppo & Coding",
+      "signalCount": 5,
+      "minimumEdgeGapPx": 34.48,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    },
+    "video-image": {
+      "label": "Video & Immagine",
+      "signalCount": 5,
+      "minimumEdgeGapPx": 34.48,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    },
+    "no-code-automation": {
+      "label": "No-Code & Automazione",
+      "signalCount": 7,
+      "minimumEdgeGapPx": 35.21,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    },
+    "ai-agents": {
+      "label": "AI Agents",
+      "signalCount": 8,
+      "minimumEdgeGapPx": 33.15,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    },
+    "other": {
+      "label": "Altro",
+      "signalCount": 4,
+      "minimumEdgeGapPx": 30.50,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok",
+      "wrongSelectionCount": 0,
+      "chooserActivations": 0,
+      "spiderfyActivations": 0,
+      "semanticRadiusMaxDelta": 0
+    }
+  },
+  "overviewNodeCount": 7,
+  "stalePreviewCount": 0,
+  "semanticRadiusMaxDelta": 0,
+  "sameRadius8": {
+    "signalCount": 8,
+    "minimumEdgeGapPx": 42.75,
+    "visualOverlapCount": 0,
+    "layoutStatus": "ok",
+    "wrongSelectionCount": 0,
+    "chooserActivations": 0,
+    "spiderfyActivations": 0,
+    "semanticRadiusMaxDelta": 0
+  }
+}

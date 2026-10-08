@@ -1966,6 +1966,69 @@
   }
 }
 
+/* ---------- PASS 2: Local Cluster Radar visual system -------------------- */
+
+/* §4 — LOCAL MODE: suppress multicolour compass arcs; the focused cluster
+   colour rim replaces them. The rim reads as "you are inside this category". */
+.tv-rx-map__compass[data-visual-mode="local"] .tv-rx-map__compass-arc {
+  display: none;
+}
+
+.tv-rx-map__compass[data-visual-mode="local"] .tv-rx-map__compass-hit {
+  display: none;
+}
+
+.tv-rx-map__local-rim {
+  fill: none;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+/* §4 — LOCAL MODE: sector dividers soften to quiet structure. */
+.tv-rx-map[data-visual-mode="local"] .tv-rx-map__sector {
+  stroke-opacity: 0.55;
+}
+
+/* §9 — LOCAL MODE: centre-core prominence reduced ~18% so NOW never
+   competes with real signals. Global Overview core is unchanged. */
+.tv-rx-map[data-visual-mode="local"] .tv-rx-map__core-glow {
+  opacity: 0.21;
+}
+
+.tv-rx-map[data-visual-mode="local"] .tv-rx-map__core {
+  opacity: 0.78;
+}
+
+/* §8 — NORMAL MARKER MATERIAL: specular white highlight reduced
+   substantially. Premium instrument marker, not marble. */
+.tv-rx-blip__glint {
+  opacity: 0.12;
+}
+
+.tv-rx-blip[data-selected="true"] .tv-rx-blip__glint {
+  opacity: 0.22;
+}
+
+/* §7 — SELECTED STATE: one clean selection ring + one restrained local halo.
+   Never a multi-ring target / bullseye. */
+.tv-rx-blip__halo {
+  opacity: 0.13;
+}
+
+.tv-rx-blip__ring {
+  stroke-width: 0.65;
+  opacity: 0.9;
+}
+
+/* §11 — CHIP RAIL: stronger selected state so the focused chip is
+   unmistakable at a glance. */
+.tv-rx-chip[data-active="true"] {
+  border-color: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 82%, transparent);
+  background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 20%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 35%, transparent);
+}
+
 /* Spec §29: decorative motion off when the user asks for reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   .tv-rx *,
