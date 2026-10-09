@@ -181,15 +181,15 @@ const TEMPORAL_RING_CHECKPOINTS: Record<
     { ageHours: 24, label: "24h" },
   ],
   week: [
+    { ageHours: 24, label: "1g" },
     { ageHours: 48, label: "2g" },
     { ageHours: 96, label: "4g" },
-    { ageHours: 144, label: "6g" },
     { ageHours: 168, label: "7g" },
   ],
   month: [
+    { ageHours: 72, label: "3g" },
     { ageHours: 168, label: "7g" },
     { ageHours: 336, label: "14g" },
-    { ageHours: 504, label: "21g" },
     { ageHours: 720, label: "30g" },
   ],
 };

@@ -201,15 +201,15 @@ describe("RADAR-GEO-V2 semantic layout", () => {
       "24h",
     ]);
     expect(radarRingLabels("week").map((ring) => ring.label)).toEqual([
+      "1g",
       "2g",
       "4g",
-      "6g",
       "7g",
     ]);
     expect(radarRingLabels("month").map((ring) => ring.label)).toEqual([
+      "3g",
       "7g",
       "14g",
-      "21g",
       "30g",
     ]);
     for (const range of ["day", "week", "month"] as const) {

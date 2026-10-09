@@ -1982,7 +1982,7 @@
   fill: none;
   stroke-width: 1.15;
   stroke-linecap: round;
-  opacity: 0.43;
+  opacity: 0.39;
 }
 
 /* §4 — LOCAL MODE: sector dividers soften to quiet structure. */
@@ -2013,7 +2013,7 @@
 /* §7 — SELECTED STATE: one clean selection ring + one restrained local halo.
    Never a multi-ring target / bullseye. */
 .tv-rx-blip__halo {
-  opacity: 0.13;
+  opacity: 0.10;
 }
 
 .tv-rx-blip__ring {
@@ -2027,6 +2027,15 @@
   border-color: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 82%, transparent);
   background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 20%, transparent);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 35%, transparent);
+}
+
+/* §2 — mobile Overview: suppress spatial +N count badges. The real cluster
+   count lives in the chip rail; badges add noise around the centre on small
+   screens. Desktop keeps them. */
+@media (max-width: 47.999rem) {
+  .tv-rx-map__hidden-badge {
+    display: none;
+  }
 }
 
 /* Spec §29: decorative motion off when the user asks for reduced motion. */

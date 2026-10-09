@@ -104,8 +104,8 @@ describe("RADAR-TIME-SCALE perceptual projection", () => {
       const rings = RADAR_TIME_RINGS[range];
       const checkpoints = {
         day: [6, 12, 18, 24],
-        week: [48, 96, 144, 168],
-        month: [168, 336, 504, 720],
+        week: [24, 48, 96, 168],
+        month: [72, 168, 336, 720],
       }[range];
 
       for (let i = 0; i < rings.length; i++) {

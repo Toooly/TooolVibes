@@ -610,7 +610,7 @@ export function RadarMap({
                     style={{ pointerEvents: "none" }}
                     cx={0}
                     cy={0}
-                    r={drawnRadius * 2.7}
+                    r={drawnRadius * 2.295}
                     fill={color}
                     className="tv-rx-blip__halo"
                     aria-hidden="true"
