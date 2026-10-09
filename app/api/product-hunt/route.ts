@@ -166,6 +166,37 @@ const RADAR_QA_FIXTURE_ENV_KEY = "TOOOLVIBES_RADAR_QA_FIXTURE";
  * derives the canonical category cluster. Two unmatched items exercise the
  * documented "Altri segnali" sector and the long-name / zero-attention edges.
  */
+const QA_FIXTURE_SNAPSHOT_ISO = "2026-10-08T12:00:00.000Z";
+const QA_FIXTURE_SNAPSHOT_MS = Date.parse(QA_FIXTURE_SNAPSHOT_ISO);
+const HOUR_MS = 3_600_000;
+
+function qaAgeHours(launchedAtIso: string): number {
+  return Math.max(0, (QA_FIXTURE_SNAPSHOT_MS - Date.parse(launchedAtIso)) / HOUR_MS);
+}
+
+function qaHoursAgo(hours: number): string {
+  return new Date(QA_FIXTURE_SNAPSHOT_MS - hours * HOUR_MS).toISOString();
+}
+
+const RANGE_HOURS: Record<ProductHuntRange, number> = {
+  day: 24,
+  week: 168,
+  month: 720,
+};
+
+/**
+ * §6 — VISUAL-QA-ONLY density fixture with TEMPORAL TRUTH.
+ *
+ * Timestamps are anchored to a fixed snapshot time (QA_FIXTURE_SNAPSHOT_ISO)
+ * so ages are deterministic and meaningful across all three ranges.
+ *
+ * Range contract is enforced HERE: a signal only appears when its age is
+ * within the selected range window, matching production behaviour where the
+ * Product Hunt API date-window filters upstream.
+ *
+ * Dense cluster (Sviluppo & Coding): 7 signals at 1h, 3h, 6h, 9h, 12h, 18h, 23h.
+ * Other clusters provide varied valid ages across 7G and 30G.
+ */
 function getDevelopmentQaFixture(
   range: ProductHuntRange,
 ): ProductHuntPayload | null {
@@ -176,172 +207,282 @@ function getDevelopmentQaFixture(
     return null;
   }
 
+  const maxAgeHours = RANGE_HOURS[range];
+
+  const allItems = [
+    // ---- Dense cluster: Sviluppo & Coding (7 signals, 24H depth) ----------
+    {
+      id: "qa-blink",
+      slug: "blink",
+      name: "Blink",
+      tagline: "Vibe coding con agenti sul progetto.",
+      votesCount: 842,
+      commentsCount: 96,
+      productHuntUrl: "https://www.producthunt.com/posts/blink",
+      launchedAt: qaHoursAgo(1),
+      topics: ["Artificial Intelligence", "Developer Tools"],
+    },
+    {
+      id: "qa-vibecode",
+      slug: "vibecode",
+      name: "Vibecode",
+      tagline: "Builder app AI in vibe coding.",
+      votesCount: 512,
+      commentsCount: 41,
+      productHuntUrl: "https://www.producthunt.com/posts/vibecode",
+      launchedAt: qaHoursAgo(3),
+      topics: ["Developer Tools"],
+    },
+    {
+      id: "qa-dev-6h",
+      name: "CodeCanvas",
+      tagline: "IDE collaborativo per team remoti.",
+      votesCount: 267,
+      commentsCount: 34,
+      productHuntUrl: "https://www.producthunt.com/posts/codecanvas",
+      launchedAt: qaHoursAgo(6),
+      topics: ["Developer Tools"],
+    },
+    {
+      id: "qa-dev-9h",
+      name: "ShipFast",
+      tagline: "Deploy continuo senza config.",
+      votesCount: 189,
+      commentsCount: 22,
+      productHuntUrl: "https://www.producthunt.com/posts/shipfast",
+      launchedAt: qaHoursAgo(9),
+      topics: ["Developer Tools"],
+    },
+    {
+      id: "qa-dev-12h",
+      name: "MergeBot",
+      tagline: "Review PR automatica con AI.",
+      votesCount: 341,
+      commentsCount: 45,
+      productHuntUrl: "https://www.producthunt.com/posts/mergebot",
+      launchedAt: qaHoursAgo(12),
+      topics: ["Developer Tools"],
+    },
+    {
+      id: "qa-dev-18h",
+      name: "TestPilot",
+      tagline: "Test E2E generati da spec.",
+      votesCount: 156,
+      commentsCount: 18,
+      productHuntUrl: "https://www.producthunt.com/posts/testpilot",
+      launchedAt: qaHoursAgo(18),
+      topics: ["Developer Tools"],
+    },
+    {
+      id: "qa-dev-23h",
+      name: "LogLens",
+      tagline: "Osservabilità per microservizi.",
+      votesCount: 98,
+      commentsCount: 11,
+      productHuntUrl: "https://www.producthunt.com/posts/loglens",
+      launchedAt: qaHoursAgo(23),
+      topics: ["Developer Tools"],
+    },
+    // ---- Agenti AI (mixed ages: 24H + 7G) --------------------------------
+    {
+      id: "qa-flowise",
+      slug: "flowise",
+      name: "Flowise",
+      tagline: "Agenti AI su misura.",
+      votesCount: 729,
+      commentsCount: 88,
+      productHuntUrl: "https://www.producthunt.com/posts/flowise",
+      launchedAt: qaHoursAgo(4),
+      topics: ["Artificial Intelligence"],
+    },
+    {
+      id: "qa-meku",
+      slug: "meku",
+      name: "Meku",
+      tagline: "Builder siti AI in vibe coding.",
+      votesCount: 388,
+      commentsCount: 25,
+      productHuntUrl: "https://www.producthunt.com/posts/meku",
+      launchedAt: qaHoursAgo(20),
+      topics: ["Artificial Intelligence"],
+    },
+    {
+      id: "qa-agentx",
+      slug: "agentx",
+      name: "AgentX",
+      tagline: "Agenti operativi per i team.",
+      votesCount: 204,
+      commentsCount: 151,
+      productHuntUrl: "https://www.producthunt.com/posts/agentx",
+      launchedAt: qaHoursAgo(48),
+      topics: ["Artificial Intelligence"],
+    },
+    {
+      id: "qa-agent-4d",
+      name: "PromptLayer",
+      tagline: "Gestione prompt per team AI.",
+      votesCount: 312,
+      commentsCount: 67,
+      productHuntUrl: "https://www.producthunt.com/posts/promptlayer",
+      launchedAt: qaHoursAgo(96),
+      topics: ["Artificial Intelligence"],
+    },
+    // ---- No-code (7G + 30G) -----------------------------------------------
+    {
+      id: "qa-weweb",
+      slug: "weweb",
+      name: "WeWeb",
+      tagline: "Builder web app no-code.",
+      votesCount: 674,
+      commentsCount: 58,
+      productHuntUrl: "https://www.producthunt.com/posts/weweb",
+      launchedAt: qaHoursAgo(26),
+      topics: ["No-Code"],
+    },
+    {
+      id: "qa-notionapps",
+      slug: "notionapps",
+      name: "NotionApps",
+      tagline: "App no-code sopra Notion.",
+      votesCount: 233,
+      commentsCount: 77,
+      productHuntUrl: "https://www.producthunt.com/posts/notionapps",
+      launchedAt: qaHoursAgo(144),
+      topics: ["No-Code", "Productivity"],
+    },
+    {
+      id: "qa-nocode-21d",
+      name: "FormCraft",
+      tagline: "Formulari intelligenti no-code.",
+      votesCount: 445,
+      commentsCount: 92,
+      productHuntUrl: "https://www.producthunt.com/posts/formcraft",
+      launchedAt: qaHoursAgo(504),
+      topics: ["No-Code"],
+    },
+    // ---- Design & Creatività (7G + 30G) ------------------------------------
+    {
+      id: "qa-wegic",
+      slug: "wegic",
+      name: "Wegic",
+      tagline: "Siti generati da un brief.",
+      votesCount: 129,
+      commentsCount: 12,
+      productHuntUrl: "https://www.producthunt.com/posts/wegic",
+      launchedAt: qaHoursAgo(10),
+      topics: ["Design Tools"],
+    },
+    {
+      id: "qa-imagine-art",
+      slug: "imagine-art",
+      name: "Imagine Art",
+      tagline: "Suite creativa immagini AI.",
+      votesCount: 451,
+      commentsCount: 210,
+      productHuntUrl: "https://www.producthunt.com/posts/imagine-art",
+      launchedAt: qaHoursAgo(72),
+      topics: ["Artificial Intelligence", "Design Tools"],
+    },
+    {
+      id: "qa-design-14d",
+      name: "PixelForge",
+      tagline: "Editing immagini AI professionale.",
+      votesCount: 523,
+      commentsCount: 134,
+      productHuntUrl: "https://www.producthunt.com/posts/pixelforge",
+      launchedAt: qaHoursAgo(336),
+      topics: ["Design Tools"],
+    },
+    // ---- Video & Immagini (24H + 30G) ---------------------------------------
+    {
+      id: "qa-betterpic",
+      slug: "betterpic",
+      name: "BetterPic",
+      tagline: "Ritratti AI professionali.",
+      votesCount: 596,
+      commentsCount: 33,
+      productHuntUrl: "https://www.producthunt.com/posts/betterpic",
+      launchedAt: qaHoursAgo(8),
+      topics: ["Artificial Intelligence", "Photos"],
+    },
+    {
+      id: "qa-muse-ai",
+      slug: "muse-ai",
+      name: "Muse AI",
+      tagline: "Hosting video AI.",
+      votesCount: 318,
+      commentsCount: 19,
+      productHuntUrl: "https://www.producthunt.com/posts/muse-ai",
+      launchedAt: qaHoursAgo(5),
+      topics: ["Video"],
+    },
+    {
+      id: "qa-vibrantsnap",
+      slug: "vibrantsnap",
+      name: "VibrantSnap",
+      tagline: "Clip video generati da testo.",
+      votesCount: 87,
+      commentsCount: 64,
+      productHuntUrl: "https://www.producthunt.com/posts/vibrantsnap",
+      launchedAt: qaHoursAgo(29 * 24),
+      topics: ["Video", "Marketing"],
+    },
+    // ---- "Altri segnali" edges (no catalog match) ---------------------------
+    {
+      id: "qa-long-name",
+      name: "Ultra Long Named Decision Orchestrator Platform X",
+      tagline:
+        "Tagline molto lunga per stressare wrapping tipografico su mobile e tablet senza collidere con metriche o rank.",
+      votesCount: 63,
+      commentsCount: 222,
+      productHuntUrl: "https://www.producthunt.com/posts/long-name-orchestrator",
+      launchedAt: qaHoursAgo(21 * 24),
+      topics: [],
+    },
+    {
+      id: "qa-quiet-launch",
+      name: "Quiet",
+      tagline: "Short.",
+      votesCount: 0,
+      commentsCount: 0,
+      productHuntUrl: "https://www.producthunt.com/posts/quiet-launch",
+      launchedAt: qaHoursAgo(2),
+      topics: [],
+    },
+    {
+      id: "qa-7d-edge",
+      name: "WeekOld Tool",
+      tagline: "Lanciato esattamente 7 giorni fa.",
+      votesCount: 77,
+      commentsCount: 8,
+      productHuntUrl: "https://www.producthunt.com/posts/weekold",
+      launchedAt: qaHoursAgo(7 * 24),
+      topics: [],
+    },
+    {
+      id: "qa-30d-edge",
+      name: "MonthOld Tool",
+      tagline: "Lanciato esattamente 30 giorni fa.",
+      votesCount: 55,
+      commentsCount: 6,
+      productHuntUrl: "https://www.producthunt.com/posts/monthold",
+      launchedAt: qaHoursAgo(30 * 24),
+      topics: [],
+    },
+  ];
+
+  // Range contract: only signals whose age is within the selected window.
+  const items = allItems.filter(
+    (item) => qaAgeHours(item.launchedAt) <= maxAgeHours,
+  );
+
   return {
     status: "ok",
     source: "qa-fixture",
     stale: false,
     range,
-    updatedAt: "2026-01-15T10:00:00.000Z",
-    items: [
-      // ---- 1. Vibe coding -------------------------------------------------
-      {
-        id: "qa-blink",
-        slug: "blink",
-        name: "Blink",
-        tagline: "Vibe coding con agenti sul progetto.",
-        votesCount: 842,
-        commentsCount: 96,
-        productHuntUrl: "https://www.producthunt.com/posts/blink",
-        launchedAt: "2026-01-15T07:40:00.000Z",
-        topics: ["Artificial Intelligence", "Developer Tools"],
-      },
-      {
-        id: "qa-vibecode",
-        slug: "vibecode",
-        name: "Vibecode",
-        tagline: "Builder app AI in vibe coding.",
-        votesCount: 512,
-        commentsCount: 41,
-        productHuntUrl: "https://www.producthunt.com/posts/vibecode",
-        launchedAt: "2026-01-14T09:15:00.000Z",
-        topics: ["Developer Tools"],
-      },
-      // ---- 2. No-code -----------------------------------------------------
-      {
-        id: "qa-weweb",
-        slug: "weweb",
-        name: "WeWeb",
-        tagline: "Builder web app no-code.",
-        votesCount: 674,
-        commentsCount: 58,
-        productHuntUrl: "https://www.producthunt.com/posts/weweb",
-        launchedAt: "2026-01-13T16:05:00.000Z",
-        topics: ["No-Code"],
-      },
-      {
-        id: "qa-notionapps",
-        slug: "notionapps",
-        name: "NotionApps",
-        tagline: "App no-code sopra Notion.",
-        votesCount: 233,
-        commentsCount: 77,
-        productHuntUrl: "https://www.producthunt.com/posts/notionapps",
-        launchedAt: "2026-01-12T11:30:00.000Z",
-        topics: ["No-Code", "Productivity"],
-      },
-      // ---- 3. Builder siti AI ---------------------------------------------
-      {
-        id: "qa-meku",
-        slug: "meku",
-        name: "Meku",
-        tagline: "Builder siti AI in vibe coding.",
-        votesCount: 388,
-        commentsCount: 25,
-        productHuntUrl: "https://www.producthunt.com/posts/meku",
-        launchedAt: "2026-01-15T05:50:00.000Z",
-        topics: ["Artificial Intelligence"],
-      },
-      {
-        id: "qa-wegic",
-        slug: "wegic",
-        name: "Wegic",
-        tagline: "Siti generati da un brief.",
-        votesCount: 129,
-        commentsCount: 12,
-        productHuntUrl: "https://www.producthunt.com/posts/wegic",
-        launchedAt: "2026-01-10T08:20:00.000Z",
-        topics: ["Design Tools"],
-      },
-      // ---- 4. Immagini AI -------------------------------------------------
-      {
-        id: "qa-betterpic",
-        slug: "betterpic",
-        name: "BetterPic",
-        tagline: "Ritratti AI professionali.",
-        votesCount: 596,
-        commentsCount: 33,
-        productHuntUrl: "https://www.producthunt.com/posts/betterpic",
-        launchedAt: "2026-01-14T19:45:00.000Z",
-        topics: ["Artificial Intelligence", "Photos"],
-      },
-      {
-        id: "qa-imagine-art",
-        slug: "imagine-art",
-        name: "Imagine Art",
-        tagline: "Suite creativa immagini AI.",
-        votesCount: 451,
-        commentsCount: 210,
-        productHuntUrl: "https://www.producthunt.com/posts/imagine-art",
-        launchedAt: "2026-01-11T13:10:00.000Z",
-        topics: ["Artificial Intelligence", "Design Tools"],
-      },
-      // ---- 5. Video AI ----------------------------------------------------
-      {
-        id: "qa-muse-ai",
-        slug: "muse-ai",
-        name: "Muse AI",
-        tagline: "Hosting video AI.",
-        votesCount: 318,
-        commentsCount: 19,
-        productHuntUrl: "https://www.producthunt.com/posts/muse-ai",
-        launchedAt: "2026-01-15T09:05:00.000Z",
-        topics: ["Video"],
-      },
-      {
-        id: "qa-vibrantsnap",
-        slug: "vibrantsnap",
-        name: "VibrantSnap",
-        tagline: "Clip video generati da testo.",
-        votesCount: 87,
-        commentsCount: 64,
-        productHuntUrl: "https://www.producthunt.com/posts/vibrantsnap",
-        launchedAt: "2026-01-09T17:25:00.000Z",
-        topics: ["Video", "Marketing"],
-      },
-      // ---- 6. Agenti AI ---------------------------------------------------
-      {
-        id: "qa-flowise",
-        slug: "flowise",
-        name: "Flowise",
-        tagline: "Agenti AI su misura.",
-        votesCount: 729,
-        commentsCount: 88,
-        productHuntUrl: "https://www.producthunt.com/posts/flowise",
-        launchedAt: "2026-01-13T06:35:00.000Z",
-        topics: ["Artificial Intelligence"],
-      },
-      {
-        id: "qa-agentx",
-        slug: "agentx",
-        name: "AgentX",
-        tagline: "Agenti operativi per i team.",
-        votesCount: 204,
-        commentsCount: 151,
-        productHuntUrl: "https://www.producthunt.com/posts/agentx",
-        launchedAt: "2026-01-08T10:00:00.000Z",
-        topics: ["Artificial Intelligence"],
-      },
-      // ---- "Altri segnali" edges (no catalog match) -----------------------
-      {
-        id: "qa-long-name",
-        name: "Ultra Long Named Decision Orchestrator Platform X",
-        tagline:
-          "Tagline molto lunga per stressare wrapping tipografico su mobile e tablet senza collidere con metriche o rank.",
-        votesCount: 63,
-        commentsCount: 222,
-        productHuntUrl: "https://www.producthunt.com/posts/long-name-orchestrator",
-        launchedAt: "2026-01-07T12:00:00.000Z",
-      },
-      {
-        id: "qa-quiet-launch",
-        name: "Quiet",
-        tagline: "Short.",
-        votesCount: 0,
-        commentsCount: 0,
-        productHuntUrl: "https://www.producthunt.com/posts/quiet-launch",
-        launchedAt: "2026-01-15T09:55:00.000Z",
-      },
-    ],
+    updatedAt: QA_FIXTURE_SNAPSHOT_ISO,
+    items,
   };
 }
 

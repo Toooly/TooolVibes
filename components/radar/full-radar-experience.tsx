@@ -104,7 +104,10 @@ export function RadarExperience() {
   );
 
   const view = useMemo(
-    () => buildRadarView({ ...snapshotMeta, items: [...uiModel.items] }, catalog),
+    () =>
+      buildRadarView({ ...snapshotMeta, items: [...uiModel.items] }, catalog, {
+        now: Date.parse(snapshotMeta.updatedAt) || undefined,
+      }),
     [snapshotMeta, uiModel.items, catalog],
   );
 

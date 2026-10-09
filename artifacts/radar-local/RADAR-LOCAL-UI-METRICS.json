@@ -1,15 +1,15 @@
 {
   "generatedAt": "2026-10-08T20:38:23.232Z",
-  "productSha": "ad9607d07bf4b2f4436c6cf0d7dc539633204e1f",
+  "productSha": "7790afa4b2f136102edba46a10bd77d10e561b02",
   "referenceViewportPx": 390,
   "referenceRadarPx": 358,
   "plannerFloorPx": 14,
   "plannerTargetPx": 18,
   "clusters": {
     "design-creative": {
-      "label": "Design & Creatività",
+      "label": "Design & Creativit\u00e0",
       "signalCount": 4,
-      "minimumEdgeGapPx": 30.50,
+      "minimumEdgeGapPx": 30.5,
       "visualOverlapCount": 0,
       "layoutStatus": "ok",
       "wrongSelectionCount": 0,
@@ -29,7 +29,7 @@
       "semanticRadiusMaxDelta": 0
     },
     "productivity": {
-      "label": "Produttività",
+      "label": "Produttivit\u00e0",
       "signalCount": 6,
       "minimumEdgeGapPx": 35.11,
       "visualOverlapCount": 0,
@@ -86,7 +86,7 @@
     "other": {
       "label": "Altro",
       "signalCount": 4,
-      "minimumEdgeGapPx": 30.50,
+      "minimumEdgeGapPx": 30.5,
       "visualOverlapCount": 0,
       "layoutStatus": "ok",
       "wrongSelectionCount": 0,
@@ -107,5 +107,66 @@
     "chooserActivations": 0,
     "spiderfyActivations": 0,
     "semanticRadiusMaxDelta": 0
+  },
+  "browser": {
+    "chromium": {
+      "hitTestTapCount": 14,
+      "hitTestCorrectSelections": 14,
+      "hitTestWrongSelections": 0,
+      "hitTestNoSelection": 0,
+      "axeSerious": 0,
+      "axeCritical": 0,
+      "axeModerate": 0,
+      "axeMinor": 2
+    },
+    "webkit": {
+      "stressTapCount": 14,
+      "stressCorrectSelections": 14,
+      "wrongSelectionCount": 0,
+      "stalePreviewCount": 0,
+      "stuckLocalMode": 0,
+      "pageErrors": 5,
+      "pageErrorsNote": "viewport-meta warnings + CSP report-only (non-blocking)",
+      "fatal": 0
+    }
+  },
+  "responsive": {
+    "widths": [
+      320,
+      344,
+      360,
+      375,
+      390,
+      393,
+      414,
+      430,
+      480,
+      768,
+      1024,
+      1280,
+      1440
+    ],
+    "overflow": "none at any width",
+    "clippedRadar": "none at any width",
+    "mapCircular": true,
+    "chipRailUsable": true,
+    "bottomNavCollision": false,
+    "note": "1280/1440 detection false-positive from header nav visibility"
+  },
+  "transitionQA": {
+    "overviewToLocal": "pass \u2014 visualMode global\u2192local, local rim appears, compass hidden",
+    "localToOverview": "pass \u2014 focus-bar Panoramica returns to global",
+    "previewStaysLocal": "pass \u2014 close preview keeps local mode, 0 stale selectedId",
+    "noStaleNodes": "pass",
+    "noCameraJump": "pass \u2014 CSS transform transition only"
+  },
+  "sameRadius8UI": {
+    "available": false,
+    "reason": "QA fixture does not include same-radius 8 scenario; planner-level coverage in unit tests (RADAR-LOCAL-05)",
+    "plannerLevel": {
+      "minimumEdgeGapPx": 42.75,
+      "visualOverlapCount": 0,
+      "layoutStatus": "ok"
+    }
   }
 }

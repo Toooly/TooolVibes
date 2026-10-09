@@ -1,0 +1,310 @@
+{
+  "generatedAt": "2026-10-08T22:10:00.000Z",
+  "productSha": "7790afa4b2f136102edba46a10bd77d10e561b02",
+  "snapshotTime": "2026-10-08T12:00:00.000Z",
+  "tools": [
+    {
+      "id": "qa-blink",
+      "publishedAt": "2026-10-08T11:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 1.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.15
+    },
+    {
+      "id": "qa-vibecode",
+      "publishedAt": "2026-10-08T09:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 3.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.25
+    },
+    {
+      "id": "qa-dev-6h",
+      "publishedAt": "2026-10-08T06:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 6.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.35
+    },
+    {
+      "id": "qa-dev-9h",
+      "publishedAt": "2026-10-08T03:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 9.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.45
+    },
+    {
+      "id": "qa-dev-12h",
+      "publishedAt": "2026-10-08T00:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 12.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.55
+    },
+    {
+      "id": "qa-dev-18h",
+      "publishedAt": "2026-10-07T18:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 18.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.7
+    },
+    {
+      "id": "qa-dev-23h",
+      "publishedAt": "2026-10-07T13:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 23.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.9
+    },
+    {
+      "id": "qa-flowise",
+      "publishedAt": "2026-10-08T08:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 4.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.18
+    },
+    {
+      "id": "qa-meku",
+      "publishedAt": "2026-10-07T16:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 20.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.65
+    },
+    {
+      "id": "qa-agentx",
+      "publishedAt": "2026-10-06T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 48.0,
+      "visibleIn24H": false,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.4
+    },
+    {
+      "id": "qa-agent-4d",
+      "publishedAt": "2026-10-04T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 96.0,
+      "visibleIn24H": false,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.55
+    },
+    {
+      "id": "qa-weweb",
+      "publishedAt": "2026-10-07T10:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 26.0,
+      "visibleIn24H": false,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.3
+    },
+    {
+      "id": "qa-notionapps",
+      "publishedAt": "2026-10-02T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 144.0,
+      "visibleIn24H": false,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.5
+    },
+    {
+      "id": "qa-nocode-21d",
+      "publishedAt": "2026-09-17T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 504.0,
+      "visibleIn24H": false,
+      "visibleIn7G": false,
+      "visibleIn30G": true,
+      "radiusRatio": 0.75
+    },
+    {
+      "id": "qa-wegic",
+      "publishedAt": "2026-10-08T02:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 10.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.22
+    },
+    {
+      "id": "qa-imagine-art",
+      "publishedAt": "2026-10-05T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 72.0,
+      "visibleIn24H": false,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.42
+    },
+    {
+      "id": "qa-design-14d",
+      "publishedAt": "2026-09-24T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 336.0,
+      "visibleIn24H": false,
+      "visibleIn7G": false,
+      "visibleIn30G": true,
+      "radiusRatio": 0.6
+    },
+    {
+      "id": "qa-betterpic",
+      "publishedAt": "2026-10-08T04:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 8.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.28
+    },
+    {
+      "id": "qa-muse-ai",
+      "publishedAt": "2026-10-08T07:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 5.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.2
+    },
+    {
+      "id": "qa-vibrantsnap",
+      "publishedAt": "2026-09-09T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 696.0,
+      "visibleIn24H": false,
+      "visibleIn7G": false,
+      "visibleIn30G": true,
+      "radiusRatio": 0.85
+    },
+    {
+      "id": "qa-long-name",
+      "publishedAt": "2026-09-17T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 504.0,
+      "visibleIn24H": false,
+      "visibleIn7G": false,
+      "visibleIn30G": true,
+      "radiusRatio": 0.92
+    },
+    {
+      "id": "qa-quiet-launch",
+      "publishedAt": "2026-10-08T10:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 2.0,
+      "visibleIn24H": true,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.1
+    },
+    {
+      "id": "qa-7d-edge",
+      "publishedAt": "2026-10-01T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 168.0,
+      "visibleIn24H": false,
+      "visibleIn7G": true,
+      "visibleIn30G": true,
+      "radiusRatio": 0.68
+    },
+    {
+      "id": "qa-30d-edge",
+      "publishedAt": "2026-09-08T12:00:00.000Z",
+      "timestampSource": "qa-fixture-launchedAt",
+      "snapshotTime": "2026-10-08T12:00:00.000Z",
+      "computedAgeHours": 720.0,
+      "visibleIn24H": false,
+      "visibleIn7G": false,
+      "visibleIn30G": true,
+      "radiusRatio": 0.98
+    }
+  ],
+  "rangeViolationCount": 0,
+  "hitTests": {
+    "chromium24H": {
+      "taps": 13,
+      "correct": 13,
+      "wrong": 0
+    },
+    "chromium7G": {
+      "taps": 19,
+      "correct": 19,
+      "wrong": 0
+    },
+    "chromium30G": {
+      "taps": 24,
+      "correct": 24,
+      "wrong": 0
+    },
+    "webkit24H": {
+      "taps": 7,
+      "correct": 7,
+      "wrong": 0
+    },
+    "webkit7G": {
+      "taps": 7,
+      "correct": 7,
+      "wrong": 0
+    },
+    "webkit30G": {
+      "taps": 7,
+      "correct": 7,
+      "wrong": 0
+    }
+  },
+  "ageDistribution24H": {
+    "0-6h": 6,
+    "6-12h": 4,
+    "12-18h": 1,
+    "18-24h": 2
+  }
+}
