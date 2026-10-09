@@ -661,7 +661,7 @@ export function RadarMap({
                     style={{ pointerEvents: "none" }}
                     cx={0}
                     cy={0}
-                    r={Math.max(drawnRadius * 0.42, 0.75)}
+                    r={Math.max(drawnRadius * 0.30, 0.55)}
                     className="tv-rx-blip__entity"
                     aria-hidden="true"
                   />

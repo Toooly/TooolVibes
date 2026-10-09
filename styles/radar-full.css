@@ -755,10 +755,10 @@
    a solid cluster-coloured dot; a catalog-linked signal keeps that colour and
    adds a neutral inner marker. The colour always means "area", never "type". */
 .tv-rx-blip__entity {
-  fill: var(--tv-color-ink-100, #f5f3ff);
+  fill: var(--tv-color-ink-300, #cbc6e8);
   stroke: var(--tv-color-surface-base, #0b0620);
-  stroke-width: 0.18;
-  opacity: 0.92;
+  stroke-width: 0.14;
+  opacity: 0.55;
   pointer-events: none;
 }
 
@@ -1980,9 +1980,9 @@
 
 .tv-rx-map__local-rim {
   fill: none;
-  stroke-width: 1.3;
+  stroke-width: 1.15;
   stroke-linecap: round;
-  opacity: 0.55;
+  opacity: 0.43;
 }
 
 /* §4 — LOCAL MODE: sector dividers soften to quiet structure. */
@@ -1993,11 +1993,11 @@
 /* §9 — LOCAL MODE: centre-core prominence reduced ~18% so NOW never
    competes with real signals. Global Overview core is unchanged. */
 .tv-rx-map[data-visual-mode="local"] .tv-rx-map__core-glow {
-  opacity: 0.21;
+  opacity: 0.19;
 }
 
 .tv-rx-map[data-visual-mode="local"] .tv-rx-map__core {
-  opacity: 0.78;
+  opacity: 0.70;
 }
 
 /* §8 — NORMAL MARKER MATERIAL: specular white highlight reduced

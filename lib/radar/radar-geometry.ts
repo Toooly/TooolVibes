@@ -29,6 +29,11 @@
 
 import type { ProductHuntRange } from "@/lib/radar/product-hunt-contract";
 import {
+  radarAgeToRadiusRatio,
+  radarRangeFromHours,
+  radarTimeRingRadius,
+} from "@/lib/radar/radar-time-scale";
+import {
   radarTopicClusterOrder,
   radarTopicClusterSectorIndex,
 } from "@/lib/radar/radar-topic-clusters";
@@ -165,28 +170,51 @@ export function visualRadiusFromAttention(
  * the selected range. Labels are the real elapsed time at that ring.
  * Center ≈ now, outer ring = the oldest edge of the range (spec §10).
  */
+const TEMPORAL_RING_CHECKPOINTS: Record<
+  ProductHuntRange,
+  readonly { ageHours: number; label: string }[]
+> = {
+  day: [
+    { ageHours: 6, label: "6h" },
+    { ageHours: 12, label: "12h" },
+    { ageHours: 18, label: "18h" },
+    { ageHours: 24, label: "24h" },
+  ],
+  week: [
+    { ageHours: 48, label: "2g" },
+    { ageHours: 96, label: "4g" },
+    { ageHours: 144, label: "6g" },
+    { ageHours: 168, label: "7g" },
+  ],
+  month: [
+    { ageHours: 168, label: "7g" },
+    { ageHours: 336, label: "14g" },
+    { ageHours: 504, label: "21g" },
+    { ageHours: 720, label: "30g" },
+  ],
+};
+
+/**
+ * Temporal ring radii computed by the SAME perceptual projection as signals
+ * (radar-time-scale). Ring ratios include the inner-radius floor so ring
+ * positions align exactly with signal centres at the checkpoint age.
+ */
 export const RADAR_TIME_RINGS: Record<
   ProductHuntRange,
   readonly { ratio: number; label: string }[]
 > = {
-  day: [
-    { ratio: 0.25, label: "6h" },
-    { ratio: 0.5, label: "12h" },
-    { ratio: 0.75, label: "18h" },
-    { ratio: 1, label: "24h" },
-  ],
-  week: [
-    { ratio: 2 / 7, label: "2g" },
-    { ratio: 4 / 7, label: "4g" },
-    { ratio: 6 / 7, label: "6g" },
-    { ratio: 1, label: "7g" },
-  ],
-  month: [
-    { ratio: 7 / 30, label: "7g" },
-    { ratio: 14 / 30, label: "14g" },
-    { ratio: 21 / 30, label: "21g" },
-    { ratio: 1, label: "30g" },
-  ],
+  day: TEMPORAL_RING_CHECKPOINTS.day.map(({ ageHours, label }) => ({
+    ratio: radarTimeRingRadius(ageHours, "day"),
+    label,
+  })),
+  week: TEMPORAL_RING_CHECKPOINTS.week.map(({ ageHours, label }) => ({
+    ratio: radarTimeRingRadius(ageHours, "week"),
+    label,
+  })),
+  month: TEMPORAL_RING_CHECKPOINTS.month.map(({ ageHours, label }) => ({
+    ratio: radarTimeRingRadius(ageHours, "month"),
+    label,
+  })),
 };
 
 export const RADAR_RANGE_HOURS: Record<ProductHuntRange, number> = {
@@ -228,9 +256,9 @@ export function resolveAgeRadiusRatio(
   innerRadiusRatio: number,
 ): number {
   if (ageHours === null || !Number.isFinite(ageHours)) return 1;
-  const span = Math.max(rangeHours, 1);
-  const t = Math.min(1, Math.max(0, ageHours / span));
-  return innerRadiusRatio + (1 - innerRadiusRatio) * t;
+  const range = radarRangeFromHours(rangeHours);
+  const perceptual = radarAgeToRadiusRatio(ageHours, range);
+  return innerRadiusRatio + (1 - innerRadiusRatio) * perceptual;
 }
 
 /** Back-compatible helper used by older call sites/tests. */
