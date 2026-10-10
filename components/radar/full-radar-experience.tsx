@@ -13,7 +13,10 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, ChartNoAxesColumn, Eye, Radar, RefreshCw, Search, Sparkles } from "lucide-react";
+import { MetricStrip } from "@/components/ui/metric-strip";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { RadarSnapshotPanel } from "@/components/radar/radar-snapshot-panel";
 
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { useAccount } from "@/components/account/account-provider";
@@ -54,12 +57,10 @@ import { RADAR_RANGE_OPTIONS, resolveRadarUiModel } from "@/lib/radar/radar-ui-m
 import {
   buildRadarView,
   type RadarTool,
-  type RadarView,
 } from "@/lib/radar/radar-domain";
 import {
   RADAR_TABS,
   RADAR_TAB_LABEL,
-  type RadarTab,
 } from "@/lib/radar/radar-url-state";
 import { useRadarUrlState } from "@/lib/radar/use-radar-url-state";
 import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
@@ -180,6 +181,7 @@ export function RadarExperience() {
   const [chooserGroup, setChooserGroup] = useState<RadarSpiderGroup | null>(null);
   const chooserRef = useRef<HTMLDivElement | null>(null);
   const mapFocusRef = useRef<HTMLElement | null>(null);
+  const selectionFocusRef = useRef<HTMLElement | null>(null);
 
   // §10 — geometry is ALWAYS computed from the full dataset. LOD and cluster
   // focus only decide what is painted, never where anything sits.
@@ -396,6 +398,7 @@ export function RadarExperience() {
 
   const handleSelect = useCallback(
     (toolId: string) => {
+      selectionFocusRef.current = document.activeElement as HTMLElement | null;
       // Closure §6 — close the collision presentation, then open the preview.
       setAmbiguous([]);
       setChooserGroup(null);
@@ -411,7 +414,18 @@ export function RadarExperience() {
     setHighlightedId(null);
     setAmbiguous([]);
     setChooserGroup(null);
+    selectionFocusRef.current?.focus?.({ preventScroll: true });
+    selectionFocusRef.current = null;
   }, [setUrlState]);
+
+  useEffect(() => {
+    if (!selectedTool) return;
+    const close = document.querySelector<HTMLButtonElement>(".tv-rx-preview__close");
+    close?.focus({ preventScroll: true });
+    if (window.matchMedia?.("(max-width: 63.999rem)").matches) {
+      document.querySelector(".tv-rx-preview")?.scrollIntoView?.({ block: "nearest", behavior: "instant" });
+    }
+  }, [selectedTool]);
 
   // Closure §7 — the fallback sheet takes focus while open, Escape closes it,
   // and focus returns to the Radar when it goes away.
@@ -452,6 +466,7 @@ export function RadarExperience() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [urlState.tool, handleClosePreview, chooserGroup, ambiguous.length]);
 
+  const focusedCluster = view.clusters.find((cluster) => cluster.id === focusedClusterId);
   const rangeLabel =
     RADAR_RANGE_OPTIONS.find((option) => option.key === urlState.range)?.label ??
     "Oggi";
@@ -461,48 +476,38 @@ export function RadarExperience() {
       className="tv-rx"
       data-state={uiModel.state}
       data-tab={urlState.tab}
+      data-focus={focusedClusterId ? "local" : "global"}
       data-qa-radar-auth={account.status}
       data-qa-radar-mode={urlState.tab}
       data-qa-radar-ready={!isLoading && uiModel.items.length > 0 ? "true" : "false"}
     >
       <header className="tv-rx__header">
-        <p className="tv-rx__eyebrow">Radar</p>
+        <p className="tv-rx__eyebrow"><Radar size={14} aria-hidden="true" /> Radar / Intelligence</p>
         <h1 className="tv-rx__title">Cosa sta emergendo adesso</h1>
         <p className="tv-rx__lede">
-          La tua mappa AI personale: esplora trend, scopri opportunit&agrave; e
-          costruisci il tuo vantaggio con l&apos;AI.
+          Lanci reali. Segnali da leggere. Scelte da seguire.
         </p>
       </header>
 
       {/* §4 compact telemetry strip — real timestamps only (spec §22). */}
-      <p className="tv-rx-telemetry" aria-live="polite">
+      <div className="tv-rx-telemetry" aria-live="polite">
+        <span className="tv-rx-telemetry__identity">
         <span className="tv-rx-telemetry__dot" data-state={uiModel.state} aria-hidden="true" />
         <span className="tv-rx-telemetry__source">{view.snapshot.sourceLabel}</span>
         <span className="tv-rx-telemetry__sep" aria-hidden="true">
           &middot;
         </span>
         <span className="tv-rx-telemetry__state">{uiModel.statusLabel}</span>
-        <span className="tv-rx-telemetry__sep" aria-hidden="true">
-          &middot;
         </span>
-        <span
+        <SegmentedControl
           className="tv-rx-range"
-          role="group"
-          aria-label="Intervallo temporale"
-        >
-          {RADAR_RANGE_OPTIONS.map((option) => (
-            <button
-              key={option.key}
-              type="button"
-              className="tv-rx-range__option"
-              data-active={option.key === urlState.range ? "true" : undefined}
-              aria-pressed={option.key === urlState.range}
-              onClick={() => setUrlState({ range: option.key })}
-            >
-              {option.label}
-            </button>
-          ))}
-        </span>
+          optionClassName="tv-rx-range__option"
+          id="tv-rx-range"
+          label="Intervallo temporale"
+          options={RADAR_RANGE_OPTIONS.map((option) => ({ value: option.key, label: option.label }))}
+          value={urlState.range}
+          onValueChange={(range) => setUrlState({ range })}
+        />
         <span className="tv-rx-telemetry__time">
           Aggiornato {uiModel.updatedAtLabel}
         </span>
@@ -516,26 +521,15 @@ export function RadarExperience() {
         >
           <RefreshCw size={13} aria-hidden="true" />
         </button>
-      </p>
+      </div>
 
       {/* Mode tabs (spec §8) */}
-      <div className="tv-rx__tabs" role="tablist" aria-label="Modalità Radar">
-        {RADAR_TABS.map((tab: RadarTab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            id={`tv-rx-tab-${tab}`}
-            aria-selected={urlState.tab === tab}
-            aria-controls={`tv-rx-panel-${tab}`}
-            className="tv-rx__tab"
-            data-active={urlState.tab === tab ? "true" : undefined}
-            onClick={() => setUrlState({ tab })}
-          >
-            {RADAR_TAB_LABEL[tab]}
-          </button>
-        ))}
-      </div>
+      <SegmentedControl
+        tabs id="tv-rx" label="Modalità Radar"
+        className="tv-rx__tabs" optionClassName="tv-rx__tab"
+        options={RADAR_TABS.map((tab) => ({ value: tab, label: RADAR_TAB_LABEL[tab], icon: tab === "panoramica" ? <Radar size={15} /> : tab === "trend" ? <ChartNoAxesColumn size={15} /> : tab === "per-te" ? <Sparkles size={15} /> : <Eye size={15} /> }))}
+        value={urlState.tab} onValueChange={(tab) => setUrlState({ tab })}
+      />
 
       {urlState.tab === "panoramica" ? (
         <div
@@ -546,7 +540,13 @@ export function RadarExperience() {
         >
           <div className="tv-rx__stage">
             <div className="tv-rx__main">
-              {/* §2/§5 — the Radar is the hero: it renders before any control. */}
+              <section className="tv-rx-instrument" aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>
+                <header className="tv-rx-instrument__head">
+                  <span className="tv-rx-instrument__level">{focusedCluster ? "02 / Locale" : "01 / Mercato"}</span>
+                  <strong>{focusedCluster?.label ?? "Panoramica globale"}</strong>
+                  <span className="tv-rx-instrument__count">{isLoading ? "—" : filteredTools.length} segnali</span>
+                </header>
+              {/* §2/§5 — geometry and the map interaction contract are frozen. */}
               {isLoading ? (
                 <RadarMapSkeleton />
               ) : filteredTools.length === 0 ? (
@@ -594,6 +594,7 @@ export function RadarExperience() {
                 </>
               )}
 
+              </section>
               {/* Spec §19 — a compact contextual indicator, integrated with
                   the existing controls rather than another large card. */}
               {focusedClusterId ? (
@@ -637,11 +638,11 @@ export function RadarExperience() {
               {!isLoading && filteredTools.length > 0 ? <RadarLegend /> : null}
 
               {/* §12 — compact metrics rail, never competing with the map. */}
-              <RadarSummaryMetrics
-                total={summary.total}
-                newInWindow={summary.newInWindow}
-                categories={summary.categories}
-              />
+              <MetricStrip label="Metriche del mercato" className="tv-rx-metrics" items={[
+                { label: "Tool nel Radar", value: isLoading ? "—" : summary.total },
+                { label: "Nuovi nelle 24h", value: isLoading ? "—" : summary.newInWindow },
+                { label: "Aree attive", value: isLoading ? "—" : summary.categories },
+              ]} />
 
               <RadarInsightStrip view={view} />
 
@@ -687,13 +688,13 @@ export function RadarExperience() {
                   onClose={handleClosePreview}
                 />
               ) : (
-                <RadarRailOverview
+                <RadarSnapshotPanel
                   view={view}
                   tools={filteredTools}
-                  rangeLabel={rangeLabel}
-                  statusLabel={uiModel.statusLabel}
-                  updatedAtLabel={uiModel.updatedAtLabel}
+                  clusterId={focusedClusterId}
+                  loading={isLoading}
                   onSelect={handleSelect}
+                  onCluster={(category) => setUrlState({ category })}
                 />
               )}
             </aside>
@@ -742,6 +743,7 @@ export function RadarExperience() {
           className="tv-rx__panel"
         >
           <RadarWatchPanel
+            onSelect={handleSelect}
             tools={view.tools}
             watch={watch}
             categories={view.clusters}
@@ -762,9 +764,9 @@ export function RadarExperience() {
           l&apos;intero mercato AI in autonomia.
         </p>
         <p>
-          Timestamp di origine: {uiModel.updatedAtLabel}. Le categorie derivano
-          dal catalogo TooolVibes quando il tool è riconosciuto; altrimenti il
-          segnale resta in &laquo;Altri segnali&raquo;.
+          Timestamp di origine: {uiModel.updatedAtLabel}. Le aree Radar derivano
+          dai topic della fonte. Il collegamento al Catalogo è indicato solo
+          quando il tool è riconosciuto.
         </p>
         <a
           href="https://www.producthunt.com/"
@@ -781,116 +783,12 @@ export function RadarExperience() {
         <ol>
           {filteredTools.map((tool) => (
             <li key={tool.id}>
-              {tool.name} &mdash; {tool.category?.label ?? "Altri segnali"},{" "}
+              {tool.name} &mdash; {tool.topicCluster.label},{" "}
               {tool.votesCount} voti, {tool.commentsCount} commenti, posizione{" "}
               {tool.rank}.
             </li>
           ))}
         </ol>
-      </section>
-    </div>
-  );
-}
-
-/**
- * §19 — desktop intelligence rail when no Tool is selected.
- * Real current-snapshot signals only: never invented history or momentum.
- */
-function RadarRailOverview({
-  view,
-  tools,
-  rangeLabel,
-  statusLabel,
-  updatedAtLabel,
-  onSelect,
-}: {
-  view: RadarView;
-  tools: readonly RadarTool[];
-  rangeLabel: string;
-  statusLabel: string;
-  updatedAtLabel: string;
-  onSelect: (toolId: string) => void;
-}) {
-  const top = tools.slice(0, 4);
-  return (
-    <div className="tv-rx-rail">
-      <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-fresh">
-        <h3 id="tv-rx-rail-fresh" className="tv-rx-rail__title">
-          Fonte e freschezza
-        </h3>
-        <dl className="tv-rx-rail__dl">
-          <div>
-            <dt>Fonte</dt>
-            <dd>{view.snapshot.sourceLabel}</dd>
-          </div>
-          <div>
-            <dt>Stato</dt>
-            <dd>{statusLabel}</dd>
-          </div>
-          <div>
-            <dt>Aggiornato</dt>
-            <dd>{updatedAtLabel}</dd>
-          </div>
-          <div>
-            <dt>Finestra</dt>
-            <dd>{rangeLabel}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-signals">
-        <h3 id="tv-rx-rail-signals" className="tv-rx-rail__title">
-          Segnali in evidenza
-        </h3>
-        {top.length === 0 ? (
-          <p className="tv-rx-honest" role="status">
-            Nessun segnale nel periodo selezionato.
-          </p>
-        ) : (
-          <ol className="tv-rx-rail__list">
-            {top.map((tool, index) => (
-              <li key={tool.id}>
-                <button
-                  type="button"
-                  className="tv-rx-rail__signal"
-                  onClick={() => onSelect(tool.id)}
-                >
-                  <span className="tv-rx-rail__rank" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span>
-                    <strong>{tool.name}</strong>
-                    <span className="tv-rx-rail__meta">
-                      {tool.category?.label ?? "Altri segnali"}
-                    </span>
-                  </span>
-                  <span className="tv-rx-rail__signal-value">
-                    {tool.votesCount} voti
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ol>
-        )}
-      </section>
-
-      <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-cats">
-        <h3 id="tv-rx-rail-cats" className="tv-rx-rail__title">
-          Aree Radar attive
-        </h3>
-        <ul className="tv-rx-rail__cats">
-          {view.clusters.map((category) => (
-            <li key={category.id}>
-              <span
-                className="tv-rx-rail__swatch"
-                data-color-index={category.colorIndex}
-                aria-hidden="true"
-              />
-              {category.label}
-              <span className="tv-rx-rail__count">{category.count}</span>
-            </li>
-          ))}
-        </ul>
       </section>
     </div>
   );
@@ -954,14 +852,15 @@ function RadarToolbar({
     const list = chipsRef.current;
     if (!list || activeCategory === null) return;
     const active = list.querySelector<HTMLElement>('[data-active="true"]');
-    if (!active || typeof active.scrollIntoView !== "function") return;
+    if (!active || typeof list.scrollTo !== "function") return;
     const reduce =
       typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    active.scrollIntoView({
+    const chipBounds = active.getBoundingClientRect();
+    const listBounds = list.getBoundingClientRect();
+    list.scrollTo({
+      left: list.scrollLeft + chipBounds.left - listBounds.left - (list.clientWidth - chipBounds.width) / 2,
       behavior: reduce ? "auto" : "smooth",
-      inline: "center",
-      block: "nearest",
     });
   }, [activeCategory]);
 
@@ -1095,33 +994,6 @@ function formatChooserAge(ageHours: number | null): string {
   if (ageHours < 1) return "<1h";
   if (ageHours < 48) return `${Math.round(ageHours)}h`;
   return `${Math.round(ageHours / 24)}g`;
-}
-
-function RadarSummaryMetrics({
-  total,
-  newInWindow,
-  categories,
-}: {
-  total: number;
-  newInWindow: number;
-  categories: number;
-}) {
-  return (
-    <dl className="tv-rx-metrics">
-      <div>
-        <dt>Tool nel Radar</dt>
-        <dd>{total}</dd>
-      </div>
-      <div>
-        <dt>Nuovi nelle 24h</dt>
-        <dd>{newInWindow}</dd>
-      </div>
-      <div>
-        <dt>Aree attive</dt>
-        <dd>{categories}</dd>
-      </div>
-    </dl>
-  );
 }
 
 function RadarMapSkeleton() {

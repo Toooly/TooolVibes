@@ -12,62 +12,51 @@
  */
 
 .tv-rx {
-  /* Floating bottom chrome clearance (spec §2-§4).
-     Composed ONLY of the canonical shell/chrome variables and mirrored from
-     `styles/compare.css`'s own `.tv-compare-dock` positioning, so Radar and
-     the Compare Dock can never disagree:
-       --tv-bottom-nav-total        MobileBottomNav reservation
-       --tv-consent-banner-height   consent banner (raises the dock)
-       --tv-tray-height             CompareSessionDock occupied height
-       --tv-compare-gap             shared dock gap
-       env(safe-area-inset-bottom)  device inset
-     No route-specific magic number. */
   --tv-rx-chrome-clearance: calc(
-    var(--tv-bottom-nav-total, 3.625rem) +
-      env(safe-area-inset-bottom, 0px) +
-      var(--tv-consent-banner-height, 0px) +
-      var(--tv-compare-gap, 0.75rem) +
-      var(--tv-tray-height, 0px)
+    var(--tv-bottom-nav-total, 3.625rem) + env(safe-area-inset-bottom, 0px) +
+    var(--tv-consent-banner-height, 0px) + var(--tv-compare-gap, 0.75rem) + var(--tv-tray-height, 0px)
   );
-  color: var(--tv-color-ink-100, #f5f3ff);
+  color: var(--tv-ink-primary);
   display: grid;
-  gap: 1rem;
-  padding: 1rem;
-  /* Reserve the floating chrome so the last scrollable content and the quick
-     preview can reach a fully unobscured position. Scroll padding only — not a
-     permanent blank slab. */
+  gap: var(--tv-space-4);
+  padding: var(--tv-space-4);
   padding-block-end: calc(1rem + var(--tv-rx-chrome-clearance));
   max-width: 46rem;
   margin-inline: auto;
+  min-width: 0;
 }
 
 /* ---------- header / freshness ------------------------------------------ */
 
 .tv-rx__eyebrow {
-  color: var(--tv-color-cyan-500, #22d3ee);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  display: flex;
+  align-items: center;
+  gap: var(--tv-space-2);
+  color: var(--tv-color-cyan-500);
+  font-size: var(--tv-text-xs);
+  letter-spacing: var(--tv-tracking-label);
   text-transform: uppercase;
-  margin: 0 0 0.2rem;
+  margin: 0 0 var(--tv-space-2);
 }
 
 /* §14 — display identity preserved, vertical cost tightened so the Radar
    enters the first viewport at 390 under normal consent-dismissed state. */
 .tv-rx__title {
-  font-family: var(--tv-font-display, "Anton", sans-serif);
-  font-size: clamp(1.35rem, 5.6vw, 1.85rem);
-  line-height: 1.02;
-  margin: 0 0 0.3rem;
-  color: var(--tv-color-ink-100, #f5f3ff);
-  letter-spacing: 0.01em;
+  font-family: var(--tv-font-family-display);
+  font-weight: var(--tv-weight-regular);
+  font-size: clamp(1.85rem, 6.5vw, 3.5rem);
+  line-height: 1.08;
+  margin: 0;
+  color: var(--tv-ink-primary);
+  letter-spacing: var(--tv-tracking-tight);
+  max-width: 22ch;
 }
 
 .tv-rx__lede {
-  color: var(--tv-color-ink-300, #cbc6e8);
-  margin: 0 0 0.45rem;
-  line-height: 1.4;
-  font-size: 0.8125rem;
-  max-width: 34rem;
+  color: var(--tv-ink-secondary);
+  margin: var(--tv-space-2) 0 0;
+  line-height: var(--tv-leading-body);
+  font-size: var(--tv-text-sm);
 }
 
 /* ---------- §4 compact telemetry strip ---------------------------------
@@ -78,14 +67,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.3rem 0.4rem;
-  font-size: 0.75rem;
-  line-height: 1.3;
-  color: var(--tv-color-ink-300, #cbc6e8);
-  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  border-radius: var(--tv-radius-px-pill, 999px);
-  background: color-mix(in srgb, var(--tv-color-surface-raised, #120c2e) 88%, transparent);
-  padding: 0.3rem 0.3rem 0.3rem 0.55rem;
+  gap: var(--tv-space-1) var(--tv-space-2);
+  font-size: var(--tv-text-xs);
+  line-height: var(--tv-leading-body);
+  color: var(--tv-ink-secondary);
+  border-block: 1px solid var(--tv-context-edge);
+  padding-block: var(--tv-space-2);
   margin: 0;
 }
 
@@ -134,26 +121,19 @@
 
 /* §4 — refresh is a compact icon control, not a full-width labelled button. */
 .tv-rx-telemetry__refresh {
-  inline-size: 30px;
-  block-size: 30px;
-  min-block-size: 30px;
+  inline-size: 44px;
+  block-size: 44px;
+  min-block-size: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--tv-color-cyan-500, #22d3ee);
+  border: 1px solid var(--tv-instrument-edge);
+  border-radius: var(--tv-radius-pill);
+  background: var(--tv-instrument-surface);
+  color: var(--tv-color-cyan-500);
   cursor: pointer;
   flex: none;
-  /* 44px effective touch target without inflating the strip. */
   position: relative;
-}
-
-.tv-rx-telemetry__refresh::after {
-  content: "";
-  position: absolute;
-  inset: -7px;
 }
 
 .tv-rx-telemetry__refresh:disabled {
@@ -163,9 +143,10 @@
 /* §15 — compact horizontally efficient segmented mode rail. */
 .tv-rx__tabs {
   display: flex;
-  gap: 0.4rem;
+  width: fit-content;
+  max-width: 100%;
+  gap: var(--tv-space-1);
   overflow-x: auto;
-  padding-block: 0.25rem;
   scrollbar-width: none;
 }
 
@@ -174,27 +155,21 @@
 }
 
 .tv-rx__tab {
-  flex: 0 0 auto;
-  flex: none;
+  flex: 1 0 auto;
   min-block-size: 44px;
-  padding: 0.5rem 0.9rem;
-  border-radius: var(--tv-radius-px-pill, 999px);
-  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  background: var(--tv-color-surface-raised, #120c2e);
-  color: var(--tv-color-ink-300, #cbc6e8);
-  font-size: 0.875rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: transform 140ms ease, opacity 140ms ease;
+  padding: var(--tv-space-2) var(--tv-space-3);
+  font-size: var(--tv-text-sm);
 }
 
 .tv-rx__tab[data-active="true"] {
-  color: var(--tv-color-ink-100, #f5f3ff);
-  border-color: var(--tv-color-violet-500, #6a3cff);
-  background: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 22%, transparent);
+  color: var(--tv-ink-primary);
+  border-color: var(--tv-color-violet-400);
+  background: color-mix(in srgb, var(--tv-color-violet-500) 30%, var(--tv-instrument-surface));
 }
 
 .tv-rx__panel {
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
   display: grid;
   gap: 1rem;
 }
@@ -202,6 +177,8 @@
 /* ---------- toolbar: category chips + search ---------------------------- */
 
 .tv-rx-toolbar {
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
   display: grid;
   gap: 0.6rem;
 }
@@ -291,7 +268,7 @@
 
 /* Field gradient stops — static color, no animation. */
 .tv-rx-map__field-stop--core {
-  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 34%, transparent);
+  stop-color: color-mix(in srgb, var(--tv-color-violet-500) 20%, var(--tv-color-surface-base));
 }
 
 .tv-rx-map__field-stop--mid {
@@ -321,8 +298,8 @@
    inner rings clearer. Blips stay above them (see .tv-rx-map__points). */
 .tv-rx-map__ring {
   fill: none;
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 62%, transparent);
-  stroke-width: 0.5;
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500) 43%, transparent);
+  stroke-width: 0.35;
 }
 
 .tv-rx-map__ring[data-ring-outer="true"] {
@@ -360,13 +337,9 @@
 }
 
 .tv-rx-map__core {
-  fill: color-mix(
-    in srgb,
-    var(--tv-color-violet-500, #6a3cff) 58%,
-    var(--tv-color-ink-100, #f5f3ff) 22%
-  );
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 62%, transparent);
-  stroke-width: 0.5;
+  fill: color-mix(in srgb, var(--tv-color-violet-500) 24%, var(--tv-color-surface-base));
+  stroke: color-mix(in srgb, var(--tv-color-cyan-500) 48%, transparent);
+  stroke-width: 0.4;
 }
 
 /* §7 — blips read above the grid/rings. */
@@ -499,28 +472,16 @@
 /* ---------- §3 compact range control ------------------------------------ */
 
 .tv-rx-range {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 2px;
-  border-radius: var(--tv-radius-px-pill, 999px);
-  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  background: color-mix(in srgb, var(--tv-color-surface-base, #0b0620) 60%, transparent);
+  margin-inline-start: auto;
   flex: none;
 }
 
 .tv-rx-range__option {
-  min-block-size: 26px;
-  padding: 0 0.55rem;
-  border: 0;
-  border-radius: var(--tv-radius-px-pill, 999px);
-  background: transparent;
-  color: var(--tv-color-ink-400, #a49dc8);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: transform 140ms ease, opacity 140ms ease;
+  min-block-size: 44px;
+  padding: var(--tv-space-2) var(--tv-space-3);
+  font-size: var(--tv-text-xs);
+  font-weight: var(--tv-weight-semibold);
+  letter-spacing: var(--tv-tracking-label);
 }
 
 .tv-rx-range__option:hover {
@@ -1059,17 +1020,20 @@
 .tv-rx-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
+  gap: var(--tv-space-3);
   margin: 0;
+  padding: var(--tv-space-4);
+  background: var(--tv-context-surface);
+  border: 1px solid var(--tv-context-edge);
+  border-radius: var(--tv-radius-feature);
 }
 
 /* §12 — compact information rail: readable 3-up, never competing with the map. */
 .tv-rx-metrics > div {
-  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  background: var(--tv-color-surface-raised, #120c2e);
-  border-radius: var(--tv-radius-px-md, 12px);
-  padding: 0.6rem;
-  text-align: center;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .tv-rx-metrics dt {
@@ -1134,7 +1098,7 @@
   gap: 0.55rem;
   align-items: start;
   border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  border-left: 3px solid var(--tv-color-gold-500, #f4c23e);
+  border-left: 3px solid var(--tv-color-cyan-500);
   background: var(--tv-color-surface-raised, #120c2e);
   border-radius: var(--tv-radius-px-md, 12px);
   padding: 0.65rem 0.75rem;
@@ -1267,7 +1231,10 @@
 
 .tv-rx-preview__title {
   margin: 0;
-  font-size: 1.05rem;
+  font-family: var(--tv-font-family-display);
+  font-weight: var(--tv-weight-regular);
+  font-size: var(--tv-text-h2);
+  overflow-wrap: anywhere;
 }
 
 .tv-rx-preview__category {
@@ -1297,9 +1264,11 @@
 
 .tv-rx-preview__metrics {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem;
-  margin: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--tv-space-3);
+  margin: var(--tv-space-2) 0;
+  padding-block: var(--tv-space-3);
+  border-block: 1px solid var(--tv-context-edge);
 }
 
 .tv-rx-preview__metrics dt {
@@ -1310,11 +1279,9 @@
 }
 
 .tv-rx-preview__metrics dd {
-  margin: 0.1rem 0 0;
-  font-size: 0.875rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
+  margin: var(--tv-space-1) 0 0;
+  font-size: var(--tv-text-h2);
+  line-height: var(--tv-leading-display);
 }
 
 .tv-rx-preview__delta {
@@ -1486,18 +1453,17 @@
   cursor: pointer;
 }
 
-.tv-rx-coldstart a,
-.tv-rx-coldstart button {
-  display: inline-flex;
-  align-items: center;
-  min-block-size: 44px;
-  color: var(--tv-color-cyan-500, #22d3ee);
-  background: transparent;
-  border: 0;
-  font-size: 0.875rem;
-  cursor: pointer;
-  text-decoration: none;
+/* Personalized entry paths are actions, not ornamental cards. */
+.tv-rx-coldstart a, .tv-rx-coldstart button {
+  display: flex; align-items: center; gap: var(--tv-space-3); width: 100%; min-block-size: 96px;
+  padding: var(--tv-space-4); border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-feature);
+  color: var(--tv-ink-primary); background: var(--tv-context-surface); text-align: start;
+  font-size: var(--tv-text-sm); cursor: pointer; text-decoration: none;
 }
+.tv-rx-coldstart svg { color: var(--tv-color-cyan-500); flex: none; }
+.tv-rx-coldstart li:last-child svg:first-child { color: var(--tv-color-gold-500); }
+.tv-rx-coldstart span { flex: 1; }
+.tv-rx-coldstart small { display: block; margin-top: var(--tv-space-2); font-size: var(--tv-text-xs); color: var(--tv-ink-secondary); }
 
 .tv-rx-watch__tool {
   display: flex;
@@ -1642,182 +1608,50 @@
 }
 
 
-/* ---------- §2/§17 stage + intelligence rail ----------------------------
-   Mobile: `display: contents` on the main column lets each block take an
-   explicit `order`, so the map is the first object in the panel and the
-   sticky quick-preview sheet sits directly beneath it.
-   Desktop (>=1024): a genuine intelligence workspace — 60/65% Radar on the
-   left, 35/40% rail on the right. The dead empty region is gone. */
-.tv-rx__stage {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.tv-rx__main {
-  display: contents;
-}
-
-/* §2 mobile information order — Radar first, controls after. */
-.tv-rx-map,
-.tv-rx-map--skeleton,
-.tv-rx-state {
-  order: 1;
-}
-
-.tv-rx__rail {
-  order: 2;
-}
-
-.tv-rx-toolbar {
-  order: 3;
-}
-
-.tv-rx-legend {
-  order: 4;
-}
-
-.tv-rx-metrics {
-  order: 5;
-}
-
-.tv-rx-insights {
-  order: 6;
-}
-
-.tv-rx-section {
-  order: 7;
-}
-
-/* §19 — the Overview rail is desktop intelligence; mobile keeps the map +
-   list as the primary surface. The quick preview is not inside this block. */
-.tv-rx-rail {
-  display: none;
-  gap: 0.75rem;
-}
-
-.tv-rx-rail__block {
-  border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  background: var(--tv-color-surface-raised, #120c2e);
-  border-radius: var(--tv-radius-px-md, 12px);
-  padding: 0.7rem 0.8rem;
-}
-
-.tv-rx-rail__title {
-  margin: 0 0 0.5rem;
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--tv-color-cyan-500, #22d3ee);
-}
-
-.tv-rx-rail__dl {
-  margin: 0;
-  display: grid;
-  gap: 0.3rem;
-}
-
-.tv-rx-rail__dl > div {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-}
-
-.tv-rx-rail__dl dt {
-  color: var(--tv-color-ink-400, #a49dc8);
-}
-
-.tv-rx-rail__dl dd {
-  margin: 0;
-  color: var(--tv-color-ink-100, #f5f3ff);
-  text-align: end;
-}
-
-.tv-rx-rail__list,
-.tv-rx-rail__cats {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.25rem;
-}
-
-.tv-rx-rail__signal {
-  inline-size: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: transparent;
-  border: 0;
-  color: inherit;
-  text-align: start;
-  cursor: pointer;
-  min-block-size: 44px;
-  padding: 0.15rem 0.2rem;
-  border-radius: var(--tv-radius-px-sm, 8px);
-}
-
-.tv-rx-rail__signal:hover {
-  background: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 8%, transparent);
-}
-
-.tv-rx-rail__rank {
-  color: var(--tv-color-ink-500, #8e87b8);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.75rem;
-  flex: none;
-}
-
-.tv-rx-rail__meta {
-  display: block;
-  color: var(--tv-color-ink-400, #a49dc8);
-  font-size: 0.75rem;
-}
-
-.tv-rx-rail__signal-value {
-  margin-inline-start: auto;
-  color: var(--tv-color-cyan-500, #22d3ee);
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-  flex: none;
-}
-
-.tv-rx-rail__cats li {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8125rem;
-  min-block-size: 28px;
-}
-
-.tv-rx-rail__swatch {
-  inline-size: 8px;
-  block-size: 8px;
-  border-radius: 2px;
-  background: var(--tv-color-cyan-500, #22d3ee);
-  flex: none;
-}
-
-.tv-rx-rail__swatch[data-color-index="1"] { background: #22d3ee; }
-.tv-rx-rail__swatch[data-color-index="2"] { background: #6a3cff; }
-.tv-rx-rail__swatch[data-color-index="3"] { background: #ec4899; }
-.tv-rx-rail__swatch[data-color-index="4"] { background: #22c55e; }
-.tv-rx-rail__swatch[data-color-index="5"] { background: #3b82f6; }
-.tv-rx-rail__swatch[data-color-index="6"] { background: #f59e0b; }
-.tv-rx-rail__swatch[data-color-index="7"] { background: #a78bfa; }
-.tv-rx-rail__swatch[data-color-index="0"] { background: #2dd4bf; }
-
-.tv-rx-rail__count {
-  margin-inline-start: auto;
-  color: var(--tv-color-ink-400, #a49dc8);
-  font-variant-numeric: tabular-nums;
-}
+/* Adaptive workspace: shared state, presentation only. */
+.tv-rx__stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--tv-space-3); }
+.tv-rx__main { display: contents; }
+.tv-rx-instrument { order: 1; min-width: 0; padding: var(--tv-space-3); border: 1px solid var(--tv-instrument-edge); border-radius: var(--tv-radius-feature); background: var(--tv-instrument-surface); }
+.tv-rx-instrument__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tv-space-2); padding: 0 0 var(--tv-space-2); font-size: var(--tv-text-xs); }
+.tv-rx-instrument__level { color: var(--tv-color-cyan-500); }
+.tv-rx-instrument__count { margin-inline-start: auto; color: var(--tv-ink-secondary); font-variant-numeric: tabular-nums; }
+.tv-rx-focusbar { order: 2; }
+.tv-rx__rail { order: 3; min-width: 0; }
+.tv-rx-toolbar { order: 4; }
+.tv-rx-legend { order: 5; }
+.tv-rx-metrics { order: 6; }
+.tv-rx-insights { order: 7; }
+.tv-rx-section { order: 8; }
+.tv-rx-rail { display: none; gap: var(--tv-space-3); }
+.tv-rx__rail:not(:has(.tv-rx-preview)) { display: none; }
+.tv-rx[data-focus="local"] .tv-rx__rail { display: block; }
+.tv-rx[data-focus="local"] .tv-rx-rail { display: grid; }
+.tv-rx-rail__block { border: 1px solid var(--tv-context-edge); background: var(--tv-context-surface); border-radius: var(--tv-radius-feature); padding: var(--tv-space-4); }
+.tv-rx-rail__title { margin: 0 0 var(--tv-space-3); font-size: var(--tv-text-xs); letter-spacing: var(--tv-tracking-label); text-transform: uppercase; color: var(--tv-ink-secondary); }
+.tv-rx-context__title { margin: 0; font-family: var(--tv-font-family-display); font-size: clamp(1.5rem, 2vw, 2rem); font-weight: var(--tv-weight-regular); }
+.tv-rx-context__caption { margin: var(--tv-space-2) 0 0; color: var(--tv-ink-secondary); font-size: var(--tv-text-xs); line-height: var(--tv-leading-body); }
+.tv-rx-context__metrics { margin-block: var(--tv-space-4); }
+.tv-rx-telemetry__identity { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tv-space-2); }
+.tv-rx-context__metrics dd { font-size: clamp(1.5rem, 2.5vw, 2.25rem); }
+.tv-rx-rail__list, .tv-rx-rail__cats, .tv-rx-distribution { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--tv-space-1); }
+.tv-rx-rail__signal, .tv-rx-rail__cluster { inline-size: 100%; display: flex; align-items: center; gap: var(--tv-space-3); background: transparent; border: 0; color: inherit; text-align: start; cursor: pointer; min-block-size: 44px; padding: var(--tv-space-2) 0; }
+.tv-rx-rail__signal:hover, .tv-rx-rail__cluster:hover { background: var(--tv-surface-selected); }
+.tv-rx-rail__rank { color: var(--tv-color-cyan-500); font-variant-numeric: tabular-nums; font-family: var(--tv-font-family-mono); font-size: var(--tv-text-xs); flex: none; }
+.tv-rx-rail__identity { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.tv-rx-rail__meta { display: block; color: var(--tv-ink-secondary); font-size: var(--tv-text-xs); line-height: var(--tv-leading-body); }
+.tv-rx-rail__signal-value { color: var(--tv-color-cyan-500); font-size: var(--tv-text-sm); font-variant-numeric: tabular-nums; text-align: end; }
+.tv-rx-rail__signal-value span { display: block; color: var(--tv-ink-muted-aa); font-size: var(--tv-text-xs); }
+.tv-rx-rail__cluster { gap: var(--tv-space-2); font-size: var(--tv-text-sm); }
+.tv-rx-rail__count { margin-inline-start: auto; color: var(--tv-ink-secondary); font-variant-numeric: tabular-nums; }
+.tv-rx-distribution li { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) 2ch; align-items: center; gap: var(--tv-space-3); min-height: 24px; font-size: var(--tv-text-xs); color: var(--tv-ink-secondary); }
+.tv-rx-distribution__track, .tv-rx-ranking-bar { display: block; height: 4px; background: var(--tv-surface-elevated); border-radius: var(--tv-radius-pill); overflow: hidden; }
+.tv-rx-distribution__track i, .tv-rx-ranking-bar i { display: block; height: 100%; background: var(--tv-color-cyan-500); border-radius: inherit; }
 
 /* ---------- §9 history-unavailable module ------------------------------
    Compact premium state. No empty chart, no fabricated points. */
 .tv-rx-hist {
   border: 1px solid var(--tv-color-surface-elevated, #1c1440);
-  border-left: 3px solid var(--tv-color-gold-500, #f4c23e);
+  border-left: 3px solid var(--tv-color-cyan-500);
   background: var(--tv-color-surface-raised, #120c2e);
   border-radius: var(--tv-radius-px-md, 12px);
   padding: 0.75rem 0.85rem;
@@ -1833,7 +1667,7 @@
   inline-size: 7px;
   block-size: 7px;
   border-radius: 50%;
-  background: var(--tv-color-gold-500, #f4c23e);
+  background: var(--tv-color-cyan-500);
   flex: none;
 }
 
@@ -1866,85 +1700,67 @@
   padding: 0.2rem 0.55rem;
   font-size: 0.75rem;
 }
-/* ---------- responsive --------------------------------------------------- */
-
-@media (min-width: 48rem) {
-  .tv-rx {
-    max-width: 62rem;
-    gap: 1rem;
-  }
-
-  /* §5 — at tablet the map grows with the container. */
-  .tv-rx-map {
-    inline-size: min(100%, 30rem);
-  }
-
-  .tv-rx__header,
-  .tv-rx-telemetry,
-  .tv-rx__tabs,
-  .tv-rx-provenance,
-  .tv-rx-sr-list {
-    grid-column: 1 / -1;
-  }
-
-  .tv-rx-preview {
-    position: static;
-    max-block-size: none;
-  }
+/* Mode-specific workspaces consume the same instrument/context material. */
+.tv-rx-mode-head { border-bottom: 1px solid var(--tv-context-edge); padding-block-end: var(--tv-space-4); }
+.tv-rx-mode-head__title { margin: 0; font-family: var(--tv-font-family-display); font-size: var(--tv-text-h2); font-weight: var(--tv-weight-regular); }
+.tv-rx-trend__grid { display: grid; gap: var(--tv-space-4); }
+.tv-rx-trend__section { min-width: 0; padding: var(--tv-space-4); border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-feature); background: var(--tv-instrument-surface); }
+.tv-rx-trend__button { width: 100%; }
+.tv-rx-trend__identity { display: flex; align-items: center; gap: var(--tv-space-2); width: 100%; }
+.tv-rx-trend__identity strong { flex: 1; overflow-wrap: anywhere; }
+.tv-rx-trend__rank { font-family: var(--tv-font-family-mono); font-size: var(--tv-text-xs); color: var(--tv-color-cyan-500); }
+.tv-rx-ranking-bar { margin-block: var(--tv-space-2); }
+.tv-rx-personal, .tv-rx-watch { display: grid; gap: var(--tv-space-4); }
+.tv-rx-personal__metrics, .tv-rx-watch__metrics { padding: var(--tv-space-4); border-block: 1px solid var(--tv-context-edge); }
+.tv-rx-watch__management { display: grid; gap: var(--tv-space-4); align-items: start; }
+.tv-rx-watch__picker { border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-feature); background: var(--tv-context-surface); padding: var(--tv-space-3); }
+.tv-rx-watch__picker summary { min-height: 44px; cursor: pointer; font-size: var(--tv-text-sm); }
+.tv-rx-watch__monitored-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--tv-space-2); }
+.tv-rx-watch__inspect { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--tv-space-3); width: 100%; min-height: 72px; border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-feature); background: var(--tv-context-surface); color: var(--tv-ink-primary); padding: var(--tv-space-4); text-align: start; cursor: pointer; font-size: var(--tv-text-xs); }
+.tv-rx-watch__inspect strong { display: block; font-size: var(--tv-text-sm); }
+.tv-rx-watch__inspect small { display: block; margin-top: var(--tv-space-1); font-size: var(--tv-text-xs); color: var(--tv-ink-secondary); }
+.tv-rx-watch__inspect > span { min-width: 0; overflow-wrap: anywhere; }
+.tv-rx-watch__inspect > svg { color: var(--tv-color-cyan-500); }
+.tv-rx-preview__age { font-size: var(--tv-text-xs); color: var(--tv-ink-secondary); margin: 0; }
+.tv-rx-preview__title-block { flex: 1; min-width: 0; }
+.tv-rx-row__body { min-width: 0; overflow-wrap: anywhere; }
+.tv-rx-instrument__head strong { overflow-wrap: anywhere; }
+@media (max-width: 47.999rem) {
+  .tv-rx .tv-rx__tabs { width: 100%; gap: 0; }
+  .tv-rx .tv-rx__tab { flex: 1 1 0; min-width: 0; padding-inline: var(--tv-space-2); font-size: var(--tv-text-xs); gap: var(--tv-space-1); }
+  .tv-rx__tab > span { display: none; }
+  .tv-rx-telemetry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--tv-space-1) var(--tv-space-2); }
+  .tv-rx-telemetry__identity { grid-column: 1 / -1; }
+  .tv-rx .tv-rx-range { margin-inline-start: 0; width: fit-content; }
+  .tv-rx-telemetry__time { grid-column: 1 / -1; grid-row: 3; }
+  .tv-rx-telemetry__refresh { grid-column: 2; grid-row: 2; }
+  .tv-rx-instrument { padding: var(--tv-space-2); }
+  .tv-rx-rail__block { padding: var(--tv-space-3); }
+  .tv-rx-preview__metrics dd { font-size: 1.75rem; }
 }
 
-
-/* ---------- §17/§18 desktop intelligence workspace (>=1024) -----------
-   LEFT  ~62%  large Radar instrument (560–650px)
-   RIGHT ~38%  persistent intelligence rail
-   The previous layout left a large dead empty region; this fills it with
-   real current-snapshot intelligence. */
+/* Responsive compositions: mobile stack, tablet instruments, desktop workspace. */
+@media (min-width: 48rem) {
+  .tv-rx { max-width: 62rem; padding-block-start: var(--tv-space-6); padding-inline: var(--tv-space-6); }
+  .tv-rx-map { inline-size: min(100%, 30rem); }
+  .tv-rx-preview { position: static; max-block-size: none; }
+  .tv-rx-coldstart { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tv-rx-perte__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tv-rx-trend__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 @media (min-width: 64rem) {
-  .tv-rx {
-    max-width: 80rem;
-  }
-
-  .tv-rx__stage {
-    grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
-    gap: 1.25rem;
-    align-items: start;
-  }
-
-  .tv-rx__main {
-    display: grid;
-    gap: 0.75rem;
-    min-width: 0;
-  }
-
-  /* §2 mobile order is irrelevant once the columns take over. */
-  .tv-rx-map,
-  .tv-rx-map--skeleton,
-  .tv-rx-state,
-  .tv-rx__rail,
-  .tv-rx-toolbar,
-  .tv-rx-legend,
-  .tv-rx-metrics,
-  .tv-rx-insights,
-  .tv-rx-section {
-    order: initial;
-  }
-
-  /* §18 — genuine instrument scale, still circular (aspect-ratio 1). */
-  .tv-rx-map {
-    inline-size: min(100%, 38rem);
-  }
-
-  /* §19 — the rail is persistent on desktop, never a modal. */
-  .tv-rx-rail {
-    display: grid;
-    position: sticky;
-    top: 1rem;
-  }
-
-  .tv-rx-preview {
-    position: static;
-    max-block-size: none;
-  }
+  .tv-rx__title { max-width: none; font-size: 3rem; }
+  .tv-rx { max-width: 94rem; gap: var(--tv-space-5); padding-block-start: var(--tv-space-6); padding-inline: var(--tv-space-8); }
+  .tv-rx__stage { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: var(--tv-space-5); align-items: start; }
+  .tv-rx__main { display: grid; gap: var(--tv-space-4); min-width: 0; }
+  .tv-rx__main > *, .tv-rx__rail { order: initial; }
+  .tv-rx-map { inline-size: min(100%, 38rem); }
+  .tv-rx-instrument { padding: var(--tv-space-5); }
+  .tv-rx__rail, .tv-rx__rail:not(:has(.tv-rx-preview)) { display: block; position: sticky; top: calc(var(--tv-header-painted, var(--tv-header-height)) + var(--tv-space-4)); }
+  .tv-rx-rail { display: grid; }
+  .tv-rx-preview { position: static; max-block-size: calc(100dvh - var(--tv-header-painted, var(--tv-header-height)) - var(--tv-rx-chrome-clearance) - 2rem); }
+  .tv-rx-watch__inspect { grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1.1fr) auto auto; }
+  .tv-rx-watch__management { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 /* Desktop dock rests at `1rem` (see `styles/compare.css`), so the clearance
    mirrors that branch instead of the nav + gap stack. */
@@ -1958,11 +1774,11 @@
 
 @media (max-width: 22.1875rem) {
   .tv-rx {
-    padding: 0.75rem;
+    padding-inline: var(--tv-space-3);
   }
 
   .tv-rx-metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

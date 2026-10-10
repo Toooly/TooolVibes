@@ -22,6 +22,7 @@ import { ArrowUpRight, Eye, X } from "lucide-react";
 
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
+import { MetricStrip } from "@/components/ui/metric-strip";
 import { formatAge } from "@/lib/radar/radar-trend";
 import type { RadarTool } from "@/lib/radar/radar-domain";
 
@@ -56,6 +57,7 @@ export function RadarQuickPreview({
       aria-label={`Anteprima di ${tool.name}`}
       data-catalog-status={tool.catalogStatus}
     >
+      <p className="tv-rx__eyebrow">03 / Segnale selezionato</p>
       <header className="tv-rx-preview__header">
         {tool.thumbnailUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- source thumbnails are remote PH assets with no stable width/height
@@ -72,7 +74,7 @@ export function RadarQuickPreview({
           </span>
         )}
         <div className="tv-rx-preview__title-block">
-          <h3 className="tv-rx-preview__title">{tool.name}</h3>
+          <h2 className="tv-rx-preview__title">{tool.name}</h2>
           <p className="tv-rx-preview__category">{tool.topicCluster.label}</p>
         </div>
         <button
@@ -92,26 +94,13 @@ export function RadarQuickPreview({
       <p className="tv-rx-preview__tagline">{tool.tagline}</p>
 
       {/* §16 — explainable position: why this signal sits where it sits. */}
-      <dl className="tv-rx-preview__metrics">
-        <div>
-          <dt>Area</dt>
-          <dd>{tool.topicCluster.label}</dd>
-        </div>
-        <div>
-          <dt>Emerso</dt>
-          <dd>{formatAge(tool.ageHours)}</dd>
-        </div>
-        <div>
-          <dt>Attenzione</dt>
-          <dd>
-            {tool.votesCount} voti · {tool.commentsCount} commenti
-          </dd>
-        </div>
-        <div>
-          <dt>Posizione</dt>
-          <dd>#{tool.rank} nel periodo</dd>
-        </div>
-      </dl>
+      <MetricStrip label="Attenzione nello snapshot" className="tv-rx-preview__metrics" items={[
+        { label: "Voti", value: tool.votesCount },
+        { label: "Commenti", value: tool.commentsCount },
+        { label: "Posizione", value: `#${tool.rank}` },
+      ]} />
+      <p className="tv-rx-preview__age">Emerso {formatAge(tool.ageHours)} · #{tool.rank} nel periodo</p>
+      <p className="tv-rx-sr-only">{tool.votesCount} voti · {tool.commentsCount} commenti</p>
 
       <p className="tv-rx-preview__delta" data-history={historyAvailable ? "true" : "false"}>
         {historyAvailable
@@ -121,6 +110,10 @@ export function RadarQuickPreview({
 
       {/* §8 — source transparency: the derived classification is explainable. */}
       <dl className="tv-rx-preview__source-list">
+        <div>
+          <dt>Area</dt>
+          <dd>{tool.topicCluster.label}</dd>
+        </div>
         <div>
           <dt>Fonte</dt>
           <dd>Product Hunt</dd>

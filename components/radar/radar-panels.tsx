@@ -7,11 +7,13 @@
  */
 
 import Link from "next/link";
-import { ArrowUpRight, Eye, EyeOff, Lightbulb } from "lucide-react";
+import { ArrowUpRight, Bookmark, ChartNoAxesColumn, Eye, EyeOff, Lightbulb, Search } from "lucide-react";
+import { MetricStrip } from "@/components/ui/metric-strip";
 
 import {
   RADAR_HISTORY_UNAVAILABLE_REASON,
   buildRadarTrendSections,
+  formatAge,
   type RadarTrendSection,
 } from "@/lib/radar/radar-trend";
 import { buildRadarPerTe } from "@/lib/radar/radar-per-te";
@@ -82,10 +84,16 @@ export function RadarTrendPanel({
   const movementAvailable = movement.some((section) => section.available);
   return (
     <div className="tv-rx-trend">
-      <p className="tv-rx-subtitle">Oggi</p>
+      <header className="tv-rx-mode-head">
+        <p className="tv-rx__eyebrow">Snapshot / {rangeLabel}</p>
+        <h2 className="tv-rx-mode-head__title">Dove si concentra l&apos;attenzione</h2>
+        <p className="tv-rx-section__desc">Ranking attuale, voti e discussioni. Il movimento richiede più snapshot.</p>
+      </header>
+      <div className="tv-rx-trend__grid">
       {today.map((section) => (
         <TrendSection key={section.key} section={section} onSelect={onSelect} />
       ))}
+      </div>
 
       <p className="tv-rx-subtitle">Movimento nel tempo</p>
       {movementAvailable ? (
@@ -118,8 +126,7 @@ function HistoryUnavailableModule() {
         </h3>
       </header>
       <p className="tv-rx-hist__body">
-        {RADAR_HISTORY_UNAVAILABLE_REASON} La raccolta degli snapshot è già
-        attiva: da qui a poco il movimento diventerà leggibile.
+        {RADAR_HISTORY_UNAVAILABLE_REASON}
       </p>
       <ul className="tv-rx-hist__list">
         <li>variazione attenzione</li>
@@ -139,7 +146,7 @@ function TrendSection({
   onSelect: (toolId: string) => void;
 }) {
   return (
-    <section className="tv-rx-section" aria-labelledby={`tv-rx-trend-${section.key}`}>
+    <section className="tv-rx-section tv-rx-trend__section" aria-labelledby={`tv-rx-trend-${section.key}`} data-ranking={section.key}>
       <header className="tv-rx-section__head">
         <h2 id={`tv-rx-trend-${section.key}`} className="tv-rx-section__title">
           {section.title}
@@ -157,16 +164,18 @@ function TrendSection({
         </p>
       ) : (
         <ol className="tv-rx-trend__list">
-          {section.entries.map((entry) => (
+          {section.entries.map((entry, index) => (
             <li key={entry.tool.id} className="tv-rx-trend__item">
               <button
                 type="button"
                 className="tv-rx-trend__button"
                 onClick={() => onSelect(entry.tool.id)}
               >
-                <strong>{entry.tool.name}</strong>
+                <span className="tv-rx-trend__identity"><span className="tv-rx-trend__rank" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><strong>{entry.tool.name}</strong><ArrowUpRight size={13} aria-hidden="true" /></span>
+                {section.key === "top-voted" || section.key === "discussion" ? (
+                  <span className="tv-rx-ranking-bar" aria-hidden="true"><i style={{ inlineSize: `${(section.key === "top-voted" ? entry.tool.votesCount : entry.tool.commentsCount) / Math.max(1, ...section.entries.map((item) => section.key === "top-voted" ? item.tool.votesCount : item.tool.commentsCount)) * 100}%` }} /></span>
+                ) : null}
                 <span className="tv-rx-trend__why">{entry.explanation}</span>
-                <span className="tv-rx-trend__why-label">Perchè è in questa lista</span>
               </button>
             </li>
           ))}
@@ -193,8 +202,9 @@ export function RadarPerTePanel({
 
   if (model.coldStart) {
     return (
-      <section className="tv-rx-section" aria-labelledby="tv-rx-perte-title">
+      <section className="tv-rx-section tv-rx-personal" aria-labelledby="tv-rx-perte-title" data-personal-state="cold">
         <header className="tv-rx-section__head">
+          <p className="tv-rx__eyebrow">Il tuo segnale / Primo passo</p>
           <h2 id="tv-rx-perte-title" className="tv-rx-section__title">
             Costruiamo il tuo Radar
           </h2>
@@ -204,15 +214,15 @@ export function RadarPerTePanel({
         </header>
         <ul className="tv-rx-coldstart">
           <li>
-            <Link href="/archivio">Scegli le tue categorie dal Catalogo</Link>
+            <Link href="/archivio"><Search size={22} aria-hidden="true" /><span><strong>Scegli le tue categorie dal Catalogo</strong><small>Trova l&apos;area in cui lavori.</small></span><ArrowUpRight size={16} aria-hidden="true" /></Link>
           </li>
           <li>
             <button type="button" onClick={onExploreTrend}>
-              Esplora i trend di oggi
+              <ChartNoAxesColumn size={22} aria-hidden="true" /><span><strong>Esplora i trend di oggi</strong><small>Leggi voti, discussioni e nuovi ingressi.</small></span><ArrowUpRight size={16} aria-hidden="true" />
             </button>
           </li>
           <li>
-            <Link href="/archivio">Salva i primi tool</Link>
+            <Link href="/archivio"><Bookmark size={22} aria-hidden="true" /><span><strong>Salva i primi tool</strong><small>I tuoi candidati danno forma al Radar.</small></span><ArrowUpRight size={16} aria-hidden="true" /></Link>
           </li>
         </ul>
       </section>
@@ -220,8 +230,9 @@ export function RadarPerTePanel({
   }
 
   return (
-    <section className="tv-rx-section" aria-labelledby="tv-rx-perte-title">
+    <section className="tv-rx-section tv-rx-personal" aria-labelledby="tv-rx-perte-title" data-personal-state={model.empty ? "partial" : "useful"}>
       <header className="tv-rx-section__head">
+        <p className="tv-rx__eyebrow">Il tuo segnale / Interessi reali</p>
         <h2 id="tv-rx-perte-title" className="tv-rx-section__title">
           Per te
         </h2>
@@ -232,6 +243,11 @@ export function RadarPerTePanel({
             : ""}
         </p>
       </header>
+      <MetricStrip label="Input personali del Radar" className="tv-rx-personal__metrics" items={[
+        { label: "Salvati", value: workspace.saved.slugs.length },
+        { label: "In confronto", value: workspace.compare.slugs.length },
+        { label: "Tool seguiti", value: workspace.radarWatch.slugs.length },
+      ]} />
 
       {model.empty ? (
         <p className="tv-rx-honest" role="status">
@@ -272,6 +288,7 @@ export function RadarWatchPanel({
   onToggleCategory,
   onClear,
   categories,
+  onSelect,
 }: {
   tools: readonly RadarTool[];
   watch: WorkspaceStateV1["radarWatch"];
@@ -279,20 +296,21 @@ export function RadarWatchPanel({
   onToggleCategory: (categoryId: string) => void;
   onClear: () => void;
   categories: readonly { id: string; label: string; count: number }[];
+  onSelect: (id: string) => void;
 }) {
   const digest: RadarWatchDigest = evaluateRadarWatchSignals(watch, tools, null);
   const empty = isRadarWatchEmpty(watch);
 
   return (
-    <section className="tv-rx-section" aria-labelledby="tv-rx-watch-title">
+    <section className="tv-rx-section tv-rx-watch" aria-labelledby="tv-rx-watch-title">
       <header className="tv-rx-section__head">
+        <p className="tv-rx__eyebrow">Monitoraggio / Il tuo Radar</p>
         <h2 id="tv-rx-watch-title" className="tv-rx-section__title">
           Watchlist
         </h2>
         <p className="tv-rx-section__desc">
-          Segui un tool o una categoria per farti segnalare i movimenti.{" "}
-          <strong>Watch non è Save</strong>: Save (oro) tiene il tool, Watch (ciano)
-          ti segnala i movimenti.
+          Watch segue i segnali; Save conserva i candidati nel Catalogo.
+          Le variazioni richiedono uno storico.
         </p>
       </header>
 
@@ -312,6 +330,33 @@ export function RadarWatchPanel({
         </>
       )}
 
+      <MetricStrip label="Snapshot della Watchlist" className="tv-rx-watch__metrics" items={[
+        { label: "Tool seguiti", value: digest.watchedToolCount },
+        { label: "Categorie", value: digest.watchedCategoryCount },
+        { label: "Nel periodo", value: digest.matchedTools.length },
+      ]} />
+
+      {digest.matchedTools.length > 0 ? (
+        <section className="tv-rx-watch__monitor" aria-labelledby="tv-rx-monitored-title">
+          <h3 id="tv-rx-monitored-title" className="tv-rx-subtitle">Seguiti nel periodo</h3>
+          <ul className="tv-rx-watch__monitored-list">
+            {digest.matchedTools.map((tool) => (
+              <li key={tool.id}>
+                <button className="tv-rx-watch__inspect" type="button" onClick={() => onSelect(tool.id)}>
+                  <span><strong>{tool.name}</strong><small>{tool.topicCluster.label} · Product Hunt</small></span>
+                  <span>{formatAge(tool.ageHours)}</span>
+                  <span>{tool.votesCount} voti · {tool.commentsCount} commenti</span>
+                  <span className="tv-rx-preview__badge" data-catalog-status={tool.catalogStatus}>{tool.catalogStatus === "linked" ? "Nel Catalogo" : "Esterno"}</span>
+                  <ArrowUpRight size={14} aria-hidden="true" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <div className="tv-rx-watch__management">
+      <section>
       <h3 className="tv-rx-subtitle">Categorie</h3>
       <ul className="tv-rx-watch__chips">
         {categories.map((category) => {
@@ -332,7 +377,10 @@ export function RadarWatchPanel({
           );
         })}
       </ul>
+      </section>
 
+      <details className="tv-rx-watch__picker">
+      <summary>Aggiungi o gestisci tool · {tools.length} nel Radar</summary>
       <h3 className="tv-rx-subtitle">Tool nel Radar</h3>
       <ul className="tv-rx-watch__tools">
         {tools.map((tool) => {
@@ -353,6 +401,8 @@ export function RadarWatchPanel({
           );
         })}
       </ul>
+      </details>
+      </div>
 
       <h3 className="tv-rx-subtitle">Segnali</h3>
       {!digest.movementAlertsAvailable ? (
@@ -376,8 +426,7 @@ export function RadarWatchPanel({
       )}
 
       <p className="tv-rx-watch__note">
-        Gli alert push non sono ancora disponibili: i segnali vivono nell&apos;app. Il
-        backend di notifica è documentato come follow-up separato.
+        Monitoraggio nell&apos;app. Le notifiche push non sono ancora disponibili.
       </p>
     </section>
   );
