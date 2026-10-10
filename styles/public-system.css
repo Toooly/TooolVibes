@@ -70,7 +70,7 @@
   border-color: var(--tv-border-interactive);
 }
 
-.tv-sys-segmented__option:active {
+.tv-sys-segmented .tv-sys-segmented__option:active:not(:disabled) {
   transform: none;
 }
 .tv-sys-segmented__option:focus-visible {
