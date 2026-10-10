@@ -1,0 +1,41 @@
+@font-face { font-family: Anton; src: url('./fonts/anton.woff2') format('woff2'); font-display: swap; }
+@font-face { font-family: Manrope; src: url('./fonts/manrope.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+:root { color-scheme: dark; --base: #0b0620; --surface: #120c2e; --ink: #f5f3ff; --muted: #a49dc8; --cyan: #22d3ee; --violet: #6a3cff; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--base); color: var(--ink); font-family: Manrope, system-ui, sans-serif; }
+main { width: min(100%, 1000px); margin: auto; padding: 28px 24px; }
+.qa-header { max-width: 608px; margin: 0 auto 22px; }
+.eyebrow { color: var(--cyan); font-size: 11px; letter-spacing: .12em; font-weight: 700; }
+h1 { font-family: Anton, Impact, sans-serif; font-size: 30px; font-weight: 400; line-height: 1.2; margin: 10px 0; }
+#concept-thesis { font-size: 13px; line-height: 1.65; color: var(--muted); margin: 0 0 16px; }
+nav { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+nav div { display: flex; gap: 6px; }
+button { min-height: 44px; padding: 0 14px; color: var(--ink); background: transparent; border: 1px solid #31234f; border-radius: 7px; font: inherit; font-size: 12px; cursor: pointer; }
+button[aria-pressed="true"] { border-color: var(--cyan); background: #102d41; }
+button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.presentation { width: 608px; max-width: 100%; margin: auto; }
+.instrument { width: 100%; aspect-ratio: 1; }
+.instrument svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+.caption { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; color: var(--muted); font-size: 11px; font-family: ui-monospace, "SF Mono", monospace; letter-spacing: .08em; }
+.provenance { margin: 24px auto 0; max-width: 608px; font-size: 11px; line-height: 1.6; color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.instrument [data-layer] { pointer-events: none; }
+.instrument path, .instrument circle, .instrument line, .instrument rect { vector-effect: non-scaling-stroke; }
+.instrument text { font-family: Manrope, system-ui, sans-serif; }
+.instrument .mono { font-family: ui-monospace, "SF Mono", monospace; letter-spacing: .04em; }
+.instrument .display { font-family: Anton, Impact, sans-serif; letter-spacing: .01em; }
+.instrument .micro { font-size: 2px; }
+.instrument .label { font-size: 2.2px; font-weight: 600; }
+.instrument .mobile-only { display: none; }
+.instrument .datum { pointer-events: none; transform-box: view-box; transform-origin: 0 0; }
+@media (max-width: 600px) {
+  main { padding: 20px 25px; }
+  h1 { font-size: 24px; }
+  .qa-header { margin-bottom: 16px; }
+  .instrument .desktop-only { display: none; }
+  .instrument .mobile-only { display: initial; }
+  .instrument .label { font-size: 3.1px; }
+  .instrument .micro { font-size: 2.95px; }
+  .caption { font-size: 10px; margin-top: 12px; }
+  button { padding: 0 11px; }
+}
