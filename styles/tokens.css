@@ -26,6 +26,11 @@
  */
 
 :root {
+  /* Instrument/context material: shared presentation roles, no data semantics. */
+  --tv-instrument-surface: color-mix(in srgb, var(--tv-surface-raised) 92%, var(--tv-bg-base));
+  --tv-instrument-edge: color-mix(in srgb, var(--tv-color-cyan-500) 20%, var(--tv-border-subtle));
+  --tv-context-surface: color-mix(in srgb, var(--tv-surface-elevated) 40%, var(--tv-surface-raised));
+  --tv-context-edge: color-mix(in srgb, var(--tv-color-ink-200) 14%, var(--tv-border-subtle));
   /* ============================================================== */
   /* === SECTION 1: FOUNDATION TOKENS ============================= */
   /* Raw values, no semantic meaning. Token authors only.           */
