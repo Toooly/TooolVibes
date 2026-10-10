@@ -18,7 +18,8 @@
  */
 
 import Link from "next/link";
-import { ArrowUpRight, Eye, X } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, ChevronDown, ChevronUp, Eye, X } from "lucide-react";
 
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
@@ -43,6 +44,8 @@ export function RadarQuickPreview({
   watched,
   onToggleWatch,
 }: RadarQuickPreviewProps) {
+  const [expanded, setExpanded] = useState(false);
+  const [thumbnailFailed, setThumbnailFailed] = useState(false);
   const isExternal = tool.catalogStatus === "external";
   const externalLinkProps = {
     target: "_blank" as const,
@@ -56,13 +59,26 @@ export function RadarQuickPreview({
       aria-modal="false"
       aria-label={`Anteprima di ${tool.name}`}
       data-catalog-status={tool.catalogStatus}
+      data-inspection={expanded ? "expanded" : "compact"}
     >
+      <button
+        type="button"
+        className="tv-rx-preview__snap"
+        aria-expanded={expanded}
+        aria-controls="tv-rx-preview-details"
+        onClick={() => setExpanded((value) => !value)}
+      >
+        <span className="tv-rx-preview__handle" aria-hidden="true" />
+        <span>{expanded ? "Riduci dettagli" : "Dettagli completi"}</span>
+        {expanded ? <ChevronDown size={16} aria-hidden="true" /> : <ChevronUp size={16} aria-hidden="true" />}
+      </button>
       <p className="tv-rx__eyebrow">03 / Segnale selezionato</p>
       <header className="tv-rx-preview__header">
-        {tool.thumbnailUrl ? (
+        {tool.thumbnailUrl && !thumbnailFailed ? (
           // eslint-disable-next-line @next/next/no-img-element -- source thumbnails are remote PH assets with no stable width/height
           <img
             src={tool.thumbnailUrl}
+            onError={() => setThumbnailFailed(true)}
             alt=""
             className="tv-rx-preview__logo"
             width={40}
@@ -91,8 +107,6 @@ export function RadarQuickPreview({
         {isExternal ? "Segnale esterno · Product Hunt" : "Nel Catalogo TooolVibes"}
       </p>
 
-      <p className="tv-rx-preview__tagline">{tool.tagline}</p>
-
       {/* §16 — explainable position: why this signal sits where it sits. */}
       <MetricStrip label="Attenzione nello snapshot" className="tv-rx-preview__metrics" items={[
         { label: "Voti", value: tool.votesCount },
@@ -102,27 +116,30 @@ export function RadarQuickPreview({
       <p className="tv-rx-preview__age">Emerso {formatAge(tool.ageHours)} · #{tool.rank} nel periodo</p>
       <p className="tv-rx-sr-only">{tool.votesCount} voti · {tool.commentsCount} commenti</p>
 
-      <p className="tv-rx-preview__delta" data-history={historyAvailable ? "true" : "false"}>
-        {historyAvailable
-          ? "Variazione disponibile."
-          : "Dati storici in raccolta: variazione e trend non ancora disponibili."}
-      </p>
+      <div id="tv-rx-preview-details" className="tv-rx-preview__details">
+        <p className="tv-rx-preview__tagline">{tool.tagline}</p>
+        <p className="tv-rx-preview__delta" data-history={historyAvailable ? "true" : "false"}>
+          {historyAvailable
+            ? "Variazione disponibile."
+            : "Dati storici in raccolta: variazione e trend non ancora disponibili."}
+        </p>
 
-      {/* §8 — source transparency: the derived classification is explainable. */}
-      <dl className="tv-rx-preview__source-list">
-        <div>
-          <dt>Area</dt>
-          <dd>{tool.topicCluster.label}</dd>
-        </div>
-        <div>
-          <dt>Fonte</dt>
-          <dd>Product Hunt</dd>
-        </div>
-        <div>
-          <dt>Topics</dt>
-          <dd>{tool.topics.length > 0 ? tool.topics.slice(0, 4).join(" · ") : "—"}</dd>
-        </div>
-      </dl>
+        {/* §8 — source transparency: the derived classification is explainable. */}
+        <dl className="tv-rx-preview__source-list">
+          <div>
+            <dt>Area</dt>
+            <dd>{tool.topicCluster.label}</dd>
+          </div>
+          <div>
+            <dt>Fonte</dt>
+            <dd>Product Hunt</dd>
+          </div>
+          <div>
+            <dt>Topics</dt>
+            <dd>{tool.topics.length > 0 ? tool.topics.slice(0, 4).join(" · ") : "—"}</dd>
+          </div>
+        </dl>
+      </div>
 
       <div className="tv-rx-preview__actions">
         {isExternal ? (

@@ -182,6 +182,7 @@ export function RadarExperience() {
   const chooserRef = useRef<HTMLDivElement | null>(null);
   const mapFocusRef = useRef<HTMLElement | null>(null);
   const selectionFocusRef = useRef<HTMLElement | null>(null);
+  const inspectionScrollRef = useRef<{ shell: HTMLElement | null; top: number; windowY: number } | null>(null);
 
   // §10 — geometry is ALWAYS computed from the full dataset. LOD and cluster
   // focus only decide what is painted, never where anything sits.
@@ -399,6 +400,10 @@ export function RadarExperience() {
   const handleSelect = useCallback(
     (toolId: string) => {
       selectionFocusRef.current = document.activeElement as HTMLElement | null;
+      if (!urlState.tool) {
+        const shell = document.querySelector<HTMLElement>(".marketing-shell");
+        inspectionScrollRef.current = { shell, top: shell?.scrollTop ?? 0, windowY: window.scrollY };
+      }
       // Closure §6 — close the collision presentation, then open the preview.
       setAmbiguous([]);
       setChooserGroup(null);
@@ -406,7 +411,7 @@ export function RadarExperience() {
       setUrlState({ tool: toolId, tab: "panoramica" });
       setHighlightedId(toolId);
     },
-    [setUrlState],
+    [setUrlState, urlState.tool],
   );
 
   const handleClosePreview = useCallback(() => {
@@ -416,6 +421,14 @@ export function RadarExperience() {
     setChooserGroup(null);
     selectionFocusRef.current?.focus?.({ preventScroll: true });
     selectionFocusRef.current = null;
+    const position = inspectionScrollRef.current;
+    inspectionScrollRef.current = null;
+    if (position && typeof requestAnimationFrame === "function") {
+      requestAnimationFrame(() => {
+        position.shell?.scrollTo?.({ top: position.top, behavior: "instant" });
+        window.scrollTo?.({ top: position.windowY, behavior: "instant" });
+      });
+    }
   }, [setUrlState]);
 
   useEffect(() => {
@@ -423,7 +436,7 @@ export function RadarExperience() {
     const close = document.querySelector<HTMLButtonElement>(".tv-rx-preview__close");
     close?.focus({ preventScroll: true });
     if (window.matchMedia?.("(max-width: 63.999rem)").matches) {
-      document.querySelector(".tv-rx-preview")?.scrollIntoView?.({ block: "nearest", behavior: "instant" });
+      document.querySelector(".tv-rx-instrument")?.scrollIntoView?.({ block: "start", inline: "nearest", behavior: "instant" });
     }
   }, [selectedTool]);
 
@@ -681,6 +694,7 @@ export function RadarExperience() {
             <aside className="tv-rx__rail" aria-label="Pannello intelligenza">
               {selectedTool && ambiguous.length === 0 ? (
                 <RadarQuickPreview
+                  key={selectedTool.id}
                   tool={selectedTool}
                   historyAvailable={view.snapshot.historyAvailable}
                   watched={watchKeys.has(watchKeyFor(selectedTool))}
@@ -743,6 +757,8 @@ export function RadarExperience() {
           className="tv-rx__panel"
         >
           <RadarWatchPanel
+            rangeLabel={uiModel.rangeLabel}
+            onExploreRadar={() => setUrlState({ tab: "panoramica" })}
             onSelect={handleSelect}
             tools={view.tools}
             watch={watch}

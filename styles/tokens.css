@@ -26,6 +26,12 @@
  */
 
 :root {
+  /* Shared desktop workspace scale: bounded canvas, stable text sizes. */
+  --tv-workspace-max: 100rem;
+  --tv-workspace-gap: clamp(1.25rem, 1.3vw, 1.5rem);
+  --tv-primary-column: 1.7fr;
+  --tv-context-rail: 1fr;
+  --tv-instrument-size: clamp(38rem, 40vw, 42rem);
   /* Instrument/context material: shared presentation roles, no data semantics. */
   --tv-instrument-surface: color-mix(in srgb, var(--tv-surface-raised) 92%, var(--tv-bg-base));
   --tv-instrument-edge: color-mix(in srgb, var(--tv-color-cyan-500) 20%, var(--tv-border-subtle));

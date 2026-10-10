@@ -226,3 +226,28 @@ describe("RADAR-CTA source transparency", () => {
     expect(onToggleWatch).toHaveBeenCalledTimes(1);
   });
 });
+
+
+describe("Radar contextual inspection", () => {
+  it("expands details without changing the canonical actions", () => {
+    renderPreview(LINKED);
+    const expand = screen.getByRole("button", { name: "Dettagli completi" });
+    expect(expand.getAttribute("aria-expanded")).toBe("false");
+    fireEvent.click(expand);
+    expect(screen.getByRole("button", { name: "Riduci dettagli" }).getAttribute("aria-expanded")).toBe("true");
+    expect(screen.getByRole("link", { name: "Apri scheda" }).getAttribute("href")).toBe("/toools/blink");
+    expect(screen.getByTestId("save-toggle").getAttribute("data-slug")).toBe("blink");
+    expect(screen.getByTestId("compare-toggle").getAttribute("data-slug")).toBe("blink");
+    fireEvent.click(screen.getByRole("button", { name: "Riduci dettagli" }));
+    expect(screen.getByRole("button", { name: "Dettagli completi" }).getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("replaces an unavailable thumbnail without removing tool identity", () => {
+    const { container } = renderPreview(tool({ id: "image-failure", name: "Incredible", thumbnailUrl: "https://example.test/missing.png" }));
+    fireEvent.error(container.querySelector("img")!);
+    expect(container.querySelector("img")).toBeNull();
+    expect(container.querySelector(".tv-rx-preview__logo--fallback")?.textContent).toBe("IN");
+    expect(screen.getByRole("heading", { name: "Incredible" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Segui nel Radar" })).toBeTruthy();
+  });
+});

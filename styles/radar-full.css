@@ -1211,6 +1211,17 @@
   padding: 0.85rem;
 }
 
+.tv-rx-preview__snap { display: none; }
+.tv-rx-preview__details { display: contents; }
+.tv-rx-preview > .tv-rx__eyebrow { order: 1; }
+.tv-rx-preview__header { order: 2; }
+.tv-rx-preview > .tv-rx-preview__badge { order: 3; }
+.tv-rx-preview__tagline { order: 4; }
+.tv-rx-preview__metrics { order: 5; }
+.tv-rx-preview__age { order: 6; }
+.tv-rx-preview__delta { order: 8; }
+.tv-rx-preview__source-list { order: 9; }
+
 .tv-rx-preview__header {
   display: flex;
   align-items: center;
@@ -1314,6 +1325,7 @@
 }
 
 .tv-rx-preview__actions {
+  order: 10;
   /* Save / Compare / Apri dettaglio stay pinned to the sheet's own bottom edge
      when the sheet scrolls internally, so they can never fall beneath the
      Compare Dock. Control heights untouched (>= 44px). */
@@ -1711,6 +1723,19 @@
 .tv-rx-trend__rank { font-family: var(--tv-font-family-mono); font-size: var(--tv-text-xs); color: var(--tv-color-cyan-500); }
 .tv-rx-ranking-bar { margin-block: var(--tv-space-2); }
 .tv-rx-personal, .tv-rx-watch { display: grid; gap: var(--tv-space-4); }
+.tv-rx-personal .tv-rx-section__title, .tv-rx-watch .tv-rx-section__title { font-size: clamp(1.5rem, 2vw, 2rem); }
+.tv-rx-watch__status { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--tv-space-3); }
+.tv-rx-watch__status .tv-rx-watch__counts { margin: 0; }
+.tv-rx-personal__workspace, .tv-rx-watch__workspace { display: grid; gap: var(--tv-space-4); align-items: start; }
+.tv-rx-workspace-main { display: grid; gap: var(--tv-space-4); min-width: 0; }
+.tv-rx-profile { min-width: 0; }
+.tv-rx-profile__matrix { display: grid; margin: 0 0 var(--tv-space-5); }
+.tv-rx-profile__matrix > div { display: flex; justify-content: space-between; gap: var(--tv-space-3); padding-block: var(--tv-space-3); border-bottom: 1px solid var(--tv-context-edge); font-size: var(--tv-text-sm); }
+.tv-rx-profile__matrix dt { color: var(--tv-ink-secondary); }
+.tv-rx-profile__matrix dd { margin: 0; color: var(--tv-color-cyan-500); font-variant-numeric: tabular-nums; }
+.tv-rx-profile__interests { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--tv-space-2); }
+.tv-rx-profile__interests li { padding: var(--tv-space-2); border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-pill); color: var(--tv-color-cyan-500); font-size: var(--tv-text-xs); }
+.tv-rx-profile__link { display: inline-flex; align-items: center; gap: var(--tv-space-2); min-height: 44px; color: var(--tv-color-cyan-500); margin-inline-start: var(--tv-space-3); font-size: var(--tv-text-sm); }
 .tv-rx-personal__metrics, .tv-rx-watch__metrics { padding: var(--tv-space-4); border-block: 1px solid var(--tv-context-edge); }
 .tv-rx-watch__management { display: grid; gap: var(--tv-space-4); align-items: start; }
 .tv-rx-watch__picker { border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-feature); background: var(--tv-context-surface); padding: var(--tv-space-3); }
@@ -1750,18 +1775,42 @@
 }
 @media (min-width: 64rem) {
   .tv-rx__title { max-width: none; font-size: 3rem; }
-  .tv-rx { max-width: 94rem; gap: var(--tv-space-5); padding-block-start: var(--tv-space-6); padding-inline: var(--tv-space-8); }
-  .tv-rx__stage { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: var(--tv-space-5); align-items: start; }
+  .tv-rx { max-width: var(--tv-workspace-max); gap: var(--tv-workspace-gap); padding-block-start: var(--tv-space-6); padding-inline: var(--tv-space-8); }
+  .tv-rx__stage { grid-template-columns: minmax(0, var(--tv-primary-column)) minmax(0, var(--tv-context-rail)); gap: var(--tv-workspace-gap); align-items: start; }
   .tv-rx__main { display: grid; gap: var(--tv-space-4); min-width: 0; }
   .tv-rx__main > *, .tv-rx__rail { order: initial; }
-  .tv-rx-map { inline-size: min(100%, 38rem); }
+  .tv-rx-map { inline-size: min(100%, var(--tv-instrument-size)); }
   .tv-rx-instrument { padding: var(--tv-space-5); }
   .tv-rx__rail, .tv-rx__rail:not(:has(.tv-rx-preview)) { display: block; position: sticky; top: calc(var(--tv-header-painted, var(--tv-header-height)) + var(--tv-space-4)); }
   .tv-rx-rail { display: grid; }
   .tv-rx-preview { position: static; max-block-size: calc(100dvh - var(--tv-header-painted, var(--tv-header-height)) - var(--tv-rx-chrome-clearance) - 2rem); }
-  .tv-rx-watch__inspect { grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1.1fr) auto auto; }
-  .tv-rx-watch__management { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .tv-rx-watch__inspect { grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.65fr) minmax(0, 1fr) auto auto; }
+  .tv-rx-personal__workspace, .tv-rx-watch__workspace { grid-template-columns: minmax(0, var(--tv-primary-column)) minmax(0, var(--tv-context-rail)); gap: var(--tv-workspace-gap); }
+  .tv-rx-personal .tv-rx-coldstart { grid-template-columns: minmax(0, 1fr); }
+  .tv-rx-personal .tv-rx-perte__list { grid-template-columns: minmax(0, 1fr); }
+  .tv-rx-profile, .tv-rx-watch__management { position: sticky; top: calc(var(--tv-header-painted, var(--tv-header-height)) + var(--tv-space-4)); }
 }
+/* One contextual inspector, two mobile snap states; canonical dock clearance. */
+@media (max-width: 63.999rem) {
+  .tv-rx-preview { position: fixed; inset-inline: var(--tv-space-3); margin-inline: auto; max-inline-size: 34rem; max-block-size: min(28rem, 52dvh); box-shadow: 0 -8px 32px color-mix(in srgb, var(--tv-bg-base) 45%, transparent); }
+  .tv-rx-preview[data-inspection="expanded"] { max-block-size: calc(100dvh - var(--tv-header-painted, var(--tv-header-height)) - var(--tv-rx-chrome-clearance) - 1.5rem); }
+  .tv-rx-preview__snap { display: flex; align-items: center; justify-content: center; gap: var(--tv-space-2); order: 0; min-block-size: 44px; padding: 0; border: 0; background: transparent; color: var(--tv-ink-secondary); font-size: var(--tv-text-xs); cursor: pointer; }
+  .tv-rx-preview__handle { inline-size: 24px; block-size: 3px; background: var(--tv-context-edge); border-radius: var(--tv-radius-pill); }
+  .tv-rx-preview > .tv-rx__eyebrow { display: none; }
+  .tv-rx-preview__title { font-size: 2rem; line-height: 1.1; }
+  .tv-rx-preview__metrics { margin-block: 0; padding-block: var(--tv-space-2); }
+  .tv-rx-preview__metrics dd { font-size: 1.75rem; }
+  .tv-rx-preview__actions { order: 7; }
+  .tv-rx-preview[data-inspection="compact"] .tv-rx-preview__tagline, .tv-rx-preview[data-inspection="compact"] .tv-rx-preview__delta, .tv-rx-preview[data-inspection="compact"] .tv-rx-preview__source-list > div:nth-child(-n+2) { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 63.999rem) {
+  .tv-rx-preview { animation: tv-rx-inspection-enter 180ms ease-out; }
+}
+@keyframes tv-rx-inspection-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Desktop dock rests at `1rem` (see `styles/compare.css`), so the clearance
    mirrors that branch instead of the nav + gap stack. */
 @media (min-width: 1280px) {

@@ -200,83 +200,80 @@ export function RadarPerTePanel({
 }) {
   const model = buildRadarPerTe(tools, workspace, catalog);
 
-  if (model.coldStart) {
-    return (
-      <section className="tv-rx-section tv-rx-personal" aria-labelledby="tv-rx-perte-title" data-personal-state="cold">
-        <header className="tv-rx-section__head">
-          <p className="tv-rx__eyebrow">Il tuo segnale / Primo passo</p>
-          <h2 id="tv-rx-perte-title" className="tv-rx-section__title">
-            Costruiamo il tuo Radar
-          </h2>
-          <p className="tv-rx-section__desc">
-            Non abbiamo ancora segnali tuoi su cui lavorare. Parti da una di queste strade.
-          </p>
-        </header>
-        <ul className="tv-rx-coldstart">
-          <li>
-            <Link href="/archivio"><Search size={22} aria-hidden="true" /><span><strong>Scegli le tue categorie dal Catalogo</strong><small>Trova l&apos;area in cui lavori.</small></span><ArrowUpRight size={16} aria-hidden="true" /></Link>
-          </li>
-          <li>
-            <button type="button" onClick={onExploreTrend}>
-              <ChartNoAxesColumn size={22} aria-hidden="true" /><span><strong>Esplora i trend di oggi</strong><small>Leggi voti, discussioni e nuovi ingressi.</small></span><ArrowUpRight size={16} aria-hidden="true" />
-            </button>
-          </li>
-          <li>
-            <Link href="/archivio"><Bookmark size={22} aria-hidden="true" /><span><strong>Salva i primi tool</strong><small>I tuoi candidati danno forma al Radar.</small></span><ArrowUpRight size={16} aria-hidden="true" /></Link>
-          </li>
-        </ul>
-      </section>
-    );
-  }
-
   return (
-    <section className="tv-rx-section tv-rx-personal" aria-labelledby="tv-rx-perte-title" data-personal-state={model.empty ? "partial" : "useful"}>
+    <section className="tv-rx-section tv-rx-personal" aria-labelledby="tv-rx-perte-title" data-personal-state={model.coldStart ? "cold" : model.empty ? "partial" : "useful"}>
       <header className="tv-rx-section__head">
         <p className="tv-rx__eyebrow">Il tuo segnale / Interessi reali</p>
-        <h2 id="tv-rx-perte-title" className="tv-rx-section__title">
-          Per te
-        </h2>
-        <p className="tv-rx-section__desc">
-          Scelte dai tuoi salvataggi, confronti e categorie seguite.{" "}
-          {model.interests.length > 0
-            ? `Interessi rilevati: ${model.interests.join(", ")}.`
-            : ""}
-        </p>
+        <h2 id="tv-rx-perte-title" className="tv-rx-section__title">{model.coldStart ? "Costruiamo il tuo Radar" : "Per te"}</h2>
+        <p className="tv-rx-section__desc">{model.coldStart ? "Non abbiamo ancora segnali tuoi su cui lavorare. Parti da una di queste strade." : "Scelte dai tuoi salvataggi, confronti e categorie seguite."}</p>
       </header>
-      <MetricStrip label="Input personali del Radar" className="tv-rx-personal__metrics" items={[
-        { label: "Salvati", value: workspace.saved.slugs.length },
-        { label: "In confronto", value: workspace.compare.slugs.length },
-        { label: "Tool seguiti", value: workspace.radarWatch.slugs.length },
-      ]} />
-
-      {model.empty ? (
-        <p className="tv-rx-honest" role="status">
-          Nessun segnale del Radar coincide con i tuoi interessi in questo periodo.
-        </p>
-      ) : (
-        <ul className="tv-rx-perte__list">
-          {model.cards.map((card) => (
-            <li key={card.tool.id} className="tv-rx-perte__card">
-              <div>
-                <strong className="tv-rx-perte__name">{card.tool.name}</strong>
-                <p className="tv-rx-perte__signal">{card.title}</p>
-                <p className="tv-rx-perte__why">{card.explanation}</p>
-                <p className="tv-rx-perte__meta">
-                  {card.tool.category?.label ?? card.tool.categoryLabel} ·{" "}
-                  {card.tool.votesCount} voti · {card.tool.commentsCount} commenti
-                </p>
-              </div>
-              <button
-                type="button"
-                className="tv-rx-perte__explore"
-                onClick={() => onSelect(card.tool.id)}
-              >
-                Esplora
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="tv-rx-personal__workspace">
+        <div className="tv-rx-workspace-main">
+          {model.coldStart ? (
+            <ul className="tv-rx-coldstart">
+              <li>
+                <Link href="/archivio"><Search size={22} aria-hidden="true" /><span><strong>Scegli le tue categorie dal Catalogo</strong><small>Trova l&apos;area in cui lavori.</small></span><ArrowUpRight size={16} aria-hidden="true" /></Link>
+              </li>
+              <li>
+                <button type="button" onClick={onExploreTrend}>
+                  <ChartNoAxesColumn size={22} aria-hidden="true" /><span><strong>Esplora i trend di oggi</strong><small>Leggi voti, discussioni e nuovi ingressi.</small></span><ArrowUpRight size={16} aria-hidden="true" />
+                </button>
+              </li>
+              <li>
+                <Link href="/archivio"><Bookmark size={22} aria-hidden="true" /><span><strong>Salva i primi tool</strong><small>I tuoi candidati danno forma al Radar.</small></span><ArrowUpRight size={16} aria-hidden="true" /></Link>
+              </li>
+            </ul>
+          ) : model.empty ? (
+            <div className="tv-rx-rail__block">
+              <p className="tv-rx__eyebrow">Interessi presenti / Nessuna corrispondenza</p>
+              <h3 className="tv-rx-context__title">Il prossimo segnale deve essere rilevante</h3>
+              <p className="tv-rx-honest" role="status">Nessun segnale del Radar coincide con i tuoi interessi in questo periodo.</p>
+              <button type="button" className="tv-rx-perte__explore" onClick={onExploreTrend}>Esplora i trend</button>
+              <Link className="tv-rx-profile__link" href="/archivio">Esplora il Catalogo <ArrowUpRight size={16} aria-hidden="true" /></Link>
+            </div>
+          ) : (
+            <ul className="tv-rx-perte__list">
+              {model.cards.map((card) => (
+                <li key={card.tool.id} className="tv-rx-perte__card">
+                  <div>
+                    <strong className="tv-rx-perte__name">{card.tool.name}</strong>
+                    <p className="tv-rx-perte__signal">{card.title}</p>
+                    <p className="tv-rx-perte__why">{card.explanation}</p>
+                    <p className="tv-rx-perte__meta">
+                      {card.tool.category?.label ?? card.tool.categoryLabel ?? card.tool.topicCluster.label} ·{" "}
+                      {card.tool.votesCount} voti · {card.tool.commentsCount} commenti
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="tv-rx-perte__explore"
+                    onClick={() => onSelect(card.tool.id)}
+                  >
+                    Esplora
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <aside className="tv-rx-profile tv-rx-rail__block" aria-labelledby="tv-rx-profile-title">
+          <p className="tv-rx__eyebrow">Le basi / Il tuo workspace</p>
+          <h3 id="tv-rx-profile-title" className="tv-rx-context__title">Profilo di interessi</h3>
+          <MetricStrip label="Input personali del Radar" className="tv-rx-personal__metrics" items={[
+            { label: "Salvati", value: workspace.saved.slugs.length },
+            { label: "In confronto", value: workspace.compare.slugs.length },
+            { label: "Tool seguiti", value: workspace.radarWatch.slugs.length },
+          ]} />
+          <dl className="tv-rx-profile__matrix">
+            <div><dt>Categorie seguite</dt><dd>{workspace.radarWatch.categories.length}</dd></div>
+            <div><dt>Tool nello stack</dt><dd>{workspace.stack.slugs.length}</dd></div>
+            <div><dt>Stati tool registrati</dt><dd>{Object.keys(workspace.toolStates).length}</dd></div>
+          </dl>
+          <p className="tv-rx-rail__title">Interessi rilevati</p>
+          {model.interests.length ? <ul className="tv-rx-profile__interests">{model.interests.map((interest) => <li key={interest}>{interest}</li>)}</ul> : <p className="tv-rx-context__caption">Nessuna categoria di interesse rilevata.</p>}
+          <p className="tv-rx-context__caption">Il Radar usa le scelte effettive nel workspace. Ogni segnale proposto spiega la propria corrispondenza.</p>
+        </aside>
+      </div>
     </section>
   );
 }
@@ -289,7 +286,11 @@ export function RadarWatchPanel({
   onClear,
   categories,
   onSelect,
+  rangeLabel,
+  onExploreRadar,
 }: {
+  rangeLabel: string;
+  onExploreRadar: () => void;
   tools: readonly RadarTool[];
   watch: WorkspaceStateV1["radarWatch"];
   onToggleTool: (id: string) => void;
@@ -302,9 +303,9 @@ export function RadarWatchPanel({
   const empty = isRadarWatchEmpty(watch);
 
   return (
-    <section className="tv-rx-section tv-rx-watch" aria-labelledby="tv-rx-watch-title">
+    <section className="tv-rx-section tv-rx-watch" aria-labelledby="tv-rx-watch-title" data-watch-density={empty ? "empty" : digest.matchedTools.length === 1 ? "single" : "multiple"}>
       <header className="tv-rx-section__head">
-        <p className="tv-rx__eyebrow">Monitoraggio / Il tuo Radar</p>
+        <p className="tv-rx__eyebrow">Monitoraggio / {rangeLabel}</p>
         <h2 id="tv-rx-watch-title" className="tv-rx-section__title">
           Watchlist
         </h2>
@@ -314,117 +315,127 @@ export function RadarWatchPanel({
         </p>
       </header>
 
-      {empty ? (
-        <p className="tv-rx-honest" role="status">
-          La tua Watchlist è vuota. Aggiungi un tool o una categoria dal Radar.
-        </p>
-      ) : (
-        <>
-          <p className="tv-rx-watch__counts">
-            {digest.watchedToolCount} tool seguiti · {digest.watchedCategoryCount} categorie
-            seguite
-          </p>
-          <button type="button" className="tv-rx-watch__clear" onClick={onClear}>
-            Azzera Watchlist
-          </button>
-        </>
-      )}
-
-      <MetricStrip label="Snapshot della Watchlist" className="tv-rx-watch__metrics" items={[
-        { label: "Tool seguiti", value: digest.watchedToolCount },
-        { label: "Categorie", value: digest.watchedCategoryCount },
-        { label: "Nel periodo", value: digest.matchedTools.length },
-      ]} />
-
-      {digest.matchedTools.length > 0 ? (
-        <section className="tv-rx-watch__monitor" aria-labelledby="tv-rx-monitored-title">
-          <h3 id="tv-rx-monitored-title" className="tv-rx-subtitle">Seguiti nel periodo</h3>
-          <ul className="tv-rx-watch__monitored-list">
-            {digest.matchedTools.map((tool) => (
-              <li key={tool.id}>
-                <button className="tv-rx-watch__inspect" type="button" onClick={() => onSelect(tool.id)}>
-                  <span><strong>{tool.name}</strong><small>{tool.topicCluster.label} · Product Hunt</small></span>
-                  <span>{formatAge(tool.ageHours)}</span>
-                  <span>{tool.votesCount} voti · {tool.commentsCount} commenti</span>
-                  <span className="tv-rx-preview__badge" data-catalog-status={tool.catalogStatus}>{tool.catalogStatus === "linked" ? "Nel Catalogo" : "Esterno"}</span>
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <div className="tv-rx-watch__management">
-      <section>
-      <h3 className="tv-rx-subtitle">Categorie</h3>
-      <ul className="tv-rx-watch__chips">
-        {categories.map((category) => {
-          const active = watch.categories.includes(category.id);
-          return (
-            <li key={category.id}>
-              <button
-                type="button"
-                className="tv-rx-chip"
-                data-active={active ? "true" : undefined}
-                aria-pressed={active}
-                onClick={() => onToggleCategory(category.id)}
-              >
-                {active ? <Eye size={12} aria-hidden="true" /> : <EyeOff size={12} aria-hidden="true" />}
-                {category.label} ({category.count})
+      <div className="tv-rx-watch__workspace">
+        <div className="tv-rx-workspace-main">
+          {!empty ? (
+            <div className="tv-rx-watch__status">
+              <p className="tv-rx-watch__counts">
+                {digest.watchedToolCount} tool seguiti · {digest.watchedCategoryCount} categorie
+                seguite
+              </p>
+              <button type="button" className="tv-rx-watch__clear" onClick={onClear}>
+                Azzera Watchlist
               </button>
-            </li>
-          );
-        })}
-      </ul>
-      </section>
+            </div>
+          ) : null}
 
-      <details className="tv-rx-watch__picker">
-      <summary>Aggiungi o gestisci tool · {tools.length} nel Radar</summary>
-      <h3 className="tv-rx-subtitle">Tool nel Radar</h3>
-      <ul className="tv-rx-watch__tools">
-        {tools.map((tool) => {
-          const active = watch.slugs.includes(tool.catalogSlug ?? tool.id);
-          return (
-            <li key={tool.id} className="tv-rx-watch__tool">
-              <span>{tool.name}</span>
-              <button
-                type="button"
-                className="tv-rx-chip"
-                data-active={active ? "true" : undefined}
-                aria-pressed={active}
-                onClick={() => onToggleTool(tool.catalogSlug ?? tool.id)}
-              >
-                {active ? "Seguito" : "Segui"}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      </details>
+          <MetricStrip label="Snapshot della Watchlist" className="tv-rx-watch__metrics" items={[
+            { label: "Tool seguiti", value: digest.watchedToolCount },
+            { label: "Categorie", value: digest.watchedCategoryCount },
+            { label: "Nel periodo", value: digest.matchedTools.length },
+          ]} />
+
+          {digest.matchedTools.length > 0 ? (
+            <section className="tv-rx-watch__monitor" aria-labelledby="tv-rx-monitored-title">
+              <h3 id="tv-rx-monitored-title" className="tv-rx-subtitle">Seguiti nel periodo</h3>
+              <ul className="tv-rx-watch__monitored-list">
+                {digest.matchedTools.map((tool) => (
+                  <li key={tool.id}>
+                    <button className="tv-rx-watch__inspect" type="button" onClick={() => onSelect(tool.id)}>
+                      <span><strong>{tool.name}</strong><small>{tool.topicCluster.label} · Product Hunt</small></span>
+                      <span>{formatAge(tool.ageHours)}</span>
+                      <span>{tool.votesCount} voti · {tool.commentsCount} commenti</span>
+                      <span className="tv-rx-preview__badge" data-catalog-status={tool.catalogStatus}>{tool.catalogStatus === "linked" ? "Nel Catalogo" : "Esterno"}</span>
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : (
+            <section className="tv-rx-rail__block">
+              <p className="tv-rx__eyebrow">{empty ? "Primo segnale" : "Fuori dal periodo"}</p>
+              <h3 className="tv-rx-context__title">{empty ? "Scegli cosa tenere d’occhio" : "Nessun tool seguito nello snapshot"}</h3>
+              <button type="button" className="tv-rx-perte__explore" onClick={onExploreRadar}>Apri il Radar</button>
+              {empty ? <p className="tv-rx-context__caption" role="status">La tua Watchlist è vuota.</p> : null}
+              <p className="tv-rx-context__caption">Segnali disponibili nel periodo · {tools.length}</p>
+              <ul className="tv-rx-rail__list">{tools.slice(0, 3).map((tool) => <li key={tool.id}><button type="button" className="tv-rx-rail__signal" onClick={() => onSelect(tool.id)}><span className="tv-rx-rail__identity">{tool.name}<small className="tv-rx-rail__meta">{tool.topicCluster.label} · {formatAge(tool.ageHours)}</small></span><ArrowUpRight size={16} aria-hidden="true" /></button></li>)}</ul>
+            </section>
+          )}
+
+          <h3 className="tv-rx-subtitle">Segnali</h3>
+          {!digest.movementAlertsAvailable ? (
+            <p className="tv-rx-honest" role="status">
+              {RADAR_WATCH_MOVEMENT_REASON}
+            </p>
+          ) : null}
+          {digest.signals.length === 0 ? (
+            <p className="tv-rx-honest" role="status">
+              Nessun segnale per la tua Watchlist in questo periodo.
+            </p>
+          ) : (
+            <ul className="tv-rx-watch__signals">
+              {digest.signals.map((signal) => (
+                <li key={signal.id} className="tv-rx-watch__signal">
+                  <strong>{signal.title}</strong>
+                  <p>{signal.explanation}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+        </div>
+        <aside className="tv-rx-watch__management tv-rx-rail__block" aria-label="Categorie e gestione della Watchlist">
+          <section>
+            <p className="tv-rx__eyebrow">Contesto / Aree del Radar</p>
+            <h3 className="tv-rx-context__title">Aree da seguire</h3>
+            <ul className="tv-rx-watch__chips">
+              {categories.map((category) => {
+                const active = watch.categories.includes(category.id);
+                return (
+                  <li key={category.id}>
+                    <button
+                      type="button"
+                      className="tv-rx-chip"
+                      data-active={active ? "true" : undefined}
+                      aria-pressed={active}
+                      onClick={() => onToggleCategory(category.id)}
+                    >
+                      {active ? <Eye size={12} aria-hidden="true" /> : <EyeOff size={12} aria-hidden="true" />}
+                      {category.label} ({category.count})
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+
+          <details className="tv-rx-watch__picker">
+            <summary>Aggiungi o gestisci tool · {tools.length} nel Radar</summary>
+            <h3 className="tv-rx-subtitle">Tool nel Radar</h3>
+            <ul className="tv-rx-watch__tools">
+              {tools.map((tool) => {
+                const active = watch.slugs.includes(tool.catalogSlug ?? tool.id);
+                return (
+                  <li key={tool.id} className="tv-rx-watch__tool">
+                    <span>{tool.name}</span>
+                    <button
+                      type="button"
+                      className="tv-rx-chip"
+                      data-active={active ? "true" : undefined}
+                      aria-pressed={active}
+                      onClick={() => onToggleTool(tool.catalogSlug ?? tool.id)}
+                    >
+                      {active ? "Seguito" : "Segui"}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
+        </aside>
+
       </div>
-
-      <h3 className="tv-rx-subtitle">Segnali</h3>
-      {!digest.movementAlertsAvailable ? (
-        <p className="tv-rx-honest" role="status">
-          {RADAR_WATCH_MOVEMENT_REASON}
-        </p>
-      ) : null}
-      {digest.signals.length === 0 ? (
-        <p className="tv-rx-honest" role="status">
-          Nessun segnale per la tua Watchlist in questo periodo.
-        </p>
-      ) : (
-        <ul className="tv-rx-watch__signals">
-          {digest.signals.map((signal) => (
-            <li key={signal.id} className="tv-rx-watch__signal">
-              <strong>{signal.title}</strong>
-              <p>{signal.explanation}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-
       <p className="tv-rx-watch__note">
         Monitoraggio nell&apos;app. Le notifiche push non sono ancora disponibili.
       </p>
