@@ -19,7 +19,7 @@
  * indistinguishable the map reports `ambiguous` and the parent offers a chooser.
  */
 
-import { useCallback, useId, useRef } from "react";
+import { useCallback, useId, useRef, type CSSProperties } from "react";
 
 import {
   RADAR_CATEGORY_PALETTE,
@@ -185,6 +185,15 @@ export function RadarMap({
     return display ? { ...entry, x: display.x, y: display.y } : entry;
   });
 
+  // Renderer-only references. The canonical point and display maps stay intact.
+  const selectedPoint = selectedId ? pointById.get(selectedId) : undefined;
+  const selectedDisplay = selectedPoint
+    ? displayPointById.get(selectedPoint.id) ?? selectedPoint
+    : undefined;
+  const instrumentAccent = focusedClusterId
+    ? colorByCluster.get(focusedClusterId) ?? "var(--tv-color-cyan-500)"
+    : "var(--tv-color-cyan-500)";
+
   // Closure §6 — a spider that has been collapsed stops painting entirely.
   const activeSpiderGroups = spider?.groups ?? [];
 
@@ -312,7 +321,12 @@ export function RadarMap({
   );
 
   return (
-    <div className="tv-rx-map" data-basis={layout.radiusBasis} data-visual-mode={visualMode}>
+    <div
+      className="tv-rx-map"
+      data-basis={layout.radiusBasis}
+      data-visual-mode={visualMode}
+      style={{ "--tv-radar-instrument-accent": instrumentAccent } as CSSProperties}
+    >
       <svg
         ref={svgRef}
         className="tv-rx-map__svg"
@@ -338,9 +352,29 @@ export function RadarMap({
             <stop offset="0%" className="tv-rx-map__glow-stop tv-rx-map__glow-stop--in" />
             <stop offset="100%" className="tv-rx-map__glow-stop tv-rx-map__glow-stop--out" />
           </radialGradient>
+          <linearGradient id={`${fieldId}-bezel`} x1="20%" y1="0%" x2="80%" y2="100%">
+            <stop offset="0%" className="tv-rx-map__bezel-stop--light" />
+            <stop offset="45%" className="tv-rx-map__bezel-stop--mid" />
+            <stop offset="100%" className="tv-rx-map__bezel-stop--edge" />
+          </linearGradient>
+          {layout.clusterOrder.map((clusterId, index) => {
+            const color = colorByCluster.get(clusterId) ?? RADAR_CATEGORY_PALETTE[index % RADAR_CATEGORY_PALETTE.length];
+            return (
+              <linearGradient key={clusterId} id={`${fieldId}-signal-${clusterId}`} x1="15%" y1="0%" x2="85%" y2="100%">
+                <stop offset="0%" stopColor={`color-mix(in srgb, ${color} 80%, var(--tv-color-ink-100))`} />
+                <stop offset="48%" stopColor={color} />
+                <stop offset="100%" stopColor={`color-mix(in srgb, ${color} 72%, var(--tv-color-surface-base))`} />
+              </linearGradient>
+            );
+          })}
         </defs>
 
-        {/* §5 — pure camera transform. Semantic coordinates are unchanged. */}
+        <g className="tv-rx-map__frame" data-instrument-layer="frame" aria-hidden="true">
+          <path d="M 9 5 H 5 V 9 M 91 5 H 95 V 9 M 5 91 V 95 H 9 M 95 91 V 95 H 91" />
+          <text x="8" y="97" className="tv-rx-map__micro-label">{visualMode === "local" ? "LOCALE" : "PANORAMICA"}</text>
+          <text x="92" y="97" textAnchor="end" className="tv-rx-map__micro-label">{range === "day" ? "24H" : range === "week" ? "7G" : "30G"}</text>
+        </g>
+
         {/* §5 — pure camera transform. Semantic coordinates are unchanged.
             The attribute is the fallback; the CSS property is what animates
             (an SVG `transform` ATTRIBUTE is not transitionable). */}
@@ -359,24 +393,23 @@ export function RadarMap({
           className="tv-rx-map__camera"
         >
 
-        {/* Static translucent instrument field. No animated gradient, no blur. */}
-        <circle
-          cx={RADAR_CENTER}
-          cy={RADAR_CENTER}
-          r={42}
-          className="tv-rx-map__field"
-          fill={`url(#${fieldId})`}
-          aria-hidden="true"
-        />
-        <circle
-          cx={RADAR_CENTER}
-          cy={RADAR_CENTER}
-          r={42}
-          className="tv-rx-map__field-rim"
-          aria-hidden="true"
-        />
+        {/* 00–03: static well, optical edge and precision bezel. No filters. */}
+        <g className="tv-rx-map__surface" data-instrument-layer="surface" aria-hidden="true">
+          <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={44.6} className="tv-rx-map__field" fill={`url(#${fieldId})`} />
+          <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={45.7} className="tv-rx-map__bezel-edge" />
+          <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={44.9} className="tv-rx-map__field-rim" stroke={`url(#${fieldId}-bezel)`} />
+          <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={43.2} className="tv-rx-map__bezel-lip" />
+        </g>
+        <g className="tv-rx-map__bezel-ticks" data-instrument-layer="bezel" aria-hidden="true">
+          {Array.from({ length: 48 }, (_, index) => {
+            const angle = (index * 7.5 - 90) * Math.PI / 180;
+            const major = index % 6 === 0;
+            const inner = major ? 46 : 46.45;
+            return <line key={index} x1={50 + inner * Math.cos(angle)} y1={50 + inner * Math.sin(angle)} x2={50 + 47.1 * Math.cos(angle)} y2={50 + 47.1 * Math.sin(angle)} className="tv-rx-map__bezel-tick" data-major={major ? "true" : undefined} data-fine={index % 2 === 1 ? "true" : undefined} />;
+          })}
+        </g>
 
-        <g className="tv-rx-map__grid" aria-hidden="true">
+        <g className="tv-rx-map__grid" data-instrument-layer="temporal-grid" aria-hidden="true">
           {rings.map((ring, index) => (
             <circle
               key={ring.label}
@@ -403,9 +436,16 @@ export function RadarMap({
                 x2={RADAR_CENTER + 42 * Math.cos(angle)}
                 y2={RADAR_CENTER + 42 * Math.sin(angle)}
                 className="tv-rx-map__sector"
+                data-diagonal={index % 2 === 1 ? "true" : undefined}
               />
             );
           })}
+          {rings.flatMap((ring) => [0, 90, 180, 270].map((degrees) => {
+            const angle = degrees * Math.PI / 180;
+            const x = 50 + 42 * ring.ratio * Math.cos(angle);
+            const y = 50 + 42 * ring.ratio * Math.sin(angle);
+            return <line key={`${ring.label}-${degrees}`} x1={x - 0.55 * Math.sin(angle)} y1={y + 0.55 * Math.cos(angle)} x2={x + 0.55 * Math.sin(angle)} y2={y - 0.55 * Math.cos(angle)} className="tv-rx-map__axis-tick" />;
+          }))}
         </g>
 
         {/* §4 — LOCAL MODE: restrained single-colour rim in the focused
@@ -414,8 +454,9 @@ export function RadarMap({
           <circle
             cx={RADAR_CENTER}
             cy={RADAR_CENTER}
-            r={42}
+            r={43.8}
             className="tv-rx-map__local-rim"
+            data-instrument-layer="local-perimeter"
             stroke={
               colorByCluster.get(focusedClusterId) ??
               "var(--tv-color-cyan-500, #22d3ee)"
@@ -442,8 +483,9 @@ export function RadarMap({
             return (
               <g key={`rim-${clusterId}`}>
                 <path
-                  d={arcPath}
+                  d={`M ${(50 + 43.8 * Math.cos(a1)).toFixed(3)} ${(50 + 43.8 * Math.sin(a1)).toFixed(3)} A 43.8 43.8 0 0 1 ${(50 + 43.8 * Math.cos(a2)).toFixed(3)} ${(50 + 43.8 * Math.sin(a2)).toFixed(3)}`}
                   className="tv-rx-map__compass-arc"
+                  data-instrument-layer="compass"
                   data-focused={
                     focusedClusterId && clusterId === focusedClusterId
                       ? "true"
@@ -484,47 +526,34 @@ export function RadarMap({
           })}
         </g>
 
-        {/* §11 — minimal time labels along ONE axis only (12 o'clock). */}
-        <g className="tv-rx-map__time-axis" aria-hidden="true">
-          <text
-            x={RADAR_CENTER}
-            y={RADAR_CENTER - 3}
-            textAnchor="middle"
-            className="tv-rx-map__ring-label"
-            fontSize="3.1"
-          >
-            {RADAR_RING_CENTER_LABEL}
-          </text>
-          {rings.map((ring) => (
-            <text
-              key={`label-${ring.label}`}
-              x={RADAR_CENTER}
-              y={RADAR_CENTER - 42 * ring.ratio - 1.1}
-              textAnchor="middle"
-              className="tv-rx-map__ring-label"
-              fontSize="3.1"
-            >
-              {ring.label}
-            </text>
-          ))}
+        {/* 06: a small calibrated origin. Static field, no pulse or sweep. */}
+        <g data-instrument-layer="origin" aria-hidden="true">
+          <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={5} className="tv-rx-map__core-glow" fill={`url(#${glowId})`} />
+          <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={2.4} className="tv-rx-map__core" />
+          <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={0.48} className="tv-rx-map__nucleus" />
         </g>
 
-        {/* Subtle static core. Purely static gradient/opacity. */}
-        <circle
-          cx={RADAR_CENTER}
-          cy={RADAR_CENTER}
-          r={14}
-          className="tv-rx-map__core-glow"
-          fill={`url(#${glowId})`}
-          aria-hidden="true"
-        />
-        <circle
-          cx={RADAR_CENTER}
-          cy={RADAR_CENTER}
-          r={7}
-          className="tv-rx-map__core"
-          aria-hidden="true"
-        />
+        {/* 08: the guide ends at the SAME display point used by painting/hits. */}
+        {selectedDisplay ? (
+          <g className="tv-rx-map__inspection-guide" data-instrument-layer="selection-guide" aria-hidden="true">
+            <line x1={RADAR_CENTER} y1={RADAR_CENTER} x2={selectedDisplay.x} y2={selectedDisplay.y} className="tv-rx-map__selection-guide" />
+          </g>
+        ) : null}
+
+        {/* Truthful time labels keep their original positions and strings. */}
+        <g className="tv-rx-map__time-axis" data-instrument-layer="labels" aria-hidden="true">
+          <text x={RADAR_CENTER} y={RADAR_CENTER - 3} textAnchor="middle" className="tv-rx-map__ring-label" fontSize="3.1">{RADAR_RING_CENTER_LABEL}</text>
+          {rings.map((ring) => {
+            const width = Math.max(7.5, ring.label.length * 2.3);
+            const y = RADAR_CENTER - 42 * ring.ratio - 1.1;
+            return (
+              <g key={`label-${ring.label}`}>
+                <rect x={RADAR_CENTER - width / 2} y={y - 3.6} width={width} height={4.3} rx={0.65} className="tv-rx-map__label-plate" />
+                <text x={RADAR_CENTER} y={y} textAnchor="middle" className="tv-rx-map__ring-label" fontSize="3.1">{ring.label}</text>
+              </g>
+            );
+          })}
+        </g>
 
         <g className="tv-rx-map__points">
           {layoutTools.map((tool) => {
@@ -634,21 +663,17 @@ export function RadarMap({
                   cx={0}
                   cy={0}
                   r={drawnRadius}
-                  fill={color}
+                  fill={`url(#${fieldId}-signal-${tool.topicCluster.id})`}
                   stroke="var(--tv-color-surface-base, #0b0620)"
                   strokeWidth={0.42}
                   strokeOpacity={0.85}
                   className="tv-rx-blip__dot"
                   aria-hidden="true"
                 />
-                {/* Static specular highlight — gives the dot a bead/material
-                    quality without any animation or extra glow. */}
-                <circle
+                {/* Directional edge light, not a spherical white glint. */}
+                <path
                   style={{ pointerEvents: "none" }}
-                  cx={-drawnRadius * 0.28}
-                  cy={-drawnRadius * 0.28}
-                  r={Math.max(drawnRadius * 0.3, 0.5)}
-                  fill="var(--tv-color-ink-100, #f5f3ff)"
+                  d={`M ${-drawnRadius * 0.65} ${-drawnRadius * 0.68} Q 0 ${-drawnRadius * 1.03} ${drawnRadius * 0.45} ${-drawnRadius * 0.86}`}
                   className="tv-rx-blip__glint"
                   aria-hidden="true"
                 />
@@ -657,11 +682,9 @@ export function RadarMap({
                     catalog-linked signal keeps that colour plus a neutral inner
                     marker. */}
                 {tool.catalogStatus === "linked" ? (
-                  <circle
+                  <path
                     style={{ pointerEvents: "none" }}
-                    cx={0}
-                    cy={0}
-                    r={Math.max(drawnRadius * 0.30, 0.55)}
+                    d={`M ${-Math.max(drawnRadius * 0.24, 0.5)} 0 L 0 ${-Math.max(drawnRadius * 0.24, 0.5)} L ${Math.max(drawnRadius * 0.24, 0.5)} 0 L 0 ${Math.max(drawnRadius * 0.24, 0.5)} Z`}
                     className="tv-rx-blip__entity"
                     aria-hidden="true"
                   />

@@ -266,86 +266,39 @@
   outline: none;
 }
 
-/* Field gradient stops — static color, no animation. */
-.tv-rx-map__field-stop--core {
-  stop-color: color-mix(in srgb, var(--tv-color-violet-500) 20%, var(--tv-color-surface-base));
-}
-
-.tv-rx-map__field-stop--mid {
-  stop-color: color-mix(
-    in srgb,
-    var(--tv-color-surface-base, #0b0620) 78%,
-    var(--tv-color-violet-500, #6a3cff) 22%
-  );
-}
-
-.tv-rx-map__field-stop--edge {
-  stop-color: color-mix(in srgb, var(--tv-color-surface-base, #0b0620) 94%, transparent);
-}
-
-.tv-rx-map__field {
-  opacity: 0.95;
-}
-
-/* Instrument bezel: the outer boundary of the field. */
-.tv-rx-map__field-rim {
-  fill: none;
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 38%, transparent);
-  stroke-width: 0.55;
-}
-
-/* §3 — the 4 canonical rings, now visibly readable. Outer rings softer,
-   inner rings clearer. Blips stay above them (see .tv-rx-map__points). */
-.tv-rx-map__ring {
-  fill: none;
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500) 43%, transparent);
-  stroke-width: 0.35;
-}
-
-.tv-rx-map__ring[data-ring-outer="true"] {
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 24%, transparent);
-  stroke-width: 0.4;
-}
-
-/* §4 — restrained telemetry lines. Axes are quiet cyan hairlines; sector
-   dividers are faint dashed violet so the field never becomes a spider chart
-   and no wedge is filled. */
-.tv-rx-map__axis {
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500, #22d3ee) 24%, transparent);
-  stroke-width: 0.32;
-}
-
-.tv-rx-map__sector {
-  stroke: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 38%, transparent);
-  stroke-width: 0.28;
-  stroke-dasharray: 1.7 1.9;
-}
-
-/* §5 — subtle static core: soft illumination plus a small solid anchor. */
-.tv-rx-map__core-glow {
-  /* Refined again so the core anchors the instrument as NOW/origin without
-     ever competing with an important signal. Static, no pulsing. */
-  opacity: 0.26;
-}
-
-.tv-rx-map__glow-stop--in {
-  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 72%, transparent);
-}
-
-.tv-rx-map__glow-stop--out {
-  stop-color: color-mix(in srgb, var(--tv-color-violet-500, #6a3cff) 0%, transparent);
-}
-
-.tv-rx-map__core {
-  fill: color-mix(in srgb, var(--tv-color-violet-500) 24%, var(--tv-color-surface-base));
-  stroke: color-mix(in srgb, var(--tv-color-cyan-500) 48%, transparent);
-  stroke-width: 0.4;
-}
-
-/* §7 — blips read above the grid/rings. */
-.tv-rx-map__points {
-  position: relative;
-}
+/* Instrument V2: optical well, bounded light and a precision edge. */
+.tv-rx-map [data-instrument-layer] { pointer-events: none; }
+.tv-rx-map__field-stop--core { stop-color: color-mix(in srgb, var(--tv-color-violet-500) 17%, var(--tv-color-surface-base)); }
+.tv-rx-map__field-stop--mid { stop-color: var(--tv-color-surface-raised); }
+.tv-rx-map__field-stop--edge { stop-color: var(--tv-color-surface-base); }
+.tv-rx-map[data-visual-mode="local"] .tv-rx-map__field-stop--core { stop-color: color-mix(in srgb, var(--tv-radar-instrument-accent) 9%, var(--tv-color-surface-base)); }
+.tv-rx-map__field { opacity: 1; }
+.tv-rx-map__bezel-stop--light { stop-color: color-mix(in srgb, var(--tv-color-ink-100) 40%, var(--tv-color-violet-500)); }
+.tv-rx-map__bezel-stop--mid { stop-color: color-mix(in srgb, var(--tv-color-ink-300) 20%, var(--tv-color-surface-base)); }
+.tv-rx-map__bezel-stop--edge { stop-color: color-mix(in srgb, var(--tv-color-ink-100) 15%, var(--tv-color-surface-base)); }
+.tv-rx-map__bezel-edge, .tv-rx-map__field-rim, .tv-rx-map__bezel-lip { fill: none; vector-effect: non-scaling-stroke; }
+.tv-rx-map__bezel-edge { stroke: var(--tv-color-surface-base); stroke-width: 2; }
+.tv-rx-map__field-rim { stroke-width: 1; }
+.tv-rx-map__bezel-lip { stroke: color-mix(in srgb, var(--tv-color-ink-300) 15%, transparent); stroke-width: 0.75; }
+.tv-rx-map__bezel-tick { stroke: color-mix(in srgb, var(--tv-color-ink-300) 28%, transparent); stroke-width: 0.7; vector-effect: non-scaling-stroke; }
+.tv-rx-map__bezel-tick[data-major="true"] { stroke: color-mix(in srgb, var(--tv-radar-instrument-accent) 60%, var(--tv-color-ink-300)); stroke-width: 1; }
+.tv-rx-map__ring { fill: none; stroke: color-mix(in srgb, var(--tv-color-ink-300) 18%, transparent); stroke-width: 0.7; vector-effect: non-scaling-stroke; }
+.tv-rx-map__ring[data-ring-index="1"] { stroke: color-mix(in srgb, var(--tv-radar-instrument-accent) 28%, transparent); stroke-width: 1; }
+.tv-rx-map__ring[data-ring-index="3"] { stroke: color-mix(in srgb, var(--tv-color-ink-300) 28%, transparent); stroke-width: 1; }
+.tv-rx-map__axis { stroke: color-mix(in srgb, var(--tv-radar-instrument-accent) 23%, transparent); stroke-width: 0.8; vector-effect: non-scaling-stroke; }
+.tv-rx-map__sector { stroke: color-mix(in srgb, var(--tv-color-ink-300) 10%, transparent); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+.tv-rx-map__sector:not([data-diagonal]) { opacity: 0; }
+.tv-rx-map__axis-tick { stroke: color-mix(in srgb, var(--tv-color-ink-300) 35%, transparent); stroke-width: 0.75; vector-effect: non-scaling-stroke; }
+.tv-rx-map__core-glow { opacity: 0.28; }
+.tv-rx-map__glow-stop--in { stop-color: color-mix(in srgb, var(--tv-radar-instrument-accent) 35%, transparent); }
+.tv-rx-map__glow-stop--out { stop-color: transparent; }
+.tv-rx-map__core { fill: var(--tv-color-surface-base); stroke: color-mix(in srgb, var(--tv-radar-instrument-accent) 65%, transparent); stroke-width: 0.8; vector-effect: non-scaling-stroke; }
+.tv-rx-map__nucleus { fill: var(--tv-color-ink-200); }
+.tv-rx-map__points { position: relative; }
+.tv-rx-map__label-plate { fill: var(--tv-color-surface-base); fill-opacity: 0.95; }
+.tv-rx-map__selection-guide { stroke: var(--tv-radar-instrument-accent); stroke-width: 0.8; stroke-opacity: 0.55; stroke-dasharray: 2 1; vector-effect: non-scaling-stroke; }
+.tv-rx-map__frame path { fill: none; stroke: color-mix(in srgb, var(--tv-color-ink-300) 18%, transparent); stroke-width: 0.75; vector-effect: non-scaling-stroke; }
+.tv-rx-map__micro-label { fill: var(--tv-color-ink-400); font-family: var(--tv-font-family-mono); font-size: 1.75px; letter-spacing: 0.1em; }
 
 /* Semantic zoom camera. `transform-box: view-box` + `transform-origin: 0 0`
    reproduce the SVG transform attribute exactly, so animating the CSS
@@ -409,7 +362,9 @@
   /* §13 — NORMAL signals sit at restrained intensity so a handful of bright
      points never wash out together. SELECTED restores 100% below. */
   opacity: 0.88;
-  transition: transform 160ms ease, opacity 160ms ease;
+  transition: transform 160ms ease, opacity 160ms ease, stroke-opacity 160ms ease;
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1;
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -417,27 +372,14 @@
 /* §8/§9 — designed SELECTED state: restrained local halo in the tool's own
    category colour plus a thin selection ring in the shared brand accent that
    the quick preview uses. A thin SVG ring, never a white rounded rectangle. */
-.tv-rx-blip__glint {
-  pointer-events: none;
-  /* Static specular highlight: material quality for the dot, never a glow. */
-  opacity: 0.26;
+.tv-rx-blip__glint { pointer-events: none; fill: none; stroke: var(--tv-color-ink-100); stroke-width: 0.65; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: 0.30; }
+.tv-rx-blip[data-selected="true"] .tv-rx-blip__glint { opacity: 0.5; }
+.tv-rx-blip__halo { pointer-events: none; opacity: 0.07; }
+.tv-rx-blip__ring { pointer-events: none; stroke: var(--tv-color-violet-400); stroke-width: 1.25; vector-effect: non-scaling-stroke; opacity: 0.95; }
+@media (hover: hover) and (pointer: fine) {
+  .tv-rx-blip:hover .tv-rx-blip__dot { opacity: 1; stroke-opacity: 1; }
 }
-
-.tv-rx-blip[data-selected="true"] .tv-rx-blip__glint {
-  opacity: 0.4;
-}
-
-.tv-rx-blip__halo {
-  pointer-events: none;
-  opacity: 0.22;
-}
-
-.tv-rx-blip__ring {
-  pointer-events: none;
-  stroke: var(--tv-color-violet-500, #6a3cff);
-  stroke-width: 0.7;
-  opacity: 0.95;
-}
+.tv-rx-blip__hit:active ~ .tv-rx-blip__dot { opacity: 1; }
 
 /* §8 — highlighted is a light nudge; SELECTED must outrank it so the dot
    lands inside the required 1.15-1.25 band (declared after highlight). */
@@ -497,13 +439,7 @@
 
 /* §14 — outer rim as a subtle fixed cluster compass: short low-opacity arcs,
    one per canonical sector, in the sector's own colour. Static, no wedge. */
-.tv-rx-map__compass-arc {
-  fill: none;
-  stroke-width: 1.15;
-  stroke-linecap: round;
-  opacity: 0.34;
-  transition: opacity 180ms ease;
-}
+.tv-rx-map__compass-arc { fill: none; stroke-width: 1.6; stroke-linecap: round; opacity: 0.7; vector-effect: non-scaling-stroke; transition: opacity 220ms ease; }
 
 .tv-rx-map__compass-arc[data-focused="true"] {
   opacity: 0.85;
@@ -623,17 +559,12 @@
 
 /* ---------- signal model v2: ring labels + selection context ------------- */
 
-/* §11 — subtle time labels on ONE axis. Sized in viewBox units via the SVG
-   `fontSize` attribute (not CSS) so the typography contract is untouched. */
+/* Time labels share one truthful axis; viewBox font sizes adapt to diameter. */
 .tv-rx-map__time-axis {
   pointer-events: none;
 }
 
-.tv-rx-map__ring-label {
-  fill: var(--tv-color-ink-500, #8e87b8);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
+.tv-rx-map__ring-label { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-mono); font-size: 3.3px; letter-spacing: 0.025em; text-transform: uppercase; }
 
 /* §18 — selection context. Selected stays full prominence, same cluster stays
    readable, other clusters step back modestly. Never hidden. Opacity/transform
@@ -1843,48 +1774,27 @@
   display: none;
 }
 
-.tv-rx-map__local-rim {
-  fill: none;
-  stroke-width: 1.15;
-  stroke-linecap: round;
-  opacity: 0.39;
+.tv-rx-map__local-rim { fill: none; stroke-width: 1.6; stroke-linecap: round; opacity: 0.65; vector-effect: non-scaling-stroke; }
+/* Local measurement mode removes geographic dividers, preserving all points. */
+.tv-rx-map[data-visual-mode="local"] .tv-rx-map__sector { display: none; }
+.tv-rx-map[data-visual-mode="local"] .tv-rx-map__bezel-lip { stroke: color-mix(in srgb, var(--tv-radar-instrument-accent) 25%, transparent); }
+.tv-rx-map[data-visual-mode="local"] .tv-rx-map__ring[data-ring-index="1"] { stroke-opacity: 0.85; }
+@media (max-width: 47.999rem) {
+  .tv-rx-map__bezel-tick[data-fine="true"], .tv-rx-map__micro-label { display: none; }
 }
-
-/* §4 — LOCAL MODE: sector dividers soften to quiet structure. */
-.tv-rx-map[data-visual-mode="local"] .tv-rx-map__sector {
-  stroke-opacity: 0.55;
+@media (min-width: 64rem) {
+  .tv-rx-map__ring-label { font-size: 2.1px; }
 }
-
-/* §9 — LOCAL MODE: centre-core prominence reduced ~18% so NOW never
-   competes with real signals. Global Overview core is unchanged. */
-.tv-rx-map[data-visual-mode="local"] .tv-rx-map__core-glow {
-  opacity: 0.19;
+@media (max-width: 22.1875rem) {
+  .tv-rx-map__ring-label { font-size: 3.8px; }
 }
-
-.tv-rx-map[data-visual-mode="local"] .tv-rx-map__core {
-  opacity: 0.70;
+@media (prefers-reduced-motion: no-preference) {
+  .tv-rx-map__surface, .tv-rx-map__bezel-ticks, .tv-rx-map__grid { animation: tv-rx-calibrate 320ms ease-out; }
+  .tv-rx-blip__dot { animation: tv-rx-calibrate 300ms ease-out; }
+  .tv-rx-map__local-rim { animation: tv-rx-calibrate 220ms ease-out; }
+  .tv-rx-map__inspection-guide, .tv-rx-blip__ring, .tv-rx-blip__halo { animation: tv-rx-calibrate 140ms ease-out; }
 }
-
-/* §8 — NORMAL MARKER MATERIAL: specular white highlight reduced
-   substantially. Premium instrument marker, not marble. */
-.tv-rx-blip__glint {
-  opacity: 0.12;
-}
-
-.tv-rx-blip[data-selected="true"] .tv-rx-blip__glint {
-  opacity: 0.22;
-}
-
-/* §7 — SELECTED STATE: one clean selection ring + one restrained local halo.
-   Never a multi-ring target / bullseye. */
-.tv-rx-blip__halo {
-  opacity: 0.10;
-}
-
-.tv-rx-blip__ring {
-  stroke-width: 0.65;
-  opacity: 0.9;
-}
+@keyframes tv-rx-calibrate { from { opacity: 0; } }
 
 /* §11 — CHIP RAIL: stronger selected state so the focused chip is
    unmistakable at a glance. */
