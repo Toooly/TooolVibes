@@ -1450,3 +1450,33 @@
     --tv-grammar-resource-surface: #232325;
   }
 }
+
+/* Shared presentation defaults; feature sheets consume these tokens. */
+:root {
+  --mp-bg: #07060d;
+  --mp-surface: #12101a;
+  --mp-elevated: #1a1724;
+  --mp-cream: #f6f1e8;
+  --mp-ink: #141218;
+  --mp-gold: #e4b23c;
+  --mp-violet: #8b6cff;
+  --mp-cyan: #3ec8ef;
+  --mp-text: #f6f1e8;
+  --mp-muted: #a39eae;
+  --mp-border: color-mix(in srgb, var(--mp-text) 12%, transparent);
+  --mp-radius: 16px;
+  --mp-fast: 160ms;
+  --mp-normal: 240ms;
+}
+:root {
+  --tv-glow-gold: 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 55%, transparent),
+    0 10px 28px color-mix(in srgb, var(--tv-accent-gold) 16%, transparent);
+  --tv-glow-cyan: 0 0 0 1px color-mix(in srgb, var(--tv-grammar-radar-accent) 50%, transparent),
+    0 10px 28px color-mix(in srgb, var(--tv-grammar-radar-accent) 14%, transparent);
+  --tv-glow-violet: 0 0 0 1px color-mix(in srgb, var(--tv-accent-brand) 48%, transparent),
+    0 10px 28px color-mix(in srgb, var(--tv-accent-brand) 14%, transparent);
+  --tv-border-system: color-mix(in srgb, var(--tv-ink-primary) 14%, transparent);
+  --tv-radius-system: 1rem;
+  --tv-motion-ui: 180ms;
+  --tv-motion-panel: 320ms;
+}

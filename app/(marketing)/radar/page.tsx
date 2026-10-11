@@ -5,7 +5,7 @@ import { RadarExperience } from "@/components/radar/full-radar-experience";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 /**
- * FULL Radar â logged-only intelligence surface (spec Â§3).
+ * FULL Radar — logged-only intelligence surface (spec §3).
  *
  * Auth contract: `MemberOnlyGate` renders NOTHING of the Radar for guests
  * (no `inert` preview, no data fetch) and resolves access through the
@@ -17,7 +17,7 @@ import { createPublicPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Radar: cosa sta emergendo adesso",
   description:
-    "Mappa radiale dei lanci AI reali, trend, opportunitÃ  personali e watchlist. Dati di mercato da Product Hunt, spiegati.",
+    "Mappa radiale dei lanci AI reali, trend, opportunità personali e watchlist. Dati di mercato da Product Hunt, spiegati.",
   path: "/radar",
   openGraphDescription:
     "Scopri cosa sta emergendo nell'AI: mappa, trend, segnali personali e watchlist.",
@@ -28,7 +28,7 @@ export default function RadarPage() {
     <MemberOnlyGate
       kicker="Radar completo"
       title="Accedi per esplorare tutti i segnali"
-      body="La preview in homepage Ã¨ pubblica. Il Radar completo con mappa, trend, Per te e Watchlist Ã¨ riservato ai membri."
+      body="La preview in homepage è pubblica. Il Radar completo con mappa, trend, Per te e Watchlist è riservato ai membri."
     >
       <RadarExperience />
     </MemberOnlyGate>

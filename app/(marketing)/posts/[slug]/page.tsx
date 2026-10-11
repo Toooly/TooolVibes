@@ -47,7 +47,6 @@ import {
 } from "@/lib/monetization/placements";
 import { SponsorOpportunityLink } from "@/components/monetization/partner-placements";
 import type { EditorialPostRecord } from "@/lib/types/article";
-import type { TocItem as TocItemType } from "@/components/guides/guide-article-toc";
 
 type EditorialPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -58,15 +57,6 @@ const kindLabels: Record<EditorialPostRecord["kind"], string> = {
   guide: "Guida",
   editorial: "Blog",
 };
-
-function dedupeHeadings(headings: TocItemType[]): TocItemType[] {
-  const seen = new Set<string>();
-  return headings.filter((h) => {
-    if (seen.has(h.id)) return false;
-    seen.add(h.id);
-    return true;
-  });
-}
 
 export async function generateStaticParams() {
   const posts = await getPublishedEditorialPosts();
@@ -219,12 +209,6 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
     ],
   };
 
-  // Heading collector ref; populated during render.
-  const headingsRef: { current: TocItemType[] } = { current: [] };
-  const onHeadings = (next: TocItemType[]) => {
-    headingsRef.current = dedupeHeadings(next);
-  };
-
   return (
     <>
       <JsonLd data={postStructuredData} />
@@ -332,7 +316,7 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
                   title="Continua nel tuo spazio"
                   body="Il resto della guida resta nel tuo spazio, insieme alle decisioni e alle note sul tool."
                 >
-                  <GuideMarkdown content={post.content_markdown ?? ""} onHeadings={onHeadings} />
+                  <GuideMarkdown content={post.content_markdown ?? ""} />
                   <GuideCallout kind="decision" title="In sintesi">
                     {post.summary}
                   </GuideCallout>
@@ -381,7 +365,6 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
 
           <div className="guides-article__rail">
             <GuideArticleToc
-              items={headingsRef.current}
               readingMinutes={readingMinutes}
             />
             <div

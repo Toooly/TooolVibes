@@ -142,6 +142,7 @@ export function GuideMarkdown({
 
   // Walk through MD parts to find headings for TOC, regardless of interleaving
   // (we only need ids for actual headings inside the markdown itself).
+  const collectedIds = new Set<string>();
   const collectedHeadings: Array<{ id: string; text: string; level: 2 | 3 }> = [];
   for (const part of parts) {
     if (part.type !== "md") continue;
@@ -154,10 +155,10 @@ export function GuideMarkdown({
         const base = slugify(text) || "sezione";
         let id = base;
         let i = 2;
-        while (usedIds.has(id)) {
+        while (collectedIds.has(id)) {
           id = `${base}-${i++}`;
         }
-        usedIds.add(id);
+        collectedIds.add(id);
         return id;
       })();
       // Reset usedIds per part? No — ids must be unique across the whole article.

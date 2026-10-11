@@ -1,25 +1,3 @@
-/* Critical token fallbacks — ensures resolution even if global tokens
-   chunk fails to cascade in the route-level CSS bundle. */
-:root {
-  --tv-font-family-display: var(--font-anton, "Anton"), Impact, "Arial Narrow", sans-serif;
-  --tv-font-family-ui: var(--font-manrope, "Manrope"), "Segoe UI", sans-serif;
-  --tv-text-hero: clamp(3rem, 5vw + 1.2rem, 7rem);
-  --tv-text-h1: clamp(2.5rem, 3.2vw + 1.55rem, 5rem);
-  --tv-text-h2: clamp(2rem, 2.1vw + 1.4rem, 3.5rem);
-  --tv-ink-primary: #F8F5EB;
-  --tv-ink-secondary: #c2beb5;
-  --tv-ink-muted-aa: #aaa59b;
-  --tv-surface-base: #0B0620;
-  --tv-surface-raised: #120C2E;
-  --tv-surface-elevated: #1C1440;
-  --tv-border-subtle: rgba(255,255,255,0.08);
-  --tv-accent-gold-on-dark: #F4C23E;
-  --tv-accent-violet: #7C3AED;
-  --tv-accent-cyan-on-dark: #22D3EE;
-  --tv-button-activation-bg: #F4C23E;
-  --tv-button-activation-text: #1a1206;
-}
-
 /* =====================================================================
    PHASE 4 — VISUAL SYSTEM TOKENS
    =====================================================================

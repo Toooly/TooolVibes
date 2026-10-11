@@ -57,7 +57,7 @@ export function LoginForm({ errorCode }: LoginFormProps) {
     <form
       action="/api/admin/login"
       method="post"
-      className="mt-7 space-y-4"
+      className="tv-admin-login-form mt-7 space-y-4"
       onChange={() => {
         setHasEditedAfterError(true);
       }}

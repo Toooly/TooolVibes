@@ -76,6 +76,11 @@ function buildContentSecurityPolicy(environment: SecurityHeaderEnvironment) {
     "https://ph-files.imgix.net",
     "https://api.qrserver.com",
     "https://www.google.com",
+    // The favicon endpoint redirects to these image-only CDN origins.
+    "https://t0.gstatic.com",
+    "https://t1.gstatic.com",
+    "https://t2.gstatic.com",
+    "https://t3.gstatic.com",
     TINYADZ_SCRIPT_ORIGIN,
   ];
 

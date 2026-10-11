@@ -829,7 +829,10 @@
     font-weight: 800;
     color: #cdb9ff;
   }
+  .guides-card__thumb > span,
+  .guides-card__thumb img { grid-area: 1 / 1; }
   .guides-card__thumb img {
+    background: var(--tv-surface-raised);
     width: 44px;
     height: 44px;
     object-fit: contain;
@@ -849,7 +852,7 @@
     gap: 4px 8px;
     min-width: 0;
   }
-  .guides-card__topic { font-size: 0.75rem; letter-spacing: 0.08em; white-space: nowrap; }
+  .guides-card__topic { font-size: 0.75rem; letter-spacing: 0.04em; overflow-wrap: anywhere; }
   .guides-card__read { font-size: 0.75rem; white-space: nowrap; }
 
   .guides-card__title {
@@ -857,7 +860,7 @@
     font-size: 0.95rem;
     line-height: 1.25;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -2435,4 +2438,44 @@
     color: var(--tv-ink-primary);
     font-size: 0.88rem;
   }
+}
+
+/* The index uses the shared dark canvas; cards retain their reading surface. */
+#guides-all {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding-inline: 0;
+}
+#guides-all .guides-filter {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 4px;
+  gap: var(--tv-space-2);
+  scrollbar-width: thin;
+  scroll-padding-inline: 4px;
+}
+#guides-all .guides-filter__chip {
+  flex: 0 0 auto;
+  min-height: var(--tv-button-min-height-touch);
+  background: var(--tv-surface-elevated);
+  border-color: var(--tv-border-interactive);
+  color: var(--tv-ink-secondary);
+}
+#guides-all .guides-filter__chip[aria-pressed="true"] {
+  background: var(--tv-accent-brand);
+  border-color: var(--tv-accent-brand);
+  color: var(--tv-ink-on-brand);
+}
+#guides-all .guides-filter__chip__count { color: inherit; }
+#guides-all .guides-filter__chip:focus-visible {
+  outline: 2px solid var(--tv-focus-ring);
+  outline-offset: 2px;
+}
+#guides-all .guides-section__foot-link {
+  color: var(--tv-ink-primary);
+  border-color: var(--tv-border-interactive);
+}
+@media (min-width: 48rem) {
+  .guides-card__thumb { display: none; }
 }

@@ -724,3 +724,10 @@
 .tv-sys-prose {
   font-size: var(--tv-type-body);
 }
+
+/* Native mobile inputs remain legible without Safari zooming the page. */
+@media (max-width: 47.99rem) {
+  .marketing-shell :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    font-size: 1rem;
+  }
+}

@@ -1,22 +1,5 @@
 /* Mockup parity presentation. Loaded last. Composition, not a second product. */
 
-:root {
-  --mp-bg: #07060d;
-  --mp-surface: #12101a;
-  --mp-elevated: #1a1724;
-  --mp-cream: #f6f1e8;
-  --mp-ink: #141218;
-  --mp-gold: #e4b23c;
-  --mp-violet: #8b6cff;
-  --mp-cyan: #3ec8ef;
-  --mp-text: #f6f1e8;
-  --mp-muted: #a39eae;
-  --mp-border: color-mix(in srgb, var(--mp-text) 12%, transparent);
-  --mp-radius: 16px;
-  --mp-fast: 160ms;
-  --mp-normal: 240ms;
-}
-
 .marketing-shell {
   background: var(--mp-bg);
 }
@@ -150,13 +133,6 @@
 }
 
 /* Guides: cream cards on night shell */
-.guides-card,
-.guide-card,
-.guides-grid__card {
-  border-radius: 16px;
-  background: var(--mp-cream);
-  color: var(--mp-ink);
-}
 
 .guides-article__body {
   max-width: 68ch;
@@ -329,7 +305,6 @@
   .def-start { padding-top: 10px; }
   .def-start__head { margin-bottom: 8px; }
   .def-start__title { font-size: 1.25rem; margin: 0; }
-  .tv-discovery-stage .def-start__tabs { min-height: 40px; }
   .def-editorial__spotlight { padding: 14px; }
   .def-editorial__spot-lede { font-size: 13px; }
   .tv-featured-tool__meta { gap: 10px; }

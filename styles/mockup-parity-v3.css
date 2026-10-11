@@ -10,7 +10,6 @@
   .def-intent__field { min-height: 44px !important; height: 44px !important; }
   .def-start { padding-top: 0 !important; margin-top: 0 !important; }
   .def-start__head { margin-bottom: 6px !important; }
-  .tv-discovery-stage .def-start__tabs { height: 40px !important; min-height: 40px !important; }
   .def-start__panel { margin-top: 4px !important; }
   .def-editorial__spotlight { padding: 14px !important; }
   .def-editorial__spot-avatar { width: 36px !important; height: 36px !important; }
@@ -121,16 +120,6 @@
 
 /* Closure adjustments (04/06) — explicit, loaded last */
 @media (max-width: 899px) {
-  .guides-filter {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    height: 44px !important;
-    min-height: 44px !important;
-    gap: 6px !important;
-    scrollbar-width: none;
-  }
-  .guides-filter__chip { flex: 0 0 auto !important; min-height: 36px !important; font-size: 0.8rem !important; }
   .guides-section--ink { margin-bottom: 13.125rem !important; }
   .cx-section-nav { min-height: 40px !important; margin-block: 4px !important; }
   .cx-stack-flow-v4 { margin-block: 0 !important; padding-top: 0 !important; }

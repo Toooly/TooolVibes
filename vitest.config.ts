@@ -25,6 +25,7 @@ const config = {
       "node_modules",
       "**/node_modules/**",
       ".codex-tmp",
+      ".tmp-qa/**",
       ".worktrees",
       ".slim",
       ".slim/**",

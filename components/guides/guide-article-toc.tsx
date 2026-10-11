@@ -8,7 +8,7 @@ import { bindShellScroll, getShellScroller, readingLine } from "@/lib/shell/scro
 export type TocItem = { id: string; text: string; level: 2 | 3 };
 
 type GuideArticleTocProps = {
-  items: TocItem[];
+  items?: TocItem[];
   title?: string;
   readingMinutes?: number;
   progressRootSelector?: string;
@@ -38,15 +38,49 @@ export function buildHeadingId(text: string, usedIds: Set<string>): string {
 }
 
 export function GuideArticleToc({
-  items,
+  items: suppliedItems = [],
   title = "Indice della guida",
   readingMinutes,
   progressRootSelector = "[data-guides-article-body]",
 }: GuideArticleTocProps) {
+  const [renderedItems, setRenderedItems] = useState<TocItem[]>([]);
+  const items = useMemo(
+    () => suppliedItems.length > 0 ? suppliedItems : renderedItems,
+    [suppliedItems, renderedItems],
+  );
   const [activeId, setActiveId] = useState<string | null>(items[0]?.id ?? null);
   const [progress, setProgress] = useState(0);
   const preferReducedMotion = useReducedMotion();
   const pinned = useRef<string | null>(null);
+
+  // Read the rendered article: server sibling render order cannot populate a ref
+  // before this client component receives it. Locked preview content stays out.
+  useEffect(() => {
+    if (suppliedItems.length > 0) return;
+    const root = document.querySelector(progressRootSelector);
+    if (!root) return;
+    const collect = () => {
+      const next = Array.from(root.querySelectorAll<HTMLElement>("h2[id], h3[id]"))
+        .filter((heading) => !heading.closest("[inert], [aria-hidden='true']"))
+        .map((heading): TocItem => ({
+          id: heading.id,
+          text: heading.textContent?.trim() ?? "",
+          level: heading.tagName === "H3" ? 3 : 2,
+        }));
+      setRenderedItems((previous) =>
+        JSON.stringify(previous) === JSON.stringify(next) ? previous : next,
+      );
+    };
+    collect();
+    const observer = new MutationObserver(collect);
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["inert", "aria-hidden", "id"],
+    });
+    return () => observer.disconnect();
+  }, [progressRootSelector, suppliedItems.length]);
 
   // Deep-link: honor #hash on first paint before scroll-spy takes over.
   useEffect(() => {

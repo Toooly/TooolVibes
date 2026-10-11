@@ -1785,9 +1785,9 @@
 
 
 .tv-compare-dock {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   position: fixed;
   left: max(0.75rem, env(safe-area-inset-left, 0px));
   right: max(0.75rem, env(safe-area-inset-right, 0px));
@@ -1802,9 +1802,9 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .tv-compare-dock {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
     animation: tv-motion-dock-in var(--tv-motion-base) var(--tv-easing-decelerate);
   }
   .tv-compare-dock,
@@ -1964,14 +1964,14 @@
 }
 @media (min-width: 1280px) {
   .tv-compare-dock {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important; bottom: 1rem; }
+  background: transparent;
+  border: none;
+  box-shadow: none; bottom: 1rem; }
 }
 html:has(.tv-consent-banner) .tv-compare-dock {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   bottom: calc(
     var(--tv-bottom-nav-total, 3.625rem) + env(safe-area-inset-bottom, 0px) +
       var(--tv-consent-banner-height, 7.5rem) + var(--tv-compare-gap, 0.75rem)
@@ -1979,9 +1979,9 @@ html:has(.tv-consent-banner) .tv-compare-dock {
 }
 @media (min-width: 1280px) {
   html:has(.tv-consent-banner) .tv-compare-dock {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
     bottom: calc(1rem + var(--tv-consent-banner-height, 7.5rem));
   }
 }
@@ -2285,152 +2285,98 @@ html:has(.tv-consent-banner) .tv-compare-dock {
   }
 }
 
-/* ─── COMPARE DOCK: final responsive architecture ─── */
-.tv-compare-dock__inner {
-  gap: 8px !important;
-  padding: 6px 10px !important;
-  min-height: 48px !important;
-}
-
-.tv-compare-dock__count {
-  white-space: nowrap !important;
-  font-variant-numeric: tabular-nums !important;
-  flex-shrink: 0 !important;
-}
-
-.tv-compare-dock__list {
-  min-width: 0 !important;
-  overflow: hidden !important;
-  display: flex !important;
-  gap: 6px !important;
-  flex-wrap: nowrap !important;
-}
-
-.tv-compare-dock__cta {
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  font-size: 12px !important;
-  padding: 6px 12px !important;
-  border-radius: 8px !important;
-  min-height: 36px !important;
-}
-
-/* Compact mode: icon-only add control */
-.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta {
-  padding: 6px !important;
-  min-width: 36px !important;
-  min-height: 36px !important;
-  font-size: 0 !important;
-}
-
-.tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta::before {
-  content: "+" !important;
-  font-size: 18px !important;
-  font-weight: 700 !important;
-  line-height: 1 !important;
-}
-
-/* Tool chip: ellipsis */
-.tv-compare-dock__chip {
-  min-width: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  max-width: 120px !important;
-}
-
 /* ─── COMPARE DOCK: mobile final architecture ─── */
 .tv-compare-dock__inner {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  padding: 6px 10px !important;
-  min-height: 48px !important;
-  width: 100% !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  min-height: 48px;
+  width: 100%;
 }
 
 .tv-compare-dock__count {
-  white-space: nowrap !important;
-  font-variant-numeric: tabular-nums !important;
-  flex-shrink: 0 !important;
-  font-family: var(--tv-font-family-mono, monospace) !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  min-width: 32px !important;
-  text-align: center !important;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  font-family: var(--tv-font-family-mono, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 32px;
+  text-align: center;
 }
 
 .tv-compare-dock__list {
-  min-width: 0 !important;
-  overflow: hidden !important;
-  display: flex !important;
-  gap: 6px !important;
-  flex-wrap: nowrap !important;
-  flex: 1 1 0% !important;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  flex: 1 1 0%;
 }
 
 .tv-compare-dock__chip,
 .tv-compare-dock__list > * {
-  min-width: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  max-width: 140px !important;
-  flex-shrink: 1 !important;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+  flex-shrink: 1;
 }
 
 /* +N overflow indicator */
 .tv-compare-dock__overflow {
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  color: var(--tv-ink-secondary, #c2beb5) !important;
-  padding: 2px 6px !important;
-  border-radius: 4px !important;
-  background: rgba(133, 103, 223, 0.08) !important;
-  border: 1px solid rgba(133, 103, 223, 0.12) !important;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tv-ink-secondary, #c2beb5);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(133, 103, 223, 0.08);
+  border: 1px solid rgba(133, 103, 223, 0.12);
 }
 
 .tv-compare-dock__cta {
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  font-size: 12px !important;
-  padding: 6px 12px !important;
-  border-radius: 8px !important;
-  min-height: 36px !important;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  min-height: var(--tv-button-min-height-touch);
 }
 
 /* Compact mode: icon-only add */
 .tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta {
-  padding: 6px !important;
-  min-width: 36px !important;
-  min-height: 36px !important;
-  font-size: 0 !important;
+  padding: 6px;
+  min-width: var(--tv-button-min-height-touch);
+  min-height: var(--tv-button-min-height-touch);
+  font-size: 0;
 }
 
 .tv-compare-dock[data-compare-dock-collapsed] .tv-compare-dock__cta::before {
-  content: "+" !important;
-  font-size: 18px !important;
-  font-weight: 700 !important;
-  line-height: 1 !important;
+  content: "+";
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 /* Expanded: show first chip + overflow count */
 @media (max-width: 429px) {
   .tv-compare-dock__chip:nth-child(n+2) {
-    display: none !important;
+    display: none;
   }
 }
 
 @media (min-width: 430px) {
   .tv-compare-dock__chip {
-    max-width: 160px !important;
+    max-width: 160px;
   }
 }
 
 @media (min-width: 768px) {
   .tv-compare-dock__chip {
-    max-width: 200px !important;
+    max-width: 200px;
   }
 }

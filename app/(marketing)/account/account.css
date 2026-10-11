@@ -4412,6 +4412,10 @@ html[data-tv-reduce-motion="true"] .tv-home-cta--primary {
 }
 
 .tv-lib-filters button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tv-space-2);
   min-height: 2.75rem;
   padding: 0 0.85rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -4724,29 +4728,30 @@ html[data-tv-reduce-motion="true"] .tv-lib--empty {
   }
 }
 
-/* GM-11 (canonical): login email row — pill with inline gold submit */
+/* Phone login: a complete email field followed by its reachable action. */
 @media (max-width: 47.99rem) {
   .v-auth-input-wrap--inline {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: 1px solid var(--tv-input-border);
-    border-radius: 999px;
-    padding: 0.3rem 0.3rem 0.3rem 0.9rem;
-    background: var(--tv-input-bg);
-  }
-  .v-auth-input-wrap--inline .v-auth-input {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--tv-space-2);
+    padding: 0;
     border: 0;
     background: transparent;
-    box-shadow: none;
+  }
+  .v-auth-input-wrap--inline .v-auth-input {
+    min-width: 0;
+    font-size: 1rem;
+    border: 1px solid var(--tv-input-border);
+    background: var(--tv-input-bg);
+  }
+  .v-auth-input-wrap--inline .v-auth-input-icon {
+    top: calc(var(--tv-control-min-height-large) / 2);
+    transform: translateY(-50%);
   }
   .v-auth-btn-primary--inline {
-    border-radius: 999px;
-    min-height: 44px;
-    padding-inline: 1.1rem;
+    width: 100%;
+    min-height: var(--tv-button-min-height-touch);
     white-space: nowrap;
-    flex: none;
   }
 }

@@ -31,11 +31,9 @@
   /* ---------- 04 GUIDES: featured card leaves the first viewport; chips then compact rows ---------- */
   .guides-section--ink { display: none !important; }
   .guides-section { padding-top: 6px !important; }
-  .guides-filter { margin-top: 8px !important; }
   .guides-grid { grid-template-columns: 1fr !important; gap: 10px !important; margin-top: 12px !important; }
   /* superseded by V4.4 anatomy below */
   /* superseded by V4.4 anatomy below */
-  .guides-grid .guides-card__title { font-size: 1rem !important; }
 
   /* ---------- 05 GUIDE ARTICLE: product media region, dark index, cream body below it ---------- */
   .guides-article__hero-media { height: 150px !important; margin-top: 8px !important; }
@@ -43,7 +41,6 @@
   .guides-article__body { margin-top: 16px !important; }
 
   /* ---------- 06 COLLECTION: compact numbered stages ---------- */
-  .cx-stack-flow-v4__stage > p, .cx-stack-flow-v4__stage > ul { display: none !important; }
   .cx-stack-flow-v4__list { gap: 8px !important; }
   .cx-stack-flow-v4__item { min-height: 0 !important; padding-block: 6px !important; }
 
@@ -140,9 +137,6 @@
 
   /* superseded by V4.4 anatomy below */
   /* superseded by V4.4 anatomy below */
-  .guides-grid .guides-card__title { font-size: 0.95rem !important; }
-
-  .guides-grid .guides-card__dek { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
 
   /* 05: cream reading surface starts below the first viewport, as in the mockup */
   /* superseded — no fold hacks */
@@ -151,13 +145,6 @@
   /* 04: row = filled topic block left, compact text right */
   /* superseded by V4.4 anatomy below */
   /* superseded by V4.4 anatomy below */
-  .guides-grid .guides-card__topic { background: color-mix(in srgb, var(--tv-accent-brand-pressed, #4d2dd6) 12%, transparent) !important; color: var(--tv-accent-brand-pressed, #4d2dd6) !important; font-size: 0.75rem !important; }
-
-  .guides-grid .guides-card__read { color: var(--tv-ink-muted, #8d8981) !important; font-size: 0.75rem !important; }
-
-  .guides-grid .guides-card__title { grid-column: 2 !important; grid-row: 1 !important; font-size: 0.92rem !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-
-  .guides-grid .guides-card__dek { display: none !important; }
 
   /* 05: dark meta pills and rail CTA; dark index box */
   .guides-article__hero-meta .pill { background: color-mix(in srgb, var(--tv-ink-primary) 8%, transparent) !important; color: var(--tv-ink-primary) !important; }
@@ -205,7 +192,6 @@
 @media (max-width: 899px){
   /* 04 V4.3: root cause — legacy ivory gradient on the grid section painted a cream slab.
      The section goes back to the dark shell; only the featured editorial card paints cream. */
-  #guides-all { background-image: none !important; background-color: transparent !important; }
 
   .guides-grid__featured .guides-feature { background: #f6f1e8 !important; border-radius: 16px !important; }
 
@@ -218,24 +204,6 @@
   .guides-masthead::before { display: none !important; }
   .guides-masthead__title { background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; color: #f6f1e8 !important; -webkit-text-fill-color: #f6f1e8 !important; }
   .guides-masthead__dek { color: #b9b2c9 !important; }
-
-  /* clean pill labels (counts must not widen the pills) */
-  .guides-filter__chip__count { display: none !important; }
-  .guides-filter__chip { padding: 0 16px !important; }
-
-  /* one cream container per row — text side included (fixes dark right region) */
-  .guides-grid .guides-card,
-  .guides-grid__featured .guides-card {
-    background: #f6f1e8 !important;
-    border-radius: 16px !important;
-    border: 1px solid rgba(20, 16, 40, 0.06) !important;
-  }
-  .guides-grid .guides-card__title,
-  .guides-grid__featured .guides-card__title { color: #17131f !important; }
-  .guides-grid .guides-card__dek,
-  .guides-grid__featured .guides-card__dek { color: #4d4860 !important; }
-  .guides-grid .guides-card__read,
-  .guides-grid__featured .guides-card__read { color: #5a5470 !important; }
 
   /* active bottom-nav item reads as active, like the reference */
   .mobile-bottom-item.is-active .mobile-bottom-item__glyph {
@@ -261,7 +229,7 @@
     border-radius: 14px !important;
   }
   .def-intent__field button {
-    width: 34px !important; height: 34px !important; min-height: 34px !important;
+    width: 44px !important; height: 44px !important; min-height: 44px !important;
     border-radius: 999px !important; padding: 0 !important;
     background: #cdb9ff !important; color: #1a1030 !important;
     display: grid !important; place-items: center !important;
@@ -278,7 +246,7 @@
 
   /* 02 CATALOGUE ---------------------------------------------- */
   .ar4-intro__search { background: rgba(139, 108, 255, 0.16) !important; border: 1px solid rgba(139, 108, 255, 0.35) !important; border-radius: 14px !important; }
-  .ar4-categories__chips { flex-wrap: nowrap !important; overflow-x: auto !important; height: 44px !important; min-height: 44px !important; gap: 8px !important; scrollbar-width: none; }
+  .ar4-categories__chips { flex-wrap: nowrap !important; overflow-x: auto !important; height: auto !important; min-height: 48px !important; gap: 8px !important; scrollbar-width: none; }
   .ar4-categories__chips::-webkit-scrollbar { display: none; }
   .ar4-chip { border-radius: 999px !important; border: 1px solid rgba(255, 255, 255, 0.16) !important; background: rgba(255, 255, 255, 0.05) !important; color: var(--tv-ink-primary) !important; min-height: 44px !important; padding: 0 14px !important; flex: 0 0 auto !important; font-size: 0.8rem !important; }
   .ar4-chip[aria-pressed="true"], .ar4-chip[data-active="true"], .ar4-chip.is-active { background: #cdb9ff !important; color: #1a1030 !important; border-color: transparent !important; }
@@ -335,7 +303,7 @@
 
   .def-intent__field { height: 48px !important; min-height: 48px !important; border-color: rgba(139, 108, 255, 0.45) !important; }
 
-  .tv-discovery-stage .def-start__tabs { height: 44px !important; margin-top: 10px !important; }
+  .tv-discovery-stage .def-start__tabs { margin-top: 10px !important; }
 
   /* segmented thumb owns the fill; labels stay color-only */
 
@@ -399,7 +367,7 @@
   /* flat bookmark inside the card, upper-right */
   .ar4-shell .ar4-card__toggles > *, .ar4-shell .ar4-card__actions [class*="selection-chip"] {
     background: transparent !important; border: 0 !important; box-shadow: none !important;
-    width: 28px !important; height: 28px !important; min-height: 28px !important;
+    width: 44px !important; height: 44px !important; min-height: 44px !important;
   }
 
 }
@@ -431,8 +399,6 @@
     color: #cdb9ff !important;
   }
 
-}
-@media (min-width: 900px){
 }
 @media (max-width: 899px){
   /* V6 follow-up */
@@ -470,7 +436,7 @@
   .ar4-shell .ar4-card__actions { top: 10px !important; right: 10px !important; }
 
   .ar4-shell .ar4-card__toggles > *, .ar4-shell .ar4-card__actions [class*="selection-chip"] {
-    width: 28px !important; height: 28px !important; min-height: 28px !important;
+    width: 44px !important; height: 44px !important; min-height: 44px !important;
   }
 
   .ar4-chip[aria-pressed="true"], .ar4-chip[data-active="true"], .ar4-chip.is-active {

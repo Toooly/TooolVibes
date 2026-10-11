@@ -62,6 +62,21 @@ describe("browser security header policy", () => {
     );
   });
 
+  it("allows favicon redirect origins only as images", () => {
+    const csp = asHeaderMap({ nodeEnv: "production" }).get("Content-Security-Policy-Report-Only") ?? "";
+    const directives = new Map(csp.split("; ").map((directive) => {
+      const [name, ...sources] = directive.split(" ");
+      return [name, sources];
+    }));
+
+    for (const origin of ["https://t0.gstatic.com", "https://t1.gstatic.com", "https://t2.gstatic.com", "https://t3.gstatic.com"]) {
+      expect(directives.get("img-src")).toContain(origin);
+      expect(directives.get("script-src")).not.toContain(origin);
+      expect(directives.get("connect-src")).not.toContain(origin);
+    }
+    expect(csp).not.toContain("*.gstatic.com");
+  });
+
   it("allows the exact TinyAdz script origin only where required", () => {
     const headers = asHeaderMap({
       nodeEnv: "production",

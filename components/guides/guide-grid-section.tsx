@@ -50,39 +50,39 @@ export function GuideGridSection({
       className="guides-section"
       aria-labelledby="guides-all-title"
     >
-        <div className="guides-filter" role="tablist" aria-label="Filtra per area">
+      <div className="guides-filter" role="group" aria-label="Filtra per area">
+        <button
+          type="button"
+          aria-pressed={active === "Tutte"}
+          onClick={() => {
+            setActive("Tutte");
+            setExpanded(false);
+          }}
+          className="guides-filter__chip"
+          aria-controls="guides-grid-list"
+        >
+          Tutte
+          <span className="guides-filter__chip__count">
+            {items.length}
+          </span>
+        </button>
+        {topics.map((t) => (
           <button
+            key={t.label}
             type="button"
-            role="tab"
-            aria-selected={active === "Tutte"}
+            aria-pressed={active === t.label}
             onClick={() => {
-              setActive("Tutte");
+              setActive(t.label);
               setExpanded(false);
             }}
             className="guides-filter__chip"
+            aria-controls="guides-grid-list"
           >
-            Tutte
-            <span className="guides-filter__chip__count">
-              {items.length}
-            </span>
+            {t.label}
+            <span className="guides-filter__chip__count">{t.count}</span>
           </button>
-          {topics.map((t) => (
-            <button
-              key={t.label}
-              type="button"
-              role="tab"
-              aria-selected={active === t.label}
-              onClick={() => {
-                setActive(t.label);
-                setExpanded(false);
-              }}
-              className="guides-filter__chip"
-            >
-              {t.label}
-              <span className="guides-filter__chip__count">{t.count}</span>
-            </button>
-          ))}
-        </div>
+        ))}
+      </div>
 
       {featured ? (
         <div className="guides-grid__featured" data-mobile-featured>
@@ -90,7 +90,7 @@ export function GuideGridSection({
         </div>
       ) : null}
 
-      <div className="guides-grid" id="guides-grid-list">
+      <div className="guides-grid" id="guides-grid-list" aria-live="polite">
         {visible.length === 0 ? (
           <p
             style={{

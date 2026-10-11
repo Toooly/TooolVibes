@@ -1,26 +1,13 @@
 /* Final visual system. Loaded last. Unifies rhythm, cards, glow, and motion.
    Does not own layout reservation, nav geometry, or ad collapse. */
 
-:root {
-  --tv-glow-gold: 0 0 0 1px color-mix(in srgb, var(--tv-accent-gold) 55%, transparent),
-    0 10px 28px color-mix(in srgb, var(--tv-accent-gold) 16%, transparent);
-  --tv-glow-cyan: 0 0 0 1px color-mix(in srgb, var(--tv-grammar-radar-accent) 50%, transparent),
-    0 10px 28px color-mix(in srgb, var(--tv-grammar-radar-accent) 14%, transparent);
-  --tv-glow-violet: 0 0 0 1px color-mix(in srgb, var(--tv-accent-brand) 48%, transparent),
-    0 10px 28px color-mix(in srgb, var(--tv-accent-brand) 14%, transparent);
-  --tv-border-system: color-mix(in srgb, var(--tv-ink-primary) 14%, transparent);
-  --tv-radius-system: 1rem;
-  --tv-motion-ui: 180ms;
-  --tv-motion-panel: 320ms;
-}
-
 .tv-discovery-stage .def-start__tabs {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   width: min(100%, 22.5rem);
   margin-inline: auto;
-  height: 44px;
+  height: 54px;
   padding: 4px;
   border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent);
   border-radius: 999px;
@@ -66,7 +53,7 @@
 
 .tv-discovery-stage .def-start__tab {
   width: 100%;
-  min-height: 0;
+  min-height: var(--tv-button-min-height-touch);
   height: auto;
   align-self: stretch;
   padding-inline: 8px;

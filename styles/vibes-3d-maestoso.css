@@ -147,7 +147,9 @@
   border: 1px solid var(--tv-border-inverted);
   background: transparent;
   box-shadow: none;
-  padding: 1rem 1.25rem;
+  padding: clamp(0.625rem, 2vw, 1rem);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* Image frame */

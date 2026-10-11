@@ -42,6 +42,15 @@ function toPixels(value: string, unit: string) {
   return unit === "px" ? number : number * 16;
 }
 
+// CSS lengths inside SVG use its viewBox coordinate system, not screen pixels.
+// Only explicitly SVG-scoped selectors qualify; HTML retains the 12px floor.
+function isSvgCoordinateSize(source: string, index: number | undefined, unit: string) {
+  if (index === undefined || unit !== "px") return false;
+  const open = source.lastIndexOf("{", index);
+  const start = Math.max(source.lastIndexOf("}", open), source.lastIndexOf("{", open - 1)) + 1;
+  return source.slice(start, open).split(",").every((selector) => /(^|\s)svg(?:\s|\.|#|:|\[|$)/.test(selector.trim()));
+}
+
 const sourceFiles = ["app", "components", "lib", "styles"]
   .flatMap(walk)
   .filter((file) => /\.(?:ts|tsx|css)$/.test(file));
@@ -148,7 +157,7 @@ describe("release typography contract", () => {
       for (const pattern of [declaration, clamp]) {
         pattern.lastIndex = 0;
         for (const match of source.matchAll(pattern)) {
-          if (toPixels(match[1], match[2]) < 12) {
+          if (toPixels(match[1], match[2]) < 12 && !isSvgCoordinateSize(source, match.index, match[2])) {
             violations.push(
               `${file}:${lineNumber(source, match.index)} ${match[0]}`,
             );

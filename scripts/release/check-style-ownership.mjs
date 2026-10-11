@@ -21,6 +21,10 @@ const expectedGlobalImports = [
   "@/styles/premium-motion.css",
   "@/styles/member-experience.css",
   "@/styles/visual-character.css",
+  "@/styles/visual-system.css",
+  "@/styles/mockup-parity.css",
+  "@/styles/mockup-parity-v3.css",
+  "@/styles/mockup-parity-v4.css",
 ];
 const retiredGlobalImports = [
   "@/styles/home.css",

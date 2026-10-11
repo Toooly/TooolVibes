@@ -1,4 +1,7 @@
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+
+import { GuideThumbnail } from "./guide-thumbnail";
 
 import { formatItalianDate } from "@/lib/utils";
 import type { EditorialPostRecord } from "@/lib/types/article";
@@ -119,7 +122,15 @@ export function GuideCard({
             <ul className="guides-feature__points" aria-label="Punti chiave">
               {post.highlights.slice(0, 4).map((point) => (
                 <li key={point}>
-                  <span>{point}</span>
+                  <span>
+                    <ReactMarkdown
+                      allowedElements={["p", "strong", "em", "code"]}
+                      unwrapDisallowed
+                      components={{ p: ({ children }) => <span>{children}</span> }}
+                    >
+                      {point}
+                    </ReactMarkdown>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -203,14 +214,7 @@ export function GuideCard({
           .join(" ")}
         aria-label={`Leggi la guida: ${post.title}`}
       >
-        <span className={["guides-card__thumb", thumbDomain ? null : "guides-card__thumb--glyph"].filter(Boolean).join(" ")} aria-hidden="true">
-          {thumbDomain ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(thumbDomain)}&sz=128`} alt="" loading="lazy" decoding="async" />
-          ) : (
-            <span aria-hidden="true">{resolvedTopic.charAt(0).toUpperCase()}</span>
-          )}
-        </span>
+        <GuideThumbnail domain={thumbDomain} label={toolName || resolvedTopic} />
         <div className="guides-card__topline">
           <span
             className="guides-card__topic"
@@ -238,14 +242,7 @@ export function GuideCard({
         .join(" ")}
       aria-label={`Leggi la guida: ${post.title}`}
     >
-        <span className={["guides-card__thumb", thumbDomain ? null : "guides-card__thumb--glyph"].filter(Boolean).join(" ")} aria-hidden="true">
-          {thumbDomain ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(thumbDomain)}&sz=128`} alt="" loading="lazy" decoding="async" />
-          ) : (
-            <span aria-hidden="true">{resolvedTopic.charAt(0).toUpperCase()}</span>
-          )}
-        </span>
+      <GuideThumbnail domain={thumbDomain} label={toolName || resolvedTopic} />
       <div className="guides-card__topline">
         <span
           className="guides-card__topic"

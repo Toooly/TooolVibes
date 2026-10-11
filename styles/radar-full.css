@@ -299,7 +299,7 @@
 .tv-rx-map__label-plate { fill: var(--tv-color-surface-base); fill-opacity: 0.95; }
 .tv-rx-map__selection-guide { stroke: var(--tv-radar-instrument-accent); stroke-width: 0.8; stroke-opacity: 0.55; stroke-dasharray: 2 1; vector-effect: non-scaling-stroke; }
 .tv-rx-map__frame path { fill: none; stroke: color-mix(in srgb, var(--tv-color-ink-300) 18%, transparent); stroke-width: 0.75; vector-effect: non-scaling-stroke; }
-.tv-rx-map__micro-label { fill: var(--tv-color-ink-400); font-family: var(--tv-font-family-mono); font-size: 1.75px; letter-spacing: 0.1em; }
+svg .tv-rx-map__micro-label { fill: var(--tv-color-ink-400); font-family: var(--tv-font-family-mono); font-size: 1.75px; letter-spacing: 0.1em; }
 
 /* Semantic zoom camera. `transform-box: view-box` + `transform-origin: 0 0`
    reproduce the SVG transform attribute exactly, so animating the CSS
@@ -565,7 +565,7 @@
   pointer-events: none;
 }
 
-.tv-rx-map__ring-label { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-mono); font-size: 3.3px; letter-spacing: 0.025em; text-transform: uppercase; }
+svg .tv-rx-map__ring-label { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-mono); font-size: 3.3px; letter-spacing: 0.025em; text-transform: uppercase; }
 
 /* §18 — selection context. Selected stays full prominence, same cluster stays
    readable, other clusters step back modestly. Never hidden. Opacity/transform
@@ -1705,7 +1705,7 @@
   .tv-rx-telemetry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--tv-space-1) var(--tv-space-2); }
   .tv-rx-telemetry__identity { grid-column: 1; grid-row: 1; gap: var(--tv-space-1); }
   .tv-rx .tv-rx-range { margin-inline-start: 0; width: fit-content; grid-column: 1; grid-row: 2; }
-  .tv-rx-telemetry__time { grid-column: 2; grid-row: 1; font-size: 0.6875rem; }
+  .tv-rx-telemetry__time { grid-column: 2; grid-row: 1; font-size: var(--tv-text-xs); }
   .tv-rx-telemetry__time-full { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .tv-rx-telemetry__time-short { display: inline; }
   .tv-rx-telemetry__refresh { grid-column: 2; grid-row: 2; }
@@ -1818,10 +1818,10 @@
   .tv-rx-map__bezel-tick[data-fine="true"], .tv-rx-map__micro-label { display: none; }
 }
 @media (min-width: 64rem) {
-  .tv-rx-map__ring-label { font-size: 2.1px; }
+svg .tv-rx-map__ring-label { font-size: 2.1px; }
 }
 @media (max-width: 22.1875rem) {
-  .tv-rx-map__ring-label { font-size: 3.8px; }
+svg .tv-rx-map__ring-label { font-size: 3.8px; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .tv-rx-map__surface, .tv-rx-map__bezel-ticks, .tv-rx-map__grid { animation: tv-rx-calibrate 320ms ease-out; }
@@ -1880,28 +1880,28 @@
 .tv-atlas__area:focus-visible .tv-atlas__territory { fill-opacity: 0.16; }
 .tv-atlas__area:focus-visible .tv-atlas__territory { stroke: var(--tv-color-ink-100); stroke-width: 1.4; }
 .tv-atlas__area-full, .tv-atlas__area-short { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-ui); font-weight: 650; letter-spacing: .02em; }
-.tv-atlas__area-full { font-size: 2.2px; }
+svg .tv-atlas__area-full { font-size: 2.2px; }
 .tv-atlas__area-short { display: none; }
-.tv-atlas__area-count { fill: var(--tv-atlas-territory); font-family: var(--tv-font-family-display); font-size: 4.7px; }
+svg .tv-atlas__area-count { fill: var(--tv-atlas-territory); font-family: var(--tv-font-family-display); font-size: 4.7px; }
 .tv-atlas__area-arrow { fill: none; stroke: var(--tv-atlas-territory); stroke-width: 1.25; }
 .tv-atlas__area:focus-visible .tv-atlas__area-full,
 .tv-atlas__area:focus-visible .tv-atlas__area-short { fill: var(--tv-color-ink-100); }
 .tv-rx-map[data-visual-mode="local"] .tv-atlas__territory { fill-opacity: 0.045; }
-.tv-atlas__micro { fill: var(--tv-color-ink-400); font-family: var(--tv-font-family-mono); font-size: 2px; letter-spacing: 0.04em; }
+svg .tv-atlas__micro { fill: var(--tv-color-ink-400); font-family: var(--tv-font-family-mono); font-size: 2px; letter-spacing: 0.04em; }
 .tv-atlas__display { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-display); font-weight: 400; letter-spacing: 0.01em; }
-.tv-atlas__count { font-size: 9px; }
-.tv-atlas__range { fill: var(--tv-color-violet-300); font-size: 7px; }
+svg .tv-atlas__count { font-size: 9px; }
+svg .tv-atlas__range { fill: var(--tv-color-violet-300); font-size: 7px; }
 .tv-atlas__time-arc { fill: none; stroke: var(--tv-color-ink-400); stroke-width: 0.8; opacity: 0.35; }
 .tv-atlas__time-arc[data-outer="true"] { stroke-width: 1.2; }
 .tv-atlas__tick { stroke: var(--tv-radar-instrument-accent); stroke-width: 1; opacity: 0.75; }
 .tv-atlas__label-plate { fill: var(--tv-color-surface-base); fill-opacity: 0.94; }
-.tv-rx-map .tv-atlas__time-label { font-size: 2.2px; letter-spacing: 0.025em; }
+.tv-rx-map svg .tv-atlas__time-label { font-size: 2.2px; letter-spacing: 0.025em; }
 .tv-atlas__accent-rule { fill: none; stroke: var(--tv-radar-instrument-accent); stroke-width: 2; }
 .tv-atlas__construction { fill: none; stroke: var(--tv-color-ink-500); stroke-width: 0.8; opacity: 0.4; }
-.tv-atlas__density { fill: var(--tv-radar-instrument-accent); font-size: 6px; }
+svg .tv-atlas__density { fill: var(--tv-radar-instrument-accent); font-size: 6px; }
 .tv-atlas__caption { fill: var(--tv-color-ink-200); }
 .tv-atlas__origin { fill: var(--tv-color-ink-200); }
-.tv-atlas__origin-label { font-size: 1.7px; }
+svg .tv-atlas__origin-label { font-size: 1.7px; }
 .tv-atlas__glyph { opacity: 0.9; transition: opacity 140ms ease; }
 .tv-atlas__glyph-body { fill: color-mix(in srgb, var(--tv-atlas-signal) 20%, var(--tv-color-surface-base)); stroke: var(--tv-color-surface-base); stroke-width: 2.5; }
 .tv-atlas__beacon-mark { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-ui); font-weight: 700; }
@@ -1914,12 +1914,12 @@
 .tv-atlas__glyph[data-beacon-tier="ambient"] .tv-atlas__glyph-body { stroke-width: 1.4; }
 .tv-rx-blip[data-selected="true"] .tv-atlas__glyph[data-beacon-tier] { opacity: 1; }
 .tv-atlas__editorial-labels { pointer-events: none; }
-.tv-atlas__tool-label { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-ui); font-size: 2.7px; font-weight: 550; }
-.tv-atlas__tool-label--primary { fill: var(--tv-color-ink-100); font-size: 3px; font-weight: 650; }
+svg .tv-atlas__tool-label { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-ui); font-size: 2.7px; font-weight: 550; }
+svg .tv-atlas__tool-label--primary { fill: var(--tv-color-ink-100); font-size: 3px; font-weight: 650; }
 .tv-atlas__tool-leader { stroke: var(--tv-color-ink-400); stroke-width: .65; opacity: .65; }
 @media (max-width: 47.999rem) {
-  .tv-atlas__tool-label { font-size: 3px; }
-  .tv-atlas__tool-label--primary { font-size: 3.4px; }
+svg .tv-atlas__tool-label { font-size: 3px; }
+svg .tv-atlas__tool-label--primary { font-size: 3.4px; }
 }
 .tv-atlas__external { fill: none; stroke: var(--tv-color-ink-400); stroke-width: .8; }
 .tv-rx-map[data-visual-mode="global"] .tv-atlas__glyph { opacity: .9; }
@@ -1934,9 +1934,9 @@
 .tv-rx-blip[data-age-unknown="true"] .tv-atlas__glyph-body { stroke-dasharray: 2 1; }
 .tv-rx-map .tv-atlas__radial-guide { stroke-dasharray: none; stroke-opacity: 0.22; }
 .tv-atlas__leader { fill: none; stroke: var(--tv-radar-instrument-accent); stroke-width: 1; opacity: 0.65; }
-.tv-atlas__selected-name { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-ui); font-size: 2.6px; font-weight: 650; }
-.tv-atlas__attention { fill: var(--tv-radar-instrument-accent); font-size: 6px; }
-.tv-atlas__attention-caption, .tv-atlas__age { font-size: 1.85px; }
+svg .tv-atlas__selected-name { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-ui); font-size: 2.6px; font-weight: 650; }
+svg .tv-atlas__attention { fill: var(--tv-radar-instrument-accent); font-size: 6px; }
+svg .tv-atlas__attention-caption, svg .tv-atlas__age { font-size: 1.85px; }
 .tv-rx-map[data-renderer="atlas"] .tv-rx-blip__hit:focus-visible { stroke: var(--tv-color-ink-100); stroke-width: 1.4; stroke-dasharray: 1.5 1.5; }
 @media (hover: hover) and (pointer: fine) {
   .tv-rx-blip:hover .tv-atlas__glyph { opacity: 1; }
@@ -1945,21 +1945,24 @@
 @media (max-width: 47.999rem) {
   .tv-atlas__density, .tv-atlas__density-caption,
   .tv-atlas__desktop { display: none; }
+  /* The adjacent inspector owns selected details on phones; map annotations
+     would compete with territory names in the same narrow margins. */
+  .tv-atlas__inspection > :is(text, .tv-atlas__leader) { display: none; }
   .tv-atlas__area-full { display: none; }
-  .tv-atlas__area-short { display: block; font-size: 3.1px; }
-  .tv-atlas__area-count { font-size: 5px; }
-  .tv-atlas__count { font-size: 7.8px; }
-  .tv-atlas__range { font-size: 6.1px; }
-  .tv-atlas__micro { font-size: 2.6px; }
-  .tv-rx-map .tv-atlas__time-label { font-size: 3px; }
-  .tv-atlas__origin-label { font-size: 2.1px; }
-  .tv-atlas__selected-name { font-size: 3.3px; }
-  .tv-atlas__attention { font-size: 5.2px; }
-  .tv-atlas__attention-caption, .tv-atlas__age { font-size: 2.2px; }
-  .tv-atlas__caption { font-size: 2.45px; }
+svg .tv-atlas__area-short { display: block; font-size: 3.1px; }
+svg .tv-atlas__area-count { font-size: 5px; }
+svg .tv-atlas__count { font-size: 7.8px; }
+svg .tv-atlas__range { font-size: 6.1px; }
+svg .tv-atlas__micro { font-size: 2.6px; }
+.tv-rx-map svg .tv-atlas__time-label { font-size: 3px; }
+svg .tv-atlas__origin-label { font-size: 2.1px; }
+svg .tv-atlas__selected-name { font-size: 3.3px; }
+svg .tv-atlas__attention { font-size: 5.2px; }
+svg .tv-atlas__attention-caption, svg .tv-atlas__age { font-size: 2.2px; }
+svg .tv-atlas__caption { font-size: 2.45px; }
 }
 @media (max-width: 23.4375rem) {
-  .tv-atlas__area-short { font-size: 3.7px; }
+svg .tv-atlas__area-short { font-size: 3.7px; }
 }
 @media (min-width: 108rem) {
   .tv-atlas__construction { opacity: 0.55; }

@@ -633,3 +633,27 @@
   height: 100%;
   background: var(--tv-accent-brand, #7c3aed);
 }
+
+/* The sign-in form shares the operational input geometry. */
+.tv-admin-login-form input {
+  min-height: calc(var(--tv-button-min-height-touch) + var(--tv-space-3));
+  padding: var(--tv-space-3) var(--tv-input-padding-x);
+  border: 1px solid var(--tv-border-interactive);
+  border-radius: var(--tv-input-radius);
+  background: var(--tv-input-bg);
+  font-size: 1rem;
+  box-shadow: none;
+}
+.tv-admin-login-form input[name="password"] { padding-right: 7.25rem; }
+.tv-admin-login-form .premium-input:focus-visible {
+  border-color: var(--tv-input-border-focus);
+  box-shadow: none;
+  outline: 2px solid var(--tv-focus-ring);
+  outline-offset: 2px;
+}
+@media (max-width: 47.99rem) {
+  [data-admin-shell] :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+    font-size: 1rem;
+    min-height: var(--tv-button-min-height-touch);
+  }
+}

@@ -45,9 +45,9 @@ export function MemberOnlyGate({
     <section className="tv-member-gate" aria-labelledby="tv-member-only-gate-title">
       <div className="tv-member-gate__card">
         <p className="tv-member-gate__kicker">{kicker}</p>
-        <h2 id="tv-member-only-gate-title" className="tv-member-gate__title">
+        <h1 id="tv-member-only-gate-title" className="tv-member-gate__title">
           {title}
-        </h2>
+        </h1>
         <p className="tv-member-gate__body">{body}</p>
         <Link className="tv-member-gate__cta" href="/account">
           Entra per continuare

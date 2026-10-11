@@ -494,15 +494,14 @@
 }
 
 .shortlist-final-surface .mobile-library-empty__recommendations {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
   gap: 0.6rem;
   width: 100%;
 }
 
 .shortlist-final-surface .mobile-library-empty__recommendation-card {
   display: flex;
-  flex: 1 1 12rem;
   flex-direction: column;
   gap: 0.2rem;
   min-width: 0;
@@ -518,7 +517,6 @@
   font-size: inherit;
   transition: border-color var(--tv-motion-fast) var(--tv-ease-standard);
   box-shadow: inset 2px 0 0 var(--tv-grammar-personal-remembered-edge);
-;
 }
 
 .shortlist-final-surface .mobile-library-empty__recommendation-card:is(:hover, :focus-visible) {
@@ -839,7 +837,7 @@
   }
 
   .shortlist-final-surface .mobile-library-empty__recommendations {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .shortlist-final-surface .mobile-library-wishlist__disclosure > summary {
