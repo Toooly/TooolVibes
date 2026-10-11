@@ -75,7 +75,7 @@ async function record(page,key,range){
  const global=await page.locator('.tv-rx-map').getAttribute('data-visual-mode')==='global';
  for(const marker of display[key]){
   const reference=baseline[key]?.find(m=>m.id===marker.id);
-  if(reference){assert.equal(marker.radius,reference.radius);assert.equal(marker.hitRadius,reference.hitRadius);assert.equal(marker.label,reference.label);if(global)assert.equal(marker.transform,reference.transform);}
+  if(reference){assert.equal(marker.radius,reference.radius);assert.equal(marker.hitRadius,reference.hitRadius);assert.equal(marker.label,reference.label);if(global||process.env.RADAR_BEACON_HIERARCHY==='1')assert.equal(marker.transform,reference.transform);}
   const coords=marker.displayCentre;
   const frozen=frozenRecords.find(p=>p.range===range&&p.id===marker.id);assert(frozen,key+' frozen source record');
   const error=Math.abs(Math.hypot(coords[0]-50,coords[1]-50)-42*frozen.radiusRatio);report.maximumCartesianRadialError=Math.max(report.maximumCartesianRadialError,error);assert(error<1e-5,key+' projected radial truth within SVG float precision');
@@ -91,6 +91,19 @@ async function record(page,key,range){
  }
 
 
+ if(process.env.RADAR_BEACON_HIERARCHY==='1' && !global){
+  const measurement=await page.locator('.tv-rx-map__camera').evaluate(camera=>{
+   const markers=[...camera.querySelectorAll('.tv-rx-blip')].map(el=>{const hit=el.querySelector('.tv-rx-blip__hit'),m=hit.getScreenCTM(),p=new DOMPoint(0,0).matrixTransform(m),glyph=el.querySelector('.tv-atlas__glyph'),body=glyph.querySelector('.tv-atlas__glyph-body').getBoundingClientRect();return {name:hit.getAttribute('aria-label'),tier:glyph.dataset.beaconTier,x:p.x,y:p.y,r:Number(glyph.dataset.drawnRadius)*Math.hypot(m.a,m.b),width:body.width,height:body.height};});
+   const labelEls=[...camera.querySelectorAll('[data-editorial-label]')];
+   const labels=labelEls.map(el=>{const text=el.querySelector('text'),b=text.getBoundingClientRect();return {id:el.dataset.editorialLabel,text:text.textContent,tier:el.dataset.labelTier,left:b.left,right:b.right,top:b.top,bottom:b.bottom};});
+   const reserved=[...camera.querySelectorAll('.tv-atlas__time text,.tv-atlas__metadata text,.tv-atlas__inspection text')].filter(el=>getComputedStyle(el).display!=='none').map(el=>el.getBoundingClientRect());
+   return {markers,labels,labelOverlap:labels.some(l=>markers.some(m=>Math.hypot(Math.max(l.left-m.x,0,m.x-l.right),Math.max(l.top-m.y,0,m.y-l.bottom))<m.r-.01)||reserved.some(b=>l.left<b.right&&l.right>b.left&&l.top<b.bottom&&l.bottom>b.top)),primaryCount:markers.filter(m=>m.tier==='primary').length};
+  });
+  assert.equal(measurement.primaryCount,1,key+' one truthful Primary');assert(measurement.labels.length<=2,key+' maximum two editorial names');assert(!measurement.labelOverlap,key+' editorial label overlap');
+  const primary=measurement.markers.find(m=>m.tier==='primary');const selection=page.locator('.tv-rx-blip[data-selected="true"] .tv-rx-blip__hit');const selected=await selection.count()?await selection.getAttribute('aria-label'):null;
+  assert(measurement.labels.some(l=>l.tier==='primary')||selected===primary.name,key+' Primary identity always labelled');
+  report.checks.push({tag:key+'-beacon-hierarchy',...measurement});
+ }
  await geometry(page,key);
  const labels=await page.locator('.tv-rx-map__ring-label').evaluateAll(els=>els.map(el=>{const r=el.getBoundingClientRect(),svg=el.closest('svg').getBoundingClientRect();return {text:el.textContent,x:r.x-svg.x,y:r.y-svg.y,right:r.right-svg.x,bottom:r.bottom-svg.y,height:r.height,width:svg.width};}));
  assert(labels.every(l=>l.x>=0&&l.y>=0&&l.right<=l.width&&l.bottom<=l.width),`${key}: label bounds`);
@@ -158,8 +171,9 @@ async function emptySectors(page,key,range){
   assert.equal(await page.locator('.tv-rx-map').getAttribute('data-visual-mode'),'global');
   const area=page.locator(`[data-atlas-territory="${cluster}"][role="button"]`);
   if(!key.includes('-390-')){
-   await page.mouse.move(empty.screen.x,empty.screen.y);await settled(page);
-   assert(Number(await area.locator('.tv-atlas__territory').evaluate(el=>getComputedStyle(el).fillOpacity))>.075,key+' hover lift');
+   const hover=await page.locator('.tv-rx-map__camera').evaluate((camera,p)=>{const q=new DOMPoint(p.x,p.y).matrixTransform(camera.getScreenCTM());return {x:q.x,y:q.y};},empty.display);
+   await page.mouse.move(hover.x,hover.y);
+   await page.waitForFunction(id=>Number(getComputedStyle(document.querySelector(`[data-atlas-territory="${id}"] .tv-atlas__territory`)).fillOpacity)>.075,cluster,{timeout:3000});
   }
   await page.keyboard.press('Tab');await area.focus();
   assert(await area.evaluate(el=>el.matches(':focus-visible')),key+' visible keyboard focus');

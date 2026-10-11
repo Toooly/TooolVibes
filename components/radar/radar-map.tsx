@@ -21,7 +21,9 @@
 
 import { useCallback, useId, useRef, type CSSProperties } from "react";
 
-import { RadarAtlasField, RadarAtlasGlyph, RadarAtlasInspection } from "@/components/radar/radar-atlas";
+import { RadarAtlasField, RadarAtlasGlyph, RadarAtlasInspection, RadarAtlasEditorialLabels } from "@/components/radar/radar-atlas";
+
+import { rankAtlasBeacons } from "@/lib/radar/radar-atlas-beacons";
 
 import {
   RADAR_CATEGORY_PALETTE,
@@ -189,6 +191,8 @@ export function RadarMap({
     const display = displayPointById.get(entry.id);
     return display ? { ...entry, x: display.x, y: display.y } : entry;
   });
+
+  const atlasTiers = focusedClusterId ? rankAtlasBeacons(layoutTools.filter(tool => tool.topicCluster.id === focusedClusterId)) : new Map();
 
   // Renderer-only references. The canonical point and display maps stay intact.
   const selectedPoint = selectedId ? pointById.get(selectedId) : undefined;
@@ -572,6 +576,11 @@ export function RadarMap({
         })()}
 
         <g className="tv-rx-map__points">
+          {instrumentRenderer === "atlas" && focusedClusterId && <RadarAtlasEditorialLabels selectedId={selectedId} signals={tapPoints.filter(p => isVisible(p.id) && p.clusterId === focusedClusterId).map(p => {
+            const tool = layoutTools.find(t => t.id === p.id)!;
+            const name = tool.name.length > 16 ? `${tool.name.slice(0, 15)}…` : tool.name;
+            return { id: p.id, x: p.x, y: p.y, radius: p.size, name, attention: tool.attention, tier: atlasTiers.get(p.id) ?? "ambient" };
+          })} />}
           {layoutTools.map((tool) => {
             if (!isVisible(tool.id)) return null;
             const basePoint = pointById.get(tool.id);
@@ -650,7 +659,7 @@ export function RadarMap({
                       : undefined
                   }
                 />
-                {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} name={tool.name} /> : <>
+                {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} name={tool.name} tier={atlasTiers.get(tool.id) ?? "global"} thumbnailUrl={focusedClusterId ? tool.thumbnailUrl : null} /> : <>
                 {(isSelected || isHighlighted) && (
                   <circle
                     style={{ pointerEvents: "none" }}

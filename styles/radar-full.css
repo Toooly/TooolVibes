@@ -1873,6 +1873,24 @@
 .tv-atlas__glyph-body { fill: color-mix(in srgb, var(--tv-atlas-signal) 20%, var(--tv-color-surface-base)); stroke: var(--tv-color-surface-base); stroke-width: 2.5; }
 .tv-atlas__beacon-facet { fill: var(--tv-color-ink-100); fill-opacity: .08; stroke: var(--tv-atlas-signal); stroke-width: .8; }
 .tv-atlas__beacon-mark { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-ui); font-weight: 700; }
+/* V3.6 Local hierarchy stays inside the canonical clearance envelope. */
+.tv-atlas__glyph[data-beacon-tier="primary"] { opacity: 1; }
+.tv-atlas__glyph[data-beacon-tier="primary"] .tv-atlas__glyph-body { fill: color-mix(in srgb, var(--tv-atlas-signal) 42%, var(--tv-color-surface-base)); stroke: var(--tv-color-ink-300); stroke-width: 1.4; }
+.tv-atlas__glyph[data-beacon-tier="primary"] .tv-atlas__beacon-facet { fill-opacity: .16; stroke-width: 1.1; }
+.tv-atlas__glyph[data-beacon-tier="primary"] .tv-atlas__glyph-datum { opacity: .95; stroke-width: 1.1; }
+.tv-atlas__glyph[data-beacon-tier="secondary"] { opacity: .94; }
+.tv-atlas__glyph[data-beacon-tier="secondary"] .tv-atlas__glyph-body { fill: color-mix(in srgb, var(--tv-atlas-signal) 28%, var(--tv-color-surface-base)); stroke-width: 1.8; }
+.tv-atlas__glyph[data-beacon-tier="ambient"] { opacity: .76; }
+.tv-atlas__glyph[data-beacon-tier="ambient"] .tv-atlas__glyph-body { stroke-width: 1.4; }
+.tv-rx-blip[data-selected="true"] .tv-atlas__glyph[data-beacon-tier] { opacity: 1; }
+.tv-atlas__editorial-labels { pointer-events: none; }
+.tv-atlas__tool-label { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-ui); font-size: 2.7px; font-weight: 550; }
+.tv-atlas__tool-label--primary { fill: var(--tv-color-ink-100); font-size: 3px; font-weight: 650; }
+.tv-atlas__tool-leader { stroke: var(--tv-color-ink-400); stroke-width: .65; opacity: .65; }
+@media (max-width: 47.999rem) {
+  .tv-atlas__tool-label { font-size: 3px; }
+  .tv-atlas__tool-label--primary { font-size: 3.4px; }
+}
 .tv-atlas__external { fill: none; stroke: var(--tv-color-ink-400); stroke-width: .8; }
 .tv-rx-map[data-visual-mode="global"] .tv-atlas__glyph { opacity: .68; }
 .tv-rx-map[data-visual-mode="global"] .tv-rx-blip[data-selected="true"] .tv-atlas__glyph { opacity: 1; }

@@ -1,4 +1,5 @@
-import type { CSSProperties } from "react";
+import { useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { planAtlasBeaconLabels, type AtlasBeaconTier, type AtlasEditorialLabel, type AtlasLabelSignal } from "@/lib/radar/radar-atlas-beacons";
 
 import type { RadarClusterSummary, RadarTool } from "@/lib/radar/radar-domain";
 import type { RadarPoint2 } from "@/lib/radar/radar-projection";
@@ -122,16 +123,67 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
   );
 }
 
-export function RadarAtlasGlyph({ radius: r, color, selected, highlighted, linked, name }: { radius: number; color: string; selected: boolean; highlighted: boolean; linked: boolean; name: string }) {
-  const body = `M ${-r * .83} 0 L ${-r * .18} ${-r * .65} L ${r * .6} ${-r * .48} L ${r * .91} ${r * .05} L ${r * .13} ${r * .73} Z`;
-  return <g className="tv-atlas__glyph" data-beacon-direction="b" data-instrument-layer="atlas-glyph" data-drawn-radius={r} aria-hidden="true" style={{ "--tv-atlas-signal": color } as CSSProperties}>
+export function RadarAtlasGlyph({ radius: r, color, selected, highlighted, linked, name, tier = "global", thumbnailUrl }: { radius: number; color: string; selected: boolean; highlighted: boolean; linked: boolean; name: string; tier?: AtlasBeaconTier; thumbnailUrl?: string | null }) {
+  const clipId = useId().replace(/:/g, "");
+  const [imageState, setImageState] = useState<{ source: string; loaded: boolean } | null>(null);
+  const local = tier !== "global";
+  const scale = tier === "ambient" ? .73 : 1;
+  const body = tier === "primary"
+    ? `M ${-r * .91} 0 L ${-r * .24} ${-r * .84} L ${r * .66} ${-r * .62} L ${r * .9} ${r * .16} L ${r * .15} ${r * .89} Z`
+    : tier === "secondary"
+      ? `M ${-r * .84} 0 L ${-r * .2} ${-r * .76} L ${r * .62} ${-r * .55} L ${r * .88} ${r * .08} L ${r * .12} ${r * .81} Z`
+      : `M ${-r * .83 * scale} 0 L ${-r * .18 * scale} ${-r * .65 * scale} L ${r * .6 * scale} ${-r * .48 * scale} L ${r * .91 * scale} ${r * .05 * scale} L ${r * .13 * scale} ${r * .73 * scale} Z`;
+  const identitySize = r * (tier === "primary" ? 1.04 : tier === "secondary" ? .9 : tier === "ambient" ? .68 : .7);
+  const image = local && thumbnailUrl && /^https?:\/\//.test(thumbnailUrl) && !(imageState?.source === thumbnailUrl && !imageState.loaded) ? thumbnailUrl : null;
+  const loaded = imageState?.source === image && imageState.loaded;
+  return <g className="tv-atlas__glyph" data-beacon-direction="b" data-beacon-tier={tier} data-instrument-layer="atlas-glyph" data-drawn-radius={r} aria-hidden="true" style={{ "--tv-atlas-signal": color } as CSSProperties}>
     <path d={body} className="tv-atlas__glyph-body" />
-    <path d={`M ${-r * .18} ${-r * .65} L ${r * .02} ${r * .02} L ${r * .91} ${r * .05} L ${r * .6} ${-r * .48} Z`} className="tv-atlas__beacon-facet" />
-    <path d={`M ${-r * .37} ${r * .05} l ${r * .24} ${-r * .3} l ${r * .3} ${r * .2} l ${-r * .25} ${r * .3} Z`} className="tv-atlas__glyph-nucleus" />
-    <text x={r * .03} y={r * .21} textAnchor="middle" className="tv-atlas__beacon-mark" style={{ fontSize: r * .7 }}>{(Array.from(name.trim())[0] ?? "·").toLocaleUpperCase("it-IT")}</text>
-    <path d={`M ${r * .2} ${r * .53} H ${r * .78}`} className="tv-atlas__glyph-datum" />
-    {linked ? <path d={`M ${r * .42} ${r * .29} v ${r * .22} m ${r * .19} ${-r * .22} v ${r * .22}`} className="tv-atlas__linked tv-rx-blip__entity" /> : <path d={`M ${r * .7} ${r * .38} l ${r * .12} ${r * .1}`} className="tv-atlas__external" />}
+    <path d={local ? `M ${-r * .2 * scale} ${-r * .72 * scale} L 0 0 L ${r * .85 * scale} ${r * .06 * scale} L ${r * .58 * scale} ${-r * .5 * scale} Z` : `M ${-r * .18} ${-r * .65} L ${r * .02} ${r * .02} L ${r * .91} ${r * .05} L ${r * .6} ${-r * .48} Z`} className="tv-atlas__beacon-facet" />
+    <path d={local ? `M ${-identitySize * .54} 0 l ${identitySize * .45} ${-identitySize * .55} l ${identitySize * .64} ${identitySize * .35} l ${-identitySize * .46} ${identitySize * .66} Z` : `M ${-r * .37} ${r * .05} l ${r * .24} ${-r * .3} l ${r * .3} ${r * .2} l ${-r * .25} ${r * .3} Z`} className="tv-atlas__glyph-nucleus" />
+    <text x={r * .03} y={identitySize * .3} textAnchor="middle" className="tv-atlas__beacon-mark" style={{ fontSize: identitySize }}>{(Array.from(name.trim())[0] ?? "·").toLocaleUpperCase("it-IT")}</text>
+    {image && <>
+      <defs><clipPath id={clipId}><rect x={-identitySize / 2} y={-identitySize / 2} width={identitySize} height={identitySize} rx={identitySize * .18} /></clipPath></defs>
+      <image href={image} x={-identitySize / 2} y={-identitySize / 2} width={identitySize} height={identitySize} preserveAspectRatio="xMidYMid meet" clipPath={`url(#${clipId})`} opacity={loaded ? 1 : 0} onLoad={() => setImageState({ source: image, loaded: true })} onError={() => setImageState({ source: image, loaded: false })} className="tv-atlas__beacon-image" />
+    </>}
+    <path d={`M ${r * .2 * scale} ${r * (local ? .6 : .53) * scale} H ${r * (!local ? .78 : tier === "primary" ? .65 : .6) * scale}`} className="tv-atlas__glyph-datum" />
+    {linked ? <path d={`M ${r * .42 * scale} ${r * .29 * scale} v ${r * .22 * scale} m ${r * .19 * scale} ${-r * .22 * scale} v ${r * .22 * scale}`} className="tv-atlas__linked tv-rx-blip__entity" /> : <path d={`M ${r * .7 * scale} ${r * .38 * scale} l ${r * .12 * scale} ${r * .1 * scale}`} className="tv-atlas__external" />}
     {(selected || highlighted) && <path d={`M ${-r * .85} ${-r * .3} V ${-r * .45} H ${-r * .55} M ${r * .55} ${r * .45} H ${r * .85} V ${r * .3}`} className="tv-atlas__selection-notches" />}
+  </g>;
+}
+
+export function RadarAtlasEditorialLabels({ signals, selectedId }: { signals: readonly AtlasLabelSignal[]; selectedId?: string | null }) {
+  const ref = useRef<SVGGElement | null>(null);
+  const [labels, setLabels] = useState<AtlasEditorialLabel[]>([]);
+  const strongest = [...signals].sort((a, b) => b.attention - a.attention || a.id.localeCompare(b.id));
+  const measured = [strongest.find(s => s.tier === "primary"), strongest.find(s => s.tier === "secondary")].filter((s): s is AtlasLabelSignal => Boolean(s));
+  const signature = JSON.stringify([signals, selectedId]);
+  useLayoutEffect(() => {
+    const group = ref.current, svg = group?.ownerSVGElement;
+    if (!group || !svg || typeof group.getBBox !== "function") return;
+    let disposed = false;
+    const compute = () => {
+      if (disposed) return;
+      const measurements = new Map([...group.querySelectorAll<SVGTextElement>('[data-label-measure]')].map(text => { const b = text.getBBox(); return [text.dataset.labelMeasure!, { width: b.width, height: b.height, baseline: b.y }]; }));
+      const reserved = [...svg.querySelectorAll<SVGTextElement>('.tv-atlas__time text,.tv-atlas__metadata text,.tv-atlas__inspection text')].map(text => { const b = text.getBBox(); return { left: b.x, right: b.x + b.width, top: b.y, bottom: b.y + b.height }; });
+      const leader = svg.querySelector<SVGPathElement>('.tv-atlas__leader');
+      const callout = leader ? Array.from({ length: Math.ceil(leader.getTotalLength() * 2) + 1 }, (_, i) => leader.getPointAtLength(i / 2)) : [];
+      const next = planAtlasBeaconLabels(signals, measurements, reserved, selectedId, callout);
+      setLabels(current => JSON.stringify(current) === JSON.stringify(next) ? current : next);
+    };
+    compute();
+    document.fonts?.ready.then(compute);
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(compute);
+    observer?.observe(svg);
+    return () => { disposed = true; observer?.disconnect(); };
+    // The serialized input includes the immutable positions and selected state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signature]);
+  return <g ref={ref} className="tv-atlas__editorial-labels" data-instrument-layer="atlas-editorial-labels" aria-hidden="true">
+    <g visibility="hidden">{measured.map(s => <text key={s.id} data-label-measure={s.id} className={`tv-atlas__tool-label tv-atlas__tool-label--${s.tier}`}>{s.name}</text>)}</g>
+    {labels.map(label => <g key={label.id} data-editorial-label={label.id} data-label-tier={label.tier}>
+      <line x1={label.from.x} y1={label.from.y} x2={label.to.x} y2={label.to.y} className="tv-atlas__tool-leader" />
+      <text x={label.x} y={label.y} textAnchor="middle" className={`tv-atlas__tool-label tv-atlas__tool-label--${label.tier}`}>{label.name}</text>
+    </g>)}
   </g>;
 }
 
