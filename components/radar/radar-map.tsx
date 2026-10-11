@@ -198,7 +198,7 @@ export function RadarMap({
   const activeSpiderGroups = spider?.groups ?? [];
 
   const handlePointerDown = useCallback(
-    (event: React.PointerEvent<SVGSVGElement>) => {
+    (event: React.PointerEvent<SVGElement>) => {
       const svg = svgRef.current;
       if (!svg) return;
       const rect = svg.getBoundingClientRect();
@@ -240,9 +240,24 @@ export function RadarMap({
       const hitRadius = RADAR_HIT_RADIUS_VIEWBOX / zoom;
       const ambiguityEpsilon = RADAR_TAP_AMBIGUITY_EPSILON / zoom;
 
-      // §4 — the sector rim is a CLUSTER FOCUS entry point. It is resolved
-      // before signal candidates so a rim tap never opens the chooser.
-      if (onSelectSector && !focusedClusterId) {
+      // Only visible, interactive points may be selected.
+      const visiblePoints = tapPoints.filter((point) => {
+        if (visibleIds && !visibleIds.has(point.id)) return false;
+        if (interactiveIds && !interactiveIds.has(point.id)) return false;
+        return true;
+      });
+      const resolution = resolveRadarTap(visiblePoints, global.x, global.y, {
+        hitRadius,
+        ambiguityEpsilon,
+      });
+
+      if (resolution.kind === "selected") {
+        onSelect(resolution.id);
+        return;
+      }
+      // Empty Global territory enters CLUSTER FOCUS only after canonical
+      // visible signal hits (including ambiguity) have had priority.
+      if (resolution.kind === "none" && onSelectSector && !focusedClusterId) {
         const radius = Math.sqrt(
           (global.x - RADAR_CENTER) * (global.x - RADAR_CENTER) +
             (global.y - RADAR_CENTER) * (global.y - RADAR_CENTER),
@@ -263,21 +278,6 @@ export function RadarMap({
         }
       }
 
-      // Only visible, interactive points may be selected.
-      const visiblePoints = tapPoints.filter((point) => {
-        if (visibleIds && !visibleIds.has(point.id)) return false;
-        if (interactiveIds && !interactiveIds.has(point.id)) return false;
-        return true;
-      });
-      const resolution = resolveRadarTap(visiblePoints, global.x, global.y, {
-        hitRadius,
-        ambiguityEpsilon,
-      });
-
-      if (resolution.kind === "selected") {
-        onSelect(resolution.id);
-        return;
-      }
       // §9 — tapping empty space collapses an open spider.
       if (spider && spider.spideredIds.size > 0) {
         onCollapseSpider?.();
@@ -511,7 +511,7 @@ export function RadarMap({
                     aria-label={`Apri il settore ${labelByCluster.get(clusterId) ?? clusterId}`}
                     onPointerDown={(event) => {
                       event.stopPropagation();
-                      if (!focusedClusterId) onSelectSector(clusterId);
+                      if (!focusedClusterId) handlePointerDown(event);
                     }}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
