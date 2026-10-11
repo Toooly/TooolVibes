@@ -21,7 +21,15 @@ const tiun: RadarTool = {
 const clusters = [{ id: topicCluster.id, label: topicCluster.label, count: 1, colorIndex: 5, sectorIndex: 5 }];
 
 beforeEach(() => {
-  vi.stubGlobal("PointerEvent", MouseEvent);
+  vi.stubGlobal("PointerEvent", class extends MouseEvent {
+    pointerType: string;
+    pointerId: number;
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init);
+      this.pointerType = init.pointerType ?? "mouse";
+      this.pointerId = init.pointerId ?? 1;
+    }
+  });
   vi.spyOn(SVGElement.prototype, "getBoundingClientRect").mockReturnValue({
     x: 0, y: 0, left: 0, top: 0, right: 100, bottom: 100, width: 100, height: 100,
     toJSON: () => ({}),
@@ -94,4 +102,44 @@ it("preserves sector keyboard entry and Local signal selection", () => {
   tap(centre.x, centre.y);
   expect(onSelect).toHaveBeenCalledExactlyOnceWith(tiun.id);
   expect(onSelectSector).not.toHaveBeenCalled();
+});
+
+it("waits for a completed touch tap instead of selecting at the start of a scroll", () => {
+  const { container, onSelect } = setup();
+  const svg = container.querySelector("svg")!;
+  const touch = { pointerType: "touch", pointerId: 1, clientX: centre.x, clientY: centre.y };
+  fireEvent.pointerDown(svg, touch);
+  expect(onSelect).not.toHaveBeenCalled();
+  fireEvent.pointerUp(svg, touch);
+  expect(onSelect).not.toHaveBeenCalled();
+  fireEvent.click(svg, { clientX: centre.x, clientY: centre.y });
+  expect(onSelect).toHaveBeenCalledExactlyOnceWith(tiun.id);
+});
+
+it.each(["drag", "cancel", "multitouch"])("does not navigate or select during a %s gesture", (gesture) => {
+  const { container, onSelect, onSelectSector, onAmbiguous } = setup();
+  const svg = container.querySelector("svg")!;
+  const touch = { pointerType: "touch", pointerId: 1, clientX: centre.x, clientY: centre.y };
+  fireEvent.pointerDown(svg, touch);
+  if (gesture === "drag") fireEvent.pointerMove(svg, { ...touch, clientY: centre.y + 50 });
+  if (gesture === "cancel") fireEvent.pointerCancel(svg, touch);
+  if (gesture === "multitouch") fireEvent.pointerDown(svg, { ...touch, pointerId: 2 });
+  fireEvent.pointerUp(svg, touch);
+  fireEvent.click(svg, { clientX: centre.x, clientY: centre.y });
+  expect(onSelect).not.toHaveBeenCalled();
+  expect(onSelectSector).not.toHaveBeenCalled();
+  expect(onAmbiguous).not.toHaveBeenCalled();
+});
+
+it("preserves a 44px minimum touch target on a narrow instrument", () => {
+  vi.spyOn(SVGElement.prototype, "getBoundingClientRect").mockReturnValue({
+    x: 0, y: 0, left: 0, top: 0, right: 256, bottom: 256, width: 256, height: 256, toJSON: () => ({}),
+  });
+  const { container, onSelect } = setup();
+  const svg = container.querySelector("svg")!;
+  const touch = { pointerType: "touch", pointerId: 1, clientX: centre.x * 2.56 + 21.99, clientY: centre.y * 2.56 };
+  fireEvent.pointerDown(svg, touch);
+  fireEvent.pointerUp(svg, touch);
+  fireEvent.click(svg, { clientX: touch.clientX, clientY: touch.clientY });
+  expect(onSelect).toHaveBeenCalledExactlyOnceWith(tiun.id);
 });

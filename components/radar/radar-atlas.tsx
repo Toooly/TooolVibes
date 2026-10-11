@@ -16,8 +16,9 @@ function arc(radius: number, start: number, end: number) {
   const a = polar(radius, start), b = polar(radius, end);
   return `M ${a.x} ${a.y} A ${radius} ${radius} 0 ${end - start > 180 ? 1 : 0} 1 ${b.x} ${b.y}`;
 }
-function territory(start: number, end: number, inner = 22, outer = 39.5) {
+function territory(start: number, end: number, inner = 0, outer = 42) {
   const a = polar(outer, start), b = polar(inner, end), c = polar(inner, start);
+  if (inner === 0) return `${arc(outer, start, end)} L 50 50 Z`;
   return `${arc(outer, start, end)} L ${b.x} ${b.y} A ${inner} ${inner} 0 0 0 ${c.x} ${c.y} L ${a.x} ${a.y} Z`;
 }
 const shortLabels = ["VIDEO", "DESIGN", "NO-CODE", "GROWTH", "PROD.", "CODING", "AGENTI", "ALTRO"];
@@ -35,6 +36,7 @@ type AtlasProps = {
 };
 
 export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, focusedClusterId, onSelectSector, visiblePoints = [] }: AtlasProps) {
+  const surfaceId = `atlas-surface-${useId().replace(/:/g, "")}`;
   const local = Boolean(focusedClusterId);
   const count = local ? tools.filter(t => t.topicCluster.id === focusedClusterId).length : tools.length;
   const activeAreas = clusters.filter(c => c.count > 0).length;
@@ -42,10 +44,21 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
   const rings = radarRingLabels(range);
   return (
     <>
+      <g className="tv-atlas__surface" data-instrument-layer="atlas-surface" aria-hidden="true">
+        <defs>
+          <radialGradient id={surfaceId} cx="38%" cy="18%" r="85%">
+            <stop offset="0" stopColor="var(--tv-color-ink-100)" stopOpacity="0.075" />
+            <stop offset="0.6" stopColor="var(--tv-color-violet-500)" stopOpacity="0.045" />
+            <stop offset="1" stopColor="var(--tv-color-surface-base)" stopOpacity="0.4" />
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="43.5" fill={`url(#${surfaceId})`} />
+        <circle cx="50" cy="50" r="43.5" className="tv-atlas__rim" />
+      </g>
       <g className="tv-atlas__territories" key={focusedClusterId ?? "market"}>
         {clusterOrder.map((id, i) => {
           if (local && id !== focusedClusterId) return null;
-          const start = local ? 92 : i * 45 + 2, end = local ? 256 : i * 45 + 43;
+          const start = i * 45, end = (i + 1) * 45;
           const cluster = clusters.find(c => c.id === id);
           const clusterCount = cluster?.count ?? 0;
           const active = !local && clusterCount > 0 && Boolean(onSelectSector);
@@ -59,11 +72,11 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
             const bearing = ((Math.atan2(tip.y - 50, tip.x - 50) * 180 / Math.PI + 90) % 360 + 360) % 360;
             const countRadius = Math.hypot(p.x - .5 - 50, p.y + 1.3 - 50);
             const clipped = countRadius <= 30 || Math.hypot(tip.x - 50, tip.y - 50) <= 30 || boxes.some(b => b.left < 1 || b.right > 99 || b.top < 1 || b.bottom > 90) || Math.floor(bearing / 45) !== i;
-            // The material body is asymmetric; its painted envelope is smaller
-            // than the canonical circular hit/clearance envelope.
+            // Circular artwork remains inside the canonical clearance envelope.
             const collisions = visiblePoints.reduce((sum, q) => {
               const r = q.size ?? 2;
-              const glyph = { left: q.x - .83 * r - .6, right: q.x + .91 * r + .6, top: q.y - .65 * r - .6, bottom: q.y + .73 * r + .6 };
+              const extent = .85 * r + .6;
+              const glyph = { left: q.x - extent, right: q.x + extent, top: q.y - extent, bottom: q.y + extent };
               return sum + boxes.reduce((depth, b) => depth + Math.max(0, -Math.max(b.left - glyph.right, glyph.left - b.right, b.top - glyph.bottom, glyph.top - b.bottom)), 0);
             }, 0);
             const metadata = [{ left: 3, right: 22, top: 2, bottom: 19 }, { left: 80, right: 97, top: 3, bottom: 13.5 }, { left: 80, right: 97, top: 74, bottom: 87 }];
@@ -74,12 +87,12 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
           return <g key={id} className="tv-atlas__area" data-atlas-territory={id} data-active={active ? "true" : undefined}
             role={active ? "button" : undefined} tabIndex={active ? 0 : undefined}
             aria-label={active ? `Apri ${cluster?.label ?? id}, ${clusterCount} segnali` : undefined}
+            onClick={active ? event => { if (event.detail === 0) onSelectSector?.(id); } : undefined}
             onKeyDown={active ? event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelectSector?.(id); } } : undefined}
             style={{ "--tv-atlas-territory": colors.get(id) } as CSSProperties}>
             {active && <path d={territory(i * 45, (i + 1) * 45, 30.0001, 47)} className="tv-atlas__territory-hit" data-territory-hit={id} aria-hidden="true" />}
             <g className="tv-atlas__area-art" data-instrument-layer="atlas-area-art" aria-hidden="true">
-              <path d={local ? territory(start, end) : territory(start, end, 30, 42)} className="tv-atlas__territory" />
-              {clusterCount > 0 && <path d={arc(42.6, start, end)} className="tv-atlas__identity" />}
+              {local ? <circle cx="50" cy="50" r="42" className="tv-atlas__territory" /> : <path d={territory(start, end)} className="tv-atlas__territory" />}
               {!local && clusterCount > 0 && <>
                 <text x={p.x} y={p.y - 2.5} textAnchor="middle" className="tv-atlas__area-short">{shortLabels[i]}</text>
                 <text x={p.x} y={p.y - 5.2} textAnchor="middle" className="tv-atlas__area-full">{categoryLines[i].map((line, n) => <tspan key={line} x={p.x} dy={n ? 2.4 : 0}>{line}</tspan>)}</text>
@@ -96,7 +109,7 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
           const x = 50 - radius;
           const width = Math.max(8.2, ring.label.length * 2.1);
           return <g key={ring.label}>
-            <path d={arc(radius, 252, 302)} className="tv-atlas__time-arc" data-ring-radius={radius} data-ring-label={ring.label} data-outer={i === rings.length - 1 ? "true" : undefined} />
+            <circle cx="50" cy="50" r={radius} className="tv-atlas__time-arc" data-ring-radius={radius} data-ring-label={ring.label} data-outer={i === rings.length - 1 ? "true" : undefined} />
             <line x1={x} y1={49.3} x2={x} y2={50.7} className="tv-atlas__tick" />
             <rect x={x - width / 2} y={50.1} width={width} height={4.1} className="tv-atlas__label-plate" />
             <text x={x} y={53.1} textAnchor="middle" className="tv-rx-map__ring-label tv-atlas__time-label">{ring.label}</text>
@@ -113,7 +126,6 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
         <path d="M 5 91 H 95" className="tv-atlas__construction" />
         <text x="5" y="97" className="tv-atlas__micro tv-atlas__caption">{local ? focusLabel.toUpperCase() : "IL MERCATO, ORA"}</text>
         <text x="95" y="97" textAnchor="end" className="tv-atlas__micro tv-atlas__desktop">{local ? "TERRITORIO / 01" : "ATLANTE / 08"}</text>
-        <path d={local ? "M 76 34 H 80 V 72 H 76" : "M 29 72 V 76 H 63 V 72"} className="tv-atlas__grouping" />
       </g>
       <g data-instrument-layer="atlas-origin" aria-hidden="true">
         <text x="50" y="48.5" textAnchor="middle" className="tv-atlas__micro tv-atlas__origin-label">{RADAR_RING_CENTER_LABEL}</text>
@@ -126,28 +138,19 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
 export function RadarAtlasGlyph({ radius: r, color, selected, highlighted, linked, name, tier = "global", thumbnailUrl }: { radius: number; color: string; selected: boolean; highlighted: boolean; linked: boolean; name: string; tier?: AtlasBeaconTier; thumbnailUrl?: string | null }) {
   const clipId = useId().replace(/:/g, "");
   const [imageState, setImageState] = useState<{ source: string; loaded: boolean } | null>(null);
-  const local = tier !== "global";
   const scale = tier === "ambient" ? .73 : 1;
-  const body = tier === "primary"
-    ? `M ${-r * .91} 0 L ${-r * .24} ${-r * .84} L ${r * .66} ${-r * .62} L ${r * .9} ${r * .16} L ${r * .15} ${r * .89} Z`
-    : tier === "secondary"
-      ? `M ${-r * .84} 0 L ${-r * .2} ${-r * .76} L ${r * .62} ${-r * .55} L ${r * .88} ${r * .08} L ${r * .12} ${r * .81} Z`
-      : `M ${-r * .83 * scale} 0 L ${-r * .18 * scale} ${-r * .65 * scale} L ${r * .6 * scale} ${-r * .48 * scale} L ${r * .91 * scale} ${r * .05 * scale} L ${r * .13 * scale} ${r * .73 * scale} Z`;
-  const identitySize = r * (tier === "primary" ? 1.04 : tier === "secondary" ? .9 : tier === "ambient" ? .68 : .7);
-  const image = local && thumbnailUrl && /^https?:\/\//.test(thumbnailUrl) && !(imageState?.source === thumbnailUrl && !imageState.loaded) ? thumbnailUrl : null;
+  const identitySize = r * (tier === "primary" ? 1.04 : tier === "secondary" ? .9 : tier === "ambient" ? .68 : 1.05);
+  const image = thumbnailUrl && /^https?:\/\//.test(thumbnailUrl) && !(imageState?.source === thumbnailUrl && !imageState.loaded) ? thumbnailUrl : null;
   const loaded = imageState?.source === image && imageState.loaded;
   return <g className="tv-atlas__glyph" data-beacon-direction="b" data-beacon-tier={tier} data-instrument-layer="atlas-glyph" data-drawn-radius={r} aria-hidden="true" style={{ "--tv-atlas-signal": color } as CSSProperties}>
-    <path d={body} className="tv-atlas__glyph-body" />
-    <path d={local ? `M ${-r * .2 * scale} ${-r * .72 * scale} L 0 0 L ${r * .85 * scale} ${r * .06 * scale} L ${r * .58 * scale} ${-r * .5 * scale} Z` : `M ${-r * .18} ${-r * .65} L ${r * .02} ${r * .02} L ${r * .91} ${r * .05} L ${r * .6} ${-r * .48} Z`} className="tv-atlas__beacon-facet" />
-    <path d={local ? `M ${-identitySize * .54} 0 l ${identitySize * .45} ${-identitySize * .55} l ${identitySize * .64} ${identitySize * .35} l ${-identitySize * .46} ${identitySize * .66} Z` : `M ${-r * .37} ${r * .05} l ${r * .24} ${-r * .3} l ${r * .3} ${r * .2} l ${-r * .25} ${r * .3} Z`} className="tv-atlas__glyph-nucleus" />
-    <text x={r * .03} y={identitySize * .3} textAnchor="middle" className="tv-atlas__beacon-mark" style={{ fontSize: identitySize }}>{(Array.from(name.trim())[0] ?? "·").toLocaleUpperCase("it-IT")}</text>
+    <circle r={r * .85 * scale} className="tv-atlas__glyph-body" />
+    <text x={r * .03} y={identitySize * .3} textAnchor="middle" opacity={loaded ? 0 : 1} className="tv-atlas__beacon-mark" style={{ fontSize: identitySize }}>{(Array.from(name.trim())[0] ?? "·").toLocaleUpperCase("it-IT")}</text>
     {image && <>
       <defs><clipPath id={clipId}><rect x={-identitySize / 2} y={-identitySize / 2} width={identitySize} height={identitySize} rx={identitySize * .18} /></clipPath></defs>
       <image href={image} x={-identitySize / 2} y={-identitySize / 2} width={identitySize} height={identitySize} preserveAspectRatio="xMidYMid meet" clipPath={`url(#${clipId})`} opacity={loaded ? 1 : 0} onLoad={() => setImageState({ source: image, loaded: true })} onError={() => setImageState({ source: image, loaded: false })} className="tv-atlas__beacon-image" />
     </>}
-    <path d={`M ${r * .2 * scale} ${r * (local ? .6 : .53) * scale} H ${r * (!local ? .78 : tier === "primary" ? .65 : .6) * scale}`} className="tv-atlas__glyph-datum" />
     {linked ? <path d={`M ${r * .42 * scale} ${r * .29 * scale} v ${r * .22 * scale} m ${r * .19 * scale} ${-r * .22 * scale} v ${r * .22 * scale}`} className="tv-atlas__linked tv-rx-blip__entity" /> : <path d={`M ${r * .7 * scale} ${r * .38 * scale} l ${r * .12 * scale} ${r * .1 * scale}`} className="tv-atlas__external" />}
-    {(selected || highlighted) && <path d={`M ${-r * .85} ${-r * .3} V ${-r * .45} H ${-r * .55} M ${r * .55} ${r * .45} H ${r * .85} V ${r * .3}`} className="tv-atlas__selection-notches" />}
+    {(selected || highlighted) && <circle r={r * .97} className="tv-atlas__selection-notches" />}
   </g>;
 }
 
@@ -197,15 +200,13 @@ export function RadarAtlasInspection({ tool, point, visiblePoints }: { tool: Rad
     const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1)));
     return Math.hypot(p.x - a.x - t * dx, p.y - a.y - t * dy);
   };
-  const routes = slots.flatMap(slot => [false, true].map(margin => {
-    const elbow = slot.right ? slot.x - 24 : slot.x + 24;
-    const trunk = slot.right ? 84 : 16;
-    const points = margin ? [point, { x: trunk, y: point.y }, { x: trunk, y: slot.y + 5 }, { x: slot.x, y: slot.y + 5 }] : [point, { x: elbow, y: slot.y + 5 }, { x: slot.x, y: slot.y + 5 }];
+  const routes = slots.map(slot => {
+    const points = [point, { x: slot.x, y: slot.y + 5 }];
     const crossings = otherPoints.filter(p => points.slice(1).some((b, i) => distanceToSegment(p, points[i], b) < (p.size ?? 2) + 1)).length;
     const occupied = otherPoints.filter(p => p.x > (slot.right ? 61 : 4) && p.x < (slot.right ? 96 : 39) && p.y > slot.y - 5 && p.y < slot.y + 20).length;
     const length = points.slice(1).reduce((sum, b, i) => sum + Math.hypot(b.x - points[i].x, b.y - points[i].y), 0);
     return { slot, points, score: crossings * 10 + occupied * 5 + length / 1000 };
-  }));
+  });
   const route = routes.reduce((best, r) => r.score < best.score ? r : best, routes[0]);
   const slot = route.slot;
   const leader = route.points.map((p, i) => `${i ? "L" : "M"} ${p.x} ${p.y}`).join(" ");

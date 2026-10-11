@@ -153,6 +153,7 @@ export function RadarMap({
   const glowId = useId();
   const svgRef = useRef<SVGSVGElement | null>(null);
   const cameraRef = useRef<SVGGElement | null>(null);
+  const touchRef = useRef<{ id: number; x: number; y: number; cancelled: boolean; completed: boolean } | null>(null);
 
   // §2 — layout is computed from the FULL set, once per dataset.
   const layout = layoutRadarPoints(layoutTools, {
@@ -207,7 +208,7 @@ export function RadarMap({
   const activeSpiderGroups = spider?.groups ?? [];
 
   const handlePointerDown = useCallback(
-    (event: React.PointerEvent<SVGElement>) => {
+    (event: { clientX: number; clientY: number; pointerType?: string }) => {
       const svg = svgRef.current;
       if (!svg) return;
       const rect = svg.getBoundingClientRect();
@@ -246,7 +247,10 @@ export function RadarMap({
       // Hit radii are defined in global units at zoom 1 (a ~50px touch target).
       // Dividing by the zoom keeps that target the same physical size on screen
       // at every zoom level instead of ballooning with the camera.
-      const hitRadius = RADAR_HIT_RADIUS_VIEWBOX / zoom;
+      const hitRadius = Math.max(
+        RADAR_HIT_RADIUS_VIEWBOX / zoom,
+        event.pointerType === "touch" ? 22 * 100 / (rect.width * zoom) : 0,
+      );
       const ambiguityEpsilon = RADAR_TAP_AMBIGUITY_EPSILON / zoom;
 
       // Only visible, interactive points may be selected.
@@ -344,7 +348,39 @@ export function RadarMap({
         role="group"
         aria-labelledby={titleId}
         preserveAspectRatio="xMidYMid meet"
-        onPointerDown={handlePointerDown}
+        onPointerDown={(event) => {
+          if (event.pointerType !== "touch") {
+            if (event.button === 0) handlePointerDown(event);
+            return;
+          }
+          if (touchRef.current && !touchRef.current.completed && !touchRef.current.cancelled) {
+            touchRef.current.cancelled = true;
+            return;
+          }
+          touchRef.current = { id: event.pointerId, x: event.clientX, y: event.clientY, cancelled: false, completed: false };
+        }}
+        onPointerMove={(event) => {
+          const touch = touchRef.current;
+          if (touch && Math.hypot(event.clientX - touch.x, event.clientY - touch.y) > 10) touch.cancelled = true;
+        }}
+        onPointerUp={(event) => {
+          const touch = touchRef.current;
+          if (!touch || event.pointerId !== touch.id) return;
+          if (touch.cancelled || Math.hypot(event.clientX - touch.x, event.clientY - touch.y) > 10) {
+            touchRef.current = null;
+            return;
+          }
+          touchRef.current = { ...touch, x: event.clientX, y: event.clientY, completed: true };
+        }}
+        onClick={() => {
+          const touch = touchRef.current;
+          if (!touch?.completed) return;
+          touchRef.current = null;
+          // Resolve after the compatibility click: moving the sheet earlier can
+          // send that same tap to a newly mounted detail/close button on iOS.
+          handlePointerDown({ clientX: touch.x, clientY: touch.y, pointerType: "touch" });
+        }}
+        onPointerCancel={() => { touchRef.current = null; }}
       >
         <title id={titleId}>
           Mappa radiale dei segnali del Radar. Settore = area Radar, distanza
@@ -648,6 +684,9 @@ export function RadarMap({
                   aria-disabled={isInteractive ? undefined : true}
                   tabIndex={isInteractive ? 0 : -1}
                   aria-label={blipAriaLabel(tool, point)}
+                  onClick={isInteractive ? (event) => {
+                    if (event.detail === 0) onSelect(tool.id);
+                  } : undefined}
                   onKeyDown={
                     isInteractive
                       ? (event) => {
@@ -659,7 +698,7 @@ export function RadarMap({
                       : undefined
                   }
                 />
-                {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} name={tool.name} tier={atlasTiers.get(tool.id) ?? "global"} thumbnailUrl={focusedClusterId ? tool.thumbnailUrl : null} /> : <>
+                {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} name={tool.name} tier={atlasTiers.get(tool.id) ?? "global"} thumbnailUrl={tool.thumbnailUrl} /> : <>
                 {(isSelected || isHighlighted) && (
                   <circle
                     style={{ pointerEvents: "none" }}

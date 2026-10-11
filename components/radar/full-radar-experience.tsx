@@ -57,6 +57,7 @@ import {
 import {
   RADAR_TABS,
   RADAR_TAB_LABEL,
+  type RadarUrlState,
 } from "@/lib/radar/radar-url-state";
 import { useRadarUrlState } from "@/lib/radar/use-radar-url-state";
 import { useProductHuntRadar } from "@/lib/radar/use-product-hunt-radar";
@@ -69,7 +70,12 @@ type CatalogHint = { slug: string; name: string; categoryLabel: string };
 
 export function RadarExperience() {
   const account = useAccount();
-  const { state: urlState, setState: setUrlState } = useRadarUrlState();
+  const { state: urlState, setState: patchUrlState } = useRadarUrlState();
+  const setUrlState = useCallback((patch: Partial<RadarUrlState>) => {
+    const contextChanged = (["range", "category", "query", "tab"] as const)
+      .some(key => patch[key] !== undefined && patch[key] !== urlState[key]);
+    patchUrlState(contextChanged && patch.tool === undefined ? { ...patch, tool: null } : patch);
+  }, [patchUrlState, urlState]);
   const { payload, isLoading, isFetching, refetch } = useProductHuntRadar(urlState.range);
   const catalogRaw = usePublicToolCatalog();
   const snapshot = useDiscoverySnapshot();
@@ -170,6 +176,9 @@ export function RadarExperience() {
   }, [view]);
 
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!urlState.tool) setHighlightedId(null);
+  }, [urlState.tool]);
   // §1 — a genuinely ambiguous tap opens a chooser instead of guessing.
   const [ambiguous, setAmbiguous] = useState<readonly RadarTapCandidate[]>([]);
   // Closure §4 — a collision group too large to fan out safely presents as the
@@ -189,7 +198,7 @@ export function RadarExperience() {
     const observer = new ResizeObserver(sync);
     observer.observe(instrument);
     return () => observer.disconnect();
-  }, [isLoading]);
+  }, [isLoading, urlState.tab]);
 
   const chooserRef = useRef<HTMLDivElement | null>(null);
   const mapFocusRef = useRef<HTMLElement | null>(null);
@@ -244,18 +253,18 @@ export function RadarExperience() {
   }, [focusedClusterId, layout.points]);
 
   const renderIds = useMemo(
-    () => localSignalIds ?? overviewPlan.representativeIds,
-    [localSignalIds, overviewPlan.representativeIds],
+    () => query ? new Set(filteredTools.map(tool => tool.id)) : localSignalIds ?? overviewPlan.representativeIds,
+    [query, filteredTools, localSignalIds, overviewPlan.representativeIds],
   );
 
   // §3 — hidden counts only exist in the Overview representation.
   const hiddenCounts = useMemo(
-    () => (focusedClusterId ? null : overviewPlan.hiddenCounts),
-    [focusedClusterId, overviewPlan.hiddenCounts],
+    () => (focusedClusterId || query ? null : overviewPlan.hiddenCounts),
+    [focusedClusterId, query, overviewPlan.hiddenCounts],
   );
 
   // §6 — only the focused cluster is interactive while it is focused.
-  const interactiveIds = useMemo(() => localSignalIds, [localSignalIds]);
+  const interactiveIds = useMemo(() => query ? renderIds : localSignalIds, [query, renderIds, localSignalIds]);
 
   // §2 — LOCAL CLUSTER PLANNER. All real signals of the focused cluster are
   // laid out by the deterministic Atlas angular planner. Semantic
@@ -327,12 +336,12 @@ export function RadarExperience() {
   // §18 — if the focused cluster has no signals in the newly selected range,
   // return to Overview instead of leaving the camera pointing at nothing.
   useEffect(() => {
-    if (!focusedClusterId) return;
+    if (isLoading || !focusedClusterId) return;
     const stillPresent = view.tools.some(
       (tool) => tool.topicCluster.id === focusedClusterId,
     );
     if (!stillPresent) setUrlState({ category: null });
-  }, [focusedClusterId, setUrlState, view.tools]);
+  }, [isLoading, focusedClusterId, setUrlState, view.tools]);
   // Closure §6 — exclusive overlay: spiderfy, chooser and Tool preview never
   // appear together. Choosing a Tool closes the collision presentation first.
   const collisionOverlayOpen = chooserGroup !== null || ambiguous.length >= 2;
@@ -433,7 +442,22 @@ export function RadarExperience() {
     const close = document.querySelector<HTMLButtonElement>(".tv-rx-preview__close");
     close?.focus({ preventScroll: true });
     if (window.matchMedia?.("(max-width: 63.999rem)").matches) {
-      document.querySelector(".tv-rx-instrument")?.scrollIntoView?.({ block: "start", inline: "nearest", behavior: "instant" });
+      const instrument = atlasInstrumentRef.current;
+      const shell = document.querySelector<HTMLElement>(".marketing-shell");
+      if (instrument && shell) {
+        const inset = parseFloat(getComputedStyle(shell).scrollPaddingTop) || 0;
+        const top = instrument.getBoundingClientRect().top - shell.getBoundingClientRect().top;
+        const mapBottom = instrument.querySelector(".tv-rx-map")?.getBoundingClientRect().bottom ?? 0;
+        const preview = document.querySelector<HTMLElement>(".tv-rx-preview");
+        const previewRect = preview?.getBoundingClientRect();
+        if (preview && previewRect && getComputedStyle(preview).position === "static") {
+          const bottomInset = parseFloat(getComputedStyle(shell).scrollPaddingBottom) || 0;
+          const visibleBottom = shell.getBoundingClientRect().bottom - bottomInset;
+          if (previewRect.bottom > visibleBottom) shell.scrollTo({ top: shell.scrollTop + previewRect.bottom - visibleBottom, left: 0, behavior: "instant" });
+        } else if (top < inset || mapBottom > (previewRect?.top ?? window.innerHeight)) {
+          shell.scrollTo({ top: shell.scrollTop + top - inset, left: 0, behavior: "instant" });
+        }
+      }
     }
   }, [selectedTool]);
 
@@ -518,8 +542,9 @@ export function RadarExperience() {
           value={urlState.range}
           onValueChange={(range) => setUrlState({ range })}
         />
-        <span className="tv-rx-telemetry__time">
-          Aggiornato {uiModel.updatedAtLabel}
+        <span className="tv-rx-telemetry__time" title={`Aggiornato ${uiModel.updatedAtLabel}`}>
+          <span className="tv-rx-telemetry__time-full">Aggiornato {uiModel.updatedAtLabel}</span>
+          <span className="tv-rx-telemetry__time-short" aria-hidden="true">{uiModel.updatedAtLabel.split(" · ").at(-1)}</span>
         </span>
         <button
           type="button"
@@ -556,6 +581,23 @@ export function RadarExperience() {
                   <strong>{focusedCluster?.label ?? "Panoramica globale"}</strong>
                   <span className="tv-rx-instrument__count">{isLoading ? "—" : filteredTools.length} segnali</span>
                 </header>
+                <div className="tv-rx-mobile-navigation">
+                  <label htmlFor="tv-rx-mobile-area">Area Radar
+                    <select id="tv-rx-mobile-area" value={urlState.category ?? ""} disabled={isLoading} onChange={event => setUrlState({ category: event.target.value || null })}>
+                      <option value="">Tutte le aree</option>
+                      {view.clusters.map(cluster => <option key={cluster.id} value={cluster.id}>{cluster.label} · {cluster.count}</option>)}
+                    </select>
+                  </label>
+                  {focusedClusterId && <button type="button" onClick={() => setUrlState({ category: null, query: null })}><ArrowLeft size={16} aria-hidden="true" /> Panoramica</button>}
+                  <button type="button" aria-controls="tv-rx-list-title" disabled={isLoading || filteredTools.length === 0} onClick={() => {
+                    const list = document.querySelector<HTMLElement>(".tv-rx-section");
+                    const shell = document.querySelector<HTMLElement>(".marketing-shell");
+                    if (list && shell) {
+                      const inset = parseFloat(getComputedStyle(shell).scrollPaddingTop) || 0;
+                      shell.scrollTo({ top: shell.scrollTop + list.getBoundingClientRect().top - shell.getBoundingClientRect().top - inset, left: 0, behavior: "instant" });
+                    }
+                  }}>Elenco</button>
+                </div>
               {/* §2/§5 — geometry and the map interaction contract are frozen. */}
               {isLoading ? (
                 <RadarMapSkeleton />
@@ -603,7 +645,7 @@ export function RadarExperience() {
                   />
                 </>
               )}
-
+                <p className="tv-rx-instrument__hint"><span>Al centro i più recenti, verso il bordo i più vecchi.</span><span>Colore: area · Dimensione: attenzione.</span></p>
               </section>
               {/* Spec §19 — a compact contextual indicator, integrated with
                   the existing controls rather than another large card. */}
@@ -685,9 +727,8 @@ export function RadarExperience() {
               ) : null}
             </div>
 
-            {/* §19 — desktop intelligence rail: selected Tool preview when
-                one is chosen, otherwise meaningful Overview intelligence.
-                On mobile this stays the sticky quick-preview sheet. */}
+            {/* Desktop intelligence rail; mobile inspection follows the map
+                in the document so short viewports never lose signal access. */}
             <aside className="tv-rx__rail" aria-label="Pannello intelligenza">
               {selectedTool && ambiguous.length === 0 ? (
                 <RadarQuickPreview

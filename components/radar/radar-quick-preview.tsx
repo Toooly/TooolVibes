@@ -53,7 +53,7 @@ export function RadarQuickPreview({
   };
 
   return (
-    <aside
+    <div
       className="tv-rx-preview"
       role="dialog"
       aria-modal="false"
@@ -205,6 +205,6 @@ export function RadarQuickPreview({
           </>
         )}
       </div>
-    </aside>
+    </div>
   );
 }

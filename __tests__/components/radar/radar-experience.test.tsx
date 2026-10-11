@@ -8,7 +8,7 @@
  */
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -230,6 +230,52 @@ describe("RadarExperience", () => {
     const tutti = screen.getByRole("button", { name: /^tutti$/i });
     fireEvent.click(tutti);
     expect(tutti.getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("searches every real signal, including tools hidden by Global representatives", async () => {
+    window.history.replaceState(null, "", "/radar");
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container } = renderRadar();
+    await screen.findAllByText(/Alpha Tool/);
+    fireEvent.change(screen.getByRole("searchbox", { name: "Cerca un tool nel Radar" }), { target: { value: "Gamma Tool" } });
+    await waitFor(() => expect(container.querySelectorAll(".tv-rx-blip__hit")).toHaveLength(1));
+    expect(container.querySelector(".tv-rx-blip__hit")?.getAttribute("aria-label")).toContain("Gamma Tool");
+    expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(1);
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("dismisses a previous selection when changing the area through the mobile control", async () => {
+    window.history.replaceState(null, "", "/radar");
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container } = renderRadar();
+    const hits = await screen.findAllByRole("button", { name: /alpha tool/i });
+    fireEvent.click(hits[0]);
+    await screen.findByRole("dialog", { name: /anteprima di alpha tool/i });
+    const area = container.querySelector<HTMLOptionElement>('select option:not([value=""])')!;
+    fireEvent.change(screen.getByRole("combobox", { name: "Area Radar" }), { target: { value: area.value } });
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
+    expect(container.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("keeps the focused area while the next time range is loading", async () => {
+    window.history.replaceState(null, "", "/radar");
+    let finish!: (value: Response) => void;
+    const pending = new Promise<Response>(resolve => { finish = resolve; });
+    fetchMock.mockImplementation((url: string) => url.includes("range=week") ? pending : fetchOk(LIVE));
+    const { container } = renderRadar();
+    await screen.findAllByText(/Alpha Tool/);
+    const area = container.querySelector<HTMLOptionElement>('select option:not([value=""])')!;
+    const areaId = area.value;
+    fireEvent.change(screen.getByRole("combobox", { name: "Area Radar" }), { target: { value: areaId } });
+    fireEvent.click(screen.getByRole("button", { name: /^7G$/ }));
+    await waitFor(() => expect((screen.getByRole("combobox", { name: "Area Radar" }) as HTMLSelectElement).disabled).toBe(true));
+    expect(new URLSearchParams(window.location.search).get("c")).toBe(areaId);
+    await act(async () => { finish(await fetchOk({ ...LIVE, range: "week" })); });
+    await waitFor(() => expect(container.querySelector(".tv-rx")?.getAttribute("data-focus")).toBe("local"));
+    expect(new URLSearchParams(window.location.search).get("c")).toBe(areaId);
+    window.history.replaceState(null, "", "/radar");
   });
 
   it("RADAR-EMPTY-01 stato vuoto onesto senza dati inventati", async () => {
