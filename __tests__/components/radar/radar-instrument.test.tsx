@@ -17,7 +17,7 @@ const tool: RadarTool = {
   categoryLabel: null, catalogSlug: null, topicCluster, rank: 1,
 };
 const clusters = [{ id: topicCluster.id, label: topicCluster.label, count: 1, colorIndex: 5, sectorIndex: 5 }];
-const props = { layoutTools: [tool], clusters, range: "day" as const, selectedId: null, onSelect: vi.fn() };
+const props = { layoutTools: [tool], clusters, range: "day" as const, selectedId: null, onSelect: vi.fn(), instrumentRenderer: "v2" as const };
 
 afterEach(cleanup);
 

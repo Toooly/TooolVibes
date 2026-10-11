@@ -1826,6 +1826,81 @@
 }
 
 
+/* ---------- Signal Atlas V3: editorial territory, canonical geometry ------
+   V2 rules remain available through the internal renderer seam. Atlas never
+   alters map sizing, camera/point transforms or transparent hit targets. */
+.tv-rx-map[data-renderer="atlas"] .tv-rx-map__compass-arc { display: none; }
+.tv-atlas__territories, .tv-atlas__time, .tv-atlas__metadata,
+.tv-atlas__inspection, .tv-atlas__glyph { pointer-events: none; }
+.tv-rx-map[data-renderer="atlas"] path:not(.tv-rx-map__compass-hit),
+.tv-rx-map[data-renderer="atlas"] line,
+.tv-rx-map[data-renderer="atlas"] rect { vector-effect: non-scaling-stroke; }
+.tv-atlas__territory { fill: var(--tv-atlas-territory); fill-opacity: 0.055; }
+.tv-rx-map[data-visual-mode="local"] .tv-atlas__territory { fill-opacity: 0.045; }
+.tv-atlas__identity { fill: none; stroke: var(--tv-atlas-territory); stroke-width: 1; opacity: 0.55; }
+.tv-atlas__identity[data-dense="true"] { stroke-width: 3; }
+.tv-atlas__micro { fill: var(--tv-color-ink-400); font-family: var(--tv-font-family-mono); font-size: 2px; letter-spacing: 0.04em; }
+.tv-atlas__display { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-display); font-weight: 400; letter-spacing: 0.01em; }
+.tv-atlas__count { font-size: 9px; }
+.tv-atlas__range { fill: var(--tv-color-violet-300); font-size: 7px; }
+.tv-atlas__perimeter { fill: var(--tv-atlas-territory); font-size: 1.7px; }
+.tv-atlas__time-arc { fill: none; stroke: var(--tv-color-ink-400); stroke-width: 0.8; opacity: 0.5; }
+.tv-atlas__time-arc[data-outer="true"] { stroke-width: 1.2; }
+.tv-atlas__tick { stroke: var(--tv-radar-instrument-accent); stroke-width: 1; opacity: 0.75; }
+.tv-atlas__label-plate { fill: var(--tv-color-surface-base); fill-opacity: 0.94; }
+.tv-rx-map .tv-atlas__time-label { font-size: 2.2px; letter-spacing: 0.025em; }
+.tv-atlas__accent-rule { fill: none; stroke: var(--tv-radar-instrument-accent); stroke-width: 2; }
+.tv-atlas__construction { fill: none; stroke: var(--tv-color-ink-500); stroke-width: 0.8; opacity: 0.4; }
+.tv-atlas__grouping { fill: none; stroke: var(--tv-radar-instrument-accent); stroke-width: 1; opacity: 0.3; }
+.tv-atlas__density { fill: var(--tv-radar-instrument-accent); font-size: 6px; }
+.tv-atlas__caption { fill: var(--tv-color-ink-200); }
+.tv-atlas__origin { fill: var(--tv-color-ink-200); }
+.tv-atlas__origin-label { font-size: 1.7px; }
+.tv-atlas__glyph { opacity: 0.9; transition: opacity 140ms ease; }
+.tv-atlas__glyph-body { fill: color-mix(in srgb, var(--tv-atlas-signal) 14%, var(--tv-color-surface-base)); stroke: var(--tv-atlas-signal); stroke-width: 1; }
+.tv-atlas__glyph-base { fill: none; stroke: var(--tv-atlas-signal); stroke-width: 2.1; }
+.tv-atlas__glyph-nucleus { fill: var(--tv-atlas-signal); }
+.tv-atlas__glyph-datum { fill: none; stroke: var(--tv-color-ink-200); stroke-width: 0.8; opacity: 0.65; }
+.tv-atlas__glyph .tv-atlas__linked { fill: var(--tv-color-ink-100); stroke-width: 0.5; opacity: 1; }
+.tv-atlas__selection-notches { fill: none; stroke: var(--tv-color-violet-300); stroke-width: 1.25; }
+.tv-rx-blip[data-selected="true"] .tv-atlas__glyph { opacity: 1; }
+.tv-rx-blip[data-age-unknown="true"] .tv-atlas__glyph-body { stroke-dasharray: 2 1; }
+.tv-rx-map .tv-atlas__radial-guide { stroke-dasharray: none; stroke-opacity: 0.22; }
+.tv-atlas__leader { fill: none; stroke: var(--tv-radar-instrument-accent); stroke-width: 1.2; opacity: 0.8; }
+.tv-atlas__selected-name { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-ui); font-size: 2.6px; font-weight: 650; }
+.tv-atlas__attention { fill: var(--tv-radar-instrument-accent); font-size: 6px; }
+.tv-atlas__attention-caption, .tv-atlas__age { font-size: 1.85px; }
+.tv-rx-map[data-renderer="atlas"] .tv-rx-blip__hit:focus-visible { stroke: var(--tv-color-ink-100); stroke-width: 1.4; stroke-dasharray: 1.5 1.5; }
+@media (hover: hover) and (pointer: fine) {
+  .tv-rx-blip:hover .tv-atlas__glyph { opacity: 1; }
+  .tv-rx-blip:hover .tv-atlas__glyph-body { stroke-width: 1.4; }
+}
+@media (max-width: 47.999rem) {
+  .tv-atlas__perimeter, .tv-atlas__density, .tv-atlas__density-caption,
+  .tv-atlas__desktop { display: none; }
+  .tv-atlas__count { font-size: 7.8px; }
+  .tv-atlas__range { font-size: 6.1px; }
+  .tv-atlas__micro { font-size: 2.6px; }
+  .tv-rx-map .tv-atlas__time-label { font-size: 3px; }
+  .tv-atlas__origin-label { font-size: 2.1px; }
+  .tv-atlas__selected-name { font-size: 3.1px; }
+  .tv-atlas__attention { font-size: 5.2px; }
+  .tv-atlas__attention-caption, .tv-atlas__age { font-size: 2.2px; }
+  .tv-atlas__caption { font-size: 2.45px; }
+}
+@media (min-width: 108rem) {
+  .tv-atlas__perimeter { font-size: 1.85px; }
+  .tv-atlas__construction { opacity: 0.55; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tv-atlas__time { animation: tv-atlas-assemble 220ms ease-out both; }
+  .tv-atlas__territories { animation: tv-atlas-assemble 260ms ease-out both; }
+  .tv-atlas__glyph { animation: tv-atlas-assemble 300ms ease-out both; }
+  .tv-atlas__metadata { animation: tv-atlas-assemble 330ms ease-out both; }
+  .tv-atlas__inspection { animation: tv-atlas-assemble 140ms ease-out both; }
+}
+@keyframes tv-atlas-assemble { from { opacity: 0; } }
+
 /* ---------- closure §5: fallback sheet touch targets ---------------------- */
 /* The fallback bottom sheet rows are a 52px minimum touch target (closure §5).
    Declared last and with extra specificity so a shared 44px button token can

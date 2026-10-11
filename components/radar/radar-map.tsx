@@ -21,6 +21,8 @@
 
 import { useCallback, useId, useRef, type CSSProperties } from "react";
 
+import { RadarAtlasField, RadarAtlasGlyph, RadarAtlasInspection } from "@/components/radar/radar-atlas";
+
 import {
   RADAR_CATEGORY_PALETTE,
   type RadarClusterSummary,
@@ -119,6 +121,8 @@ export type RadarMapProps = {
    * single-colour rim and restrained core.
    */
   visualMode?: "global" | "local";
+  /** Internal rollback seam. No URL, persistence or user-facing toggle. */
+  instrumentRenderer?: "atlas" | "v2";
 };
 
 export function RadarMap({
@@ -140,6 +144,7 @@ export function RadarMap({
   displayOverrides,
   focusedClusterId,
   visualMode = "global",
+  instrumentRenderer = "atlas",
 }: RadarMapProps) {
   const titleId = useId();
   const fieldId = useId();
@@ -324,6 +329,7 @@ export function RadarMap({
     <div
       className="tv-rx-map"
       data-basis={layout.radiusBasis}
+      data-renderer={instrumentRenderer}
       data-visual-mode={visualMode}
       style={{ "--tv-radar-instrument-accent": instrumentAccent } as CSSProperties}
     >
@@ -342,7 +348,7 @@ export function RadarMap({
           attenzione relativa (voti + commenti), colore = area Radar.
         </title>
 
-        <defs>
+        {instrumentRenderer === "v2" && <defs>
           <radialGradient id={fieldId} cx="50%" cy="50%" r="50%">
             <stop offset="0%" className="tv-rx-map__field-stop tv-rx-map__field-stop--core" />
             <stop offset="55%" className="tv-rx-map__field-stop tv-rx-map__field-stop--mid" />
@@ -367,13 +373,13 @@ export function RadarMap({
               </linearGradient>
             );
           })}
-        </defs>
+        </defs>}
 
-        <g className="tv-rx-map__frame" data-instrument-layer="frame" aria-hidden="true">
+        {instrumentRenderer === "v2" && <g className="tv-rx-map__frame" data-instrument-layer="frame" aria-hidden="true">
           <path d="M 9 5 H 5 V 9 M 91 5 H 95 V 9 M 5 91 V 95 H 9 M 95 91 V 95 H 91" />
           <text x="8" y="97" className="tv-rx-map__micro-label">{visualMode === "local" ? "LOCALE" : "PANORAMICA"}</text>
           <text x="92" y="97" textAnchor="end" className="tv-rx-map__micro-label">{range === "day" ? "24H" : range === "week" ? "7G" : "30G"}</text>
-        </g>
+        </g>}
 
         {/* §5 — pure camera transform. Semantic coordinates are unchanged.
             The attribute is the fallback; the CSS property is what animates
@@ -393,6 +399,8 @@ export function RadarMap({
           className="tv-rx-map__camera"
         >
 
+        {instrumentRenderer === "atlas" && <RadarAtlasField clusterOrder={layout.clusterOrder} clusters={clusters} colors={colorByCluster} tools={layoutTools} range={range} focusedClusterId={focusedClusterId} />}
+        {instrumentRenderer === "v2" && <>
         {/* 00–03: static well, optical edge and precision bezel. No filters. */}
         <g className="tv-rx-map__surface" data-instrument-layer="surface" aria-hidden="true">
           <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={44.6} className="tv-rx-map__field" fill={`url(#${fieldId})`} />
@@ -464,6 +472,7 @@ export function RadarMap({
             aria-hidden="true"
           />
         ) : null}
+        </>}
         <g className="tv-rx-map__compass" data-visual-mode={visualMode}>
           {layout.clusterOrder.map((clusterId, index) => {
             const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
@@ -526,6 +535,7 @@ export function RadarMap({
           })}
         </g>
 
+        {instrumentRenderer === "v2" && <>
         {/* 06: a small calibrated origin. Static field, no pulse or sweep. */}
         <g data-instrument-layer="origin" aria-hidden="true">
           <circle cx={RADAR_CENTER} cy={RADAR_CENTER} r={5} className="tv-rx-map__core-glow" fill={`url(#${glowId})`} />
@@ -554,6 +564,12 @@ export function RadarMap({
             );
           })}
         </g>
+
+        </>}
+        {instrumentRenderer === "atlas" && selectedDisplay && selectedId && (() => {
+          const tool = layoutTools.find(entry => entry.id === selectedId);
+          return tool ? <RadarAtlasInspection tool={tool} point={selectedDisplay} visiblePoints={tapPoints.filter(p => isVisible(p.id))} /> : null;
+        })()}
 
         <g className="tv-rx-map__points">
           {layoutTools.map((tool) => {
@@ -634,6 +650,7 @@ export function RadarMap({
                       : undefined
                   }
                 />
+                {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} /> : <>
                 {(isSelected || isHighlighted) && (
                   <circle
                     style={{ pointerEvents: "none" }}
@@ -689,6 +706,7 @@ export function RadarMap({
                     aria-hidden="true"
                   />
                 ) : null}
+                </>}
                 {(() => {
                   const hidden = hiddenCounts?.get(tool.topicCluster.id) ?? 0;
                   if (hidden <= 0) return null;
