@@ -32,14 +32,10 @@ import {
 } from "@/lib/radar/radar-camera";
 import { planRadarSpiderfy, type RadarSpiderGroup } from "@/lib/radar/radar-spiderfy";
 import type { RadarPoint2 } from "@/lib/radar/radar-projection";
-import {
-  planRadarLocalFocus,
-  type RadarLocalFocusSignal,
-} from "@/lib/radar/radar-local-focus";
+import type { RadarLocalFocusSignal } from "@/lib/radar/radar-local-focus";
+import { planRadarAtlasConstellation } from "@/lib/radar/radar-atlas-constellation";
 import {
   planRadarOverview,
-  RADAR_OVERVIEW_BUDGET_MOBILE,
-  RADAR_OVERVIEW_BUDGET_DESKTOP,
   type RadarLodInput,
 } from "@/lib/radar/radar-lod";
 import {
@@ -179,6 +175,22 @@ export function RadarExperience() {
   // Closure §4 — a collision group too large to fan out safely presents as the
   // fallback bottom sheet instead of spiderfying.
   const [chooserGroup, setChooserGroup] = useState<RadarSpiderGroup | null>(null);
+  const atlasInstrumentRef = useRef<HTMLElement | null>(null);
+  const [atlasMapWidth, setAtlasMapWidth] = useState(256);
+  useEffect(() => {
+    const instrument = atlasInstrumentRef.current;
+    if (!instrument) return;
+    const sync = () => {
+      const width = instrument.querySelector(".tv-rx-map")?.getBoundingClientRect().width;
+      if (width && width > 0) setAtlasMapWidth(width);
+    };
+    sync();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(sync);
+    observer.observe(instrument);
+    return () => observer.disconnect();
+  }, [isLoading]);
+
   const chooserRef = useRef<HTMLDivElement | null>(null);
   const mapFocusRef = useRef<HTMLElement | null>(null);
   const selectionFocusRef = useRef<HTMLElement | null>(null);
@@ -208,17 +220,11 @@ export function RadarExperience() {
     });
   }, [layout.points, view.tools]);
 
-  // §3 — Level-0 OVERVIEW is CLUSTER-FIRST: one lead real signal per active
-  // cluster plus catalog-linked exceptions. Free-standing +N stacks are no
-  // longer spatial objects; the hidden count rides on the cluster chip and a
-  // small "+N" badge on the representative node. Target 6-9 nodes on mobile.
-  const overviewBudget = useIsWideViewport()
-    ? RADAR_OVERVIEW_BUDGET_DESKTOP
-    : RADAR_OVERVIEW_BUDGET_MOBILE;
-
+  // Atlas Global: one real lead per active territory. The existing lead pass
+  // fills this budget exactly, so catalog extras stay available in Local/list.
   const overviewPlan = useMemo(
-    () => planRadarOverview(lodInputs, { budget: overviewBudget }),
-    [lodInputs, overviewBudget],
+    () => planRadarOverview(lodInputs, { budget: new Set(lodInputs.map(item => item.clusterId)).size }),
+    [lodInputs],
   );
 
   // §4 — `urlState.category` IS the canonical cluster focus state. Tapping a
@@ -252,7 +258,7 @@ export function RadarExperience() {
   const interactiveIds = useMemo(() => localSignalIds, [localSignalIds]);
 
   // §2 — LOCAL CLUSTER PLANNER. All real signals of the focused cluster are
-  // laid out by the deterministic `planRadarLocalFocus` engine. Semantic
+  // laid out by the deterministic Atlas angular planner. Semantic
   // coordinates are never recomputed; only display angles move. The planner
   // output feeds the canonical display-override channel used for BOTH painting
   // and hit-testing.
@@ -275,20 +281,11 @@ export function RadarExperience() {
 
   const localPlan = useMemo(() => {
     if (!focusedClusterId || localSignals.length === 0) return null;
-    return planRadarLocalFocus(localSignals, {
-      rect: {
-        left: 0,
-        top: 0,
-        width: RADAR_ZOOM_DEFAULT_MAP_PX,
-        height: RADAR_ZOOM_DEFAULT_MAP_PX,
-      },
-      outerRadius: 42,
-      center: { x: 50, y: 50 },
-    });
-  }, [focusedClusterId, localSignals]);
+    return planRadarAtlasConstellation(localSignals, { rect: { left: 0, top: 0, width: atlasMapWidth, height: atlasMapWidth } });
+  }, [focusedClusterId, localSignals, atlasMapWidth]);
 
   // §14 — residual collision: the existing spiderfy/chooser fallback handles
-  // physically impossible packings. The Local planner itself is never modified.
+  // physically impossible packings; the angular planner reports them explicitly.
   const spider = useMemo(() => {
     if (!localPlan || localPlan.layoutStatus !== "residual-collision") return null;
     const nodes = localPlan.nodes.map((node) => ({
@@ -553,7 +550,7 @@ export function RadarExperience() {
         >
           <div className="tv-rx__stage">
             <div className="tv-rx__main">
-              <section className="tv-rx-instrument" aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>
+              <section ref={atlasInstrumentRef} className="tv-rx-instrument" aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>
                 <header className="tv-rx-instrument__head">
                   <span className="tv-rx-instrument__level">{focusedCluster ? "02 / Locale" : "01 / Mercato"}</span>
                   <strong>{focusedCluster?.label ?? "Panoramica globale"}</strong>
@@ -815,29 +812,6 @@ export function RadarExperience() {
  * catalog-linked, otherwise the real source item id. Never invents a Catalog
  * entity for an external signal (spec §21).
  */
-/**
- * §3/§24 — the overview display budget is a viewport budget: mobile shows a
- * calmer instrument, desktop a larger one, and neither shows every signal.
- */
-const RADAR_WIDE_VIEWPORT_QUERY = "(min-width: 64rem)";
-
-function useIsWideViewport(): boolean {
-  const [wide, setWide] = useState(false);
-  useEffect(() => {
-    // Guarded: `matchMedia` is absent during SSR and in some test runtimes.
-    // Falling back to the mobile budget is the safe default.
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-      return;
-    }
-    const media = window.matchMedia(RADAR_WIDE_VIEWPORT_QUERY);
-    const sync = () => setWide(media.matches);
-    sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
-  }, []);
-  return wide;
-}
-
 function watchKeyFor(tool: RadarTool): string {
   return tool.catalogSlug ?? tool.id;
 }

@@ -1827,23 +1827,36 @@
 
 
 /* ---------- Signal Atlas V3: editorial territory, canonical geometry ------
-   V2 rules remain available through the internal renderer seam. Atlas never
-   alters map sizing, camera/point transforms or transparent hit targets. */
-.tv-rx-map[data-renderer="atlas"] .tv-rx-map__compass-arc { display: none; }
-.tv-atlas__territories, .tv-atlas__time, .tv-atlas__metadata,
+   V2 rules remain available through the internal renderer seam. Atlas preserves map sizing, canonical projection and signal hit targets. */
+.tv-rx-map[data-renderer="atlas"] .tv-rx-map__compass-arc,
+.tv-rx-map[data-renderer="atlas"] .tv-rx-map__compass-hit,
+.tv-rx-map[data-renderer="atlas"] .tv-rx-map__hidden-badge { display: none; }
+.tv-atlas__area-art, .tv-atlas__time, .tv-atlas__metadata,
 .tv-atlas__inspection, .tv-atlas__glyph { pointer-events: none; }
 .tv-rx-map[data-renderer="atlas"] path:not(.tv-rx-map__compass-hit),
 .tv-rx-map[data-renderer="atlas"] line,
 .tv-rx-map[data-renderer="atlas"] rect { vector-effect: non-scaling-stroke; }
-.tv-atlas__territory { fill: var(--tv-atlas-territory); fill-opacity: 0.055; }
+.tv-atlas__territory { fill: var(--tv-atlas-territory); fill-opacity: 0.075; transition: fill-opacity 180ms ease; }
+.tv-atlas__territory-hit { fill: transparent; pointer-events: all; cursor: pointer; }
+.tv-atlas__area { outline: none; }
+.tv-atlas__area[data-active="true"]:hover .tv-atlas__territory,
+.tv-atlas__area:focus-visible .tv-atlas__territory { fill-opacity: 0.16; }
+.tv-atlas__area[data-active="true"]:hover .tv-atlas__identity,
+.tv-atlas__area:focus-visible .tv-atlas__identity { stroke-width: 2.5; opacity: 1; }
+.tv-atlas__area:focus-visible .tv-atlas__identity { stroke: var(--tv-color-ink-100); }
+.tv-atlas__area-full, .tv-atlas__area-short { fill: var(--tv-color-ink-200); font-family: var(--tv-font-family-ui); font-weight: 650; letter-spacing: .02em; }
+.tv-atlas__area-full { font-size: 2.2px; }
+.tv-atlas__area-short { display: none; }
+.tv-atlas__area-count { fill: var(--tv-atlas-territory); font-family: var(--tv-font-family-display); font-size: 4.7px; }
+.tv-atlas__area-arrow { fill: none; stroke: var(--tv-atlas-territory); stroke-width: 1.25; }
+.tv-atlas__area:focus-visible .tv-atlas__area-full,
+.tv-atlas__area:focus-visible .tv-atlas__area-short { fill: var(--tv-color-ink-100); }
 .tv-rx-map[data-visual-mode="local"] .tv-atlas__territory { fill-opacity: 0.045; }
 .tv-atlas__identity { fill: none; stroke: var(--tv-atlas-territory); stroke-width: 1; opacity: 0.55; }
-.tv-atlas__identity[data-dense="true"] { stroke-width: 3; }
 .tv-atlas__micro { fill: var(--tv-color-ink-400); font-family: var(--tv-font-family-mono); font-size: 2px; letter-spacing: 0.04em; }
 .tv-atlas__display { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-display); font-weight: 400; letter-spacing: 0.01em; }
 .tv-atlas__count { font-size: 9px; }
 .tv-atlas__range { fill: var(--tv-color-violet-300); font-size: 7px; }
-.tv-atlas__perimeter { fill: var(--tv-atlas-territory); font-size: 1.7px; }
 .tv-atlas__time-arc { fill: none; stroke: var(--tv-color-ink-400); stroke-width: 0.8; opacity: 0.5; }
 .tv-atlas__time-arc[data-outer="true"] { stroke-width: 1.2; }
 .tv-atlas__tick { stroke: var(--tv-radar-instrument-accent); stroke-width: 1; opacity: 0.75; }
@@ -1857,11 +1870,15 @@
 .tv-atlas__origin { fill: var(--tv-color-ink-200); }
 .tv-atlas__origin-label { font-size: 1.7px; }
 .tv-atlas__glyph { opacity: 0.9; transition: opacity 140ms ease; }
-.tv-atlas__glyph-body { fill: color-mix(in srgb, var(--tv-atlas-signal) 14%, var(--tv-color-surface-base)); stroke: var(--tv-atlas-signal); stroke-width: 1; }
-.tv-atlas__glyph-base { fill: none; stroke: var(--tv-atlas-signal); stroke-width: 2.1; }
+.tv-atlas__glyph-body { fill: color-mix(in srgb, var(--tv-atlas-signal) 20%, var(--tv-color-surface-base)); stroke: var(--tv-color-surface-base); stroke-width: 2.5; }
+.tv-atlas__beacon-facet { fill: var(--tv-color-ink-100); fill-opacity: .08; stroke: var(--tv-atlas-signal); stroke-width: .8; }
+.tv-atlas__beacon-mark { fill: var(--tv-color-ink-100); font-family: var(--tv-font-family-ui); font-weight: 700; }
+.tv-atlas__external { fill: none; stroke: var(--tv-color-ink-400); stroke-width: .8; }
+.tv-rx-map[data-visual-mode="global"] .tv-atlas__glyph { opacity: .68; }
+.tv-rx-map[data-visual-mode="global"] .tv-rx-blip[data-selected="true"] .tv-atlas__glyph { opacity: 1; }
 .tv-atlas__glyph-nucleus { fill: var(--tv-atlas-signal); }
 .tv-atlas__glyph-datum { fill: none; stroke: var(--tv-color-ink-200); stroke-width: 0.8; opacity: 0.65; }
-.tv-atlas__glyph .tv-atlas__linked { fill: var(--tv-color-ink-100); stroke-width: 0.5; opacity: 1; }
+.tv-atlas__glyph .tv-atlas__linked { fill: none; stroke: var(--tv-color-ink-100); stroke-width: 1; opacity: 1; }
 .tv-atlas__selection-notches { fill: none; stroke: var(--tv-color-violet-300); stroke-width: 1.25; }
 .tv-rx-blip[data-selected="true"] .tv-atlas__glyph { opacity: 1; }
 .tv-rx-blip[data-age-unknown="true"] .tv-atlas__glyph-body { stroke-dasharray: 2 1; }
@@ -1876,8 +1893,11 @@
   .tv-rx-blip:hover .tv-atlas__glyph-body { stroke-width: 1.4; }
 }
 @media (max-width: 47.999rem) {
-  .tv-atlas__perimeter, .tv-atlas__density, .tv-atlas__density-caption,
+  .tv-atlas__density, .tv-atlas__density-caption,
   .tv-atlas__desktop { display: none; }
+  .tv-atlas__area-full { display: none; }
+  .tv-atlas__area-short { display: block; font-size: 3.1px; }
+  .tv-atlas__area-count { font-size: 5px; }
   .tv-atlas__count { font-size: 7.8px; }
   .tv-atlas__range { font-size: 6.1px; }
   .tv-atlas__micro { font-size: 2.6px; }
@@ -1888,13 +1908,15 @@
   .tv-atlas__attention-caption, .tv-atlas__age { font-size: 2.2px; }
   .tv-atlas__caption { font-size: 2.45px; }
 }
+@media (max-width: 23.4375rem) {
+  .tv-atlas__area-short { font-size: 3.7px; }
+}
 @media (min-width: 108rem) {
-  .tv-atlas__perimeter { font-size: 1.85px; }
   .tv-atlas__construction { opacity: 0.55; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .tv-atlas__time { animation: tv-atlas-assemble 220ms ease-out both; }
-  .tv-atlas__territories { animation: tv-atlas-assemble 260ms ease-out both; }
+  .tv-atlas__territories { animation: tv-atlas-assemble 280ms ease-out both; }
   .tv-atlas__glyph { animation: tv-atlas-assemble 300ms ease-out both; }
   .tv-atlas__metadata { animation: tv-atlas-assemble 330ms ease-out both; }
   .tv-atlas__inspection { animation: tv-atlas-assemble 140ms ease-out both; }

@@ -399,7 +399,7 @@ export function RadarMap({
           className="tv-rx-map__camera"
         >
 
-        {instrumentRenderer === "atlas" && <RadarAtlasField clusterOrder={layout.clusterOrder} clusters={clusters} colors={colorByCluster} tools={layoutTools} range={range} focusedClusterId={focusedClusterId} />}
+        {instrumentRenderer === "atlas" && <RadarAtlasField clusterOrder={layout.clusterOrder} clusters={clusters} colors={colorByCluster} tools={layoutTools} range={range} focusedClusterId={focusedClusterId} onSelectSector={onSelectSector} visiblePoints={tapPoints.filter(p => isVisible(p.id)).map(p => ({ ...p, size: focusedClusterId ? p.size : compressVisualRadiusForOverview(p.size) }))} />}
         {instrumentRenderer === "v2" && <>
         {/* 00–03: static well, optical edge and precision bezel. No filters. */}
         <g className="tv-rx-map__surface" data-instrument-layer="surface" aria-hidden="true">
@@ -650,7 +650,7 @@ export function RadarMap({
                       : undefined
                   }
                 />
-                {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} /> : <>
+                {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} name={tool.name} /> : <>
                 {(isSelected || isHighlighted) && (
                   <circle
                     style={{ pointerEvents: "none" }}
