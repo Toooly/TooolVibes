@@ -35,6 +35,8 @@ export type RadarQuickPreviewProps = {
   /** Watch state for this signal (the internal Radar action). */
   watched: boolean;
   onToggleWatch: () => void;
+  /** List inspection stays at the selected row and opens its reading details. */
+  inline?: boolean;
 };
 
 export function RadarQuickPreview({
@@ -43,8 +45,9 @@ export function RadarQuickPreview({
   historyAvailable,
   watched,
   onToggleWatch,
+  inline = false,
 }: RadarQuickPreviewProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(inline);
   const [thumbnailFailed, setThumbnailFailed] = useState(false);
   const isExternal = tool.catalogStatus === "external";
   const externalLinkProps = {
@@ -60,6 +63,7 @@ export function RadarQuickPreview({
       aria-label={`Anteprima di ${tool.name}`}
       data-catalog-status={tool.catalogStatus}
       data-inspection={expanded ? "expanded" : "compact"}
+      data-placement={inline ? "inline" : "atlas"}
     >
       <button
         type="button"

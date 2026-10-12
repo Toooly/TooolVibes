@@ -222,6 +222,49 @@ describe("RadarExperience", () => {
     expect(container.querySelector(".tv-rx-preview")).toBeTruthy();
   });
 
+  it("opens list details at the selected row and restores its keyboard focus on close", async () => {
+    window.history.replaceState(null, "", "/radar");
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container } = renderRadar();
+    const rowButton = await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
+    fireEvent.click(rowButton);
+    const preview = await screen.findByRole("dialog", { name: /anteprima di alpha tool/i });
+    expect(preview.closest(".tv-rx-row")).toBe(rowButton.closest(".tv-rx-row"));
+    expect(rowButton.getAttribute("aria-expanded")).toBe("true");
+    expect(document.getElementById(rowButton.getAttribute("aria-controls")!)).toContain(preview);
+    expect(preview.getAttribute("data-inspection")).toBe("expanded");
+    expect(container.querySelectorAll(".tv-rx-preview")).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Chiudi anteprima" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(document.activeElement).toBe(rowButton);
+    expect(rowButton.getAttribute("aria-expanded")).toBe("false");
+    expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("keeps mobile list search, empty recovery and area controls usable without returning to Atlas", async () => {
+    window.history.replaceState(null, "", "/radar?r=week");
+    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+    fetchMock.mockImplementation(() => fetchOk({ ...LIVE, range: "week" }));
+    const { container } = renderRadar();
+    await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
+    fireEvent.click(screen.getByRole("button", { name: "Elenco" }));
+    expect(container.querySelector(".tv-rx")?.getAttribute("data-browse")).toBe("list");
+    const search = screen.getByRole("searchbox", { name: "Cerca nell’elenco dei segnali" });
+    fireEvent.change(search, { target: { value: "Gamma Tool" } });
+    await waitFor(() => expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(1));
+    expect(screen.getByRole("button", { name: "Apri dettagli di Gamma Tool" })).toBeTruthy();
+    fireEvent.change(search, { target: { value: "unmatched search" } });
+    await waitFor(() => expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(0));
+    expect(screen.getByRole("combobox", { name: "Area dell’elenco" })).toBeTruthy();
+    fireEvent.change(search, { target: { value: "" } });
+    await waitFor(() => expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(3));
+    fireEvent.click(screen.getByRole("button", { name: "Atlas" }));
+    expect(container.querySelector(".tv-rx")?.getAttribute("data-browse")).toBe("atlas");
+    expect(new URLSearchParams(window.location.search).get("r")).toBe("week");
+    window.history.replaceState(null, "", "/radar");
+  });
+
   it("RADAR-FILTER-01 il filtro categoria aggiorna lista e conteggi", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE));
     renderRadar();

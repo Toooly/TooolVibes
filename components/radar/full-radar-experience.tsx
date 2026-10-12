@@ -188,6 +188,9 @@ export function RadarExperience() {
   const atlasInstrumentRef = useRef<HTMLElement | null>(null);
   const [atlasMapWidth, setAtlasMapWidth] = useState(256);
   const [mobileAtlas, setMobileAtlas] = useState(false);
+  const [browseMode, setBrowseMode] = useState<"atlas" | "list">("atlas");
+  const [selectionOrigin, setSelectionOrigin] = useState<"atlas" | "list">("atlas");
+  const atlasScrollRef = useRef(0);
   const [microStackId, setMicroStackId] = useState<string | null>(null);
   const [microPage, setMicroPage] = useState(0);
   useEffect(() => {
@@ -452,9 +455,12 @@ export function RadarExperience() {
   }, []);
 
   const handleSelect = useCallback(
-    (toolId: string) => {
+    (toolId: string, origin: "atlas" | "list" = "atlas") => {
+      setSelectionOrigin(origin);
       selectionFocusRef.current = document.activeElement as HTMLElement | null;
-      if (!urlState.tool) {
+      if (origin === "list") {
+        inspectionScrollRef.current = null;
+      } else if (!urlState.tool) {
         const shell = document.querySelector<HTMLElement>(".marketing-shell");
         inspectionScrollRef.current = { shell, top: shell?.scrollTop ?? 0, windowY: window.scrollY };
       }
@@ -485,10 +491,44 @@ export function RadarExperience() {
     }
   }, [setUrlState]);
 
+  const handleListSelect = useCallback((toolId: string) => {
+    if (urlState.tool === toolId && selectionOrigin === "list") handleClosePreview();
+    else handleSelect(toolId, "list");
+  }, [urlState.tool, selectionOrigin, handleClosePreview, handleSelect]);
+
+  const handleBrowseList = useCallback(() => {
+    const shell = document.querySelector<HTMLElement>(".marketing-shell");
+    atlasScrollRef.current = shell?.scrollTop ?? 0;
+    setBrowseMode("list");
+    setUrlState({ tool: null });
+    setHighlightedId(null);
+    requestAnimationFrame(() => {
+      const heading = document.querySelector<HTMLElement>("#tv-rx-list-title");
+      if (heading && shell) {
+        const inset = parseFloat(getComputedStyle(shell).scrollPaddingTop) || 0;
+        shell.scrollTo({ top: shell.scrollTop + heading.getBoundingClientRect().top - shell.getBoundingClientRect().top - inset, behavior: "instant" });
+        heading.focus({ preventScroll: true });
+      }
+    });
+  }, [setUrlState]);
+
+  const handleReturnAtlas = useCallback(() => {
+    setBrowseMode("atlas");
+    setUrlState({ tool: null });
+    setHighlightedId(null);
+    inspectionScrollRef.current = null;
+    selectionFocusRef.current = null;
+    requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>(".marketing-shell")?.scrollTo({ top: atlasScrollRef.current, behavior: "instant" });
+      atlasInstrumentRef.current?.querySelector<HTMLButtonElement>("[data-browse-list]")?.focus({ preventScroll: true });
+    });
+  }, [setUrlState]);
+
   useEffect(() => {
     if (!selectedTool) return;
     const close = document.querySelector<HTMLButtonElement>(".tv-rx-preview__close");
     close?.focus({ preventScroll: true });
+    if (selectionOrigin === "list") return;
     if (window.matchMedia?.("(max-width: 63.999rem)").matches) {
       const instrument = atlasInstrumentRef.current;
       const shell = document.querySelector<HTMLElement>(".marketing-shell");
@@ -507,7 +547,7 @@ export function RadarExperience() {
         }
       }
     }
-  }, [selectedTool]);
+  }, [selectedTool, selectionOrigin]);
 
   // Closure §7 — the fallback sheet takes focus while open, Escape closes it,
   // and focus returns to the Radar when it goes away.
@@ -559,6 +599,7 @@ export function RadarExperience() {
       className="tv-rx"
       data-state={uiModel.state}
       data-tab={urlState.tab}
+      data-browse={mobileAtlas ? browseMode : "atlas"}
       data-focus={focusedClusterId ? "local" : "global"} data-atlas-mobile={mobileAtlas ? "true" : undefined} data-atlas-stage={microStack ? "micro" : focusedClusterId ? "local" : "global"}
       data-qa-radar-auth={account.status}
       data-qa-radar-mode={urlState.tab}
@@ -636,14 +677,7 @@ export function RadarExperience() {
                     else setUrlState({ category: null, query: null });
                   }}><ArrowLeft size={16} aria-hidden="true" />{microStack ? focusedCluster?.label : "Mercato"}</button>}
                   <span className="tv-rx-mobile-navigation__context">{microStack ? `${microStack.ageLabel} · ${microStack.memberIds.length} segnali` : focusedCluster ? `${focusedCluster.label} · ${filteredTools.length}` : "Scegli un’area"}</span>
-                  <button type="button" aria-controls="tv-rx-list-title" disabled={isLoading || filteredTools.length === 0} onClick={() => {
-                    const list = document.querySelector<HTMLElement>(".tv-rx-section");
-                    const shell = document.querySelector<HTMLElement>(".marketing-shell");
-                    if (list && shell) {
-                      const inset = parseFloat(getComputedStyle(shell).scrollPaddingTop) || 0;
-                      shell.scrollTo({ top: shell.scrollTop + list.getBoundingClientRect().top - shell.getBoundingClientRect().top - inset, left: 0, behavior: "instant" });
-                    }
-                  }}>Elenco</button>
+                  <button type="button" data-browse-list aria-controls="tv-rx-list-title" disabled={isLoading || filteredTools.length === 0} onClick={handleBrowseList}>Elenco</button>
                 </div>
               {/* §2/§5 — geometry and the map interaction contract are frozen. */}
               {isLoading ? (
@@ -758,18 +792,42 @@ export function RadarExperience() {
 
               <RadarInsightStrip view={view} />
 
-              {filteredTools.length > 0 ? (
-                <section className="tv-rx-section" aria-labelledby="tv-rx-list-title">
+              {filteredTools.length > 0 || (mobileAtlas && browseMode === "list") ? (
+                <section className="tv-rx-section" aria-labelledby="tv-rx-list-title" aria-busy={isLoading}>
                   <header className="tv-rx-section__head">
-                    <h2 id="tv-rx-list-title" className="tv-rx-section__title">
-                      Tool nel Radar
-                    </h2>
-                    <p className="tv-rx-section__desc">
-                      {filteredTools.length}{" "}
-                      {filteredTools.length === 1 ? "segnale" : "segnali"}
-                      {urlState.category ? " nella categoria selezionata" : " nel periodo"}
-                    </p>
+                    <div className="tv-rx-section__heading">
+                      <h2 id="tv-rx-list-title" tabIndex={-1} className="tv-rx-section__title">
+                        Tool nel Radar
+                      </h2>
+                      <p className="tv-rx-section__desc">
+                        {isLoading ? "Caricamento…" : <>{filteredTools.length}{" "}
+                          {filteredTools.length === 1 ? "segnale" : "segnali"}
+                          {urlState.category ? " nella categoria selezionata" : " nel periodo"}</>}
+                      </p>
+                    </div>
+                    {mobileAtlas && <button type="button" className="tv-rx-list-back" onClick={handleReturnAtlas}><ArrowLeft size={16} aria-hidden="true" /> Atlas</button>}
+                    {mobileAtlas && browseMode === "list" && <label className="tv-rx-list-search">
+                      <Search size={16} aria-hidden="true" />
+                      <span className="tv-rx-sr-only">Cerca nell’elenco dei segnali</span>
+                      <input type="search" value={query ?? ""} placeholder="Nome, categoria, idea…" onChange={event => setUrlState({ query: event.target.value || null })} />
+                    </label>}
+                    {mobileAtlas && browseMode === "list" && <div className="tv-rx-list-controls">
+                      <SegmentedControl
+                        className="tv-rx-range" optionClassName="tv-rx-range__option"
+                        id="tv-rx-list-range" label="Periodo dell’elenco"
+                        options={RADAR_RANGE_OPTIONS.map(option => ({ value: option.key, label: option.label }))}
+                        value={urlState.range} onValueChange={range => setUrlState({ range })}
+                      />
+                      <select aria-label="Area dell’elenco" value={urlState.category ?? ""} onChange={event => setUrlState({ category: event.target.value || null })}>
+                        <option value="">Tutte le aree</option>
+                        {view.clusters.map(cluster => <option key={cluster.id} value={cluster.id}>{cluster.label}</option>)}
+                      </select>
+                    </div>}
                   </header>
+                  {mobileAtlas && browseMode === "list" && (isLoading || filteredTools.length === 0) ? (
+                    isLoading ? <p className="tv-rx-state" role="status">Caricamento dei segnali…</p> :
+                      <RadarEmptyState state={uiModel.state} hasQuery={Boolean(query)} onClear={() => setUrlState({ query: null })} />
+                  ) : null}
                   <ol className="tv-rx-list">
                     {filteredTools.map((tool, index) => (
                       <RadarToolRow
@@ -777,10 +835,15 @@ export function RadarExperience() {
                         tool={tool}
                         index={index}
                         selected={urlState.tool === tool.id}
-                        onSelect={handleSelect}
+                        onSelect={handleListSelect}
                         watched={watchKeys.has(watchKeyFor(tool))}
                         onToggleWatch={handleToggleWatch}
-                      />
+                      >
+                        {urlState.tool === tool.id && selectionOrigin === "list" && <RadarQuickPreview
+                          key={tool.id} inline tool={tool} historyAvailable={view.snapshot.historyAvailable}
+                          watched={watchKeys.has(watchKeyFor(tool))} onToggleWatch={() => handleToggleWatch(tool)} onClose={handleClosePreview}
+                        />}
+                      </RadarToolRow>
                     ))}
                   </ol>
                 </section>
@@ -790,7 +853,7 @@ export function RadarExperience() {
             {/* Desktop intelligence rail; mobile inspection follows the map
                 in the document so short viewports never lose signal access. */}
             <aside className="tv-rx__rail" aria-label="Pannello intelligenza">
-              {selectedTool && ambiguous.length === 0 ? (
+              {selectedTool && selectionOrigin !== "list" && ambiguous.length === 0 ? (
                 <RadarQuickPreview
                   key={selectedTool.id}
                   tool={selectedTool}

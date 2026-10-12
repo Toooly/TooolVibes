@@ -10,11 +10,13 @@
  */
 
 import Link from "next/link";
-import { ArrowUpRight, Eye } from "lucide-react";
+import { useId, useState, type ReactNode } from "react";
+import { ArrowUpRight, ChevronDown, Eye } from "lucide-react";
 
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { ShortlistToggle } from "@/components/tools/shortlist-toggle";
 import type { RadarTool } from "@/lib/radar/radar-domain";
+import { formatAge } from "@/lib/radar/radar-trend";
 
 export function RadarToolRow({
   tool,
@@ -23,6 +25,7 @@ export function RadarToolRow({
   onSelect,
   watched,
   onToggleWatch,
+  children,
 }: {
   tool: RadarTool;
   index: number;
@@ -30,31 +33,50 @@ export function RadarToolRow({
   onSelect: (toolId: string) => void;
   watched: boolean;
   onToggleWatch: (tool: RadarTool) => void;
+  children?: ReactNode;
 }) {
   const keySignal = `${tool.votesCount} voti · ${tool.commentsCount} commenti`;
   const isExternal = tool.catalogStatus === "external";
+  const detailsId = useId();
+  const [thumbnailFailed, setThumbnailFailed] = useState(false);
+  const expanded = Boolean(children);
 
   return (
     <li
       className="tv-rx-row"
       data-selected={selected ? "true" : undefined}
       data-catalog-status={tool.catalogStatus}
+      data-expanded={expanded ? "true" : undefined}
     >
       <button
         type="button"
         className="tv-rx-row__main"
-        onClick={() => onSelect(tool.id)}
-        aria-expanded={selected}
+        onClick={event => {
+          event.currentTarget.focus({ preventScroll: true });
+          onSelect(tool.id);
+        }}
+        aria-expanded={expanded}
+        aria-controls={expanded ? detailsId : undefined}
+        aria-label={`${expanded ? "Chiudi" : "Apri"} dettagli di ${tool.name}`}
       >
         <span className="tv-rx-row__rank" aria-hidden="true">
           {String(index + 1).padStart(2, "0")}
         </span>
+        <span className="tv-rx-row__identity" aria-hidden="true">
+          {tool.thumbnailUrl && !thumbnailFailed ? (
+            // eslint-disable-next-line @next/next/no-img-element -- factual source thumbnail; no invented catalog identity
+            <img src={tool.thumbnailUrl} width={40} height={40} alt="" loading="lazy" decoding="async" onError={() => setThumbnailFailed(true)} />
+          ) : tool.name.slice(0, 1).toLocaleUpperCase("it-IT")}
+        </span>
         <span className="tv-rx-row__body">
           <strong className="tv-rx-row__name">{tool.name}</strong>
+          <span className="tv-rx-row__tagline">{tool.tagline}</span>
           <span className="tv-rx-row__meta">
-            {tool.topicCluster.label} · {keySignal}
+            <span>{tool.topicCluster.label}</span><span>{formatAge(tool.ageHours)}</span>
+            <span className="tv-rx-sr-only">{keySignal}</span>
           </span>
         </span>
+        <ChevronDown className="tv-rx-row__chevron" size={16} aria-hidden="true" />
       </button>
       <span className="tv-rx-row__actions">
         {isExternal ? (
@@ -93,6 +115,7 @@ export function RadarToolRow({
           </>
         )}
       </span>
+      {children && <div id={detailsId} className="tv-rx-row__details">{children}</div>}
     </li>
   );
 }
