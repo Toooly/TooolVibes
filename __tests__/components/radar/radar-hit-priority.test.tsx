@@ -143,3 +143,22 @@ it("preserves a 44px minimum touch target on a narrow instrument", () => {
   fireEvent.click(svg, { clientX: touch.clientX, clientY: touch.clientY });
   expect(onSelect).toHaveBeenCalledExactlyOnceWith(tiun.id);
 });
+
+it("opens the inner part of an active mobile territory", () => {
+  const { tap, onSelectSector, onSelect, onAmbiguous } = setup({ mobileAtlas: true, mapWidth: 100 });
+  const angle = 247.5 * Math.PI / 180;
+  tap(50 + 12 * Math.sin(angle), 50 - 12 * Math.cos(angle));
+  expect(onSelectSector).toHaveBeenCalledExactlyOnceWith(topicCluster.id);
+  expect(onSelect).not.toHaveBeenCalled();
+  expect(onAmbiguous).not.toHaveBeenCalled();
+});
+
+it("opens a mobile Stack directly without ambiguity or territory navigation", () => {
+  const onSelectStack = vi.fn();
+  const { tap, onSelectSector, onSelect, onAmbiguous } = setup({ mobileAtlas: true, mapWidth: 100, atlasStacks: [{ id: "stack-1", memberIds: ["a", "b"], x: 70, y: 70, radiusRatio: .2, ageLabel: "<1h" }], onSelectStack });
+  tap(70, 70);
+  expect(onSelectStack).toHaveBeenCalledExactlyOnceWith("stack-1");
+  expect(onSelect).not.toHaveBeenCalled();
+  expect(onSelectSector).not.toHaveBeenCalled();
+  expect(onAmbiguous).not.toHaveBeenCalled();
+});

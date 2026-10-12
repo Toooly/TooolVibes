@@ -31,8 +31,17 @@ export function CompareSessionDock() {
   const slugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const toggleCompare = useToolWorkspaceStore((state) => state.toggleCompare);
   const guideRoute = isGuidePath(pathname);
+  const [radarMobile, setRadarMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const media = window.matchMedia("(max-width: 1023px)");
+    const sync = () => setRadarMobile(pathname === "/radar" && media.matches);
+    sync();
+    media.addEventListener?.("change", sync);
+    return () => media.removeEventListener?.("change", sync);
+  }, [pathname]);
   const hidden = slugs.length < 1 || pathname === "/compare";
-  const prefersCompact = guideRoute || comparePrefersCompact(pathname);
+  const prefersCompact = radarMobile || guideRoute || comparePrefersCompact(pathname);
   const [expanded, setExpanded] = useState(() => !prefersCompact);
   const dockRef = useRef<HTMLDivElement | null>(null);
   const expandedRef = useRef(expanded);
@@ -48,7 +57,7 @@ export function CompareSessionDock() {
   }, [pathname, prefersCompact]);
 
   useEffect(() => {
-    if (hidden || guideRoute) return;
+    if (hidden || guideRoute || radarMobile) return;
     let prevY = readLiveScrollTop();
     let frame = 0;
     const onScroll = () => {
@@ -79,7 +88,7 @@ export function CompareSessionDock() {
       document.removeEventListener("scroll", onScroll, { capture: true });
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [hidden, guideRoute, pathname, prefersCompact]);
+  }, [hidden, guideRoute, radarMobile, pathname, prefersCompact]);
 
   useEffect(() => {
     const root = document.documentElement;

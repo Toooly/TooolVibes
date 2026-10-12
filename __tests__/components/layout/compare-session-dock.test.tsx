@@ -113,6 +113,22 @@ describe("CompareSessionDock states", () => {
     expect(screen.getByRole("button", { name: "Togli atlas-ai dal confronto" })).toBeTruthy();
   });
 
+  it("starts compact on mobile Radar and expands only on request", () => {
+    navRuntime.pathname = "/radar";
+    vi.stubGlobal("matchMedia", () => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+    seedWorkspace(compareState("atlas-ai", "gamma-app"));
+    render(<CompareSessionDock />);
+    const dock = document.querySelector("[data-compare-dock]");
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("compact");
+    fireEvent.scroll(window);
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("compact");
+    fireEvent.click(screen.getByRole("button", { name: "Mostra i tool in confronto" }));
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("expanded");
+    fireEvent.click(screen.getByRole("button", { name: "Nascondi i tool in confronto" }));
+    expect(dock?.getAttribute("data-compare-chrome")).toBe("compact");
+    vi.unstubAllGlobals();
+  });
+
   it("hides on the compare route", () => {
     navRuntime.pathname = "/compare";
     seedWorkspace(compareState("atlas-ai", "gamma-app"));

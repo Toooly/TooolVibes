@@ -34,6 +34,7 @@ import { planRadarSpiderfy, type RadarSpiderGroup } from "@/lib/radar/radar-spid
 import type { RadarPoint2 } from "@/lib/radar/radar-projection";
 import type { RadarLocalFocusSignal } from "@/lib/radar/radar-local-focus";
 import { planRadarAtlasConstellation } from "@/lib/radar/radar-atlas-constellation";
+import { ATLAS_MICRO_PAGE_SIZE, atlasMobileGlobalIds, atlasMobileRadii, planAtlasMicroFocus, planAtlasMobile, type AtlasMobileSignal } from "@/lib/radar/radar-atlas-mobile";
 import {
   planRadarOverview,
   type RadarLodInput,
@@ -186,6 +187,21 @@ export function RadarExperience() {
   const [chooserGroup, setChooserGroup] = useState<RadarSpiderGroup | null>(null);
   const atlasInstrumentRef = useRef<HTMLElement | null>(null);
   const [atlasMapWidth, setAtlasMapWidth] = useState(256);
+  const [mobileAtlas, setMobileAtlas] = useState(false);
+  const [microStackId, setMicroStackId] = useState<string | null>(null);
+  const [microPage, setMicroPage] = useState(0);
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const media = window.matchMedia("(max-width: 1023px)");
+    const sync = () => setMobileAtlas(media.matches);
+    sync();
+    media.addEventListener?.("change", sync);
+    return () => media.removeEventListener?.("change", sync);
+  }, []);
+  useEffect(() => {
+    setMicroStackId(null);
+    setMicroPage(0);
+  }, [urlState.category, urlState.range, urlState.query, urlState.tab]);
   useEffect(() => {
     const instrument = atlasInstrumentRef.current;
     if (!instrument) return;
@@ -252,7 +268,7 @@ export function RadarExperience() {
     );
   }, [focusedClusterId, layout.points]);
 
-  const renderIds = useMemo(
+  const baseRenderIds = useMemo(
     () => query ? new Set(filteredTools.map(tool => tool.id)) : localSignalIds ?? overviewPlan.representativeIds,
     [query, filteredTools, localSignalIds, overviewPlan.representativeIds],
   );
@@ -264,7 +280,7 @@ export function RadarExperience() {
   );
 
   // §6 — only the focused cluster is interactive while it is focused.
-  const interactiveIds = useMemo(() => query ? renderIds : localSignalIds, [query, renderIds, localSignalIds]);
+  const baseInteractiveIds = useMemo(() => query ? baseRenderIds : localSignalIds, [query, baseRenderIds, localSignalIds]);
 
   // §2 — LOCAL CLUSTER PLANNER. All real signals of the focused cluster are
   // laid out by the deterministic Atlas angular planner. Semantic
@@ -288,10 +304,41 @@ export function RadarExperience() {
       }));
   }, [focusedClusterId, layout.points]);
 
+  const mobileSignals = useMemo<AtlasMobileSignal[]>(() => localSignals.map(signal => {
+    const tool = view.tools.find(tool => tool.id === signal.id)!;
+    return { ...signal, attention: tool.attention, ageHours: tool.ageHours };
+  }).filter(signal => !query || filteredTools.some(tool => tool.id === signal.id)), [localSignals, view.tools, query, filteredTools]);
+  const mobilePlan = useMemo(() => mobileAtlas && focusedClusterId ? planAtlasMobile(mobileSignals, atlasMapWidth) : null, [mobileAtlas, focusedClusterId, mobileSignals, atlasMapWidth]);
+  const microStack = mobilePlan?.stacks.find(stack => stack.id === microStackId) ?? null;
+  const leaveMicroFocus = useCallback(() => {
+    const stackId = microStackId;
+    setMicroStackId(null);
+    setMicroPage(0);
+    requestAnimationFrame(() => {
+      const stack = Array.from(atlasInstrumentRef.current?.querySelectorAll<SVGElement>("[data-atlas-stack]") ?? []).find(node => node.dataset.atlasStack === stackId);
+      stack?.focus({ preventScroll: true });
+    });
+  }, [microStackId]);
+  const microPositions = useMemo(() => microStack ? planAtlasMicroFocus(microStack.memberIds, microPage) : null, [microStack, microPage]);
+  const renderIds = useMemo(() => {
+    if (!mobileAtlas) return baseRenderIds;
+    if (microPositions) return new Set(microPositions.keys());
+    if (mobilePlan) return mobilePlan.visibleIds;
+    const candidates = layout.points.filter(point => baseRenderIds.has(point.id)).map(point => ({ ...point, attention: view.tools.find(tool => tool.id === point.id)!.attention }));
+    return atlasMobileGlobalIds(candidates, atlasMapWidth);
+  }, [mobileAtlas, baseRenderIds, microPositions, mobilePlan, layout.points, view.tools, atlasMapWidth]);
+  const interactiveIds = mobileAtlas ? renderIds : baseInteractiveIds;
+  const mobileRadii = useMemo(() => {
+    if (!mobileAtlas) return null;
+    if (microPositions) return atlasMobileRadii(mobileSignals.filter(s => microPositions.has(s.id)), atlasMapWidth);
+    if (mobilePlan) return mobilePlan.radii;
+    return atlasMobileRadii(layout.points.map(p => ({...p, semanticAngle:p.semanticAngleDeg, radius:p.size, attention:view.tools.find(t=>t.id===p.id)!.attention})), atlasMapWidth, false);
+  }, [mobileAtlas, microPositions, mobileSignals, mobilePlan, atlasMapWidth, layout.points, view.tools]);
+
   const localPlan = useMemo(() => {
-    if (!focusedClusterId || localSignals.length === 0) return null;
+    if (mobileAtlas || !focusedClusterId || localSignals.length === 0) return null;
     return planRadarAtlasConstellation(localSignals, { rect: { left: 0, top: 0, width: atlasMapWidth, height: atlasMapWidth } });
-  }, [focusedClusterId, localSignals, atlasMapWidth]);
+  }, [mobileAtlas, focusedClusterId, localSignals, atlasMapWidth]);
 
   // §14 — residual collision: the existing spiderfy/chooser fallback handles
   // physically impossible packings; the angular planner reports them explicitly.
@@ -312,6 +359,7 @@ export function RadarExperience() {
 
   // Spec §1/§3 — ONE display map for painting AND hit-testing.
   const displayOverrides = useMemo<Map<string, RadarPoint2>>(() => {
+    if (mobileAtlas) return microPositions ?? mobilePlan?.positions ?? new Map<string, RadarPoint2>();
     const map = new Map<string, RadarPoint2>();
     for (const node of localPlan?.nodes ?? []) {
       map.set(node.id, { x: node.displayX, y: node.displayY });
@@ -322,7 +370,7 @@ export function RadarExperience() {
       }
     }
     return map;
-  }, [localPlan, spider]);
+  }, [mobileAtlas, microPositions, mobilePlan, localPlan, spider]);
 
   // Spec §4 — the Sector Lens replaces the old camera zoom as the separation
   // mechanism, so there is exactly one transform at a time.
@@ -490,15 +538,16 @@ export function RadarExperience() {
 
   // Keyboard: Escape closes the quick preview.
   useEffect(() => {
-    if (!urlState.tool) return;
+    if (!urlState.tool && !microStackId) return;
     const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !urlState.tool && microStackId) { leaveMicroFocus(); return; }
       if (event.key === "Escape" && chooserGroup === null && ambiguous.length === 0) {
         handleClosePreview();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [urlState.tool, handleClosePreview, chooserGroup, ambiguous.length]);
+  }, [urlState.tool, handleClosePreview, chooserGroup, ambiguous.length, microStackId, leaveMicroFocus]);
 
   const focusedCluster = view.clusters.find((cluster) => cluster.id === focusedClusterId);
   const rangeLabel =
@@ -510,7 +559,7 @@ export function RadarExperience() {
       className="tv-rx"
       data-state={uiModel.state}
       data-tab={urlState.tab}
-      data-focus={focusedClusterId ? "local" : "global"}
+      data-focus={focusedClusterId ? "local" : "global"} data-atlas-mobile={mobileAtlas ? "true" : undefined} data-atlas-stage={microStack ? "micro" : focusedClusterId ? "local" : "global"}
       data-qa-radar-auth={account.status}
       data-qa-radar-mode={urlState.tab}
       data-qa-radar-ready={!isLoading && uiModel.items.length > 0 ? "true" : "false"}
@@ -581,14 +630,12 @@ export function RadarExperience() {
                   <strong>{focusedCluster?.label ?? "Panoramica globale"}</strong>
                   <span className="tv-rx-instrument__count">{isLoading ? "—" : filteredTools.length} segnali</span>
                 </header>
-                <div className="tv-rx-mobile-navigation">
-                  <label htmlFor="tv-rx-mobile-area">Area Radar
-                    <select id="tv-rx-mobile-area" value={urlState.category ?? ""} disabled={isLoading} onChange={event => setUrlState({ category: event.target.value || null })}>
-                      <option value="">Tutte le aree</option>
-                      {view.clusters.map(cluster => <option key={cluster.id} value={cluster.id}>{cluster.label} · {cluster.count}</option>)}
-                    </select>
-                  </label>
-                  {focusedClusterId && <button type="button" onClick={() => setUrlState({ category: null, query: null })}><ArrowLeft size={16} aria-hidden="true" /> Panoramica</button>}
+                <div className="tv-rx-mobile-navigation" data-micro-focus={microStack ? "true" : undefined}>
+                  {focusedClusterId && <button type="button" onClick={() => {
+                    if (microStack) leaveMicroFocus();
+                    else setUrlState({ category: null, query: null });
+                  }}><ArrowLeft size={16} aria-hidden="true" />{microStack ? focusedCluster?.label : "Mercato"}</button>}
+                  <span className="tv-rx-mobile-navigation__context">{microStack ? `${microStack.ageLabel} · ${microStack.memberIds.length} segnali` : focusedCluster ? `${focusedCluster.label} · ${filteredTools.length}` : "Scegli un’area"}</span>
                   <button type="button" aria-controls="tv-rx-list-title" disabled={isLoading || filteredTools.length === 0} onClick={() => {
                     const list = document.querySelector<HTMLElement>(".tv-rx-section");
                     const shell = document.querySelector<HTMLElement>(".marketing-shell");
@@ -611,6 +658,12 @@ export function RadarExperience() {
                 <>
                   <RadarMap
                     layoutTools={view.tools}
+                    mobileAtlas={mobileAtlas}
+                    mapWidth={atlasMapWidth}
+                    radiusOverrides={mobileRadii}
+                    atlasStacks={microStack ? [] : mobilePlan?.stacks}
+                    microAnchor={microStack}
+                    onSelectStack={id => { setMicroStackId(id); setMicroPage(0); }}
                     visibleIds={renderIds}
                     interactiveIds={interactiveIds}
                     hiddenCounts={hiddenCounts}
@@ -645,7 +698,14 @@ export function RadarExperience() {
                   />
                 </>
               )}
-                <p className="tv-rx-instrument__hint"><span>Al centro i più recenti, verso il bordo i più vecchi.</span><span>Colore: area · Dimensione: attenzione.</span></p>
+                {microStack && microStack.memberIds.length > ATLAS_MICRO_PAGE_SIZE && <nav className="tv-rx-micro-pages" aria-label="Altri segnali del gruppo">
+                  <button type="button" disabled={microPage === 0} onClick={() => setMicroPage(p => p - 1)}>Precedenti</button>
+                  <span>{microPage + 1} / {Math.ceil(microStack.memberIds.length / ATLAS_MICRO_PAGE_SIZE)}</span>
+                  <button type="button" disabled={(microPage + 1) * ATLAS_MICRO_PAGE_SIZE >= microStack.memberIds.length} onClick={() => setMicroPage(p => p + 1)}>Successivi</button>
+                </nav>}
+                {mobileAtlas ? (
+<details className="tv-rx-instrument__help"><summary>Come leggere</summary><p className="tv-rx-instrument__hint"><span>Al centro i più recenti, verso il bordo i più vecchi.</span><span>Colore: area · Dimensione: attenzione.</span><span>Micro Focus apre un gruppo: la disposizione dei tool facilita i tap; il periodo del gruppo e l’età di ogni segnale restano indicati.</span></p></details>
+                ) : <p className="tv-rx-instrument__hint"><span>Al centro i più recenti, verso il bordo i più vecchi.</span><span>Colore: area · Dimensione: attenzione.</span></p>}
               </section>
               {/* Spec §19 — a compact contextual indicator, integrated with
                   the existing controls rather than another large card. */}

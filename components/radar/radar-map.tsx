@@ -24,6 +24,7 @@ import { useCallback, useId, useRef, type CSSProperties } from "react";
 import { RadarAtlasField, RadarAtlasGlyph, RadarAtlasInspection, RadarAtlasEditorialLabels } from "@/components/radar/radar-atlas";
 
 import { rankAtlasBeacons } from "@/lib/radar/radar-atlas-beacons";
+import { ATLAS_MOBILE_HIT_PX, type AtlasStack } from "@/lib/radar/radar-atlas-mobile";
 
 import {
   RADAR_CATEGORY_PALETTE,
@@ -61,6 +62,12 @@ import type { RadarSpiderPlan } from "@/lib/radar/radar-spiderfy";
 const RADAR_SECTOR_HIT_WIDTH = 9;
 
 export type RadarMapProps = {
+  mobileAtlas?: boolean;
+  mapWidth?: number;
+  radiusOverrides?: ReadonlyMap<string, number> | null;
+  atlasStacks?: readonly AtlasStack[];
+  microAnchor?: AtlasStack | null;
+  onSelectStack?: (stackId: string) => void;
   /**
    * The FULL dataset. Geometry is ALWAYS computed from this, so filtering or
    * searching can never move an existing point (spec §2).
@@ -128,6 +135,12 @@ export type RadarMapProps = {
 };
 
 export function RadarMap({
+  mobileAtlas = false,
+  mapWidth = 256,
+  radiusOverrides,
+  atlasStacks = [],
+  microAnchor,
+  onSelectStack,
   layoutTools,
   visibleIds,
   interactiveIds,
@@ -193,7 +206,7 @@ export function RadarMap({
     return display ? { ...entry, x: display.x, y: display.y } : entry;
   });
 
-  const atlasTiers = focusedClusterId ? rankAtlasBeacons(layoutTools.filter(tool => tool.topicCluster.id === focusedClusterId)) : new Map();
+  const atlasTiers = focusedClusterId ? rankAtlasBeacons(layoutTools.filter(tool => tool.topicCluster.id === focusedClusterId && (!microAnchor || isVisible(tool.id)))) : new Map();
 
   // Renderer-only references. The canonical point and display maps stay intact.
   const selectedPoint = selectedId ? pointById.get(selectedId) : undefined;
@@ -247,7 +260,7 @@ export function RadarMap({
       // Hit radii are defined in global units at zoom 1 (a ~50px touch target).
       // Dividing by the zoom keeps that target the same physical size on screen
       // at every zoom level instead of ballooning with the camera.
-      const hitRadius = Math.max(
+      const hitRadius = mobileAtlas ? ATLAS_MOBILE_HIT_PX * 50 / (rect.width * zoom) : Math.max(
         RADAR_HIT_RADIUS_VIEWBOX / zoom,
         event.pointerType === "touch" ? 22 * 100 / (rect.width * zoom) : 0,
       );
@@ -268,6 +281,10 @@ export function RadarMap({
         onSelect(resolution.id);
         return;
       }
+      if (resolution.kind === "none" && onSelectStack) {
+        const stack = atlasStacks.find(stack => Math.hypot(stack.x-global.x, stack.y-global.y) <= hitRadius);
+        if (stack) { onSelectStack(stack.id); return; }
+      }
       // Empty Global territory enters CLUSTER FOCUS only after canonical
       // visible signal hits (including ambiguity) have had priority.
       if (resolution.kind === "none" && onSelectSector && !focusedClusterId) {
@@ -275,7 +292,7 @@ export function RadarMap({
           (global.x - RADAR_CENTER) * (global.x - RADAR_CENTER) +
             (global.y - RADAR_CENTER) * (global.y - RADAR_CENTER),
         );
-        if (radius > 30) {
+        if (mobileAtlas ? radius <= 42 : radius > 30) {
           const raw = (Math.atan2(global.y - RADAR_CENTER, global.x - RADAR_CENTER) * 180) / Math.PI + 90;
           const angle = ((raw % 360) + 360) % 360;
           const span = RADAR_COMPASS_SECTOR_SPAN_DEG;
@@ -284,7 +301,7 @@ export function RadarMap({
             Math.floor(angle / span),
           );
           const clusterId = layout.clusterOrder[sectorIndex];
-          if (clusterId) {
+          if (clusterId && (!mobileAtlas || clusters.some(cluster => cluster.id === clusterId && cluster.count > 0))) {
             onSelectSector(clusterId);
             return;
           }
@@ -319,6 +336,10 @@ export function RadarMap({
     },
     [
       camera,
+      mobileAtlas,
+      atlasStacks,
+      onSelectStack,
+      clusters,
       focusedClusterId,
       interactiveIds,
       layout.clusterOrder,
@@ -339,6 +360,7 @@ export function RadarMap({
       data-basis={layout.radiusBasis}
       data-renderer={instrumentRenderer}
       data-visual-mode={visualMode}
+      data-micro-focus={microAnchor ? "true" : undefined}
       style={{ "--tv-radar-instrument-accent": instrumentAccent } as CSSProperties}
     >
       <svg
@@ -439,7 +461,7 @@ export function RadarMap({
           className="tv-rx-map__camera"
         >
 
-        {instrumentRenderer === "atlas" && <RadarAtlasField clusterOrder={layout.clusterOrder} clusters={clusters} colors={colorByCluster} tools={layoutTools} range={range} focusedClusterId={focusedClusterId} onSelectSector={onSelectSector} visiblePoints={tapPoints.filter(p => isVisible(p.id)).map(p => ({ ...p, size: focusedClusterId ? p.size : compressVisualRadiusForOverview(p.size) }))} />}
+        {instrumentRenderer === "atlas" && <RadarAtlasField clusterOrder={layout.clusterOrder} clusters={clusters} colors={colorByCluster} tools={layoutTools} range={range} focusedClusterId={focusedClusterId} onSelectSector={onSelectSector} mobileAtlas={mobileAtlas} visiblePoints={tapPoints.filter(p => isVisible(p.id)).map(p => ({ ...p, size: radiusOverrides?.get(p.id) ?? (focusedClusterId ? p.size : compressVisualRadiusForOverview(p.size)) }))} />}
         {instrumentRenderer === "v2" && <>
         {/* 00–03: static well, optical edge and precision bezel. No filters. */}
         <g className="tv-rx-map__surface" data-instrument-layer="surface" aria-hidden="true">
@@ -615,8 +637,25 @@ export function RadarMap({
           {instrumentRenderer === "atlas" && focusedClusterId && <RadarAtlasEditorialLabels selectedId={selectedId} signals={tapPoints.filter(p => isVisible(p.id) && p.clusterId === focusedClusterId).map(p => {
             const tool = layoutTools.find(t => t.id === p.id)!;
             const name = tool.name.length > 16 ? `${tool.name.slice(0, 15)}…` : tool.name;
-            return { id: p.id, x: p.x, y: p.y, radius: p.size, name, attention: tool.attention, tier: atlasTiers.get(p.id) ?? "ambient" };
+            return { id: p.id, x: p.x, y: p.y, radius: radiusOverrides?.get(p.id) ?? p.size, name, attention: tool.attention, tier: atlasTiers.get(p.id) ?? "ambient" };
           })} />}
+          {microAnchor && <g className="tv-atlas__micro-focus-anchor" aria-hidden="true">
+            <path d={`M ${microAnchor.x} ${microAnchor.y} L 50 50`} />
+            <circle cx={microAnchor.x} cy={microAnchor.y} r="1" />
+            <text x="50" y="51" textAnchor="middle">{microAnchor.ageLabel}</text>
+          </g>}
+          {atlasStacks.map(stack => {
+            const radius = ATLAS_MOBILE_HIT_PX * 50 / Math.max(1,mapWidth);
+            const label = `Apri gruppo di ${stack.memberIds.length} segnali emersi ${stack.ageLabel === "<1h" ? "nell’ultima ora" : `nel periodo ${stack.ageLabel}`}`;
+            return <g key={stack.id} className="tv-atlas__stack" data-atlas-stack={stack.id} data-members={stack.memberIds.join("|")} style={{transform:`translate(${stack.x}px, ${stack.y}px)`}} role="button" tabIndex={0} aria-label={label}
+              onClick={event => { if(event.detail===0) onSelectStack?.(stack.id); }}
+              onKeyDown={event => { if(event.key==="Enter" || event.key===" "){event.preventDefault();onSelectStack?.(stack.id);} }}>
+              <circle r={radius} className="tv-atlas__stack-hit" aria-hidden="true" />
+              <rect x={-radius*.85} y={-radius*.85} width={radius*1.7} height={radius*1.7} rx={radius*.3} className="tv-atlas__stack-body" aria-hidden="true" />
+              <text textAnchor="middle" y="0" className="tv-atlas__stack-count" aria-hidden="true">+{stack.memberIds.length}</text>
+              <text textAnchor="middle" y="3.4" className="tv-atlas__stack-age" aria-hidden="true">{stack.ageLabel}</text>
+            </g>;
+          })}
           {layoutTools.map((tool) => {
             if (!isVisible(tool.id)) return null;
             const basePoint = pointById.get(tool.id);
@@ -630,9 +669,9 @@ export function RadarMap({
             // Spec §16 — Level-0 Overview compresses the RENDERED radius range
             // ~20% so a high-attention marker cannot dominate the quiet
             // overview. The attention value and its sqrt ordering are untouched.
-            const drawnRadius = focusedClusterId
+            const drawnRadius = radiusOverrides?.get(tool.id) ?? (focusedClusterId
               ? point.size
-              : compressVisualRadiusForOverview(point.size);
+              : compressVisualRadiusForOverview(point.size));
             const color =
               colorByCluster.get(tool.topicCluster.id) ??
               RADAR_CATEGORY_PALETTE[
@@ -677,7 +716,7 @@ export function RadarMap({
                 <circle
                   cx={0}
                   cy={0}
-                  r={RADAR_HIT_RADIUS_VIEWBOX}
+                  r={mobileAtlas ? ATLAS_MOBILE_HIT_PX * 50 / Math.max(1,mapWidth) : RADAR_HIT_RADIUS_VIEWBOX}
                   className="tv-rx-blip__hit"
                   role="button"
                   data-interactive={isInteractive ? "true" : "false"}

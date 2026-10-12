@@ -244,15 +244,15 @@ describe("RadarExperience", () => {
     window.history.replaceState(null, "", "/radar");
   });
 
-  it("dismisses a previous selection when changing the area through the mobile control", async () => {
+  it("dismisses a previous selection when changing the area through a territory", async () => {
     window.history.replaceState(null, "", "/radar");
     fetchMock.mockImplementation(() => fetchOk(LIVE));
     const { container } = renderRadar();
     const hits = await screen.findAllByRole("button", { name: /alpha tool/i });
     fireEvent.click(hits[0]);
     await screen.findByRole("dialog", { name: /anteprima di alpha tool/i });
-    const area = container.querySelector<HTMLOptionElement>('select option:not([value=""])')!;
-    fireEvent.change(screen.getByRole("combobox", { name: "Area Radar" }), { target: { value: area.value } });
+    const area = container.querySelector<SVGElement>('[data-atlas-territory][role="button"]')!;
+    fireEvent.keyDown(area, { key: "Enter" });
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
     expect(container.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
@@ -266,15 +266,37 @@ describe("RadarExperience", () => {
     fetchMock.mockImplementation((url: string) => url.includes("range=week") ? pending : fetchOk(LIVE));
     const { container } = renderRadar();
     await screen.findAllByText(/Alpha Tool/);
-    const area = container.querySelector<HTMLOptionElement>('select option:not([value=""])')!;
-    const areaId = area.value;
-    fireEvent.change(screen.getByRole("combobox", { name: "Area Radar" }), { target: { value: areaId } });
+    const area = container.querySelector<SVGElement>('[data-atlas-territory][role="button"]')!;
+    const areaId = area.dataset.atlasTerritory;
+    fireEvent.keyDown(area, { key: "Enter" });
     fireEvent.click(screen.getByRole("button", { name: /^7G$/ }));
-    await waitFor(() => expect((screen.getByRole("combobox", { name: "Area Radar" }) as HTMLSelectElement).disabled).toBe(true));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining("range=week")));
     expect(new URLSearchParams(window.location.search).get("c")).toBe(areaId);
     await act(async () => { finish(await fetchOk({ ...LIVE, range: "week" })); });
     await waitFor(() => expect(container.querySelector(".tv-rx")?.getAttribute("data-focus")).toBe("local"));
     expect(new URLSearchParams(window.location.search).get("c")).toBe(areaId);
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("preserves Micro Focus after closing inspection and restores the Stack with Escape", async () => {
+    window.history.replaceState(null, "", "/radar");
+    vi.stubGlobal("matchMedia", () => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+    fetchMock.mockImplementation(() => fetchOk({ ...LIVE, items: LIVE.items.map(item => ({ ...item, topics: ["Productivity"], launchedAt: "2026-07-28T08:00:00.000Z" })) }));
+    const { container } = renderRadar();
+    const area = await screen.findByRole("button", { name: "Apri Produttività, 3 segnali" });
+    fireEvent.keyDown(area, { key: "Enter" });
+    const stack = await screen.findByRole("button", { name: /Apri gruppo di 3 segnali/ });
+    fireEvent.keyDown(stack, { key: "Enter" });
+    expect(container.querySelector(".tv-rx")?.getAttribute("data-atlas-stage")).toBe("micro");
+    fireEvent.keyDown(container.querySelector(".tv-rx-blip__hit")!, { key: "Enter" });
+    await screen.findByRole("dialog");
+    fireEvent.click(screen.getByRole("button", { name: "Chiudi anteprima" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(container.querySelector(".tv-rx")?.getAttribute("data-atlas-stage")).toBe("micro");
+    fireEvent.keyDown(window, { key: "Escape" });
+    await screen.findByRole("button", { name: /Apri gruppo di 3 segnali/ });
+    expect(container.querySelector(".tv-rx")?.getAttribute("data-atlas-stage")).toBe("local");
+    expect(container.querySelector(".tv-rx-chooser")).toBeNull();
     window.history.replaceState(null, "", "/radar");
   });
 

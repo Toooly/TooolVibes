@@ -25,6 +25,7 @@ const shortLabels = ["VIDEO", "DESIGN", "NO-CODE", "GROWTH", "PROD.", "CODING", 
 const categoryLines = [["VIDEO &", "IMMAGINI"], ["DESIGN &", "CREATIVITÀ"], ["NO-CODE &", "AUTOMAZIONE"], ["MARKETING &", "GROWTH"], ["PRODUTTIVITÀ"], ["SVILUPPO &", "CODING"], ["AI &", "AGENTI"], ["ALTRO"]];
 
 type AtlasProps = {
+  mobileAtlas?: boolean;
   clusterOrder: readonly string[];
   clusters: readonly RadarClusterSummary[];
   colors: ReadonlyMap<string, string>;
@@ -35,7 +36,7 @@ type AtlasProps = {
   visiblePoints?: readonly (RadarPoint2 & { size?: number })[];
 };
 
-export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, focusedClusterId, onSelectSector, visiblePoints = [] }: AtlasProps) {
+export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, colors, tools, range, focusedClusterId, onSelectSector, visiblePoints = [] }: AtlasProps) {
   const surfaceId = `atlas-surface-${useId().replace(/:/g, "")}`;
   const local = Boolean(focusedClusterId);
   const count = local ? tools.filter(t => t.topicCluster.id === focusedClusterId).length : tools.length;
@@ -90,7 +91,7 @@ export function RadarAtlasField({ clusterOrder, clusters, colors, tools, range, 
             onClick={active ? event => { if (event.detail === 0) onSelectSector?.(id); } : undefined}
             onKeyDown={active ? event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onSelectSector?.(id); } } : undefined}
             style={{ "--tv-atlas-territory": colors.get(id) } as CSSProperties}>
-            {active && <path d={territory(i * 45, (i + 1) * 45, 30.0001, 47)} className="tv-atlas__territory-hit" data-territory-hit={id} aria-hidden="true" />}
+            {active && <path d={territory(i * 45, (i + 1) * 45, mobileAtlas ? 0 : 30.0001, mobileAtlas ? 42 : 47)} className="tv-atlas__territory-hit" data-territory-hit={id} aria-hidden="true" />}
             <g className="tv-atlas__area-art" data-instrument-layer="atlas-area-art" aria-hidden="true">
               {local ? <circle cx="50" cy="50" r="42" className="tv-atlas__territory" /> : <path d={territory(start, end)} className="tv-atlas__territory" />}
               {!local && clusterCount > 0 && <>

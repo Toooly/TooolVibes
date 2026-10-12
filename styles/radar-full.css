@@ -1989,3 +1989,41 @@ svg .tv-atlas__area-short { font-size: 3.7px; }
   min-block-size: 52px;
   min-height: 52px;
 }
+
+/* V3.7 mobile interaction: territory -> constellation -> explicit group orbit.
+   Desktop artwork, time projection and constellation owner stay unchanged. */
+.tv-atlas__stack-hit { fill: transparent; pointer-events: all; }
+.tv-atlas__stack-body { fill: var(--tv-instrument-surface); stroke: var(--tv-color-cyan-500); stroke-width: .6; stroke-dasharray: 1.4 .7; pointer-events: none; }
+.tv-atlas__stack-count { fill: var(--tv-ink-primary); font-family: var(--tv-font-data); font-size: 3.5px; font-weight: 700; pointer-events: none; }
+.tv-atlas__stack-age { fill: var(--tv-ink-secondary); font-family: var(--tv-font-ui); font-size: 2.7px; pointer-events: none; }
+.tv-atlas__stack { cursor: pointer; }
+.tv-atlas__stack:focus-visible .tv-atlas__stack-body { stroke: var(--tv-ink-primary); stroke-width: 1; }
+.tv-atlas__micro-focus-anchor { pointer-events: none; }
+.tv-atlas__micro-focus-anchor path { fill: none; stroke: var(--tv-color-cyan-500); stroke-width: .4; stroke-dasharray: 1 1.5; opacity: .5; }
+.tv-atlas__micro-focus-anchor circle { fill: var(--tv-color-cyan-500); }
+.tv-atlas__micro-focus-anchor text { fill: var(--tv-ink-secondary); font-family: var(--tv-font-data); font-size: 3px; }
+.tv-rx-instrument__help > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--tv-ink-secondary); font-size: var(--tv-text-xs); }
+.tv-rx-micro-pages { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.tv-rx-micro-pages button { min-height: 44px; border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-control); padding-inline: .75rem; background: var(--tv-instrument-surface); color: var(--tv-ink-primary); }
+.tv-rx-micro-pages button:disabled { opacity: .45; }
+@media (max-width: 1023px) {
+  .tv-rx[data-atlas-mobile="true"] { padding-inline: 8px; gap: 12px; }
+  .tv-rx[data-atlas-mobile="true"] .tv-rx-instrument { padding: 0; border: 0; box-shadow: none; background: transparent; }
+  .tv-rx[data-atlas-mobile="true"] .tv-rx-map { inline-size: min(100%, 32rem); }
+  .tv-rx[data-atlas-mobile="true"] .tv-rx-instrument__head { display: none; }
+  .tv-rx[data-atlas-mobile="true"] .tv-rx-mobile-navigation { display: flex; align-items: center; gap: 6px; min-height: 44px; margin-bottom: 4px; }
+  .tv-rx-mobile-navigation__context { flex: 1; min-width: 0; color: var(--tv-ink-primary); text-align: center; font-size: .875rem; font-weight: 600; }
+  .tv-rx[data-atlas-mobile="true"] .tv-rx-mobile-navigation button { min-height: 44px; padding: 8px; white-space: nowrap; }
+  .tv-rx[data-atlas-mobile="true"][data-tab="panoramica"] .tv-rx__header { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .tv-rx[data-atlas-mobile="true"][data-focus="local"] > :is(.tv-rx-telemetry, .tv-rx__tabs) { display: none; }
+  .tv-rx[data-atlas-mobile="true"][data-focus="local"] .tv-rx-toolbar { display: none; }
+  .tv-rx[data-atlas-mobile="true"] .tv-rx-focusbar { display: none; }
+  .tv-rx-map[data-micro-focus="true"] .tv-atlas__time { opacity: .25; }
+  .tv-rx-map[data-micro-focus="true"] .tv-atlas__origin-label { display: none; }
+  .tv-rx-map[data-micro-focus="true"] .tv-rx-blip { transition: transform 220ms ease-out; }
+  .tv-rx[data-atlas-mobile="true"] .tv-atlas__area-short { font-size: 3.2px; }
+  .tv-rx[data-atlas-mobile="true"] .tv-atlas__area-arrow { stroke-width: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-rx-map[data-micro-focus="true"] .tv-rx-blip { transition: none; }
+}
