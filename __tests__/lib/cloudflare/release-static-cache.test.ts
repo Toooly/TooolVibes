@@ -13,6 +13,10 @@ function fixture(value: object | null) {
 }
 
 describe("immutable release page cache", () => {
+  it("preserves the provider identity required to populate cache assets on deploy", () => {
+    const { base, cache } = fixture(null);
+    expect(cache.name).toBe(base.name);
+  });
   it.each(["app", "page"])("serves published %s content without browser caching or background rendering", async type => {
     const { base, cache } = fixture({ type, html: "Published catalog", revalidate: 1, meta: { status: 200, headers: { "x-content-type-options": "nosniff" } } });
     const entry = await cache.get("/archivio", "cache");

@@ -3,7 +3,8 @@ import type { IncrementalCache } from "@opennextjs/aws/types/overrides.js";
 /** Reuse only this build's immutable page artifacts; never cache HTML in the browser/CDN. */
 export function releaseStaticCache(base: IncrementalCache): IncrementalCache {
   return {
-    name: "tooolvibes-release-static-cache",
+    // OpenNext selects its cache-population step by the provider's name.
+    name: base.name,
     async get(key, type) {
       const entry = await base.get(key, type);
       const value = entry?.value;
