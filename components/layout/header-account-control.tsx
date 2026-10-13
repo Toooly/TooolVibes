@@ -28,6 +28,32 @@ export function HeaderAccountControl({
 }) {
   const account = useAccount();
   const accountCta = useHeaderAccountCta();
+  const menuRef = useRef<HTMLDetailsElement | null>(null);
+
+  useEffect(() => {
+    const onPointer = (event: PointerEvent) => {
+      const menu = menuRef.current;
+      // The mobile backdrop is a details pseudo-element: its taps target the menu itself.
+      if (menu?.open && event.target instanceof Node &&
+        (event.target === menu || !menu.contains(event.target))) {
+        menu.open = false;
+      }
+    };
+    const onKey = (event: KeyboardEvent) => {
+      const menu = menuRef.current;
+      if (event.key === "Escape" && menu?.open) {
+        menu.open = false;
+        menu.querySelector("summary")?.focus();
+      }
+    };
+    // Capture outside taps before other shell controls can stop propagation.
+    document.addEventListener("pointerdown", onPointer, true);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer, true);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
   const accountIcon =
     accountCta.state === "guest" || accountCta.state === "legacy"
       ? UserPlus
@@ -49,7 +75,7 @@ export function HeaderAccountControl({
       );
     }
     return (
-      <details className={menuClassName}>
+      <details ref={menuRef} className={menuClassName}>
         <LocalizedAttributes><summary
           className={linkClassName}
           aria-label={accountCta.label || "Account"}
@@ -62,7 +88,14 @@ export function HeaderAccountControl({
             </span>
           ) : null}
         </summary></LocalizedAttributes>
-        <div className={panelClassName}>
+        <div
+          className={panelClassName}
+          onClick={(event) => {
+            if (event.target instanceof Element && event.target.closest("a, button") && menuRef.current) {
+              menuRef.current.open = false;
+            }
+          }}
+        >
           <AccountMenuLinks onSignOut={() => void account.signOut()} />
         </div>
       </details>

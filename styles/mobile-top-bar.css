@@ -213,6 +213,8 @@
 }
 
 .mobile-top-bar__account-menu > summary {
+  position: relative;
+  z-index: 1;
   list-style: none;
   cursor: pointer;
 }

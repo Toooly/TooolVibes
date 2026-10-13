@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { createElement } from "react";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const accountState = vi.hoisted(() => ({
@@ -42,6 +42,7 @@ describe("HeaderAccountControl", () => {
     cleanup();
     accountState.status = "guest";
     accountState.authEnabled = true;
+    vi.clearAllMocks();
   });
 
   it("SHELL-01 guest Accedi does not replace the public chrome control", () => {
@@ -66,5 +67,61 @@ describe("HeaderAccountControl", () => {
       "/account/settings",
     );
     expect(screen.getByRole("button", { name: "Esci" })).toBeTruthy();
+  });
+
+  it("dismisses an open account menu on outside touch even when propagation is stopped", () => {
+    accountState.status = "authenticated";
+    const { container } = renderControl();
+    const menu = container.querySelector("details")!;
+    const outside = document.createElement("button");
+    document.body.append(outside);
+    outside.addEventListener("pointerdown", (event) => event.stopPropagation());
+    try {
+      menu.open = true;
+      fireEvent.pointerDown(menu.querySelector("div")!, { pointerType: "touch" });
+      expect(menu.open).toBe(true);
+      fireEvent.pointerDown(outside, { pointerType: "touch" });
+      expect(menu.open).toBe(false);
+      menu.open = true;
+      fireEvent.pointerDown(outside, { pointerType: "touch" });
+      expect(menu.open).toBe(false);
+    } finally {
+      outside.remove();
+    }
+  });
+
+  it("dismisses with Escape and restores focus to the profile trigger", () => {
+    accountState.status = "authenticated";
+    const { container } = renderControl();
+    const menu = container.querySelector("details")!;
+    menu.open = true;
+    screen.getByRole("link", { name: "Stack" }).focus();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(menu.open).toBe(false);
+    expect(document.activeElement).toBe(menu.querySelector("summary"));
+  });
+
+  it("dismisses taps on the mobile pseudo-element backdrop", () => {
+    accountState.status = "authenticated";
+    const { container } = renderControl();
+    const menu = container.querySelector("details")!;
+    menu.open = true;
+    fireEvent.pointerDown(menu, { pointerType: "touch" });
+    expect(menu.open).toBe(false);
+  });
+
+  it("closes after selecting a workspace link or signing out", () => {
+    accountState.status = "authenticated";
+    const { container } = renderControl();
+    const menu = container.querySelector("details")!;
+    const link = screen.getByRole("link", { name: "Stack" });
+    link.addEventListener("click", (event) => event.preventDefault());
+    menu.open = true;
+    fireEvent.click(link);
+    expect(menu.open).toBe(false);
+    menu.open = true;
+    fireEvent.click(screen.getByRole("button", { name: "Esci" }));
+    expect(menu.open).toBe(false);
+    expect(accountState.signOut).toHaveBeenCalledOnce();
   });
 });
