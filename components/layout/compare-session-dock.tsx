@@ -1,7 +1,7 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/ui/app-link";
 import { usePathname } from "next/navigation";
@@ -49,6 +49,21 @@ export function CompareSessionDock() {
   const gestureRef = useRef<CompareGesture>(initialCompareChrome(pathname));
   const lockUntilRef = useRef(0);
   expandedRef.current = expanded;
+
+  const closeInspection = useCallback(() => {
+    gestureRef.current = { chrome: "compact", down: 0, up: 0 };
+    lockUntilRef.current = performance.now() + COMPARE_LOCK_MS;
+    setExpanded(false);
+  }, []);
+
+  useEffect(() => {
+    if (hidden || !expanded) return;
+    const dismiss = (event: PointerEvent) => {
+      if (event.target instanceof Node && !dockRef.current?.contains(event.target)) closeInspection();
+    };
+    document.addEventListener("pointerdown", dismiss);
+    return () => document.removeEventListener("pointerdown", dismiss);
+  }, [hidden, expanded, closeInspection]);
 
   useEffect(() => {
     const next = !prefersCompact;
@@ -145,6 +160,13 @@ export function CompareSessionDock() {
       role="region"
       aria-label="Confronto in corso"
       aria-live="polite"
+      onKeyDown={(event) => {
+        if (event.key !== "Escape" || !expanded) return;
+        event.preventDefault();
+        event.stopPropagation();
+        closeInspection();
+        dockRef.current?.querySelector<HTMLButtonElement>(".tv-compare-dock__toggle")?.focus();
+      }}
     >
       <div className="tv-compare-dock__inner">
           <LocalizedAttributes><button

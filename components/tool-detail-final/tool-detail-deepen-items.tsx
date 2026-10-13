@@ -1,5 +1,8 @@
 "use client";
 
+import { scrollToSection, readingLine } from "@/lib/shell/scroll-port";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+
 import { LocalizedText } from "@/components/i18n/localized-text";
 import { FileText, Settings, Target, Scale, User, HelpCircle } from "lucide-react";
 
@@ -11,6 +14,7 @@ type Panel = {
 };
 
 export function ToolDetailDeepenItems({ panels }: { panels: Panel[] }) {
+  const reducedMotion = useReducedMotion();
   return (
     <>
       {panels.map((panel) => (
@@ -22,10 +26,9 @@ export function ToolDetailDeepenItems({ panels }: { panels: Panel[] }) {
           onToggle={(e) => {
             const el = e.target as HTMLDetailsElement;
             if (!el.open) return;
-            const nav = document.querySelector(".td-final-decision-nav");
-            const clearance = nav ? nav.getBoundingClientRect().bottom + 10 : 0;
-            const top = el.getBoundingClientRect().top + window.scrollY - clearance;
-            window.scrollTo({ top, behavior: "smooth" });
+            if (el.getBoundingClientRect().top < readingLine()) {
+              scrollToSection(el, reducedMotion ? "auto" : "smooth");
+            }
           }}
         >
           <summary className="td-final-deepen__summary">

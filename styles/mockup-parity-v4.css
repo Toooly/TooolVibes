@@ -103,19 +103,6 @@
 
 }
 @media (max-width: 899px){
-  /* 05 article: TOC index moves into the dark hero, above the cream reading surface */
-  .guides-article__layout { display: flex !important; flex-direction: column !important; }
-
-  .guides-article__rail { order: -1 !important; margin: 6px 0 10px !important; }
-
-  .guides-toc { background: transparent !important; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent) !important; border-radius: 16px !important; padding: 12px 14px !important; }
-
-  .guides-toc__title { font-size: 0.85rem !important; }
-
-  .guides-toc__list { display: block !important; gap: 0 !important; }
-
-}
-@media (max-width: 899px){
   .ar4-intro__facet { display: none !important; }
 
   .ar4-categories { margin: 24px 0 0 !important; }
@@ -123,10 +110,6 @@
   .ar4-grid, .ar4-grid__list { margin-top: 16px !important; }
 
   .guides-article__dark-meta { display: none !important; }
-
-  .guides-article__rail { margin: 2px 0 8px !important; }
-
-  .guides-toc { padding: 10px 12px !important; }
 
   .guides-article__body { margin-top: 4px !important; }
 
@@ -150,12 +133,6 @@
   .guides-article__hero-meta .pill { background: color-mix(in srgb, var(--tv-ink-primary) 8%, transparent) !important; color: var(--tv-ink-primary) !important; }
 
   .guides-rail__cta { background: transparent !important; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 14%, transparent) !important; color: var(--tv-ink-primary) !important; }
-
-  .guides-article__hero-index { display: block; margin: 8px 0 4px; padding: 12px 14px; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent); }
-
-  .guides-article__hero-index-title { margin: 0 0 6px; font-size: 0.85rem; font-weight: 700; color: var(--tv-ink-primary); }
-
-  .guides-article__hero-index ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--tv-ink-secondary); font-size: 0.82rem; }
 
 }
 @media (max-width: 899px){
@@ -330,7 +307,6 @@
 
   .ar4-shell .ar4-card { position: relative !important; min-height: 124px !important; padding-right: 56px !important; }
 
-
   .ar4-shell .ar4-card__actions { position: absolute !important; top: 10px !important; right: 10px !important; margin: 0 !important; }
 
 }
@@ -454,7 +430,6 @@
     right: auto !important;
   }
 
-
 }
 @media (max-width: 899px){
   /* V7 final: the save control has no stable visual class — pin it by accessible name */
@@ -527,8 +502,7 @@
   .cx-section-nav,
   .tv-lib-toolbar,
   .ar4-mobile-bar,
-  .ar4-filters,
-  .guides-toc {
+  .ar4-filters {
     top: var(--tv-header-painted, var(--tv-header-height-mobile)) !important;
     z-index: var(--tv-z-subnav, 30);
   }
@@ -546,7 +520,6 @@
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
-
 
 .td-final-page__partner {
   margin-top: var(--tv-space-6);

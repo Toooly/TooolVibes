@@ -47,7 +47,7 @@ describe("tool detail nav final contract", () => {
 
   it("four tabs, no horizontal scroll geometry", () => {
     const nav = extractBlock(css, ".td-final-decision-nav {");
-    expect(nav).toContain("grid-template-columns: repeat(4, minmax(0, 1fr))");
+    expect(nav).toContain("grid-template-columns: repeat(var(--td-nav-columns, 4), minmax(0, 1fr))");
     expect(nav).not.toContain("overflow-x: auto");
     const link = extractBlock(css, ".td-final-decision-nav__link {");
     // Single-line labels with ellipsis: no wrap, no scroll. Grid columns

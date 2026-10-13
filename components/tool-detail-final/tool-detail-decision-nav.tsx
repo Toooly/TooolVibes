@@ -1,9 +1,9 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, type CSSProperties } from "react";
 
-import { bindShellScroll, readingLine } from "@/lib/shell/scroll-port";
+import { useSectionNavigation } from "@/lib/hooks/use-section-navigation";
 
 type Item = { id: string; label: string };
 
@@ -20,7 +20,7 @@ export function ToolDetailDecisionNav({
   showDeepen?: boolean;
   navSections?: Array<{ id: string; label: string }>;
 }) {
-  const items = useMemo<Item[]>(() => {
+  const sections = useMemo<Item[]>(() => {
     if (navSections && navSections.length > 0) {
       return navSections.map((s) => ({ id: s.id, label: s.label }));
     }
@@ -35,56 +35,12 @@ export function ToolDetailDecisionNav({
     if (showAlternatives) next.push({ id: "td-final-alternatives", label: "Alternative" });
     return next;
   }, [navSections, showAlternatives, showDeepen]);
-  const [active, setActive] = useState(items[0]?.id ?? "");
-  const pinned = useRef<string | null>(null);
+  const { items, active, navigate } = useSectionNavigation(sections);
 
-  useEffect(() => {
-    if (typeof window === "undefined" || items.length === 0) return;
-    const els = items
-      .map((item) => document.getElementById(item.id))
-      .filter((el): el is HTMLElement => Boolean(el));
-    if (!els.length) return;
-
-    let raf = 0;
-    const measure = () => {
-      if (pinned.current) {
-        setActive(pinned.current);
-        return;
-      }
-      const line = readingLine();
-      let current = els[0]?.id ?? items[0]?.id ?? "";
-      for (const el of els) {
-        if (el.getBoundingClientRect().top <= line) current = el.id;
-        else break;
-      }
-      setActive(current);
-      const link = document.querySelector(`.td-final-decision-nav [href="#${current}"]`);
-      if (link instanceof HTMLElement && document.activeElement !== link) {
-        const nav = link.parentElement;
-        if (nav instanceof HTMLElement) {
-          const left = link.offsetLeft - nav.clientWidth / 2 + link.clientWidth / 2;
-          nav.scrollTo({ left: Math.max(0, left) });
-        }
-      }
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(measure);
-    };
-    measure();
-    const unbind = bindShellScroll(onScroll, { passive: true });
-    window.addEventListener("hashchange", onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      unbind();
-      window.removeEventListener("hashchange", onScroll);
-    };
-  }, [items]);
-
-  if (!showDeepen && !showAlternatives) return null;
+  if (items.length < 2) return null;
 
   return (
-    <LocalizedAttributes><nav className="td-final-decision-nav" aria-label="Sezioni della scheda">
+    <LocalizedAttributes><nav className="td-final-decision-nav" aria-label="Sezioni della scheda" style={{ "--td-nav-columns": items.length } as CSSProperties}>
       {items.map((item) => {
         const selected = active === item.id;
         return (
@@ -92,14 +48,8 @@ export function ToolDetailDecisionNav({
             key={item.id}
             className={selected ? "td-final-decision-nav__link is-active" : "td-final-decision-nav__link"}
             href={`#${item.id}`}
-            aria-current={selected ? "true" : undefined}
-            onClick={() => {
-              pinned.current = item.id;
-              setActive(item.id);
-              window.setTimeout(() => {
-                pinned.current = null;
-              }, 700);
-            }}
+            aria-current={selected ? "location" : undefined}
+            onClick={(event) => navigate(event, item.id)}
           >
             <LocalizedText>{item.label}</LocalizedText>
           </a>

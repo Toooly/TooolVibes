@@ -34,7 +34,7 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
   return (
     <section id="td-final-pricing" className="td-final-pricing" aria-labelledby="td-final-pricing-title">
       <p className="td-final-pricing__eyebrow"><LocalizedText>{"Prezzi"}</LocalizedText></p>
-      <h2 id="td-final-pricing-title" className="td-final-section-title"><LocalizedText>{"Quanto costa "}</LocalizedText>{tool.name}
+      <h2 id="td-final-pricing-title" className="td-final-section-title"><LocalizedText>{`Quanto costa ${tool.name}?`}</LocalizedText>
       </h2>
       {pricingModel === "transactional" ? (
         <div className="td-final-pricing__unknown">

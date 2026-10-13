@@ -7,6 +7,7 @@ import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 
 import { cn } from "@/lib/utils";
+import { accessibleMarkdownElements } from "@/components/editorial/markdown-elements";
 
 type MarkdownContentProps = {
   content: string;
@@ -64,6 +65,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
         components={{
+          ...accessibleMarkdownElements,
           h1: ({ children }) => <h2>{children}</h2>,
           a: ({ href, children, ...props }) => (
             <a

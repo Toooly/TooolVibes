@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 
 import { MemberPreviewGate } from "@/components/account/member-preview-gate";
 import { GuideMarkdown } from "@/components/guides/guide-markdown";
-import { HeaderAccountControl } from "@/components/layout/header-account-control";
 import { GuideArticleToc } from "@/components/guides/guide-article-toc";
 import { GuideArticleHero } from "@/components/guides/guide-article-hero";
 import { GuideArticleEnd } from "@/components/guides/guide-article-end";
@@ -121,12 +120,6 @@ export default async function EditorialPostPage({ params }: EditorialPostPagePro
   }
 
   const isAuthoredPost = Boolean(post.content_markdown);
-  const serverHeadings = (post.content_markdown ?? "")
-    .split("\n")
-    .filter((line) => line.startsWith("### "))
-    .map((line) => line.replace(/^###\s+/, "").trim())
-    .filter(Boolean)
-    .slice(0, 5);
   const kindLabel = kindLabels[post.kind];
   const canonicalUrl = `${siteConfig.url}/posts/${post.slug}`;
   const subjectDirectoryTool = getDirectoryToolBySlug(post.tool_slug ?? post.slug);
@@ -265,19 +258,6 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
           </figure></LocalizedAttributes>
         ) : null}
 
-        {isAuthoredPost && serverHeadings.length > 0 ? (
-          <LocalizedAttributes><nav className="guides-article__hero-index" aria-label="In questa guida">
-            <p className="guides-article__hero-index-title"><LocalizedText>{"In questa guida"}</LocalizedText></p>
-            <ol>
-              {serverHeadings.slice(0, 5).map((heading, index) => (
-                <li key={heading}>
-                  {index + 1}. <LocalizedText>{heading}</LocalizedText>
-                </li>
-              ))}
-            </ol>
-          </nav></LocalizedAttributes>
-        ) : null}
-
         {isAuthoredPost ? (
           <div className="guides-article__dark-meta">
             <GuideByline
@@ -292,16 +272,6 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
         ) : null}
 
         <div className="guides-article__layout">
-          <div className="guides-article-mobileheader">
-            <Link href="/posts" className="guides-article-mobileheader__back"><LocalizedText>{"← Tutte le guide "}</LocalizedText></Link>
-            <HeaderAccountControl
-              linkClassName="guides-article-mobileheader__account"
-              menuClassName="guides-article-mobileheader__menu"
-              panelClassName="guides-article-mobileheader__panel"
-              showLabel={false}
-            />
-          </div>
-
           <div className="guides-article__main">
             {isAuthoredPost ? (
               <article
@@ -361,25 +331,27 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
           </div>
 
           <div className="guides-article__rail">
-            <GuideArticleToc
-              readingMinutes={readingMinutes}
-            />
-            <div
-              id={partnerRailHostId}
-              className="guides-article__partner-rail"
-              data-guide-partner-rail-host
-            />
-            {relatedTools.length > 0 ? (
-  <LocalizedAttributes><section className="guides-related-tools" aria-label="Tool correlati">
-    <p className="td-final-section-eyebrow"><LocalizedText>{"Tool correlati"}</LocalizedText></p>
-    <h2 className="td-final-section-title"><LocalizedText>{"Tool menzionati in questa guida"}</LocalizedText></h2>
-    <EntityCardList entities={relatedTools.map((t) => ({ href: `/toools/${t.slug}`, title: t.name, kind: "tool" as const }))} />
-  </section></LocalizedAttributes>
-) : null}
-<GuideRelatedRail
-              tool={tool}
-              toolHref={toolHrefForArticle}
-            />
+            <div className="guides-article__index">
+              <GuideArticleToc readingMinutes={readingMinutes} />
+            </div>
+            <div className="guides-article__rail-extras">
+              <div
+                id={partnerRailHostId}
+                className="guides-article__partner-rail"
+                data-guide-partner-rail-host
+              />
+              {relatedTools.length > 0 ? (
+                <LocalizedAttributes><section className="guides-related-tools" aria-label="Tool correlati">
+                  <p className="td-final-section-eyebrow"><LocalizedText>{"Tool correlati"}</LocalizedText></p>
+                  <h2 className="td-final-section-title"><LocalizedText>{"Tool menzionati in questa guida"}</LocalizedText></h2>
+                  <EntityCardList entities={relatedTools.map((t) => ({ href: `/toools/${t.slug}`, title: t.name, kind: "tool" as const }))} />
+                </section></LocalizedAttributes>
+              ) : null}
+              <GuideRelatedRail
+                tool={tool}
+                toolHref={toolHrefForArticle}
+              />
+            </div>
           </div>
         </div>
       </div>

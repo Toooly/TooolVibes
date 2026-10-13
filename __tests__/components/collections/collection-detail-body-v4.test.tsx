@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/components/collections/collection-anti-recommendation-v4", () => ({
   CollectionAntiRecommendationV4: () => (
@@ -19,6 +19,12 @@ import { makeCollection, makeSecondaryCollection } from "./fixture";
 
 afterEach(() => {
   cleanup();
+});
+
+beforeEach(() => {
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => setTimeout(() => callback(0), 0));
+  vi.stubGlobal("cancelAnimationFrame", clearTimeout);
+  HTMLElement.prototype.scrollTo = vi.fn();
 });
 
 function authValue() {

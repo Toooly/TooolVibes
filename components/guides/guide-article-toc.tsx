@@ -1,10 +1,10 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { bindShellScroll, getShellScroller, readingLine } from "@/lib/shell/scroll-port";
+import { useSectionNavigation } from "@/lib/hooks/use-section-navigation";
+import { bindShellScroll, getShellScroller } from "@/lib/shell/scroll-port";
 
 export type TocItem = { id: string; text: string; level: 2 | 3 };
 
@@ -49,10 +49,21 @@ export function GuideArticleToc({
     () => suppliedItems.length > 0 ? suppliedItems : renderedItems,
     [suppliedItems, renderedItems],
   );
-  const [activeId, setActiveId] = useState<string | null>(items[0]?.id ?? null);
+  const sections = useMemo(() => items.map((item) => ({ id: item.id, label: item.text })), [items]);
+  const { active: activeId, navigate } = useSectionNavigation(sections);
+  const [expanded, setExpanded] = useState(false);
   const [progress, setProgress] = useState(0);
-  const preferReducedMotion = useReducedMotion();
-  const pinned = useRef<string | null>(null);
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") {
+      setExpanded(true);
+      return;
+    }
+    const media = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setExpanded(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
 
   // Read the rendered article: server sibling render order cannot populate a ref
   // before this client component receives it. Locked preview content stays out.
@@ -76,6 +87,7 @@ export function GuideArticleToc({
     const observer = new MutationObserver(collect);
     observer.observe(root, {
       childList: true,
+      characterData: true,
       subtree: true,
       attributes: true,
       attributeFilter: ["inert", "aria-hidden", "id"],
@@ -83,23 +95,8 @@ export function GuideArticleToc({
     return () => observer.disconnect();
   }, [progressRootSelector, suppliedItems.length]);
 
-  // Deep-link: honor #hash on first paint before scroll-spy takes over.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hash = window.location.hash.replace(/^#/, "");
-    if (hash && items.some((item) => item.id === hash)) {
-      setActiveId(hash);
-    }
-  }, [items]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const elements = items
-      .map((item) => document.getElementById(item.id))
-      .filter((el): el is HTMLElement => Boolean(el));
-
-    if (elements.length === 0) return;
 
     let raf = 0;
     const measure = () => {
@@ -112,27 +109,10 @@ export function GuideArticleToc({
       const scrolled = viewTop - rect.top;
       const total = Math.max(1, target.offsetHeight - viewport);
       const pct = Math.max(0, Math.min(1, scrolled / total));
-      setProgress(pct);
-
-      if (pinned.current) {
-        setActiveId(pinned.current);
-        return;
-      }
-
-      const line = readingLine();
-      let current: string | null = elements[0]?.id ?? null;
-      for (const el of elements) {
-        if (el.getBoundingClientRect().top <= line) current = el.id;
-        else break;
-      }
-      setActiveId(current);
+      setProgress(Math.round(pct * 100));
     };
 
     const onScroll = () => {
-      if (preferReducedMotion) {
-        measure();
-        return;
-      }
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(measure);
     };
@@ -147,7 +127,7 @@ export function GuideArticleToc({
       window.removeEventListener("resize", onScroll);
       window.removeEventListener("hashchange", onScroll);
     };
-  }, [items, preferReducedMotion, progressRootSelector]);
+  }, [progressRootSelector]);
 
   const counter = useMemo(
     () => items.length.toString().padStart(2, "0"),
@@ -162,19 +142,10 @@ export function GuideArticleToc({
       aria-label={title}
       data-toc-count={items.length}
     >
-      <div className="guides-toc__title">
-        <LocalizedText>{title}</LocalizedText> <span aria-hidden>· <LocalizedText>{counter}</LocalizedText></span>
-      </div>
-      <LocalizedAttributes><div
-        className="guides-toc__progress"
-        role="progressbar"
-        aria-label="Progresso di lettura"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(progress * 100)}
-      >
-        <span style={{ width: `${Math.round(progress * 100)}%` }} />
-      </div></LocalizedAttributes>
+      <details className="guides-toc__disclosure" open={expanded} onToggle={(event) => setExpanded(event.currentTarget.open)}>
+        <summary className="guides-toc__title">
+          <span><LocalizedText>{title}</LocalizedText> <span aria-hidden>· {counter}</span></span>
+        </summary>
       <ol className="guides-toc__list">
         {items.map((item) => (
           <li
@@ -183,13 +154,15 @@ export function GuideArticleToc({
           >
             <a
               href={`#${item.id}`}
-              aria-current={activeId === item.id ? "true" : undefined}
-              onClick={() => {
-                pinned.current = item.id;
-                setActiveId(item.id);
-                window.setTimeout(() => {
-                  pinned.current = null;
-                }, 700);
+              aria-current={activeId === item.id ? "location" : undefined}
+              onClick={(event) => {
+                if (window.innerWidth < 1024 && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                  event.preventDefault();
+                  setExpanded(false);
+                  requestAnimationFrame(() => navigate(event, item.id));
+                } else {
+                  navigate(event, item.id);
+                }
               }}
             >
               <LocalizedText>{item.text}</LocalizedText>
@@ -203,6 +176,17 @@ export function GuideArticleToc({
           </span>
         </div>
       ) : null}
+      </details>
+      <LocalizedAttributes><div
+        className="guides-toc__progress"
+        role="progressbar"
+        aria-label="Progresso di lettura"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={progress}
+      >
+        <span style={{ width: `${progress}%` }} />
+      </div></LocalizedAttributes>
     </nav></LocalizedAttributes>
   );
 }

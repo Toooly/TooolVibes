@@ -132,8 +132,6 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
   const active = variants.find((v) => v.label === activeLabel) ?? variants[0];
   if (!active) return null;
 
-  const totalCount = collection.included_tools.filter((s) => s.is_core).length;
-
   return (
     <details
       className="cx-variant-paths-v4 cx-variant-paths-v4--additive cx-detail-depth motion-reveal"
@@ -181,7 +179,7 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
                 <LocalizedText>{labelDisplay(v.label)}</LocalizedText>
               </span>
               <span className="cx-variant-paths-v4__tab-count">
-                {v.core_tool_slugs.length}/{totalCount}
+                {v.core_tool_slugs.filter((slug) => collection.included_tools.some((slot) => slot.tool.slug === slug)).length}
               </span>
             </button>
           );

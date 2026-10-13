@@ -132,15 +132,6 @@
   background: transparent;
 }
 
-/* Guides: cream cards on night shell */
-
-.guides-article__body {
-  max-width: 68ch;
-  border-radius: 20px;
-  background: var(--mp-cream);
-  color: var(--mp-ink);
-}
-
 /* Collection primary action */
 .cx-detail-hero-v4__actions a:first-child,
 .cx-detail-hero-v4__actions button:first-child {
@@ -148,10 +139,6 @@
   border-radius: 12px;
   background: var(--mp-gold);
   color: var(--mp-ink);
-}
-
-.cx-section-nav {
-  border-radius: 999px;
 }
 
 /* Decision sheet: light elevated surface */

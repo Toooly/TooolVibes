@@ -29,7 +29,7 @@ export function buildToolDetailSections(input: ToolDetailSectionInput): ToolDeta
   if (input.hasExtendedContent) {
     sections.push({
       id: "td-final-approfondisci",
-      label: "Approfondisci",
+      label: "Dettagli",
       enabled: true,
       navVisible: true,
       analyticsKey: "deepen",

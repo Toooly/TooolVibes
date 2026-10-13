@@ -7,6 +7,7 @@ import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 
 import { cn } from "@/lib/utils";
+import { accessibleMarkdownElements } from "@/components/editorial/markdown-elements";
 
 import {
   GuideCallout,
@@ -194,6 +195,7 @@ export function GuideMarkdown({
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
                 components={{
+                  ...accessibleMarkdownElements,
                   h1: ({ children }) => {
                     // Surface as h2 in the article body, with stable id.
                     const text = sourceHeadings[headingIndex++] ?? flattenText(children);
@@ -243,6 +245,7 @@ export function GuideMarkdown({
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                components={accessibleMarkdownElements}
               >
                 {markdown(c.body)}
               </ReactMarkdown>

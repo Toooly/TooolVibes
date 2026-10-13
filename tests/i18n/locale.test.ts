@@ -50,3 +50,8 @@ describe("authored text", () => {
     expect(translateMarkdown(source, t)).toBe("## Practical guide\n\n::: tip Practical guide\nUse [Claude](https://claude.ai) and `npm run build`.\n:::\n\n```js\nSalva\n```\n\n[ref]: https://example.com/Salva\n- Save");
   });
 });
+
+it('keeps a tool name in its natural position in an English pricing heading', () => {
+  const t = createTranslator({ 'Quanto costa {0}?': 'How much does {0} cost?' });
+  expect(t('Quanto costa Blink?')).toBe('How much does Blink cost?');
+});

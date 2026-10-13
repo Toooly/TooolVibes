@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 import { GuideArticleToc } from "@/components/guides/guide-article-toc";
 import { GuideMarkdown } from "@/components/guides/guide-markdown";
@@ -12,6 +12,10 @@ vi.mock("@/lib/shell/scroll-port", () => ({
 }));
 
 afterEach(cleanup);
+beforeEach(() => {
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => setTimeout(() => callback(0), 0));
+  vi.stubGlobal("cancelAnimationFrame", clearTimeout);
+});
 
 it("keeps markdown headings and index links aligned, including repeated headings", async () => {
   const collect = vi.fn();

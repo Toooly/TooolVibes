@@ -140,6 +140,20 @@ describe("CompareSessionDock states", () => {
     vi.unstubAllGlobals();
   });
 
+  it("dismisses inspection outside the dock and restores focus on Escape", () => {
+    seedWorkspace(compareState("atlas-ai", "gamma-app"));
+    render(<CompareSessionDock />);
+    fireEvent.click(screen.getByRole("button", { name: "Mostra i tool in confronto" }));
+    const remove = screen.getByRole("button", { name: "Togli atlas-ai dal confronto" });
+    remove.focus();
+    fireEvent.keyDown(remove, { key: "Escape" });
+    const toggle = screen.getByRole("button", { name: "Mostra i tool in confronto" });
+    expect(document.activeElement).toBe(toggle);
+    fireEvent.click(toggle);
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole("button", { name: /Togli / })).toBeNull();
+  });
+
   it("hides on the compare route", () => {
     navRuntime.pathname = "/compare";
     seedWorkspace(compareState("atlas-ai", "gamma-app"));

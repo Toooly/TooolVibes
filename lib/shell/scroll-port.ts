@@ -64,7 +64,8 @@ const STICKY_SUBNAV = ".cx-section-nav, .td-final-decision-nav, .tv-lib-toolbar,
 /** Viewport Y where a section heading has cleared header + sticky local nav. */
 export function readingLine(): number {
   if (typeof document === "undefined") return 80;
-  const header = document.querySelector(".mobile-top-bar, .td-final-mobileheader, .command-bar");
+  const header = Array.from(document.querySelectorAll(".mobile-top-bar, .td-final-mobileheader, .command-bar"))
+    .find((element) => element.getBoundingClientRect().height > 8);
   const headerH =
     header instanceof HTMLElement && header.getBoundingClientRect().height > 8
       ? header.getBoundingClientRect().height
@@ -75,4 +76,11 @@ export function readingLine(): number {
       ? sub.getBoundingClientRect().height
       : 0;
   return headerH + subH + 8;
+}
+
+/** Move only the actual page scrollport; nested rails keep their position. */
+export function scrollToSection(target: HTMLElement, behavior: ScrollBehavior = "auto"): void {
+  const scroller = getShellScroller();
+  const top = readScrollTop(scroller) + target.getBoundingClientRect().top - readingLine();
+  scroller.scrollTo({ top: Math.max(0, top), behavior });
 }

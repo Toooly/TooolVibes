@@ -612,8 +612,8 @@
 
 /* ============================================================
    D. DECISION NAVIGATION — FINAL CONTRACT
-   Exactly 4 tabs, all visible simultaneously at 320-430. No horizontal
-   scroll: equal grid columns, compact padding, clamp typography.
+   Available sections share equal columns; narrow phones use two columns.
+   Every label stays visible without a horizontal rail.
    Sticky below the painted header (frozen shell geometry). Guide and
    Collection navs keep their own horizontal-scroll rules untouched.
    ============================================================ */
@@ -622,14 +622,12 @@
   top: var(--tv-header-painted);
   z-index: var(--tv-z-subnav, 30);
   margin-top: var(--tv-space-4);
-  padding: 0.35rem 0;
-  border: 0;
-  border-top: 1px solid var(--tv-border-subtle);
-  border-bottom: 1px solid var(--tv-border-subtle);
-  border-radius: 0;
-  background: transparent;
+  padding: 0.35rem;
+  border: 1px solid var(--tv-border-subtle);
+  border-radius: 1rem;
+  background: var(--tv-bg-base, #0b0620);
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--td-nav-columns, 4), minmax(0, 1fr));
   gap: 0.125rem;
   overflow-x: visible;
 }
@@ -691,7 +689,7 @@
   outline-offset: 2px;
 }
 .td-final-decision-nav__link.is-active,
-.td-final-decision-nav__link[aria-current="true"] {
+.td-final-decision-nav__link[aria-current="location"] {
   border-color: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 72%, transparent);
   background: var(--tv-accent-brand, #7c3aed);
   color: #fff;

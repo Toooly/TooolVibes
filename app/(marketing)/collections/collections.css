@@ -3103,9 +3103,8 @@
   .cx-detail-hero-v4__identity { gap: 0.45rem; }
   .cx-detail-hero-v4__eyebrow {
     font-size: 0.75rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    row-gap: 0.4rem;
   }
   .cx-detail-hero-v4__title {
     font-size: 2rem;
@@ -4792,7 +4791,7 @@
   background: color-mix(in srgb, var(--tv-bg-base, #0c0d10) 97%, #000);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid color-mix(in srgb, var(--cx-accent, #6366f1) 22%, transparent);
-  overflow: hidden;
+  border-radius: 1rem;
 }
 .cx-section-nav__scroller {
   width: 100%;
@@ -4801,8 +4800,10 @@
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
-  padding-inline: 1rem;
+  padding: 0.2rem 0.75rem;
+  scrollbar-width: none;
 }
+.cx-section-nav__scroller::-webkit-scrollbar { display: none; }
 .cx-section-nav ol {
   display: flex;
   flex-wrap: nowrap;
@@ -4846,7 +4847,7 @@
   outline-offset: 2px;
 }
 .cx-section-nav a.is-active,
-.cx-section-nav a[aria-current="true"] {
+.cx-section-nav a[aria-current="location"] {
   border-color: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 72%, transparent);
   background: color-mix(in srgb, var(--tv-accent-brand, #7c3aed) 24%, var(--tv-surface-elevated, #1a1330));
   color: var(--tv-ink-primary, #f4f0ea);
@@ -5159,26 +5160,32 @@
   }
 
   .cx-detail-hero-v4__decision {
-    flex-wrap: nowrap;
-    align-items: baseline;
-    gap: 0.55rem 0.85rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 0.65rem;
     padding-top: 0.65rem;
   }
 
   .cx-detail-hero-v4__decision-item {
-    flex-direction: row;
-    align-items: baseline;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
     gap: 0.3rem;
-    flex: 0 0 auto;
   }
 
+  .cx-detail-hero-v4__decision-item:nth-child(2) {
+    grid-column: 1 / -1;
+    order: 3;
+  }
   .cx-detail-hero-v4__decision-label {
     font-size: 0.75rem;
   }
 
   .cx-detail-hero-v4__decision-value {
+    font-family: var(--tv-font-family-ui);
+    overflow-wrap: anywhere;
+    line-height: 1.45;
     font-size: 0.82rem;
   }
 }

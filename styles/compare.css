@@ -2298,3 +2298,13 @@ html:has(.tv-consent-banner) .tv-compare-dock {
 .tv-compare-dock__list li > span { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
 .tv-compare-dock__cta { justify-self: end; font-size: .8125rem; }
 .tv-compare-dock__count { min-width: 28px; text-align: center; }
+
+@media (min-width: 600px) {
+  .tv-compare-dock:not([data-compare-dock-collapsed]) .tv-compare-dock__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  .tv-compare-dock { justify-content: flex-end; }
+  .tv-compare-dock:not([data-compare-dock-collapsed]) .tv-compare-dock__inner { max-width: 32rem; }
+}
