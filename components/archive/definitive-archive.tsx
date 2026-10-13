@@ -140,6 +140,7 @@ export function DefinitiveArchive({
   const [activeGroup, setActiveGroup] = useState<string>(initialGroup);
   const [activeLevel, setActiveLevel] = useState<string>(initialLevel);
   const [query, setQuery] = useState<string>(initialQuery);
+  const [urlReady, setUrlReady] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>("name-asc");
   const [showAllCategories, setShowAllCategories] = useState<boolean>(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState<boolean>(false);
@@ -155,9 +156,8 @@ export function DefinitiveArchive({
   // as Home podium). No tool identity is special; tiers follow position.
   const podiumTiers = useMemo(() => resolvePodiumTiers(tools), [tools]);
 
-  // Density from server-resolved tv-density presentation hint (first-paint
-  // correct). useAccount() keeps it in sync for live auth transitions
-  // (login/logout/cross-tab). tv-density is NOT auth — it is a layout hint.
+  // Public HTML starts compact; the real account session selects enriched
+  // density on hydration and keeps login/logout/cross-tab changes in sync.
   // Enriched shows only public Tool metadata (levelLabel, readingTime, tags).
   const account = useAccount();
   const [cardDensity, setCardDensity] = useState<"compact" | "enriched">(initialDensity);
@@ -181,11 +181,15 @@ export function DefinitiveArchive({
           : "all",
       );
     }
+    if (window.location.pathname === "/archivio") onPopState();
+    setUrlReady(true);
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, [filterGroups]);
 
   useEffect(() => {
+    // Restore deep-link filters before writing state into the URL.
+    if (!urlReady) return;
     const next = serializeCatalogUrl({
       query,
       group: activeGroup === "all" ? null : activeGroup,
@@ -195,7 +199,7 @@ export function DefinitiveArchive({
     if (current !== next) {
       window.history.replaceState(null, "", next);
     }
-  }, [query, activeGroup, activeLevel]);
+  }, [query, activeGroup, activeLevel, urlReady]);
 
 
   // Per-category tool counts (used by both desktop chip rail and mobile sheet)

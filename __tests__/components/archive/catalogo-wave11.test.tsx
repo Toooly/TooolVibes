@@ -47,6 +47,18 @@ afterEach(() => {
 });
 
 describe("Wave 11 — Catalogo / Radar characterizations", () => {
+  it("restores a catalog deep-link query before synchronizing the static page URL", async () => {
+    const previousUrl = window.location.href;
+    window.history.replaceState(null, "", "/archivio?q=Cursor");
+    try {
+      render(<DefinitiveArchive tools={[makeCatalogTool({ slug: "cursor", name: "Cursor" })]} filterGroups={CATALOG_FILTER_GROUPS} />);
+      await waitFor(() => expect((screen.getByPlaceholderText("Cerca per nome o categoria…") as HTMLInputElement).value).toBe("Cursor"));
+      expect(new URLSearchParams(window.location.search).get("q")).toBe("Cursor");
+    } finally {
+      cleanup();
+      window.history.replaceState(null, "", previousUrl);
+    }
+  });
   it("W11-T4 /radar page still renders RadarExperience", () => {
     const page = readSource("app/(marketing)/radar/page.tsx");
     expect(page).toContain("RadarExperience");

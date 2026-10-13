@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import type { Metadata } from "next";
 import Link from "@/components/ui/app-link";
 
@@ -16,6 +15,9 @@ import {
 } from "@/lib/data/public-tools";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 import "@/styles/archive-v4.css";
+
+// Public catalog data is built once; query filters and account density hydrate on the client.
+export const dynamic = "force-static";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Catalogo di tool AI, SaaS e no-code",
@@ -50,22 +52,6 @@ export default async function ArchivePage({
   searchParams: Promise<ArchiveSearchParams>;
 }) {
   const params = await searchParams;
-  // tv-density is a server-readable PRESENTATION HINT — not auth.
-  // Canonical auth: AccountProvider / Supabase client session.
-  // This cookie only selects first-paint card geometry (compact vs
-  // enriched). Enriched content is public Tool metadata only
-  // (levelLabel, readingTime, tags). NEVER used for authorization.
-  // If absent or invalid → defaults to "compact" (safe guest default).
-  // Known limitation: first visit after deploy for already-authenticated
-  // users without cookie → paints compact, upgrades once via client sync.
-  let initialDensity: "compact" | "enriched" = "compact";
-  try {
-    const cookieStore = await cookies();
-    const densityCookie = cookieStore.get("tv-density")?.value;
-    initialDensity = densityCookie === "enriched" ? "enriched" : "compact";
-  } catch {
-    // cookies() may fail on Cloudflare Workers edge cases — default to compact
-  }
   const [tools, filterGroups] = await Promise.all([
     getPublicToolViews(),
     getPublicToolFilterGroups(),
@@ -93,7 +79,7 @@ export default async function ArchivePage({
         initialQuery={initialQuery}
         initialGroup={initialGroup}
         initialLevel={initialLevel}
-        initialDensity={initialDensity}
+        initialDensity="compact"
         partnerInsert={
           placement ? (
             <PartnerEditorialInsert
