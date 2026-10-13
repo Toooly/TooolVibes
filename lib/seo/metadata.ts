@@ -23,10 +23,10 @@ type PublicPageMetadataInput = {
 };
 
 export const defaultSocialImage: SocialImage = {
-  url: `${siteConfig.url}/about/team-working.jpg`,
-  width: 2560,
-  height: 1706,
-  alt: "Il team TooolVibes al lavoro.",
+  url: `${siteConfig.url}/brand/tooolvibes-social-v1.png`,
+  width: 1200,
+  height: 630,
+  alt: "TooolVibes — Scegli il tool giusto. Ricorda perché. Find your tools. Build your next move.",
 };
 
 export const organizationLogoUrl = `${siteConfig.url}/brand/tooolvibes-logo.png`;
