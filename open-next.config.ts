@@ -3,8 +3,9 @@ import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incre
 import { releaseStaticCache } from "./lib/cloudflare/release-static-cache";
 
 // Cloudflare Workers Builds and local release path both use Node 22.23.1 + npm.
-// Prerendered pages are served from Workers static assets so Free-plan CPU
-// is not spent re-running Next on every public hit (Error 1102).
+// Keep prerendered pages in Workers static assets to reduce CPU and latency.
+// Workers Paid provides headroom for dynamic requests, not a reason to rerender
+// immutable public pages on every hit.
 const baseConfig = defineCloudflareConfig({
   incrementalCache: releaseStaticCache(staticAssetsIncrementalCache),
   enableCacheInterception: true,
