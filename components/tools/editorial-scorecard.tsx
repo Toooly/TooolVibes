@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { cn } from "@/lib/utils";
 import {
   getEditorialScorecard,
@@ -74,7 +75,7 @@ export function EditorialScorecard({
       <div className={className}>
         {showHeading ? (
           <p className={cn("editorial-label", isDark && "!text-white/58")}>
-            {heading ?? "Lettura rapida"}
+            <LocalizedText>{heading ?? "Lettura rapida"}</LocalizedText>
           </p>
         ) : null}
         <div className={cn("flex flex-wrap gap-2", showHeading && "mt-2.5")}>
@@ -87,7 +88,7 @@ export function EditorialScorecard({
               )}
             >
               <span className={cn("editorial-score-signal-label", isDark && "is-dark")}>
-                {entry.label}
+                <LocalizedText>{entry.label}</LocalizedText>
               </span>
               <EditorialScoreMeter strength={entry.strength} tone={tone} compact />
             </div>
@@ -103,7 +104,7 @@ export function EditorialScorecard({
         {showHeading ? (
           <div>
             <p className={cn("editorial-label", isDark && "!text-white/58")}>
-              {heading ?? "Scorecard curatoriale"}
+              <LocalizedText>{heading ?? "Scorecard curatoriale"}</LocalizedText>
             </p>
             <p
               className={cn(
@@ -111,7 +112,7 @@ export function EditorialScorecard({
                 isDark ? "text-white/72" : "text-[var(--muted-strong)]",
               )}
             >
-              {description ?? "Tre segnali per capire al volo dove questo tool convince davvero."}
+              <LocalizedText>{description ?? "Tre segnali per capire al volo dove questo tool convince davvero."}</LocalizedText>
             </p>
           </div>
         ) : null}
@@ -132,7 +133,7 @@ export function EditorialScorecard({
                     isDark ? "text-white/52" : "text-[var(--muted)]",
                   )}
                 >
-                  {entry.label}
+                  <LocalizedText>{entry.label}</LocalizedText>
                 </p>
                 <p
                   className={cn(
@@ -140,7 +141,7 @@ export function EditorialScorecard({
                     isDark ? "text-white/84" : "text-[var(--muted-strong)]",
                   )}
                 >
-                  {entry.descriptor}
+                  <LocalizedText>{entry.descriptor}</LocalizedText>
                 </p>
               </div>
               <div className="shrink-0 text-right">
@@ -150,7 +151,7 @@ export function EditorialScorecard({
                     isDark ? "text-white/44" : "text-[var(--muted)]",
                   )}
                 >
-                  {getEditorialScoreLevelLabel(entry.level)}
+                  <LocalizedText>{getEditorialScoreLevelLabel(entry.level)}</LocalizedText>
                 </p>
                 <EditorialScoreMeter strength={entry.strength} tone={tone} className="mt-2 justify-end" />
               </div>
@@ -172,7 +173,7 @@ export function EditorialScorecard({
       {showHeading ? (
         <div>
           <p className={cn("brand-kicker", isDark && "!text-white/58")}>
-            {heading ?? "Scorecard curatoriale"}
+            <LocalizedText>{heading ?? "Scorecard curatoriale"}</LocalizedText>
           </p>
           <p
             className={cn(
@@ -180,8 +181,8 @@ export function EditorialScorecard({
               isDark ? "text-white/74" : "text-[var(--muted-strong)]",
             )}
           >
-            {description ??
-              "Una lettura sintetica per capire dove il tool entra bene nel flusso di lavoro e dove resta più situazionale."}
+            <LocalizedText>{description ??
+              "Una lettura sintetica per capire dove il tool entra bene nel flusso di lavoro e dove resta più situazionale."}</LocalizedText>
           </p>
         </div>
       ) : null}
@@ -203,7 +204,7 @@ export function EditorialScorecard({
                     isDark ? "text-white/56" : "text-[var(--muted)]",
                   )}
                 >
-                  {entry.label}
+                  <LocalizedText>{entry.label}</LocalizedText>
                 </p>
                 <p
                   className={cn(
@@ -211,7 +212,7 @@ export function EditorialScorecard({
                     isDark ? "text-white/86" : "text-[var(--muted-strong)]",
                   )}
                 >
-                  {entry.descriptor}
+                  <LocalizedText>{entry.descriptor}</LocalizedText>
                 </p>
               </div>
               <span
@@ -220,7 +221,7 @@ export function EditorialScorecard({
                   isDark && "is-dark",
                 )}
               >
-                {getEditorialScoreLevelLabel(entry.level)}
+                <LocalizedText>{getEditorialScoreLevelLabel(entry.level)}</LocalizedText>
               </span>
             </div>
             <EditorialScoreMeter strength={entry.strength} tone={tone} className="mt-3" />

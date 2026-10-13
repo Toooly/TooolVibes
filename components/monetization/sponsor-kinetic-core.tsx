@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -81,7 +82,7 @@ export function SponsorKineticCore({
       </div>
       <span className="sponsor-kinetic__scan" />
       <span className="sponsor-kinetic__core" aria-hidden="true">
-        <span className="sponsor-kinetic__monogram">{initial}</span>
+        <span className="sponsor-kinetic__monogram"><LocalizedText>{initial}</LocalizedText></span>
       </span>
     </div>
   );

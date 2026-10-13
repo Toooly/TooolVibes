@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { createArticleFormAction } from "@/app/(admin)/admin/actions/articles";
 import { ArticleForm } from "@/components/admin/article-form";
 import { ControlCenterNotice } from "@/components/admin/control-center-header";
@@ -20,7 +21,7 @@ export default async function NewArticlePage({ searchParams }: NewArticlePagePro
 
   return (
     <div className="page-shell py-6">
-      {!canWrite ? <ControlCenterNotice tone="warn">{runtime.writeMessage}</ControlCenterNotice> : null}
+      {!canWrite ? <ControlCenterNotice tone="warn"><LocalizedText>{runtime.writeMessage}</LocalizedText></ControlCenterNotice> : null}
       <ArticleForm
         action={createArticleFormAction}
         initialValues={initialValues}

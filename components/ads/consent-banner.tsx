@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -69,7 +70,7 @@ export function ConsentBanner() {
   }
 
   return createPortal(
-    <div
+    <LocalizedAttributes><div
       ref={bannerRef}
       role="dialog"
       aria-modal="false"
@@ -77,18 +78,14 @@ export function ConsentBanner() {
       tabIndex={-1}
       className="tv-consent-banner"
     >
-      <h2 className="sr-only">Rispettiamo la tua privacy</h2>
+      <h2 className="sr-only"><LocalizedText>{"Rispettiamo la tua privacy"}</LocalizedText></h2>
       <div className="tv-consent-banner__inner">
-        <p className="tv-consent-banner__body">
-          Cookie tecnici per far funzionare il sito; con il tuo consenso,
-          anche gli spazi TinyAdz. Cambia scelta quando vuoi:{" "}
+        <p className="tv-consent-banner__body"><LocalizedText>{"Cookie tecnici per far funzionare il sito; con il tuo consenso, anche gli spazi TinyAdz. Cambia scelta quando vuoi:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
           <button
             type="button"
             onClick={openSettings}
             className="tv-consent-banner__settings-link"
-          >
-            Personalizza
-          </button>
+          ><LocalizedText>{"Personalizza "}</LocalizedText></button>
           .
         </p>
         <div className="tv-consent-banner__actions">
@@ -96,19 +93,15 @@ export function ConsentBanner() {
             type="button"
             onClick={grantAll}
             className="tv-consent-banner__cta"
-          >
-            Accetta tutto
-          </button>
+          ><LocalizedText>{"Accetta tutto "}</LocalizedText></button>
           <button
             type="button"
             onClick={denyNonNecessary}
             className="tv-consent-banner__cta"
-          >
-            Rifiuta non necessari
-          </button>
+          ><LocalizedText>{"Rifiuta non necessari "}</LocalizedText></button>
         </div>
       </div>
-    </div>,
+    </div></LocalizedAttributes>,
     document.body,
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +19,7 @@ export function SegmentedControl<T extends string>({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div ref={ref} className={cn("tv-sys-segmented", className)} role={tabs ? "tablist" : "group"} aria-label={label}>
+    <LocalizedAttributes><div ref={ref} className={cn("tv-sys-segmented", className)} role={tabs ? "tablist" : "group"} aria-label={label}>
       {options.map((option, index) => (
         <button
           key={option.value}
@@ -41,10 +42,10 @@ export function SegmentedControl<T extends string>({
             onValueChange(options[next].value);
           }}
         >
-          {option.icon ? <span aria-hidden="true">{option.icon}</span> : null}
-          {option.label}
+          {option.icon ? <span aria-hidden="true"><LocalizedText>{option.icon}</LocalizedText></span> : null}
+          <LocalizedText>{option.label}</LocalizedText>
         </button>
       ))}
-    </div>
+    </div></LocalizedAttributes>
   );
 }

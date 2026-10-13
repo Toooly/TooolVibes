@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import {
@@ -76,7 +77,7 @@ export default async function AdminDashboardPage({
 
   return (
     <div className="page-shell py-6">
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         title="Gestione guide"
         description="Crea, modifica e pubblica articoli e guide."
         primaryHref="/admin/articles/new"
@@ -86,17 +87,17 @@ export default async function AdminDashboardPage({
           { label: "Pubblicate", value: publishedCount },
           { label: "In evidenza", value: featuredCount },
         ]}
-      />
+      /></LocalizedAttributes>
 
       {status && statusMessages[status] ? (
-        <ControlCenterNotice tone="ok">{statusMessages[status]}</ControlCenterNotice>
+        <ControlCenterNotice tone="ok"><LocalizedText>{statusMessages[status]}</LocalizedText></ControlCenterNotice>
       ) : null}
       {!canWrite ? (
-        <ControlCenterNotice tone="warn">{runtime.writeMessage}</ControlCenterNotice>
+        <ControlCenterNotice tone="warn"><LocalizedText>{runtime.writeMessage}</LocalizedText></ControlCenterNotice>
       ) : null}
       {runtime.warnings.map((warning) => (
         <ControlCenterNotice key={warning} tone="warn">
-          {getAdminArticleWarningLabel(warning)}
+          <LocalizedText>{getAdminArticleWarningLabel(warning)}</LocalizedText>
         </ControlCenterNotice>
       ))}
 
@@ -108,7 +109,7 @@ export default async function AdminDashboardPage({
             <article key={article.id} className="tv-cc-card">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="tv-cc-card__title">{article.title}</h2>
+                  <h2 className="tv-cc-card__title"><LocalizedText>{article.title}</LocalizedText></h2>
                   <AdminStatusPill
                     active={article.status === "published"}
                     activeLabel="Pubblicato"
@@ -119,31 +120,25 @@ export default async function AdminDashboardPage({
                   ) : null}
                 </div>
                 <p className="tv-cc-card__meta">
-                  <span>{kindLabels[article.kind]}</span>
-                  <span>{getArticleSourceLabel(article.admin_source)}</span>
-                  <span>{formatItalianDate(article.published_at)}</span>
+                  <span><LocalizedText>{kindLabels[article.kind]}</LocalizedText></span>
+                  <span><LocalizedText>{getArticleSourceLabel(article.admin_source)}</LocalizedText></span>
+                  <span><LocalizedText>{formatItalianDate(article.published_at)}</LocalizedText></span>
                 </p>
               </div>
               <div className="tv-cc-card__actions">
                 {article.admin_can_edit ? (
-                  <Link href={`/admin/articles/${article.id}/edit`} className="tv-cc-btn tv-cc-btn--primary">
-                    Modifica
-                  </Link>
+                  <Link href={`/admin/articles/${article.id}/edit`} className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Modifica "}</LocalizedText></Link>
                 ) : canWrite ? (
-                  <Link href={`/admin/articles/new?seed=${article.slug}`} className="tv-cc-btn tv-cc-btn--primary">
-                    Importa
-                  </Link>
+                  <Link href={`/admin/articles/new?seed=${article.slug}`} className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Importa "}</LocalizedText></Link>
                 ) : null}
                 {article.status === "published" ? (
-                  <Link href={`/posts/${article.slug}`} className="tv-cc-btn tv-cc-btn--secondary">
-                    Apri
-                  </Link>
+                  <Link href={`/posts/${article.slug}`} className="tv-cc-btn tv-cc-btn--secondary"><LocalizedText>{"Apri "}</LocalizedText></Link>
                 ) : null}
                 {article.admin_can_mutate ? (
                   <AdminActionMenu>
                     <form action={toggleArticleFeaturedAction.bind(null, article.id, !article.featured)}>
                       <button type="submit" disabled={!canWrite}>
-                        {article.featured ? "Rimuovi evidenza" : "Metti in evidenza"}
+                        <LocalizedText>{article.featured ? "Rimuovi evidenza" : "Metti in evidenza"}</LocalizedText>
                       </button>
                     </form>
                     <form
@@ -154,7 +149,7 @@ export default async function AdminDashboardPage({
                       )}
                     >
                       <button type="submit" disabled={!canWrite}>
-                        {article.status === "published" ? "Torna in bozza" : "Pubblica"}
+                        <LocalizedText>{article.status === "published" ? "Torna in bozza" : "Pubblica"}</LocalizedText>
                       </button>
                     </form>
                     <DeleteWithConfirm
@@ -171,12 +166,12 @@ export default async function AdminDashboardPage({
           ))}
         </div>
       ) : (
-        <AdminEmptyState
+        <LocalizedAttributes><AdminEmptyState
           title="Nessun articolo in questa vista"
           description="Crea una nuova guida oppure cambia filtro."
           ctaHref="/admin/articles/new"
           ctaLabel="Nuova guida"
-        />
+        /></LocalizedAttributes>
       )}
     </div>
   );

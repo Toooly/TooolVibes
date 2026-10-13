@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { ExperienceModerationControls } from "@/components/admin/experience-moderation-controls";
@@ -110,24 +111,20 @@ export default async function ExperiencesPage({ searchParams }: ExperiencesPageP
 
   return (
     <div className="page-shell py-6">
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         title="Esperienze"
         description="Modera le esperienze della community prima che diventino pubbliche."
         metrics={[{ label: "In questo filtro", value: total }]}
-      />
+      /></LocalizedAttributes>
 
       {notice ? (
-        <ControlCenterNotice tone={notice.tone}>{notice.text}</ControlCenterNotice>
+        <ControlCenterNotice tone={notice.tone}><LocalizedText>{notice.text}</LocalizedText></ControlCenterNotice>
       ) : null}
       {loadError ? (
-        <ControlCenterNotice tone="warn">
-          Non è stato possibile caricare la coda. Riprova.
-        </ControlCenterNotice>
+        <ControlCenterNotice tone="warn"><LocalizedText>{"Non è stato possibile caricare la coda. Riprova. "}</LocalizedText></ControlCenterNotice>
       ) : null}
       {!canWrite ? (
-        <ControlCenterNotice tone="warn">
-          Il salvataggio admin non è configurato. La coda resta vuota.
-        </ControlCenterNotice>
+        <ControlCenterNotice tone="warn"><LocalizedText>{"Il salvataggio admin non è configurato. La coda resta vuota. "}</LocalizedText></ControlCenterNotice>
       ) : null}
 
       <ControlCenterFilters items={[...filterItems]} active={status} />
@@ -161,27 +158,27 @@ export default async function ExperiencesPage({ searchParams }: ExperiencesPageP
                       </Link>
                     )}
                   </p>
-                  <p className="tv-cc-kicker mt-3">Come lo usa</p>
+                  <p className="tv-cc-kicker mt-3"><LocalizedText>{"Come lo usa"}</LocalizedText></p>
                   <p className="tv-cc-card__meta">{experience.useCase}</p>
-                  <p className="tv-cc-kicker mt-3">Esperienza</p>
+                  <p className="tv-cc-kicker mt-3"><LocalizedText>{"Esperienza"}</LocalizedText></p>
                   <p className="whitespace-pre-wrap text-sm text-[var(--tv-text)]">
                     {experience.body}
                   </p>
-                  <p className="tv-cc-kicker mt-3">Cosa funziona</p>
+                  <p className="tv-cc-kicker mt-3"><LocalizedText>{"Cosa funziona"}</LocalizedText></p>
                   <ul className="list-disc pl-5 text-sm">
                     {experience.pros.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item}><LocalizedText>{item}</LocalizedText></li>
                     ))}
                   </ul>
-                  <p className="tv-cc-kicker mt-3">Limiti</p>
+                  <p className="tv-cc-kicker mt-3"><LocalizedText>{"Limiti"}</LocalizedText></p>
                   <ul className="list-disc pl-5 text-sm">
                     {experience.limits.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item}><LocalizedText>{item}</LocalizedText></li>
                     ))}
                   </ul>
                   {experience.switchedFromSlug || experience.switchedFromLabel ? (
                     <>
-                      <p className="tv-cc-kicker mt-3">Passato da</p>
+                      <p className="tv-cc-kicker mt-3"><LocalizedText>{"Passato da"}</LocalizedText></p>
                       <p className="tv-cc-card__meta">
                         {experience.switchedFromSlug ?? experience.switchedFromLabel}
                       </p>
@@ -189,7 +186,7 @@ export default async function ExperiencesPage({ searchParams }: ExperiencesPageP
                   ) : null}
                   {experience.moderationReason ? (
                     <>
-                      <p className="tv-cc-kicker mt-3">Motivo di moderazione</p>
+                      <p className="tv-cc-kicker mt-3"><LocalizedText>{"Motivo di moderazione"}</LocalizedText></p>
                       <p className="whitespace-pre-wrap text-sm">{experience.moderationReason}</p>
                     </>
                   ) : null}
@@ -207,31 +204,26 @@ export default async function ExperiencesPage({ searchParams }: ExperiencesPageP
           })}
         </div>
       ) : (
-        <AdminEmptyState title={emptyTitle} description="Le nuove esperienze in attesa compaiono qui." />
+        <LocalizedAttributes><AdminEmptyState title={emptyTitle} description="Le nuove esperienze in attesa compaiono qui." /></LocalizedAttributes>
       )}
 
       {totalPages > 1 ? (
-        <nav className="mt-4 flex gap-2" aria-label="Paginazione">
+        <LocalizedAttributes><nav className="mt-4 flex gap-2" aria-label="Paginazione">
           {page > 1 ? (
             <Link
               href={`/admin/experiences?status=${status}&page=${page - 1}`}
               className="tv-cc-btn tv-cc-btn--ghost"
-            >
-              Precedente
-            </Link>
+            ><LocalizedText>{"Precedente "}</LocalizedText></Link>
           ) : null}
-          <span className="tv-cc-card__meta">
-            Pagina {page} di {totalPages}
+          <span className="tv-cc-card__meta"><LocalizedText>{"Pagina "}</LocalizedText>{page}<LocalizedText>{" di "}</LocalizedText>{totalPages}
           </span>
           {page < totalPages ? (
             <Link
               href={`/admin/experiences?status=${status}&page=${page + 1}`}
               className="tv-cc-btn tv-cc-btn--ghost"
-            >
-              Successiva
-            </Link>
+            ><LocalizedText>{"Successiva "}</LocalizedText></Link>
           ) : null}
-        </nav>
+        </nav></LocalizedAttributes>
       ) : null}
     </div>
   );

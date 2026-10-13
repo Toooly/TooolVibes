@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import {
   AlignCenter,
   AlignLeft,
@@ -47,7 +48,7 @@ function ToolbarButton({
   children: ReactNode;
 }) {
   return (
-    <button
+    <LocalizedAttributes><button
       type="button"
       title={title}
       aria-label={title}
@@ -57,7 +58,7 @@ function ToolbarButton({
       style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
     >
       {children}
-    </button>
+    </button></LocalizedAttributes>
   );
 }
 
@@ -172,31 +173,31 @@ export function ArticleMarkdownEditor({
     <div className="overflow-hidden rounded-[28px] border" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}>
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-3 py-3 soft-divider">
         <div className="flex flex-wrap items-center gap-1.5">
-          <ToolbarButton title="Titolo grande" disabled={disabled} onClick={() => replaceSelection((text) => `# ${text}`)}>
+          <LocalizedAttributes><ToolbarButton title="Titolo grande" disabled={disabled} onClick={() => replaceSelection((text) => `# ${text}`)}>
             <Heading1 className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Titolo sezione" disabled={disabled} onClick={() => replaceSelection((text) => `## ${text}`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Titolo sezione" disabled={disabled} onClick={() => replaceSelection((text) => `## ${text}`)}>
             <Heading2 className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Grassetto" disabled={disabled} onClick={() => replaceSelection((text) => `**${text}**`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Grassetto" disabled={disabled} onClick={() => replaceSelection((text) => `**${text}**`)}>
             <Bold className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Corsivo" disabled={disabled} onClick={() => replaceSelection((text) => `*${text}*`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Corsivo" disabled={disabled} onClick={() => replaceSelection((text) => `*${text}*`)}>
             <Italic className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Citazione" disabled={disabled} onClick={() => replaceSelection((text) => `> ${text}`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Citazione" disabled={disabled} onClick={() => replaceSelection((text) => `> ${text}`)}>
             <Quote className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Codice" disabled={disabled} onClick={() => replaceSelection((text) => `\`${text}\``)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Codice" disabled={disabled} onClick={() => replaceSelection((text) => `\`${text}\``)}>
             <Code2 className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Lista" disabled={disabled} onClick={() => insertBlock("- Punto uno\n- Punto due\n")}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Lista" disabled={disabled} onClick={() => insertBlock("- Punto uno\n- Punto due\n")}>
             <List className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Lista numerata" disabled={disabled} onClick={() => insertBlock("1. Punto uno\n2. Punto due\n")}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Lista numerata" disabled={disabled} onClick={() => insertBlock("1. Punto uno\n2. Punto due\n")}>
             <ListOrdered className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton
             title="Link"
             disabled={disabled}
             onClick={() => {
@@ -205,18 +206,18 @@ export function ArticleMarkdownEditor({
             }}
           >
             <LinkIcon className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Allinea sinistra" disabled={disabled} onClick={() => replaceSelection((text) => `<p style="text-align:left">${text}</p>`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Allinea sinistra" disabled={disabled} onClick={() => replaceSelection((text) => `<p style="text-align:left">${text}</p>`)}>
             <AlignLeft className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Allinea centro" disabled={disabled} onClick={() => replaceSelection((text) => `<p style="text-align:center">${text}</p>`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Allinea centro" disabled={disabled} onClick={() => replaceSelection((text) => `<p style="text-align:center">${text}</p>`)}>
             <AlignCenter className="h-4 w-4" />
-          </ToolbarButton>
-          <ToolbarButton title="Allinea destra" disabled={disabled} onClick={() => replaceSelection((text) => `<p style="text-align:right">${text}</p>`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Allinea destra" disabled={disabled} onClick={() => replaceSelection((text) => `<p style="text-align:right">${text}</p>`)}>
             <AlignRight className="h-4 w-4" />
-          </ToolbarButton>
+          </ToolbarButton></LocalizedAttributes>
 
-          <select
+          <LocalizedAttributes><select
             title="Grandezza testo"
             aria-label="Grandezza testo"
             disabled={disabled}
@@ -229,14 +230,14 @@ export function ArticleMarkdownEditor({
               event.target.value = "";
             }}
           >
-            <option value="">Size</option>
-            <option value="0.92rem">Small</option>
-            <option value="1.1rem">Body+</option>
-            <option value="1.35rem">Lead</option>
-            <option value="1.8rem">Display</option>
-          </select>
+            <option value=""><LocalizedText>{"Size"}</LocalizedText></option>
+            <option value="0.92rem"><LocalizedText>{"Small"}</LocalizedText></option>
+            <option value="1.1rem"><LocalizedText>{"Body+"}</LocalizedText></option>
+            <option value="1.35rem"><LocalizedText>{"Lead"}</LocalizedText></option>
+            <option value="1.8rem"><LocalizedText>{"Display"}</LocalizedText></option>
+          </select></LocalizedAttributes>
 
-          <select
+          <LocalizedAttributes><select
             title="Font"
             aria-label="Font"
             disabled={disabled}
@@ -249,12 +250,12 @@ export function ArticleMarkdownEditor({
               event.target.value = "";
             }}
           >
-            <option value="">Font</option>
-            <option value="'Inter', 'Segoe UI', sans-serif">Inter</option>
-            <option value="Fraunces, Georgia, serif">Fraunces</option>
-            <option value="Georgia, serif">Serif</option>
-            <option value="'SFMono-Regular', Consolas, monospace">Mono</option>
-          </select>
+            <option value=""><LocalizedText>{"Font"}</LocalizedText></option>
+            <option value="'Inter', 'Segoe UI', sans-serif"><LocalizedText>{"Inter"}</LocalizedText></option>
+            <option value="Fraunces, Georgia, serif"><LocalizedText>{"Fraunces"}</LocalizedText></option>
+            <option value="Georgia, serif"><LocalizedText>{"Serif"}</LocalizedText></option>
+            <option value="'SFMono-Regular', Consolas, monospace"><LocalizedText>{"Mono"}</LocalizedText></option>
+          </select></LocalizedAttributes>
 
           <input
             ref={imageInputRef}
@@ -270,15 +271,15 @@ export function ArticleMarkdownEditor({
             className="hidden"
             onChange={(event) => handleFileChange(event, "video")}
           />
-          <ToolbarButton title="Carica foto o gif" disabled={disabled || Boolean(uploading)} onClick={() => imageInputRef.current?.click()}>
+          <LocalizedAttributes><ToolbarButton title="Carica foto o gif" disabled={disabled || Boolean(uploading)} onClick={() => imageInputRef.current?.click()}>
             {uploading === "image" ? <Upload className="h-4 w-4 animate-pulse" /> : <ImageIcon className="h-4 w-4" />}
-          </ToolbarButton>
-          <ToolbarButton title="Carica video" disabled={disabled || Boolean(uploading)} onClick={() => videoInputRef.current?.click()}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Carica video" disabled={disabled || Boolean(uploading)} onClick={() => videoInputRef.current?.click()}>
             {uploading === "video" ? <Upload className="h-4 w-4 animate-pulse" /> : <Video className="h-4 w-4" />}
-          </ToolbarButton>
-          <ToolbarButton title="Callout" disabled={disabled} onClick={() => insertBlock(`<aside class="blog-callout">\n\n### Nota\n\nScrivi qui il blocco in evidenza.\n\n</aside>\n`)}>
+          </ToolbarButton></LocalizedAttributes>
+          <LocalizedAttributes><ToolbarButton title="Callout" disabled={disabled} onClick={() => insertBlock(`<aside class="blog-callout">\n\n### Nota\n\nScrivi qui il blocco in evidenza.\n\n</aside>\n`)}>
             <Type className="h-4 w-4" />
-          </ToolbarButton>
+          </ToolbarButton></LocalizedAttributes>
         </div>
 
         <div className="inline-flex rounded-full border p-1" style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}>
@@ -287,18 +288,14 @@ export function ArticleMarkdownEditor({
             onClick={() => setMode("write")}
             className="rounded-full px-3 py-1.5 text-xs font-semibold"
             style={{ background: mode === "write" ? "rgba(106,60,255,0.12)" : "transparent" }}
-          >
-            Scrivi
-          </button>
+          ><LocalizedText>{"Scrivi "}</LocalizedText></button>
           <button
             type="button"
             onClick={() => setMode("preview")}
             className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold"
             style={{ background: mode === "preview" ? "rgba(106,60,255,0.12)" : "transparent" }}
           >
-            <Eye className="h-3.5 w-3.5" />
-            Preview
-          </button>
+            <Eye className="h-3.5 w-3.5" /><LocalizedText>{"Preview "}</LocalizedText></button>
         </div>
       </div>
 
@@ -346,11 +343,9 @@ export function ArticleMarkdownEditor({
       )}
 
       {uploading ? (
-        <div className="border-t px-4 py-3 text-sm font-semibold" style={{ borderColor: "var(--line)", color: "var(--muted-strong)" }}>
-          Upload in corso...
-        </div>
+        <div className="border-t px-4 py-3 text-sm font-semibold" style={{ borderColor: "var(--line)", color: "var(--muted-strong)" }}><LocalizedText>{"Upload in corso... "}</LocalizedText></div>
       ) : null}
-      {error ? <p className="border-t px-4 py-3 text-sm font-medium text-red-700">{error}</p> : null}
+      {error ? <p className="border-t px-4 py-3 text-sm font-medium text-red-700"><LocalizedText>{error}</LocalizedText></p> : null}
     </div>
   );
 }

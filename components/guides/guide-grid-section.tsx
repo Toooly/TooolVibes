@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useMemo, useState, type ReactNode } from "react";
 
 import type { EditorialPostRecord } from "@/lib/types/article";
@@ -50,7 +51,7 @@ export function GuideGridSection({
       className="guides-section"
       aria-labelledby="guides-all-title"
     >
-      <div className="guides-filter" role="group" aria-label="Filtra per area">
+      <LocalizedAttributes><div className="guides-filter" role="group" aria-label="Filtra per area">
         <button
           type="button"
           aria-pressed={active === "Tutte"}
@@ -60,9 +61,7 @@ export function GuideGridSection({
           }}
           className="guides-filter__chip"
           aria-controls="guides-grid-list"
-        >
-          Tutte
-          <span className="guides-filter__chip__count">
+        ><LocalizedText>{"Tutte "}</LocalizedText><span className="guides-filter__chip__count">
             {items.length}
           </span>
         </button>
@@ -78,15 +77,15 @@ export function GuideGridSection({
             className="guides-filter__chip"
             aria-controls="guides-grid-list"
           >
-            {t.label}
+            <LocalizedText>{t.label}</LocalizedText>
             <span className="guides-filter__chip__count">{t.count}</span>
           </button>
         ))}
-      </div>
+      </div></LocalizedAttributes>
 
       {featured ? (
         <div className="guides-grid__featured" data-mobile-featured>
-          {featured}
+          <LocalizedText>{featured}</LocalizedText>
         </div>
       ) : null}
 
@@ -100,9 +99,7 @@ export function GuideGridSection({
               color: "var(--guides-text-muted)",
               fontSize: "0.95rem",
             }}
-          >
-            Nessuna guida trovata in quest&apos;area. Prova un filtro diverso.
-          </p>
+          ><LocalizedText>{"Nessuna guida trovata in quest'area. Prova un filtro diverso. "}</LocalizedText></p>
         ) : (
           visible.map((item) => (
             <GuideCard
@@ -139,10 +136,10 @@ export function GuideGridSection({
               fontFamily: "inherit",
             }}
           >
-            {expanded
+            <LocalizedText>{expanded
               ? `Mostra meno (${visible.length} visibili)`
-              : `Mostra tutte (${totalForActive - initialVisible} altre)`}
-            <span aria-hidden>{expanded ? "↑" : "↓"}</span>
+              : `Mostra tutte (${totalForActive - initialVisible} altre)`}</LocalizedText>
+            <span aria-hidden><LocalizedText>{expanded ? "↑" : "↓"}</LocalizedText></span>
           </button>
         </div>
       ) : null}

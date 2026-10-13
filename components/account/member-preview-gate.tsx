@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { ScenicLoading } from "@/components/layout/scenic-loading";
@@ -30,14 +31,12 @@ export function MemberPreviewGate({
   return (
     <section className="tv-member-gate" aria-labelledby="tv-member-gate-title">
       <div className="tv-member-gate__card">
-        <p className="tv-member-gate__kicker">{kicker}</p>
+        <p className="tv-member-gate__kicker"><LocalizedText>{kicker}</LocalizedText></p>
         <h2 id="tv-member-gate-title" className="tv-member-gate__title">
-          {title}
+          <LocalizedText>{title}</LocalizedText>
         </h2>
-        <p className="tv-member-gate__body">{body}</p>
-        <Link className="tv-member-gate__cta" href="/account">
-          Entra per continuare
-        </Link>
+        <p className="tv-member-gate__body"><LocalizedText>{body}</LocalizedText></p>
+        <Link className="tv-member-gate__cta" href="/account"><LocalizedText>{"Entra per continuare "}</LocalizedText></Link>
       </div>
       <div className="tv-member-gate__locked" inert aria-hidden="true">
         {children}

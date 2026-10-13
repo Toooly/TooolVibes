@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { FormEvent, useState } from "react";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
 
@@ -110,7 +111,7 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
   return (
     <p id={id} role="alert" className="mt-2 text-sm font-semibold text-red-100">
-      {message}
+      <LocalizedText>{message}</LocalizedText>
     </p>
   );
 }
@@ -189,10 +190,8 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
     <PremiumPanel tone="dark" className={cn("p-4 text-white before:!hidden after:!hidden sm:p-6", className)}>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <PremiumBadge tone="accent" className="after:!hidden">Candidatura affiliato</PremiumBadge>
-          <h2 id="affiliate-application-title" className="mt-3 text-[1.45rem] leading-tight sm:text-[1.85rem]">
-            Raccontaci chi sei e dove porteresti TooolVibes.
-          </h2>
+          <PremiumBadge tone="accent" className="after:!hidden"><LocalizedText>{"Candidatura affiliato"}</LocalizedText></PremiumBadge>
+          <h2 id="affiliate-application-title" className="mt-3 text-[1.45rem] leading-tight sm:text-[1.85rem]"><LocalizedText>{"Raccontaci chi sei e dove porteresti TooolVibes. "}</LocalizedText></h2>
         </div>
       </div>
 
@@ -205,33 +204,33 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
         <SubmissionProtectionFields action="affiliate_request" />
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
-            <span className={labelClass}>Nome</span>
-            <input
+            <span className={labelClass}><LocalizedText>{"Nome"}</LocalizedText></span>
+            <LocalizedAttributes><input
               value={form.firstName}
               onChange={(event) => updateField("firstName", event.target.value)}
               className={cn(inputClass, "mt-2")}
               placeholder="Il tuo nome"
               disabled={isSubmitting}
               autoComplete="given-name"
-            />
+            /></LocalizedAttributes>
             <FieldError id="affiliate-first-name-error" message={errors.firstName} />
           </label>
 
           <label className="block">
-            <span className={labelClass}>Brand o progetto</span>
-            <input
+            <span className={labelClass}><LocalizedText>{"Brand o progetto"}</LocalizedText></span>
+            <LocalizedAttributes><input
               value={form.brandName}
               onChange={(event) => updateField("brandName", event.target.value)}
               className={cn(inputClass, "mt-2")}
               placeholder="Creator, newsletter, community..."
               disabled={isSubmitting}
               autoComplete="organization"
-            />
+            /></LocalizedAttributes>
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Email per ricontattarti</span>
-            <input
+            <span className={labelClass}><LocalizedText>{"Email per ricontattarti"}</LocalizedText></span>
+            <LocalizedAttributes><input
               value={form.email}
               onChange={(event) => updateField("email", event.target.value)}
               type="email"
@@ -243,13 +242,13 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               required
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? "affiliate-email-error" : undefined}
-            />
+            /></LocalizedAttributes>
             <FieldError id="affiliate-email-error" message={errors.email} />
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Sito principale</span>
-            <input
+            <span className={labelClass}><LocalizedText>{"Sito principale"}</LocalizedText></span>
+            <LocalizedAttributes><input
               value={form.websiteUrl}
               onChange={(event) => updateField("websiteUrl", event.target.value)}
               type="url"
@@ -260,12 +259,12 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
               disabled={isSubmitting}
               aria-invalid={Boolean(errors.websiteUrl)}
               aria-describedby={errors.websiteUrl ? "affiliate-website-error" : undefined}
-            />
+            /></LocalizedAttributes>
             <FieldError id="affiliate-website-error" message={errors.websiteUrl} />
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Audience o caso d&apos;uso (poche righe)</span>
+            <span className={labelClass}><LocalizedText>{"Audience o caso d'uso (poche righe)"}</LocalizedText></span>
             <textarea
               value={form.audience}
               onChange={(event) => updateField("audience", event.target.value)}
@@ -277,7 +276,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
           </label>
 
           <label className="block md:col-span-2">
-            <span className={labelClass}>Messaggio obbligatorio</span>
+            <span className={labelClass}><LocalizedText>{"Messaggio obbligatorio"}</LocalizedText></span>
             <textarea
               value={form.message}
               onChange={(event) => updateField("message", event.target.value)}
@@ -296,35 +295,33 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
         <details className="affiliate-progressive-disclosure rounded-[22px] border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-raised)]">
           <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-[var(--tv-ink-primary)] sm:px-5 sm:py-4">
             <span className="flex items-center justify-between gap-3">
-              <span>Aggiungi canali di promozione e profili social</span>
-              <span className="text-xs font-normal uppercase tracking-[0.14em] text-[var(--tv-ink-muted-aa)]" aria-hidden="true">
-                Apri
-              </span>
+              <span><LocalizedText>{"Aggiungi canali di promozione e profili social"}</LocalizedText></span>
+              <span className="text-xs font-normal uppercase tracking-[0.14em] text-[var(--tv-ink-muted-aa)]" aria-hidden="true"><LocalizedText>{"Apri "}</LocalizedText></span>
             </span>
           </summary>
           <div className="space-y-4 px-4 pb-4 sm:px-5 sm:pb-5">
             <label className="block">
-              <span className={labelClass}>Cognome</span>
-              <input
+              <span className={labelClass}><LocalizedText>{"Cognome"}</LocalizedText></span>
+              <LocalizedAttributes><input
                 value={form.lastName}
                 onChange={(event) => updateField("lastName", event.target.value)}
                 className={cn(inputClass, "mt-2")}
                 placeholder="Opzionale"
                 disabled={isSubmitting}
                 autoComplete="family-name"
-              />
+              /></LocalizedAttributes>
               <FieldError id="affiliate-last-name-error" message={errors.lastName} />
             </label>
 
             <label className="block">
-              <span className={labelClass}>Canali di promozione</span>
-              <input
+              <span className={labelClass}><LocalizedText>{"Canali di promozione"}</LocalizedText></span>
+              <LocalizedAttributes><input
                 value={form.channels}
                 onChange={(event) => updateField("channels", event.target.value)}
                 className={cn(inputClass, "mt-2")}
                 placeholder="Newsletter, YouTube, LinkedIn, community, sito..."
                 disabled={isSubmitting}
-              />
+              /></LocalizedAttributes>
             </label>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -341,8 +338,8 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
                 const errorMessage = errors[fieldKey];
                 return (
                   <label key={key} className="block">
-                    <span className={labelClass}>{label}</span>
-                    <input
+                    <span className={labelClass}><LocalizedText>{label}</LocalizedText></span>
+                    <LocalizedAttributes><input
                       value={form[fieldKey]}
                       onChange={(event) => updateField(fieldKey, event.target.value)}
                       className={cn(inputClass, "mt-2")}
@@ -350,7 +347,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
                       disabled={isSubmitting}
                       aria-invalid={Boolean(errorMessage)}
                       aria-describedby={errorMessage ? errorKey : undefined}
-                    />
+                    /></LocalizedAttributes>
                     <FieldError id={errorKey} message={errorMessage} />
                   </label>
                 );
@@ -364,7 +361,7 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             role="alert"
             className="rounded-[20px] border border-red-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm font-semibold text-red-200"
           >
-            {errors.form}
+            <LocalizedText>{errors.form}</LocalizedText>
           </div>
         ) : null}
 
@@ -375,25 +372,19 @@ export function AffiliateApplicationForm({ className }: { className?: string }) 
             className="flex gap-3 rounded-[20px] border border-emerald-500 bg-[var(--tv-surface-elevated)] px-4 py-3 text-sm text-emerald-200"
           >
             <CheckCircle2 className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
-            <p>Richiesta ricevuta. La troviamo nel backoffice e ti ricontattiamo sui recapiti indicati.</p>
+            <p><LocalizedText>{"Richiesta ricevuta. La troviamo nel backoffice e ti ricontattiamo sui recapiti indicati."}</LocalizedText></p>
           </div>
         ) : null}
 
         <div className="flex flex-col gap-3 border-t border-[var(--tv-border-subtle)] pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-[0.9375rem] leading-6 text-[var(--tv-ink-secondary)]">
-            Nome, brand, email e sito bastano per candidarti. Aggiungi canali e profili social solo se li vuoi condividere.
-          </p>
+          <p className="text-[0.9375rem] leading-6 text-[var(--tv-ink-secondary)]"><LocalizedText>{"Nome, brand, email e sito bastano per candidarti. Aggiungi canali e profili social solo se li vuoi condividere. "}</LocalizedText></p>
           <PremiumButton type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
             {isSubmitting ? (
               <>
-                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                Invio in corso
-              </>
+                <Loader2 className="size-4 animate-spin" aria-hidden="true" /><LocalizedText>{"Invio in corso "}</LocalizedText></>
             ) : (
               <>
-                <Send className="size-4" aria-hidden="true" />
-                Invia candidatura
-              </>
+                <Send className="size-4" aria-hidden="true" /><LocalizedText>{"Invia candidatura "}</LocalizedText></>
             )}
           </PremiumButton>
         </div>

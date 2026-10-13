@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { navigateSite } from "@/lib/shell/document-navigation";
@@ -19,7 +20,7 @@ export function ShortlistRouteGate({ children }: { children: ReactNode }) {
   }, [authenticated, router]);
 
   if (authenticated) {
-    return <p>Apertura Salvati…</p>;
+    return <p><LocalizedText>{"Apertura Salvati…"}</LocalizedText></p>;
   }
 
   return children;

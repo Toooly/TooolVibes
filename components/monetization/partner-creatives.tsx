@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   CheckCheck,
@@ -141,7 +142,7 @@ export function TayloraFlowCreative({
         className,
       )}
     >
-      <span className="taylora-flow__monogram">{monogram}</span>
+      <span className="taylora-flow__monogram"><LocalizedText>{monogram}</LocalizedText></span>
       <div className="taylora-flow__grid" />
 
       <svg
@@ -205,7 +206,7 @@ export function TayloraFlowCreative({
               style={{ left: `${node.x}%`, top: `${node.y}%` } as CSSProperties}
             >
               <Icon aria-hidden="true" />
-              <span>{node.label}</span>
+              <span><LocalizedText>{node.label}</LocalizedText></span>
             </li>
           );
         })}
@@ -219,7 +220,7 @@ export function TayloraFlowCreative({
         <span className="taylora-flow__hub-lock">
           <Lock aria-hidden="true" />
         </span>
-        <span className="taylora-flow__hub-label">Workspace protetto</span>
+        <span className="taylora-flow__hub-label"><LocalizedText>{"Workspace protetto"}</LocalizedText></span>
       </div>
 
       <div
@@ -229,12 +230,12 @@ export function TayloraFlowCreative({
         <span className="taylora-flow__customer-icon">
           <UserRound aria-hidden="true" />
         </span>
-        <span className="taylora-flow__customer-label">Team</span>
+        <span className="taylora-flow__customer-label"><LocalizedText>{"Team"}</LocalizedText></span>
       </div>
 
       <ol className="taylora-flow__phases">
         {TAYLORA_PHASES.map((phase) => (
-          <li key={phase}>{phase}</li>
+          <li key={phase}><LocalizedText>{phase}</LocalizedText></li>
         ))}
       </ol>
     </div>
@@ -314,7 +315,7 @@ export function OnWeb24BuildCreative({
         className,
       )}
     >
-      <span className="partner-canvas__monogram">{monogram}</span>
+      <span className="partner-canvas__monogram"><LocalizedText>{monogram}</LocalizedText></span>
       <div className="partner-canvas__grid" />
 
       <svg
@@ -371,7 +372,7 @@ export function OnWeb24BuildCreative({
         style={{ left: `${ONWEB24_BRIEF.x}%`, top: `${ONWEB24_BRIEF.y}%` } as CSSProperties}
       >
         <BriefIcon aria-hidden="true" />
-        <span>{ONWEB24_BRIEF.label}</span>
+        <span><LocalizedText>{ONWEB24_BRIEF.label}</LocalizedText></span>
       </span>
 
       <ul className="partner-canvas__sources">
@@ -384,7 +385,7 @@ export function OnWeb24BuildCreative({
               style={{ left: `${node.x}%`, top: `${node.y}%` } as CSSProperties}
             >
               <Icon aria-hidden="true" />
-              <span>{node.label}</span>
+              <span><LocalizedText>{node.label}</LocalizedText></span>
             </li>
           );
         })}
@@ -398,7 +399,7 @@ export function OnWeb24BuildCreative({
         <span className="partner-canvas__hub-icon">
           <Globe aria-hidden="true" />
         </span>
-        <span className="partner-canvas__hub-label">Sito live</span>
+        <span className="partner-canvas__hub-label"><LocalizedText>{"Sito live"}</LocalizedText></span>
       </div>
 
       <div
@@ -408,12 +409,12 @@ export function OnWeb24BuildCreative({
         <span className="partner-canvas__dest-icon">
           <Users aria-hidden="true" />
         </span>
-        <span className="partner-canvas__dest-label">Clienti</span>
+        <span className="partner-canvas__dest-label"><LocalizedText>{"Clienti"}</LocalizedText></span>
       </div>
 
       <ol className="partner-canvas__phases">
         {ONWEB24_PHASES.map((phase) => (
-          <li key={phase}>{phase}</li>
+          <li key={phase}><LocalizedText>{phase}</LocalizedText></li>
         ))}
       </ol>
     </div>
@@ -480,7 +481,7 @@ export function ZapLaterScheduleCreative({
         className,
       )}
     >
-      <span className="partner-canvas__monogram">{monogram}</span>
+      <span className="partner-canvas__monogram"><LocalizedText>{monogram}</LocalizedText></span>
       <div className="partner-canvas__grid" />
 
       {/* Timeline rail: the scheduling world is time-based. */}
@@ -534,7 +535,7 @@ export function ZapLaterScheduleCreative({
         style={{ left: `${ZAPLATER_DRAFT.x}%`, top: `${ZAPLATER_DRAFT.y}%` } as CSSProperties}
       >
         <DraftIcon aria-hidden="true" />
-        <span>{ZAPLATER_DRAFT.label}</span>
+        <span><LocalizedText>{ZAPLATER_DRAFT.label}</LocalizedText></span>
       </span>
 
       <div
@@ -548,7 +549,7 @@ export function ZapLaterScheduleCreative({
         <span className="partner-canvas__hub-badge">
           <RotateCcw aria-hidden="true" />
         </span>
-        <span className="partner-canvas__hub-label">Programmato</span>
+        <span className="partner-canvas__hub-label"><LocalizedText>{"Programmato"}</LocalizedText></span>
       </div>
 
       <ul className="partner-canvas__sources">
@@ -561,7 +562,7 @@ export function ZapLaterScheduleCreative({
               style={{ left: `${node.x}%`, top: `${node.y}%` } as CSSProperties}
             >
               <Icon aria-hidden="true" />
-              <span>{node.label}</span>
+              <span><LocalizedText>{node.label}</LocalizedText></span>
               <CheckCheck className="partner-canvas__sent" aria-hidden="true" />
             </li>
           );
@@ -570,7 +571,7 @@ export function ZapLaterScheduleCreative({
 
       <ol className="partner-canvas__phases">
         {ZAPLATER_PHASES.map((phase) => (
-          <li key={phase}>{phase}</li>
+          <li key={phase}><LocalizedText>{phase}</LocalizedText></li>
         ))}
       </ol>
     </div>
@@ -627,21 +628,21 @@ export function OpenSlotPreviewCreative({
 
         <div className="open-slot-preview__content">
           <span className="open-slot-preview__logo">
-            <span className="open-slot-preview__logo-label">Il tuo logo</span>
+            <span className="open-slot-preview__logo-label"><LocalizedText>{"Il tuo logo"}</LocalizedText></span>
           </span>
           <span className="open-slot-preview__headline">
             <i />
             <i />
           </span>
           <span className="open-slot-preview__prop" />
-          <span className="open-slot-preview__cta">La tua CTA</span>
+          <span className="open-slot-preview__cta"><LocalizedText>{"La tua CTA"}</LocalizedText></span>
         </div>
       </div>
 
       <ul className="open-slot-preview__modes">
         {OPEN_SLOT_MODES.map((mode) => (
           <li key={mode.id} data-mode={mode.id}>
-            {mode.label}
+            <LocalizedText>{mode.label}</LocalizedText>
           </li>
         ))}
       </ul>
@@ -690,7 +691,7 @@ export function PartnerBrandPlate({
       aria-hidden={decorative ? true : undefined}
       role={decorative ? "presentation" : undefined}
     >
-      <Image
+      <LocalizedAttributes><Image
         src={asset.src}
         alt={decorative ? "" : asset.alt}
         width={asset.width}
@@ -715,7 +716,7 @@ export function PartnerBrandPlate({
           objectPosition: position,
         }}
         priority={density === "stage"}
-      />
+      /></LocalizedAttributes>
     </div>
   );
 }

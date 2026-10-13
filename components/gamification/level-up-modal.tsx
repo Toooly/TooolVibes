@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
@@ -106,10 +107,8 @@ export function LevelUpModal({ level, onClose }: LevelUpModalProps) {
               </div>
 
               <div className="space-y-1.5">
-                <h2 className="text-xl font-semibold">Level up!</h2>
-                <p className="max-w-[16rem] text-sm text-[var(--muted-foreground)]">
-                  Sei salito di livello. Continua a esplorare per sbloccare nuove ricompense.
-                </p>
+                <h2 className="text-xl font-semibold"><LocalizedText>{"Level up!"}</LocalizedText></h2>
+                <p className="max-w-[16rem] text-sm text-[var(--muted-foreground)]"><LocalizedText>{"Sei salito di livello. Continua a esplorare per sbloccare nuove ricompense. "}</LocalizedText></p>
               </div>
 
               <div className="mt-3 flex items-baseline justify-center gap-1 text-5xl font-bold text-[var(--accent-strong)]">
@@ -124,9 +123,7 @@ export function LevelUpModal({ level, onClose }: LevelUpModalProps) {
                 className="w-full"
                 onClick={onClose}
               >
-                <Sparkles aria-hidden="true" />
-                Continua
-              </Button>
+                <Sparkles aria-hidden="true" /><LocalizedText>{"Continua "}</LocalizedText></Button>
             </div>
           </motion.div>
         </motion.div>

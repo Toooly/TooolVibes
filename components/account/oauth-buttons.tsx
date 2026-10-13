@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useMemo, useState } from "react";
 
 import {
@@ -77,7 +78,7 @@ export function OAuthButtons({
 
   return (
     <div className="tv-oauth">
-      <p className="tv-oauth__kicker">Entra in un attimo</p>
+      <p className="tv-oauth__kicker"><LocalizedText>{"Entra in un attimo"}</LocalizedText></p>
       <div className="tv-oauth__row" data-count={providers.length}>
         {providers.map((provider) => {
           const loading = active === provider.id;
@@ -105,13 +106,13 @@ export function OAuthButtons({
               <span className="tv-oauth__icon" aria-hidden="true">
                 <ProviderIcon provider={provider.id} />
               </span>
-              <span>{loading ? "Apertura…" : `Continua con ${provider.label}`}</span>
+              <span><LocalizedText>{loading ? "Apertura…" : `Continua con ${provider.label}`}</LocalizedText></span>
             </button>
           );
         })}
       </div>
       <p className="tv-oauth__or">
-        <span>oppure</span>
+        <span><LocalizedText>{"oppure"}</LocalizedText></span>
       </p>
     </div>
   );

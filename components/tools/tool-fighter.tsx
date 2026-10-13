@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { type CSSProperties, useState } from "react";
 import { motion } from "motion/react";
 import { getToolBadgeLabel } from "@/lib/data/tooolvibes-directory";
@@ -41,17 +42,17 @@ export function ToolFighter({
     ...style,
   } as CSSProperties;
   const avatar = !tool.logoUrl || logoError ? (
-    <span className="tool-fighter__initials">{initials}</span>
+    <span className="tool-fighter__initials"><LocalizedText>{initials}</LocalizedText></span>
   ) : (
     /* eslint-disable-next-line @next/next/no-img-element -- runtime favicon from the official tool domain */
-    <img
+    <LocalizedAttributes><img
       src={tool.logoUrl}
       alt=""
       loading="lazy"
       decoding="async"
       className="tool-fighter__logo"
       onError={() => setLogoError(true)}
-    />
+    /></LocalizedAttributes>
   );
 
   if (variant === "micro") {
@@ -82,9 +83,9 @@ export function ToolFighter({
         <div className="tool-fighter__avatar">{avatar}</div>
         <div className="tool-fighter__info">
           <span className="tool-fighter__name">{tool.name}</span>
-          <span className="tool-fighter__cat">{tool.categoryLabel}</span>
+          <span className="tool-fighter__cat"><LocalizedText>{tool.categoryLabel}</LocalizedText></span>
           <span className="tool-fighter__score">
-            {tool.battleScore === null ? "Valutazione editoriale in preparazione" : `${tool.battleScore}/10`}
+            <LocalizedText>{tool.battleScore === null ? "Valutazione editoriale in preparazione" : `${tool.battleScore}/10`}</LocalizedText>
           </span>
         </div>
       </motion.div>
@@ -110,9 +111,9 @@ export function ToolFighter({
       <div className="tool-fighter__avatar">{avatar}</div>
       <div className="tool-fighter__info">
         <span className="tool-fighter__name">{tool.name}</span>
-        <span className="tool-fighter__cat">{tool.categoryLabel}</span>
+        <span className="tool-fighter__cat"><LocalizedText>{tool.categoryLabel}</LocalizedText></span>
         <span className="tool-fighter__score">
-          {tool.battleScore === null ? "Valutazione editoriale in preparazione" : `${tool.battleScore}/10`}
+          <LocalizedText>{tool.battleScore === null ? "Valutazione editoriale in preparazione" : `${tool.battleScore}/10`}</LocalizedText>
         </span>
       </div>
     </motion.div>

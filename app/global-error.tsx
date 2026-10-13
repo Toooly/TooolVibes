@@ -1,5 +1,6 @@
 "use client";
 
+import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { ErrorRecoveryView } from "@/components/app/error-recovery-view";
 
 /**
@@ -20,7 +21,7 @@ export default function GlobalError({
   return (
     <html lang="it">
       <body className="min-h-dvh">
-        <ErrorRecoveryView error={error} reset={reset} homeHref="/" />
+        <LocaleProvider><ErrorRecoveryView error={error} reset={reset} homeHref="/" /></LocaleProvider>
       </body>
     </html>
   );

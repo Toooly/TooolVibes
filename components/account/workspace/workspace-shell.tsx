@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -96,7 +97,7 @@ export function WorkspaceShell({
     <Suspense
       fallback={
         <AccountWorkspaceFrame surface="workspace" view={initialView ?? "riprendi"}>
-          <p>Apertura spazio…</p>
+          <p><LocalizedText>{"Apertura spazio…"}</LocalizedText></p>
         </AccountWorkspaceFrame>
       }
     >

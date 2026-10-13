@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
@@ -156,15 +157,15 @@ export function GuideArticleToc({
   if (items.length === 0) return null;
 
   return (
-    <nav
+    <LocalizedAttributes><nav
       className={items.length < 3 ? "guides-toc is-compact" : "guides-toc"}
       aria-label={title}
       data-toc-count={items.length}
     >
       <div className="guides-toc__title">
-        {title} <span aria-hidden>· {counter}</span>
+        <LocalizedText>{title}</LocalizedText> <span aria-hidden>· <LocalizedText>{counter}</LocalizedText></span>
       </div>
-      <div
+      <LocalizedAttributes><div
         className="guides-toc__progress"
         role="progressbar"
         aria-label="Progresso di lettura"
@@ -173,7 +174,7 @@ export function GuideArticleToc({
         aria-valuenow={Math.round(progress * 100)}
       >
         <span style={{ width: `${Math.round(progress * 100)}%` }} />
-      </div>
+      </div></LocalizedAttributes>
       <ol className="guides-toc__list">
         {items.map((item) => (
           <li
@@ -191,18 +192,17 @@ export function GuideArticleToc({
                 }, 700);
               }}
             >
-              {item.text}
+              <LocalizedText>{item.text}</LocalizedText>
             </a>
           </li>
         ))}
       </ol>
       {readingMinutes && readingMinutes > 0 ? (
         <div className="guides-toc__cta">
-          <span className="guides-meta">
-            Lettura stimata · <strong>{readingMinutes} min</strong>
+          <span className="guides-meta"><LocalizedText>{"Lettura stimata · "}</LocalizedText><strong>{readingMinutes}<LocalizedText>{" min"}</LocalizedText></strong>
           </span>
         </div>
       ) : null}
-    </nav>
+    </nav></LocalizedAttributes>
   );
 }

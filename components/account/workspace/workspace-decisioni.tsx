@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { useEffect, useMemo, useState } from "react";
 
@@ -42,26 +43,24 @@ function DecisionRow({
       <span className="tv-decision-row__body">
         <strong className="tv-decision-row__name">{nameOf(names, item.slug)}</strong>
         <span className="tv-decision-row__status">
-          {statusLabel}
-          {item.status === "review" ? " · da rivedere" : ""}
+          <LocalizedText>{statusLabel}</LocalizedText>
+          <LocalizedText>{item.status === "review" ? " · da rivedere" : ""}</LocalizedText>
         </span>
         {item.at ? (
-          <span className="tv-decision-row__meta">{formatWorkspaceDate(item.at)}</span>
+          <span className="tv-decision-row__meta"><LocalizedText>{formatWorkspaceDate(item.at)}</LocalizedText></span>
         ) : null}
         {item.reason ? (
-          <span className="tv-decision-row__note">{item.reason}</span>
+          <span className="tv-decision-row__note"><LocalizedText>{item.reason}</LocalizedText></span>
         ) : item.useCase ? (
-          <span className="tv-decision-row__note">{item.useCase}</span>
+          <span className="tv-decision-row__note"><LocalizedText>{item.useCase}</LocalizedText></span>
         ) : null}
       </span>
-      <button
+      <LocalizedAttributes><button
         type="button"
         className="tv-decision-row__action"
         aria-label={`Rivedi la decisione su ${nameOf(names, item.slug)}`}
         onClick={() => onReview(item.slug)}
-      >
-        Rivedi
-      </button>
+      ><LocalizedText>{"Rivedi "}</LocalizedText></button></LocalizedAttributes>
     </li>
   );
 }
@@ -98,17 +97,11 @@ export function WorkspaceDecisioni({
         data-workspace-view="decisioni"
         aria-labelledby="tv-decisioni-empty"
       >
-        <h2 id="tv-decisioni-empty" className="tv-home-title">
-          Quando scegli un tool, salva anche il perché.
-        </h2>
-        <p className="tv-home-copy">Lo ritroverai qui, con le alternative che avevi scartato.</p>
+        <h2 id="tv-decisioni-empty" className="tv-home-title"><LocalizedText>{"Quando scegli un tool, salva anche il perché. "}</LocalizedText></h2>
+        <p className="tv-home-copy"><LocalizedText>{"Lo ritroverai qui, con le alternative che avevi scartato."}</LocalizedText></p>
         <div className="tv-home-actions">
-          <Link className="tv-home-cta tv-home-cta--primary" href="/compare">
-            Crea la prima decisione
-          </Link>
-          <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
-            Parti dai Salvati
-          </Link>
+          <Link className="tv-home-cta tv-home-cta--primary" href="/compare"><LocalizedText>{"Crea la prima decisione "}</LocalizedText></Link>
+          <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}><LocalizedText>{"Parti dai Salvati "}</LocalizedText></Link>
         </div>
       </section>
       {reviewSlug ? (
@@ -138,13 +131,13 @@ export function WorkspaceDecisioni({
   return (
     <div className="tv-home" data-workspace-view="decisioni">
       <p className="tv-decisions__summary" aria-live="polite">
-        {allDecisions.length === 1
+        <LocalizedText>{allDecisions.length === 1
           ? "1 decisione"
-          : `${allDecisions.length} decisioni`}
-        {reviewCount > 0 ? ` · ${reviewCount} da rivedere` : ""}
+          : `${allDecisions.length} decisioni`}</LocalizedText>
+        <LocalizedText>{reviewCount > 0 ? ` · ${reviewCount} da rivedere` : ""}</LocalizedText>
       </p>
 
-      <div className="tv-decisions__filters" role="group" aria-label="Filtra decisioni">
+      <LocalizedAttributes><div className="tv-decisions__filters" role="group" aria-label="Filtra decisioni">
         {(
           [
             ["tutte", "Tutte"],
@@ -160,18 +153,18 @@ export function WorkspaceDecisioni({
             className={filter === id ? "is-active" : undefined}
             onClick={() => setFilter(id)}
           >
-            {label}
+            <LocalizedText>{label}</LocalizedText>
           </button>
         ))}
-      </div>
+      </div></LocalizedAttributes>
 
-      <section className="tv-decisions" aria-label="Decisioni">
+      <LocalizedAttributes><section className="tv-decisions" aria-label="Decisioni">
         <ul className="tv-decision-list">
           {visibleDecisions.map((item) => (
             <DecisionRow key={item.id} item={item} names={names} onReview={setReviewSlug} />
           ))}
         </ul>
-      </section>
+      </section></LocalizedAttributes>
       {reviewSlug ? (
         <DecisionSheet
           open

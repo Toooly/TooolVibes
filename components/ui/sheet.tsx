@@ -1,5 +1,6 @@
 "use client"
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 
@@ -80,7 +81,7 @@ function SheetContent({
           >
             <XIcon
             />
-            <span className="sr-only">Chiudi</span>
+            <span className="sr-only"><LocalizedText>{"Chiudi"}</LocalizedText></span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Popup>

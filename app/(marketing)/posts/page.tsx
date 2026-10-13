@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { GuideMasthead } from "@/components/guides/guide-masthead";
@@ -197,21 +198,17 @@ export default async function PostsPage() {
         className="guides-section guides-section--ink"
         aria-labelledby="guides-close-title"
       >
-        <p className="guides-kicker is-on-dark" id="guides-close-title">
-          Prossimi passi
-        </p>
-        <nav className="guides-next-steps" aria-label="Prossimi passi">
-          <Link href="/archivio">Catalogo</Link>
+        <p className="guides-kicker is-on-dark" id="guides-close-title"><LocalizedText>{"Prossimi passi "}</LocalizedText></p>
+        <LocalizedAttributes><nav className="guides-next-steps" aria-label="Prossimi passi">
+          <Link href="/archivio"><LocalizedText>{"Catalogo"}</LocalizedText></Link>
           <span aria-hidden>·</span>
-          <Link href="/collections">Raccolte</Link>
+          <Link href="/collections"><LocalizedText>{"Raccolte"}</LocalizedText></Link>
           <span aria-hidden>·</span>
-          <Link href="/radar">Radar</Link>
-        </nav>
-        <p className="guides-section__meta guides-section__meta--ink">
-          Lettura media: <strong>{readingTime} min</strong>{" "}
-          per guida · ultimo aggiornamento editoriale:{" "}
+          <Link href="/radar"><LocalizedText>{"Radar"}</LocalizedText></Link>
+        </nav></LocalizedAttributes>
+        <p className="guides-section__meta guides-section__meta--ink"><LocalizedText>{"Lettura media: "}</LocalizedText><strong>{readingTime}<LocalizedText>{" min"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"per guida · ultimo aggiornamento editoriale:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
           <strong>
-            {new Date().toLocaleDateString("it-IT", { month: "long", year: "numeric" })}
+            <LocalizedText>{new Date().toLocaleDateString("it-IT", { month: "long", year: "numeric" })}</LocalizedText>
           </strong>
         </p>
       </section>

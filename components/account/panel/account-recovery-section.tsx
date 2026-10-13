@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { RotateCcw, Shield } from "lucide-react";
 
 import {
@@ -30,13 +31,9 @@ export function AccountRecoverySection({
         <div className="account-section-panel p-5 sm:p-6" role="status">
           <div className="flex items-center gap-2">
             <Shield size={16} className="text-[var(--accent-purple)]" aria-hidden="true" />
-            <p className="account-label">Backup locale isolato</p>
+            <p className="account-label"><LocalizedText>{"Backup locale isolato"}</LocalizedText></p>
           </div>
-          <p className="account-subtitle mt-3">
-            Questa selezione è precedente al sistema di proprietà del browser.
-            Non è stata assegnata automaticamente al tuo account. Ripristinala
-            solo se riconosci questo dispositivo e il suo contenuto.
-          </p>
+          <p className="account-subtitle mt-3"><LocalizedText>{"Questa selezione è precedente al sistema di proprietà del browser. Non è stata assegnata automaticamente al tuo account. Ripristinala solo se riconosci questo dispositivo e il suo contenuto. "}</LocalizedText></p>
           <button
             type="button"
             className="account-btn-secondary mt-4 disabled:cursor-default disabled:opacity-60"
@@ -44,9 +41,9 @@ export function AccountRecoverySection({
             onClick={() => void account.restoreQuarantinedWorkspace()}
           >
             <RotateCcw size={16} aria-hidden="true" />
-            {account.isRestoringQuarantinedWorkspace
+            <LocalizedText>{account.isRestoringQuarantinedWorkspace
               ? "Ripristino in corso..."
-              : "Ripristina nello spazio corrente"}
+              : "Ripristina nello spazio corrente"}</LocalizedText>
           </button>
         </div>
       ) : null}
@@ -56,7 +53,7 @@ export function AccountRecoverySection({
           className={getAuthMessageClassName(account.authMessage)}
           style={getAuthMessageTone(account.authMessage)}
         >
-          <p className="text-sm leading-6">{account.authMessage}</p>
+          <p className="text-sm leading-6"><LocalizedText>{account.authMessage}</LocalizedText></p>
         </div>
       ) : null}
     </>

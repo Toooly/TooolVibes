@@ -1,5 +1,6 @@
 "use client"
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
 
@@ -61,8 +62,8 @@ function CommandDialog({
       >
         <Command shouldFilter={shouldFilter}>
           <DialogHeader className="sr-only">
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
+            <DialogTitle><LocalizedText>{title}</LocalizedText></DialogTitle>
+            <DialogDescription><LocalizedText>{description}</LocalizedText></DialogDescription>
           </DialogHeader>
           {children}
         </Command>

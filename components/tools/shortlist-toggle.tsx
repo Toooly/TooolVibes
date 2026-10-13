@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState } from "react";
 
 import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
@@ -81,9 +82,7 @@ export function ShortlistToggle({
   });
 
   const liveRegion = announceSaved ? (
-    <span className="sr-only" aria-live="polite">
-      Salvato
-    </span>
+    <span className="sr-only" aria-live="polite"><LocalizedText>{"Salvato "}</LocalizedText></span>
   ) : null;
 
   if (mode === "icon") {
@@ -96,7 +95,7 @@ export function ShortlistToggle({
         : "Salva tool";
     return (
       <span className="inline-flex">
-        <button
+        <LocalizedAttributes><button
           type="button"
           {...hold}
           className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border select-none transition-all duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
@@ -125,7 +124,7 @@ export function ShortlistToggle({
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </button></LocalizedAttributes>
         {liveRegion}
       </span>
     );
@@ -160,7 +159,7 @@ export function ShortlistToggle({
             boxShadow: isSaved ? "0 0 0 4px rgba(34,197,94,0.14)" : "0 0 0 4px rgba(239,68,68,0.14)",
           }}
         />
-        {isSaved ? "Salvato" : "Da salvare"}
+        <LocalizedText>{isSaved ? "Salvato" : "Da salvare"}</LocalizedText>
       </button>
       {liveRegion}
     </span>

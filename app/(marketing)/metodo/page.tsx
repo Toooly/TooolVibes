@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import Link from "@/components/ui/app-link";
 import { ArrowRight, Compass, Gauge, ShieldCheck } from "lucide-react";
@@ -100,7 +101,7 @@ const PRINCIPLES = [
 export default function MetodoPage() {
   return (
     <SecondaryPageShell>
-      <SecondaryHero
+      <LocalizedAttributes><SecondaryHero
         tone="dark"
         layout="split"
         routeIndex="04"
@@ -110,14 +111,14 @@ export default function MetodoPage() {
         title="Una scelta è un percorso, non una lista."
         lede="TooolVibes non è un elenco: è un metodo. Scopri, valuta, confronta, decidi, ricorda. Salvare un candidato non è decidere."
         actions={
-          <Link
+          <LocalizedAttributes><Link
             href="/archivio"
             className="secondary-card__cta"
             aria-label="Apri il catalogo e inizia la prima tappa"
           >
-            <span>Inizia dal catalogo</span>
+            <span><LocalizedText>{"Inizia dal catalogo"}</LocalizedText></span>
             <ArrowRight aria-hidden="true" className="size-4" />
-          </Link>
+          </Link></LocalizedAttributes>
         }
         signature={
           <>
@@ -138,32 +139,24 @@ export default function MetodoPage() {
                 lineHeight: 1.55,
               }}
             >
-              <strong style={{ color: "var(--tv-ink-primary)" }}>
-                Scopri
-              </strong>{" "}
-              restringe,{" "}
-              <strong style={{ color: "var(--tv-ink-primary)" }}>Valuta</strong>{" "}
-              legge i limiti,{" "}
-              <strong style={{ color: "var(--tv-ink-primary)" }}>Confronta</strong>{" "}
-              isola,{" "}
-              <strong style={{ color: "var(--tv-ink-primary)" }}>Decidi</strong>{" "}
-              sceglie,{" "}
-              <strong style={{ color: "var(--tv-ink-primary)" }}>Ricorda</strong>{" "}
-              tiene il motivo.
-            </p>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Scopri "}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"restringe,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Valuta"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"legge i limiti,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Confronta"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"isola,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Decidi"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"sceglie,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Ricorda"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"tiene il motivo. "}</LocalizedText></p>
           </>
         }
-      />
+      /></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         eyebrow="Percorso"
         title={formatDecisionLifecycle()}
         lede="Ogni tappa ha una destinazione reale su TooolVibes: non una descrizione, uno strumento."
       >
         <DecisionTrack steps={TRACK_STEPS} />
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         tone="ivory"
         eyebrow="Principi"
         title="Come pensiamo le valutazioni"
@@ -171,37 +164,37 @@ export default function MetodoPage() {
       >
         <SecondaryCardGrid columns={3}>
           {PRINCIPLES.map((principle) => (
-            <SecondaryPrincipleCard
+            <LocalizedAttributes key={principle.title}><SecondaryPrincipleCard
               key={principle.title}
               title={principle.title}
               copy={principle.copy}
               bullets={principle.bullets}
               icon={principle.icon}
               tone="ivory"
-            />
+            /></LocalizedAttributes>
           ))}
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondaryClosingCTA
+      <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
         title="La cosa migliore da fare, adesso."
         body="Parti dal catalogo per restringere i candidati. I Salvati tengono quelli che stai considerando, con il motivo."
         actions={
           <>
             <Link href="/archivio" className="secondary-card__cta secondary-card__cta--ghost method-closing-catalog">
-              <span>Apri il catalogo</span>
+              <span><LocalizedText>{"Apri il catalogo"}</LocalizedText></span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
             <Link
               href="/shortlist"
               className="secondary-card__cta secondary-card__cta--ghost"
             >
-              <span>Riapri i salvati</span>
+              <span><LocalizedText>{"Riapri i salvati"}</LocalizedText></span>
             </Link>
           </>
         }
-      />
+      /></LocalizedAttributes>
     </SecondaryPageShell>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { setShortlistStage } from "@/lib/discovery/local-storage";
 import { getShortlistStageMeta } from "@/lib/tools/discovery";
@@ -31,7 +32,7 @@ export function ShortlistStageToggle({ slug }: ShortlistStageToggleProps) {
             data-sonic-action="tab"
             className="shortlist-stage-chip"
           >
-            {meta.label}
+            <LocalizedText>{meta.label}</LocalizedText>
           </button>
         );
       })}

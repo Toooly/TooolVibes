@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import Link from "@/components/ui/app-link";
 
@@ -106,12 +107,8 @@ export default async function ArchivePage({
         aria-labelledby="archive-method-band-title"
       >
         <div className="archive-method-band__inner">
-          <p id="archive-method-band-title" className="archive-method-band__note">
-            Il catalogo resta editoriale. Gli sponsor restano dichiarati.
-          </p>
-          <Link href="/metodo" className="archive-method-band__link">
-            Scopri il metodo
-          </Link>
+          <p id="archive-method-band-title" className="archive-method-band__note"><LocalizedText>{"Il catalogo resta editoriale. Gli sponsor restano dichiarati. "}</LocalizedText></p>
+          <Link href="/metodo" className="archive-method-band__link"><LocalizedText>{"Scopri il metodo "}</LocalizedText></Link>
         </div>
       </section>
 

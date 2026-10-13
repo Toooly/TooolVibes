@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useId, useMemo, useState, type FormEvent } from "react";
 
 import { CommunityTurnstile } from "@/components/community/community-turnstile";
@@ -147,17 +148,13 @@ export function ExperienceForm({
 
   return (
     <form className="td-final-experience-form" onSubmit={handleSubmit} noValidate>
-      {warning ? <p className="td-final-experience-form__warning">{warning}</p> : null}
+      {warning ? <p className="td-final-experience-form__warning"><LocalizedText>{warning}</LocalizedText></p> : null}
       {error ? (
         <p className="td-final-experience-form__error" role="alert">
-          {error}
+          <LocalizedText>{error}</LocalizedText>
         </p>
       ) : null}
-      <label className="td-final-experience-form__label" htmlFor={`${formId}-name`}>
-        Nome pubblico
-        <span className="td-final-experience-form__hint">
-          Questo nome sarà visibile accanto alla tua esperienza.
-        </span>
+      <label className="td-final-experience-form__label" htmlFor={`${formId}-name`}><LocalizedText>{"Nome pubblico "}</LocalizedText><span className="td-final-experience-form__hint"><LocalizedText>{"Questo nome sarà visibile accanto alla tua esperienza. "}</LocalizedText></span>
         <input
           id={`${formId}-name`}
           className="td-final-experience-form__input"
@@ -168,10 +165,8 @@ export function ExperienceForm({
           aria-invalid={fieldErrors.displayName ? true : undefined}
         />
       </label>
-      {fieldErrors.displayName ? <p className="td-final-experience-form__error">{fieldErrors.displayName}</p> : null}
-      <label className="td-final-experience-form__label" htmlFor={`${formId}-use`}>
-        Come lo usi?
-        <input
+      {fieldErrors.displayName ? <p className="td-final-experience-form__error"><LocalizedText>{fieldErrors.displayName}</LocalizedText></p> : null}
+      <label className="td-final-experience-form__label" htmlFor={`${formId}-use`}><LocalizedText>{"Come lo usi? "}</LocalizedText><input
           id={`${formId}-use`}
           className="td-final-experience-form__input"
           value={values.useCase}
@@ -180,10 +175,8 @@ export function ExperienceForm({
           aria-invalid={fieldErrors.useCase ? true : undefined}
         />
       </label>
-      {fieldErrors.useCase ? <p className="td-final-experience-form__error">{fieldErrors.useCase}</p> : null}
-      <label className="td-final-experience-form__label" htmlFor={`${formId}-body`}>
-        La tua esperienza
-        <textarea
+      {fieldErrors.useCase ? <p className="td-final-experience-form__error"><LocalizedText>{fieldErrors.useCase}</LocalizedText></p> : null}
+      <label className="td-final-experience-form__label" htmlFor={`${formId}-body`}><LocalizedText>{"La tua esperienza "}</LocalizedText><textarea
           id={`${formId}-body`}
           className="td-final-experience-form__textarea"
           value={values.body}
@@ -194,9 +187,9 @@ export function ExperienceForm({
         />
         <span className="td-final-experience-form__count">{values.body.trim().length}/2000</span>
       </label>
-      {fieldErrors.body ? <p className="td-final-experience-form__error">{fieldErrors.body}</p> : null}
+      {fieldErrors.body ? <p className="td-final-experience-form__error"><LocalizedText>{fieldErrors.body}</LocalizedText></p> : null}
       <fieldset className="td-final-experience-form__fieldset">
-        <legend>Cosa funziona bene?</legend>
+        <legend><LocalizedText>{"Cosa funziona bene?"}</LocalizedText></legend>
         {values.pros.map((item, index) => (
           <div key={`pro-${index}`} className="td-final-experience-form__row">
             <input
@@ -206,21 +199,17 @@ export function ExperienceForm({
               onChange={(event) => updateList("pros", index, event.target.value)}
             />
             {values.pros.length > 1 ? (
-              <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, pros: current.pros.filter((_, i) => i !== index) }))}>
-                Rimuovi
-              </button>
+              <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, pros: current.pros.filter((_, i) => i !== index) }))}><LocalizedText>{"Rimuovi "}</LocalizedText></button>
             ) : null}
           </div>
         ))}
         {values.pros.length < 5 ? (
-          <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, pros: [...current.pros, ""] }))}>
-            Aggiungi
-          </button>
+          <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, pros: [...current.pros, ""] }))}><LocalizedText>{"Aggiungi "}</LocalizedText></button>
         ) : null}
-        {fieldErrors.pros ? <p className="td-final-experience-form__error">{fieldErrors.pros}</p> : null}
+        {fieldErrors.pros ? <p className="td-final-experience-form__error"><LocalizedText>{fieldErrors.pros}</LocalizedText></p> : null}
       </fieldset>
       <fieldset className="td-final-experience-form__fieldset">
-        <legend>Quali limiti hai trovato?</legend>
+        <legend><LocalizedText>{"Quali limiti hai trovato?"}</LocalizedText></legend>
         {values.limits.map((item, index) => (
           <div key={`limit-${index}`} className="td-final-experience-form__row">
             <input
@@ -230,21 +219,17 @@ export function ExperienceForm({
               onChange={(event) => updateList("limits", index, event.target.value)}
             />
             {values.limits.length > 1 ? (
-              <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, limits: current.limits.filter((_, i) => i !== index) }))}>
-                Rimuovi
-              </button>
+              <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, limits: current.limits.filter((_, i) => i !== index) }))}><LocalizedText>{"Rimuovi "}</LocalizedText></button>
             ) : null}
           </div>
         ))}
         {values.limits.length < 5 ? (
-          <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, limits: [...current.limits, ""] }))}>
-            Aggiungi
-          </button>
+          <button type="button" className="td-final-experience-form__ghost" onClick={() => setValues((current) => ({ ...current, limits: [...current.limits, ""] }))}><LocalizedText>{"Aggiungi "}</LocalizedText></button>
         ) : null}
-        {fieldErrors.limits ? <p className="td-final-experience-form__error">{fieldErrors.limits}</p> : null}
+        {fieldErrors.limits ? <p className="td-final-experience-form__error"><LocalizedText>{fieldErrors.limits}</LocalizedText></p> : null}
       </fieldset>
       <fieldset className="td-final-experience-form__fieldset">
-        <legend>Da quanto lo usi?</legend>
+        <legend><LocalizedText>{"Da quanto lo usi?"}</LocalizedText></legend>
         <div className="td-final-experience-form__chips">
           {COMMUNITY_DURATION_BUCKETS.map((bucket) => (
             <label key={bucket} className="td-final-experience-form__chip">
@@ -254,35 +239,29 @@ export function ExperienceForm({
                 checked={values.durationBucket === bucket}
                 onChange={() => setValues((current) => ({ ...current, durationBucket: bucket }))}
               />
-              {DURATION_BUCKET_LABELS[bucket]}
+              <LocalizedText>{DURATION_BUCKET_LABELS[bucket]}</LocalizedText>
             </label>
           ))}
         </div>
       </fieldset>
       <fieldset className="td-final-experience-form__fieldset">
-        <legend>Usavi qualcos&apos;altro prima?</legend>
+        <legend><LocalizedText>{"Usavi qualcos'altro prima?"}</LocalizedText></legend>
         <label className="td-final-experience-form__chip">
-          <input type="radio" name={`${formId}-switched`} checked={values.switchedMode === "none"} onChange={() => setValues((current) => ({ ...current, switchedMode: "none", switchedFromSlug: "", switchedFromLabel: "" }))} />
-          No
-        </label>
+          <input type="radio" name={`${formId}-switched`} checked={values.switchedMode === "none"} onChange={() => setValues((current) => ({ ...current, switchedMode: "none", switchedFromSlug: "", switchedFromLabel: "" }))} /><LocalizedText>{"No "}</LocalizedText></label>
         <label className="td-final-experience-form__chip">
-          <input type="radio" name={`${formId}-switched`} checked={values.switchedMode === "catalog"} onChange={() => setValues((current) => ({ ...current, switchedMode: "catalog", switchedFromLabel: "" }))} />
-          Tool TooolVibes
-        </label>
+          <input type="radio" name={`${formId}-switched`} checked={values.switchedMode === "catalog"} onChange={() => setValues((current) => ({ ...current, switchedMode: "catalog", switchedFromLabel: "" }))} /><LocalizedText>{"Tool TooolVibes "}</LocalizedText></label>
         <label className="td-final-experience-form__chip">
-          <input type="radio" name={`${formId}-switched`} checked={values.switchedMode === "other"} onChange={() => setValues((current) => ({ ...current, switchedMode: "other", switchedFromSlug: "" }))} />
-          Altro tool
-        </label>
+          <input type="radio" name={`${formId}-switched`} checked={values.switchedMode === "other"} onChange={() => setValues((current) => ({ ...current, switchedMode: "other", switchedFromSlug: "" }))} /><LocalizedText>{"Altro tool "}</LocalizedText></label>
         {values.switchedMode === "catalog" ? (
           <select
             className="td-final-experience-form__input"
             value={values.switchedFromSlug}
             onChange={(event) => setValues((current) => ({ ...current, switchedFromSlug: event.target.value }))}
           >
-            <option value="">Scegli un tool</option>
+            <option value=""><LocalizedText>{"Scegli un tool"}</LocalizedText></option>
             {catalogOptions.map(([slug, name]) => (
               <option key={slug} value={slug}>
-                {name}
+                <LocalizedText>{name}</LocalizedText>
               </option>
             ))}
           </select>
@@ -295,12 +274,12 @@ export function ExperienceForm({
             onChange={(event) => setValues((current) => ({ ...current, switchedFromLabel: event.target.value }))}
           />
         ) : null}
-        {fieldErrors.switched ? <p className="td-final-experience-form__error">{fieldErrors.switched}</p> : null}
+        {fieldErrors.switched ? <p className="td-final-experience-form__error"><LocalizedText>{fieldErrors.switched}</LocalizedText></p> : null}
       </fieldset>
       {mode === "create" ? <CommunityTurnstile onToken={setCaptchaToken} /> : null}
       <div className="td-final-experience-form__actions">
         <button type="submit" className="td-final-experience__more" disabled={busy}>
-          {busy ? "Invio…" : submitLabel}
+          <LocalizedText>{busy ? "Invio…" : submitLabel}</LocalizedText>
         </button>
         <button
           type="button"
@@ -309,9 +288,7 @@ export function ExperienceForm({
             if (dirty && !window.confirm("Scartare le modifiche?")) return;
             onCancel();
           }}
-        >
-          Annulla
-        </button>
+        ><LocalizedText>{"Annulla "}</LocalizedText></button>
       </div>
     </form>
   );

@@ -1,5 +1,8 @@
 "use client";
 
+import { LanguagePicker } from "@/components/i18n/language-picker";
+
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * TooolVibes — Mobile Top Bar
  * Definitive UI shell replacement (2026-07-24)
@@ -199,7 +202,7 @@ export function MobileTopBar() {
       }}
     >
       <div className="mobile-top-bar__inner">
-        <Link
+        <LocalizedAttributes><Link
           href="/"
           prefetch={false}
           aria-label="TooolVibes home"
@@ -208,8 +211,8 @@ export function MobileTopBar() {
           <span className="mobile-top-bar__brand-mark">
             <BrandLogo size={24} fallback="png" priority />
           </span>
-          <span className="mobile-top-bar__brand-text">TooolVibes</span>
-        </Link>
+          <span className="mobile-top-bar__brand-text"><LocalizedText>{"TooolVibes"}</LocalizedText></span>
+        </Link></LocalizedAttributes>
 
         <div className="mobile-top-bar__spacer" aria-hidden="true" />
 
@@ -229,6 +232,7 @@ export function MobileTopBar() {
           >
             <RefreshCw size={16} />
           </span>
+          <LanguagePicker />
           <HeaderAccountControl
             linkClassName="mobile-top-bar__account"
             menuClassName="mobile-top-bar__account-menu"
@@ -241,7 +245,7 @@ export function MobileTopBar() {
       {isHome || !hasRouteStrip(pathname) ? null : (
         <div className="mobile-top-bar__route">
           <span aria-hidden="true" className="mobile-top-bar__route-dot" />
-          <span className="mobile-top-bar__route-label">{routeLabel}</span>
+          <span className="mobile-top-bar__route-label"><LocalizedText>{routeLabel}</LocalizedText></span>
         </div>
       )}
     </header>

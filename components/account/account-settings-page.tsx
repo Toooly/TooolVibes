@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useState } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -48,7 +49,7 @@ export function AccountSettingsPage() {
   });
 
   if (account.status === "loading") {
-    return <p className="px-4 py-8">Apertura impostazioni…</p>;
+    return <p className="px-4 py-8"><LocalizedText>{"Apertura impostazioni…"}</LocalizedText></p>;
   }
   if (account.status !== "authenticated") {
     return <AuthPage />;
@@ -64,36 +65,30 @@ export function AccountSettingsPage() {
       <div className="tv-settings">
         <header className="tv-id">
           <span className="tv-app__initials" aria-hidden="true">
-            {profile.displayName?.slice(0, 2).toUpperCase() ?? (email?.slice(0, 2).toUpperCase() ?? "TV")}
+            <LocalizedText>{profile.displayName?.slice(0, 2).toUpperCase() ?? (email?.slice(0, 2).toUpperCase() ?? "TV")}</LocalizedText>
           </span>
           <div className="tv-id__copy">
-            <p className="tv-id__name">{profile.displayName ?? email?.split("@")[0] ?? "account"}</p>
-            {email ? <p className="tv-id__meta">{email}</p> : null}
-            <h1 className="sr-only">Impostazioni</h1>
+            <p className="tv-id__name"><LocalizedText>{profile.displayName ?? email?.split("@")[0] ?? "account"}</LocalizedText></p>
+            {email ? <p className="tv-id__meta"><LocalizedText>{email}</LocalizedText></p> : null}
+            <h1 className="sr-only"><LocalizedText>{"Impostazioni"}</LocalizedText></h1>
           </div>
         </header>
 
         <section className="tv-settings-section" aria-labelledby="settings-profile">
-          <h2 id="settings-profile" className="tv-settings-heading">
-            Profilo
-          </h2>
-          <p className="tv-settings-lead">Chi sei in questo workspace, e su cosa stai lavorando.</p>
+          <h2 id="settings-profile" className="tv-settings-heading"><LocalizedText>{"Profilo "}</LocalizedText></h2>
+          <p className="tv-settings-lead"><LocalizedText>{"Chi sei in questo workspace, e su cosa stai lavorando."}</LocalizedText></p>
           <PersonalizationSettings />
         </section>
 
         <section className="tv-settings-section" aria-labelledby="settings-signal">
-          <h2 id="settings-signal" className="tv-settings-heading">
-            Segnale
-          </h2>
-          <p className="tv-settings-lead">Volume, animazioni e celebrazioni. Lo spazio resta utile anche in silenzio.</p>
+          <h2 id="settings-signal" className="tv-settings-heading"><LocalizedText>{"Segnale "}</LocalizedText></h2>
+          <p className="tv-settings-lead"><LocalizedText>{"Volume, animazioni e celebrazioni. Lo spazio resta utile anche in silenzio."}</LocalizedText></p>
           <SignalSettings />
         </section>
 
         {showRecovery ? (
           <section className="tv-settings-section" aria-labelledby="settings-recovery">
-            <h2 id="settings-recovery" className="tv-settings-heading">
-              Recovery
-            </h2>
+            <h2 id="settings-recovery" className="tv-settings-heading"><LocalizedText>{"Recovery "}</LocalizedText></h2>
             <AccountRecoverySection account={account} />
           </section>
         ) : (
@@ -101,30 +96,20 @@ export function AccountSettingsPage() {
         )}
 
         <section className="tv-settings-section" aria-labelledby="settings-workspace">
-          <h2 id="settings-workspace" className="tv-settings-heading">
-            Workspace
-          </h2>
-          <p className="tv-settings-lead">Esporta o svuota salvati, stack e decisioni di questo spazio.</p>
+          <h2 id="settings-workspace" className="tv-settings-heading"><LocalizedText>{"Workspace "}</LocalizedText></h2>
+          <p className="tv-settings-lead"><LocalizedText>{"Esporta o svuota salvati, stack e decisioni di questo spazio."}</LocalizedText></p>
           <WorkspaceSettings />
         </section>
 
         <section className="tv-settings-section" aria-labelledby="settings-privacy">
-          <h2 id="settings-privacy" className="tv-settings-heading">
-            Privacy e dati
-          </h2>
-          <p className="tv-settings-copy">
-            I dati del toolbox restano nel workspace personale. Puoi esportarli dalla sezione Workspace.
-          </p>
-          <p className="tv-settings-copy">
-            Eliminazione account: non disponibile in questo ciclo.
-          </p>
+          <h2 id="settings-privacy" className="tv-settings-heading"><LocalizedText>{"Privacy e dati "}</LocalizedText></h2>
+          <p className="tv-settings-copy"><LocalizedText>{"I dati del toolbox restano nel workspace personale. Puoi esportarli dalla sezione Workspace. "}</LocalizedText></p>
+          <p className="tv-settings-copy"><LocalizedText>{"Eliminazione account: non disponibile in questo ciclo. "}</LocalizedText></p>
         </section>
 
         <section className="tv-settings-section" aria-labelledby="settings-contrib">
-          <h2 id="settings-contrib" className="tv-settings-heading">
-            Contributi
-          </h2>
-          <p className="tv-settings-lead">Tool e segnalazioni che hai inviato.</p>
+          <h2 id="settings-contrib" className="tv-settings-heading"><LocalizedText>{"Contributi "}</LocalizedText></h2>
+          <p className="tv-settings-lead"><LocalizedText>{"Tool e segnalazioni che hai inviato."}</LocalizedText></p>
           <AccountSubmissionsSection
             status={account.status}
             submissions={submissions.submissions}
@@ -138,18 +123,14 @@ export function AccountSettingsPage() {
         <AccountIdentitiesSection />
 
         <section className="tv-settings-section" aria-labelledby="settings-account">
-          <h2 id="settings-account" className="tv-settings-heading">
-            Account
-          </h2>
-          <p className="tv-settings-lead">Sessione e uscita.</p>
-          <button
+          <h2 id="settings-account" className="tv-settings-heading"><LocalizedText>{"Account "}</LocalizedText></h2>
+          <p className="tv-settings-lead"><LocalizedText>{"Sessione e uscita."}</LocalizedText></p>
+          <LocalizedAttributes><button
             type="button"
             className="account-btn-secondary"
             onClick={() => void account.signOut()}
             aria-label="Esci dall'account"
-          >
-            Esci dall&apos;account
-          </button>
+          ><LocalizedText>{"Esci dall'account "}</LocalizedText></button></LocalizedAttributes>
         </section>
       </div>
     </AccountWorkspaceFrame>
@@ -183,11 +164,9 @@ function PersonalizationSettings() {
         });
       }}
     >
-      <p className="tv-settings-copy">
-        Si può cambiare quando cambia il lavoro. Non è un onboarding da chiudere.
-      </p>
+      <p className="tv-settings-copy"><LocalizedText>{"Si può cambiare quando cambia il lavoro. Non è un onboarding da chiudere. "}</LocalizedText></p>
       <fieldset className="tv-choice">
-        <legend>Focus</legend>
+        <legend><LocalizedText>{"Focus"}</LocalizedText></legend>
         {SIGNAL_FOCUS_AREAS.map((item) => (
           <button
             key={item}
@@ -195,12 +174,12 @@ function PersonalizationSettings() {
             aria-pressed={focusArea === item}
             onClick={() => setFocusArea(item)}
           >
-            {FOCUS_AREA_LABELS[item]}
+            <LocalizedText>{FOCUS_AREA_LABELS[item]}</LocalizedText>
           </button>
         ))}
       </fieldset>
       <fieldset className="tv-choice">
-        <legend>Obiettivo</legend>
+        <legend><LocalizedText>{"Obiettivo"}</LocalizedText></legend>
         {SIGNAL_PRIMARY_GOALS.map((item) => (
           <button
             key={item}
@@ -208,14 +187,12 @@ function PersonalizationSettings() {
             aria-pressed={primaryGoal === item}
             onClick={() => setPrimaryGoal(item)}
           >
-            {PRIMARY_GOAL_LABELS[item]}
+            <LocalizedText>{PRIMARY_GOAL_LABELS[item]}</LocalizedText>
           </button>
         ))}
       </fieldset>
-      <button type="submit" className="account-btn-primary">
-        Aggiorna contesto
-      </button>
-      {status ? <p role="status">{status}</p> : null}
+      <button type="submit" className="account-btn-primary"><LocalizedText>{"Aggiorna contesto "}</LocalizedText></button>
+      {status ? <p role="status"><LocalizedText>{status}</LocalizedText></p> : null}
     </form>
   );
 }
@@ -246,34 +223,26 @@ function SignalSettings() {
 
   return (
     <div className="tv-settings-form">
-      <p className="tv-settings-copy">
-        Lo spazio resta utile anche a volume zero. Nessuna penalità per le pause.
-      </p>
+      <p className="tv-settings-copy"><LocalizedText>{"Lo spazio resta utile anche a volume zero. Nessuna penalità per le pause. "}</LocalizedText></p>
       <label className="tv-switch">
         <input
           type="checkbox"
           checked={prefs.quietMode}
           onChange={() => toggle("quietMode")}
-        />
-        Modalità silenziosa
-      </label>
+        /><LocalizedText>{"Modalità silenziosa "}</LocalizedText></label>
       <label className="tv-switch">
         <input
           type="checkbox"
           checked={prefs.reduceRewardAnimations}
           onChange={() => toggle("reduceRewardAnimations")}
-        />
-        Riduci animazioni
-      </label>
+        /><LocalizedText>{"Riduci animazioni "}</LocalizedText></label>
       <label className="tv-switch">
         <input
           type="checkbox"
           checked={prefs.suppressMajorCelebrations}
           onChange={() => toggle("suppressMajorCelebrations")}
-        />
-        Niente celebrazioni
-      </label>
-      {status ? <p role="status">{status}</p> : null}
+        /><LocalizedText>{"Niente celebrazioni "}</LocalizedText></label>
+      {status ? <p role="status"><LocalizedText>{status}</LocalizedText></p> : null}
     </div>
   );
 }
@@ -287,9 +256,7 @@ function WorkspaceSettings() {
 
   return (
     <div className="tv-settings-form">
-      <p className="tv-settings-copy">
-        Esporta o svuota salvati, stack e decisioni di questo workspace. Il catalogo e il ledger del segnale restano intatti.
-      </p>
+      <p className="tv-settings-copy"><LocalizedText>{"Esporta o svuota salvati, stack e decisioni di questo workspace. Il catalogo e il ledger del segnale restano intatti. "}</LocalizedText></p>
       <button
         type="button"
         className="account-btn-secondary"
@@ -301,14 +268,12 @@ function WorkspaceSettings() {
           );
           setExportStatus("Esportazione avviata.");
         }}
-      >
-        Esporta i tuoi dati
-      </button>
-      {exportStatus ? <p role="status">{exportStatus}</p> : null}
+      ><LocalizedText>{"Esporta i tuoi dati "}</LocalizedText></button>
+      {exportStatus ? <p role="status"><LocalizedText>{exportStatus}</LocalizedText></p> : null}
 
       <div className="tv-danger">
       <label className="tv-space-search">
-        <span>Scrivi RESET per confermare</span>
+        <span><LocalizedText>{"Scrivi RESET per confermare"}</LocalizedText></span>
         <input
           value={resetConfirm}
           onChange={(event) => setResetConfirm(event.target.value)}
@@ -317,9 +282,7 @@ function WorkspaceSettings() {
           aria-describedby="settings-reset-help"
         />
       </label>
-      <p id="settings-reset-help" className="tv-settings-copy">
-        Svuota salvati, stack e decisioni su questo workspace. Non tocca il catalogo né il ledger del segnale.
-      </p>
+      <p id="settings-reset-help" className="tv-settings-copy"><LocalizedText>{"Svuota salvati, stack e decisioni su questo workspace. Non tocca il catalogo né il ledger del segnale. "}</LocalizedText></p>
       <button
         type="button"
         className="account-btn-secondary"
@@ -330,10 +293,8 @@ function WorkspaceSettings() {
           setResetConfirm("");
           setResetStatus("Spazio svuotato.");
         }}
-      >
-        Svuota lo spazio
-      </button>
-      {resetStatus ? <p role="status">{resetStatus}</p> : null}
+      ><LocalizedText>{"Svuota lo spazio "}</LocalizedText></button>
+      {resetStatus ? <p role="status"><LocalizedText>{resetStatus}</LocalizedText></p> : null}
       </div>
     </div>
   );

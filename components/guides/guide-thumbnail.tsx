@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useState } from "react";
 
 export function GuideThumbnail({ domain, label }: { domain: string | null; label: string }) {
@@ -10,10 +11,10 @@ export function GuideThumbnail({ domain, label }: { domain: string | null; label
 
   return (
     <span className="guides-card__thumb" aria-hidden="true">
-      <span>{label.slice(0, 2).toUpperCase()}</span>
+      <span><LocalizedText>{label.slice(0, 2).toUpperCase()}</LocalizedText></span>
       {source ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <LocalizedAttributes><img
           src={source}
           alt=""
           loading="lazy"
@@ -21,7 +22,7 @@ export function GuideThumbnail({ domain, label }: { domain: string | null; label
           style={{ opacity: loadedSource === source ? 1 : 0 }}
           onLoad={() => setLoadedSource(source)}
           onError={() => setLoadedSource(null)}
-        />
+        /></LocalizedAttributes>
       ) : null}
     </span>
   );

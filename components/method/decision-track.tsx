@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 import Link from "@/components/ui/app-link";
 import { ArrowRight } from "lucide-react";
@@ -42,10 +43,10 @@ export function DecisionTrack({ steps, className, eyebrow }: DecisionTrackProps)
     <div className={cn("method-track motion-reveal", className)}>
       {eyebrow ? (
         <div className="secondary-section__eyebrow" style={{ alignSelf: "start" }}>
-          {eyebrow}
+          <LocalizedText>{eyebrow}</LocalizedText>
         </div>
       ) : null}
-      <ol className="method-track__list" aria-label="Percorso editoriale TooolVibes">
+      <LocalizedAttributes><ol className="method-track__list" aria-label="Percorso editoriale TooolVibes">
         {steps.map((step, index) => (
           <li key={step.label} className="method-track__step">
             <details
@@ -55,22 +56,22 @@ export function DecisionTrack({ steps, className, eyebrow }: DecisionTrackProps)
             >
               <summary className="method-track__summary">
                 <span className="method-track__step-index" aria-hidden="true">
-                  {step.index}
+                  <LocalizedText>{step.index}</LocalizedText>
                 </span>
-                <span className="method-track__step-label">{step.label}</span>
-                <h3 className="method-track__step-title">{step.title}</h3>
+                <span className="method-track__step-label"><LocalizedText>{step.label}</LocalizedText></span>
+                <h3 className="method-track__step-title"><LocalizedText>{step.title}</LocalizedText></h3>
               </summary>
               <div className="method-track__step-body">
-                <p className="method-track__step-copy">{step.copy}</p>
+                <p className="method-track__step-copy"><LocalizedText>{step.copy}</LocalizedText></p>
                 <Link className="method-track__step-cta" href={step.href}>
-                  <span>{step.cta}</span>
+                  <span><LocalizedText>{step.cta}</LocalizedText></span>
                   <ArrowRight aria-hidden="true" className="size-3.5" />
                 </Link>
               </div>
             </details>
           </li>
         ))}
-      </ol>
+      </ol></LocalizedAttributes>
     </div>
   );
 }

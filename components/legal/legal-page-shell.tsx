@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 import Link from "@/components/ui/app-link";
 import { ArrowUpRight } from "lucide-react";
@@ -34,15 +35,15 @@ export function LegalPageShell({
 
       <div className="legal-page__layout">
         <header className="legal-page__intro">
-          <p className="editorial-label">Trasparenza di prodotto</p>
-          <h1>{title}</h1>
-          <p>{description}</p>
+          <p className="editorial-label"><LocalizedText>{"Trasparenza di prodotto"}</LocalizedText></p>
+          <h1><LocalizedText>{title}</LocalizedText></h1>
+          <p><LocalizedText>{description}</LocalizedText></p>
         </header>
 
         <div className="legal-page__body">{children}</div>
       </div>
 
-      <nav className="legal-page__nav" aria-label="Documenti legali">
+      <LocalizedAttributes><nav className="legal-page__nav" aria-label="Documenti legali">
         {legalLinks.map((link) => (
           <Link
             key={link.href}
@@ -50,10 +51,10 @@ export function LegalPageShell({
             aria-current={link.label === title ? "page" : undefined}
           >
             <ArrowUpRight aria-hidden="true" />
-            {link.label}
+            <LocalizedText>{link.label}</LocalizedText>
           </Link>
         ))}
-      </nav>
+      </nav></LocalizedAttributes>
     </article>
   );
 }

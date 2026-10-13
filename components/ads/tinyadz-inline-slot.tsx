@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -128,7 +129,7 @@ export function TinyAdzInlineSlot({
   }
 
   const slot = (
-    <aside
+    <LocalizedAttributes><aside
       ref={hostRef}
       aria-label={fillState === "filled" ? "Pubblicità" : undefined}
       aria-hidden={fillState !== "filled"}
@@ -137,10 +138,10 @@ export function TinyAdzInlineSlot({
       data-tinyadz-state={fillState}
     >
       {fillState === "filled" ? (
-        <p className="tinyadz-inline-slot__label">Pubblicità</p>
+        <p className="tinyadz-inline-slot__label"><LocalizedText>{"Pubblicità"}</LocalizedText></p>
       ) : null}
       <div ta-ad-container="" />
-    </aside>
+    </aside></LocalizedAttributes>
   );
 
   const section = (

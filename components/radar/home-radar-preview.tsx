@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * HomeRadarPreview - MVP 1.0 glanceable signal snapshot (NOT a mini /radar).
  *
@@ -38,29 +39,25 @@ export function HomeRadarPreview() {
     >
       <header className="tv-home-radar__header">
         <div className="tv-home-radar__header-main">
-          <h2 id="tv-home-radar-title">Cosa sta emergendo adesso</h2>
+          <h2 id="tv-home-radar-title"><LocalizedText>{"Cosa sta emergendo adesso"}</LocalizedText></h2>
         </div>
         <span className="tv-home-radar__status" data-state={model.state} aria-hidden="true">
           <span />
         </span>
       </header>
 
-      <p className="tv-home-radar__meta-line" aria-label="Sintesi segnali di oggi">
+      <LocalizedAttributes><p className="tv-home-radar__meta-line" aria-label="Sintesi segnali di oggi">
         {isLoading ? (
           <span className="tv-home-radar__meta-skeleton" aria-hidden="true" />
         ) : (
           <>
-            {model.signalCount ?? 0} segnali
-            {" · "}
-            Product Hunt
-            {" · "}
-            aggiornato {model.updatedAtLabel}
+            {model.signalCount ?? 0}<LocalizedText>{" segnali "}</LocalizedText><LocalizedText>{" · "}</LocalizedText><LocalizedText>{"Product Hunt "}</LocalizedText><LocalizedText>{" · "}</LocalizedText><LocalizedText>{"aggiornato "}</LocalizedText><LocalizedText>{model.updatedAtLabel}</LocalizedText>
             {model.state === "stale" ? (
-              <span className="tv-home-radar__stale-mark"> · dati recenti</span>
+              <span className="tv-home-radar__stale-mark"><LocalizedText>{" · dati recenti"}</LocalizedText></span>
             ) : null}
           </>
         )}
-      </p>
+      </p></LocalizedAttributes>
 
       {isLoading ? (
         <div className="tv-home-radar__skeleton" aria-hidden="true">
@@ -76,7 +73,7 @@ export function HomeRadarPreview() {
           ))}
         </div>
       ) : top.length > 0 ? (
-        <ol className="tv-home-radar__launches" aria-label="Top lanci del periodo">
+        <LocalizedAttributes><ol className="tv-home-radar__launches" aria-label="Top lanci del periodo">
           {top.map((item, index) => {
             return (
               <li key={item.id}>
@@ -87,16 +84,16 @@ export function HomeRadarPreview() {
                   className="tv-home-radar__launch"
                 >
                   <span className="tv-home-radar__launch-rank" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
+                    <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
                   </span>
                   <span className="tv-home-radar__launch-body">
                     <strong>{item.name}</strong>
-                    <em>{item.tagline || "Lancio su Product Hunt"}</em>
+                    <em><LocalizedText>{item.tagline || "Lancio su Product Hunt"}</LocalizedText></em>
                   </span>
                   <span className="tv-home-radar__launch-metrics">
                     <span className="tv-home-radar__launch-votes">
                       <ChevronUp size={12} aria-hidden="true" />
-                      {item.votesCount > 0 ? item.votesCount : "n/d"}
+                      <LocalizedText>{item.votesCount > 0 ? item.votesCount : "n/d"}</LocalizedText>
                     </span>
                     {item.commentsCount > 0 ? (
                       <span className="tv-home-radar__launch-comments">
@@ -113,29 +110,28 @@ export function HomeRadarPreview() {
               </li>
             );
           })}
-        </ol>
+        </ol></LocalizedAttributes>
       ) : (
         <p className="tv-home-radar__empty" role="status">
-          {model.state === "error" || model.state === "missing-token"
+          <LocalizedText>{model.state === "error" || model.state === "missing-token"
             ? "Segnali non disponibili in questo momento. Nessun dato simulato."
-            : "Nessun lancio nel periodo. Apri il Radar completo per altri intervalli."}
+            : "Nessun lancio nel periodo. Apri il Radar completo per altri intervalli."}</LocalizedText>
         </p>
       )}
 
       {top.length > 0 ? (
         <p className="tv-home-radar__hint" aria-hidden="true">
-          {top.length} segnali in evidenza · Apri Radar per tutti i segnali
-        </p>
+          {top.length}<LocalizedText>{" segnali in evidenza · Apri Radar per tutti i segnali "}</LocalizedText></p>
       ) : null}
-      <Link
+      <LocalizedAttributes><Link
         href="/radar"
         className="tv-home-radar__cta tv-gold-cta"
         aria-label="Apri il Radar completo dei nuovi lanci"
       >
         <span className="tv-gold-cta__glow" aria-hidden="true" />
-        <span className="tv-gold-cta__label">Apri Radar</span>
+        <span className="tv-gold-cta__label"><LocalizedText>{"Apri Radar"}</LocalizedText></span>
         <ArrowRight size={14} aria-hidden="true" />
-      </Link>
+      </Link></LocalizedAttributes>
     </div>
   );
 }

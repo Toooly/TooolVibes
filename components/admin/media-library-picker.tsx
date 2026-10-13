@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useMemo, useState } from "react";
 
 import { AdminMediaDropzone } from "@/components/admin/admin-media-dropzone";
@@ -46,25 +47,25 @@ export function MediaLibraryPicker({
         }}
       />
       <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <input
+        <LocalizedAttributes><input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Cerca asset"
           className="tv-cc-field"
-        />
+        /></LocalizedAttributes>
         <select
           value={kind}
           onChange={(event) => setKind(event.target.value)}
           className="tv-cc-field"
         >
-          <option value="all">Tutti</option>
-          <option value="partner">Partner</option>
-          <option value="brand">Brand</option>
-          <option value="editorial">Editoriale</option>
+          <option value="all"><LocalizedText>{"Tutti"}</LocalizedText></option>
+          <option value="partner"><LocalizedText>{"Partner"}</LocalizedText></option>
+          <option value="brand"><LocalizedText>{"Brand"}</LocalizedText></option>
+          <option value="editorial"><LocalizedText>{"Editoriale"}</LocalizedText></option>
         </select>
       </div>
       {filtered.length === 0 ? (
-        <p className="tv-cc-notice">Nessun asset. Carica un’immagine o registra un URL.</p>
+        <p className="tv-cc-notice"><LocalizedText>{"Nessun asset. Carica un’immagine o registra un URL."}</LocalizedText></p>
       ) : (
         <div className="grid max-h-80 gap-2 overflow-auto sm:grid-cols-2">
           {filtered.map((asset) => (
@@ -75,10 +76,10 @@ export function MediaLibraryPicker({
               className={cn("tv-cc-panel flex min-h-16 items-center gap-3 text-left", selected?.id === asset.id && "outline outline-1 outline-[var(--tv-border-brand)]")}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={asset.src} alt="" className="h-10 w-16 rounded-lg bg-black/30 object-contain" />
+              <LocalizedAttributes><img src={asset.src} alt="" className="h-10 w-16 rounded-lg bg-black/30 object-contain" /></LocalizedAttributes>
               <span>
-                <strong className="block text-sm">{asset.label}</strong>
-                <em className="tv-cc-card__meta not-italic">{asset.usedIn}</em>
+                <strong className="block text-sm"><LocalizedText>{asset.label}</LocalizedText></strong>
+                <em className="tv-cc-card__meta not-italic"><LocalizedText>{asset.usedIn}</LocalizedText></em>
               </span>
             </button>
           ))}
@@ -87,31 +88,25 @@ export function MediaLibraryPicker({
       {selected ? (
         <div className="tv-cc-panel flex flex-wrap items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={selected.src} alt="" className="h-16 w-24 rounded-lg bg-black/30 object-contain" />
+          <LocalizedAttributes><img src={selected.src} alt="" className="h-16 w-24 rounded-lg bg-black/30 object-contain" /></LocalizedAttributes>
           <div className="min-w-0 flex-1">
-            <p className="text-sm">{selected.label}</p>
-            <p className="break-all text-xs tv-cc-card__meta">{selected.src}</p>
+            <p className="text-sm"><LocalizedText>{selected.label}</LocalizedText></p>
+            <p className="break-all text-xs tv-cc-card__meta"><LocalizedText>{selected.src}</LocalizedText></p>
           </div>
           <button
             type="button"
             className="tv-cc-btn tv-cc-btn--ghost"
             onClick={() => void navigator.clipboard.writeText(selected.src)}
-          >
-            Copia URL
-          </button>
-          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={() => choose("")}>
-            Rimuovi
-          </button>
+          ><LocalizedText>{"Copia URL "}</LocalizedText></button>
+          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={() => choose("")}><LocalizedText>{"Rimuovi "}</LocalizedText></button>
         </div>
       ) : null}
-      <label className="block">
-        URL avanzato
-        <input
+      <label className="block"><LocalizedText>{"URL avanzato "}</LocalizedText><LocalizedAttributes><input
           value={value}
           onChange={(event) => choose(event.target.value)}
           className="tv-cc-field"
           placeholder="https:// o /percorso-locale"
-        />
+        /></LocalizedAttributes>
       </label>
     </div>
   );
@@ -121,16 +116,16 @@ export function MediaAssetCard({ asset }: { asset: MediaAsset }) {
   return (
     <article className="tv-cc-panel">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset.src} alt={asset.alt} className="mb-3 h-28 w-full rounded-2xl bg-black/30 object-contain" />
-      <p className="text-xs font-bold uppercase tracking-[0.14em] tv-cc-card__meta">{asset.kind}</p>
-      <h2 className="mt-1 text-lg font-semibold text-white">{asset.label}</h2>
-      <p className="tv-cc-panel__desc">{asset.usedIn}</p>
-      <p className="mt-3 break-all text-xs tv-cc-card__meta">{asset.src}</p>
+      <LocalizedAttributes><img src={asset.src} alt={asset.alt} className="mb-3 h-28 w-full rounded-2xl bg-black/30 object-contain" /></LocalizedAttributes>
+      <p className="text-xs font-bold uppercase tracking-[0.14em] tv-cc-card__meta"><LocalizedText>{asset.kind}</LocalizedText></p>
+      <h2 className="mt-1 text-lg font-semibold text-white"><LocalizedText>{asset.label}</LocalizedText></h2>
+      <p className="tv-cc-panel__desc"><LocalizedText>{asset.usedIn}</LocalizedText></p>
+      <p className="mt-3 break-all text-xs tv-cc-card__meta"><LocalizedText>{asset.src}</LocalizedText></p>
       {asset.mimeType ? (
         <p className="mt-1 text-xs tv-cc-card__meta">
-          {asset.mimeType}
-          {asset.fileSize ? ` · ${Math.round(asset.fileSize / 1024)} KB` : ""}
-          {asset.width && asset.height ? ` · ${asset.width}×${asset.height}` : ""}
+          <LocalizedText>{asset.mimeType}</LocalizedText>
+          <LocalizedText>{asset.fileSize ? ` · ${Math.round(asset.fileSize / 1024)} KB` : ""}</LocalizedText>
+          <LocalizedText>{asset.width && asset.height ? ` · ${asset.width}×${asset.height}` : ""}</LocalizedText>
         </p>
       ) : null}
     </article>

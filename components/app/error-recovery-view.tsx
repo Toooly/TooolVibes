@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect } from "react";
 import { isChunkLoadError, recoverChunkLoadError } from "@/lib/shell/chunk-recovery";
 
@@ -34,15 +35,11 @@ export function ErrorRecoveryView({
     <Component className="error-recovery-view">
       <section className="error-recovery-view__panel" aria-labelledby="error-recovery-title">
         <p className="error-recovery-view__eyebrow">
-          <span className="tv-brand-signal-dot" aria-hidden="true" />
-          TooolVibes · recupero
-        </p>
-        <h1 id="error-recovery-title">Qualcosa è andato storto</h1>
-        <p className="error-recovery-view__copy">
-          La pagina non è riuscita a completare il caricamento. Puoi riprovare senza perdere il contesto.
-        </p>
+          <span className="tv-brand-signal-dot" aria-hidden="true" /><LocalizedText>{"TooolVibes · recupero "}</LocalizedText></p>
+        <h1 id="error-recovery-title"><LocalizedText>{"Qualcosa è andato storto"}</LocalizedText></h1>
+        <p className="error-recovery-view__copy"><LocalizedText>{"La pagina non è riuscita a completare il caricamento. Puoi riprovare senza perdere il contesto. "}</LocalizedText></p>
         {error.digest ? (
-          <p className="error-recovery-view__digest">Codice errore: {error.digest}</p>
+          <p className="error-recovery-view__digest"><LocalizedText>{"Codice errore: "}</LocalizedText><LocalizedText>{error.digest}</LocalizedText></p>
         ) : null}
         <div className="error-recovery-view__actions">
           <button
@@ -50,15 +47,13 @@ export function ErrorRecoveryView({
             onClick={() => assetFailure ? window.location.reload() : reset()}
             className="error-recovery-view__primary"
           >
-            {assetFailure ? "Ricarica pagina" : "Riprova"}
+            <LocalizedText>{assetFailure ? "Ricarica pagina" : "Riprova"}</LocalizedText>
           </button>
           {homeHref ? (
             <a
               href={homeHref}
               className="error-recovery-view__secondary"
-            >
-              Torna alla home
-            </a>
+            ><LocalizedText>{"Torna alla home "}</LocalizedText></a>
           ) : null}
         </div>
       </section>

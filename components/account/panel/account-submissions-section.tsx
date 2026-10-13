@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { ExternalLink, RotateCcw, Send } from "lucide-react";
 
 import type {
@@ -45,27 +46,19 @@ export function AccountSubmissionsSection({
     <div className="account-section-panel p-5 sm:p-6">
       <div className="flex items-center gap-2">
         <Send size={16} className="text-[var(--accent-purple)]" />
-        <p className="account-label">Submission inviate</p>
+        <p className="account-label"><LocalizedText>{"Submission inviate"}</LocalizedText></p>
       </div>
-      <h2 className="account-title mt-3 text-[1.3rem] sm:text-[1.5rem]">
-        Le richieste non spariscono dopo l&apos;invio.
-      </h2>
-      <p className="account-subtitle mt-3">
-        Quando sei loggato, recuperiamo suggerimenti tool e candidature affiliate collegate alla tua email.
-      </p>
+      <h2 className="account-title mt-3 text-[1.3rem] sm:text-[1.5rem]"><LocalizedText>{"Le richieste non spariscono dopo l'invio. "}</LocalizedText></h2>
+      <p className="account-subtitle mt-3"><LocalizedText>{"Quando sei loggato, recuperiamo suggerimenti tool e candidature affiliate collegate alla tua email. "}</LocalizedText></p>
 
       <div className="mt-5 grid gap-3">
         {status !== "authenticated" ? (
           <div className="account-selection-card p-4">
-            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
-              Accedi per vedere lo stato delle submission associate alla tua email.
-            </p>
+            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}><LocalizedText>{"Accedi per vedere lo stato delle submission associate alla tua email. "}</LocalizedText></p>
           </div>
         ) : isLoading ? (
           <div className="account-selection-card p-4">
-            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
-              Caricamento submission...
-            </p>
+            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}><LocalizedText>{"Caricamento submission... "}</LocalizedText></p>
           </div>
         ) : errorCell ? (
           <div
@@ -74,10 +67,10 @@ export function AccountSubmissionsSection({
             data-submissions-error={errorCell.kind}
           >
             <p className="font-semibold text-sm text-[var(--account-ink)]">
-              {errorCell.title}
+              <LocalizedText>{errorCell.title}</LocalizedText>
             </p>
             <p className="mt-1 text-sm leading-6" style={{ color: "var(--muted)" }}>
-              {errorCell.body}
+              <LocalizedText>{errorCell.body}</LocalizedText>
             </p>
             {onRetry ? (
               <button
@@ -86,7 +79,7 @@ export function AccountSubmissionsSection({
                 onClick={onRetry}
               >
                 <RotateCcw size={14} aria-hidden="true" />
-                {errorCell.retryLabel}
+                <LocalizedText>{errorCell.retryLabel}</LocalizedText>
               </button>
             ) : null}
           </div>
@@ -96,12 +89,12 @@ export function AccountSubmissionsSection({
               <div key={request.id} className="account-selection-card p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-semibold text-[var(--account-ink)]">{request.tool_name}</p>
+                    <p className="font-semibold text-[var(--account-ink)]"><LocalizedText>{request.tool_name}</LocalizedText></p>
                     <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-                      {request.submitter_type === "founder" ? "Proposta founder" : "Suggerimento tool"}
+                      <LocalizedText>{request.submitter_type === "founder" ? "Proposta founder" : "Suggerimento tool"}</LocalizedText>
                     </p>
                   </div>
-                  <span className="account-status-badge">{request.status}</span>
+                  <span className="account-status-badge"><LocalizedText>{request.status}</LocalizedText></span>
                 </div>
               </div>
             ))}
@@ -110,13 +103,11 @@ export function AccountSubmissionsSection({
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-semibold text-[var(--account-ink)]">
-                      {request.brand_name ?? "Richiesta affiliato"}
+                      <LocalizedText>{request.brand_name ?? "Richiesta affiliato"}</LocalizedText>
                     </p>
-                    <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-                      Programma affiliati
-                    </p>
+                    <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}><LocalizedText>{"Programma affiliati "}</LocalizedText></p>
                   </div>
-                  <span className="account-status-badge">{request.status}</span>
+                  <span className="account-status-badge"><LocalizedText>{request.status}</LocalizedText></span>
                 </div>
                 {request.referral_url ? (
                   <a
@@ -124,9 +115,7 @@ export function AccountSubmissionsSection({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="account-link mt-3 text-sm"
-                  >
-                    Apri referral
-                    <ExternalLink size={14} />
+                  ><LocalizedText>{"Apri referral "}</LocalizedText><ExternalLink size={14} />
                   </a>
                 ) : null}
               </div>
@@ -134,9 +123,7 @@ export function AccountSubmissionsSection({
           </>
         ) : (
           <div className="account-selection-card p-4">
-            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
-              Nessuna submission collegata. Quando suggerisci un tool o invii una candidatura, la ritrovi qui.
-            </p>
+            <p className="text-sm leading-6" style={{ color: "var(--muted)" }}><LocalizedText>{"Nessuna submission collegata. Quando suggerisci un tool o invii una candidatura, la ritrovi qui. "}</LocalizedText></p>
           </div>
         )}
       </div>

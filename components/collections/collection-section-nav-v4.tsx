@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { bindShellScroll, readingLine } from "@/lib/shell/scroll-port";
@@ -71,7 +72,7 @@ export function CollectionSectionNavV4({ items }: Props) {
   if (safe.length < 2) return null;
 
   return (
-    <nav className="cx-section-nav" data-shell-nav="painted" aria-label="Sezioni della raccolta">
+    <LocalizedAttributes><nav className="cx-section-nav" data-shell-nav="painted" aria-label="Sezioni della raccolta">
       <div className="cx-section-nav__scroller">
         <ol>
           {safe.map((item) => (
@@ -88,12 +89,12 @@ export function CollectionSectionNavV4({ items }: Props) {
                   }, 700);
                 }}
               >
-                {item.label}
+                <LocalizedText>{item.label}</LocalizedText>
               </a>
             </li>
           ))}
         </ol>
       </div>
-    </nav>
+    </nav></LocalizedAttributes>
   );
 }

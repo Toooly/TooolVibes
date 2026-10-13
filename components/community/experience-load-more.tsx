@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useRef, useState, useTransition } from "react";
 
 import { ExperienceCard } from "@/components/community/experience-card";
@@ -69,7 +70,7 @@ export function ExperienceLoadMore({
       ))}
       {error ? (
         <p className="td-final-experience__status" role="alert">
-          {error}
+          <LocalizedText>{error}</LocalizedText>
         </p>
       ) : null}
       {cursor ? (
@@ -79,7 +80,7 @@ export function ExperienceLoadMore({
           onClick={loadMore}
           disabled={pending}
         >
-          {pending ? "Caricamento…" : "Mostra altre esperienze"}
+          <LocalizedText>{pending ? "Caricamento…" : "Mostra altre esperienze"}</LocalizedText>
         </button>
       ) : null}
     </>

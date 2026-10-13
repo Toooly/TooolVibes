@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useId, useState, useTransition } from "react";
 
 import { moderateExperienceAction } from "@/app/(admin)/admin/actions/experiences";
@@ -71,9 +72,7 @@ export function ExperienceModerationControls({
 
   if (status === "rejected") {
     return (
-      <p className="tv-cc-card__meta">
-        Solo l&apos;autore può modificare e rinviare un&apos;esperienza rifiutata.
-      </p>
+      <p className="tv-cc-card__meta"><LocalizedText>{"Solo l'autore può modificare e rinviare un'esperienza rifiutata. "}</LocalizedText></p>
     );
   }
 
@@ -81,7 +80,7 @@ export function ExperienceModerationControls({
     <div className="mt-3 space-y-2">
       {status === "pending" || status === "published" ? (
         <label className="block" htmlFor={reasonId}>
-          <span className="tv-cc-kicker">Motivo (obbligatorio per rifiuto o nascondi)</span>
+          <span className="tv-cc-kicker"><LocalizedText>{"Motivo (obbligatorio per rifiuto o nascondi)"}</LocalizedText></span>
           <textarea
             id={reasonId}
             name="reason"
@@ -97,7 +96,7 @@ export function ExperienceModerationControls({
       ) : null}
       {error ? (
         <p id={errorId} role="alert" className="text-sm text-[var(--tv-danger)]">
-          {error}
+          <LocalizedText>{error}</LocalizedText>
         </p>
       ) : null}
       <div className="tv-cc-card__actions">
@@ -109,16 +108,14 @@ export function ExperienceModerationControls({
               onClick={() => submit("publish", false)}
               className="tv-cc-btn tv-cc-btn--primary"
             >
-              {isPending ? "Attendi..." : "Pubblica"}
+              <LocalizedText>{isPending ? "Attendi..." : "Pubblica"}</LocalizedText>
             </button>
             <button
               type="button"
               disabled={busy}
               onClick={() => submit("reject", true)}
               className="tv-cc-btn tv-cc-btn--danger"
-            >
-              Rifiuta
-            </button>
+            ><LocalizedText>{"Rifiuta "}</LocalizedText></button>
           </>
         ) : null}
         {status === "published" ? (
@@ -127,9 +124,7 @@ export function ExperienceModerationControls({
             disabled={busy}
             onClick={() => submit("hide", true)}
             className="tv-cc-btn tv-cc-btn--danger"
-          >
-            Nascondi
-          </button>
+          ><LocalizedText>{"Nascondi "}</LocalizedText></button>
         ) : null}
         {status === "hidden" ? (
           <button
@@ -137,9 +132,7 @@ export function ExperienceModerationControls({
             disabled={busy}
             onClick={() => submit("republish", false)}
             className="tv-cc-btn tv-cc-btn--primary"
-          >
-            Ripubblica
-          </button>
+          ><LocalizedText>{"Ripubblica "}</LocalizedText></button>
         ) : null}
       </div>
     </div>

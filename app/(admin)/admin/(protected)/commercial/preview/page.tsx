@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";
 import { ControlCenterHeader } from "@/components/admin/control-center-header";
 import { getManagedCampaigns, getPlacementOverride } from "@/lib/sponsors/commercial-overrides";
@@ -25,11 +26,11 @@ export default function AdminCommercialPreviewPage() {
   return (
     <div className="space-y-5">
       <CommercialSubnav current="/admin/commercial/preview" />
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         kicker="Commercial"
         title="Preview campagne"
         description="Ogni placement mostra superficie, campagna, CTA e modalità."
-      />
+      /></LocalizedAttributes>
       <div className="space-y-3">
         {SURFACES.map((surface) => {
           const override = getPlacementOverride(surface.key);
@@ -47,33 +48,33 @@ export default function AdminCommercialPreviewPage() {
             <article key={surface.key} className="tv-cc-panel">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="tv-cc-panel__kicker">{override.mode} · {surface.surface}</p>
-                  <h2 className="tv-cc-panel__title">{surface.label}</h2>
-                  <p className="tv-cc-card__meta">{surface.key}</p>
+                  <p className="tv-cc-panel__kicker"><LocalizedText>{override.mode}</LocalizedText> · <LocalizedText>{surface.surface}</LocalizedText></p>
+                  <h2 className="tv-cc-panel__title"><LocalizedText>{surface.label}</LocalizedText></h2>
+                  <p className="tv-cc-card__meta"><LocalizedText>{surface.key}</LocalizedText></p>
                 </div>
-                <span className="tv-cc-metric">{shown ? shown.status : "vuoto"}</span>
+                <span className="tv-cc-metric"><LocalizedText>{shown ? shown.status : "vuoto"}</LocalizedText></span>
               </div>
               {shown ? (
                 <div className="mt-4 grid gap-4 sm:grid-cols-[auto_1fr]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <LocalizedAttributes><img
                     src={shown.brandAsset?.src ?? shown.image ?? "/icon.svg"}
                     alt=""
                     className="h-20 w-32 rounded-2xl object-contain"
                     style={{ background: "var(--tv-surface-elevated)" }}
-                  />
+                  /></LocalizedAttributes>
                   <div>
-                    <p className="tv-cc-card__meta">{shown.sponsorId}</p>
-                    <p className="tv-cc-panel__title">{shown.headline}</p>
-                    <p className="tv-cc-panel__desc">{shown.description}</p>
+                    <p className="tv-cc-card__meta"><LocalizedText>{shown.sponsorId}</LocalizedText></p>
+                    <p className="tv-cc-panel__title"><LocalizedText>{shown.headline}</LocalizedText></p>
+                    <p className="tv-cc-panel__desc"><LocalizedText>{shown.description}</LocalizedText></p>
                     <p className="mt-3 text-sm font-semibold">
-                      {shown.ctaLabel} → {shown.destinationUrl}
+                      <LocalizedText>{shown.ctaLabel}</LocalizedText> → <LocalizedText>{shown.destinationUrl}</LocalizedText>
                     </p>
-                    <p className="tv-cc-card__meta">{shown.disclosure}</p>
+                    <p className="tv-cc-card__meta"><LocalizedText>{shown.disclosure}</LocalizedText></p>
                   </div>
                 </div>
               ) : (
-                <p className="tv-cc-panel__desc">Nessuna campagna visibile. La superficie pubblica resta pulita.</p>
+                <p className="tv-cc-panel__desc"><LocalizedText>{"Nessuna campagna visibile. La superficie pubblica resta pulita."}</LocalizedText></p>
               )}
             </article>
           );

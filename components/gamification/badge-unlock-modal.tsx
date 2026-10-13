@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
@@ -166,17 +167,16 @@ export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps) {
               </motion.div>
 
               <div className="space-y-1.5">
-                <h2 className="text-xl font-semibold">Badge sbloccato!</h2>
+                <h2 className="text-xl font-semibold"><LocalizedText>{"Badge sbloccato!"}</LocalizedText></h2>
                 <p className="max-w-[16rem] text-sm text-[var(--muted-foreground)]">
-                  {badge.description}
+                  <LocalizedText>{badge.description}</LocalizedText>
                 </p>
               </div>
 
               <div className="mt-3 space-y-1">
                 <p className="text-lg font-semibold">{badge.name}</p>
                 <p className="inline-flex items-center gap-1 rounded-full bg-[rgba(106,60,255,0.12)] px-3 py-1 text-sm font-semibold text-[var(--accent-strong)]">
-                  +<NumberFlow value={badge.xp_bonus} /> XP
-                </p>
+                  +<NumberFlow value={badge.xp_bonus} /><LocalizedText>{" XP "}</LocalizedText></p>
               </div>
             </div>
 
@@ -187,9 +187,7 @@ export function BadgeUnlockModal({ badge, onClose }: BadgeUnlockModalProps) {
                 className="w-full"
                 onClick={onClose}
               >
-                <Sparkles aria-hidden="true" />
-                Fantastico
-              </Button>
+                <Sparkles aria-hidden="true" /><LocalizedText>{"Fantastico "}</LocalizedText></Button>
             </div>
           </motion.div>
         </motion.div>

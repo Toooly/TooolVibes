@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/ui/app-link";
@@ -49,7 +50,7 @@ export function HeaderAccountControl({
     }
     return (
       <details className={menuClassName}>
-        <summary
+        <LocalizedAttributes><summary
           className={linkClassName}
           aria-label={accountCta.label || "Account"}
           aria-busy={accountCta.ariaBusy || undefined}
@@ -57,10 +58,10 @@ export function HeaderAccountControl({
           <User size={showLabel ? 14 : 18} aria-hidden="true" />
           {showLabel ? (
             <span className="command-bar__account-label">
-              {accountCta.label || "Account"}
+              <LocalizedText>{accountCta.label || "Account"}</LocalizedText>
             </span>
           ) : null}
-        </summary>
+        </summary></LocalizedAttributes>
         <div className={panelClassName}>
           <AccountMenuLinks onSignOut={() => void account.signOut()} />
         </div>
@@ -70,7 +71,7 @@ export function HeaderAccountControl({
 
   const Icon = accountIcon;
   return (
-    <Link
+    <LocalizedAttributes><Link
       href={accountCta.href}
       prefetch={false}
       className={linkClassName}
@@ -80,22 +81,22 @@ export function HeaderAccountControl({
       <Icon size={showLabel ? 14 : 18} aria-hidden="true" />
       {showLabel ? (
         <span className="command-bar__account-label">
-          {accountCta.label || "Account"}
+          <LocalizedText>{accountCta.label || "Account"}</LocalizedText>
         </span>
       ) : null}
-    </Link>
+    </Link></LocalizedAttributes>
   );
 }
 
 function AccountMenuLinks({ onSignOut }: { onSignOut: () => void }) {
   return (
     <>
-      <Link href={personalDashboardHref()} prefetch={false}>Il tuo spazio</Link>
-      <Link href={workspaceViewHref("salvati")} prefetch={false}>Salvati</Link>
-      <Link href={workspaceViewHref("stack")} prefetch={false}>Stack</Link>
-      <Link href={workspaceViewHref("decisioni")} prefetch={false}>Decisioni</Link>
-      <Link href="/account/settings" prefetch={false}>Impostazioni</Link>
-      <button type="button" className="is-destructive" onClick={onSignOut}>Esci</button>
+      <Link href={personalDashboardHref()} prefetch={false}><LocalizedText>{"Il tuo spazio"}</LocalizedText></Link>
+      <Link href={workspaceViewHref("salvati")} prefetch={false}><LocalizedText>{"Salvati"}</LocalizedText></Link>
+      <Link href={workspaceViewHref("stack")} prefetch={false}><LocalizedText>{"Stack"}</LocalizedText></Link>
+      <Link href={workspaceViewHref("decisioni")} prefetch={false}><LocalizedText>{"Decisioni"}</LocalizedText></Link>
+      <Link href="/account/settings" prefetch={false}><LocalizedText>{"Impostazioni"}</LocalizedText></Link>
+      <button type="button" className="is-destructive" onClick={onSignOut}><LocalizedText>{"Esci"}</LocalizedText></button>
     </>
   );
 }
@@ -153,7 +154,7 @@ function FloatingAccountMenu({
 
   return (
     <div className={menuClassName}>
-      <button
+      <LocalizedAttributes><button
         ref={buttonRef}
         type="button"
         className={linkClassName}
@@ -164,11 +165,11 @@ function FloatingAccountMenu({
         onClick={() => setOpen((value) => !value)}
       >
         <User size={18} aria-hidden="true" />
-      </button>
+      </button></LocalizedAttributes>
       {open && typeof document !== "undefined"
         ? createPortal(
             <>
-              <button type="button" className="td-final-account-scrim" aria-label="Chiudi menu account" onClick={() => setOpen(false)} />
+              <LocalizedAttributes><button type="button" className="td-final-account-scrim" aria-label="Chiudi menu account" onClick={() => setOpen(false)} /></LocalizedAttributes>
               <div
                 ref={panelRef}
                 className={panelClassName}
@@ -176,7 +177,7 @@ function FloatingAccountMenu({
                 aria-labelledby={titleId}
                 style={{ top: box.top, right: box.right }}
               >
-                <p id={titleId} className="td-final-account-menu__title">Il tuo spazio</p>
+                <p id={titleId} className="td-final-account-menu__title"><LocalizedText>{"Il tuo spazio"}</LocalizedText></p>
                 <AccountMenuLinks onSignOut={() => { setOpen(false); onSignOut(); }} />
               </div>
             </>,

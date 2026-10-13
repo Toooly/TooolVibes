@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -91,7 +92,7 @@ export function SectionHeader({
             "text-[var(--tv-ink-secondary)]",
           )}
         >
-          {eyebrow}
+          <LocalizedText>{eyebrow}</LocalizedText>
         </span>
         <div
           className={cn(
@@ -100,7 +101,7 @@ export function SectionHeader({
           )}
           aria-hidden="true"
         />
-        {trailing ? <div className="ml-auto">{trailing}</div> : null}
+        {trailing ? <div className="ml-auto"><LocalizedText>{trailing}</LocalizedText></div> : null}
       </div>
       <Heading
         className={cn(
@@ -110,7 +111,7 @@ export function SectionHeader({
           surfaceText,
         )}
       >
-        {title}
+        <LocalizedText>{title}</LocalizedText>
       </Heading>
       {description ? (
         <p
@@ -119,7 +120,7 @@ export function SectionHeader({
             mutedText,
           )}
         >
-          {description}
+          <LocalizedText>{description}</LocalizedText>
         </p>
       ) : null}
     </div>

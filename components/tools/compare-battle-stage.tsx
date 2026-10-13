@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { type CSSProperties } from "react";
 import { Scale } from "lucide-react";
 
@@ -52,15 +53,14 @@ function DuelCard({
     >
       <div className="compare-battle-stage__duel-rank">
         <Scale className="size-4" aria-hidden="true" />
-        <span>{rank === null ? "—" : `#${rank}`}</span>
+        <span><LocalizedText>{rank === null ? "—" : `#${rank}`}</LocalizedText></span>
       </div>
       {tool.objectiveScore !== null && tool.objectiveScore !== undefined ? (
-        <span
+        <LocalizedAttributes><span
           className="compare-battle-stage__duel-fit"
           aria-label={`Fit obiettivo ${tool.objectiveScore} su 10`}
-        >
-          Fit {tool.objectiveScore}/10
-        </span>
+        ><LocalizedText>{"Fit "}</LocalizedText>{tool.objectiveScore}/10
+        </span></LocalizedAttributes>
       ) : null}
 
       <ToolFighter
@@ -74,11 +74,10 @@ function DuelCard({
       <div className="compare-battle-stage__duel-copy">
         <h3 className="compare-battle-stage__duel-name">{tool.name}</h3>
         <span>
-          {tool.categoryLabel} · {formatEditorialScore(tool.editorialScore)}
+          <LocalizedText>{tool.categoryLabel}</LocalizedText> · <LocalizedText>{formatEditorialScore(tool.editorialScore)}</LocalizedText>
         </span>
         {tool.objectiveScore !== null && tool.objectiveScore !== undefined ? (
-          <span className="compare-battle-stage__duel-basefit">
-            Punteggio {tool.battleScore}/10
+          <span className="compare-battle-stage__duel-basefit"><LocalizedText>{"Punteggio "}</LocalizedText>{tool.battleScore}/10
           </span>
         ) : null}
       </div>
@@ -112,7 +111,7 @@ function RosterCard({
       }
     >
       <span className="compare-battle-stage__roster-rank">
-        {rank === null ? "—" : `#${rank}`}
+        <LocalizedText>{rank === null ? "—" : `#${rank}`}</LocalizedText>
       </span>
       <ToolFighter
         tool={tool}
@@ -123,7 +122,7 @@ function RosterCard({
       />
       <div className="compare-battle-stage__roster-copy">
         <h3 className="compare-battle-stage__roster-name">{tool.name}</h3>
-        <span>{formatEditorialScore(tool.editorialScore, true)}</span>
+        <span><LocalizedText>{formatEditorialScore(tool.editorialScore, true)}</LocalizedText></span>
       </div>
     </article>
   );
@@ -177,7 +176,7 @@ export function CompareBattleStage({
   const showResult = battleState === "result";
 
   return (
-    <section
+    <LocalizedAttributes><section
       className="compare-battle-stage"
       data-layout={layoutMode}
       data-state={battleState}
@@ -186,24 +185,19 @@ export function CompareBattleStage({
     >
       <header className="compare-battle-stage__hud">
         <div className="compare-battle-stage__hud-text">
-          <p className="compare-battle-stage__eyebrow">Esito comparativo</p>
-          <h2 className="compare-battle-stage__title">
-            Quale tool emerge dal confronto?
-          </h2>
-          <p className="compare-battle-stage__lede">
-            Il risultato considera le valutazioni editoriali e il contesto dei
-            tool selezionati. Non indica un vincitore assoluto.
-          </p>
+          <p className="compare-battle-stage__eyebrow"><LocalizedText>{"Esito comparativo"}</LocalizedText></p>
+          <h2 className="compare-battle-stage__title"><LocalizedText>{"Quale tool emerge dal confronto? "}</LocalizedText></h2>
+          <p className="compare-battle-stage__lede"><LocalizedText>{"Il risultato considera le valutazioni editoriali e il contesto dei tool selezionati. Non indica un vincitore assoluto. "}</LocalizedText></p>
         </div>
         <span
           className="compare-battle-stage__status"
           aria-live="polite"
           aria-atomic="true"
         >
-          {battleState === "idle" && "Pronto"}
-          {battleState === "fighting" && "Analisi in corso…"}
-          {battleState === "result" &&
-            (winner ? `Emerge: ${winner.name}` : verdict?.label)}
+          <LocalizedText>{battleState === "idle" && "Pronto"}</LocalizedText>
+          <LocalizedText>{battleState === "fighting" && "Analisi in corso…"}</LocalizedText>
+          <LocalizedText>{battleState === "result" &&
+            (winner ? `Emerge: ${winner.name}` : verdict?.label)}</LocalizedText>
         </span>
       </header>
 
@@ -222,7 +216,7 @@ export function CompareBattleStage({
         </div>
 
         {rosterTools.length > 0 ? (
-          <div
+          <LocalizedAttributes><div
             className="compare-battle-stage__roster"
             aria-label="Altri candidati nel confronto"
           >
@@ -236,7 +230,7 @@ export function CompareBattleStage({
                 layoutMode={layoutMode}
               />
             ))}
-          </div>
+          </div></LocalizedAttributes>
         ) : null}
 
         {isFighting && !reducedMotion ? (
@@ -249,13 +243,13 @@ export function CompareBattleStage({
             data-layout={layoutMode}
             aria-live="polite"
           >
-            {getVerdictTitle(verdict!, winner, objectiveLabel)}
+            <LocalizedText>{getVerdictTitle(verdict!, winner, objectiveLabel)}</LocalizedText>
           </div>
         ) : null}
       </div>
 
       <div className="compare-battle-stage__actions">
-        <button
+        <LocalizedAttributes><button
           type="button"
           className="compare-battle-stage__fight-btn"
           disabled={isFighting}
@@ -263,9 +257,9 @@ export function CompareBattleStage({
           aria-label={getFightButtonLabel(battleState)}
         >
           <Scale className="size-5" aria-hidden="true" />
-          {getFightButtonLabel(battleState)}
-        </button>
+          <LocalizedText>{getFightButtonLabel(battleState)}</LocalizedText>
+        </button></LocalizedAttributes>
       </div>
-    </section>
+    </section></LocalizedAttributes>
   );
 }

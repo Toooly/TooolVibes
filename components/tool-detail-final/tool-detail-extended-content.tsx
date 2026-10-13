@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import { ToolDetailDeepenItems } from "./tool-detail-deepen-items";
@@ -66,14 +67,14 @@ export function ToolDetailExtendedContent({
         <>
           {parsed.byId.overview ? <MarkdownBody content={parsed.byId.overview} /> : null}
           {dimensions.length > 0 ? (
-            <ul className="td-final-score__dimensions" aria-label="Dimensioni verificate">
+            <LocalizedAttributes><ul className="td-final-score__dimensions" aria-label="Dimensioni verificate">
               {dimensions.map((dimension) => (
                 <li key={dimension.label} className="td-final-score__dim">
-                  <span className="td-final-score__dim-label">{dimension.label}</span>
+                  <span className="td-final-score__dim-label"><LocalizedText>{dimension.label}</LocalizedText></span>
                   <span className="td-final-score__dim-value">{dimension.value}</span>
                 </li>
               ))}
-            </ul>
+            </ul></LocalizedAttributes>
           ) : null}
         </>
       ),
@@ -104,13 +105,13 @@ export function ToolDetailExtendedContent({
         <>
           {parsed.byId.strengths ? (
             <div className="td-final-deepen__block">
-              <h3 className="td-final-deepen__subhead">Punti di forza</h3>
+              <h3 className="td-final-deepen__subhead"><LocalizedText>{"Punti di forza"}</LocalizedText></h3>
               <MarkdownBody content={parsed.byId.strengths} />
             </div>
           ) : null}
           {parsed.byId.limits ? (
             <div className="td-final-deepen__block">
-              <h3 className="td-final-deepen__subhead">Limiti</h3>
+              <h3 className="td-final-deepen__subhead"><LocalizedText>{"Limiti"}</LocalizedText></h3>
               <MarkdownBody content={parsed.byId.limits} />
             </div>
           ) : null}
@@ -141,9 +142,7 @@ export function ToolDetailExtendedContent({
       className="td-final-deepen"
       aria-labelledby="td-final-approfondisci-title"
     >
-      <h2 id="td-final-approfondisci-title" className="td-final-section-title">
-        Approfondisci
-      </h2>
+      <h2 id="td-final-approfondisci-title" className="td-final-section-title"><LocalizedText>{"Approfondisci "}</LocalizedText></h2>
       <div className="td-final-deepen__list">
         <ToolDetailDeepenItems panels={panels} />
       </div>

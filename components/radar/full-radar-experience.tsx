@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * FULL Radar — logged-only AI discovery & intelligence surface.
  *
@@ -606,22 +607,18 @@ export function RadarExperience() {
       data-qa-radar-ready={!isLoading && uiModel.items.length > 0 ? "true" : "false"}
     >
       <header className="tv-rx__header">
-        <p className="tv-rx__eyebrow"><Radar size={14} aria-hidden="true" /> Radar / Intelligence</p>
-        <h1 className="tv-rx__title">Cosa sta emergendo adesso</h1>
-        <p className="tv-rx__lede">
-          Lanci reali. Segnali da leggere. Scelte da seguire.
-        </p>
+        <p className="tv-rx__eyebrow"><Radar size={14} aria-hidden="true" /><LocalizedText>{" Radar / Intelligence"}</LocalizedText></p>
+        <h1 className="tv-rx__title"><LocalizedText>{"Cosa sta emergendo adesso"}</LocalizedText></h1>
+        <p className="tv-rx__lede"><LocalizedText>{"Lanci reali. Segnali da leggere. Scelte da seguire. "}</LocalizedText></p>
       </header>
 
       {/* §4 compact telemetry strip — real timestamps only (spec §22). */}
       <div className="tv-rx-telemetry" aria-live="polite">
         <span className="tv-rx-telemetry__identity">
         <span className="tv-rx-telemetry__dot" data-state={uiModel.state} aria-hidden="true" />
-        <span className="tv-rx-telemetry__source">{view.snapshot.sourceLabel}</span>
-        <span className="tv-rx-telemetry__sep" aria-hidden="true">
-          &middot;
-        </span>
-        <span className="tv-rx-telemetry__state">{uiModel.statusLabel}</span>
+        <span className="tv-rx-telemetry__source"><LocalizedText>{view.snapshot.sourceLabel}</LocalizedText></span>
+        <span className="tv-rx-telemetry__sep" aria-hidden="true"><LocalizedText>{"· "}</LocalizedText></span>
+        <span className="tv-rx-telemetry__state"><LocalizedText>{uiModel.statusLabel}</LocalizedText></span>
         </span>
         <SegmentedControl
           className="tv-rx-range"
@@ -632,11 +629,11 @@ export function RadarExperience() {
           value={urlState.range}
           onValueChange={(range) => setUrlState({ range })}
         />
-        <span className="tv-rx-telemetry__time" title={`Aggiornato ${uiModel.updatedAtLabel}`}>
-          <span className="tv-rx-telemetry__time-full">Aggiornato {uiModel.updatedAtLabel}</span>
-          <span className="tv-rx-telemetry__time-short" aria-hidden="true">{uiModel.updatedAtLabel.split(" · ").at(-1)}</span>
-        </span>
-        <button
+        <LocalizedAttributes><span className="tv-rx-telemetry__time" title={`Aggiornato ${uiModel.updatedAtLabel}`}>
+          <span className="tv-rx-telemetry__time-full"><LocalizedText>{"Aggiornato "}</LocalizedText><LocalizedText>{uiModel.updatedAtLabel}</LocalizedText></span>
+          <span className="tv-rx-telemetry__time-short" aria-hidden="true"><LocalizedText>{uiModel.updatedAtLabel.split(" · ").at(-1)}</LocalizedText></span>
+        </span></LocalizedAttributes>
+        <LocalizedAttributes><button
           type="button"
           className="tv-rx-telemetry__refresh"
           onClick={() => refetch()}
@@ -645,7 +642,7 @@ export function RadarExperience() {
           title={isFetching ? "Aggiornamento in corso" : "Aggiorna i dati"}
         >
           <RefreshCw size={13} aria-hidden="true" />
-        </button>
+        </button></LocalizedAttributes>
       </div>
 
       {/* Mode tabs (spec §8) */}
@@ -665,19 +662,19 @@ export function RadarExperience() {
         >
           <div className="tv-rx__stage">
             <div className="tv-rx__main">
-              <section ref={atlasInstrumentRef} className="tv-rx-instrument" aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>
+              <LocalizedAttributes><section ref={atlasInstrumentRef} className="tv-rx-instrument" aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>
                 <header className="tv-rx-instrument__head">
-                  <span className="tv-rx-instrument__level">{focusedCluster ? "02 / Locale" : "01 / Mercato"}</span>
-                  <strong>{focusedCluster?.label ?? "Panoramica globale"}</strong>
-                  <span className="tv-rx-instrument__count">{isLoading ? "—" : filteredTools.length} segnali</span>
+                  <span className="tv-rx-instrument__level"><LocalizedText>{focusedCluster ? "02 / Locale" : "01 / Mercato"}</LocalizedText></span>
+                  <strong><LocalizedText>{focusedCluster?.label ?? "Panoramica globale"}</LocalizedText></strong>
+                  <span className="tv-rx-instrument__count"><LocalizedText>{isLoading ? "—" : filteredTools.length}</LocalizedText><LocalizedText>{" segnali"}</LocalizedText></span>
                 </header>
                 <div className="tv-rx-mobile-navigation" data-micro-focus={microStack ? "true" : undefined}>
                   {focusedClusterId && <button type="button" onClick={() => {
                     if (microStack) leaveMicroFocus();
                     else setUrlState({ category: null, query: null });
-                  }}><ArrowLeft size={16} aria-hidden="true" />{microStack ? focusedCluster?.label : "Mercato"}</button>}
-                  <span className="tv-rx-mobile-navigation__context">{microStack ? `${microStack.ageLabel} · ${microStack.memberIds.length} segnali` : focusedCluster ? `${focusedCluster.label} · ${filteredTools.length}` : "Scegli un’area"}</span>
-                  <button type="button" data-browse-list aria-controls="tv-rx-list-title" disabled={isLoading || filteredTools.length === 0} onClick={handleBrowseList}>Elenco</button>
+                  }}><ArrowLeft size={16} aria-hidden="true" /><LocalizedText>{microStack ? focusedCluster?.label : "Mercato"}</LocalizedText></button>}
+                  <span className="tv-rx-mobile-navigation__context"><LocalizedText>{microStack ? `${microStack.ageLabel} · ${microStack.memberIds.length} segnali` : focusedCluster ? `${focusedCluster.label} · ${filteredTools.length}` : "Scegli un’area"}</LocalizedText></span>
+                  <button type="button" data-browse-list aria-controls="tv-rx-list-title" disabled={isLoading || filteredTools.length === 0} onClick={handleBrowseList}><LocalizedText>{"Elenco"}</LocalizedText></button>
                 </div>
               {/* §2/§5 — geometry and the map interaction contract are frozen. */}
               {isLoading ? (
@@ -732,15 +729,15 @@ export function RadarExperience() {
                   />
                 </>
               )}
-                {microStack && microStack.memberIds.length > ATLAS_MICRO_PAGE_SIZE && <nav className="tv-rx-micro-pages" aria-label="Altri segnali del gruppo">
-                  <button type="button" disabled={microPage === 0} onClick={() => setMicroPage(p => p - 1)}>Precedenti</button>
+                {microStack && microStack.memberIds.length > ATLAS_MICRO_PAGE_SIZE && <LocalizedAttributes><nav className="tv-rx-micro-pages" aria-label="Altri segnali del gruppo">
+                  <button type="button" disabled={microPage === 0} onClick={() => setMicroPage(p => p - 1)}><LocalizedText>{"Precedenti"}</LocalizedText></button>
                   <span>{microPage + 1} / {Math.ceil(microStack.memberIds.length / ATLAS_MICRO_PAGE_SIZE)}</span>
-                  <button type="button" disabled={(microPage + 1) * ATLAS_MICRO_PAGE_SIZE >= microStack.memberIds.length} onClick={() => setMicroPage(p => p + 1)}>Successivi</button>
-                </nav>}
+                  <button type="button" disabled={(microPage + 1) * ATLAS_MICRO_PAGE_SIZE >= microStack.memberIds.length} onClick={() => setMicroPage(p => p + 1)}><LocalizedText>{"Successivi"}</LocalizedText></button>
+                </nav></LocalizedAttributes>}
                 {mobileAtlas ? (
-<details className="tv-rx-instrument__help"><summary>Come leggere</summary><p className="tv-rx-instrument__hint"><span>Al centro i più recenti, verso il bordo i più vecchi.</span><span>Colore: area · Dimensione: attenzione.</span><span>Micro Focus apre un gruppo: la disposizione dei tool facilita i tap; il periodo del gruppo e l’età di ogni segnale restano indicati.</span></p></details>
-                ) : <p className="tv-rx-instrument__hint"><span>Al centro i più recenti, verso il bordo i più vecchi.</span><span>Colore: area · Dimensione: attenzione.</span></p>}
-              </section>
+<details className="tv-rx-instrument__help"><summary><LocalizedText>{"Come leggere"}</LocalizedText></summary><p className="tv-rx-instrument__hint"><span><LocalizedText>{"Al centro i più recenti, verso il bordo i più vecchi."}</LocalizedText></span><span><LocalizedText>{"Colore: area · Dimensione: attenzione."}</LocalizedText></span><span><LocalizedText>{"Micro Focus apre un gruppo: la disposizione dei tool facilita i tap; il periodo del gruppo e l’età di ogni segnale restano indicati."}</LocalizedText></span></p></details>
+                ) : <p className="tv-rx-instrument__hint"><span><LocalizedText>{"Al centro i più recenti, verso il bordo i più vecchi."}</LocalizedText></span><span><LocalizedText>{"Colore: area · Dimensione: attenzione."}</LocalizedText></span></p>}
+              </section></LocalizedAttributes>
               {/* Spec §19 — a compact contextual indicator, integrated with
                   the existing controls rather than another large card. */}
               {focusedClusterId ? (
@@ -757,8 +754,8 @@ export function RadarExperience() {
                     <span>
                       {view.clusters.find((c) => c.id === focusedClusterId)
                         ?.label ?? focusedClusterId}
-                      {" · "}
-                      {localSignals.length} {localSignals.length === 1 ? "segnale" : "segnali"}
+                      <LocalizedText>{" · "}</LocalizedText>
+                      {localSignals.length} <LocalizedText>{localSignals.length === 1 ? "segnale" : "segnali"}</LocalizedText>
                     </span>
                   </p>
                   <button
@@ -766,9 +763,7 @@ export function RadarExperience() {
                     className="tv-rx-focusbar__back"
                     onClick={() => setUrlState({ category: null })}
                   >
-                    <ArrowLeft size={13} aria-hidden="true" />
-                    Panoramica
-                  </button>
+                    <ArrowLeft size={13} aria-hidden="true" /><LocalizedText>{"Panoramica "}</LocalizedText></button>
                 </div>
               ) : null}
 
@@ -796,20 +791,18 @@ export function RadarExperience() {
                 <section className="tv-rx-section" aria-labelledby="tv-rx-list-title" aria-busy={isLoading}>
                   <header className="tv-rx-section__head">
                     <div className="tv-rx-section__heading">
-                      <h2 id="tv-rx-list-title" tabIndex={-1} className="tv-rx-section__title">
-                        Tool nel Radar
-                      </h2>
+                      <h2 id="tv-rx-list-title" tabIndex={-1} className="tv-rx-section__title"><LocalizedText>{"Tool nel Radar "}</LocalizedText></h2>
                       <p className="tv-rx-section__desc">
-                        {isLoading ? "Caricamento…" : <>{filteredTools.length}{" "}
-                          {filteredTools.length === 1 ? "segnale" : "segnali"}
-                          {urlState.category ? " nella categoria selezionata" : " nel periodo"}</>}
+                        {isLoading ? "Caricamento…" : <>{filteredTools.length}<LocalizedText>{" "}</LocalizedText>
+                          <LocalizedText>{filteredTools.length === 1 ? "segnale" : "segnali"}</LocalizedText>
+                          <LocalizedText>{urlState.category ? " nella categoria selezionata" : " nel periodo"}</LocalizedText></>}
                       </p>
                     </div>
-                    {mobileAtlas && <button type="button" className="tv-rx-list-back" onClick={handleReturnAtlas}><ArrowLeft size={16} aria-hidden="true" /> Atlas</button>}
+                    {mobileAtlas && <button type="button" className="tv-rx-list-back" onClick={handleReturnAtlas}><ArrowLeft size={16} aria-hidden="true" /><LocalizedText>{" Atlas"}</LocalizedText></button>}
                     {mobileAtlas && browseMode === "list" && <label className="tv-rx-list-search">
                       <Search size={16} aria-hidden="true" />
-                      <span className="tv-rx-sr-only">Cerca nell’elenco dei segnali</span>
-                      <input type="search" value={query ?? ""} placeholder="Nome, categoria, idea…" onChange={event => setUrlState({ query: event.target.value || null })} />
+                      <span className="tv-rx-sr-only"><LocalizedText>{"Cerca nell’elenco dei segnali"}</LocalizedText></span>
+                      <LocalizedAttributes><input type="search" value={query ?? ""} placeholder="Nome, categoria, idea…" onChange={event => setUrlState({ query: event.target.value || null })} /></LocalizedAttributes>
                     </label>}
                     {mobileAtlas && browseMode === "list" && <div className="tv-rx-list-controls">
                       <SegmentedControl
@@ -818,14 +811,14 @@ export function RadarExperience() {
                         options={RADAR_RANGE_OPTIONS.map(option => ({ value: option.key, label: option.label }))}
                         value={urlState.range} onValueChange={range => setUrlState({ range })}
                       />
-                      <select aria-label="Area dell’elenco" value={urlState.category ?? ""} onChange={event => setUrlState({ category: event.target.value || null })}>
-                        <option value="">Tutte le aree</option>
-                        {view.clusters.map(cluster => <option key={cluster.id} value={cluster.id}>{cluster.label}</option>)}
-                      </select>
+                      <LocalizedAttributes><select aria-label="Area dell’elenco" value={urlState.category ?? ""} onChange={event => setUrlState({ category: event.target.value || null })}>
+                        <option value=""><LocalizedText>{"Tutte le aree"}</LocalizedText></option>
+                        {view.clusters.map(cluster => <option key={cluster.id} value={cluster.id}><LocalizedText>{cluster.label}</LocalizedText></option>)}
+                      </select></LocalizedAttributes>
                     </div>}
                   </header>
                   {mobileAtlas && browseMode === "list" && (isLoading || filteredTools.length === 0) ? (
-                    isLoading ? <p className="tv-rx-state" role="status">Caricamento dei segnali…</p> :
+                    isLoading ? <p className="tv-rx-state" role="status"><LocalizedText>{"Caricamento dei segnali…"}</LocalizedText></p> :
                       <RadarEmptyState state={uiModel.state} hasQuery={Boolean(query)} onClear={() => setUrlState({ query: null })} />
                   ) : null}
                   <ol className="tv-rx-list">
@@ -852,7 +845,7 @@ export function RadarExperience() {
 
             {/* Desktop intelligence rail; mobile inspection follows the map
                 in the document so short viewports never lose signal access. */}
-            <aside className="tv-rx__rail" aria-label="Pannello intelligenza">
+            <LocalizedAttributes><aside className="tv-rx__rail" aria-label="Pannello intelligenza">
               {selectedTool && selectionOrigin !== "list" && ambiguous.length === 0 ? (
                 <RadarQuickPreview
                   key={selectedTool.id}
@@ -872,7 +865,7 @@ export function RadarExperience() {
                   onCluster={(category) => setUrlState({ category })}
                 />
               )}
-            </aside>
+            </aside></LocalizedAttributes>
           </div>
         </div>
       ) : null}
@@ -934,39 +927,29 @@ export function RadarExperience() {
       <TinyAdzInlineSlot placement="radar-feed" />
 
       <details className="tv-rx-provenance">
-        <summary>Informazioni sui dati</summary>
-        <p>
-          I segnali del Radar arrivano da <strong>Product Hunt</strong>: lanci
-          reali ordinati per voti nel periodo selezionato. TooolVibes non misura
-          l&apos;intero mercato AI in autonomia.
-        </p>
-        <p>
-          Timestamp di origine: {uiModel.updatedAtLabel}. Le aree Radar derivano
-          dai topic della fonte. Il collegamento al Catalogo è indicato solo
-          quando il tool è riconosciuto.
-        </p>
+        <summary><LocalizedText>{"Informazioni sui dati"}</LocalizedText></summary>
+        <p><LocalizedText>{"I segnali del Radar arrivano da "}</LocalizedText><strong><LocalizedText>{"Product Hunt"}</LocalizedText></strong><LocalizedText>{": lanci reali ordinati per voti nel periodo selezionato. TooolVibes non misura l'intero mercato AI in autonomia. "}</LocalizedText></p>
+        <p><LocalizedText>{"Timestamp di origine: "}</LocalizedText><LocalizedText>{uiModel.updatedAtLabel}</LocalizedText><LocalizedText>{". Le aree Radar derivano dai topic della fonte. Il collegamento al Catalogo è indicato solo quando il tool è riconosciuto. "}</LocalizedText></p>
         <a
           href="https://www.producthunt.com/"
           target="_blank"
           rel="noopener noreferrer"
-        >
-          Visita Product Hunt
-        </a>
+        ><LocalizedText>{"Visita Product Hunt "}</LocalizedText></a>
       </details>
 
       {/* Screen-reader alternate semantic list (spec §42). */}
-      <section className="tv-rx-sr-list" aria-label="Elenco testuale dei segnali" role="region">
-        <h2>Elenco dei segnali</h2>
+      <LocalizedAttributes><section className="tv-rx-sr-list" aria-label="Elenco testuale dei segnali" role="region">
+        <h2><LocalizedText>{"Elenco dei segnali"}</LocalizedText></h2>
         <ol>
           {filteredTools.map((tool) => (
             <li key={tool.id}>
-              {tool.name} &mdash; {tool.topicCluster.label},{" "}
-              {tool.votesCount} voti, {tool.commentsCount} commenti, posizione{" "}
+              {tool.name}<LocalizedText>{" — "}</LocalizedText><LocalizedText>{tool.topicCluster.label}</LocalizedText>,<LocalizedText>{" "}</LocalizedText>
+              {tool.votesCount}<LocalizedText>{" voti, "}</LocalizedText>{tool.commentsCount}<LocalizedText>{" commenti, posizione"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
               {tool.rank}.
             </li>
           ))}
         </ol>
-      </section>
+      </section></LocalizedAttributes>
     </div>
   );
 }
@@ -1021,7 +1004,7 @@ function RadarToolbar({
   return (
     <div className="tv-rx-toolbar">
       <div className="tv-rx-chips-wrap">
-      <ul className="tv-rx-chips" ref={chipsRef} aria-label="Filtra per categoria">
+      <LocalizedAttributes><ul className="tv-rx-chips" ref={chipsRef} aria-label="Filtra per categoria">
         <li>
           <button
             type="button"
@@ -1029,9 +1012,7 @@ function RadarToolbar({
             data-active={activeCategory === null ? "true" : undefined}
             aria-pressed={activeCategory === null}
             onClick={() => onCategory(null)}
-          >
-            Tutti
-          </button>
+          ><LocalizedText>{"Tutti "}</LocalizedText></button>
         </li>
         {categories.map((category) => (
           <li key={category.id}>
@@ -1049,22 +1030,22 @@ function RadarToolbar({
                 data-color-index={category.colorIndex ?? 0}
                 aria-hidden="true"
               />
-              {category.label} {category.count}
+              <LocalizedText>{category.label}</LocalizedText> {category.count}
             </button>
           </li>
         ))}
-      </ul>
+      </ul></LocalizedAttributes>
       </div>
 
       <label className="tv-rx-search">
-        <span className="tv-rx-sr-only">Cerca un tool nel Radar</span>
+        <span className="tv-rx-sr-only"><LocalizedText>{"Cerca un tool nel Radar"}</LocalizedText></span>
         <Search size={13} aria-hidden="true" />
-        <input
+        <LocalizedAttributes><input
           type="search"
           value={query ?? ""}
           onChange={(event) => onQuery(event.target.value || null)}
           placeholder="Cerca nel Radar"
-        />
+        /></LocalizedAttributes>
       </label>
     </div>
   );
@@ -1099,7 +1080,7 @@ function RadarAmbiguityChooser({
   if (entries.length < 2) return null;
   const toolById = new Map(tools.map((tool) => [tool.id, tool]));
   return (
-    <div
+    <LocalizedAttributes><div
       ref={panelRef}
       className="tv-rx-chooser"
       role="dialog"
@@ -1107,8 +1088,7 @@ function RadarAmbiguityChooser({
       aria-label={`${entries.length} segnali in questo punto`}
     >
       <p className="tv-rx-chooser__title">
-        {entries.length} segnali in questo punto
-      </p>
+        {entries.length}<LocalizedText>{" segnali in questo punto "}</LocalizedText></p>
       <ul className="tv-rx-chooser__list">
         {entries.map((entry) => {
           const tool = toolById.get(entry.id);
@@ -1126,20 +1106,18 @@ function RadarAmbiguityChooser({
                 {/* Closure §5 — compact context only: area, age, attention,
                     with the entity type shown subtly when useful. */}
                 <span className="tv-rx-chooser__meta">
-                  {tool?.topicCluster.label ?? "—"}
-                  {ageHours !== null ? ` · ${formatChooserAge(ageHours)}` : ""}
-                  {tool ? ` · ${tool.votesCount}v ${tool.commentsCount}c` : ""}
-                  {tool?.catalogStatus === "linked" ? " · catalogo" : ""}
+                  <LocalizedText>{tool?.topicCluster.label ?? "—"}</LocalizedText>
+                  <LocalizedText>{ageHours !== null ? ` · ${formatChooserAge(ageHours)}` : ""}</LocalizedText>
+                  <LocalizedText>{tool ? ` · ${tool.votesCount}v ${tool.commentsCount}c` : ""}</LocalizedText>
+                  <LocalizedText>{tool?.catalogStatus === "linked" ? " · catalogo" : ""}</LocalizedText>
                 </span>
               </button>
             </li>
           );
         })}
       </ul>
-      <button type="button" className="tv-rx-chooser__dismiss" onClick={onDismiss}>
-        Annulla
-      </button>
-    </div>
+      <button type="button" className="tv-rx-chooser__dismiss" onClick={onDismiss}><LocalizedText>{"Annulla "}</LocalizedText></button>
+    </div></LocalizedAttributes>
   );
 }
 
@@ -1152,13 +1130,13 @@ function formatChooserAge(ageHours: number | null): string {
 
 function RadarMapSkeleton() {
   return (
-    <div className="tv-rx-map tv-rx-map--skeleton" aria-busy="true" aria-label="Caricamento della mappa">
+    <LocalizedAttributes><div className="tv-rx-map tv-rx-map--skeleton" aria-busy="true" aria-label="Caricamento della mappa">
       <div className="tv-rx-map__rings" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
-    </div>
+    </div></LocalizedAttributes>
   );
 }
 
@@ -1174,35 +1152,30 @@ function RadarEmptyState({
   if (state === "error" || state === "missing-token") {
     return (
       <div className="tv-rx-state" role="status">
-        <h2>Segnali non disponibili</h2>
-        <p>
-          La fonte non risponde in questo momento. Nessun dato simulato: riprova
-          più tardi o esplora il Catalogo.
-        </p>
-        <a href="/archivio">Vai al Catalogo</a>
+        <h2><LocalizedText>{"Segnali non disponibili"}</LocalizedText></h2>
+        <p><LocalizedText>{"La fonte non risponde in questo momento. Nessun dato simulato: riprova più tardi o esplora il Catalogo. "}</LocalizedText></p>
+        <a href="/archivio"><LocalizedText>{"Vai al Catalogo"}</LocalizedText></a>
       </div>
     );
   }
   if (state === "empty") {
     return (
       <div className="tv-rx-state" role="status">
-        <h2>Nessun segnale nel periodo</h2>
-        <p>Prova un periodo più ampio oppure esplora il Catalogo.</p>
-        <a href="/archivio">Vai al Catalogo</a>
+        <h2><LocalizedText>{"Nessun segnale nel periodo"}</LocalizedText></h2>
+        <p><LocalizedText>{"Prova un periodo più ampio oppure esplora il Catalogo."}</LocalizedText></p>
+        <a href="/archivio"><LocalizedText>{"Vai al Catalogo"}</LocalizedText></a>
       </div>
     );
   }
   return (
     <div className="tv-rx-state" role="status">
-      <h2>Nessun risultato</h2>
+      <h2><LocalizedText>{"Nessun risultato"}</LocalizedText></h2>
       <p>
-        {hasQuery
+        <LocalizedText>{hasQuery
           ? "Nessun tool del Radar corrisponde alla ricerca."
-          : "Nessun tool in questa categoria."}
+          : "Nessun tool in questa categoria."}</LocalizedText>
       </p>
-      <button type="button" onClick={onClear}>
-        Azzera filtri
-      </button>
+      <button type="button" onClick={onClear}><LocalizedText>{"Azzera filtri "}</LocalizedText></button>
     </div>
   );
 }

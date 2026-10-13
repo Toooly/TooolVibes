@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -56,7 +57,7 @@ export function CompareRanking({
   const showPersonal = account.status === "authenticated";
 
   return (
-    <ol
+    <LocalizedAttributes><ol
       className="compare-ranking"
       data-layout={layoutMode}
       aria-label="Classifica del confronto"
@@ -77,28 +78,28 @@ export function CompareRanking({
             data-winner={isWinner}
             data-layout={layoutMode}
           >
-            <span className="compare-ranking__pos" aria-label={`Posizione ${rank}`}>
-              #{rank}
-            </span>
+            <LocalizedAttributes><span className="compare-ranking__pos" aria-label={`Posizione ${rank}`}>
+              #<LocalizedText>{rank}</LocalizedText>
+            </span></LocalizedAttributes>
             <div className="compare-ranking__info">
               <h3 className="compare-ranking__name">{tool.name}</h3>
-              <p className="compare-ranking__reason">{summary}</p>
+              <p className="compare-ranking__reason"><LocalizedText>{summary}</LocalizedText></p>
             </div>
-            <span className="compare-ranking__score" aria-label={`Punteggio ${score ?? "non disponibile"} su 10`}>
+            <LocalizedAttributes><span className="compare-ranking__score" aria-label={`Punteggio ${score ?? "non disponibile"} su 10`}>
               <span className="compare-ranking__score-value">
-                {score === null || score === undefined ? "—" : score}
+                <LocalizedText>{score === null || score === undefined ? "—" : score}</LocalizedText>
               </span>
               <small className="compare-ranking__score-suffix">/10</small>
-            </span>
+            </span></LocalizedAttributes>
             {onRemove ? (
-              <button
+              <LocalizedAttributes><button
                 type="button"
                 className="compare-ranking__remove"
                 onClick={() => onRemove(tool.slug)}
                 aria-label={`Rimuovi ${tool.name} dal confronto`}
               >
                 <X className="size-4" aria-hidden="true" />
-              </button>
+              </button></LocalizedAttributes>
             ) : null}
             {showPersonal ? (
               <>
@@ -111,6 +112,6 @@ export function CompareRanking({
           </li>
         );
       })}
-    </ol>
+    </ol></LocalizedAttributes>
   );
 }

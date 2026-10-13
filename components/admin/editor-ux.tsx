@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 
@@ -44,15 +45,11 @@ export function UnsavedChangesGuard({ dirty }: { dirty: boolean }) {
   return (
     <div className="fixed inset-0 z-[90] grid place-items-center bg-black/65 p-4" role="dialog" aria-modal="true" aria-labelledby="unsaved-title">
       <div className="tv-cc-dialog">
-        <h2 id="unsaved-title" className="tv-cc-panel__title">Uscire senza salvare?</h2>
-        <p className="tv-cc-panel__desc">Le modifiche non salvate andranno perse.</p>
+        <h2 id="unsaved-title" className="tv-cc-panel__title"><LocalizedText>{"Uscire senza salvare?"}</LocalizedText></h2>
+        <p className="tv-cc-panel__desc"><LocalizedText>{"Le modifiche non salvate andranno perse."}</LocalizedText></p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={() => setHref(null)}>
-            Resta
-          </button>
-          <a href={href} className="tv-cc-btn tv-cc-btn--primary">
-            Esci senza salvare
-          </a>
+          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={() => setHref(null)}><LocalizedText>{"Resta "}</LocalizedText></button>
+          <a href={href} className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Esci senza salvare "}</LocalizedText></a>
         </div>
       </div>
     </div>
@@ -75,14 +72,12 @@ export function EditorHeader({
   return (
     <header className="tv-cc-header">
       <div>
-        <a href={backHref} className="tv-cc-btn tv-cc-btn--ghost">
-          Indietro
-        </a>
-        <p className="tv-cc-kicker" style={{ marginTop: "0.75rem" }}>{eyebrow}</p>
-        <h1 className="tv-cc-title">{title}</h1>
-        {updatedAt ? <p className="tv-cc-desc">Aggiornato {updatedAt}</p> : null}
+        <a href={backHref} className="tv-cc-btn tv-cc-btn--ghost"><LocalizedText>{"Indietro "}</LocalizedText></a>
+        <p className="tv-cc-kicker" style={{ marginTop: "0.75rem" }}><LocalizedText>{eyebrow}</LocalizedText></p>
+        <h1 className="tv-cc-title"><LocalizedText>{title}</LocalizedText></h1>
+        {updatedAt ? <p className="tv-cc-desc"><LocalizedText>{"Aggiornato "}</LocalizedText><LocalizedText>{updatedAt}</LocalizedText></p> : null}
       </div>
-      {status ? <span className="tv-cc-metric">{status}</span> : null}
+      {status ? <span className="tv-cc-metric"><LocalizedText>{status}</LocalizedText></span> : null}
     </header>
   );
 }
@@ -102,10 +97,10 @@ export function EditorStickyBar({
   return (
     <div className="tv-cc-savebar">
       <p className="tv-cc-panel__desc" role="status" style={{ margin: 0 }}>
-        {pending ? "Salvataggio…" : error ? error : dirty ? "Modifiche non salvate" : "Nessuna modifica"}
+        <LocalizedText>{pending ? "Salvataggio…" : error ? error : dirty ? "Modifiche non salvate" : "Nessuna modifica"}</LocalizedText>
       </p>
       <button type="submit" disabled={disabled || pending} className="tv-cc-btn tv-cc-btn--primary">
-        {pending ? "Salvataggio…" : label}
+        <LocalizedText>{pending ? "Salvataggio…" : label}</LocalizedText>
       </button>
     </div>
   );
@@ -159,9 +154,9 @@ export function DecisionNoteDialog({
           onClose();
         }}
       >
-        <h2 id={headingId} className="tv-cc-panel__title">{title}</h2>
+        <h2 id={headingId} className="tv-cc-panel__title"><LocalizedText>{title}</LocalizedText></h2>
         <label className="mt-4 block">
-          <span className="tv-cc-label">Perché lo stai considerando</span>
+          <span className="tv-cc-label"><LocalizedText>{"Perché lo stai considerando"}</LocalizedText></span>
           <textarea
             ref={fieldRef}
             value={value}
@@ -171,12 +166,8 @@ export function DecisionNoteDialog({
           />
         </label>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={onClose}>
-            Annulla
-          </button>
-          <button type="submit" className="tv-cc-btn tv-cc-btn--primary">
-            Salva nota
-          </button>
+          <button type="button" className="tv-cc-btn tv-cc-btn--ghost" onClick={onClose}><LocalizedText>{"Annulla "}</LocalizedText></button>
+          <button type="submit" className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Salva nota "}</LocalizedText></button>
         </div>
       </form>
     </div>

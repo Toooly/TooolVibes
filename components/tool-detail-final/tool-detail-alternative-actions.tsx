@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
@@ -17,9 +18,9 @@ export function ToolDetailAlternativeActions({
   return (
     <div className="td-final-alt-actions">
       <button type="button" aria-pressed={selected} onClick={() => toggleCompare(slug)}>
-        {selected ? "In confronto" : "Confronta"}
+        <LocalizedText>{selected ? "In confronto" : "Confronta"}</LocalizedText>
       </button>
-      <Link href={`/toools/${slug}`}>Scheda {name}</Link>
+      <Link href={`/toools/${slug}`}><LocalizedText>{"Scheda "}</LocalizedText><LocalizedText>{name}</LocalizedText></Link>
     </div>
   );
 }

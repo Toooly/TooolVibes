@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useState, type ReactNode } from "react";
 import { useActionState } from "react";
 
@@ -42,11 +43,11 @@ function FieldError({ error }: { error?: string }) {
     return null;
   }
 
-  return <p className="tv-cc-error">{error}</p>;
+  return <p className="tv-cc-error"><LocalizedText>{error}</LocalizedText></p>;
 }
 
 function FieldLabel({ label }: { label: string }) {
-  return <span className="tv-cc-label">{label}</span>;
+  return <span className="tv-cc-label"><LocalizedText>{label}</LocalizedText></span>;
 }
 
 function FormSection({
@@ -63,10 +64,10 @@ function FormSection({
   return (
     <section className="tv-cc-panel">
       <div className="border-b pb-4 soft-divider">
-        <p className="tv-cc-panel__kicker">{eyebrow}</p>
-        <h2 className="tv-cc-panel__title">{title}</h2>
+        <p className="tv-cc-panel__kicker"><LocalizedText>{eyebrow}</LocalizedText></p>
+        <h2 className="tv-cc-panel__title"><LocalizedText>{title}</LocalizedText></h2>
         <p className="tv-cc-panel__desc">
-          {description}
+          <LocalizedText>{description}</LocalizedText>
         </p>
       </div>
       <div className="mt-5">{children}</div>
@@ -88,9 +89,9 @@ function ToggleCard({
   return (
     <label className="tv-cc-panel flex items-center justify-between gap-4">
       <div>
-        <p className="text-sm font-semibold">{title}</p>
+        <p className="text-sm font-semibold"><LocalizedText>{title}</LocalizedText></p>
         <p className="tv-cc-panel__desc">
-          {description}
+          <LocalizedText>{description}</LocalizedText>
         </p>
       </div>
       <input name={name} type="checkbox" defaultChecked={defaultChecked} className="h-5 w-5" />
@@ -120,15 +121,15 @@ export function ArticleForm({
   return (
     <EditorShell dirty={dirty} onDirty={markDirty}>
     <form action={formAction} className="space-y-8" onChange={markDirty}>
-      <EditorHeader backHref={backHref} eyebrow="Guida" title={entityTitle || values.title || "Nuova guida"} status={entityStatus} updatedAt={updatedAt} />
+      <LocalizedAttributes><EditorHeader backHref={backHref} eyebrow="Guida" title={entityTitle || values.title || "Nuova guida"} status={entityStatus} updatedAt={updatedAt} /></LocalizedAttributes>
       {state.status === "error" && state.message ? (
         <div className="tv-cc-notice tv-cc-notice--warn">
-          {state.message}
+          <LocalizedText>{state.message}</LocalizedText>
         </div>
       ) : null}
 
       <fieldset disabled={disabled} className="space-y-6 disabled:opacity-60">
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Gestione blog"
           title="Titolo, slug e promessa editoriale"
           description="Questi campi alimentano lista blog, SEO, anteprime e pagina pubblica."
@@ -147,12 +148,12 @@ export function ArticleForm({
 
             <label className="block">
               <FieldLabel label="Slug" />
-              <input
+              <LocalizedAttributes><input
                 name="slug"
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal titolo"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.slug} />
             </label>
 
@@ -180,9 +181,9 @@ export function ArticleForm({
               <FieldError error={state.fieldErrors?.summary} />
             </label>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Editor"
           title="Corpo articolo in Markdown con media"
           description="Qui puoi scrivere il testo lungo, caricare foto, gif e video, usare tabelle, callout, HTML controllato, dimensioni e allineamenti."
@@ -193,9 +194,9 @@ export function ArticleForm({
             disabled={disabled}
             error={state.fieldErrors?.content_markdown}
           />
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Media e informazioni"
           title="Copertina, autore, tag e stato"
           description="L'immagine di copertina resta separata dal corpo articolo; i media interni vengono invece inseriti direttamente nel testo."
@@ -203,14 +204,14 @@ export function ArticleForm({
           <div className="grid gap-5 lg:grid-cols-2">
             <label className="block lg:col-span-2">
               <FieldLabel label="URL immagine di copertina" />
-              <input
+              <LocalizedAttributes><input
                 type="url"
                 value={coverUrl}
                 readOnly
                 aria-label="URL copertina selezionato"
                 placeholder="Trascina un file nella libreria"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.cover_image_url} />
             </label>
 
@@ -241,12 +242,12 @@ export function ArticleForm({
 
             <label className="block">
               <FieldLabel label="Tag" />
-              <input
+              <LocalizedAttributes><input
                 name="tags"
                 defaultValue={values.tags}
                 placeholder="ai, seo, automazione"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.tags} />
             </label>
 
@@ -259,7 +260,7 @@ export function ArticleForm({
               >
                 {articleKinds.map((kind) => (
                   <option key={kind} value={kind}>
-                    {kindLabels[kind]}
+                    <LocalizedText>{kindLabels[kind]}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -275,7 +276,7 @@ export function ArticleForm({
               >
                 {articleStatuses.map((status) => (
                   <option key={status} value={status}>
-                    {statusLabels[status]}
+                    <LocalizedText>{statusLabels[status]}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -294,14 +295,14 @@ export function ArticleForm({
               <FieldError error={state.fieldErrors?.published_at} />
             </label>
 
-            <ToggleCard
+            <LocalizedAttributes><ToggleCard
               name="is_featured"
               title="In primo piano"
               description="Porta l'articolo nei blocchi in evidenza del blog pubblico."
               defaultChecked={values.is_featured}
-            />
+            /></LocalizedAttributes>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
       </fieldset>
 
       <EditorStickyBar dirty={dirty} label={submitLabel} disabled={disabled} error={state.status === "error" ? state.message : undefined} />

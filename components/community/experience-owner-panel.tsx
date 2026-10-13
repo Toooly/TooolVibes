@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -79,9 +80,7 @@ export function ExperienceOwnerPanel({
           type="button"
           className="td-final-experience__more"
           onClick={() => continuation.requestCommunityWrite({ toolSlug, origin: "community.tool" })}
-        >
-          Condividi la tua esperienza
-        </button>
+        ><LocalizedText>{"Condividi la tua esperienza "}</LocalizedText></button>
       </div>
     );
   }
@@ -94,30 +93,28 @@ export function ExperienceOwnerPanel({
 
   return (
     <div className="td-final-experience-owner">
-      {notice ? <p role="status">{notice}</p> : null}
+      {notice ? <p role="status"><LocalizedText>{notice}</LocalizedText></p> : null}
       {loaded && !editing && !owner ? (
-        <button type="button" className="td-final-experience__more" onClick={() => setOpen(true)}>
-          Condividi la tua esperienza
-        </button>
+        <button type="button" className="td-final-experience__more" onClick={() => setOpen(true)}><LocalizedText>{"Condividi la tua esperienza "}</LocalizedText></button>
       ) : null}
       {loaded && owner && !editing ? (
         <div className="td-final-experience-owner__status">
-          <p className="td-final-experience-owner__kicker">La tua esperienza</p>
+          <p className="td-final-experience-owner__kicker"><LocalizedText>{"La tua esperienza"}</LocalizedText></p>
           <p>
-            <strong>{OWNER_STATUS_LABEL[owner.status]}</strong>
+            <strong><LocalizedText>{OWNER_STATUS_LABEL[owner.status]}</LocalizedText></strong>
           </p>
-          {owner.status === "pending" ? <p>La tua esperienza è in revisione.</p> : null}
+          {owner.status === "pending" ? <p><LocalizedText>{"La tua esperienza è in revisione."}</LocalizedText></p> : null}
           {owner.status === "hidden" ? (
-            <p>Questa esperienza non è al momento visibile pubblicamente.</p>
+            <p><LocalizedText>{"Questa esperienza non è al momento visibile pubblicamente."}</LocalizedText></p>
           ) : null}
           {owner.moderationReason && (owner.status === "rejected" || owner.status === "hidden") ? (
-            <p>Motivo: {owner.moderationReason}</p>
+            <p><LocalizedText>{"Motivo: "}</LocalizedText><LocalizedText>{owner.moderationReason}</LocalizedText></p>
           ) : null}
           <div className="td-final-experience-form__actions">
             <button type="button" className="td-final-experience__more" onClick={() => setOpen(true)}>
-              {owner.status === "rejected" || owner.status === "hidden"
+              <LocalizedText>{owner.status === "rejected" || owner.status === "hidden"
                 ? "Modifica e invia di nuovo"
-                : "Modifica"}
+                : "Modifica"}</LocalizedText>
             </button>
             <button
               type="button"
@@ -136,9 +133,7 @@ export function ExperienceOwnerPanel({
                 router.refresh();
               }}
               disabled={busy}
-            >
-              Elimina esperienza
-            </button>
+            ><LocalizedText>{"Elimina esperienza "}</LocalizedText></button>
           </div>
         </div>
       ) : null}

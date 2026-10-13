@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { navigateSite } from "@/lib/shell/document-navigation";
@@ -74,29 +75,27 @@ export function AdminCommandPalette() {
         type="button"
         className="inline-flex min-h-11 items-center rounded-xl border border-white/10 px-3 text-sm text-white/70"
         onClick={() => setOpen(true)}
-      >
-        Cerca
-      </button>
+      ><LocalizedText>{"Cerca "}</LocalizedText></button>
     );
   }
 
 
 
   return (
-    <div className="fixed inset-0 z-[80] bg-black/60 p-4" role="dialog" aria-modal="true" aria-label="Cerca nel Control Center">
+    <LocalizedAttributes><div className="fixed inset-0 z-[80] bg-black/60 p-4" role="dialog" aria-modal="true" aria-label="Cerca nel Control Center">
       <div className="mx-auto mt-[12vh] max-w-xl rounded-3xl border border-white/10 bg-[#120d2e] p-4 shadow-2xl">
-        <input
+        <LocalizedAttributes><input
           autoFocus
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Cerca tool, guide, raccolte, partner, campagne"
           className="min-h-11 w-full rounded-2xl border border-white/10 bg-black/30 px-4 text-white"
-        />
+        /></LocalizedAttributes>
         <div className="mt-4 max-h-80 space-y-3 overflow-auto">
           {Object.entries(groups).map(([group, hits]) =>
             hits.length ? (
               <div key={group}>
-                <p className="px-1 text-xs font-bold uppercase tracking-[0.16em] text-white/40">{group}</p>
+                <p className="px-1 text-xs font-bold uppercase tracking-[0.16em] text-white/40"><LocalizedText>{group}</LocalizedText></p>
                 <ul>
                   {hits.map((hit) => (
                     <li key={`${group}-${hit.id}`}>
@@ -108,7 +107,7 @@ export function AdminCommandPalette() {
                           navigateSite(hit.href, router);
                         }}
                       >
-                        {hit.label}
+                        <LocalizedText>{hit.label}</LocalizedText>
                       </button>
                     </li>
                   ))}
@@ -118,6 +117,6 @@ export function AdminCommandPalette() {
           )}
         </div>
       </div>
-    </div>
+    </div></LocalizedAttributes>
   );
 }

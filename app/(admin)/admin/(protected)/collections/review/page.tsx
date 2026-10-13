@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { CollectionTransitionCard } from "@/components/admin/collection-transition-card";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { ControlCenterFilters, ControlCenterHeader, ControlCenterNotice } from "@/components/admin/control-center-header";
@@ -220,15 +221,15 @@ export default async function AdminCollectionsReviewPage({
   return (
     <div className="page-shell py-8 sm:py-10">
       <div className="space-y-6">
-        <ControlCenterHeader
+        <LocalizedAttributes><ControlCenterHeader
           kicker="Raccolte"
           title="Revisione conflitti"
           description="Conflitti, importazioni in attesa e revisioni. Nessun riallineamento distruttivo."
           backHref="/admin/collections"
           backLabel="Torna alle raccolte"
           metrics={reviewMetrics.map((item) => ({ label: item.label, value: item.value }))}
-        />
-        {statusMessage ? <ControlCenterNotice tone="ok">{statusMessage}</ControlCenterNotice> : null}
+        /></LocalizedAttributes>
+        {statusMessage ? <ControlCenterNotice tone="ok"><LocalizedText>{statusMessage}</LocalizedText></ControlCenterNotice> : null}
         <ControlCenterFilters
           active={params.view ?? "open"}
           items={reviewViewOptions.map((item) => ({
@@ -257,12 +258,12 @@ export default async function AdminCollectionsReviewPage({
             ))}
           </div>
         ) : (
-          <AdminEmptyState
+          <LocalizedAttributes><AdminEmptyState
             title="Nessun elemento da rivedere in questa vista"
             description="Questo filtro non mostra conflitti aperti. Puoi tornare alla lista raccolte o allargare la vista a tutte le revisioni."
             ctaHref="/admin/collections/review?view=all"
             ctaLabel="Apri tutte le revisioni"
-          />
+          /></LocalizedAttributes>
         )}
       </div>
     </div>

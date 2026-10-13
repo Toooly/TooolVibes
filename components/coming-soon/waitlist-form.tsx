@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,10 +64,8 @@ export function WaitlistForm() {
     >
       <SubmissionProtectionFields action="waitlist" />
       <div className="flex flex-col gap-3 sm:flex-row">
-        <label htmlFor={emailId} className="sr-only">
-          Indirizzo email
-        </label>
-        <Input
+        <label htmlFor={emailId} className="sr-only"><LocalizedText>{"Indirizzo email "}</LocalizedText></label>
+        <LocalizedAttributes><Input
           id={emailId}
           name="email"
           type="email"
@@ -80,7 +79,7 @@ export function WaitlistForm() {
           aria-invalid={status === "error"}
           aria-describedby={message ? messageId : undefined}
           className="h-12 flex-1 rounded-xl border-[rgba(124,77,255,0.25)] bg-[rgba(18,18,42,0.6)] px-4 text-[#F0EFFF] placeholder:text-[#6B6690] focus-visible:border-[rgba(124,77,255,0.5)] focus-visible:ring-[rgba(124,77,255,0.25)]"
-        />
+        /></LocalizedAttributes>
         <Button
           type="submit"
           disabled={status === "loading" || status === "success"}
@@ -91,9 +90,7 @@ export function WaitlistForm() {
           ) : null}
           {status === "success" ? (
             <CheckCircle className="mr-2 h-4 w-4" />
-          ) : null}
-          Avvisami
-        </Button>
+          ) : null}<LocalizedText>{"Avvisami "}</LocalizedText></Button>
       </div>
 
       {message && (
@@ -105,7 +102,7 @@ export function WaitlistForm() {
             status === "success" ? "text-[#64FFDA]" : "text-[#FF5252]"
           }`}
         >
-          {message}
+          <LocalizedText>{message}</LocalizedText>
         </p>
       )}
     </form>

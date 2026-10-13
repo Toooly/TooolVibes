@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { useEffect, useMemo, useState } from "react";
 
@@ -93,20 +94,14 @@ function WorkspaceReviewActions({
         type="button"
         className={primary ? "tv-home-cta tv-home-cta--primary" : "tv-home-textbtn"}
         onClick={onStillTrue}
-      >
-        Ancora vero
-      </button>
-      <button type="button" className="tv-home-textbtn" onClick={onNoLonger}>
-        Non più
-      </button>
+      ><LocalizedText>{"Ancora vero "}</LocalizedText></button>
+      <button type="button" className="tv-home-textbtn" onClick={onNoLonger}><LocalizedText>{"Non più "}</LocalizedText></button>
       <button
         type="button"
         className="tv-home-textbtn"
         aria-expanded={snoozeOpen}
         onClick={onRimanda}
-      >
-        Rimanda
-      </button>
+      ><LocalizedText>{"Rimanda "}</LocalizedText></button>
       {snoozeOpen ? <RevisitWhenChips onSelect={onSnooze} /> : null}
     </div>
   );
@@ -165,37 +160,25 @@ export function WorkspaceRiprendi({
       <span className="tv-home-hero__light" data-tv-decor aria-hidden="true" />
       {blank ? (
         <section className="tv-mod tv-mod--resume tv-home__resume" aria-labelledby="tv-home-empty-title">
-          <h2 id="tv-home-empty-title" className="tv-home-title">
-            Il tuo spazio è pronto
-          </h2>
-          <p className="tv-home-copy">
-            Qui restano stack, decisioni e note. Il catalogo è pubblico: questo è il laboratorio.
-          </p>
+          <h2 id="tv-home-empty-title" className="tv-home-title"><LocalizedText>{"Il tuo spazio è pronto "}</LocalizedText></h2>
+          <p className="tv-home-copy"><LocalizedText>{"Qui restano stack, decisioni e note. Il catalogo è pubblico: questo è il laboratorio. "}</LocalizedText></p>
           <div className="tv-home-actions">
-            <Link className="tv-home-cta tv-home-cta--primary" href="/archivio">
-              Trova il primo tool
-            </Link>
-            <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
-              Apri i Salvati
-            </Link>
-            <Link className="tv-home-textbtn" href={workspaceViewHref("decisioni")}>
-              Crea la prima decisione
-            </Link>
+            <Link className="tv-home-cta tv-home-cta--primary" href="/archivio"><LocalizedText>{"Trova il primo tool "}</LocalizedText></Link>
+            <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}><LocalizedText>{"Apri i Salvati "}</LocalizedText></Link>
+            <Link className="tv-home-textbtn" href={workspaceViewHref("decisioni")}><LocalizedText>{"Crea la prima decisione "}</LocalizedText></Link>
           </div>
         </section>
       ) : null}
 
 
       {!blank && resume.kind === "confirm_usage" && resume.slug ? (
-        <section className="tv-home-summary" aria-label="Conferma se lo usi">
+        <LocalizedAttributes><section className="tv-home-summary" aria-label="Conferma se lo usi">
           <div className="tv-home-summary__row">
             <span className="tv-home-summary__icon" aria-hidden="true">
               <WorkspaceCatalogMark catalog={catalog} slug={resume.slug} size="sm" />
             </span>
             <span className="tv-home-summary__body">
-              <strong className="tv-home-summary__title">
-                Conferma se lo usi
-              </strong>
+              <strong className="tv-home-summary__title"><LocalizedText>{"Conferma se lo usi "}</LocalizedText></strong>
               <span className="tv-home-summary__sub">{nameOf(names, resume.slug)}</span>
             </span>
             <button
@@ -203,26 +186,26 @@ export function WorkspaceRiprendi({
               className="tv-home-summary__cta tv-home-cta tv-home-cta--primary"
               onClick={() => markWorkspaceToolUsing(resume.slug as string)}
             >
-              {USAGE_ACTION_LABELS.using}
+              <LocalizedText>{USAGE_ACTION_LABELS.using}</LocalizedText>
             </button>
           </div>
-        </section>
+        </section></LocalizedAttributes>
       ) : null}
 
       {!blank ? (
-        <section className="tv-home-summary" aria-label="Riepilogo spazio">
+        <LocalizedAttributes><section className="tv-home-summary" aria-label="Riepilogo spazio">
           <Link className="tv-home-summary__row" href="/compare">
             <span className="tv-home-summary__icon" aria-hidden="true">
               <WorkspaceMarkStrip catalog={catalog} slugs={state.compare.slugs.slice(0, 3)} size="sm" />
             </span>
             <span className="tv-home-summary__body">
               <strong className="tv-home-summary__title">
-                {state.compare.slugs.length > 0
+                <LocalizedText>{state.compare.slugs.length > 0
                   ? `${state.compare.slugs.length} confronto in corso`
-                  : "Nessun confronto aperto"}
+                  : "Nessun confronto aperto"}</LocalizedText>
               </strong>
               <span className="tv-home-summary__sub">
-                {state.compare.slugs.length > 0 ? "Completa la tua valutazione" : "Avvia un confronto"}
+                <LocalizedText>{state.compare.slugs.length > 0 ? "Completa la tua valutazione" : "Avvia un confronto"}</LocalizedText>
               </span>
             </span>
             <span className="tv-home-summary__chevron" aria-hidden="true">›</span>
@@ -235,11 +218,11 @@ export function WorkspaceRiprendi({
             </span>
             <span className="tv-home-summary__body">
               <strong className="tv-home-summary__title">
-                {state.saved.slugs.length > 0
+                <LocalizedText>{state.saved.slugs.length > 0
                   ? `${state.saved.slugs.length} tool salvati`
-                  : "Nessun tool salvato"}
+                  : "Nessun tool salvato"}</LocalizedText>
               </strong>
-              <span className="tv-home-summary__sub">Da rivedere</span>
+              <span className="tv-home-summary__sub"><LocalizedText>{"Da rivedere"}</LocalizedText></span>
             </span>
             <span className="tv-home-summary__chevron" aria-hidden="true">›</span>
           </Link>
@@ -254,58 +237,50 @@ export function WorkspaceRiprendi({
             </span>
             <span className="tv-home-summary__body">
               <strong className="tv-home-summary__title">
-                {liveDecisions.length > 0
+                <LocalizedText>{liveDecisions.length > 0
                   ? `${liveDecisions.length} decisione da confermare`
-                  : "Nessuna decisione aperta"}
+                  : "Nessuna decisione aperta"}</LocalizedText>
               </strong>
-              <span className="tv-home-summary__sub">Conferma se lo usi</span>
+              <span className="tv-home-summary__sub"><LocalizedText>{"Conferma se lo usi"}</LocalizedText></span>
             </span>
             <span className="tv-home-summary__chevron" aria-hidden="true">›</span>
           </Link>
-        </section>
+        </section></LocalizedAttributes>
       ) : null}
 
       {!blank && liveStack.length > 0 ? (
         <section className="tv-mod" aria-labelledby="tv-home-stack-now">
-          <h2 id="tv-home-stack-now" className="tv-home-title">Il tuo stack</h2>
-          <p className="tv-home-copy">Tool che stai usando, distinti dai Salvati.</p>
+          <h2 id="tv-home-stack-now" className="tv-home-title"><LocalizedText>{"Il tuo stack"}</LocalizedText></h2>
+          <p className="tv-home-copy"><LocalizedText>{"Tool che stai usando, distinti dai Salvati."}</LocalizedText></p>
           <WorkspaceMarkStrip catalog={catalog} slugs={liveStack} />
-          <Link className="tv-home-textbtn" href={workspaceViewHref("stack")}>
-            Gestisci lo stack
-          </Link>
+          <Link className="tv-home-textbtn" href={workspaceViewHref("stack")}><LocalizedText>{"Gestisci lo stack "}</LocalizedText></Link>
         </section>
       ) : null}
 
       {!blank && !quiet && liveDecisions.length > 0 ? (
         <section className="tv-mod" aria-labelledby="tv-home-decisions">
-          <h2 id="tv-home-decisions" className="tv-home-title">Le tue decisioni</h2>
+          <h2 id="tv-home-decisions" className="tv-home-title"><LocalizedText>{"Le tue decisioni"}</LocalizedText></h2>
           <p className="tv-home-copy">
-            {liveDecisions.length === 1
+            <LocalizedText>{liveDecisions.length === 1
               ? "Hai una decisione da rivedere o ricordare."
-              : `Hai ${liveDecisions.length} decisioni salvate.`}
+              : `Hai ${liveDecisions.length} decisioni salvate.`}</LocalizedText>
           </p>
-          <Link className="tv-home-textbtn" href={workspaceViewHref("decisioni")}>
-            Apri le decisioni
-          </Link>
+          <Link className="tv-home-textbtn" href={workspaceViewHref("decisioni")}><LocalizedText>{"Apri le decisioni "}</LocalizedText></Link>
         </section>
       ) : null}
 
       {quiet ? (
         <div className="tv-home__quiet">
-          <p className="tv-home-whisper">Niente da riprendere.</p>
+          <p className="tv-home-whisper"><LocalizedText>{"Niente da riprendere."}</LocalizedText></p>
           {state.saved.slugs.length > 0 ? (
-            <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
-              Apri i Salvati
-            </Link>
+            <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}><LocalizedText>{"Apri i Salvati "}</LocalizedText></Link>
           ) : null}
         </div>
       ) : null}
 
       {!blank && unfinished.length > 0 ? (
         <section className="tv-home__unfinished" aria-labelledby="tv-home-unfinished-title">
-          <h2 id="tv-home-unfinished-title" className="tv-home-title">
-            Da riprendere
-          </h2>
+          <h2 id="tv-home-unfinished-title" className="tv-home-title"><LocalizedText>{"Da riprendere "}</LocalizedText></h2>
           <ul className="tv-home-list">
             {unfinished.map((item) => {
               const copyItem = UNFINISHED_COPY[item.kind];
@@ -315,7 +290,7 @@ export function WorkspaceRiprendi({
                     <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="sm" />
                   </span>
                   <div className="tv-home-mini__body">
-                    <p className="tv-home-kicker tv-home-mini__kicker">{copyItem.kicker}</p>
+                    <p className="tv-home-kicker tv-home-mini__kicker"><LocalizedText>{copyItem.kicker}</LocalizedText></p>
                     <div className="tv-home-row">
                       <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
                       {item.kind === "selected_follow_up" ? (
@@ -324,11 +299,11 @@ export function WorkspaceRiprendi({
                           className="tv-home-textbtn"
                           onClick={() => markWorkspaceToolUsing(item.slug)}
                         >
-                          {copyItem.action}
+                          <LocalizedText>{copyItem.action}</LocalizedText>
                         </button>
                       ) : (
                         <Link className="tv-home-textbtn" href={salvatiFocusHref(item.slug)}>
-                          {copyItem.action}
+                          <LocalizedText>{copyItem.action}</LocalizedText>
                         </Link>
                       )}
                     </div>
@@ -342,9 +317,7 @@ export function WorkspaceRiprendi({
 
       {!blank && review.length > 0 ? (
         <section className="tv-home__review tv-home-review" aria-labelledby="tv-home-review-title">
-          <h2 id="tv-home-review-title" className="tv-home-title">
-            Da rivedere
-          </h2>
+          <h2 id="tv-home-review-title" className="tv-home-title"><LocalizedText>{"Da rivedere "}</LocalizedText></h2>
           <ul className="tv-home-list">
             {review.map((item) => {
               const tool = state.toolStates[item.slug];
@@ -361,17 +334,16 @@ export function WorkspaceRiprendi({
                     <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
                     <span className="tv-home-row__meta">
                       <span className="tv-home-review__dot" aria-hidden="true" />
-                      {revisit ?? decidedAt ?? "Rimandata, da riprendere"}
+                      <LocalizedText>{revisit ?? decidedAt ?? "Rimandata, da riprendere"}</LocalizedText>
                     </span>
                   </div>
                   {decidedAt ? (
                     <p className="tv-home-whisper">
-                      {decidedAt}. Lo stai ancora preferendo?
-                    </p>
+                      <LocalizedText>{decidedAt}</LocalizedText><LocalizedText>{". Lo stai ancora preferendo? "}</LocalizedText></p>
                   ) : (
-                    <p className="tv-home-whisper">Lo stai ancora preferendo?</p>
+                    <p className="tv-home-whisper"><LocalizedText>{"Lo stai ancora preferendo?"}</LocalizedText></p>
                   )}
-                  {why ? <p className="tv-home-whisper">{why}</p> : null}
+                  {why ? <p className="tv-home-whisper"><LocalizedText>{why}</LocalizedText></p> : null}
                   <WorkspaceReviewActions
                     snoozeOpen={snoozeSlug === item.slug}
                     onStillTrue={() => stillTrue(item.slug)}
@@ -394,9 +366,7 @@ export function WorkspaceRiprendi({
 
       {!blank && stacks.length > 0 ? (
         <section className="tv-home__stacks" aria-labelledby="tv-home-stacks-title">
-          <h2 id="tv-home-stacks-title" className="tv-home-title">
-            Stack attivi
-          </h2>
+          <h2 id="tv-home-stacks-title" className="tv-home-title"><LocalizedText>{"Stack attivi "}</LocalizedText></h2>
           <div className="tv-home-stacks">
             {stacks.map((stack) => {
               const shown = stack.slugs.slice(0, 4);
@@ -413,29 +383,25 @@ export function WorkspaceRiprendi({
                   ) : null}
                   {count > 0 ? (
                     <p className="tv-home-whisper tv-home-stack__count">
-                      {count === 1 ? "1 tool" : `${count} tool`}
+                      <LocalizedText>{count === 1 ? "1 tool" : `${count} tool`}</LocalizedText>
                     </p>
                   ) : null}
                   {shown.length > 0 ? (
                     <p className="tv-home-whisper tv-home-stack__tools">
-                      {shown.map((slug) => nameOf(names, slug)).join(" · ")}
+                      <LocalizedText>{shown.map((slug) => nameOf(names, slug)).join(" · ")}</LocalizedText>
                     </p>
                   ) : null}
                   <div className="tv-home-actions">
                     <Link
                       className="tv-home-textbtn"
                       href={workspaceViewHref("stack", { stack: stack.id })}
-                    >
-                      Apri
-                    </Link>
+                    ><LocalizedText>{"Apri "}</LocalizedText></Link>
                     {stack.slugs.length >= MIN_COMPARE_TOOLS ? (
                       <Link
                         className="tv-home-textbtn"
                         href="/compare"
                         onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
-                      >
-                        Confronta
-                      </Link>
+                      ><LocalizedText>{"Confronta "}</LocalizedText></Link>
                     ) : null}
                   </div>
                 </article>
@@ -447,9 +413,7 @@ export function WorkspaceRiprendi({
 
       {!blank && unfiled.length > 0 ? (
         <section className="tv-home__unfiled" aria-labelledby="tv-home-unfiled-title">
-          <h2 id="tv-home-unfiled-title" className="tv-home-title">
-            Salvati da organizzare
-          </h2>
+          <h2 id="tv-home-unfiled-title" className="tv-home-title"><LocalizedText>{"Salvati da organizzare "}</LocalizedText></h2>
           <ul className="tv-home-list">
             {unfiled.map((item) => (
               <li key={item.slug} className="tv-home-queue-item tv-home-mini">
@@ -457,7 +421,7 @@ export function WorkspaceRiprendi({
                   <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="sm" />
                 </span>
                 <div className="tv-home-mini__body">
-                <p className="tv-home-kicker tv-home-mini__kicker">Solo salvato</p>
+                <p className="tv-home-kicker tv-home-mini__kicker"><LocalizedText>{"Solo salvato"}</LocalizedText></p>
                 <div className="tv-home-row">
                   <span className="tv-home-row__text">{nameOf(names, item.slug)}</span>
                 </div>
@@ -469,9 +433,7 @@ export function WorkspaceRiprendi({
                     onClick={() =>
                       setFilingSlug((current) => (current === item.slug ? null : item.slug))
                     }
-                  >
-                    Aggiungi a Stack
-                  </button>
+                  ><LocalizedText>{"Aggiungi a Stack "}</LocalizedText></button>
                   <Link
                     className="tv-home-textbtn"
                     href="/compare"
@@ -480,12 +442,8 @@ export function WorkspaceRiprendi({
                         toggleWorkspaceCompare(item.slug);
                       }
                     }}
-                  >
-                    Confronta
-                  </Link>
-                  <Link className="tv-home-textbtn" href={salvatiFocusHref(item.slug)}>
-                    Apri
-                  </Link>
+                  ><LocalizedText>{"Confronta "}</LocalizedText></Link>
+                  <Link className="tv-home-textbtn" href={salvatiFocusHref(item.slug)}><LocalizedText>{"Apri "}</LocalizedText></Link>
                 </div>
                   {filingSlug === item.slug ? (
                     <StackPickOrCreate
@@ -503,32 +461,19 @@ export function WorkspaceRiprendi({
       ) : null}
 
       {!blank && usingSlugs.length > 0 ? (
-        <p className="tv-home-using-line tv-home__using">
-          In uso: {usingSlugs.map((slug) => nameOf(names, slug)).join(" · ")}
+        <p className="tv-home-using-line tv-home__using"><LocalizedText>{"In uso: "}</LocalizedText><LocalizedText>{usingSlugs.map((slug) => nameOf(names, slug)).join(" · ")}</LocalizedText>
         </p>
       ) : null}
 
 
       <section className="tv-home__members" aria-labelledby="tv-home-members-title">
-        <h2 id="tv-home-members-title" className="tv-home-title">
-          Riservato a te
-        </h2>
-        <p className="tv-home-copy">
-          Raccolte complete e guide profonde si aprono qui, insieme a stack e Salvati.
-        </p>
+        <h2 id="tv-home-members-title" className="tv-home-title"><LocalizedText>{"Riservato a te "}</LocalizedText></h2>
+        <p className="tv-home-copy"><LocalizedText>{"Raccolte complete e guide profonde si aprono qui, insieme a stack e Salvati. "}</LocalizedText></p>
         <div className="tv-home-member-links">
-          <Link className="tv-home-cta tv-home-cta--primary" href={workspaceViewHref("stack")}>
-            I tuoi stack
-          </Link>
-          <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}>
-            Salvati
-          </Link>
-          <Link className="tv-home-textbtn" href="/collections">
-            Raccolte
-          </Link>
-          <Link className="tv-home-textbtn" href="/posts">
-            Guide
-          </Link>
+          <Link className="tv-home-cta tv-home-cta--primary" href={workspaceViewHref("stack")}><LocalizedText>{"I tuoi stack "}</LocalizedText></Link>
+          <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}><LocalizedText>{"Salvati "}</LocalizedText></Link>
+          <Link className="tv-home-textbtn" href="/collections"><LocalizedText>{"Raccolte "}</LocalizedText></Link>
+          <Link className="tv-home-textbtn" href="/posts"><LocalizedText>{"Guide "}</LocalizedText></Link>
         </div>
       </section>
       <HomeRadarPulse />

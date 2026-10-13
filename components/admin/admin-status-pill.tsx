@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 export function AdminStatusPill({
   active,
   activeLabel,
@@ -20,7 +21,7 @@ export function AdminStatusPill({
           : "var(--tv-border-default)",
       }}
     >
-      {active ? activeLabel : inactiveLabel}
+      <LocalizedText>{active ? activeLabel : inactiveLabel}</LocalizedText>
     </span>
   );
 }

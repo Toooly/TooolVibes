@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { ArrowRight } from "lucide-react";
 
@@ -102,17 +103,17 @@ export function CollectionCardV4({
       <header className="cx-card-v4__head">
         <div className="cx-card-v4__eyebrow">
           {groupLabel && (
-            <span className="cx-card-v4__group">{groupLabel.toUpperCase()}</span>
+            <span className="cx-card-v4__group"><LocalizedText>{groupLabel.toUpperCase()}</LocalizedText></span>
           )}
           {areaLabel && (
-            <span className="cx-card-v4__area">{areaLabel}</span>
+            <span className="cx-card-v4__area"><LocalizedText>{areaLabel}</LocalizedText></span>
           )}
         </div>
         {featured && (
           <div className="cx-card-v4__count">
             <span className="cx-card-v4__count-num">{coreCount}</span>
             <span className="cx-card-v4__count-label">
-              {coreCount === 1 ? "strumento" : "strumenti"}
+              <LocalizedText>{coreCount === 1 ? "strumento" : "strumenti"}</LocalizedText>
             </span>
           </div>
         )}
@@ -123,17 +124,17 @@ export function CollectionCardV4({
           href={`/collections/${collection.slug}`}
           className="cx-card-v4__title-link"
         >
-          {collection.title}
+          <LocalizedText>{collection.title}</LocalizedText>
         </Link>
       </h3>
 
       <p className="cx-card-v4__promise">
-        {collection.stack_meta?.concise_promise ?? collection.description}
+        <LocalizedText>{collection.stack_meta?.concise_promise ?? collection.description}</LocalizedText>
       </p>
 
       {/* LAYER 2 — STACK (real brand gradient glyph strip) */}
       {visibleCores.length > 0 && (
-        <div className="cx-card-v4__stack" aria-label="Tool nello stack">
+        <LocalizedAttributes><div className="cx-card-v4__stack" aria-label="Tool nello stack">
           <ol className="cx-card-v4__stack-list">
             {visibleCores.map((slot, index) => (
               <li
@@ -141,7 +142,7 @@ export function CollectionCardV4({
                 className="cx-card-v4__stack-item"
               >
                 <span className="cx-card-v4__stack-no" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
+                  <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
                 </span>
                 <CollectionToolGlyph
                   slug={slot.tool.slug}
@@ -158,7 +159,7 @@ export function CollectionCardV4({
                   </span>
                   {featured && slot.stage && (
                     <span className="cx-card-v4__stack-stage">
-                      {slot.stage}
+                      <LocalizedText>{slot.stage}</LocalizedText>
                     </span>
                   )}
                 </div>
@@ -167,27 +168,27 @@ export function CollectionCardV4({
           </ol>
           {featured && hiddenCoresCount > 0 && (
             <p className="cx-card-v4__stack-more">
-              +{hiddenCoresCount} {hiddenCoresCount === 1 ? "altro strumento" : "altri strumenti"}
+              +{hiddenCoresCount} <LocalizedText>{hiddenCoresCount === 1 ? "altro strumento" : "altri strumenti"}</LocalizedText>
             </p>
           )}
-        </div>
+        </div></LocalizedAttributes>
       )}
 
       {/* LAYER 3 — DECISION (signal + CTA) */}
       <div className="cx-card-v4__foot">
-        {signal && <p className="cx-card-v4__signal">{signal}</p>}
+        {signal && <p className="cx-card-v4__signal"><LocalizedText>{signal}</LocalizedText></p>}
 
-        <Link
+        <LocalizedAttributes><Link
           href={`/collections/${collection.slug}`}
           className="cx-card-v4__cta"
           aria-label={`Usa questa raccolta ${collection.title}`}
         >
-          <span>Usa questa raccolta</span>
+          <span><LocalizedText>{"Usa questa raccolta"}</LocalizedText></span>
           <ArrowRight
             className="cx-card-v4__cta-arrow size-3.5"
             aria-hidden="true"
           />
-        </Link>
+        </Link></LocalizedAttributes>
       </div>
     </article>
   );

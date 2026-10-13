@@ -1,3 +1,4 @@
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import { JsonLd } from "@/components/seo/json-ld";
 
 import type { CuratedCollection } from "@/lib/types/collection";
@@ -102,7 +103,7 @@ export function CollectionDetailBodyV4({
           ]}
         />
         <CollectionStackFlowV4 collection={collection} />
-        <MemberPreviewGate
+        <LocalizedAttributes><MemberPreviewGate
           title="Continua nel tuo spazio"
           body="Lo stack completo resta nel tuo spazio."
         >
@@ -117,7 +118,7 @@ export function CollectionDetailBodyV4({
         <CollectionNextStepV4
           relatedCollections={relatedCollections}
         />
-        </MemberPreviewGate>
+        </MemberPreviewGate></LocalizedAttributes>
       </div>
     </>
   );

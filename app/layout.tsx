@@ -97,7 +97,7 @@ const structuredData = [
     name: siteConfig.name,
     url: siteConfig.url,
     description: siteConfig.description,
-    inLanguage: "it-IT",
+    inLanguage: ["it-IT", "en-US"],
     potentialAction: {
       "@type": "SearchAction",
       target: `${siteConfig.url}/archivio?q={search_term_string}`,

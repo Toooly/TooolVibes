@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowRight, Search } from "lucide-react";
 
@@ -58,7 +59,7 @@ export function IntentEntry() {
 
   return (
     <div className="def-intent">
-      <form
+      <LocalizedAttributes><form
         className="def-intent__form"
         action="/archivio"
         method="get"
@@ -74,19 +75,19 @@ export function IntentEntry() {
           data-locking={locking ? "" : undefined}
         >
           <Search size={16} aria-hidden="true" />
-          <input
+          <LocalizedAttributes><input
             id="home-intent-query"
             type="search"
             name="q"
             placeholder="Cerca tool, categoria, uso..."
             autoComplete="off"
             aria-label="Cerca tool, categoria, uso"
-          />
-          <button type="submit" aria-label="Cerca">
+          /></LocalizedAttributes>
+          <LocalizedAttributes><button type="submit" aria-label="Cerca">
             <ArrowRight size={16} aria-hidden="true" />
-          </button>
+          </button></LocalizedAttributes>
         </div>
-      </form>
+      </form></LocalizedAttributes>
     </div>
   );
 }

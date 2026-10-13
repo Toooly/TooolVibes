@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useMemo, useState } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -32,24 +33,20 @@ export function AccountIdentitiesSection() {
 
   return (
     <section className="tv-settings-section" aria-labelledby="settings-identities">
-      <h2 id="settings-identities" className="tv-settings-heading">
-        Metodi di accesso
-      </h2>
-      <p className="tv-settings-lead">
-        Email e social con la stessa email restano lo stesso spazio.
-      </p>
+      <h2 id="settings-identities" className="tv-settings-heading"><LocalizedText>{"Metodi di accesso "}</LocalizedText></h2>
+      <p className="tv-settings-lead"><LocalizedText>{"Email e social con la stessa email restano lo stesso spazio. "}</LocalizedText></p>
       <ul className="tv-identity-list">
         <li className="tv-identity-row">
-          <span>Email</span>
-          <span>{email ?? "collegata"}</span>
+          <span><LocalizedText>{"Email"}</LocalizedText></span>
+          <span><LocalizedText>{email ?? "collegata"}</LocalizedText></span>
         </li>
         {enabled.map((provider) => {
           const isLinked = linked.has(provider);
           return (
             <li key={provider} className="tv-identity-row">
-              <span>{oauthProviderLabel(provider)}</span>
+              <span><LocalizedText>{oauthProviderLabel(provider)}</LocalizedText></span>
               {isLinked ? (
-                <span>Collegato</span>
+                <span><LocalizedText>{"Collegato"}</LocalizedText></span>
               ) : (
                 <button
                   type="button"
@@ -65,9 +62,9 @@ export function AccountIdentitiesSection() {
                     });
                   }}
                 >
-                  {busy === provider
+                  <LocalizedText>{busy === provider
                     ? "Collegamento…"
-                    : `Collega ${oauthProviderLabel(provider)}`}
+                    : `Collega ${oauthProviderLabel(provider)}`}</LocalizedText>
                 </button>
               )}
             </li>
@@ -76,7 +73,7 @@ export function AccountIdentitiesSection() {
       </ul>
       {message ? (
         <p className="tv-settings-copy" role="alert">
-          {message}
+          <LocalizedText>{message}</LocalizedText>
         </p>
       ) : null}
     </section>

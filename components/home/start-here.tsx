@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/components/i18n/locale-provider";
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "@/components/ui/app-link";
 import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
@@ -72,7 +74,7 @@ function initialFor(name: string) {
       concrete job (no time/ease/quality inference added);
    4. canonical levelLabel ("Livello Base") as the closing facet.
    No time-to-result, ease, quality or performance claims are synthesized. */
-function editorialReasonsFor(tool: ToolPublicView): string[] {
+function editorialReasonsFor(tool: ToolPublicView, translate: (source: string) => string): string[] {
   const seen = new Set<string>();
   const reasons: string[] = [];
   const push = (label: string) => {
@@ -94,7 +96,7 @@ function editorialReasonsFor(tool: ToolPublicView): string[] {
   if (reasons.length < 2 && category) {
     push(category);
   }
-  const firstUseCase = (tool.useCases ?? []).map((u) => u.trim()).find((u) => u.length > 0);
+  const firstUseCase = (tool.useCases ?? []).map((u) => translate(u.trim())).find((u) => u.length > 0);
   if (firstUseCase && reasons.length < 3) {
     /* Word-boundary truncation: never cut a word, never alter meaning. */
     const words = firstUseCase.split(/\s+/);
@@ -162,10 +164,8 @@ export function StartHere({
       data-switched={hasSwitched ? "" : undefined}
     >
       <header className="def-start__head tv-discovery-stage__head">
-        <h2 id="def-start-title" className="def-start__title">
-          Da dove partire?
-        </h2>
-        <div
+        <h2 id="def-start-title" className="def-start__title"><LocalizedText>{"Da dove partire? "}</LocalizedText></h2>
+        <LocalizedAttributes><div
           className="def-start__tabs tv-discovery-stage__switch"
           role="tablist"
           aria-label="Da dove partire"
@@ -188,11 +188,11 @@ export function StartHere({
                 }}
                 onClick={() => selectTab(item.id)}
               >
-                {item.label}
+                <LocalizedText>{item.label}</LocalizedText>
               </button>
             );
           })}
-        </div>
+        </div></LocalizedAttributes>
       </header>
 
       <div className="tv-discovery-stage__frame">
@@ -239,6 +239,7 @@ function IvoryEditorial({
   focusTool: ToolPublicView | null;
   tools: ToolPublicView[];
 }) {
+  const { t } = useLocale();
   if (!focusTool) return null;
   const editorialScore = computeEditorialScore(focusTool);
   const isAffiliateLink =
@@ -247,10 +248,10 @@ function IvoryEditorial({
     editorialScore.status === "assessed" && editorialScore.value !== null
       ? editorialScore.value.toFixed(1)
       : "—";
-  const positioning = truncate(focusTool.tldr || focusTool.shortDescription || "", 140);
+  const positioning = truncate(t(focusTool.tldr || focusTool.shortDescription || ""), 140);
 
   return (
-    <div className="def-editorial tv-tool-mode" aria-label="In evidenza">
+    <LocalizedAttributes><div className="def-editorial tv-tool-mode" aria-label="In evidenza">
       <div className="def-editorial__inner">
         <div
           className="def-editorial__spotlight tv-featured-tool"
@@ -259,93 +260,88 @@ function IvoryEditorial({
         >
           <span className="tv-featured-tool__meteor" aria-hidden="true" data-meteor="" />
           <span className="tv-featured-tool__sparks" aria-hidden="true" data-sparks="" />
-          <Link
+          <LocalizedAttributes><Link
             href={`/toools/${focusTool.slug}`}
             className="tv-featured-tool__stretch"
             aria-label={`Apri ${focusTool.name}`}
-          />
+          /></LocalizedAttributes>
           <div className="def-editorial__spot-body">
-            <p className="def-editorial__spot-eyebrow">Scelta della redazione</p>
+            <p className="def-editorial__spot-eyebrow"><LocalizedText>{"Scelta della redazione"}</LocalizedText></p>
             <div className="def-editorial__spot-head">
               <span className="def-editorial__spot-avatar" aria-hidden="true">
                 {iconUrlFor(focusTool) ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={iconUrlFor(focusTool)!} alt="" loading="eager" decoding="async" />
+                  <LocalizedAttributes><img src={iconUrlFor(focusTool)!} alt="" loading="eager" decoding="async" /></LocalizedAttributes>
                 ) : (
                   <span>{initialFor(focusTool.name)}</span>
                 )}
               </span>
               <div className="def-editorial__spot-identity">
                 <h3 className="def-editorial__spot-name">{focusTool.name}</h3>
-                <p className="def-editorial__spot-cat">{focusTool.categoryLabel}</p>
+                <p className="def-editorial__spot-cat"><LocalizedText>{focusTool.categoryLabel}</LocalizedText></p>
               </div>
             </div>
             {positioning ? (
-              <p className="def-editorial__spot-lede">{positioning}</p>
+              <p className="def-editorial__spot-lede"><LocalizedText>{positioning}</LocalizedText></p>
             ) : null}
-            {editorialReasonsFor(focusTool).length > 0 ? (
-              <ul className="tv-featured-tool__reasons" aria-label="Perche la redazione lo consiglia">
-                {editorialReasonsFor(focusTool).map((reason) => (
-                  <li key={reason}>{reason}</li>
+            {editorialReasonsFor(focusTool, t).length > 0 ? (
+              <LocalizedAttributes><ul className="tv-featured-tool__reasons" aria-label="Perche la redazione lo consiglia">
+                {editorialReasonsFor(focusTool, t).map((reason) => (
+                  <li key={reason}><LocalizedText>{reason}</LocalizedText></li>
                 ))}
-              </ul>
+              </ul></LocalizedAttributes>
             ) : null}
             <p className="tv-featured-tool__meta">
               <span>
-                <span className="tv-featured-tool__meta-label">Score</span>
-                <strong className="tv-featured-tool__mono">{scoreLabel}</strong>
+                <span className="tv-featured-tool__meta-label"><LocalizedText>{"Score"}</LocalizedText></span>
+                <strong className="tv-featured-tool__mono"><LocalizedText>{scoreLabel}</LocalizedText></strong>
               </span>
               <span>
-                <span className="tv-featured-tool__meta-label">Livello</span>
-                <strong>{focusTool.levelLabel ?? "\u2014"}</strong>
+                <span className="tv-featured-tool__meta-label"><LocalizedText>{"Livello"}</LocalizedText></span>
+                <strong><LocalizedText>{focusTool.levelLabel ?? "\u2014"}</LocalizedText></strong>
               </span>
               <span>
-                <span className="tv-featured-tool__meta-label">Lettura</span>
+                <span className="tv-featured-tool__meta-label"><LocalizedText>{"Lettura"}</LocalizedText></span>
                 <strong className="tv-featured-tool__mono">
-                  {formatHomeAnalysisTime(focusTool.readingTime)}
+                  <LocalizedText>{formatHomeAnalysisTime(focusTool.readingTime)}</LocalizedText>
                 </strong>
               </span>
             </p>
             <div className="tv-featured-tool__footer">
-              <Link
+              <LocalizedAttributes><Link
                 href={`/toools/${focusTool.slug}`}
                 className="tv-featured-tool__cta"
                 aria-label={`Apri ${focusTool.name}`}
-              >
-                Apri scheda
-                <ArrowRight size={13} aria-hidden="true" />
-              </Link>
+              ><LocalizedText>{"Apri scheda "}</LocalizedText><ArrowRight size={13} aria-hidden="true" />
+              </Link></LocalizedAttributes>
               {(() => {
                 const visitUrl = focusTool.affiliateUrl ?? focusTool.externalUrl;
                 return visitUrl ? (
-                  <a
+                  <LocalizedAttributes><a
                     href={visitUrl}
                     target="_blank"
                     rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
                     className="tv-featured-tool__external"
                     aria-label={isAffiliateLink ? `Visita sito di ${focusTool.name} (link affiliato)` : `Visita sito di ${focusTool.name}`}
-                  >
-                    Visita sito
-                    <ExternalLink size={12} aria-hidden="true" />
-                  </a>
+                  ><LocalizedText>{"Visita sito "}</LocalizedText><ExternalLink size={12} aria-hidden="true" />
+                  </a></LocalizedAttributes>
                 ) : null;
               })()}
             </div>
             {isAffiliateLink ? (
-              <p className="def-editorial__spot-disclosure">
-                Link affiliato: commissione possibile, senza costi extra.
-              </p>
+              <p className="def-editorial__spot-disclosure"><LocalizedText>{"Link affiliato: commissione possibile, senza costi extra. "}</LocalizedText></p>
             ) : null}
           </div>
         </div>
 
         <LatestFromCatalog tools={tools} />
       </div>
-    </div>
+    </div></LocalizedAttributes>
   );
 }
 
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
+  const { t } = useLocale();
   const podiumRef = useRef<HTMLElement | null>(null);
   const celebrated = useRef(false);
   /* Selection state: which top-3 cell is currently brought to front.
@@ -434,62 +430,62 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
                 </svg>
               </span>
             ) : null}
-            <span className="def-podium__rank">{rank}</span>
+            <span className="def-podium__rank"><LocalizedText>{rank}</LocalizedText></span>
           </div>
         ) : null}
-        <Link
+        <LocalizedAttributes><Link
           href={`/toools/${tool.slug}`}
           className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}${isSelected ? " is-selected" : ""}`}
           aria-label={`Posizione ${rank}: apri ${tool.name}`}
           data-selected={isSelected || undefined}
           onClick={onSelect}
         >
-        {compact ? <span className="def-podium__rank def-podium__rank--inline" aria-hidden="true">{rank}</span> : null}
+        {compact ? <span className="def-podium__rank def-podium__rank--inline" aria-hidden="true"><LocalizedText>{rank}</LocalizedText></span> : null}
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+            <LocalizedAttributes><img src={iconUrl} alt="" loading="lazy" decoding="async" /></LocalizedAttributes>
           ) : (
-            <span>{initial}</span>
+            <span><LocalizedText>{initial}</LocalizedText></span>
           )}
         </span>
         <span className="def-podium__name">{tool.name}</span>
         {tool.categoryLabel ? (
-          <span className="def-podium__cat">{tool.categoryLabel}</span>
+          <span className="def-podium__cat"><LocalizedText>{tool.categoryLabel}</LocalizedText></span>
         ) : null}
         <span className="def-podium__score">
-          <span className="tv-featured-tool__mono">{scoreLabel}</span>
+          <span className="tv-featured-tool__mono"><LocalizedText>{scoreLabel}</LocalizedText></span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </span>
         {isSelected && !compact ? (
           <div className="def-podium__extra">
-            {tool.shortDescription ? <p className="def-podium__extra-desc">{truncate(tool.shortDescription, 120)}</p> : null}
+            {tool.shortDescription ? <p className="def-podium__extra-desc"><LocalizedText>{truncate(t(tool.shortDescription), 120)}</LocalizedText></p> : null}
             <div className="def-podium__extra-meta">
               {tool.levelLabel ? (
                 <span className="def-podium__pill">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                  {tool.levelLabel}
+                  <LocalizedText>{tool.levelLabel}</LocalizedText>
                 </span>
               ) : null}
               {tool.readingTime ? (
                 <span className="def-podium__pill">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  {formatHomeAnalysisTime(tool.readingTime)}
+                  <LocalizedText>{formatHomeAnalysisTime(tool.readingTime)}</LocalizedText>
                 </span>
               ) : null}
               {tool.tags?.[0] ? (
                 <span className="def-podium__pill def-podium__pill--tag">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                  {tool.tags[0]}
+                  <LocalizedText>{tool.tags[0]}</LocalizedText>
                 </span>
               ) : null}
               {tool.tags?.[1] ? (
-                <span className="def-podium__pill def-podium__pill--tag">{tool.tags[1]}</span>
+                <span className="def-podium__pill def-podium__pill--tag"><LocalizedText>{tool.tags[1]}</LocalizedText></span>
               ) : null}
             </div>
           </div>
         ) : null}
-        </Link>
+        </Link></LocalizedAttributes>
       </>
     );
   }
@@ -533,7 +529,7 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
           </span>
           <span className="def-podium__rank">01</span>
         </div>
-        <Link
+        <LocalizedAttributes><Link
           href={`/toools/${tool.slug}`}
           className={`def-podium__card is-first${isSelected ? " is-selected" : ""}`}
           aria-label={`Posizione 01: apri ${tool.name}`}
@@ -543,48 +539,48 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
         <span className="def-podium__avatar" aria-hidden="true">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+            <LocalizedAttributes><img src={iconUrl} alt="" loading="lazy" decoding="async" /></LocalizedAttributes>
           ) : (
-            <span>{initial}</span>
+            <span><LocalizedText>{initial}</LocalizedText></span>
           )}
         </span>
         <span className="def-podium__name">{tool.name}</span>
         {tool.categoryLabel ? (
-          <span className="def-podium__cat">{tool.categoryLabel}</span>
+          <span className="def-podium__cat"><LocalizedText>{tool.categoryLabel}</LocalizedText></span>
         ) : null}
         <span className="def-podium__score">
-          <span className="tv-featured-tool__mono">{scoreLabel}</span>
+          <span className="tv-featured-tool__mono"><LocalizedText>{scoreLabel}</LocalizedText></span>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </span>
         {isSelected ? (
           <div className="def-podium__extra">
-            {tool.shortDescription ? <p className="def-podium__extra-desc">{truncate(tool.shortDescription, 120)}</p> : null}
+            {tool.shortDescription ? <p className="def-podium__extra-desc"><LocalizedText>{truncate(t(tool.shortDescription), 120)}</LocalizedText></p> : null}
             <div className="def-podium__extra-meta">
               {tool.levelLabel ? (
                 <span className="def-podium__pill">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                  {tool.levelLabel}
+                  <LocalizedText>{tool.levelLabel}</LocalizedText>
                 </span>
               ) : null}
               {tool.readingTime ? (
                 <span className="def-podium__pill">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  {formatHomeAnalysisTime(tool.readingTime)}
+                  <LocalizedText>{formatHomeAnalysisTime(tool.readingTime)}</LocalizedText>
                 </span>
               ) : null}
               {tool.tags?.[0] ? (
                 <span className="def-podium__pill def-podium__pill--tag">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                  {tool.tags[0]}
+                  <LocalizedText>{tool.tags[0]}</LocalizedText>
                 </span>
               ) : null}
               {tool.tags?.[1] ? (
-                <span className="def-podium__pill def-podium__pill--tag">{tool.tags[1]}</span>
+                <span className="def-podium__pill def-podium__pill--tag"><LocalizedText>{tool.tags[1]}</LocalizedText></span>
               ) : null}
             </div>
           </div>
         ) : null}
-        </Link>
+        </Link></LocalizedAttributes>
       </>
     );
   }
@@ -592,13 +588,11 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   return (
     <section ref={podiumRef} className="def-latest" aria-labelledby="def-latest-title">
       <div className="def-latest__head def-podium__header">
-        <h3 id="def-latest-title" className="def-latest__title def-podium__title">
-          Ultime dal catalogo
-        </h3>
-        <p className="def-podium__subtitle">I tool più discussi questa settimana.</p>
+        <h3 id="def-latest-title" className="def-latest__title def-podium__title"><LocalizedText>{"Ultime dal catalogo "}</LocalizedText></h3>
+        <p className="def-podium__subtitle"><LocalizedText>{"I tool più discussi questa settimana."}</LocalizedText></p>
       </div>
       <div className="def-podium__backdrop" aria-hidden="true" />
-      <div
+      <LocalizedAttributes><div
         className={"def-podium__stage" + (selectedPos ? " has-focus-" + selectedPos : "")}
         role="list"
         aria-label="Podio dei tool"
@@ -627,9 +621,9 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
             <StageCard tool={top3[2]} rank="03" rankClass="is-top" medal="bronze" laurel="bronze" isSelected={selectedPos === "third"} onSelect={handleCellClick("third")} />
           </div>
         ) : null}
-      </div>
+      </div></LocalizedAttributes>
       {rest.length > 0 ? (
-        <div className="def-podium__rail" role="list" aria-label={`Posizioni 04–${String(Math.min(rest.length + 3, 9)).padStart(2, "0")}`}>
+        <LocalizedAttributes><div className="def-podium__rail" role="list" aria-label={`Posizioni 04–${String(Math.min(rest.length + 3, 9)).padStart(2, "0")}`}>
           {rest.map((tool, i) => {
             const rank = String(i + 4).padStart(2, "0");
             return (
@@ -638,11 +632,11 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
               </div>
             );
           })}
-        </div>
+        </div></LocalizedAttributes>
       ) : null}
       <Link href="/archivio" className="def-podium__cta tv-gold-cta">
         <span className="tv-gold-cta__glow" aria-hidden="true" />
-        <span className="tv-gold-cta__label">Vedi tutto il catalogo</span>
+        <span className="tv-gold-cta__label"><LocalizedText>{"Vedi tutto il catalogo"}</LocalizedText></span>
         <ArrowRight size={15} aria-hidden="true" />
       </Link>
     </section>
@@ -690,13 +684,13 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
   return (
     <div className="def-stacks tv-stack-mode">
       {stacks.length > 0 ? (
-        <div
+        <LocalizedAttributes><div
           className="def-stacks__carousel"
           role="region"
           aria-roledescription="carousel"
           aria-label="Stack in evidenza"
         >
-          <button
+          <LocalizedAttributes><button
             type="button"
             className="def-stacks__arrow def-stacks__arrow--prev"
             aria-label="Stack precedente"
@@ -704,7 +698,7 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
             disabled={active === 0}
           >
             <ChevronLeft size={18} aria-hidden="true" />
-          </button>
+          </button></LocalizedAttributes>
           <ul ref={scrollerRef} className="def-stacks__rail">
             {stacks.map((stack, index) => {
               const isActive = index === active;
@@ -718,31 +712,31 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
                 >
                   <Link href={`/collections/${stack.slug}`} className="def-stacks__card">
                     <div className="def-stacks__card-head">
-                      <span className="def-stacks__pill">{stack.kicker}</span>
+                      <span className="def-stacks__pill"><LocalizedText>{stack.kicker}</LocalizedText></span>
                       <span className="def-stacks__counter">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                         {index + 1}/{total}
                       </span>
                     </div>
-                    <h3 className="def-stacks__title">{stack.title}</h3>
+                    <h3 className="def-stacks__title"><LocalizedText>{stack.title}</LocalizedText></h3>
                     {stack.outcome ? (
-                      <p className="def-stacks__desc">{stack.outcome}</p>
+                      <p className="def-stacks__desc"><LocalizedText>{stack.outcome}</LocalizedText></p>
                     ) : null}
                     {shownTools.length > 0 ? (
-                      <ol className="def-stacks__tools" aria-label="Tool inclusi">
+                      <LocalizedAttributes><ol className="def-stacks__tools" aria-label="Tool inclusi">
                         {shownTools.map((stage, si) => (
                           <li key={`${stack.slug}-${stage.name}`} className="def-stacks__tool">
                             <span className="def-stacks__tool-icon">
                               {stage.iconUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={stage.iconUrl} alt="" loading="lazy" decoding="async" />
+                                <LocalizedAttributes><img src={stage.iconUrl} alt="" loading="lazy" decoding="async" /></LocalizedAttributes>
                               ) : (
                                 <span className="def-stacks__tool-fallback">{stage.name.slice(0, 1).toUpperCase()}</span>
                               )}
                             </span>
                             <span className="def-stacks__tool-text">
                               <strong>{stage.name}</strong>
-                              {stage.label ? <span>{stage.label}</span> : null}
+                              {stage.label ? <span><LocalizedText>{stage.label}</LocalizedText></span> : null}
                             </span>
                             {si < shownTools.length - 1 ? (
                               <span className="def-stacks__tool-node" aria-hidden="true" />
@@ -750,44 +744,42 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
                           </li>
                         ))}
                         {extraCount > 0 ? (
-                          <li className="def-stacks__tool def-stacks__tool--more">+{extraCount} altri</li>
+                          <li className="def-stacks__tool def-stacks__tool--more">+{extraCount}<LocalizedText>{" altri"}</LocalizedText></li>
                         ) : null}
-                      </ol>
+                      </ol></LocalizedAttributes>
                     ) : null}
                     <div className="def-stacks__meta">
                       {stack.setupTime ? (
                         <span className="def-stacks__meta-item">
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                          {stack.setupTime}
+                          <LocalizedText>{stack.setupTime}</LocalizedText>
                         </span>
                       ) : null}
                       {stack.variantLabel ? (
                         <span className="def-stacks__meta-item">
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                          Variante {stack.variantLabel}
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg><LocalizedText>{"Variante "}</LocalizedText><LocalizedText>{stack.variantLabel}</LocalizedText>
                         </span>
                       ) : null}
                       {stack.cost ? (
                         <span className="def-stacks__meta-item">
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                          {stack.cost}
+                          <LocalizedText>{stack.cost}</LocalizedText>
                         </span>
                       ) : null}
                       {stack.toolCount ? (
                         <span className="def-stacks__meta-item">
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-                          {stack.toolCount} tool
-                        </span>
+                          {stack.toolCount}<LocalizedText>{" tool "}</LocalizedText></span>
                       ) : null}
                     </div>
                     {!authenticated ? (
                       <span className="def-stacks__cta tv-gold-cta tv-gold-cta--secondary">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        <span className="tv-gold-cta__label">Accedi per lo stack completo</span>
+                        <span className="tv-gold-cta__label"><LocalizedText>{"Accedi per lo stack completo"}</LocalizedText></span>
                       </span>
                     ) : (
                       <span className="def-stacks__cta tv-gold-cta tv-gold-cta--secondary">
-                        <span className="tv-gold-cta__label">Apri raccolta</span>
+                        <span className="tv-gold-cta__label"><LocalizedText>{"Apri raccolta"}</LocalizedText></span>
                         <ArrowRight size={14} aria-hidden="true" />
                       </span>
                     )}
@@ -796,7 +788,7 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
               );
             })}
           </ul>
-          <button
+          <LocalizedAttributes><button
             type="button"
             className="def-stacks__arrow def-stacks__arrow--next"
             aria-label="Stack successivo"
@@ -804,14 +796,14 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
             disabled={active === stacks.length - 1}
           >
             <ChevronRight size={18} aria-hidden="true" />
-          </button>
-        </div>
+          </button></LocalizedAttributes>
+        </div></LocalizedAttributes>
       ) : null}
       {showDots ? (
-        <div className="def-stacks__pagination" role="group" aria-label="Paginazione stack">
+        <LocalizedAttributes><div className="def-stacks__pagination" role="group" aria-label="Paginazione stack">
           <div className="def-stacks__segments">
             {stacks.map((stack, index) => (
-              <button
+              <LocalizedAttributes key={stack.slug}><button
                 key={stack.slug}
                 type="button"
                 aria-current={index === active ? "true" : undefined}
@@ -820,21 +812,20 @@ function HomeStacks({ stacks, authenticated = false }: { stacks: HomeStackPrevie
                 onClick={() => scrollToIndex(index)}
               >
                 <span className="def-stacks__segment-bar" />
-              </button>
+              </button></LocalizedAttributes>
             ))}
           </div>
           <span className="def-stacks__progress-label" aria-live="polite">
             {active + 1} / {total}
           </span>
-        </div>
+        </div></LocalizedAttributes>
       ) : null}
       <div className="def-stacks__discovery">
         <p className="def-stacks__discovery-hint">
-          {total} in evidenza · molte altre da esplorare
-        </p>
+          {total}<LocalizedText>{" in evidenza · molte altre da esplorare "}</LocalizedText></p>
         <Link href="/collections" className="def-stacks__more tv-gold-cta">
           <span className="tv-gold-cta__glow" aria-hidden="true" />
-          <span className="tv-gold-cta__label">Tutte le raccolte</span>
+          <span className="tv-gold-cta__label"><LocalizedText>{"Tutte le raccolte"}</LocalizedText></span>
           <ArrowRight size={14} aria-hidden="true" />
         </Link>
       </div>

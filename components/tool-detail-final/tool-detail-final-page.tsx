@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -171,11 +172,11 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
     <>
       <JsonLd data={toolStructuredData} />
       <div className="td-final-page">
-        <nav className="td-final-breadcrumb" aria-label="Breadcrumb">
-          <Link href="/archivio" className="td-final-breadcrumb__link">← Catalogo</Link>
+        <LocalizedAttributes><nav className="td-final-breadcrumb" aria-label="Breadcrumb">
+          <Link href="/archivio" className="td-final-breadcrumb__link"><LocalizedText>{"← Catalogo"}</LocalizedText></Link>
           <span className="td-final-breadcrumb__sep" aria-hidden="true">/</span>
           <span className="td-final-breadcrumb__current">{tool.name}</span>
-        </nav>
+        </nav></LocalizedAttributes>
         <section
           id="td-final-overview" data-td-section data-td-section-target="td-final-overview" data-td-section-title="Panoramica"
           className="td-final-hero"
@@ -209,15 +210,15 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
         <div data-td-section data-td-section-target="td-final-alternatives" data-td-section-title="Alternative"><ToolDetailAlternatives current={tool} related={relatedTools} /></div>
         {relatedGuides.length > 0 ? (
           <section id="td-final-related-guides" data-td-section data-td-section-target="td-final-related-guides" data-td-section-title="Guide correlate" className="td-final-related-guides">
-            <p className="td-final-section-eyebrow">Guide correlate</p>
-            <h2 className="td-final-section-title">Approfondisci questo tool</h2>
+            <p className="td-final-section-eyebrow"><LocalizedText>{"Guide correlate"}</LocalizedText></p>
+            <h2 className="td-final-section-title"><LocalizedText>{"Approfondisci questo tool"}</LocalizedText></h2>
             <EntityCardList entities={relatedGuides.map((g) => ({ href: `/posts/${g.slug}`, title: g.name, kind: "guide" as const }))} />
           </section>
         ) : null}
         {relatedStacks.length > 0 ? (
           <section id="td-final-related-stacks" data-td-section data-td-section-target="td-final-related-stacks" data-td-section-title="In questi Stack" className="td-final-related-stacks">
-            <p className="td-final-section-eyebrow">In questi Stack</p>
-            <h2 className="td-final-section-title">Presente in questi Stack</h2>
+            <p className="td-final-section-eyebrow"><LocalizedText>{"In questi Stack"}</LocalizedText></p>
+            <h2 className="td-final-section-title"><LocalizedText>{"Presente in questi Stack"}</LocalizedText></h2>
             <EntityCardList entities={relatedStacks.map((s) => ({ href: `/collections/${s.slug}`, title: s.name, subtitle: `${s.toolCount} tool`, kind: "stack" as const }))} />
           </section>
         ) : null}

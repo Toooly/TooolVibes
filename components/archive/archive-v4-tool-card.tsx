@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * TooolVibes — Archive V4 Tool Card (CATALOG FINAL V2, 2026-10-02)
  *
@@ -227,38 +228,36 @@ function ArchiveV4ToolCard({
         <span className="ar4-card__avatar" aria-hidden="true">
           {iconUrl && !logoFailed ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <LocalizedAttributes><img
               src={iconUrl}
               alt=""
               loading="lazy"
               decoding="async"
               onError={() => setLogoFailed(true)}
-            />
+            /></LocalizedAttributes>
           ) : (
-            <span>{initial}</span>
+            <span><LocalizedText>{initial}</LocalizedText></span>
           )}
         </span>
         <div className="ar4-card__identity">
           <h3 className="ar4-card__name">
-            <Link
+            <LocalizedAttributes><Link
               href={`/toools/${tool.slug}`}
               prefetch={false}
               className="ar4-card__name-link"
               aria-label={`Apri la scheda di ${tool.name}`}
             >
               <span className="ar4-card__name-text">{tool.name}</span>
-            </Link>
+            </Link></LocalizedAttributes>
           </h3>
-          <p className="ar4-card__category">{tool.categoryLabel}</p>
+          <p className="ar4-card__category"><LocalizedText>{tool.categoryLabel}</LocalizedText></p>
         </div>
         {showEditorialBadge ? (
-          <span
+          <LocalizedAttributes><span
             className="ar4-card__status ar4-card__status--editorial"
             aria-label="In evidenza"
           >
-            <Star size={11} aria-hidden="true" />
-            In evidenza
-          </span>
+            <Star size={11} aria-hidden="true" /><LocalizedText>{"In evidenza "}</LocalizedText></span></LocalizedAttributes>
         ) : null}
         {showTierBadge ? (
           <span
@@ -268,22 +267,20 @@ function ArchiveV4ToolCard({
             )}
           >
             {effectiveTier === "primary" ? <Star size={11} aria-hidden="true" /> : null}
-            {tierLabel}
+            <LocalizedText>{tierLabel}</LocalizedText>
           </span>
         ) : null}
         {showSponsoredBadge ? (
-          <span
+          <LocalizedAttributes><span
             className="ar4-card__status ar4-card__status--sponsored"
             aria-label="Contenuto sponsorizzato"
-          >
-            Contenuto sponsorizzato
-          </span>
+          ><LocalizedText>{"Contenuto sponsorizzato "}</LocalizedText></span></LocalizedAttributes>
         ) : null}
       </div>
 
       {/* 2. DESCRIPTION: 2-line editorial block */}
       <p className="ar4-card__desc">
-        {tool.tldr || tool.shortDescription || "Scheda in preparazione."}
+        <LocalizedText>{tool.tldr || tool.shortDescription || "Scheda in preparazione."}</LocalizedText>
       </p>
       {!reduced && bestFor ? (
         <p className="ar4-card__best">
@@ -291,8 +288,8 @@ function ArchiveV4ToolCard({
             <Target />
           </span>
           <span>
-            <span className="ar4-card__best-label">Ideale per</span>{" "}
-            <span className="ar4-card__best-text">{bestFor}</span>
+            <span className="ar4-card__best-label"><LocalizedText>{"Ideale per"}</LocalizedText></span><LocalizedText>{" "}</LocalizedText>
+            <span className="ar4-card__best-text"><LocalizedText>{bestFor}</LocalizedText></span>
           </span>
         </p>
       ) : null}
@@ -304,16 +301,16 @@ function ArchiveV4ToolCard({
         <div className="ar4-card__enriched">
           <div className="ar4-card__enriched-rail">
             {tool.levelLabel ? (
-              <span className="ar4-card__enriched-label">{tool.levelLabel}</span>
+              <span className="ar4-card__enriched-label"><LocalizedText>{tool.levelLabel}</LocalizedText></span>
             ) : null}
             {tool.levelLabel && tool.readingTime ? (
               <span className="ar4-card__enriched-sep">·</span>
             ) : null}
             {tool.readingTime ? (
-              <span className="ar4-card__enriched-label">{tool.readingTime}</span>
+              <span className="ar4-card__enriched-label"><LocalizedText>{tool.readingTime}</LocalizedText></span>
             ) : null}
             {tool.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="ar4-card__enriched-chip">{tag}</span>
+              <span key={tag} className="ar4-card__enriched-chip"><LocalizedText>{tag}</LocalizedText></span>
             ))}
           </div>
         </div>
@@ -324,9 +321,9 @@ function ArchiveV4ToolCard({
         <div className="ar4-card__control-rail" data-has-rank={showRank ? "true" : undefined}>
           {showRank ? (
             <div className="ar4-card__state-flags" aria-live="polite">
-              <span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
-                #{String(rank).padStart(2, "0")}
-              </span>
+              <LocalizedAttributes><span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
+                #<LocalizedText>{String(rank).padStart(2, "0")}</LocalizedText>
+              </span></LocalizedAttributes>
             </div>
           ) : (
             <WorkspacePersonalStatusBadge
@@ -335,10 +332,10 @@ function ArchiveV4ToolCard({
             />
           )}
           {!reduced && scoreLine ? (
-            <span className="ar4-card__score">{scoreLine}</span>
+            <span className="ar4-card__score"><LocalizedText>{scoreLine}</LocalizedText></span>
           ) : null}
           <div className="ar4-card__toggles">
-            <button
+            <LocalizedAttributes><button
               type="button"
               className="ar4-card__bookmark"
               data-saved={isSaved || undefined}
@@ -351,7 +348,7 @@ function ArchiveV4ToolCard({
                 aria-hidden="true"
                 fill={isSaved ? "currentColor" : "none"}
               />
-            </button>
+            </button></LocalizedAttributes>
             <CompareToggle
               slug={tool.slug}
               mode="icon"
@@ -363,10 +360,7 @@ function ArchiveV4ToolCard({
 
       {/* DISCLOSURE */}
       {showSponsoredBadge ? (
-        <p className="ar4-card__disclosure">
-          Link affiliato: potremmo ricevere una commissione, senza costi
-          aggiuntivi per te.
-        </p>
+        <p className="ar4-card__disclosure"><LocalizedText>{"Link affiliato: potremmo ricevere una commissione, senza costi aggiuntivi per te. "}</LocalizedText></p>
       ) : null}
       {/* Save acknowledgement pill */}
       {showSaveAck && (
@@ -374,7 +368,7 @@ function ArchiveV4ToolCard({
           <svg width="12" height="12" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
             <path d="M1 1h8v12l-4-3-4 3z" />
           </svg>
-          <span>Salvato</span>
+          <span><LocalizedText>{"Salvato"}</LocalizedText></span>
         </div>
       )}
     </article>

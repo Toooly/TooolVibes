@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useState } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
@@ -51,7 +52,7 @@ export function DailyResetCountdown({ className, size = 56 }: DailyResetCountdow
   }, []);
 
   return (
-    <div className={className} aria-label={ariaLabel}>
+    <LocalizedAttributes><div className={className} aria-label={ariaLabel}>
       <CountdownCircleTimer
         key={key}
         isPlaying
@@ -69,10 +70,10 @@ export function DailyResetCountdown({ className, size = 56 }: DailyResetCountdow
       >
         {({ remainingTime }) => (
           <span className="daily-reset-countdown__text">
-            {formatRemaining(remainingTime)}
+            <LocalizedText>{formatRemaining(remainingTime)}</LocalizedText>
           </span>
         )}
       </CountdownCircleTimer>
-    </div>
+    </div></LocalizedAttributes>
   );
 }

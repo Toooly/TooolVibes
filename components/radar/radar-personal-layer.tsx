@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useState } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -91,9 +92,7 @@ export function RadarLensControl({
       aria-labelledby="tv-radar-lens-label"
       data-radar-lens=""
     >
-      <span id="tv-radar-lens-label" className="tv-radar-control__label">
-        Lente
-      </span>
+      <span id="tv-radar-lens-label" className="tv-radar-control__label"><LocalizedText>{"Lente "}</LocalizedText></span>
       <div className="tv-radar-control__buttons">
         <button
           type="button"
@@ -101,9 +100,7 @@ export function RadarLensControl({
           aria-selected={lens === "public"}
           aria-controls="tv-radar-results"
           onClick={() => onSelect("public")}
-        >
-          Tendenze
-        </button>
+        ><LocalizedText>{"Tendenze "}</LocalizedText></button>
         <button
           type="button"
           role="tab"
@@ -111,9 +108,7 @@ export function RadarLensControl({
           aria-selected={lens === "personal"}
           aria-controls="tv-radar-results"
           onClick={() => onSelect("personal")}
-        >
-          Per te
-        </button>
+        ><LocalizedText>{"Per te "}</LocalizedText></button>
       </div>
     </div>
   );
@@ -127,8 +122,8 @@ export function RadarPersonalReason({
   if (!signal) return null;
   return (
     <p className="tv-radar-personal-reason" data-radar-personal-reason={signal.kind}>
-      <span className="tv-radar-personal-reason__eyebrow">Per te</span>
-      {signal.explanation}
+      <span className="tv-radar-personal-reason__eyebrow"><LocalizedText>{"Per te"}</LocalizedText></span>
+      <LocalizedText>{signal.explanation}</LocalizedText>
     </p>
   );
 }
@@ -142,11 +137,8 @@ export function RadarPersonalEmpty() {
       role="status"
       aria-live="polite"
     >
-      <h3 className="tv-radar-state__title">Nessun segnale personale forte in questo momento.</h3>
-      <p className="tv-radar-state__body">
-        Il Radar resta sulle tendenze pubbliche. Torna alle tendenze per
-        continuare a esplorare i lanci.
-      </p>
+      <h3 className="tv-radar-state__title"><LocalizedText>{"Nessun segnale personale forte in questo momento."}</LocalizedText></h3>
+      <p className="tv-radar-state__body"><LocalizedText>{"Il Radar resta sulle tendenze pubbliche. Torna alle tendenze per continuare a esplorare i lanci. "}</LocalizedText></p>
     </div>
   );
 }

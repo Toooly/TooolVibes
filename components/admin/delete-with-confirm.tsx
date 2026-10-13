@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useTransition } from "react";
 
 type DeleteWithConfirmProps = {
@@ -33,7 +34,7 @@ export function DeleteWithConfirm({
       onClick={handleClick}
       className={variant === "menu" ? undefined : "tv-cc-btn tv-cc-btn--danger"}
     >
-      {isPending ? "Eliminazione..." : label}
+      <LocalizedText>{isPending ? "Eliminazione..." : label}</LocalizedText>
     </button>
   );
 }

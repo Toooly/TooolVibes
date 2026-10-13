@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { cn } from "@/lib/utils";
 
 export type RouteMarkerProps = {
@@ -25,10 +26,10 @@ export function RouteMarker({
         <span className="tv-brand-trace tv-brand-trace--solid" />
       </span>
       <span className="route-marker__index" aria-hidden="true">
-        {index}
+        <LocalizedText>{index}</LocalizedText>
       </span>
-      <span className="route-marker__label">{label}</span>
-      {status ? <span className="route-marker__status">{status}</span> : null}
+      <span className="route-marker__label"><LocalizedText>{label}</LocalizedText></span>
+      {status ? <span className="route-marker__status"><LocalizedText>{status}</LocalizedText></span> : null}
     </div>
   );
 }

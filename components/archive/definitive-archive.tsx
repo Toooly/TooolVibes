@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/components/i18n/locale-provider";
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * TooolVibes — Definitive Archive (CATALOG V2, 2026-08-03)
  *
@@ -228,6 +230,7 @@ export function DefinitiveArchive({
   );
 
   // Filter (no sort, no slice — used to drive counts in the H2)
+  const { t: translate } = useLocale();
   const filtered = useMemo(() => {
     return tools.filter((t) => {
       if (activeGroup !== "all") {
@@ -238,12 +241,13 @@ export function DefinitiveArchive({
       }
       if (query.trim()) {
         const q = query.trim().toLowerCase();
-        const haystack = `${t.name} ${t.categoryLabel} ${t.tldr ?? ""} ${t.shortDescription ?? ""} ${(t.useCases ?? []).join(" ")} ${(t.tags ?? []).join(" ")} ${t.idealUseCase ?? ""}`.toLowerCase();
+        const localized = [t.categoryLabel, t.tldr ?? "", t.shortDescription ?? "", ...(t.useCases ?? []), ...(t.tags ?? []), t.idealUseCase ?? ""].map(translate).join(" ");
+        const haystack = `${localized} ${t.name} ${t.categoryLabel} ${t.tldr ?? ""} ${t.shortDescription ?? ""} ${(t.useCases ?? []).join(" ")} ${(t.tags ?? []).join(" ")} ${t.idealUseCase ?? ""}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
     });
-  }, [tools, activeGroup, activeLevel, query]);
+  }, [tools, activeGroup, activeLevel, query, translate]);
 
   // Apply sort
   const sortedFiltered = useMemo(() => {
@@ -303,40 +307,35 @@ export function DefinitiveArchive({
             <p className="ar4-intro__eyebrow">
               <span aria-hidden="true" className="ar4-intro__eyebrow-dot" />
               <span className="ar4-intro__eyebrow-copy">
-                <span className="ar4-intro__eyebrow-lead">Catalogo · </span>{totalTools} tool<span className="ar4-intro__eyebrow-in"> in </span><span className="ar4-intro__eyebrow-sep"> · </span>{totalGroups} categorie
-              </span>
+                <span className="ar4-intro__eyebrow-lead"><LocalizedText>{"Catalogo · "}</LocalizedText></span>{totalTools}<LocalizedText>{" tool"}</LocalizedText><span className="ar4-intro__eyebrow-in"><LocalizedText>{" in "}</LocalizedText></span><span className="ar4-intro__eyebrow-sep"> · </span>{totalGroups}<LocalizedText>{" categorie "}</LocalizedText></span>
             </p>
-            <h1 id="ar4-intro-title" className="ar4-intro__title">
-              Trova i tool da valutare.
-            </h1>
+            <h1 id="ar4-intro-title" className="ar4-intro__title"><LocalizedText>{"Trova i tool da valutare. "}</LocalizedText></h1>
           </div>
 
           <div className="ar4-intro__panel">
-            <label className="ar4-intro__search" aria-label="Cerca nel catalogo">
+            <LocalizedAttributes><label className="ar4-intro__search" aria-label="Cerca nel catalogo">
               <Search size={16} aria-hidden="true" />
-              <input
+              <LocalizedAttributes><input
                 type="search"
                 placeholder="Cerca per nome o categoria…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 autoComplete="off"
                 spellCheck={false}
-              />
+              /></LocalizedAttributes>
               {query.trim().length > 0 ? (
-                <button
+                <LocalizedAttributes><button
                   type="button"
                   className="ar4-intro__search-clear"
                   onClick={() => setQuery("")}
                   aria-label="Cancella il termine di ricerca"
                 >
                   <X size={14} aria-hidden="true" />
-                </button>
+                </button></LocalizedAttributes>
               ) : null}
-            </label>
+            </label></LocalizedAttributes>
             {query.trim().length > 0 ? (
-              <p className="ar4-intro__search-helper" role="status" aria-live="polite">
-                Risultati per &ldquo;{query.trim()}&rdquo;
-              </p>
+              <p className="ar4-intro__search-helper" role="status" aria-live="polite"><LocalizedText>{"Risultati per “"}</LocalizedText>{query.trim()}<LocalizedText>{"” "}</LocalizedText></p>
             ) : null}
 
             {/* Counts live in the intro eyebrow only. */}
@@ -348,18 +347,17 @@ export function DefinitiveArchive({
       {/* ═══ 2. CATEGORIE — chip rail con expand/collapse ═══ */}
       <section className="ar4-categories" aria-labelledby="ar4-categories-title">
         <div className="ar4-categories__inner">
-          <div ref={chipsRef} className="ar4-categories__chips" role="group" aria-label="Categorie del catalogo">
-            <button
+          <LocalizedAttributes><div ref={chipsRef} className="ar4-categories__chips" role="group" aria-label="Categorie del catalogo">
+            <LocalizedAttributes><button
               type="button"
               className={cn("ar4-chip", activeGroup === "all" && "is-active")}
               onClick={() => setActiveGroup("all")}
               aria-pressed={activeGroup === "all"}
               aria-label="Mostra i tool di tutte le categorie"
-            >
-              Tutte <em>({totalTools})</em>
-            </button>
+            ><LocalizedText>{"Tutte "}</LocalizedText><em>({totalTools})</em>
+            </button></LocalizedAttributes>
             {visibleCategoryGroups.map((g) => (
-              <button
+              <LocalizedAttributes key={g.key}><button
                 key={g.key}
                 type="button"
                 className={cn("ar4-chip", activeGroup === g.key && "is-active")}
@@ -367,12 +365,12 @@ export function DefinitiveArchive({
                 aria-pressed={activeGroup === g.key}
                 aria-label={`Mostra i tool della categoria ${g.label}`}
               >
-                {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
-              </button>
+                <LocalizedText>{g.label}</LocalizedText> <em>{groupCounts.get(g.key) ?? 0}</em>
+              </button></LocalizedAttributes>
             ))}
             {showAllCategories
               ? hiddenCategoryGroups.map((g) => (
-                  <button
+                  <LocalizedAttributes key={g.key}><button
                     key={g.key}
                     type="button"
                     className={cn("ar4-chip", activeGroup === g.key && "is-active")}
@@ -380,11 +378,11 @@ export function DefinitiveArchive({
                     aria-pressed={activeGroup === g.key}
                     aria-label={`Mostra i tool della categoria ${g.label}`}
                   >
-                    {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
-                  </button>
+                    <LocalizedText>{g.label}</LocalizedText> <em>{groupCounts.get(g.key) ?? 0}</em>
+                  </button></LocalizedAttributes>
                 ))
               : null}
-          </div>
+          </div></LocalizedAttributes>
 
           {hiddenCategoryGroups.length > 0 ? (
             <button
@@ -394,18 +392,18 @@ export function DefinitiveArchive({
               aria-expanded={showAllCategories}
             >
               {showAllCategories ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
-              <span>{showAllCategories ? "Mostra meno categorie" : "Mostra tutte le categorie"}</span>
+              <span><LocalizedText>{showAllCategories ? "Mostra meno categorie" : "Mostra tutte le categorie"}</LocalizedText></span>
             </button>
           ) : null}
         </div>
       </section>
 
       {/* ═══ 3a. DESKTOP FILTRI + ORDINAMENTO (>= 768px) ═══ */}
-      <section className="ar4-filters" aria-label="Filtri catalogo">
+      <LocalizedAttributes><section className="ar4-filters" aria-label="Filtri catalogo">
         <div className="ar4-filters__inner">
-          <div className="ar4-filters__group" role="tablist" aria-label="Livello">
+          <LocalizedAttributes><div className="ar4-filters__group" role="tablist" aria-label="Livello">
             <span className="ar4-filters__label" aria-hidden="true">
-              <span>Livello</span>
+              <span><LocalizedText>{"Livello"}</LocalizedText></span>
             </span>
             {LEVEL_FILTERS.map((l) => (
               <button
@@ -416,15 +414,13 @@ export function DefinitiveArchive({
                 className={cn("ar4-chip ar4-chip--level", activeLevel === l.key && "is-active")}
                 onClick={() => setActiveLevel(l.key)}
               >
-                {l.label}
+                <LocalizedText>{l.label}</LocalizedText>
               </button>
             ))}
-          </div>
+          </div></LocalizedAttributes>
 
           <div className="ar4-filters__group ar4-filters__group--sort">
-            <label className="ar4-filters__label" htmlFor="ar4-sort">
-              Ordina per
-            </label>
+            <label className="ar4-filters__label" htmlFor="ar4-sort"><LocalizedText>{"Ordina per "}</LocalizedText></label>
             <select
               id="ar4-sort"
               className="ar4-filters__sort"
@@ -433,18 +429,18 @@ export function DefinitiveArchive({
             >
               {SORT_OPTIONS.map((o) => (
                 <option key={o.key} value={o.key}>
-                  {o.label}
+                  <LocalizedText>{o.label}</LocalizedText>
                 </option>
               ))}
             </select>
           </div>
         </div>
-      </section>
+      </section></LocalizedAttributes>
 
       {/* ═══ 3b. MOBILE FILTER BAR (< 768px) ═══ */}
-      <section className="ar4-mobile-bar" aria-label="Filtri rapidi">
+      <LocalizedAttributes><section className="ar4-mobile-bar" aria-label="Filtri rapidi">
         <div className="ar4-mobile-bar__inner">
-          <button
+          <LocalizedAttributes><button
             type="button"
             ref={filterTriggerRef}
             className="ar4-mobile-bar__trigger"
@@ -455,11 +451,11 @@ export function DefinitiveArchive({
             aria-label="Apri filtri catalogo"
           >
             <SlidersHorizontal size={16} aria-hidden="true" />
-            <span>{activeFilterCount > 0 ? `Filtri · ${activeFilterCount}` : "Filtri"}</span>
-          </button>
+            <span><LocalizedText>{activeFilterCount > 0 ? `Filtri · ${activeFilterCount}` : "Filtri"}</LocalizedText></span>
+          </button></LocalizedAttributes>
           <label className="ar4-mobile-bar__sort">
-            <span className="sr-only">Ordina per</span>
-            <select
+            <span className="sr-only"><LocalizedText>{"Ordina per"}</LocalizedText></span>
+            <LocalizedAttributes><select
               className="ar4-mobile-bar__sort-select"
               value={sortKey}
               onChange={(e) => setSortKey(e.target.value as SortKey)}
@@ -467,41 +463,38 @@ export function DefinitiveArchive({
             >
               {SORT_OPTIONS.map((o) => (
                 <option key={o.key} value={o.key}>
-                  {o.label}
+                  <LocalizedText>{o.label}</LocalizedText>
                 </option>
               ))}
-            </select>
+            </select></LocalizedAttributes>
           </label>
         </div>
-      </section>
+      </section></LocalizedAttributes>
 
       {hasActiveFilter ? (
-        <div className="ar4-applied" aria-label="Filtri attivi">
-          <p className="ar4-applied__label">Filtri attivi</p>
+        <LocalizedAttributes><div className="ar4-applied" aria-label="Filtri attivi">
+          <p className="ar4-applied__label"><LocalizedText>{"Filtri attivi"}</LocalizedText></p>
           <div className="ar4-applied__chips">
             {query.trim() ? (
-              <button type="button" className="ar4-applied__chip" onClick={() => setQuery("")}>
-                Ricerca: {query.trim()}
+              <button type="button" className="ar4-applied__chip" onClick={() => setQuery("")}><LocalizedText>{"Ricerca: "}</LocalizedText>{query.trim()}
                 <X size={12} aria-hidden="true" />
               </button>
             ) : null}
             {activeGroup !== "all" ? (
               <button type="button" className="ar4-applied__chip" onClick={() => setActiveGroup("all")}>
-                {filterGroups.find((group) => group.key === activeGroup)?.label ?? activeGroup}
+                <LocalizedText>{filterGroups.find((group) => group.key === activeGroup)?.label ?? activeGroup}</LocalizedText>
                 <X size={12} aria-hidden="true" />
               </button>
             ) : null}
             {activeLevel !== "all" ? (
               <button type="button" className="ar4-applied__chip" onClick={() => setActiveLevel("all")}>
-                {LEVEL_FILTERS.find((level) => level.key === activeLevel)?.label ?? activeLevel}
+                <LocalizedText>{LEVEL_FILTERS.find((level) => level.key === activeLevel)?.label ?? activeLevel}</LocalizedText>
                 <X size={12} aria-hidden="true" />
               </button>
             ) : null}
-            <button type="button" className="ar4-applied__reset" onClick={resetAll}>
-              Reimposta
-            </button>
+            <button type="button" className="ar4-applied__reset" onClick={resetAll}><LocalizedText>{"Reimposta "}</LocalizedText></button>
           </div>
-        </div>
+        </div></LocalizedAttributes>
       ) : null}
 
       {/* ═══ 4. GRIGLIA — H2 dinamico + supporting + cards ═══ */}
@@ -510,11 +503,11 @@ export function DefinitiveArchive({
           <header className="ar4-grid__head">
             <div>
               <h2 id="ar4-grid-title" className="ar4-grid__title">
-                {gridH2}
+                <LocalizedText>{gridH2}</LocalizedText>
               </h2>
               {gridSupporting ? (
                 <p className="ar4-grid__supporting" aria-live="polite" aria-atomic="true">
-                  {gridSupporting}
+                  <LocalizedText>{gridSupporting}</LocalizedText>
                 </p>
               ) : null}
             </div>
@@ -524,21 +517,13 @@ export function DefinitiveArchive({
             <div className="ar4-grid__empty" role="status">
               {query.trim().length > 0 ? (
                 <>
-                  <p className="ar4-grid__empty-title">
-                    Nessun risultato per &ldquo;{query.trim()}&rdquo;
-                  </p>
-                  <p className="ar4-grid__empty-body">
-                    Prova con un termine più ampio oppure rimuovi uno dei filtri attivi.
-                  </p>
+                  <p className="ar4-grid__empty-title"><LocalizedText>{"Nessun risultato per “"}</LocalizedText>{query.trim()}<LocalizedText>{"” "}</LocalizedText></p>
+                  <p className="ar4-grid__empty-body"><LocalizedText>{"Prova con un termine più ampio oppure rimuovi uno dei filtri attivi. "}</LocalizedText></p>
                 </>
               ) : (
                 <>
-                  <p className="ar4-grid__empty-title">
-                    Nessun tool corrisponde ai filtri selezionati.
-                  </p>
-                  <p className="ar4-grid__empty-body">
-                    Prova a rimuovere un filtro o a esplorare tutte le categorie.
-                  </p>
+                  <p className="ar4-grid__empty-title"><LocalizedText>{"Nessun tool corrisponde ai filtri selezionati. "}</LocalizedText></p>
+                  <p className="ar4-grid__empty-body"><LocalizedText>{"Prova a rimuovere un filtro o a esplorare tutte le categorie. "}</LocalizedText></p>
                 </>
               )}
               <div className="ar4-grid__empty-actions">
@@ -546,9 +531,7 @@ export function DefinitiveArchive({
                   type="button"
                   className="ar4-grid__empty-cta ar4-grid__empty-cta--primary"
                   onClick={resetAll}
-                >
-                  Reimposta i filtri
-                </button>
+                ><LocalizedText>{"Reimposta i filtri "}</LocalizedText></button>
               </div>
             </div>
           ) : (
@@ -575,14 +558,14 @@ export function DefinitiveArchive({
                         key="partner-experience-insert"
                         className="ar4-grid__item--partner"
                       >
-                        {partnerInsert}
+                        <LocalizedText>{partnerInsert}</LocalizedText>
                       </li>
                     ) : null}
                     {adInsert &&
                     !hasActiveFilter &&
                     sortKey === "name-asc" &&
                     idx === TINYADZ_INSERT_AFTER - 1 ? (
-                      <Fragment key="tinyadz-catalog-insert">{adInsert}</Fragment>
+                      <Fragment key="tinyadz-catalog-insert"><LocalizedText>{adInsert}</LocalizedText></Fragment>
                     ) : null}
                   </Fragment>
                 ))}
@@ -591,18 +574,18 @@ export function DefinitiveArchive({
               {/* Paginazione progressiva — mobile + tablet */}
               {hasMore ? (
                 <div className="ar4-grid__more">
-                  <button
+                  <LocalizedAttributes><button
                     type="button"
                     className="ar4-grid__more-btn"
                     onClick={() => setMobileVisibleCount((c) => c + MOBILE_STEP)}
                     aria-label="Mostra altri tool del Catalogo"
                   >
-                    {nextBatchCount === 1 ? "Mostra un altro tool" : `Mostra altri ${nextBatchCount} tool`}
+                    <LocalizedText>{nextBatchCount === 1 ? "Mostra un altro tool" : `Mostra altri ${nextBatchCount} tool`}</LocalizedText>
                     <ArrowRight size={14} aria-hidden="true" />
-                  </button>
+                  </button></LocalizedAttributes>
                   <p className="ar4-grid__more-hint" aria-live="polite" aria-atomic="true">
-                    {visibleFiltered.length} di {sortedFiltered.length}{" "}
-                    {visibleFiltered.length === 1 ? "tool mostrato" : "tool mostrati"}
+                    {visibleFiltered.length}<LocalizedText>{" di "}</LocalizedText>{sortedFiltered.length}<LocalizedText>{" "}</LocalizedText>
+                    <LocalizedText>{visibleFiltered.length === 1 ? "tool mostrato" : "tool mostrati"}</LocalizedText>
                   </p>
                 </div>
               ) : null}
@@ -782,20 +765,16 @@ function FilterSheet({
         tabIndex={-1}
       >
         <div className="ar4-sheet__head">
-          <h3 id="ar4-sheet-title" className="ar4-sheet__title">
-            Filtra il catalogo
-          </h3>
-          <p id="ar4-sheet-desc" className="ar4-sheet__desc">
-            Restringi i risultati senza perdere la selezione corrente.
-          </p>
-          <button
+          <h3 id="ar4-sheet-title" className="ar4-sheet__title"><LocalizedText>{"Filtra il catalogo "}</LocalizedText></h3>
+          <p id="ar4-sheet-desc" className="ar4-sheet__desc"><LocalizedText>{"Restringi i risultati senza perdere la selezione corrente. "}</LocalizedText></p>
+          <LocalizedAttributes><button
             type="button"
             className="ar4-sheet__close"
             onClick={onClose}
             aria-label="Chiudi i filtri"
           >
             <X size={18} aria-hidden="true" />
-          </button>
+          </button></LocalizedAttributes>
         </div>
 
         <div className="ar4-sheet__groups">
@@ -808,7 +787,7 @@ function FilterSheet({
               id="ar4-sheet-group-categoria-label"
               onClick={() => toggleGroup("categoria")}
             >
-              <span>Categoria</span>
+              <span><LocalizedText>{"Categoria"}</LocalizedText></span>
               {openGroup === "categoria" ? (
                 <ChevronUp size={16} aria-hidden="true" />
               ) : (
@@ -822,14 +801,13 @@ function FilterSheet({
                 aria-labelledby="ar4-sheet-group-categoria-label"
                 className="ar4-sheet__group-body"
               >
-                <div className="ar4-sheet__chips" role="group" aria-label="Categorie del catalogo">
+                <LocalizedAttributes><div className="ar4-sheet__chips" role="group" aria-label="Categorie del catalogo">
                   <button
                     type="button"
                     className={cn("ar4-chip", activeGroup === "all" && "is-active")}
                     onClick={() => onSetGroup("all")}
                     aria-pressed={activeGroup === "all"}
-                  >
-                    Tutti <em>{totalTools}</em>
+                  ><LocalizedText>{"Tutti "}</LocalizedText><em>{totalTools}</em>
                   </button>
                   {visibleCategoryGroups.map((g) => (
                     <button
@@ -839,7 +817,7 @@ function FilterSheet({
                       onClick={() => onSetGroup(g.key)}
                       aria-pressed={activeGroup === g.key}
                     >
-                      {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
+                      <LocalizedText>{g.label}</LocalizedText> <em>{groupCounts.get(g.key) ?? 0}</em>
                     </button>
                   ))}
                   {showAllSheetCategories
@@ -851,11 +829,11 @@ function FilterSheet({
                           onClick={() => onSetGroup(g.key)}
                           aria-pressed={activeGroup === g.key}
                         >
-                          {g.label} <em>{groupCounts.get(g.key) ?? 0}</em>
+                          <LocalizedText>{g.label}</LocalizedText> <em>{groupCounts.get(g.key) ?? 0}</em>
                         </button>
                       ))
                     : null}
-                </div>
+                </div></LocalizedAttributes>
                 {hiddenCategoryGroups.length > 0 ? (
                   <button
                     type="button"
@@ -869,9 +847,9 @@ function FilterSheet({
                       <ChevronDown size={14} aria-hidden="true" />
                     )}
                     <span>
-                      {showAllSheetCategories
+                      <LocalizedText>{showAllSheetCategories
                         ? "Mostra meno categorie"
-                        : "Mostra tutte le categorie"}
+                        : "Mostra tutte le categorie"}</LocalizedText>
                     </span>
                   </button>
                 ) : null}
@@ -888,7 +866,7 @@ function FilterSheet({
               id="ar4-sheet-group-obiettivi-label"
               onClick={() => toggleGroup("obiettivi")}
             >
-              <span>Obiettivi</span>
+              <span><LocalizedText>{"Obiettivi"}</LocalizedText></span>
               {openGroup === "obiettivi" ? (
                 <ChevronUp size={16} aria-hidden="true" />
               ) : (
@@ -902,7 +880,7 @@ function FilterSheet({
                 aria-labelledby="ar4-sheet-group-obiettivi-label"
                 className="ar4-sheet__group-body"
               >
-                <div className="ar4-sheet__chips" role="group" aria-label="Obiettivi">
+                <LocalizedAttributes><div className="ar4-sheet__chips" role="group" aria-label="Obiettivi">
                   {DISCOVERY_INTENTS.map((intent) => {
                     const pressed = intent.group
                       ? activeGroup === intent.group
@@ -915,11 +893,11 @@ function FilterSheet({
                         aria-pressed={pressed}
                         onClick={() => applyDiscoveryIntent(intent, onSetGroup, onSetQuery)}
                       >
-                        {intent.label}
+                        <LocalizedText>{intent.label}</LocalizedText>
                       </button>
                     );
                   })}
-                </div>
+                </div></LocalizedAttributes>
               </div>
             ) : null}
           </div>
@@ -933,7 +911,7 @@ function FilterSheet({
               id="ar4-sheet-group-livello-label"
               onClick={() => toggleGroup("livello")}
             >
-              <span>Livello</span>
+              <span><LocalizedText>{"Livello"}</LocalizedText></span>
               {openGroup === "livello" ? (
                 <ChevronUp size={16} aria-hidden="true" />
               ) : (
@@ -947,7 +925,7 @@ function FilterSheet({
                 aria-labelledby="ar4-sheet-group-livello-label"
                 className="ar4-sheet__group-body"
               >
-                <div className="ar4-sheet__chips" role="group" aria-label="Livello">
+                <LocalizedAttributes><div className="ar4-sheet__chips" role="group" aria-label="Livello">
                   {levelFilters.map((l) => (
                     <button
                       key={l.key}
@@ -959,10 +937,10 @@ function FilterSheet({
                       onClick={() => onSetLevel(l.key)}
                       aria-pressed={activeLevel === l.key}
                     >
-                      {l.label}
+                      <LocalizedText>{l.label}</LocalizedText>
                     </button>
                   ))}
-                </div>
+                </div></LocalizedAttributes>
               </div>
             ) : null}
           </div>
@@ -974,20 +952,18 @@ function FilterSheet({
             className="ar4-sheet__reset"
             onClick={onReset}
             disabled={!isDirty}
-          >
-            Reimposta i filtri
-          </button>
+          ><LocalizedText>{"Reimposta i filtri "}</LocalizedText></button>
           <button
             type="button"
             className="ar4-sheet__apply"
             onClick={onClose}
           >
             <Check size={16} aria-hidden="true" />
-            {filteredCount === 0
+            <LocalizedText>{filteredCount === 0
               ? "Mostra 0 risultati"
               : filteredCount === 1
                 ? "Mostra 1 risultato"
-                : `Mostra ${filteredCount} risultati`}
+                : `Mostra ${filteredCount} risultati`}</LocalizedText>
           </button>
         </div>
       </div>

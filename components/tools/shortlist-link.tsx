@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState } from "react";
 import Link from "@/components/ui/app-link";
 
@@ -73,7 +74,7 @@ export function ShortlistLink({
         color: active || count > 0 ? "var(--accent-strong)" : "var(--muted-strong)",
       }}
     >
-      <span>{label}</span>
+      <span><LocalizedText>{label}</LocalizedText></span>
       <span
         className={cn(
           "count-badge-live inline-flex min-w-[1.6rem] items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold",

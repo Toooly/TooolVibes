@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { importMockCollectionsAction } from "@/app/(admin)/admin/actions/collections";
@@ -357,7 +358,7 @@ export default async function AdminCollectionsPage({
   return (
     <div className="page-shell py-6">
       <div className="space-y-6">
-        <ControlCenterHeader
+        <LocalizedAttributes><ControlCenterHeader
           title="Gestione raccolte"
           description="Pubblicazione, evidenza e revisione delle collection."
           primaryHref="/admin/collections/new"
@@ -367,8 +368,8 @@ export default async function AdminCollectionsPage({
             { label: "Pubbliche", value: stateCounts.published + stateCounts.featured },
             { label: "Segnali", value: workspaceMetrics[2].value },
           ]}
-        />
-        {statusMessage ? <ControlCenterNotice tone="ok">{statusMessage}</ControlCenterNotice> : null}
+        /></LocalizedAttributes>
+        {statusMessage ? <ControlCenterNotice tone="ok"><LocalizedText>{statusMessage}</LocalizedText></ControlCenterNotice> : null}
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <div
               className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
@@ -381,7 +382,7 @@ export default async function AdminCollectionsPage({
                   : "rgba(243,191,76,0.12)",
               }}
             >
-              {runtime.writeMessage}
+              <LocalizedText>{runtime.writeMessage}</LocalizedText>
             </div>
             <div
               className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
@@ -389,19 +390,17 @@ export default async function AdminCollectionsPage({
                 borderColor: "rgba(112,82,255,0.14)",
                 background: "rgba(106,60,255,0.14)",
               }}
-            >
-              Lettura interna: <strong>{getSourceLabel(runtime.adminReadSource)}</strong>. Sorgente pubblica:{" "}
-              <strong>{getSourceLabel(runtime.publicSnapshot.meta.active_source)}</strong>.
+            ><LocalizedText>{"Lettura interna: "}</LocalizedText><strong><LocalizedText>{getSourceLabel(runtime.adminReadSource)}</LocalizedText></strong><LocalizedText>{". Sorgente pubblica:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+              <strong><LocalizedText>{getSourceLabel(runtime.publicSnapshot.meta.active_source)}</LocalizedText></strong>.
               {runtime.writeTarget ? (
                 <>
-                  {" "}
-                  Destinazione salvataggio: <strong>{getWriteTargetLabel(runtime.writeTarget)}</strong>.
+                  <LocalizedText>{" "}</LocalizedText><LocalizedText>{"Destinazione salvataggio: "}</LocalizedText><strong><LocalizedText>{getWriteTargetLabel(runtime.writeTarget)}</LocalizedText></strong>.
                 </>
               ) : null}
               <br />
-              {runtime.reviewMessage}
+              <LocalizedText>{runtime.reviewMessage}</LocalizedText>
               <br />
-              {runtime.safeAlignMessage}
+              <LocalizedText>{runtime.safeAlignMessage}</LocalizedText>
             </div>
           </div>
 
@@ -414,22 +413,16 @@ export default async function AdminCollectionsPage({
                 <p
                   className="text-sm font-semibold uppercase tracking-[0.18em]"
                   style={{ color: "var(--muted)" }}
-                >
-                  Transizione sorgenti
-                </p>
-                <h2 className="text-2xl">Dalla sorgente locale all’archivio reale senza stacchi nel pubblico.</h2>
-                <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-                  In automatico, il pubblico sceglie la sorgente con questa priorità:{" "}
+                ><LocalizedText>{"Transizione sorgenti "}</LocalizedText></p>
+                <h2 className="text-2xl"><LocalizedText>{"Dalla sorgente locale all’archivio reale senza stacchi nel pubblico."}</LocalizedText></h2>
+                <p className="text-sm leading-7" style={{ color: "var(--muted)" }}><LocalizedText>{"In automatico, il pubblico sceglie la sorgente con questa priorità:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
                   <strong>
-                    {(runtime.publicSnapshot.meta.source_precedence ??
+                    <LocalizedText>{(runtime.publicSnapshot.meta.source_precedence ??
                       runtime.transitionReport.source_precedence
                     )
                       .map(getSourceLabel)
-                      .join(" > ")}
-                  </strong>
-                  . Se una raccolta esiste già nell’archivio reale, quella versione prevale; le raccolte non ancora
-                  importate restano servite dalla sorgente locale o dai contenuti statici.
-                </p>
+                      .join(" > ")}</LocalizedText>
+                  </strong><LocalizedText>{". Se una raccolta esiste già nell’archivio reale, quella versione prevale; le raccolte non ancora importate restano servite dalla sorgente locale o dai contenuti statici. "}</LocalizedText></p>
               </div>
               {runtime.canWrite ? (
                 <form action={importMockCollectionsAction}>
@@ -437,8 +430,7 @@ export default async function AdminCollectionsPage({
                     type="submit"
                     disabled={!hasPendingImports}
                     className="tv-cc-btn tv-cc-btn--primary rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
-                  >
-                    Importa raccolte locali mancanti ({runtime.transitionReport.summary.pending_import})
+                  ><LocalizedText>{"Importa raccolte locali mancanti ("}</LocalizedText>{runtime.transitionReport.summary.pending_import})
                   </button>
                 </form>
               ) : (
@@ -448,9 +440,7 @@ export default async function AdminCollectionsPage({
                     borderColor: "rgba(161,105,47,0.18)",
                     background: "rgba(243,191,76,0.12)",
                   }}
-                >
-                  Attiva il salvataggio per importare dal pannello interno.
-                </div>
+                ><LocalizedText>{"Attiva il salvataggio per importare dal pannello interno. "}</LocalizedText></div>
               )}
             </div>
 
@@ -465,7 +455,7 @@ export default async function AdminCollectionsPage({
                     className="text-xs font-semibold uppercase tracking-[0.18em]"
                     style={{ color: "var(--muted)" }}
                   >
-                    {item.label}
+                    <LocalizedText>{item.label}</LocalizedText>
                   </p>
                   <p className="mt-3 text-3xl">{item.value}</p>
                 </article>
@@ -483,7 +473,7 @@ export default async function AdminCollectionsPage({
                     className="text-xs font-semibold uppercase tracking-[0.18em]"
                     style={{ color: "var(--muted)" }}
                   >
-                    {item.label}
+                    <LocalizedText>{item.label}</LocalizedText>
                   </p>
                   <p className="mt-3 text-3xl">{item.value}</p>
                 </article>
@@ -499,7 +489,7 @@ export default async function AdminCollectionsPage({
                   className="rounded-[var(--radius-lg)] border px-4 py-3 text-sm"
                   style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
                 >
-                  {warning}
+                  <LocalizedText>{warning}</LocalizedText>
                 </div>
               ))}
             </div>
@@ -512,14 +502,9 @@ export default async function AdminCollectionsPage({
               <p
                 className="text-sm font-semibold uppercase tracking-[0.18em]"
                 style={{ color: "var(--muted)" }}
-              >
-                Stato importazione
-              </p>
-              <h2 className="text-2xl">Stato importazione delle raccolte</h2>
-              <p className="max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}>
-                Questa vista mostra quali raccolte sono ancora nella sorgente locale, quali sono
-                già state importate e dove esistono differenze con l’archivio reale.
-              </p>
+              ><LocalizedText>{"Stato importazione "}</LocalizedText></p>
+              <h2 className="text-2xl"><LocalizedText>{"Stato importazione delle raccolte"}</LocalizedText></h2>
+              <p className="max-w-[44rem] text-sm leading-7" style={{ color: "var(--muted)" }}><LocalizedText>{"Questa vista mostra quali raccolte sono ancora nella sorgente locale, quali sono già state importate e dove esistono differenze con l’archivio reale. "}</LocalizedText></p>
             </div>
           </div>
 
@@ -535,7 +520,7 @@ export default async function AdminCollectionsPage({
                 >
                   <div className="space-y-3">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h3 className="text-xl">{entry.title}</h3>
+                      <h3 className="text-xl"><LocalizedText>{entry.title}</LocalizedText></h3>
                       <span
                         className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                         style={{
@@ -543,7 +528,7 @@ export default async function AdminCollectionsPage({
                           background: statusMeta.background,
                         }}
                       >
-                        {statusMeta.label}
+                        <LocalizedText>{statusMeta.label}</LocalizedText>
                       </span>
                       {entry.public_source ? (
                         <span
@@ -552,8 +537,7 @@ export default async function AdminCollectionsPage({
                             borderColor: "rgba(112,82,255,0.16)",
                             background: "rgba(106,60,255,0.14)",
                           }}
-                        >
-                          Pubblico -&gt; {getSourceLabel(entry.public_source)}
+                        ><LocalizedText>{"Pubblico -> "}</LocalizedText><LocalizedText>{getSourceLabel(entry.public_source)}</LocalizedText>
                         </span>
                       ) : null}
                     </div>
@@ -562,20 +546,17 @@ export default async function AdminCollectionsPage({
                       className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]"
                       style={{ color: "var(--muted)" }}
                     >
-                      <span>Slug: {entry.slug}</span>
-                      <span>Locale: {entry.mock ? "sì" : "no"}</span>
-                      <span>Archivio reale: {entry.supabase ? "sì" : "no"}</span>
-                      <span>Contenuto: {entry.content ? "sì" : "no"}</span>
+                      <span><LocalizedText>{"Slug: "}</LocalizedText>{entry.slug}</span>
+                      <span><LocalizedText>{"Locale: "}</LocalizedText><LocalizedText>{entry.mock ? "sì" : "no"}</LocalizedText></span>
+                      <span><LocalizedText>{"Archivio reale: "}</LocalizedText><LocalizedText>{entry.supabase ? "sì" : "no"}</LocalizedText></span>
+                      <span><LocalizedText>{"Contenuto: "}</LocalizedText><LocalizedText>{entry.content ? "sì" : "no"}</LocalizedText></span>
                     </div>
 
                     {diffSummary.length > 0 ? (
-                      <p className="text-sm" style={{ color: "var(--muted-strong)" }}>
-                        Drift rilevato su: {diffSummary.join(", ")}.
+                      <p className="text-sm" style={{ color: "var(--muted-strong)" }}><LocalizedText>{"Drift rilevato su: "}</LocalizedText><LocalizedText>{diffSummary.join(", ")}</LocalizedText>.
                       </p>
                     ) : (
-                      <p className="text-sm" style={{ color: "var(--muted-strong)" }}>
-                        Nessuna differenza rilevata sui campi chiave.
-                      </p>
+                      <p className="text-sm" style={{ color: "var(--muted-strong)" }}><LocalizedText>{"Nessuna differenza rilevata sui campi chiave. "}</LocalizedText></p>
                     )}
 
                     {entry.warnings.length > 0 ? (
@@ -595,7 +576,7 @@ export default async function AdminCollectionsPage({
                                   : "rgba(243,191,76,0.12)",
                             }}
                           >
-                            {warning}
+                            <LocalizedText>{warning}</LocalizedText>
                           </div>
                         ))}
                       </div>
@@ -633,7 +614,7 @@ export default async function AdminCollectionsPage({
                           className="text-xs font-semibold uppercase tracking-[0.18em]"
                           style={{ color: "var(--muted)" }}
                         >
-                          {item.label}
+                          <LocalizedText>{item.label}</LocalizedText>
                         </p>
                         <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>
                           {item.value}
@@ -647,9 +628,7 @@ export default async function AdminCollectionsPage({
                       <Link
                         href={`/admin/collections/${entry.supabase.id}`}
                         className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
-                      >
-                        Apri raccolta
-                      </Link>
+                      ><LocalizedText>{"Apri raccolta "}</LocalizedText></Link>
                     ) : null}
                     {runtime.canWrite && entry.import_status === "pending-import" ? (
                       <form action={importMockCollectionsAction}>
@@ -657,9 +636,7 @@ export default async function AdminCollectionsPage({
                         <button
                           type="submit"
                           className="tv-cc-btn tv-cc-btn--primary w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
-                        >
-                          Importa raccolta
-                        </button>
+                        ><LocalizedText>{"Importa raccolta "}</LocalizedText></button>
                       </form>
                     ) : null}
                   </div>
@@ -671,7 +648,7 @@ export default async function AdminCollectionsPage({
 
         <div className="tv-cc-panel rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="border-b pb-5">
-            <p className="editorial-label">Viste raccolte</p>
+            <p className="editorial-label"><LocalizedText>{"Viste raccolte"}</LocalizedText></p>
             <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
               {collectionViewOptions.map((item) => (
                 <Link
@@ -686,14 +663,14 @@ export default async function AdminCollectionsPage({
                     color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                   }}
                 >
-                  {item.label} ({item.count})
+                  <LocalizedText>{item.label}</LocalizedText> ({item.count})
                 </Link>
               ))}
             </div>
           </div>
 
           <div className="mt-4 border-b pb-5">
-            <p className="editorial-label">Filtri per stato</p>
+            <p className="editorial-label"><LocalizedText>{"Filtri per stato"}</LocalizedText></p>
             <div className="tool-rail -mx-1 mt-4 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:-mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
               {editorialStateOptions.map((item) => (
               <Link
@@ -708,7 +685,7 @@ export default async function AdminCollectionsPage({
                   color: item.active ? "var(--accent-strong)" : "var(--muted-strong)",
                 }}
               >
-                {item.label} ({item.count})
+                <LocalizedText>{item.label}</LocalizedText> ({item.count})
               </Link>
             ))}
           </div>
@@ -754,18 +731,18 @@ export default async function AdminCollectionsPage({
                     >
                       <div className="space-y-4">
                         <div className="flex flex-wrap items-center gap-3">
-                          <h2 className="text-2xl">{collection.title}</h2>
+                          <h2 className="text-2xl"><LocalizedText>{collection.title}</LocalizedText></h2>
                           <span
                             className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                           >
-                            {stateMeta.label}
+                            <LocalizedText>{stateMeta.label}</LocalizedText>
                           </span>
                           <span
                             className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                           >
-                            {surfaceMeta.label}
+                            <LocalizedText>{surfaceMeta.label}</LocalizedText>
                           </span>
                           {readiness ? (
                             <span
@@ -785,7 +762,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(57,210,246,0.12)",
                               }}
                             >
-                              {readiness.label}
+                              <LocalizedText>{readiness.label}</LocalizedText>
                             </span>
                           ) : null}
                           {transitionSeverityMeta ? (
@@ -808,7 +785,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(57,210,246,0.12)",
                               }}
                             >
-                              {transitionSeverityMeta.label}
+                              <LocalizedText>{transitionSeverityMeta.label}</LocalizedText>
                             </span>
                           ) : null}
                           {reviewMeta ? (
@@ -829,7 +806,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(243,191,76,0.12)",
                               }}
                             >
-                              {reviewMeta.label}
+                              <LocalizedText>{reviewMeta.label}</LocalizedText>
                             </span>
                           ) : null}
                           {syncPreviewMeta ? (
@@ -846,7 +823,7 @@ export default async function AdminCollectionsPage({
                                     : "rgba(243,191,76,0.12)",
                               }}
                             >
-                              {syncPreviewMeta.label}
+                              <LocalizedText>{syncPreviewMeta.label}</LocalizedText>
                             </span>
                           ) : null}
                           {issues.length > 0 ? (
@@ -854,8 +831,7 @@ export default async function AdminCollectionsPage({
                               className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
                               style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
                             >
-                              {issues.length} avvisi
-                            </span>
+                              {issues.length}<LocalizedText>{" avvisi "}</LocalizedText></span>
                           ) : null}
                           {lastSafeAlign ? (
                             <span
@@ -864,14 +840,12 @@ export default async function AdminCollectionsPage({
                                 borderColor: "rgba(112,82,255,0.16)",
                                 background: "rgba(106,60,255,0.14)",
                               }}
-                            >
-                              Riallineata
-                            </span>
+                            ><LocalizedText>{"Riallineata "}</LocalizedText></span>
                           ) : null}
                         </div>
 
                         <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-                          {collection.description}
+                          <LocalizedText>{collection.description}</LocalizedText>
                         </p>
 
                         {readiness ? (
@@ -892,7 +866,7 @@ export default async function AdminCollectionsPage({
                                     : "rgba(57,210,246,0.12)",
                             }}
                           >
-                            {readiness.summary}
+                            <LocalizedText>{readiness.summary}</LocalizedText>
                           </div>
                         ) : null}
 
@@ -914,7 +888,7 @@ export default async function AdminCollectionsPage({
                                     : "rgba(57,210,246,0.12)",
                             }}
                           >
-                            <strong>{syncPreviewPosture.label}:</strong> {syncPreview.summary}
+                            <strong><LocalizedText>{syncPreviewPosture.label}</LocalizedText>:</strong> <LocalizedText>{syncPreview.summary}</LocalizedText>
                           </div>
                         ) : null}
 
@@ -922,9 +896,8 @@ export default async function AdminCollectionsPage({
                           <div
                             className="rounded-[20px] border px-4 py-3 text-sm"
                             style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
-                          >
-                            Ultimo riallineamento: {formatItalianDate(lastSafeAlign.applied_at)} -{" "}
-                            {lastSafeAlign.aligned_fields.join(", ")}
+                          ><LocalizedText>{"Ultimo riallineamento: "}</LocalizedText><LocalizedText>{formatItalianDate(lastSafeAlign.applied_at)}</LocalizedText> -<LocalizedText>{" "}</LocalizedText>
+                            <LocalizedText>{lastSafeAlign.aligned_fields.join(", ")}</LocalizedText>
                           </div>
                         ) : null}
 
@@ -932,13 +905,13 @@ export default async function AdminCollectionsPage({
                           className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]"
                           style={{ color: "var(--muted)" }}
                         >
-                          <span>Slug: {collection.slug}</span>
-                          <span>Tono: {toneMeta.label}</span>
-                          <span>Accesso: {accessMeta.subtleLabel}</span>
-                          <span>Difficoltà: {difficultyLabel}</span>
-                          <span>Ordine: {collection.editorial_order ?? 999}</span>
+                          <span><LocalizedText>{"Slug: "}</LocalizedText>{collection.slug}</span>
+                          <span><LocalizedText>{"Tono: "}</LocalizedText><LocalizedText>{toneMeta.label}</LocalizedText></span>
+                          <span><LocalizedText>{"Accesso: "}</LocalizedText><LocalizedText>{accessMeta.subtleLabel}</LocalizedText></span>
+                          <span><LocalizedText>{"Difficoltà: "}</LocalizedText><LocalizedText>{difficultyLabel}</LocalizedText></span>
+                          <span><LocalizedText>{"Ordine: "}</LocalizedText>{collection.editorial_order ?? 999}</span>
                           {collection.featured_slot ? (
-                            <span>Spazio: {getCollectionFeaturedSlotLabel(collection.featured_slot)}</span>
+                            <span><LocalizedText>{"Spazio: "}</LocalizedText><LocalizedText>{getCollectionFeaturedSlotLabel(collection.featured_slot)}</LocalizedText></span>
                           ) : null}
                         </div>
 
@@ -959,7 +932,7 @@ export default async function AdminCollectionsPage({
                                       : "rgba(243,191,76,0.12)",
                                 }}
                               >
-                                {issue.message}
+                                <LocalizedText>{issue.message}</LocalizedText>
                               </div>
                             ))}
                           </div>
@@ -981,8 +954,8 @@ export default async function AdminCollectionsPage({
                                   : "rgba(243,191,76,0.12)",
                             }}
                           >
-                            <strong>{transitionSeverityMeta.label}:</strong>{" "}
-                            {transitionSeverityMeta.description}
+                            <strong><LocalizedText>{transitionSeverityMeta.label}</LocalizedText>:</strong><LocalizedText>{" "}</LocalizedText>
+                            <LocalizedText>{transitionSeverityMeta.description}</LocalizedText>
                           </div>
                         ) : null}
                       </div>
@@ -1012,7 +985,7 @@ export default async function AdminCollectionsPage({
                             style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
                           >
                             <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                              {item.label}
+                              <LocalizedText>{item.label}</LocalizedText>
                             </p>
                             <p className="mt-2 text-sm" style={{ color: "var(--muted-strong)" }}>
                               {item.value}
@@ -1025,17 +998,13 @@ export default async function AdminCollectionsPage({
                         <Link
                           href={`/admin/collections/${collection.id}`}
                           className="tv-cc-btn tv-cc-btn--primary text-ui-strong rounded-full px-4 py-2 text-center text-sm font-semibold text-white"
-                        >
-                          Apri dettaglio
-                        </Link>
+                        ><LocalizedText>{"Apri dettaglio "}</LocalizedText></Link>
                         {(collection.editorial_state === "published" ||
                           collection.editorial_state === "featured") && (
                           <Link
                             href={`/collections/${collection.slug}`}
                             className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
-                          >
-                            Vedi pagina pubblica
-                          </Link>
+                          ><LocalizedText>{"Vedi pagina pubblica "}</LocalizedText></Link>
                         )}
                         {transitionEntry ? (
                           <Link
@@ -1047,9 +1016,7 @@ export default async function AdminCollectionsPage({
                                   : "/admin/collections/review"
                             }
                             className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
-                          >
-                            Apri revisione
-                          </Link>
+                          ><LocalizedText>{"Apri revisione "}</LocalizedText></Link>
                         ) : null}
                       </div>
                     </article>
@@ -1057,7 +1024,7 @@ export default async function AdminCollectionsPage({
                 })}
               </div>
             ) : (
-              <AdminEmptyState
+              <LocalizedAttributes><AdminEmptyState
                 title={
                   selectedState
                     ? `Nessuna raccolta in stato ${getCollectionEditorialStateMeta(selectedState).label}`
@@ -1070,7 +1037,7 @@ export default async function AdminCollectionsPage({
                 }
                 ctaHref={runtime.canWrite ? "/admin/collections/new" : undefined}
                 ctaLabel={runtime.canWrite ? "Crea la prima raccolta" : undefined}
-              />
+              /></LocalizedAttributes>
             )}
           </div>
       </div>

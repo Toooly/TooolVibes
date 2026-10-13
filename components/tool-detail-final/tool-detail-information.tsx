@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
@@ -47,7 +48,7 @@ function informationRows(tool: ToolPublicView): Array<{ dt: string; dd: ReactNod
       dd: (
         <ul>
           {tool.tags.map((t) => (
-            <li key={t}>#{t}</li>
+            <li key={t}>#<LocalizedText>{t}</LocalizedText></li>
           ))}
         </ul>
       ),
@@ -67,8 +68,8 @@ export function ToolDetailInformation({
     <dl className="td-final-information__grid" id={embedded ? "td-final-information-grid" : undefined}>
       {rows.map((row) => (
         <div className="td-final-information__row" key={row.dt}>
-          <dt>{row.dt}</dt>
-          <dd>{row.dd}</dd>
+          <dt><LocalizedText>{row.dt}</LocalizedText></dt>
+          <dd><LocalizedText>{row.dd}</LocalizedText></dd>
         </div>
       ))}
     </dl>
@@ -82,9 +83,7 @@ export function ToolDetailInformation({
       className="td-final-information"
       aria-labelledby="td-final-information-title"
     >
-      <h2 id="td-final-information-title" className="td-final-section-eyebrow">
-        Dati tecnici
-      </h2>
+      <h2 id="td-final-information-title" className="td-final-section-eyebrow"><LocalizedText>{"Dati tecnici "}</LocalizedText></h2>
       {grid}
     </section>
   );

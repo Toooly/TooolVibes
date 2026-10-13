@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import {
@@ -64,7 +65,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
 
   return (
     <div className="page-shell py-6">
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         title="Suggerimenti"
         description="Revisiona, approva o rifiuta le richieste tool della community."
         metrics={[
@@ -72,11 +73,11 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
           { label: "Approvati", value: runtime.approvedCount },
           { label: "Totali", value: suggestions.length },
         ]}
-      />
+      /></LocalizedAttributes>
 
       {status && statusLabels[status] ? (
         <ControlCenterNotice tone={status === "error" ? "warn" : "ok"}>
-          {statusLabels[status]}
+          <LocalizedText>{statusLabels[status]}</LocalizedText>
         </ControlCenterNotice>
       ) : null}
 
@@ -88,7 +89,7 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
             <article key={suggestion.id} className="tv-cc-card">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="tv-cc-card__title">{suggestion.tool_name}</h2>
+                  <h2 className="tv-cc-card__title"><LocalizedText>{suggestion.tool_name}</LocalizedText></h2>
                   <AdminStatusPill
                     active={suggestion.submitter_type === "founder"}
                     activeLabel="Founder"
@@ -97,17 +98,17 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                   <StatusBadge status={suggestion.status} />
                 </div>
                 <p className="tv-cc-card__meta">
-                  {suggestion.category ? <span>{suggestion.category}</span> : null}
+                  {suggestion.category ? <span><LocalizedText>{suggestion.category}</LocalizedText></span> : null}
                   {suggestion.email ? <span>{suggestion.email}</span> : null}
-                  <span>{formatItalianDate(suggestion.created_at)}</span>
+                  <span><LocalizedText>{formatItalianDate(suggestion.created_at)}</LocalizedText></span>
                 </p>
                 {suggestion.message ? (
-                  <p className="tv-cc-card__meta">{suggestion.message}</p>
+                  <p className="tv-cc-card__meta"><LocalizedText>{suggestion.message}</LocalizedText></p>
                 ) : null}
                 <form action={updateSuggestionStatusAction} className="mt-3 space-y-2">
                   <input type="hidden" name="id" value={suggestion.id} />
                   <label className="block">
-                    <span className="tv-cc-kicker">Note interne</span>
+                    <span className="tv-cc-kicker"><LocalizedText>{"Note interne"}</LocalizedText></span>
                     <textarea
                       name="admin_notes"
                       rows={2}
@@ -118,25 +119,15 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
                   <div className="tv-cc-card__actions">
                     {(suggestion.status === "received" || suggestion.status === "reviewing") ? (
                       <>
-                        <button type="submit" name="status" value="reviewing" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--ghost">
-                          In revisione
-                        </button>
-                        <button type="submit" name="status" value="approved" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--primary">
-                          Approva
-                        </button>
-                        <button type="submit" name="status" value="rejected" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--danger">
-                          Rifiuta
-                        </button>
+                        <button type="submit" name="status" value="reviewing" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--ghost"><LocalizedText>{"In revisione "}</LocalizedText></button>
+                        <button type="submit" name="status" value="approved" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Approva "}</LocalizedText></button>
+                        <button type="submit" name="status" value="rejected" disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--danger"><LocalizedText>{"Rifiuta "}</LocalizedText></button>
                       </>
                     ) : (
-                      <button type="submit" name="status" value={suggestion.status} disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--secondary">
-                        Salva note
-                      </button>
+                      <button type="submit" name="status" value={suggestion.status} disabled={!runtime.canWrite} className="tv-cc-btn tv-cc-btn--secondary"><LocalizedText>{"Salva note "}</LocalizedText></button>
                     )}
                     {suggestion.status === "approved" ? (
-                      <Link href={`/admin/tools/new?suggestion=${suggestion.id}`} className="tv-cc-btn tv-cc-btn--primary">
-                        Crea tool
-                      </Link>
+                      <Link href={`/admin/tools/new?suggestion=${suggestion.id}`} className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Crea tool "}</LocalizedText></Link>
                     ) : null}
                     <DeleteWithConfirm
                       action={deleteSuggestionAction.bind(null, suggestion.id)}
@@ -152,10 +143,10 @@ export default async function SuggestionsPage({ searchParams }: SuggestionsPageP
           ))}
         </div>
       ) : (
-        <AdminEmptyState
+        <LocalizedAttributes><AdminEmptyState
           title="Nessun suggerimento"
           description="Quando arrivano richieste dalla community, le trovi qui."
-        />
+        /></LocalizedAttributes>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { planAtlasBeaconLabels, type AtlasBeaconTier, type AtlasEditorialLabel, type AtlasLabelSignal } from "@/lib/radar/radar-atlas-beacons";
 
@@ -85,7 +86,7 @@ export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, c
             return (clipped ? 100 : 0) + collisions * 10 + (crowded ? 5 : 0);
           };
           const p = labelSlots.reduce((best, candidate) => labelScore(candidate) < labelScore(best) ? candidate : best, labelSlots[0]);
-          return <g key={id} className="tv-atlas__area" data-atlas-territory={id} data-active={active ? "true" : undefined}
+          return <LocalizedAttributes key={id}><g key={id} className="tv-atlas__area" data-atlas-territory={id} data-active={active ? "true" : undefined}
             role={active ? "button" : undefined} tabIndex={active ? 0 : undefined}
             aria-label={active ? `Apri ${cluster?.label ?? id}, ${clusterCount} segnali` : undefined}
             onClick={active ? event => { if (event.detail === 0) onSelectSector?.(id); } : undefined}
@@ -95,13 +96,13 @@ export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, c
             <g className="tv-atlas__area-art" data-instrument-layer="atlas-area-art" aria-hidden="true">
               {local ? <circle cx="50" cy="50" r="42" className="tv-atlas__territory" /> : <path d={territory(start, end)} className="tv-atlas__territory" />}
               {!local && clusterCount > 0 && <>
-                <text x={p.x} y={p.y - 2.5} textAnchor="middle" className="tv-atlas__area-short">{shortLabels[i]}</text>
-                <text x={p.x} y={p.y - 5.2} textAnchor="middle" className="tv-atlas__area-full">{categoryLines[i].map((line, n) => <tspan key={line} x={p.x} dy={n ? 2.4 : 0}>{line}</tspan>)}</text>
+                <text x={p.x} y={p.y - 2.5} textAnchor="middle" className="tv-atlas__area-short"><LocalizedText>{shortLabels[i]}</LocalizedText></text>
+                <text x={p.x} y={p.y - 5.2} textAnchor="middle" className="tv-atlas__area-full">{categoryLines[i].map((line, n) => <tspan key={line} x={p.x} dy={n ? 2.4 : 0}><LocalizedText>{line}</LocalizedText></tspan>)}</text>
                 <text x={p.x - .5} y={p.y + 4.4} textAnchor="middle" className="tv-atlas__area-count">{clusterCount}</text>
                 <path d={`M ${p.x + 4} ${p.y + 1.3} H ${p.x + 8} m -1.7 -1.7 l 1.7 1.7 l -1.7 1.7`} className="tv-atlas__area-arrow" />
               </>}
             </g>
-          </g>;
+          </g></LocalizedAttributes>;
         })}
       </g>
       <g className="tv-atlas__time" data-instrument-layer="atlas-time" aria-hidden="true">
@@ -113,23 +114,23 @@ export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, c
             <circle cx="50" cy="50" r={radius} className="tv-atlas__time-arc" data-ring-radius={radius} data-ring-label={ring.label} data-outer={i === rings.length - 1 ? "true" : undefined} />
             <line x1={x} y1={49.3} x2={x} y2={50.7} className="tv-atlas__tick" />
             <rect x={x - width / 2} y={50.1} width={width} height={4.1} className="tv-atlas__label-plate" />
-            <text x={x} y={53.1} textAnchor="middle" className="tv-rx-map__ring-label tv-atlas__time-label">{ring.label}</text>
+            <text x={x} y={53.1} textAnchor="middle" className="tv-rx-map__ring-label tv-atlas__time-label"><LocalizedText>{ring.label}</LocalizedText></text>
           </g>;
         })}
       </g>
       <g className="tv-atlas__metadata" data-instrument-layer="atlas-coordinates" aria-hidden="true">
-        <text x="5" y="12" className="tv-atlas__display tv-atlas__count">{String(count).padStart(2, "0")}</text>
-        <text x="6" y="17" className="tv-atlas__micro">SEGNALI</text>
-        <text x="94" y="12" textAnchor="end" className="tv-atlas__display tv-atlas__range">{range === "day" ? "24H" : range === "week" ? "7G" : "30G"}</text>
+        <text x="5" y="12" className="tv-atlas__display tv-atlas__count"><LocalizedText>{String(count).padStart(2, "0")}</LocalizedText></text>
+        <text x="6" y="17" className="tv-atlas__micro"><LocalizedText>{"SEGNALI"}</LocalizedText></text>
+        <text x="94" y="12" textAnchor="end" className="tv-atlas__display tv-atlas__range"><LocalizedText>{range === "day" ? "24H" : range === "week" ? "7G" : "30G"}</LocalizedText></text>
         <path d="M 5 20 H 20" className="tv-atlas__accent-rule" />
         <text x="93" y="81" textAnchor="end" className="tv-atlas__display tv-atlas__density">{local ? count : activeAreas}</text>
-        <text x="93" y="85" textAnchor="end" className="tv-atlas__micro tv-atlas__density-caption">{local ? "NEL CLUSTER" : "AREE ATTIVE"}</text>
+        <text x="93" y="85" textAnchor="end" className="tv-atlas__micro tv-atlas__density-caption"><LocalizedText>{local ? "NEL CLUSTER" : "AREE ATTIVE"}</LocalizedText></text>
         <path d="M 5 91 H 95" className="tv-atlas__construction" />
-        <text x="5" y="97" className="tv-atlas__micro tv-atlas__caption">{local ? focusLabel.toUpperCase() : "IL MERCATO, ORA"}</text>
-        <text x="95" y="97" textAnchor="end" className="tv-atlas__micro tv-atlas__desktop">{local ? "TERRITORIO / 01" : "ATLANTE / 08"}</text>
+        <text x="5" y="97" className="tv-atlas__micro tv-atlas__caption"><LocalizedText>{local ? focusLabel.toUpperCase() : "IL MERCATO, ORA"}</LocalizedText></text>
+        <text x="95" y="97" textAnchor="end" className="tv-atlas__micro tv-atlas__desktop"><LocalizedText>{local ? "TERRITORIO / 01" : "ATLANTE / 08"}</LocalizedText></text>
       </g>
       <g data-instrument-layer="atlas-origin" aria-hidden="true">
-        <text x="50" y="48.5" textAnchor="middle" className="tv-atlas__micro tv-atlas__origin-label">{RADAR_RING_CENTER_LABEL}</text>
+        <text x="50" y="48.5" textAnchor="middle" className="tv-atlas__micro tv-atlas__origin-label"><LocalizedText>{RADAR_RING_CENTER_LABEL}</LocalizedText></text>
         <circle cx="50" cy="50" r="0.4" className="tv-atlas__origin" />
       </g>
     </>
@@ -145,7 +146,7 @@ export function RadarAtlasGlyph({ radius: r, color, selected, highlighted, linke
   const loaded = imageState?.source === image && imageState.loaded;
   return <g className="tv-atlas__glyph" data-beacon-direction="b" data-beacon-tier={tier} data-instrument-layer="atlas-glyph" data-drawn-radius={r} aria-hidden="true" style={{ "--tv-atlas-signal": color } as CSSProperties}>
     <circle r={r * .85 * scale} className="tv-atlas__glyph-body" />
-    <text x={r * .03} y={identitySize * .3} textAnchor="middle" opacity={loaded ? 0 : 1} className="tv-atlas__beacon-mark" style={{ fontSize: identitySize }}>{(Array.from(name.trim())[0] ?? "·").toLocaleUpperCase("it-IT")}</text>
+    <text x={r * .03} y={identitySize * .3} textAnchor="middle" opacity={loaded ? 0 : 1} className="tv-atlas__beacon-mark" style={{ fontSize: identitySize }}><LocalizedText>{(Array.from(name.trim())[0] ?? "·").toLocaleUpperCase("it-IT")}</LocalizedText></text>
     {image && <>
       <defs><clipPath id={clipId}><rect x={-identitySize / 2} y={-identitySize / 2} width={identitySize} height={identitySize} rx={identitySize * .18} /></clipPath></defs>
       <image href={image} x={-identitySize / 2} y={-identitySize / 2} width={identitySize} height={identitySize} preserveAspectRatio="xMidYMid meet" clipPath={`url(#${clipId})`} opacity={loaded ? 1 : 0} onLoad={() => setImageState({ source: image, loaded: true })} onError={() => setImageState({ source: image, loaded: false })} className="tv-atlas__beacon-image" />
@@ -216,9 +217,9 @@ export function RadarAtlasInspection({ tool, point, visiblePoints }: { tool: Rad
   return <g className="tv-atlas__inspection" data-instrument-layer="atlas-inspection" aria-hidden="true">
     <line x1="50" y1="50" x2={point.x} y2={point.y} className="tv-rx-map__selection-guide tv-atlas__radial-guide" />
     <path d={leader} className="tv-atlas__leader" />
-    <text x={slot.x} y={slot.y} textAnchor={slot.right ? "end" : "start"} className="tv-atlas__selected-name">{name}</text>
+    <text x={slot.x} y={slot.y} textAnchor={slot.right ? "end" : "start"} className="tv-atlas__selected-name"><LocalizedText>{name}</LocalizedText></text>
     <text x={slot.x} y={slot.y + 11} textAnchor={slot.right ? "end" : "start"} className="tv-atlas__display tv-atlas__attention">{tool.attention}</text>
-    <text x={slot.x} y={slot.y + 15} textAnchor={slot.right ? "end" : "start"} className="tv-atlas__micro tv-atlas__attention-caption">ATTENZIONE</text>
-    <text x={slot.x} y={slot.y + 19} textAnchor={slot.right ? "end" : "start"} className="tv-atlas__micro tv-atlas__age">{age}</text>
+    <text x={slot.x} y={slot.y + 15} textAnchor={slot.right ? "end" : "start"} className="tv-atlas__micro tv-atlas__attention-caption"><LocalizedText>{"ATTENZIONE"}</LocalizedText></text>
+    <text x={slot.x} y={slot.y + 19} textAnchor={slot.right ? "end" : "start"} className="tv-atlas__micro tv-atlas__age"><LocalizedText>{age}</LocalizedText></text>
   </g>;
 }

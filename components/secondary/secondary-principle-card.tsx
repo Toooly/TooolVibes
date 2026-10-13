@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -42,16 +43,16 @@ export function SecondaryPrincipleCard({
       <div className="secondary-principle__head">
         {icon ? (
           <span className="secondary-card__icon" aria-hidden="true">
-            {icon}
+            <LocalizedText>{icon}</LocalizedText>
           </span>
         ) : null}
-        <h3 className="secondary-principle__title">{title}</h3>
+        <h3 className="secondary-principle__title"><LocalizedText>{title}</LocalizedText></h3>
       </div>
-      <p className="secondary-principle__copy">{copy}</p>
+      <p className="secondary-principle__copy"><LocalizedText>{copy}</LocalizedText></p>
       {bullets && bullets.length > 0 ? (
         <ul className="secondary-principle__list">
           {bullets.map((bullet) => (
-            <li key={bullet}>{bullet}</li>
+            <li key={bullet}><LocalizedText>{bullet}</LocalizedText></li>
           ))}
         </ul>
       ) : null}

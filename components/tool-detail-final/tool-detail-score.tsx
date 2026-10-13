@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore, editorialScoreBand } from "@/lib/data/editorial-score";
 
@@ -15,7 +16,7 @@ export function ToolDetailScore({ tool, showVerdictPill = true }: ToolDetailScor
   const assessment = computeEditorialScore(tool);
 
   return (
-    <p className="td-final-score td-final-score--compact" aria-label={assessment.label}>
+    <LocalizedAttributes><p className="td-final-score td-final-score--compact" aria-label={assessment.label}>
       {assessment.value !== null ? (
         <>
           <span className="td-final-score__star" aria-hidden="true">
@@ -28,10 +29,8 @@ export function ToolDetailScore({ tool, showVerdictPill = true }: ToolDetailScor
           ) : null}
         </>
       ) : (
-        <span className="td-final-score__number td-final-score__number--status">
-          Valutazione in preparazione
-        </span>
+        <span className="td-final-score__number td-final-score__number--status"><LocalizedText>{"Valutazione in preparazione "}</LocalizedText></span>
       )}
-    </p>
+    </p></LocalizedAttributes>
   );
 }

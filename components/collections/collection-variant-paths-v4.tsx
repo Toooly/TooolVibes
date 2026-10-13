@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "@/components/ui/app-link";
 import { GitBranch } from "lucide-react";
@@ -139,22 +140,15 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
       id="cx-detail-variants"
       aria-labelledby="cx-variants-title"
     >
-      <summary className="cx-detail-depth__summary">Varianti e percorsi</summary>
+      <summary className="cx-detail-depth__summary"><LocalizedText>{"Varianti e percorsi"}</LocalizedText></summary>
       <header className="cx-variant-paths-v4__head">
         <span className="cx-variant-paths-v4__eyebrow">
-          <GitBranch className="size-3.5" aria-hidden="true" />
-          Varianti
-        </span>
-        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title">
-          Quanta potenza ti serve davvero?
-        </h2>
-        <p className="cx-variant-paths-v4__lede">
-          La variante minima funziona per partire. Quelle successive
-          aggiungono strumenti, complessità e costo.
-        </p>
+          <GitBranch className="size-3.5" aria-hidden="true" /><LocalizedText>{"Varianti "}</LocalizedText></span>
+        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title"><LocalizedText>{"Quanta potenza ti serve davvero? "}</LocalizedText></h2>
+        <p className="cx-variant-paths-v4__lede"><LocalizedText>{"La variante minima funziona per partire. Quelle successive aggiungono strumenti, complessità e costo. "}</LocalizedText></p>
       </header>
 
-      <div
+      <LocalizedAttributes><div
         role="tablist"
         aria-label="Varianti dello stack"
         className="cx-variant-paths-v4__tabs"
@@ -184,7 +178,7 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
               )}
             >
               <span className="cx-variant-paths-v4__tab-label">
-                {labelDisplay(v.label)}
+                <LocalizedText>{labelDisplay(v.label)}</LocalizedText>
               </span>
               <span className="cx-variant-paths-v4__tab-count">
                 {v.core_tool_slugs.length}/{totalCount}
@@ -192,7 +186,7 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
             </button>
           );
         })}
-      </div>
+      </div></LocalizedAttributes>
 
       <div
         key={active.label}
@@ -255,19 +249,12 @@ function PathBasedVariants({ collection }: { collection: CuratedCollection }) {
       id="cx-detail-variants"
       aria-labelledby="cx-variants-title"
     >
-      <summary className="cx-detail-depth__summary">Varianti e percorsi</summary>
+      <summary className="cx-detail-depth__summary"><LocalizedText>{"Varianti e percorsi"}</LocalizedText></summary>
       <header className="cx-variant-paths-v4__head">
         <span className="cx-variant-paths-v4__eyebrow">
-          <GitBranch className="size-3.5" aria-hidden="true" />
-          Architettura
-        </span>
-        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title">
-          Due percorsi, una decisione
-        </h2>
-        <p className="cx-variant-paths-v4__lede">
-          I CORE tools cambiano in base al percorso. Scegli quello
-          adatto al tuo contesto.
-        </p>
+          <GitBranch className="size-3.5" aria-hidden="true" /><LocalizedText>{"Architettura "}</LocalizedText></span>
+        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title"><LocalizedText>{"Due percorsi, una decisione "}</LocalizedText></h2>
+        <p className="cx-variant-paths-v4__lede"><LocalizedText>{"I CORE tools cambiano in base al percorso. Scegli quello adatto al tuo contesto. "}</LocalizedText></p>
       </header>
 
       <div className="cx-variant-paths-v4__paths">
@@ -284,15 +271,14 @@ function PathBasedVariants({ collection }: { collection: CuratedCollection }) {
             >
               <div className="cx-variant-paths-v4__path-head">
                 <span className="cx-variant-paths-v4__path-label">
-                  {path.label}
+                  <LocalizedText>{path.label}</LocalizedText>
                 </span>
                 <span className="cx-variant-paths-v4__path-count">
-                  {path.coreSlugs.length} CORE
-                </span>
+                  {path.coreSlugs.length}<LocalizedText>{" CORE "}</LocalizedText></span>
               </div>
 
               {path.tagline && (
-                <p className="cx-variant-paths-v4__path-gains">{path.tagline}</p>
+                <p className="cx-variant-paths-v4__path-gains"><LocalizedText>{path.tagline}</LocalizedText></p>
               )}
 
               {path.coreSlugs.length > 0 && (
@@ -346,7 +332,7 @@ function VariantPanel({
     <div className="cx-variant-paths-v4__variant">
       {variant.gains && variant.gains.length > 0 && (
         <p className="cx-variant-paths-v4__variant-gains">
-          {variant.gains.join(" · ")}
+          <LocalizedText separator=" · ">{variant.gains}</LocalizedText>
         </p>
       )}
 
@@ -379,7 +365,7 @@ function VariantPanel({
                 </Link>
                 {slot.stage && (
                   <span className="cx-variant-paths-v4__variant-stage">
-                    {slot.stage}
+                    <LocalizedText>{slot.stage}</LocalizedText>
                   </span>
                 )}
               </li>
@@ -390,7 +376,7 @@ function VariantPanel({
 
       {variant.trade_offs && variant.trade_offs.length > 0 && (
         <p className="cx-variant-paths-v4__variant-tradeoffs">
-          <strong>Cosa cambi.</strong> {variant.trade_offs.join(" ")}
+          <strong><LocalizedText>{"Cosa cambi."}</LocalizedText></strong> <LocalizedText separator=" ">{variant.trade_offs}</LocalizedText>
         </p>
       )}
     </div>

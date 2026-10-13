@@ -1,3 +1,4 @@
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
 /**
@@ -25,7 +26,7 @@ export function HeroDecisionScope({
       .toUpperCase();
 
   return (
-    <svg
+    <LocalizedAttributes><svg
       className="def-scope"
       viewBox="0 0 480 460"
       role="img"
@@ -119,6 +120,6 @@ export function HeroDecisionScope({
       ))}
 
       {/* frame annotation */}
-    </svg>
+    </svg></LocalizedAttributes>
   );
 }

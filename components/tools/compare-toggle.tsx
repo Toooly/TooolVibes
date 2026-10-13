@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { Columns2 } from "lucide-react";
 
@@ -88,7 +89,7 @@ export function CompareToggle({
         ? "Rimuovi dal confronto"
         : "Aggiungi al confronto";
     return (
-      <button
+      <LocalizedAttributes><button
         type="button"
         onClick={handleToggle}
         className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-colors duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
@@ -108,7 +109,7 @@ export function CompareToggle({
         data-sonic-action="compare"
       >
         <Columns2 className="h-4 w-4" aria-hidden="true" />
-      </button>
+      </button></LocalizedAttributes>
     );
   }
 
@@ -135,7 +136,7 @@ export function CompareToggle({
           boxShadow: isSelected ? "0 0 0 4px rgba(34,197,94,0.14)" : "0 0 0 4px rgba(239,68,68,0.14)",
         }}
       />
-      {compact ? "Confronta" : isSelected ? "Aggiunto al confronto" : "Aggiungi al confronto"}
+      <LocalizedText>{compact ? "Confronta" : isSelected ? "Aggiunto al confronto" : "Aggiungi al confronto"}</LocalizedText>
       <span
         className={`count-badge-live rounded-full bg-white/10 px-1.5 py-0.5 text-xs ${count > 0 ? "is-active" : ""} ${
           isReady ? "is-ready" : ""

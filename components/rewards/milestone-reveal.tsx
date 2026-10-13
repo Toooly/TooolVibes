@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useId, useRef } from "react";
 import Link from "@/components/ui/app-link";
 import { motion } from "motion/react";
@@ -115,12 +116,12 @@ export function MilestoneReveal({
 
   return (
     <div className="tv-reward-ach-root" data-reward-tier="milestone">
-      <button
+      <LocalizedAttributes><button
         type="button"
         className="tv-reward-ach__backdrop"
         aria-label="Chiudi traguardo"
         onClick={onDismiss}
-      />
+      /></LocalizedAttributes>
       <div className="tv-reward-milestone-stage">
         <canvas
           ref={canvasRef}
@@ -142,41 +143,37 @@ export function MilestoneReveal({
             ease: [...MOTION_EASING.decelerate] as [number, number, number, number],
           }}
         >
-          <p className="tv-reward-ach__eyebrow">Traguardo</p>
+          <p className="tv-reward-ach__eyebrow"><LocalizedText>{"Traguardo"}</LocalizedText></p>
           <h2 id={titleId} className="tv-reward-ach__title">
-            {envelope.title}
+            <LocalizedText>{envelope.title}</LocalizedText>
           </h2>
           <p id={descId} className="tv-reward-ach__description">
-            {envelope.description}
+            <LocalizedText>{envelope.description}</LocalizedText>
           </p>
           {envelope.levelLabel ? (
             <p className="tv-reward-ach__level tv-reward-milestone__level">
-              {envelope.levelLabel}
+              <LocalizedText>{envelope.levelLabel}</LocalizedText>
             </p>
           ) : null}
           {typeof envelope.resultingBalance === "number" ? (
-            <p className="tv-reward-ach__delta" aria-label={`Bilancio ${envelope.resultingBalance} Signal Points`}>
+            <LocalizedAttributes><p className="tv-reward-ach__delta" aria-label={`Bilancio ${envelope.resultingBalance} Signal Points`}>
               <NumberFlow value={envelope.resultingBalance} />
-              <span className="tv-reward-milestone__delta-unit"> SP</span>
-            </p>
+              <span className="tv-reward-milestone__delta-unit"><LocalizedText>{" SP"}</LocalizedText></span>
+            </p></LocalizedAttributes>
           ) : null}
           <button
             ref={closeRef}
             type="button"
             className="tv-reward-ach__close"
             onClick={onDismiss}
-          >
-            Continua
-          </button>
+          ><LocalizedText>{"Continua "}</LocalizedText></button>
           <Link
             href="/account"
             className="tv-reward-ach__close"
             onClick={onDismiss}
-          >
-            Vedi i tuoi progressi
-          </Link>
+          ><LocalizedText>{"Vedi i tuoi progressi "}</LocalizedText></Link>
           <span className="sr-only" role="status" aria-live="polite">
-            {envelope.accessibilityAnnouncement}
+            <LocalizedText>{envelope.accessibilityAnnouncement}</LocalizedText>
           </span>
         </motion.div>
       </div>

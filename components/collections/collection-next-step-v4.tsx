@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { ArrowRight } from "lucide-react";
 
@@ -35,15 +36,9 @@ export function CollectionNextStepV4({
       aria-labelledby="cx-next-step-title"
     >
       <header className="cx-next-step-v4__head">
-        <span className="cx-next-step-v4__eyebrow">
-          Prossimo passo
-        </span>
-        <h2 id="cx-next-step-title" className="cx-next-step-v4__title">
-          Dove andare dopo
-        </h2>
-        <p className="cx-next-step-v4__lede">
-          Le raccolte che vengono dopo, in ordine di progressione.
-        </p>
+        <span className="cx-next-step-v4__eyebrow"><LocalizedText>{"Prossimo passo "}</LocalizedText></span>
+        <h2 id="cx-next-step-title" className="cx-next-step-v4__title"><LocalizedText>{"Dove andare dopo "}</LocalizedText></h2>
+        <p className="cx-next-step-v4__lede"><LocalizedText>{"Le raccolte che vengono dopo, in ordine di progressione. "}</LocalizedText></p>
       </header>
 
       <div className="cx-next-step-v4__grid motion-stagger">
@@ -65,17 +60,17 @@ export function CollectionNextStepV4({
               className="cx-next-step-v4__card"
             >
               <div className="cx-next-step-v4__card-eyebrow">
-                {groupLabel?.toUpperCase()}
+                <LocalizedText>{groupLabel?.toUpperCase()}</LocalizedText>
               </div>
-              <h3 className="cx-next-step-v4__card-title">{next.title}</h3>
+              <h3 className="cx-next-step-v4__card-title"><LocalizedText>{next.title}</LocalizedText></h3>
               {next.stack_meta?.concise_promise && (
                 <p className="cx-next-step-v4__card-promise">
-                  {next.stack_meta.concise_promise}
+                  <LocalizedText>{next.stack_meta.concise_promise}</LocalizedText>
                 </p>
               )}
 
               {previewCores.length > 0 && (
-                <div
+                <LocalizedAttributes><div
                   className="cx-next-step-v4__card-stack"
                   aria-label="CORE preview"
                 >
@@ -96,17 +91,17 @@ export function CollectionNextStepV4({
                       />
                     </span>
                   ))}
-                </div>
+                </div></LocalizedAttributes>
               )}
 
               {(cost || setup) && (
                 <p className="cx-next-step-v4__card-signal">
-                  {[cost, setup].filter(Boolean).join(" · ")}
+                  <LocalizedText>{[cost, setup].filter(Boolean).join(" · ")}</LocalizedText>
                 </p>
               )}
 
               <span className="cx-next-step-v4__card-cta">
-                <span>Usa questa raccolta</span>
+                <span><LocalizedText>{"Usa questa raccolta"}</LocalizedText></span>
                 <ArrowRight
                   className="size-3.5"
                   aria-hidden="true"

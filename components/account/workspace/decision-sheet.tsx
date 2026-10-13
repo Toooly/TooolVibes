@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 
 import {
@@ -191,25 +192,22 @@ export function DecisionSheet({
               size="sm"
             />
             <div className="tv-decision-sheet__identity">
-              <SheetTitle id={titleId} className="tv-decision-sheet__title">
-                Valuta {toolName}
+              <SheetTitle id={titleId} className="tv-decision-sheet__title"><LocalizedText>{"Valuta "}</LocalizedText><LocalizedText>{toolName}</LocalizedText>
               </SheetTitle>
-              <SheetDescription className="sr-only">
-                Scegli un esito e conferma. Il contesto extra è facoltativo.
-              </SheetDescription>
+              <SheetDescription className="sr-only"><LocalizedText>{"Scegli un esito e conferma. Il contesto extra è facoltativo. "}</LocalizedText></SheetDescription>
             </div>
-            <button
+            <LocalizedAttributes><button
               type="button"
               className="tv-decision-sheet__close"
               onClick={() => onOpenChange(false)}
               aria-label="Chiudi"
             >
               ×
-            </button>
+            </button></LocalizedAttributes>
           </header>
 
           <div className="tv-decision-sheet__body">
-            <div
+            <LocalizedAttributes><div
               className="tv-decision-sheet__outcomes"
               role="radiogroup"
               aria-label="Esito"
@@ -225,14 +223,14 @@ export function DecisionSheet({
                   autoFocus={option === outcome}
                   onClick={() => setOutcome(option)}
                 >
-                  {OUTCOME_STATE_LABELS[option]}
+                  <LocalizedText>{OUTCOME_STATE_LABELS[option]}</LocalizedText>
                 </button>
               ))}
-            </div>
+            </div></LocalizedAttributes>
 
             {frozenAlternatives.length > 0 ? (
-              <div className="tv-decision-sheet__alts" aria-label="Alternative">
-                <p className="tv-decision-sheet__alts-label">Alternative</p>
+              <LocalizedAttributes><div className="tv-decision-sheet__alts" aria-label="Alternative">
+                <p className="tv-decision-sheet__alts-label"><LocalizedText>{"Alternative"}</LocalizedText></p>
                 {frozenAlternatives.map((alt) => {
                   const named = frozenNames.find((item) => item.slug === alt);
                   return (
@@ -244,11 +242,11 @@ export function DecisionSheet({
                     />
                   );
                 })}
-              </div>
+              </div></LocalizedAttributes>
             ) : null}
 
-            <div className="tv-decision-sheet__field" role="group" aria-label="Perché questa decisione?">
-              <span className="tv-decision-sheet__field-label">Perché questa decisione?</span>
+            <LocalizedAttributes><div className="tv-decision-sheet__field" role="group" aria-label="Perché questa decisione?">
+              <span className="tv-decision-sheet__field-label"><LocalizedText>{"Perché questa decisione?"}</LocalizedText></span>
               <div className="tv-decision-sheet__chips">
                 {DECISION_REASON_CHIPS.map((chip) => {
                   const active = reasonChips.includes(chip.id);
@@ -267,17 +265,15 @@ export function DecisionSheet({
                         )
                       }
                     >
-                      {chip.label}
+                      <LocalizedText>{chip.label}</LocalizedText>
                     </button>
                   );
                 })}
               </div>
-            </div>
+            </div></LocalizedAttributes>
 
             <div className="tv-decision-sheet__field">
-              <p className="tv-decision-sheet__field-label">
-                Conferma se lo usi tra 1 mese
-              </p>
+              <p className="tv-decision-sheet__field-label"><LocalizedText>{"Conferma se lo usi tra 1 mese "}</LocalizedText></p>
               <RevisitWhenChips
                 tone="light"
                 onSelect={(next) => setRevisitAt(next)}
@@ -285,15 +281,15 @@ export function DecisionSheet({
             </div>
 
             <label className="tv-decision-sheet__field" htmlFor={`${titleId}-nota`}>
-              <span className="tv-decision-sheet__field-label">Nota privata</span>
-              <input
+              <span className="tv-decision-sheet__field-label"><LocalizedText>{"Nota privata"}</LocalizedText></span>
+              <LocalizedAttributes><input
                 id={`${titleId}-nota`}
                 className="tv-decision-sheet__input"
                 value={reason}
                 maxLength={200}
                 placeholder="Es. È il più utile per me"
                 onChange={(event) => setReason(event.target.value)}
-              />
+              /></LocalizedAttributes>
             </label>
 
             {currentOutcome ? (
@@ -301,33 +297,27 @@ export function DecisionSheet({
                 type="button"
                 className="tv-decision-sheet__reopen"
                 onClick={handleReopen}
-              >
-                Riapri
-              </button>
+              ><LocalizedText>{"Riapri "}</LocalizedText></button>
             ) : null}
           </div>
 
           <footer className="tv-decision-sheet__footer">
             {error ? (
               <p className="tv-decision-sheet__error" role="alert">
-                {error}
+                <LocalizedText>{error}</LocalizedText>
               </p>
             ) : null}
             <button
               type="button"
               className="tv-decision-sheet__cancel"
               onClick={() => onOpenChange(false)}
-            >
-              Annulla
-            </button>
+            ><LocalizedText>{"Annulla "}</LocalizedText></button>
             <button
               type="button"
               className="tv-decision-sheet__confirm"
               disabled={submitting}
               onClick={handleConfirm}
-            >
-              Salva decisione
-            </button>
+            ><LocalizedText>{"Salva decisione "}</LocalizedText></button>
           </footer>
         </SheetContent>
       ) : null}

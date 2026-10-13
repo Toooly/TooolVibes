@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * Accessible SVG Radar map (spec §27).
  *
@@ -404,11 +405,7 @@ export function RadarMap({
         }}
         onPointerCancel={() => { touchRef.current = null; }}
       >
-        <title id={titleId}>
-          Mappa radiale dei segnali del Radar. Settore = area Radar, distanza
-          dal centro = quando è emerso (al centro = più recente), dimensione =
-          attenzione relativa (voti + commenti), colore = area Radar.
-        </title>
+        <title id={titleId}><LocalizedText>{"Mappa radiale dei segnali del Radar. Settore = area Radar, distanza dal centro = quando è emerso (al centro = più recente), dimensione = attenzione relativa (voti + commenti), colore = area Radar. "}</LocalizedText></title>
 
         {instrumentRenderer === "v2" && <defs>
           <radialGradient id={fieldId} cx="50%" cy="50%" r="50%">
@@ -439,8 +436,8 @@ export function RadarMap({
 
         {instrumentRenderer === "v2" && <g className="tv-rx-map__frame" data-instrument-layer="frame" aria-hidden="true">
           <path d="M 9 5 H 5 V 9 M 91 5 H 95 V 9 M 5 91 V 95 H 9 M 95 91 V 95 H 91" />
-          <text x="8" y="97" className="tv-rx-map__micro-label">{visualMode === "local" ? "LOCALE" : "PANORAMICA"}</text>
-          <text x="92" y="97" textAnchor="end" className="tv-rx-map__micro-label">{range === "day" ? "24H" : range === "week" ? "7G" : "30G"}</text>
+          <text x="8" y="97" className="tv-rx-map__micro-label"><LocalizedText>{visualMode === "local" ? "LOCALE" : "PANORAMICA"}</LocalizedText></text>
+          <text x="92" y="97" textAnchor="end" className="tv-rx-map__micro-label"><LocalizedText>{range === "day" ? "24H" : range === "week" ? "7G" : "30G"}</LocalizedText></text>
         </g>}
 
         {/* §5 — pure camera transform. Semantic coordinates are unchanged.
@@ -571,7 +568,7 @@ export function RadarMap({
                   aria-hidden="true"
                 />
                 {onSelectSector ? (
-                  <path
+                  <LocalizedAttributes><path
                     d={arcPath}
                     className="tv-rx-map__compass-hit"
                     strokeWidth={RADAR_SECTOR_HIT_WIDTH}
@@ -590,7 +587,7 @@ export function RadarMap({
                         if (!focusedClusterId) onSelectSector(clusterId);
                       }
                     }}
-                  />
+                  /></LocalizedAttributes>
                 ) : null}
               </g>
             );
@@ -614,14 +611,14 @@ export function RadarMap({
 
         {/* Truthful time labels keep their original positions and strings. */}
         <g className="tv-rx-map__time-axis" data-instrument-layer="labels" aria-hidden="true">
-          <text x={RADAR_CENTER} y={RADAR_CENTER - 3} textAnchor="middle" className="tv-rx-map__ring-label" fontSize="3.1">{RADAR_RING_CENTER_LABEL}</text>
+          <text x={RADAR_CENTER} y={RADAR_CENTER - 3} textAnchor="middle" className="tv-rx-map__ring-label" fontSize="3.1"><LocalizedText>{RADAR_RING_CENTER_LABEL}</LocalizedText></text>
           {rings.map((ring) => {
             const width = Math.max(7.5, ring.label.length * 2.3);
             const y = RADAR_CENTER - 42 * ring.ratio - 1.1;
             return (
               <g key={`label-${ring.label}`}>
                 <rect x={RADAR_CENTER - width / 2} y={y - 3.6} width={width} height={4.3} rx={0.65} className="tv-rx-map__label-plate" />
-                <text x={RADAR_CENTER} y={y} textAnchor="middle" className="tv-rx-map__ring-label" fontSize="3.1">{ring.label}</text>
+                <text x={RADAR_CENTER} y={y} textAnchor="middle" className="tv-rx-map__ring-label" fontSize="3.1"><LocalizedText>{ring.label}</LocalizedText></text>
               </g>
             );
           })}
@@ -642,19 +639,19 @@ export function RadarMap({
           {microAnchor && <g className="tv-atlas__micro-focus-anchor" aria-hidden="true">
             <path d={`M ${microAnchor.x} ${microAnchor.y} L 50 50`} />
             <circle cx={microAnchor.x} cy={microAnchor.y} r="1" />
-            <text x="50" y="51" textAnchor="middle">{microAnchor.ageLabel}</text>
+            <text x="50" y="51" textAnchor="middle"><LocalizedText>{microAnchor.ageLabel}</LocalizedText></text>
           </g>}
           {atlasStacks.map(stack => {
             const radius = ATLAS_MOBILE_HIT_PX * 50 / Math.max(1,mapWidth);
             const label = `Apri gruppo di ${stack.memberIds.length} segnali emersi ${stack.ageLabel === "<1h" ? "nell’ultima ora" : `nel periodo ${stack.ageLabel}`}`;
-            return <g key={stack.id} className="tv-atlas__stack" data-atlas-stack={stack.id} data-members={stack.memberIds.join("|")} style={{transform:`translate(${stack.x}px, ${stack.y}px)`}} role="button" tabIndex={0} aria-label={label}
+            return <LocalizedAttributes key={stack.id}><g key={stack.id} className="tv-atlas__stack" data-atlas-stack={stack.id} data-members={stack.memberIds.join("|")} style={{transform:`translate(${stack.x}px, ${stack.y}px)`}} role="button" tabIndex={0} aria-label={label}
               onClick={event => { if(event.detail===0) onSelectStack?.(stack.id); }}
               onKeyDown={event => { if(event.key==="Enter" || event.key===" "){event.preventDefault();onSelectStack?.(stack.id);} }}>
               <circle r={radius} className="tv-atlas__stack-hit" aria-hidden="true" />
               <rect x={-radius*.85} y={-radius*.85} width={radius*1.7} height={radius*1.7} rx={radius*.3} className="tv-atlas__stack-body" aria-hidden="true" />
               <text textAnchor="middle" y="0" className="tv-atlas__stack-count" aria-hidden="true">+{stack.memberIds.length}</text>
-              <text textAnchor="middle" y="3.4" className="tv-atlas__stack-age" aria-hidden="true">{stack.ageLabel}</text>
-            </g>;
+              <text textAnchor="middle" y="3.4" className="tv-atlas__stack-age" aria-hidden="true"><LocalizedText>{stack.ageLabel}</LocalizedText></text>
+            </g></LocalizedAttributes>;
           })}
           {layoutTools.map((tool) => {
             if (!isVisible(tool.id)) return null;
@@ -713,7 +710,7 @@ export function RadarMap({
               >
                 {/* 44px effective touch target (transparent). Keyboard-only
                     focus; pointer selection is resolved centrally above. */}
-                <circle
+                <LocalizedAttributes><circle
                   cx={0}
                   cy={0}
                   r={mobileAtlas ? ATLAS_MOBILE_HIT_PX * 50 / Math.max(1,mapWidth) : RADAR_HIT_RADIUS_VIEWBOX}
@@ -736,7 +733,7 @@ export function RadarMap({
                         }
                       : undefined
                   }
-                />
+                /></LocalizedAttributes>
                 {instrumentRenderer === "atlas" ? <RadarAtlasGlyph radius={drawnRadius} color={color} selected={isSelected} highlighted={isHighlighted} linked={tool.catalogStatus === "linked"} name={tool.name} tier={atlasTiers.get(tool.id) ?? "global"} thumbnailUrl={tool.thumbnailUrl} /> : <>
                 {(isSelected || isHighlighted) && (
                   <circle
@@ -806,7 +803,7 @@ export function RadarMap({
                       className="tv-rx-map__hidden-badge"
                       fontSize="2.9"
                     >
-                      {radarOverviewHiddenLabel(hidden)}
+                      <LocalizedText>{radarOverviewHiddenLabel(hidden)}</LocalizedText>
                     </text>
                   );
                 })()}

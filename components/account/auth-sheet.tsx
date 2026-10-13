@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -138,12 +139,12 @@ function AuthSheetForm({
 
   return (
     <div className="tv-auth-sheet">
-      <p className="tv-auth-sheet__eyebrow">Il tuo spazio</p>
-      {title}
-      {description}
+      <p className="tv-auth-sheet__eyebrow"><LocalizedText>{"Il tuo spazio"}</LocalizedText></p>
+      <LocalizedText>{title}</LocalizedText>
+      <LocalizedText>{description}</LocalizedText>
       {sent ? (
         <p className="tv-auth-sheet__status" id={statusId} role="status">
-          {draft.capability === "search.personal"
+          <LocalizedText>{draft.capability === "search.personal"
             ? "Controlla la tua email. Apri il link per continuare la ricerca."
             : draft.capability === "compare.deep"
               ? "Controlla la tua email. Apri il link per continuare il confronto."
@@ -153,16 +154,14 @@ function AuthSheetForm({
                   ? "Controlla la tua email. Apri il link per continuare sul Radar."
                 : draft.capability === "community.write"
                   ? "Controlla la tua email. Apri il link per continuare con la tua esperienza."
-            : `Controlla la tua email. Apri il link per continuare con ${draft.toolSlug}.`}
+            : `Controlla la tua email. Apri il link per continuare con ${draft.toolSlug}.`}</LocalizedText>
         </p>
       ) : (
         <form className="tv-auth-sheet__form" onSubmit={onSubmit} noValidate>
           {onOAuth ? (
             <OAuthButtons disabled={submitting} onSelect={onOAuth} />
           ) : null}
-          <label className="tv-auth-sheet__label" htmlFor={emailId}>
-            Email
-            <input
+          <label className="tv-auth-sheet__label" htmlFor={emailId}><LocalizedText>{"Email "}</LocalizedText><input
               ref={emailRef}
               id={emailId}
               className="tv-auth-sheet__input"
@@ -179,7 +178,7 @@ function AuthSheetForm({
           </label>
           {error ? (
             <p className="tv-auth-sheet__error" id={errorId} role="alert">
-              {error}
+              <LocalizedText>{error}</LocalizedText>
             </p>
           ) : null}
           <div className="tv-auth-sheet__actions">
@@ -188,15 +187,13 @@ function AuthSheetForm({
               className="tv-auth-sheet__cta"
               disabled={submitting}
             >
-              {submitting ? "Invio in corso…" : "Continua con il tuo account"}
+              <LocalizedText>{submitting ? "Invio in corso…" : "Continua con il tuo account"}</LocalizedText>
             </button>
             <button
               type="button"
               className="tv-auth-sheet__dismiss"
               onClick={onDismiss}
-            >
-              Non ora
-            </button>
+            ><LocalizedText>{"Non ora "}</LocalizedText></button>
           </div>
         </form>
       )}
@@ -205,13 +202,9 @@ function AuthSheetForm({
           type="button"
           className="tv-auth-sheet__dismiss"
           onClick={onDismiss}
-        >
-          Chiudi
-        </button>
+        ><LocalizedText>{"Chiudi "}</LocalizedText></button>
       ) : null}
-      <p className="tv-auth-sheet__footnote">
-        Un link alla tua email, oppure un account se disponibile. Niente password.
-      </p>
+      <p className="tv-auth-sheet__footnote"><LocalizedText>{"Un link alla tua email, oppure un account se disponibile. Niente password. "}</LocalizedText></p>
     </div>
   );
 }
@@ -369,19 +362,19 @@ export function AuthSheet({
           className="tv-auth-sheet__surface !bg-[var(--tv-activation-surface)] border-0 p-0 shadow-none ring-0 sm:max-w-none"
           data-placement="desktop"
         >
-          <AuthSheetForm
+          <LocalizedAttributes><AuthSheetForm
             {...formProps}
             title={
               <DialogTitle className="tv-auth-sheet__title">
-                {authSheetCopy(draft.capability ?? "stack.create").title}
+                <LocalizedText>{authSheetCopy(draft.capability ?? "stack.create").title}</LocalizedText>
               </DialogTitle>
             }
             description={
               <DialogDescription className="tv-auth-sheet__body">
-                {authSheetCopy(draft.capability ?? "stack.create").body}
+                <LocalizedText>{authSheetCopy(draft.capability ?? "stack.create").body}</LocalizedText>
               </DialogDescription>
             }
-          />
+          /></LocalizedAttributes>
         </DialogContent>
       </Dialog>
     );
@@ -395,19 +388,19 @@ export function AuthSheet({
         className="tv-auth-sheet__surface !bg-[var(--tv-activation-surface)] border-0 p-0 shadow-none"
         data-placement="mobile"
       >
-        <AuthSheetForm
+        <LocalizedAttributes><AuthSheetForm
           {...formProps}
           title={
             <SheetTitle className="tv-auth-sheet__title">
-              {authSheetCopy(draft.capability ?? "stack.create").title}
+              <LocalizedText>{authSheetCopy(draft.capability ?? "stack.create").title}</LocalizedText>
             </SheetTitle>
           }
           description={
             <SheetDescription className="tv-auth-sheet__body">
-              {authSheetCopy(draft.capability ?? "stack.create").body}
+              <LocalizedText>{authSheetCopy(draft.capability ?? "stack.create").body}</LocalizedText>
             </SheetDescription>
           }
-        />
+        /></LocalizedAttributes>
       </SheetContent>
     </Sheet>
   );

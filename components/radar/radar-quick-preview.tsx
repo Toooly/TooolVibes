@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * Tool quick preview (spec §2-§4, §8, §16).
  *
@@ -56,7 +57,7 @@ export function RadarQuickPreview({
   };
 
   return (
-    <div
+    <LocalizedAttributes><div
       className="tv-rx-preview"
       role="dialog"
       aria-modal="false"
@@ -73,21 +74,21 @@ export function RadarQuickPreview({
         onClick={() => setExpanded((value) => !value)}
       >
         <span className="tv-rx-preview__handle" aria-hidden="true" />
-        <span>{expanded ? "Riduci dettagli" : "Dettagli completi"}</span>
+        <span><LocalizedText>{expanded ? "Riduci dettagli" : "Dettagli completi"}</LocalizedText></span>
         {expanded ? <ChevronDown size={16} aria-hidden="true" /> : <ChevronUp size={16} aria-hidden="true" />}
       </button>
-      <p className="tv-rx__eyebrow">03 / Segnale selezionato</p>
+      <p className="tv-rx__eyebrow"><LocalizedText>{"03 / Segnale selezionato"}</LocalizedText></p>
       <header className="tv-rx-preview__header">
         {tool.thumbnailUrl && !thumbnailFailed ? (
           // eslint-disable-next-line @next/next/no-img-element -- source thumbnails are remote PH assets with no stable width/height
-          <img
+          <LocalizedAttributes><img
             src={tool.thumbnailUrl}
             onError={() => setThumbnailFailed(true)}
             alt=""
             className="tv-rx-preview__logo"
             width={40}
             height={40}
-          />
+          /></LocalizedAttributes>
         ) : (
           <span className="tv-rx-preview__logo tv-rx-preview__logo--fallback" aria-hidden="true">
             {tool.name.slice(0, 2).toUpperCase()}
@@ -95,20 +96,20 @@ export function RadarQuickPreview({
         )}
         <div className="tv-rx-preview__title-block">
           <h2 className="tv-rx-preview__title">{tool.name}</h2>
-          <p className="tv-rx-preview__category">{tool.topicCluster.label}</p>
+          <p className="tv-rx-preview__category"><LocalizedText>{tool.topicCluster.label}</LocalizedText></p>
         </div>
-        <button
+        <LocalizedAttributes><button
           type="button"
           className="tv-rx-preview__close"
           onClick={onClose}
           aria-label="Chiudi anteprima"
         >
           <X size={16} aria-hidden="true" />
-        </button>
+        </button></LocalizedAttributes>
       </header>
 
       <p className="tv-rx-preview__badge" data-catalog-status={tool.catalogStatus}>
-        {isExternal ? "Segnale esterno · Product Hunt" : "Nel Catalogo TooolVibes"}
+        <LocalizedText>{isExternal ? "Segnale esterno · Product Hunt" : "Nel Catalogo TooolVibes"}</LocalizedText>
       </p>
 
       {/* §16 — explainable position: why this signal sits where it sits. */}
@@ -117,30 +118,30 @@ export function RadarQuickPreview({
         { label: "Commenti", value: tool.commentsCount },
         { label: "Posizione", value: `#${tool.rank}` },
       ]} />
-      <p className="tv-rx-preview__age">Emerso {formatAge(tool.ageHours)} · #{tool.rank} nel periodo</p>
-      <p className="tv-rx-sr-only">{tool.votesCount} voti · {tool.commentsCount} commenti</p>
+      <p className="tv-rx-preview__age"><LocalizedText>{"Emerso "}</LocalizedText><LocalizedText>{formatAge(tool.ageHours)}</LocalizedText> · #{tool.rank}<LocalizedText>{" nel periodo"}</LocalizedText></p>
+      <p className="tv-rx-sr-only">{tool.votesCount}<LocalizedText>{" voti · "}</LocalizedText>{tool.commentsCount}<LocalizedText>{" commenti"}</LocalizedText></p>
 
       <div id="tv-rx-preview-details" className="tv-rx-preview__details">
-        <p className="tv-rx-preview__tagline">{tool.tagline}</p>
+        <p className="tv-rx-preview__tagline"><LocalizedText>{tool.tagline}</LocalizedText></p>
         <p className="tv-rx-preview__delta" data-history={historyAvailable ? "true" : "false"}>
-          {historyAvailable
+          <LocalizedText>{historyAvailable
             ? "Variazione disponibile."
-            : "Dati storici in raccolta: variazione e trend non ancora disponibili."}
+            : "Dati storici in raccolta: variazione e trend non ancora disponibili."}</LocalizedText>
         </p>
 
         {/* §8 — source transparency: the derived classification is explainable. */}
         <dl className="tv-rx-preview__source-list">
           <div>
-            <dt>Area</dt>
-            <dd>{tool.topicCluster.label}</dd>
+            <dt><LocalizedText>{"Area"}</LocalizedText></dt>
+            <dd><LocalizedText>{tool.topicCluster.label}</LocalizedText></dd>
           </div>
           <div>
-            <dt>Fonte</dt>
-            <dd>Product Hunt</dd>
+            <dt><LocalizedText>{"Fonte"}</LocalizedText></dt>
+            <dd><LocalizedText>{"Product Hunt"}</LocalizedText></dd>
           </div>
           <div>
-            <dt>Topics</dt>
-            <dd>{tool.topics.length > 0 ? tool.topics.slice(0, 4).join(" · ") : "—"}</dd>
+            <dt><LocalizedText>{"Topics"}</LocalizedText></dt>
+            <dd><LocalizedText>{tool.topics.length > 0 ? tool.topics.slice(0, 4).join(" · ") : "—"}</LocalizedText></dd>
           </div>
         </dl>
       </div>
@@ -153,7 +154,7 @@ export function RadarQuickPreview({
               href={tool.websiteUrl ?? tool.sourceUrl}
               {...externalLinkProps}
             >
-              {tool.websiteUrl ? "Visita il sito" : "Apri la fonte"}
+              <LocalizedText>{tool.websiteUrl ? "Visita il sito" : "Apri la fonte"}</LocalizedText>
               <ArrowUpRight size={14} aria-hidden="true" />
             </a>
             <button
@@ -164,12 +165,10 @@ export function RadarQuickPreview({
               onClick={onToggleWatch}
             >
               <Eye size={14} aria-hidden="true" />
-              {watched ? "Seguito" : "Segui nel Radar"}
+              <LocalizedText>{watched ? "Seguito" : "Segui nel Radar"}</LocalizedText>
             </button>
             {tool.websiteUrl ? (
-              <a className="tv-rx-preview__source" href={tool.sourceUrl} {...externalLinkProps}>
-                Product Hunt
-                <ArrowUpRight size={12} aria-hidden="true" />
+              <a className="tv-rx-preview__source" href={tool.sourceUrl} {...externalLinkProps}><LocalizedText>{"Product Hunt "}</LocalizedText><ArrowUpRight size={12} aria-hidden="true" />
               </a>
             ) : null}
           </>
@@ -178,9 +177,7 @@ export function RadarQuickPreview({
             <Link
               className="tv-rx-preview__primary"
               href={`/toools/${tool.catalogSlug}`}
-            >
-              Apri scheda
-              <ArrowUpRight size={14} aria-hidden="true" />
+            ><LocalizedText>{"Apri scheda "}</LocalizedText><ArrowUpRight size={14} aria-hidden="true" />
             </Link>
             <ShortlistToggle
               slug={tool.catalogSlug ?? tool.id}
@@ -200,15 +197,13 @@ export function RadarQuickPreview({
               onClick={onToggleWatch}
             >
               <Eye size={14} aria-hidden="true" />
-              {watched ? "Seguito" : "Segui nel Radar"}
+              <LocalizedText>{watched ? "Seguito" : "Segui nel Radar"}</LocalizedText>
             </button>
-            <a className="tv-rx-preview__source" href={tool.sourceUrl} {...externalLinkProps}>
-              Product Hunt
-              <ArrowUpRight size={12} aria-hidden="true" />
+            <a className="tv-rx-preview__source" href={tool.sourceUrl} {...externalLinkProps}><LocalizedText>{"Product Hunt "}</LocalizedText><ArrowUpRight size={12} aria-hidden="true" />
             </a>
           </>
         )}
       </div>
-    </div>
+    </div></LocalizedAttributes>
   );
 }

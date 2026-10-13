@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import Link from "@/components/ui/app-link";
 import {
@@ -79,7 +80,7 @@ const TRUST_PROMISES = [
 export default function ContributiPage() {
   return (
     <SecondaryPageShell>
-      <SecondaryHero
+      <LocalizedAttributes><SecondaryHero
         tone="dark"
         layout="split"
         routeIndex="07"
@@ -90,19 +91,19 @@ export default function ContributiPage() {
         lede="Puoi proporre un tool, raccontare un flusso o correggere una scheda. Ogni invio viene letto dalla redazione: non promettiamo pubblicazioni automatiche."
         actions={
           <>
-            <a
+            <LocalizedAttributes><a
               href={CONTRIBUTE_EMAIL_SUBJECT}
               className="secondary-card__cta"
               aria-label="Scrivi alla redazione TooolVibes per proporre un contributo"
             >
               <Mail aria-hidden="true" className="size-4" />
-              <span>Scrivi alla redazione</span>
-            </a>
+              <span><LocalizedText>{"Scrivi alla redazione"}</LocalizedText></span>
+            </a></LocalizedAttributes>
             <Link
               href="/shortlist#wishlist"
               className="secondary-card__cta secondary-card__cta--ghost"
             >
-              <span>Aggiungi alla wishlist</span>
+              <span><LocalizedText>{"Aggiungi alla wishlist"}</LocalizedText></span>
             </Link>
           </>
         }
@@ -110,7 +111,7 @@ export default function ContributiPage() {
           <>
             <span className="secondary-hero__signature-eyebrow">
               <Send className="size-4" aria-hidden="true" />
-              <span>Indirizzo della redazione</span>
+              <span><LocalizedText>{"Indirizzo della redazione"}</LocalizedText></span>
             </span>
             <p
               style={{
@@ -126,9 +127,7 @@ export default function ContributiPage() {
               <a
                 href={CONTRIBUTE_EMAIL_SUBJECT}
                 style={{ color: "inherit", textDecoration: "none" }}
-              >
-                hello@tooolvibes.com
-              </a>
+              ><LocalizedText>{"hello@tooolvibes.com "}</LocalizedText></a>
             </p>
             <p
               style={{
@@ -138,44 +137,35 @@ export default function ContributiPage() {
                 fontSize: "0.9rem",
                 lineHeight: 1.55,
               }}
-            >
-              Una sola mail, nessun modulo. Scrivi il tag{" "}
-              <strong style={{ color: "var(--tv-ink-primary)" }}>
-                [tool]
-              </strong>{" "}
-              ·{" "}
-              <strong style={{ color: "var(--tv-ink-primary)" }}>
-                [flusso]
-              </strong>{" "}
-              ·{" "}
-              <strong style={{ color: "var(--tv-ink-primary)" }}>
-                [correzione]
-              </strong>{" "}
-              nella prima riga: aiuta la redazione a instradarla.
-            </p>
+            ><LocalizedText>{"Una sola mail, nessun modulo. Scrivi il tag"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"[tool] "}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText>
+              ·<LocalizedText>{" "}</LocalizedText>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"[flusso] "}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText>
+              ·<LocalizedText>{" "}</LocalizedText>
+              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"[correzione] "}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"nella prima riga: aiuta la redazione a instradarla. "}</LocalizedText></p>
           </>
         }
-      />
+      /></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         eyebrow="Cosa puoi inviare"
         title="Tre tipi di contributo, una sola redazione"
         lede="I contributi migliori partono da un bisogno concreto e aiutano altre persone a scegliere. Sono tre i tagli che vale la pena proporre."
       >
         <SecondaryCardGrid columns={3}>
           {CONTRIBUTION_TYPES.map((type) => (
-            <SecondaryPrincipleCard
+            <LocalizedAttributes key={type.title}><SecondaryPrincipleCard
               key={type.title}
               title={type.title}
               copy={type.copy}
               bullets={type.bullets}
               icon={type.icon}
-            />
+            /></LocalizedAttributes>
           ))}
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         tone="ivory"
         eyebrow="Come lavoriamo"
         title="Tre promesse editoriali"
@@ -183,37 +173,37 @@ export default function ContributiPage() {
       >
         <SecondaryCardGrid columns={3}>
           {TRUST_PROMISES.map((promise) => (
-            <SecondaryPrincipleCard
+            <LocalizedAttributes key={promise.title}><SecondaryPrincipleCard
               key={promise.title}
               title={promise.title}
               copy={promise.copy}
               tone="ivory"
-            />
+            /></LocalizedAttributes>
           ))}
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondaryClosingCTA
+      <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
         title="Hai qualcosa da proporre?"
         body="Una mail, un tag, un caso d'uso. La redazione risponde con una prima lettura editoriale, anche quando la proposta è fuori perimetro."
         actions={
           <>
-            <a
+            <LocalizedAttributes><a
               href={CONTRIBUTE_EMAIL_SUBJECT}
               className="secondary-card__cta"
               aria-label="Apri la mail per scrivere alla redazione"
             >
               <Mail aria-hidden="true" className="size-4" />
-              <span>Scrivi a hello@tooolvibes.com</span>
-            </a>
+              <span><LocalizedText>{"Scrivi a hello@tooolvibes.com"}</LocalizedText></span>
+            </a></LocalizedAttributes>
             <Link href="/metodo" className="secondary-card__cta secondary-card__cta--ghost">
-              <span>Rileggi il Metodo</span>
+              <span><LocalizedText>{"Rileggi il Metodo"}</LocalizedText></span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </>
         }
-      />
+      /></LocalizedAttributes>
     </SecondaryPageShell>
   );
 }

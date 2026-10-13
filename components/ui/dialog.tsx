@@ -1,5 +1,6 @@
 "use client"
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
@@ -80,7 +81,7 @@ function DialogContent({
           >
             <XIcon
             />
-            <span className="sr-only">Chiudi</span>
+            <span className="sr-only"><LocalizedText>{"Chiudi"}</LocalizedText></span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -117,9 +118,7 @@ function DialogFooter({
     >
       {children}
       {showCloseButton && (
-        <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Chiudi
-        </DialogPrimitive.Close>
+        <DialogPrimitive.Close render={<Button variant="outline" />}><LocalizedText>{"Chiudi "}</LocalizedText></DialogPrimitive.Close>
       )}
     </div>
   )

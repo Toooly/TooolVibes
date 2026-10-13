@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 type TagPillProps = {
@@ -14,7 +15,7 @@ export function TagPill({ tag }: TagPillProps) {
       }}
     >
       <span className="badge-dot h-1.25 w-1.25 rounded-full" style={{ background: "var(--gold)" }} />
-      #{tag}
+      #<LocalizedText>{tag}</LocalizedText>
     </Link>
   );
 }

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { BookOpenText, ArrowRight } from "lucide-react";
 
@@ -35,17 +36,9 @@ export function CollectionGuideBridgeV4({
     >
       <header className="cx-guide-bridge-v4__head">
         <span className="cx-guide-bridge-v4__eyebrow">
-          <BookOpenText className="size-3.5" aria-hidden="true" />
-          Guide collegate
-        </span>
-        <h2 id="cx-guide-bridge-title" className="cx-guide-bridge-v4__title">
-          Approfondisci i tool di questo stack
-        </h2>
-        <p className="cx-guide-bridge-v4__lede">
-          Le Guide TooolVibes che coprono i tool presenti in questa
-          raccolta. Approfondisci uno per uno, o parti da quello che ti
-          incuriosisce di più.
-        </p>
+          <BookOpenText className="size-3.5" aria-hidden="true" /><LocalizedText>{"Guide collegate "}</LocalizedText></span>
+        <h2 id="cx-guide-bridge-title" className="cx-guide-bridge-v4__title"><LocalizedText>{"Approfondisci i tool di questo stack "}</LocalizedText></h2>
+        <p className="cx-guide-bridge-v4__lede"><LocalizedText>{"Le Guide TooolVibes che coprono i tool presenti in questa raccolta. Approfondisci uno per uno, o parti da quello che ti incuriosisce di più. "}</LocalizedText></p>
       </header>
 
       <ul className="cx-guide-bridge-v4__list motion-stagger">
@@ -55,10 +48,8 @@ export function CollectionGuideBridgeV4({
               href={`/posts/${slug}`}
               className="cx-guide-bridge-v4__link"
             >
-              <span className="cx-guide-bridge-v4__slug">{slug}</span>
-              <span className="cx-guide-bridge-v4__cta">
-                Apri la guida
-                <ArrowRight
+              <span className="cx-guide-bridge-v4__slug"><LocalizedText>{slug}</LocalizedText></span>
+              <span className="cx-guide-bridge-v4__cta"><LocalizedText>{"Apri la guida "}</LocalizedText><ArrowRight
                   className="size-3.5"
                   aria-hidden="true"
                 />

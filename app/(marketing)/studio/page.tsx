@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import Link from "@/components/ui/app-link";
 import { ArrowRight, ArrowUpRight, Compass, FileText, Layers3, Mail } from "lucide-react";
@@ -71,7 +72,7 @@ const PROCESS = [
 export default function StudioPage() {
   return (
     <SecondaryPageShell>
-      <SecondaryHero
+      <LocalizedAttributes><SecondaryHero
         tone="dark"
         layout="split"
         routeIndex="08"
@@ -82,20 +83,20 @@ export default function StudioPage() {
         lede="Studio by TooolVibes collabora con prodotti e team che hanno bisogno di ricerca, struttura e parole precise per orientare persone reali."
         actions={
           <>
-            <a
+            <LocalizedAttributes><a
               href={STUDIO_EMAIL}
               className="secondary-card__cta"
               aria-label="Scrivi a TooolVibes per parlare del progetto"
             >
               <Mail aria-hidden="true" className="size-4" />
-              <span>Parla del progetto</span>
+              <span><LocalizedText>{"Parla del progetto"}</LocalizedText></span>
               <ArrowUpRight aria-hidden="true" className="size-4" />
-            </a>
+            </a></LocalizedAttributes>
             <Link
               href="/archivio"
               className="secondary-card__cta secondary-card__cta--ghost"
             >
-              <span>Guarda il catalogo</span>
+              <span><LocalizedText>{"Guarda il catalogo"}</LocalizedText></span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </>
@@ -103,7 +104,7 @@ export default function StudioPage() {
         signature={
           <>
             <span className="secondary-hero__signature-eyebrow">
-              <span>Prima lettura gratuita</span>
+              <span><LocalizedText>{"Prima lettura gratuita"}</LocalizedText></span>
             </span>
             <p
               style={{
@@ -114,9 +115,7 @@ export default function StudioPage() {
                 lineHeight: 1.4,
                 fontWeight: 600,
               }}
-            >
-              Raccontaci il contesto, non il budget.
-            </p>
+            ><LocalizedText>{"Raccontaci il contesto, non il budget. "}</LocalizedText></p>
             <p
               style={{
                 margin: 0,
@@ -125,32 +124,30 @@ export default function StudioPage() {
                 fontSize: "0.9rem",
                 lineHeight: 1.55,
               }}
-            >
-              Ti rispondiamo con una prima lettura editoriale del problema, anche quando la risposta è onesta &quot;non è il nostro perimetro&quot;.
-            </p>
+            ><LocalizedText>{"Ti rispondiamo con una prima lettura editoriale del problema, anche quando la risposta è onesta \"non è il nostro perimetro\". "}</LocalizedText></p>
           </>
         }
-      />
+      /></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         eyebrow="Servizi"
         title="Tre servizi, una sola coerenza"
         lede="Interventi essenziali, costruiti intorno a una domanda decisionale concreta. Ogni servizio può essere breve o continuativo."
       >
         <SecondaryCardGrid columns={3}>
           {SERVICES.map((service) => (
-            <SecondaryPrincipleCard
+            <LocalizedAttributes key={service.title}><SecondaryPrincipleCard
               key={service.title}
               title={service.title}
               copy={service.copy}
               bullets={service.bullets}
               icon={service.icon}
-            />
+            /></LocalizedAttributes>
           ))}
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         tone="ivory"
         eyebrow="Processo"
         title="Come lavoriamo"
@@ -158,40 +155,40 @@ export default function StudioPage() {
       >
         <SecondaryCardGrid columns={3}>
           {PROCESS.map((step) => (
-            <SecondaryPrincipleCard
+            <LocalizedAttributes key={step.title}><SecondaryPrincipleCard
               key={step.title}
               title={step.title}
               copy={step.copy}
               tone="ivory"
-            />
+            /></LocalizedAttributes>
           ))}
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondaryClosingCTA
+      <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
         title="Hai una decisione difficile da prendere?"
         body="Scrivici. Se è un caso che possiamo indirizzare, rispondiamo con una prima lettura; se non lo è, lo diciamo apertamente."
         actions={
           <>
-            <a
+            <LocalizedAttributes><a
               href={STUDIO_EMAIL}
               className="secondary-card__cta"
               aria-label="Apri la mail per parlare del progetto"
             >
               <Mail aria-hidden="true" className="size-4" />
-              <span>Scrivi a hello@tooolvibes.com</span>
-            </a>
+              <span><LocalizedText>{"Scrivi a hello@tooolvibes.com"}</LocalizedText></span>
+            </a></LocalizedAttributes>
             <Link
               href="/archivio"
               className="secondary-card__cta secondary-card__cta--ghost"
             >
-              <span>Esplora il catalogo</span>
+              <span><LocalizedText>{"Esplora il catalogo"}</LocalizedText></span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </>
         }
-      />
+      /></LocalizedAttributes>
     </SecondaryPageShell>
   );
 }

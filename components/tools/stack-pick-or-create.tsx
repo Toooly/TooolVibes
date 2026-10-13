@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * Shared Speed 2 stack membership panel.
  * Catalogo overflow and Salvati use the same create/add writers.
@@ -158,21 +159,19 @@ export function StackPickOrCreate({
       <h3
         id={headingId}
         className="px-1 text-[length:var(--tv-text-xs)] font-medium text-[var(--tv-ink-secondary)]"
-      >
-        Aggiungi a uno stack
-      </h3>
+      ><LocalizedText>{"Aggiungi a uno stack "}</LocalizedText></h3>
 
       {manyStacks ? (
         <label className="px-1">
-          <span className="sr-only">Filtra stack</span>
-          <input
+          <span className="sr-only"><LocalizedText>{"Filtra stack"}</LocalizedText></span>
+          <LocalizedAttributes><input
             data-stack-pick-filter=""
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
             placeholder="Filtra stack"
             autoComplete="off"
             className="min-h-11 w-full rounded-lg border border-[var(--tv-border-subtle)] bg-transparent px-3 text-sm text-[var(--tv-ink-primary)]"
-          />
+          /></LocalizedAttributes>
         </label>
       ) : null}
 
@@ -206,7 +205,7 @@ export function StackPickOrCreate({
                 className="inline-flex min-h-11 items-center justify-between gap-2 rounded-lg px-3 text-left text-sm text-[var(--tv-ink-primary)] hover:bg-[var(--tv-surface-elevated)] disabled:opacity-80"
               >
                 <span>
-                  {member ? `Nello stack · ${stack.name}` : `Aggiungi a ${stack.name}`}
+                  <LocalizedText>{member ? `Nello stack · ${stack.name}` : `Aggiungi a ${stack.name}`}</LocalizedText>
                 </span>
                 {member ? <Check className="h-4 w-4" aria-hidden="true" /> : null}
               </button>
@@ -225,9 +224,7 @@ export function StackPickOrCreate({
           }}
         >
           <label className="flex flex-col gap-1">
-            <span className="text-[length:var(--tv-text-xs)] text-[var(--tv-ink-secondary)]">
-              Nuovo stack
-            </span>
+            <span className="text-[length:var(--tv-text-xs)] text-[var(--tv-ink-secondary)]"><LocalizedText>{"Nuovo stack "}</LocalizedText></span>
             <input
               value={draftName}
               onChange={(event) => setDraftName(event.target.value)}
@@ -245,9 +242,7 @@ export function StackPickOrCreate({
             type="submit"
             disabled={draftName.trim() === ""}
             className="min-h-11 rounded-lg px-3 text-left text-sm font-medium text-[var(--tv-ink-primary)] hover:bg-[var(--tv-surface-elevated)] disabled:opacity-50"
-          >
-            Crea
-          </button>
+          ><LocalizedText>{"Crea "}</LocalizedText></button>
         </form>
       ) : null}
     </section>

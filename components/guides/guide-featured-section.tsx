@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import type { EditorialPostRecord } from "@/lib/types/article";
 
 import { GuideCard } from "@/components/guides/guide-card";
@@ -26,18 +27,13 @@ export function GuideFeaturedSection({
       <div className="guides-section__head">
         <div className="guides-section__head-row">
           <div>
-            <p className="guides-kicker is-on-dark">Guida in evidenza</p>
+            <p className="guides-kicker is-on-dark"><LocalizedText>{"Guida in evidenza"}</LocalizedText></p>
             <h2
               id="guides-featured-title"
               className="guides-section__title"
-            >
-              La <em>lettura</em> da cui partire.
-            </h2>
+            ><LocalizedText>{"La "}</LocalizedText><em><LocalizedText>{"lettura"}</LocalizedText></em><LocalizedText>{" da cui partire. "}</LocalizedText></h2>
           </div>
-          <p className="guides-section__dek">
-            La guida più utile di questo momento secondo la redazione —
-            scelta per profondità, attualità e completezza, non per traffico.
-          </p>
+          <p className="guides-section__dek"><LocalizedText>{"La guida più utile di questo momento secondo la redazione — scelta per profondità, attualità e completezza, non per traffico. "}</LocalizedText></p>
         </div>
       </div>
 

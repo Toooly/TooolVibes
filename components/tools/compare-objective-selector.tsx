@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useId } from "react";
 
 import {
@@ -32,9 +33,7 @@ export function CompareObjectiveSelector({
 
   return (
     <fieldset className="compare-objective">
-      <legend className="compare-objective__legend">
-        Obiettivo del confronto
-      </legend>
+      <legend className="compare-objective__legend"><LocalizedText>{"Obiettivo del confronto "}</LocalizedText></legend>
 
       <div className="compare-objective__options">
         <label className="compare-objective__chip" data-active={objective === null}>
@@ -46,7 +45,7 @@ export function CompareObjectiveSelector({
             checked={objective === null}
             onChange={() => onObjectiveChange(null)}
           />
-          <span className="compare-objective__chip-label">Neutro</span>
+          <span className="compare-objective__chip-label"><LocalizedText>{"Neutro"}</LocalizedText></span>
         </label>
 
         {COMPARE_OBJECTIVES.map((option) => (
@@ -63,7 +62,7 @@ export function CompareObjectiveSelector({
               checked={objective === option.key}
               onChange={() => onObjectiveChange(option.key)}
             />
-            <span className="compare-objective__chip-label">{option.label}</span>
+            <span className="compare-objective__chip-label"><LocalizedText>{option.label}</LocalizedText></span>
           </label>
         ))}
       </div>
@@ -71,7 +70,7 @@ export function CompareObjectiveSelector({
       <div className="compare-objective__explain" aria-live="polite">
         {explanation.map((line) => (
           <p key={line} className="compare-objective__explain-line">
-            {line}
+            <LocalizedText>{line}</LocalizedText>
           </p>
         ))}
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +29,7 @@ export const CommandControl = React.forwardRef<
     ref,
   ) => {
     return (
-      <button
+      <LocalizedAttributes><button
         ref={ref}
         type="button"
         className={cn(
@@ -46,7 +47,7 @@ export const CommandControl = React.forwardRef<
       >
         <span className="command-control__icon">{children}</span>
         <span className="command-control__state" aria-hidden="true" />
-      </button>
+      </button></LocalizedAttributes>
     );
   },
 );

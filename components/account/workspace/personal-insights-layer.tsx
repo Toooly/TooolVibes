@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useRef } from "react";
 import Link from "@/components/ui/app-link";
 
@@ -74,9 +75,7 @@ export function PersonalInsightsLayer({
               origin: `insight.${origin}`,
             });
           }}
-        >
-          Per te
-        </button>
+        ><LocalizedText>{"Per te "}</LocalizedText></button>
       </div>
     );
   }
@@ -92,11 +91,9 @@ export function PersonalInsightsLayer({
       data-personal-insights=""
       aria-labelledby={`tv-insights-title-${slug}`}
     >
-      <h2 className="tv-insights__title" id={`tv-insights-title-${slug}`}>
-        Per te
-      </h2>
+      <h2 className="tv-insights__title" id={`tv-insights-title-${slug}`}><LocalizedText>{"Per te "}</LocalizedText></h2>
       {insights.length === 0 ? (
-        <p className="tv-insights__empty">Nessun contesto personale ancora.</p>
+        <p className="tv-insights__empty"><LocalizedText>{"Nessun contesto personale ancora."}</LocalizedText></p>
       ) : (
         <ul className="tv-insights__list">
           {insights.map((item) => (
@@ -111,11 +108,11 @@ export function PersonalInsightsLayer({
 function InsightRow({ insight }: { insight: PersonalInsight }) {
   return (
     <li className="tv-insights__item" data-insight-type={insight.type} data-insight-id={insight.id}>
-      <p className="tv-insights__kicker">{insight.title}</p>
-      <p className="tv-insights__text">{insight.explanation}</p>
+      <p className="tv-insights__kicker"><LocalizedText>{insight.title}</LocalizedText></p>
+      <p className="tv-insights__text"><LocalizedText>{insight.explanation}</LocalizedText></p>
       {insight.action ? (
         <Link className="tv-insights__action" href={insight.action.href}>
-          {insight.action.label}
+          <LocalizedText>{insight.action.label}</LocalizedText>
         </Link>
       ) : null}
     </li>
@@ -157,7 +154,7 @@ export function CompareInsightLine({
       data-compare-insight=""
       data-insight-type={insight.type}
     >
-      {insight.explanation}
+      <LocalizedText>{insight.explanation}</LocalizedText>
     </p>
   );
 }

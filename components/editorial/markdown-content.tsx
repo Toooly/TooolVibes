@@ -1,3 +1,6 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/locale-provider";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
@@ -54,6 +57,7 @@ const sanitizeSchema = {
 };
 
 export function MarkdownContent({ content, className }: MarkdownContentProps) {
+  const { markdown } = useLocale();
   return (
     <div className={cn("editorial-markdown", className)}>
       <ReactMarkdown
@@ -77,8 +81,14 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
           ),
         }}
       >
-        {content}
+        {markdown(content)}
       </ReactMarkdown>
     </div>
   );
+}
+
+/** Compact formatted highlights use the same locale as the full article. */
+export function MarkdownHighlight({ content }: { content: string }) {
+  const { markdown } = useLocale();
+  return <ReactMarkdown allowedElements={["p", "strong", "em", "code"]} unwrapDisallowed components={{ p: ({ children }) => <span>{children}</span> }}>{markdown(content)}</ReactMarkdown>;
 }

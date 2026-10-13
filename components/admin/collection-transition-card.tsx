@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import {
@@ -145,7 +146,7 @@ export function CollectionTransitionCard({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className={compact ? "text-xl" : "text-2xl"}>{entry.title}</h3>
+            <h3 className={compact ? "text-xl" : "text-2xl"}><LocalizedText>{entry.title}</LocalizedText></h3>
             <span
               className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
               style={{
@@ -163,13 +164,13 @@ export function CollectionTransitionCard({
                       : "rgba(57,210,246,0.12)",
               }}
             >
-              {severityMeta.label}
+              <LocalizedText>{severityMeta.label}</LocalizedText>
             </span>
             <span
               className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
               style={reviewStyles}
             >
-              {reviewMeta.label}
+              <LocalizedText>{reviewMeta.label}</LocalizedText>
             </span>
             {readinessMeta ? (
               <span
@@ -179,7 +180,7 @@ export function CollectionTransitionCard({
                   background: readinessMeta.background,
                 }}
               >
-                {readinessMeta.label}
+                <LocalizedText>{readinessMeta.label}</LocalizedText>
               </span>
             ) : null}
             {syncPreviewMeta ? (
@@ -196,7 +197,7 @@ export function CollectionTransitionCard({
                       : "rgba(243,191,76,0.12)",
                 }}
               >
-                {syncPreviewMeta.label}
+                <LocalizedText>{syncPreviewMeta.label}</LocalizedText>
               </span>
             ) : null}
           </div>
@@ -204,13 +205,13 @@ export function CollectionTransitionCard({
             className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em]"
             style={{ color: "var(--muted)" }}
           >
-            <span>Slug: {entry.slug}</span>
-            <span>Sorgente pubblica: {getSourceLabel(entry.public_source)}</span>
-            <span>Locale: {entry.mock ? "sì" : "no"}</span>
-            <span>Archivio reale: {entry.supabase ? "sì" : "no"}</span>
+            <span><LocalizedText>{"Slug: "}</LocalizedText>{entry.slug}</span>
+            <span><LocalizedText>{"Sorgente pubblica: "}</LocalizedText><LocalizedText>{getSourceLabel(entry.public_source)}</LocalizedText></span>
+            <span><LocalizedText>{"Locale: "}</LocalizedText><LocalizedText>{entry.mock ? "sì" : "no"}</LocalizedText></span>
+            <span><LocalizedText>{"Archivio reale: "}</LocalizedText><LocalizedText>{entry.supabase ? "sì" : "no"}</LocalizedText></span>
           </div>
           <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-            {severityMeta.description}
+            <LocalizedText>{severityMeta.description}</LocalizedText>
           </p>
         </div>
 
@@ -219,16 +220,12 @@ export function CollectionTransitionCard({
             <Link
               href={`/admin/collections/${entry.supabase.id}`}
               className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
-            >
-              Apri dettaglio
-            </Link>
+            ><LocalizedText>{"Apri dettaglio "}</LocalizedText></Link>
           ) : null}
           <Link
             href={returnTo}
             className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
-          >
-            Ricarica confronto
-          </Link>
+          ><LocalizedText>{"Ricarica confronto "}</LocalizedText></Link>
         </div>
       </div>
 
@@ -240,7 +237,7 @@ export function CollectionTransitionCard({
             background: readinessMeta?.background,
           }}
         >
-          <strong>{readiness.label}:</strong> {readiness.summary}
+          <strong><LocalizedText>{readiness.label}</LocalizedText>:</strong> <LocalizedText>{readiness.summary}</LocalizedText>
         </div>
       ) : null}
 
@@ -264,12 +261,11 @@ export function CollectionTransitionCard({
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">
-              <p className="font-semibold">{syncPreviewPosture.label}</p>
+              <p className="font-semibold"><LocalizedText>{syncPreviewPosture.label}</LocalizedText></p>
               <p style={{ color: "var(--muted-strong)" }}>
-                {syncPreview.summary}
+                <LocalizedText>{syncPreview.summary}</LocalizedText>
               </p>
-              <p style={{ color: "var(--muted)" }}>
-                Modifiche sicure: {syncPreview.safe_change_count} - Modifiche editoriali:{" "}
+              <p style={{ color: "var(--muted)" }}><LocalizedText>{"Modifiche sicure: "}</LocalizedText>{syncPreview.safe_change_count}<LocalizedText>{" - Modifiche editoriali:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
                 {syncPreview.editorial_change_count}
               </p>
             </div>
@@ -277,9 +273,7 @@ export function CollectionTransitionCard({
               <Link
                 href={`/admin/collections/${collectionId}#sync-preview`}
                 className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-center text-sm font-semibold"
-              >
-                Vedi anteprima
-              </Link>
+              ><LocalizedText>{"Vedi anteprima "}</LocalizedText></Link>
             ) : null}
           </div>
         </div>
@@ -303,9 +297,9 @@ export function CollectionTransitionCard({
               }}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em]">{item.label}</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.16em]"><LocalizedText>{item.label}</LocalizedText></p>
                 <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                  {item.severity === "critical" ? "critico" : "minore"}
+                  <LocalizedText>{item.severity === "critical" ? "critico" : "minore"}</LocalizedText>
                 </span>
               </div>
               <div className="mt-3 grid gap-3 lg:grid-cols-3">
@@ -320,7 +314,7 @@ export function CollectionTransitionCard({
                     style={{ borderColor: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.56)" }}
                   >
                     <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                      {field.label}
+                      <LocalizedText>{field.label}</LocalizedText>
                     </p>
                     <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted-strong)" }}>
                       {field.value}
@@ -335,9 +329,7 @@ export function CollectionTransitionCard({
         <div
           className="mt-5 rounded-[22px] border px-4 py-4 text-sm"
           style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
-        >
-          Nessuna differenza aperta sui campi chiave di transizione.
-        </div>
+        ><LocalizedText>{"Nessuna differenza aperta sui campi chiave di transizione. "}</LocalizedText></div>
       )}
 
       {entry.warnings.length > 0 ? (
@@ -348,7 +340,7 @@ export function CollectionTransitionCard({
               className="rounded-[18px] border px-4 py-3 text-sm"
               style={{ borderColor: "rgba(161,105,47,0.18)", background: "rgba(243,191,76,0.12)" }}
             >
-              {warning}
+              <LocalizedText>{warning}</LocalizedText>
             </div>
           ))}
         </div>
@@ -376,9 +368,9 @@ export function CollectionTransitionCard({
               }}
             >
               <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-                {check.label}
+                <LocalizedText>{check.label}</LocalizedText>
               </p>
-              <p className="mt-2">{check.detail}</p>
+              <p className="mt-2"><LocalizedText>{check.detail}</LocalizedText></p>
             </div>
           ))}
         </div>
@@ -393,9 +385,7 @@ export function CollectionTransitionCard({
             <button
               type="submit"
               className="tv-cc-btn tv-cc-btn--primary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white"
-            >
-              Applica riallineamento sicuro
-            </button>
+            ><LocalizedText>{"Applica riallineamento sicuro "}</LocalizedText></button>
           </form>
         ) : null}
 
@@ -413,9 +403,7 @@ export function CollectionTransitionCard({
                   borderColor: "rgba(15,118,110,0.18)",
                   background: "rgba(57,210,246,0.12)",
                 }}
-              >
-                Segna come rivista
-              </button>
+              ><LocalizedText>{"Segna come rivista "}</LocalizedText></button>
             </form>
 
             <form className="w-full sm:w-auto" action={setCollectionTransitionReviewAction}>
@@ -430,9 +418,7 @@ export function CollectionTransitionCard({
                   borderColor: "rgba(112,82,255,0.16)",
                   background: "rgba(106,60,255,0.14)",
                 }}
-              >
-                Ignora segnale
-              </button>
+              ><LocalizedText>{"Ignora segnale "}</LocalizedText></button>
             </form>
 
             {reviewState !== "unreviewed" ? (
@@ -444,9 +430,7 @@ export function CollectionTransitionCard({
                 <button
                   type="submit"
                   className="tv-cc-btn tv-cc-btn--secondary w-full rounded-full px-4 py-2.5 text-sm font-semibold "
-                >
-                  Riapri revisione
-                </button>
+                ><LocalizedText>{"Riapri revisione "}</LocalizedText></button>
               </form>
             ) : null}
           </>
@@ -458,17 +442,15 @@ export function CollectionTransitionCard({
             <button
               type="submit"
               className="tv-cc-btn tv-cc-btn--primary w-full rounded-full px-4 py-2.5 text-sm font-semibold text-white"
-            >
-              Importa slug
-            </button>
+            ><LocalizedText>{"Importa slug "}</LocalizedText></button>
           </form>
         ) : null}
       </div>
 
       {safeAlignEligibility.eligible && !canSafeAlign ? (
         <p className="mt-3 text-sm" style={{ color: "var(--muted)" }}>
-          {safeAlignMessage ??
-            "Riallineamento sicuro non disponibile: abilita salvataggio e registro modifiche prima di applicarlo."}
+          <LocalizedText>{safeAlignMessage ??
+            "Riallineamento sicuro non disponibile: abilita salvataggio e registro modifiche prima di applicarlo."}</LocalizedText>
         </p>
       ) : null}
     </article>

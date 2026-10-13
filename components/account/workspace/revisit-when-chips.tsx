@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import {
   REVISIT_PRESETS,
   type RevisitPresetId,
@@ -32,7 +33,7 @@ export function RevisitWhenChips({
         };
 
   return (
-    <div
+    <LocalizedAttributes><div
       className="mt-2 flex flex-wrap gap-2"
       role="group"
       aria-label={labelledBy ? undefined : "Quando rivedere"}
@@ -46,9 +47,9 @@ export function RevisitWhenChips({
           style={style}
           onClick={() => onSelect(revisitAtFromPreset(preset.id), preset.id)}
         >
-          {preset.label}
+          <LocalizedText>{preset.label}</LocalizedText>
         </button>
       ))}
-    </div>
+    </div></LocalizedAttributes>
   );
 }

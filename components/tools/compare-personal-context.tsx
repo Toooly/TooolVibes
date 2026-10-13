@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useState } from "react";
 import Link from "@/components/ui/app-link";
 
@@ -55,9 +56,7 @@ export function CompareDeepEntry({
       onClick={() => {
         continuation.requestCompareDeep({ origin: "compare.deep" });
       }}
-    >
-      Il tuo contesto
-    </button>
+    ><LocalizedText>{"Il tuo contesto "}</LocalizedText></button>
   );
 }
 
@@ -85,12 +84,12 @@ export function ComparePersonalStrip({
       data-compare-personal=""
       data-slug={context.toolSlug}
     >
-      <p className="compare-personal__eyebrow">Il tuo contesto</p>
+      <p className="compare-personal__eyebrow"><LocalizedText>{"Il tuo contesto"}</LocalizedText></p>
       {chips.length > 0 ? (
         <ul className="compare-personal__chips">
           {chips.map((chip) => (
             <li key={chip.key} className="compare-personal__chip" data-chip={chip.key}>
-              {chip.label}
+              <LocalizedText>{chip.label}</LocalizedText>
             </li>
           ))}
         </ul>
@@ -103,19 +102,15 @@ export function ComparePersonalStrip({
             aria-expanded={open}
             aria-controls={detailsId}
             onClick={() => setOpen((current) => !current)}
-          >
-            Nel tuo spazio
-          </button>
+          ><LocalizedText>{"Nel tuo spazio "}</LocalizedText></button>
           {open ? (
             <div id={detailsId} className="compare-personal__l2">
               {lines.map((line) => (
                 <p key={line.key} data-l2={line.key}>
-                  {line.label}
+                  <LocalizedText>{line.label}</LocalizedText>
                 </p>
               ))}
-              <Link className="compare-personal__link" href={`/toools/${context.toolSlug}`}>
-                Apri tool
-              </Link>
+              <Link className="compare-personal__link" href={`/toools/${context.toolSlug}`}><LocalizedText>{"Apri tool "}</LocalizedText></Link>
             </div>
           ) : null}
         </div>
@@ -148,14 +143,14 @@ export function ComparePersonalLayer({
   if (!anyFact && !forceOpen) return null;
 
   return (
-    <section
+    <LocalizedAttributes><section
       className="compare-personal-layer"
       data-compare-personal-layer=""
       data-open={forceOpen ? "true" : "false"}
       aria-label="Il tuo contesto"
     >
       {!anyFact ? (
-        <p className="compare-personal__empty">Nessun contesto personale ancora.</p>
+        <p className="compare-personal__empty"><LocalizedText>{"Nessun contesto personale ancora."}</LocalizedText></p>
       ) : null}
       {contexts.map((context) => (
         <ComparePersonalStrip
@@ -164,6 +159,6 @@ export function ComparePersonalLayer({
           defaultOpen={forceOpen}
         />
       ))}
-    </section>
+    </section></LocalizedAttributes>
   );
 }

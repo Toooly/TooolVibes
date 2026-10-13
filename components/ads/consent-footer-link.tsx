@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useAdvertisingConsent } from "@/components/ads/advertising-consent-provider";
 
 /**
@@ -15,8 +16,6 @@ export function ConsentFooterLink() {
       id="consent-dialog-opener"
       onClick={openSettings}
       className="site-footer-v2__legal-link cursor-pointer bg-transparent"
-    >
-      Gestisci preferenze
-    </button>
+    ><LocalizedText>{"Gestisci preferenze "}</LocalizedText></button>
   );
 }

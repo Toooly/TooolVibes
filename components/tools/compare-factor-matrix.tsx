@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import {
   type CSSProperties,
   useEffect,
@@ -128,35 +129,31 @@ function DesktopFactorMatrix({
       <div className="compare-factor-matrix__header">
         <Scale className="size-4" aria-hidden="true" />
         <div>
-          <span>Fattori per l&apos;obiettivo</span>
-          <small>Una riga per ogni dimensione decisionale.</small>
+          <span><LocalizedText>{"Fattori per l'obiettivo"}</LocalizedText></span>
+          <small><LocalizedText>{"Una riga per ogni dimensione decisionale."}</LocalizedText></small>
         </div>
-        <div className="compare-factor-matrix__mode" role="group" aria-label="Visibilità fattori">
+        <LocalizedAttributes><div className="compare-factor-matrix__mode" role="group" aria-label="Visibilità fattori">
           <button
             type="button"
             className="compare-factor-matrix__mode-btn"
             aria-pressed={!diffOnly}
             onClick={() => setDiffOnly(false)}
-          >
-            Tutto
-          </button>
+          ><LocalizedText>{"Tutto "}</LocalizedText></button>
           <button
             type="button"
             className="compare-factor-matrix__mode-btn"
             aria-pressed={diffOnly}
             onClick={() => setDiffOnly(true)}
-          >
-            Solo differenze
-          </button>
-        </div>
+          ><LocalizedText>{"Solo differenze "}</LocalizedText></button>
+        </div></LocalizedAttributes>
       </div>
 
       <div className="compare-factor-matrix__head" aria-hidden="false">
         <div className="compare-factor-matrix__axis compare-factor-matrix__axis--head">
-          <span>Fattore</span>
-          <small>peso e spiegazione</small>
+          <span><LocalizedText>{"Fattore"}</LocalizedText></span>
+          <small><LocalizedText>{"peso e spiegazione"}</LocalizedText></small>
         </div>
-        <div
+        <LocalizedAttributes><div
           className="compare-factor-matrix__scroll-wrap"
           tabIndex={0}
           aria-label="Tool confrontati"
@@ -188,15 +185,15 @@ function DesktopFactorMatrix({
               >
                 <span className="compare-factor-matrix__tool">{tool.name}</span>
                 <span className="compare-factor-matrix__tool-score">
-                  {rankBySlug.get(tool.slug) === null ||
+                  <LocalizedText>{rankBySlug.get(tool.slug) === null ||
                   scoreBySlug.get(tool.slug) === null
                     ? "Valutazione editoriale in preparazione"
-                    : `#${rankBySlug.get(tool.slug)} · ${scoreBySlug.get(tool.slug)}/10`}
+                    : `#${rankBySlug.get(tool.slug)} · ${scoreBySlug.get(tool.slug)}/10`}</LocalizedText>
                 </span>
               </div>
             ))}
           </div>
-        </div>
+        </div></LocalizedAttributes>
       </div>
 
       <div
@@ -215,10 +212,10 @@ function DesktopFactorMatrix({
                 className="compare-factor-matrix__axis"
                 data-primary={isPrimary}
               >
-                <span>{factor.label}</span>
-                <small>{helper}</small>
+                <span><LocalizedText>{factor.label}</LocalizedText></span>
+                <small><LocalizedText>{helper}</LocalizedText></small>
               </div>
-              <div
+              <LocalizedAttributes><div
                 className="compare-factor-matrix__scroll-wrap"
                 tabIndex={0}
                 aria-label={`Valori: ${factor.label}`}
@@ -247,9 +244,7 @@ function DesktopFactorMatrix({
                           className="compare-factor-matrix__cell"
                         >
                           <span className="compare-factor-matrix__value">
-                            <small className="compare-factor-matrix__fit-note">
-                              Dimensione non valutata per questo tool.
-                            </small>
+                            <small className="compare-factor-matrix__fit-note"><LocalizedText>{"Dimensione non valutata per questo tool. "}</LocalizedText></small>
                           </span>
                         </div>
                       );
@@ -275,12 +270,10 @@ function DesktopFactorMatrix({
                               {dim.value}/5
                             </span>
                             {isWinner ? (
-                              <span className="compare-factor-matrix__factor-advantage">
-                                Vantaggio
-                              </span>
+                              <span className="compare-factor-matrix__factor-advantage"><LocalizedText>{"Vantaggio "}</LocalizedText></span>
                             ) : null}
                           </div>
-                          <div
+                          <LocalizedAttributes><div
                             className="compare-factor-matrix__factor-track"
                             role="meter"
                             aria-label={`${tool.name}: ${dim.label}, valore ${dim.value} su 5, peso ${pct}%, contributo ${dim.contribution.toFixed(2)}`}
@@ -293,16 +286,15 @@ function DesktopFactorMatrix({
                               data-primary={dim.isPrimary}
                               style={{ width: `${(dim.value / 5) * 100}%` }}
                             />
-                          </div>
-                          <span className="compare-factor-matrix__factor-contrib">
-                            contributo {dim.contribution.toFixed(2)}
+                          </div></LocalizedAttributes>
+                          <span className="compare-factor-matrix__factor-contrib"><LocalizedText>{"contributo "}</LocalizedText><LocalizedText>{dim.contribution.toFixed(2)}</LocalizedText>
                           </span>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-              </div>
+              </div></LocalizedAttributes>
             </div>
           );
         })}
@@ -333,14 +325,12 @@ function MobileFactorAccordion({
 
   if (factors.length === 0) {
     return (
-      <p className="compare-factor-accordion__empty">
-        Seleziona un obiettivo per vedere il peso dei fattori.
-      </p>
+      <p className="compare-factor-accordion__empty"><LocalizedText>{"Seleziona un obiettivo per vedere il peso dei fattori. "}</LocalizedText></p>
     );
   }
 
   return (
-    <div
+    <LocalizedAttributes><div
       className="compare-factor-accordion"
       data-layout="mobile"
       aria-label={`Fattori per ${objective ? getCompareObjectiveLabel(objective) : "il confronto"}`}
@@ -358,8 +348,8 @@ function MobileFactorAccordion({
               aria-expanded={isOpen}
               aria-controls={contentId}
             >
-              <span>{label}</span>
-              <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
+              <span><LocalizedText>{label}</LocalizedText></span>
+              <span aria-hidden="true"><LocalizedText>{isOpen ? "−" : "+"}</LocalizedText></span>
             </button>
             {isOpen ? (
               <div id={contentId} className="compare-factor-accordion__content">
@@ -380,7 +370,7 @@ function MobileFactorAccordion({
                       <span className="compare-factor-accordion__tool-value">
                         {dimension.value}/5
                       </span>
-                      <span
+                      <LocalizedAttributes><span
                         className="compare-factor-accordion__tool-bar"
                         role="meter"
                         aria-valuenow={dimension.value}
@@ -397,9 +387,8 @@ function MobileFactorAccordion({
                             } as CSSProperties
                           }
                         />
-                      </span>
-                      <span className="compare-factor-accordion__tool-contrib">
-                        contrib {dimension.contribution.toFixed(2)}
+                      </span></LocalizedAttributes>
+                      <span className="compare-factor-accordion__tool-contrib"><LocalizedText>{"contrib "}</LocalizedText><LocalizedText>{dimension.contribution.toFixed(2)}</LocalizedText>
                       </span>
                     </div>
                   );
@@ -409,7 +398,7 @@ function MobileFactorAccordion({
           </section>
         );
       })}
-    </div>
+    </div></LocalizedAttributes>
   );
 }
 

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { notFound } from "next/navigation";
 
 import { updateArticleFormAction } from "@/app/(admin)/admin/actions/articles";
@@ -26,7 +27,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
 
   return (
     <div className="page-shell py-6">
-      {!canWrite ? <ControlCenterNotice tone="warn">{runtime.writeMessage}</ControlCenterNotice> : null}
+      {!canWrite ? <ControlCenterNotice tone="warn"><LocalizedText>{runtime.writeMessage}</LocalizedText></ControlCenterNotice> : null}
       <ArticleForm
         entityTitle={article.title}
         entityStatus={article.status}

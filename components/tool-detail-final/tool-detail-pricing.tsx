@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { parsePublicToolMarkdown } from "@/lib/content/tool-markdown-public";
 
@@ -32,21 +33,18 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
 
   return (
     <section id="td-final-pricing" className="td-final-pricing" aria-labelledby="td-final-pricing-title">
-      <p className="td-final-pricing__eyebrow">Prezzi</p>
-      <h2 id="td-final-pricing-title" className="td-final-section-title">
-        Quanto costa {tool.name}
+      <p className="td-final-pricing__eyebrow"><LocalizedText>{"Prezzi"}</LocalizedText></p>
+      <h2 id="td-final-pricing-title" className="td-final-section-title"><LocalizedText>{"Quanto costa "}</LocalizedText>{tool.name}
       </h2>
       {pricingModel === "transactional" ? (
         <div className="td-final-pricing__unknown">
           <span className="td-final-pricing__unknown-icon" aria-hidden="true">%</span>
           <div>
-            <p style={{ fontWeight: 600, marginBottom: 4 }}>Modello transazionale</p>
-            <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}>
-              Commissione per transazione. Nessun canone mensile per le funzionalità ecommerce.
-            </p>
+            <p style={{ fontWeight: 600, marginBottom: 4 }}><LocalizedText>{"Modello transazionale"}</LocalizedText></p>
+            <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}><LocalizedText>{"Commissione per transazione. Nessun canone mensile per le funzionalità ecommerce. "}</LocalizedText></p>
             {plans.map((plan) => (
               <p key={plan.name} style={{ margin: "4px 0 0", fontWeight: 600 }}>
-                {plan.name}: {plan.price} {plan.period}
+                {plan.name}: <LocalizedText>{plan.price}</LocalizedText> <LocalizedText>{plan.period}</LocalizedText>
               </p>
             ))}
           </div>
@@ -55,10 +53,8 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
         <div className="td-final-pricing__unknown">
           <span className="td-final-pricing__unknown-icon" aria-hidden="true">✓</span>
           <div>
-            <p style={{ fontWeight: 600, marginBottom: 4 }}>Gratuito</p>
-            <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}>
-              Questo tool offre un piano gratuito.
-            </p>
+            <p style={{ fontWeight: 600, marginBottom: 4 }}><LocalizedText>{"Gratuito"}</LocalizedText></p>
+            <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}><LocalizedText>{"Questo tool offre un piano gratuito. "}</LocalizedText></p>
           </div>
         </div>
       ) : plans.length > 0 ? (
@@ -66,14 +62,13 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
           {plans.map((plan) => (
             <div key={plan.name} className="td-final-pricing__plan">
               <p className="td-final-pricing__plan-name">{plan.name}</p>
-              <p className="td-final-pricing__plan-price">{plan.price}</p>
-              {plan.period ? <p className="td-final-pricing__plan-period">{plan.period}</p> : null}
+              <p className="td-final-pricing__plan-price"><LocalizedText>{plan.price}</LocalizedText></p>
+              {plan.period ? <p className="td-final-pricing__plan-period"><LocalizedText>{plan.period}</LocalizedText></p> : null}
             </div>
           ))}
           {sourceUrl ? (
-            <p className="td-final-pricing__source">
-              Prezzi verificati il {verifiedAt}
-              {tool.domain ? ` — Fonte: ${tool.domain}` : ""}
+            <p className="td-final-pricing__source"><LocalizedText>{"Prezzi verificati il "}</LocalizedText><LocalizedText>{verifiedAt}</LocalizedText>
+              <LocalizedText>{tool.domain ? ` — Fonte: ${tool.domain}` : ""}</LocalizedText>
             </p>
           ) : null}
           <a
@@ -81,30 +76,28 @@ export function ToolDetailPricing({ tool }: ToolDetailPricingProps) {
             className="td-final-pricing__cta"
             target="_blank"
             rel={tool.affiliateUrl ? "noopener noreferrer sponsored" : "noopener noreferrer"}
-          >
-            Vedi prezzi aggiornati ↗
-          </a>
+          ><LocalizedText>{"Vedi prezzi aggiornati ↗ "}</LocalizedText></a>
         </div>
       ) : known ? (
-        <div className="td-final-pricing__body">{body}</div>
+        <div className="td-final-pricing__body"><LocalizedText>{body}</LocalizedText></div>
       ) : (
         <div className="td-final-pricing__unknown">
           <span className="td-final-pricing__unknown-icon" aria-hidden="true">?</span>
           <div>
             <p style={{ fontWeight: 600, marginBottom: 4 }}>
-              {pricingStatus === "contact" ? "Listino su richiesta" :
+              <LocalizedText>{pricingStatus === "contact" ? "Listino su richiesta" :
                pricingStatus === "custom" ? "Prezzo custom" :
                pricingStatus === "temporarily_unverifiable" ? "Temporaneamente non verificabile" :
-               "Prezzo non verificato"}
+               "Prezzo non verificato"}</LocalizedText>
             </p>
             <p style={{ margin: 0, color: "var(--tv-ink-secondary)" }}>
-              {pricingStatus === "contact"
+              <LocalizedText>{pricingStatus === "contact"
                 ? "Listino su richiesta. Contatta il team per un preventivo."
                 : pricingStatus === "custom"
                 ? "Prezzo personalizzato in base alle esigenze."
                 : pricingStatus === "temporarily_unverifiable"
                 ? "Il listino non è temporaneamente verificabile. Riprova più tardi."
-                : "Questa scheda non pubblica un listino verificato. Controlla il sito del tool prima di decidere."}
+                : "Questa scheda non pubblica un listino verificato. Controlla il sito del tool prima di decidere."}</LocalizedText>
             </p>
           </div>
         </div>

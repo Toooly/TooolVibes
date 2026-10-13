@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
 
 const PALETTE = [
@@ -79,7 +80,7 @@ export function WorkspaceToolMark({
       }}
     >
       <span className="tv-tool-mark__jewel" />
-      <span className="tv-tool-mark__fallback">{label}</span>
+      <span className="tv-tool-mark__fallback"><LocalizedText>{label}</LocalizedText></span>
     </span>
   );
 }

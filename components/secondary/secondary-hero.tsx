@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import { RouteMarker } from "@/components/ui/route-marker";
@@ -95,20 +96,20 @@ export function SecondaryHero({
       <div className="secondary-hero__inner">
         <div className="secondary-hero__copy">
           {resolvedEyebrow ? (
-            <div className="secondary-hero__eyebrow">{resolvedEyebrow}</div>
+            <div className="secondary-hero__eyebrow"><LocalizedText>{resolvedEyebrow}</LocalizedText></div>
           ) : null}
-          <h1 className="secondary-hero__title">{renderedTitle}</h1>
-          <p className="secondary-hero__lede">{lede}</p>
-          {actions ? <div className="secondary-hero__actions">{actions}</div> : null}
+          <h1 className="secondary-hero__title"><LocalizedText>{renderedTitle}</LocalizedText></h1>
+          <p className="secondary-hero__lede"><LocalizedText>{lede}</LocalizedText></p>
+          {actions ? <div className="secondary-hero__actions"><LocalizedText>{actions}</LocalizedText></div> : null}
         </div>
 
         {signature ? (
-          <aside
+          <LocalizedAttributes><aside
             className="secondary-hero__signature"
             aria-label={signatureLabel}
           >
-            {signature}
-          </aside>
+            <LocalizedText>{signature}</LocalizedText>
+          </aside></LocalizedAttributes>
         ) : null}
       </div>
     </section>
@@ -136,9 +137,9 @@ function renderTitleWithEmphasis(title: string, emphasis: string) {
   const after = title.slice(at + emphasis.length);
   return (
     <>
-      {before}
-      <strong>{match}</strong>
-      {after}
+      <LocalizedText>{before}</LocalizedText>
+      <strong><LocalizedText>{match}</LocalizedText></strong>
+      <LocalizedText>{after}</LocalizedText>
     </>
   );
 }

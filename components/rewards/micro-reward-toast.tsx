@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect } from "react";
 import { motion } from "motion/react";
 
@@ -55,23 +56,21 @@ export function MicroRewardToast({
       }}
     >
       <div className="tv-reward-micro__body">
-        <p className="tv-reward-micro__title">{envelope.title}</p>
-        <p className="tv-reward-micro__description">{envelope.description}</p>
+        <p className="tv-reward-micro__title"><LocalizedText>{envelope.title}</LocalizedText></p>
+        <p className="tv-reward-micro__description"><LocalizedText>{envelope.description}</LocalizedText></p>
         {typeof envelope.displayDelta === "number" ? (
-          <p className="tv-reward-micro__delta" aria-label={`Delta ${envelope.displayDelta}`}>
+          <LocalizedAttributes><p className="tv-reward-micro__delta" aria-label={`Delta ${envelope.displayDelta}`}>
             +{envelope.displayDelta}
-          </p>
+          </p></LocalizedAttributes>
         ) : null}
       </div>
-      <button
+      <LocalizedAttributes><button
         type="button"
         className="tv-reward-micro__dismiss"
         onClick={onDismiss}
         aria-label="Chiudi notifica"
-      >
-        Chiudi
-      </button>
-      <span className="sr-only">{envelope.accessibilityAnnouncement}</span>
+      ><LocalizedText>{"Chiudi "}</LocalizedText></button></LocalizedAttributes>
+      <span className="sr-only"><LocalizedText>{envelope.accessibilityAnnouncement}</LocalizedText></span>
     </motion.div>
   );
 }

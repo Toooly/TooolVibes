@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useState } from "react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { useCompareObjective } from "@/lib/hooks/use-compare-objective";
@@ -17,9 +18,7 @@ function CompareViewportFallback() {
       role="status"
       aria-busy="true"
       aria-live="polite"
-    >
-      Preparazione dell’area di confronto…
-    </div>
+    ><LocalizedText>{"Preparazione dell’area di confronto… "}</LocalizedText></div>
   );
 }
 
@@ -83,24 +82,22 @@ export function ToolBattleView({
     );
 
   return (
-    <section
+    <LocalizedAttributes><section
       className={`tool-battle-page${showIntro ? "" : " tool-battle-page--embedded"}`}
       aria-labelledby={showIntro ? "tool-battle-title" : undefined}
       aria-label={showIntro ? undefined : "Area di confronto"}
     >
       {showIntro && <header className="tool-battle-page__intro">
-        <p className="tool-battle-page__eyebrow">Confronto guidato</p>
-        <h1 id="tool-battle-title">Metti a confronto ciò che conta davvero.</h1>
-        <p className="tool-battle-page__lede">
-          Due-cinque candidati affiancati. Differenze, limiti, trade-off.
-        </p>
-        <ol className="tool-battle-page__steps" aria-label="Come funziona il confronto">
-          <li><span>01</span> Aggiungi</li>
-          <li><span>02</span> Confronta</li>
-          <li><span>03</span> Decidi</li>
-        </ol>
+        <p className="tool-battle-page__eyebrow"><LocalizedText>{"Confronto guidato"}</LocalizedText></p>
+        <h1 id="tool-battle-title"><LocalizedText>{"Metti a confronto ciò che conta davvero."}</LocalizedText></h1>
+        <p className="tool-battle-page__lede"><LocalizedText>{"Due-cinque candidati affiancati. Differenze, limiti, trade-off. "}</LocalizedText></p>
+        <LocalizedAttributes><ol className="tool-battle-page__steps" aria-label="Come funziona il confronto">
+          <li><span>01</span><LocalizedText>{" Aggiungi"}</LocalizedText></li>
+          <li><span>02</span><LocalizedText>{" Confronta"}</LocalizedText></li>
+          <li><span>03</span><LocalizedText>{" Decidi"}</LocalizedText></li>
+        </ol></LocalizedAttributes>
       </header>}
       <div className="tool-battle-page__viewport">{activeView}</div>
-    </section>
+    </section></LocalizedAttributes>
   );
 }

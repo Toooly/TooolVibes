@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 
@@ -71,9 +72,7 @@ export function SubmissionProtectionFields({
       <label
         aria-hidden="true"
         className="pointer-events-none absolute left-[-10000px] top-auto size-px overflow-hidden"
-      >
-        Company website
-        <input
+      ><LocalizedText>{"Company website "}</LocalizedText><input
           name="companyWebsite"
           type="text"
           tabIndex={-1}

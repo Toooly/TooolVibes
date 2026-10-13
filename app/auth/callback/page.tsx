@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -91,29 +92,24 @@ export default function AuthCallbackPage() {
         <div className="mt-8 grid gap-6 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
           <BrandLogo fallback="png" size={76} priority />
           <div>
-            <p className="editorial-label">Workspace personale</p>
+            <p className="editorial-label"><LocalizedText>{"Workspace personale"}</LocalizedText></p>
             <h1 className="text-display-card mt-3 text-[2rem] sm:text-[2.5rem]">
-              {failed ? "Collegamento non riuscito" : "Collegamento in corso"}
+              <LocalizedText>{failed ? "Collegamento non riuscito" : "Collegamento in corso"}</LocalizedText>
             </h1>
             <p
               className="mt-4 text-[0.98rem] leading-7 text-[var(--tv-ink-secondary)]"
               aria-live={failed ? "assertive" : "polite"}
               role={failed ? "alert" : "status"}
             >
-              {message}
+              <LocalizedText>{message}</LocalizedText>
             </p>
           </div>
         </div>
 
         {failed ? (
           <div className="mt-7 border-t border-[var(--tv-border-subtle)] pt-6">
-            <PremiumLink href="/account" className="w-full sm:w-auto">
-              Torna all&apos;accesso
-            </PremiumLink>
-            <p className="mt-3 max-w-[52ch] text-sm leading-6 text-[var(--tv-ink-secondary)]">
-              Puoi riprovare con Google, Apple, Microsoft o GitHub, oppure inviarti un nuovo
-              link email dalla pagina account.
-            </p>
+            <PremiumLink href="/account" className="w-full sm:w-auto"><LocalizedText>{"Torna all'accesso "}</LocalizedText></PremiumLink>
+            <p className="mt-3 max-w-[52ch] text-sm leading-6 text-[var(--tv-ink-secondary)]"><LocalizedText>{"Puoi riprovare con Google, Apple, Microsoft o GitHub, oppure inviarti un nuovo link email dalla pagina account. "}</LocalizedText></p>
           </div>
         ) : null}
       </PremiumPanel>

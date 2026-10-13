@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
@@ -100,16 +101,16 @@ function ResolveForm({
       <input type="hidden" name="disposition" value={disposition} />
       <input type="hidden" name="returnScope" value={scope} />
       <input type="hidden" name="page" value={page} />
-      <input
+      <LocalizedAttributes><input
         type="text"
         name="note"
         placeholder={notePlaceholder}
         maxLength={500}
         aria-label={`Nota per ${label}`}
         className="tv-cc-inline-form__input"
-      />
+      /></LocalizedAttributes>
       <button type="submit" className="tv-cc-inline-form__submit">
-        {label}
+        <LocalizedText>{label}</LocalizedText>
       </button>
     </form>
   );
@@ -168,24 +169,20 @@ export default async function ExperienceReportsPage({
 
   return (
     <div className="page-shell py-6">
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         title="Segnalazioni"
         description="Le segnalazioni delle esperienze pubblicate. Nessuna azione automatica: decidi tu."
         metrics={[{ label: "In questo filtro", value: total }]}
-      />
+      /></LocalizedAttributes>
 
       {notice ? (
-        <ControlCenterNotice tone={notice.tone}>{notice.text}</ControlCenterNotice>
+        <ControlCenterNotice tone={notice.tone}><LocalizedText>{notice.text}</LocalizedText></ControlCenterNotice>
       ) : null}
       {loadError ? (
-        <ControlCenterNotice tone="warn">
-          Non è stato possibile caricare la coda. Riprova.
-        </ControlCenterNotice>
+        <ControlCenterNotice tone="warn"><LocalizedText>{"Non è stato possibile caricare la coda. Riprova. "}</LocalizedText></ControlCenterNotice>
       ) : null}
       {!canWrite ? (
-        <ControlCenterNotice tone="warn">
-          Il salvataggio admin non è configurato. La coda resta vuota.
-        </ControlCenterNotice>
+        <ControlCenterNotice tone="warn"><LocalizedText>{"Il salvataggio admin non è configurato. La coda resta vuota. "}</LocalizedText></ControlCenterNotice>
       ) : null}
 
       <ControlCenterFilters items={[...filterItems]} active={scope} />
@@ -210,7 +207,7 @@ export default async function ExperienceReportsPage({
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="tv-cc-card__title">
-                      {experience ? tool?.name ?? experience.toolSlug : "Esperienza eliminata"}
+                      <LocalizedText>{experience ? tool?.name ?? experience.toolSlug : "Esperienza eliminata"}</LocalizedText>
                     </h2>
                     <AdminStatusPill
                       active={pill.active}
@@ -220,12 +217,12 @@ export default async function ExperienceReportsPage({
                   </div>
                   <p className="tv-cc-card__meta">
                     <span>
-                      {experience
+                      <LocalizedText>{experience
                         ? experience.displayName
-                        : "L’esperienza non esiste più."}
+                        : "L’esperienza non esiste più."}</LocalizedText>
                     </span>
-                    <span>{reason}</span>
-                    <span>{formatItalianDate(report.reportedAt)}</span>
+                    <span><LocalizedText>{reason}</LocalizedText></span>
+                    <span><LocalizedText>{formatItalianDate(report.reportedAt)}</LocalizedText></span>
                     {experience && tool && !tool.missing ? (
                       <Link
                         href={`/toools/${experience.toolSlug}`}
@@ -237,15 +234,14 @@ export default async function ExperienceReportsPage({
                   </p>
                   {report.details ? (
                     <>
-                      <p className="tv-cc-kicker mt-3">Dettagli della segnalazione</p>
+                      <p className="tv-cc-kicker mt-3"><LocalizedText>{"Dettagli della segnalazione"}</LocalizedText></p>
                       <p className="whitespace-pre-wrap text-sm text-[var(--tv-text)]">
-                        {report.details}
+                        <LocalizedText>{report.details}</LocalizedText>
                       </p>
                     </>
                   ) : null}
                   {experience ? (
-                    <p className="tv-cc-card__meta mt-3">
-                      Stato esperienza: {experience.status}
+                    <p className="tv-cc-card__meta mt-3"><LocalizedText>{"Stato esperienza: "}</LocalizedText>{experience.status}
                     </p>
                   ) : null}
                   {report.status === "open" ? (
@@ -280,7 +276,7 @@ export default async function ExperienceReportsPage({
                           />
                           <input type="hidden" name="returnScope" value={scope} />
                           <input type="hidden" name="page" value={String(page)} />
-                          <input
+                          <LocalizedAttributes><input
                             type="text"
                             name="reason"
                             placeholder="Motivo della rimozione (obbligatorio)"
@@ -288,20 +284,18 @@ export default async function ExperienceReportsPage({
                             required
                             aria-label="Motivo della rimozione"
                             className="tv-cc-inline-form__input"
-                          />
-                          <button type="submit" className="tv-cc-inline-form__submit">
-                            Nascondi esperienza
-                          </button>
+                          /></LocalizedAttributes>
+                          <button type="submit" className="tv-cc-inline-form__submit"><LocalizedText>{"Nascondi esperienza "}</LocalizedText></button>
                         </form>
                       ) : null}
                     </div>
                   ) : (
                     <p className="tv-cc-card__meta mt-3">
-                      {report.resolutionNote ? `Nota: ${report.resolutionNote}` : null}
-                      {report.resolvedBy ? ` · ${report.resolvedBy}` : ""}
-                      {report.resolvedAt
+                      <LocalizedText>{report.resolutionNote ? `Nota: ${report.resolutionNote}` : null}</LocalizedText>
+                      <LocalizedText>{report.resolvedBy ? ` · ${report.resolvedBy}` : ""}</LocalizedText>
+                      <LocalizedText>{report.resolvedAt
                         ? ` · ${formatItalianDate(report.resolvedAt)}`
-                        : ""}
+                        : ""}</LocalizedText>
                     </p>
                   )}
                 </div>
@@ -310,34 +304,29 @@ export default async function ExperienceReportsPage({
           })}
         </div>
       ) : (
-        <AdminEmptyState
+        <LocalizedAttributes><AdminEmptyState
           title={scopeConfig[scope].empty}
           description="Le segnalazioni delle esperienze pubblicate compaiono qui."
-        />
+        /></LocalizedAttributes>
       )}
 
       {totalPages > 1 ? (
-        <nav className="mt-6 flex items-center gap-3 text-sm" aria-label="Paginazione">
+        <LocalizedAttributes><nav className="mt-6 flex items-center gap-3 text-sm" aria-label="Paginazione">
           {page > 1 ? (
             <Link
               href={`/admin/experiences/reports?scope=${scope}&page=${page - 1}`}
               className="underline"
-            >
-              Precedente
-            </Link>
+            ><LocalizedText>{"Precedente "}</LocalizedText></Link>
           ) : null}
-          <span>
-            Pagina {page} di {totalPages}
+          <span><LocalizedText>{"Pagina "}</LocalizedText>{page}<LocalizedText>{" di "}</LocalizedText>{totalPages}
           </span>
           {page < totalPages ? (
             <Link
               href={`/admin/experiences/reports?scope=${scope}&page=${page + 1}`}
               className="underline"
-            >
-              Successiva
-            </Link>
+            ><LocalizedText>{"Successiva "}</LocalizedText></Link>
           ) : null}
-        </nav>
+        </nav></LocalizedAttributes>
       ) : null}
     </div>
   );

@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -41,7 +42,7 @@ export function SecondarySection({
   const hasHeader = Boolean(eyebrow || title || lede);
 
   return (
-    <section
+    <LocalizedAttributes><section
       id={id}
       aria-label={ariaLabel}
       className={cn(
@@ -53,14 +54,14 @@ export function SecondarySection({
       {hasHeader ? (
         <header className="secondary-section__header">
           {eyebrow ? (
-            <span className="secondary-section__eyebrow">{eyebrow}</span>
+            <span className="secondary-section__eyebrow"><LocalizedText>{eyebrow}</LocalizedText></span>
           ) : null}
-          {title ? <h2 className="secondary-section__title">{title}</h2> : null}
-          {lede ? <p className="secondary-section__lede">{lede}</p> : null}
+          {title ? <h2 className="secondary-section__title"><LocalizedText>{title}</LocalizedText></h2> : null}
+          {lede ? <p className="secondary-section__lede"><LocalizedText>{lede}</LocalizedText></p> : null}
         </header>
       ) : null}
       {children}
-    </section>
+    </section></LocalizedAttributes>
   );
 }
 

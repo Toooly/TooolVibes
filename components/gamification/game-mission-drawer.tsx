@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useState } from "react";
 import { Target } from "lucide-react";
 
@@ -56,10 +57,8 @@ export function GameMissionDrawer({ className }: GameMissionDrawerProps) {
     <>
       <div className="game-mission-drawer__heading">
         <div>
-          <h2 className="game-mission-drawer__title">Missioni Radar</h2>
-          <p className="game-mission-drawer__subtitle">
-            Completa le missioni giornaliere per salire di livello.
-          </p>
+          <h2 className="game-mission-drawer__title"><LocalizedText>{"Missioni Radar"}</LocalizedText></h2>
+          <p className="game-mission-drawer__subtitle"><LocalizedText>{"Completa le missioni giornaliere per salire di livello. "}</LocalizedText></p>
         </div>
         <DailyResetCountdown size={64} />
       </div>
@@ -70,7 +69,7 @@ export function GameMissionDrawer({ className }: GameMissionDrawerProps) {
   const triggerContent = (
     <>
       <Target size={22} aria-hidden="true" />
-      <span className="sr-only">Apri le missioni giornaliere</span>
+      <span className="sr-only"><LocalizedText>{"Apri le missioni giornaliere"}</LocalizedText></span>
     </>
   );
 
@@ -81,7 +80,7 @@ export function GameMissionDrawer({ className }: GameMissionDrawerProps) {
           {triggerContent}
         </DrawerTrigger>
         <DrawerContent className="game-mission-drawer game-mission-drawer--mobile">
-          <DrawerTitle className="sr-only">Missioni Radar</DrawerTitle>
+          <DrawerTitle className="sr-only"><LocalizedText>{"Missioni Radar"}</LocalizedText></DrawerTitle>
           <div className="game-mission-drawer__body">
             {header}
             <RadarGameMissions />
@@ -98,7 +97,7 @@ export function GameMissionDrawer({ className }: GameMissionDrawerProps) {
       </SheetTrigger>
       <SheetContent side="right" className="game-mission-drawer game-mission-drawer--desktop">
         <SheetHeader className="sr-only">
-          <SheetTitle>Missioni Radar</SheetTitle>
+          <SheetTitle><LocalizedText>{"Missioni Radar"}</LocalizedText></SheetTitle>
         </SheetHeader>
         <div className="game-mission-drawer__body">
           {header}

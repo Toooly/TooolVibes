@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import Link from "@/components/ui/app-link";
 import { ArrowRight, FileText, Layers3, Sparkles } from "lucide-react";
@@ -45,7 +46,7 @@ const CARDS = [
 export default function ShopPage() {
   return (
     <SecondaryPageShell className="resource-page">
-      <SecondaryHero
+      <LocalizedAttributes><SecondaryHero
         tone="dark"
         layout="split"
         routeIndex="06"
@@ -57,81 +58,81 @@ export default function ShopPage() {
         actions={
           <>
             <Link href="/archivio" className="secondary-card__cta">
-              <span>Esplora il Catalogo</span>
+              <span><LocalizedText>{"Esplora il Catalogo"}</LocalizedText></span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
             <Link
               href="/collections"
               className="secondary-card__cta secondary-card__cta--ghost"
             >
-              <span>Vedi le Raccolte</span>
+              <span><LocalizedText>{"Vedi le Raccolte"}</LocalizedText></span>
             </Link>
           </>
         }
         signature={<InventoryPanel />}
-      />
+      /></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         eyebrow="Inventario"
         title="Cosa puoi aspettarti, oggi"
         lede="Lo Shop è una promessa futura. Quello che esiste davvero oggi è nel prodotto editoriale, ed è lì che vale la pena iniziare."
       >
         <SecondaryCardGrid columns={3}>
           {CARDS.map((card) => (
-            <SecondaryPrincipleCard
+            <LocalizedAttributes key={card.title}><SecondaryPrincipleCard
               key={card.title}
               title={card.title}
               copy={card.copy}
               icon={card.icon}
-            />
+            /></LocalizedAttributes>
           ))}
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         tone="ivory"
         eyebrow="Una promessa verificabile"
         title="Per ora, il posto giusto per decidere resta il prodotto."
         lede="Quando lo Shop sarà pronto, lo annunceremo qui. Fino ad allora, le Raccolte e il Catalogo sono sufficienti — e continuano a migliorare."
       >
         <SecondaryCardGrid columns={3}>
-          <SecondaryPrincipleCard
+          <LocalizedAttributes><SecondaryPrincipleCard
             title="Solo risorse verificabili"
             copy="Prima di pubblicare un prodotto, verifichiamo fonte, condizioni e limiti. La pagina Shop resta in silenzio fino a quel momento."
             tone="ivory"
-          />
-          <SecondaryPrincipleCard
+          /></LocalizedAttributes>
+          <LocalizedAttributes><SecondaryPrincipleCard
             title="Senza pressione"
             copy="Nessun conto alla rovescia, nessun &quot;prima che sia troppo tardi&quot;. Le decisioni prese sotto pressione sono raramente buone decisioni."
             tone="ivory"
-          />
-          <SecondaryPrincipleCard
+          /></LocalizedAttributes>
+          <LocalizedAttributes><SecondaryPrincipleCard
             title="Trasparenza editoriale"
             copy="Se lo Shop dovesse contenere placement, saranno etichettati come contenuto sponsorizzato. Il Catalogo resta indipendente."
             tone="ivory"
-          />
+          /></LocalizedAttributes>
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondaryClosingCTA
+      <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
         title="Inizia dal Catalogo, non dalla vetrina."
         body="Se vuoi suggerire una risorsa o un flusso che merita una guida editoriale, puoi farlo anche adesso — la redazione legge ogni proposta."
         actions={
           <>
             <Link href="/archivio" className="secondary-card__cta">
-              <span>Apri il Catalogo</span>
+              <span><LocalizedText>{"Apri il Catalogo"}</LocalizedText></span>
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
             <Link
               href="/collections"
               className="secondary-card__cta secondary-card__cta--ghost"
             >
-              <span>Vai alle Raccolte</span>
+              <span><LocalizedText>{"Vai alle Raccolte"}</LocalizedText></span>
             </Link>
           </>
         }
-      />
+      /></LocalizedAttributes>
     </SecondaryPageShell>
   );
 }
@@ -140,11 +141,8 @@ function InventoryPanel() {
   return (
     <div className="resource-inventory">
       <p className="resource-inventory__stamp">
-        <span className="resource-inventory__stamp-mark">In preparazione</span>
-        <span className="resource-inventory__stamp-copy">
-          Nessun prodotto, prezzo o checkout. Catalogo e Raccolte restano
-          disponibili.
-        </span>
+        <span className="resource-inventory__stamp-mark"><LocalizedText>{"In preparazione"}</LocalizedText></span>
+        <span className="resource-inventory__stamp-copy"><LocalizedText>{"Nessun prodotto, prezzo o checkout. Catalogo e Raccolte restano disponibili. "}</LocalizedText></span>
       </p>
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { NormalisedTool } from "./tool-battle-shared";
@@ -59,13 +60,13 @@ function DesktopEditorialTabs({ tools }: { tools: NormalisedTool[] }) {
   if (tools.length === 0) return null;
 
   return (
-    <div
+    <LocalizedAttributes><div
       className="compare-editorial-details"
       data-layout="desktop"
       role="region"
       aria-label="Dettaglio editoriale per tool"
     >
-      <div
+      <LocalizedAttributes><div
         className="compare-editorial-details__tabs"
         role="tablist"
         aria-label="Tool"
@@ -93,7 +94,7 @@ function DesktopEditorialTabs({ tools }: { tools: NormalisedTool[] }) {
             </button>
           );
         })}
-      </div>
+      </div></LocalizedAttributes>
 
       {tools.map((tool) => {
         const isActive = tool.slug === activeSlug;
@@ -115,7 +116,7 @@ function DesktopEditorialTabs({ tools }: { tools: NormalisedTool[] }) {
                 className="compare-editorial-details__row"
               >
                 <span className="compare-editorial-details__label">
-                  {row.label}
+                  <LocalizedText>{row.label}</LocalizedText>
                 </span>
                 <span className="compare-editorial-details__value">
                   {row.value}
@@ -125,7 +126,7 @@ function DesktopEditorialTabs({ tools }: { tools: NormalisedTool[] }) {
           </div>
         );
       })}
-    </div>
+    </div></LocalizedAttributes>
   );
 }
 
@@ -174,7 +175,7 @@ function MobileEditorialAccordion({ tools }: { tools: NormalisedTool[] }) {
   if (tools.length === 0 || sections.length === 0) return null;
 
   return (
-    <div
+    <LocalizedAttributes><div
       className="compare-editorial-details compare-editorial-details--mobile"
       data-layout="mobile"
       data-accordion="criterion"
@@ -197,8 +198,8 @@ function MobileEditorialAccordion({ tools }: { tools: NormalisedTool[] }) {
               aria-expanded={isOpen}
               aria-controls={contentId}
             >
-              <span>{section.label}</span>
-              <span aria-hidden="true">{isOpen ? "−" : "+"}</span>
+              <span><LocalizedText>{section.label}</LocalizedText></span>
+              <span aria-hidden="true"><LocalizedText>{isOpen ? "−" : "+"}</LocalizedText></span>
             </button>
             {isOpen ? (
               <div
@@ -225,7 +226,7 @@ function MobileEditorialAccordion({ tools }: { tools: NormalisedTool[] }) {
           </section>
         );
       })}
-    </div>
+    </div></LocalizedAttributes>
   );
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useState, type ReactNode } from "react";
 
 export function AdminEditorChrome({
@@ -36,16 +37,14 @@ export function AdminEditorChrome({
       {children}
       <div className="tv-cc-savebar">
         <p className="tv-cc-panel__desc" style={{ margin: 0 }}>
-          {saving ? "Salvataggio…" : dirty ? "Modifiche non salvate" : "Nessuna modifica"}
+          <LocalizedText>{saving ? "Salvataggio…" : dirty ? "Modifiche non salvate" : "Nessuna modifica"}</LocalizedText>
         </p>
         <div className="flex flex-wrap gap-2">
           {backHref ? (
-            <a href={backHref} className="tv-cc-btn tv-cc-btn--ghost">
-              Annulla
-            </a>
+            <a href={backHref} className="tv-cc-btn tv-cc-btn--ghost"><LocalizedText>{"Annulla "}</LocalizedText></a>
           ) : null}
           <button type="submit" disabled={saving} className="tv-cc-btn tv-cc-btn--primary">
-            {saveLabel}
+            <LocalizedText>{saveLabel}</LocalizedText>
           </button>
         </div>
       </div>

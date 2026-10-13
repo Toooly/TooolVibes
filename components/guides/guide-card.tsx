@@ -1,5 +1,6 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
-import ReactMarkdown from "react-markdown";
+import { MarkdownHighlight } from "@/components/editorial/markdown-content";
 
 import { GuideThumbnail } from "./guide-thumbnail";
 
@@ -94,13 +95,13 @@ export function GuideCard({
       >
         <div className="guides-feature__body">
           <div className="guides-feature__topline guides-feature__topline--feature">
-            <span className="guides-kicker guides-feature__kicker">Guida in evidenza</span>
+            <span className="guides-kicker guides-feature__kicker"><LocalizedText>{"Guida in evidenza"}</LocalizedText></span>
             <p className="guides-feature__signal">
-              <span>{resolvedTopic}</span>
+              <span><LocalizedText>{resolvedTopic}</LocalizedText></span>
               <span className="guides-feature__signal-dot" aria-hidden>
                 ·
               </span>
-              <span>{minutes} min</span>
+              <span>{minutes}<LocalizedText>{" min"}</LocalizedText></span>
             </p>
           </div>
 
@@ -112,68 +113,57 @@ export function GuideCard({
               href={`/posts/${post.slug}`}
               style={{ color: "inherit", textDecoration: "none" }}
             >
-              {post.title}
+              <LocalizedText>{post.title}</LocalizedText>
             </Link>
           </h2>
 
-          {post.dek ? <p className="guides-feature__dek">{post.dek}</p> : null}
+          {post.dek ? <p className="guides-feature__dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
 
           {post.highlights.length > 0 ? (
-            <ul className="guides-feature__points" aria-label="Punti chiave">
+            <LocalizedAttributes><ul className="guides-feature__points" aria-label="Punti chiave">
               {post.highlights.slice(0, 4).map((point) => (
                 <li key={point}>
                   <span>
-                    <ReactMarkdown
-                      allowedElements={["p", "strong", "em", "code"]}
-                      unwrapDisallowed
-                      components={{ p: ({ children }) => <span>{children}</span> }}
-                    >
-                      {point}
-                    </ReactMarkdown>
+                    <MarkdownHighlight content={point} />
                   </span>
                 </li>
               ))}
-            </ul>
+            </ul></LocalizedAttributes>
           ) : null}
 
-          <div className="guides-feature__meta" role="group" aria-label="Metadati">
+          <LocalizedAttributes><div className="guides-feature__meta" role="group" aria-label="Metadati">
             <span>
-              <strong>Pubblicata</strong> {publishedLabel}
+              <strong><LocalizedText>{"Pubblicata"}</LocalizedText></strong> <LocalizedText>{publishedLabel}</LocalizedText>
             </span>
             {updatedLabel && updatedLabel !== publishedLabel ? (
               <>
                 <span className="guides-feature__meta-divider" aria-hidden />
                 <span>
-                  <strong>Aggiornata</strong> {updatedLabel}
+                  <strong><LocalizedText>{"Aggiornata"}</LocalizedText></strong> <LocalizedText>{updatedLabel}</LocalizedText>
                 </span>
               </>
             ) : null}
             <span className="guides-feature__meta-divider" aria-hidden />
             <span>
-              <strong>Lettura</strong> {minutes} min
-            </span>
+              <strong><LocalizedText>{"Lettura"}</LocalizedText></strong> {minutes}<LocalizedText>{" min "}</LocalizedText></span>
             {toolName ? (
               <>
                 <span className="guides-feature__meta-divider" aria-hidden />
                 <span>
-                  <strong>Tool</strong> {toolName}
+                  <strong><LocalizedText>{"Tool"}</LocalizedText></strong> <LocalizedText>{toolName}</LocalizedText>
                 </span>
               </>
             ) : null}
-          </div>
+          </div></LocalizedAttributes>
 
           <div className="guides-feature__cta">
             <Link
               href={`/posts/${post.slug}`}
               data-variant="primary"
-            >
-              Leggi la guida
-              <span aria-hidden>→</span>
+            ><LocalizedText>{"Leggi la guida "}</LocalizedText><span aria-hidden>→</span>
             </Link>
             {toolHref ? (
-              <Link href={toolHref} data-variant="ghost">
-                Apri la scheda tool
-                <span aria-hidden>↗</span>
+              <Link href={toolHref} data-variant="ghost"><LocalizedText>{"Apri la scheda tool "}</LocalizedText><span aria-hidden>↗</span>
               </Link>
             ) : null}
           </div>
@@ -188,16 +178,16 @@ export function GuideCard({
         >
           <div className="guides-feature__cover-content">
             <div className="guides-feature__glyph" aria-hidden>
-              {resolvedTopic.charAt(0).toUpperCase()}
+              <LocalizedText>{resolvedTopic.charAt(0).toUpperCase()}</LocalizedText>
             </div>
             <div className="guides-feature__cover-foot">
               <span
                 className="guides-feature__topic-pill"
                 style={{ background: palette.background, color: palette.color }}
               >
-                {resolvedTopic}
+                <LocalizedText>{resolvedTopic}</LocalizedText>
               </span>
-              <span className="guides-feature__read">{minutes} min di lettura</span>
+              <span className="guides-feature__read">{minutes}<LocalizedText>{" min di lettura"}</LocalizedText></span>
             </div>
           </div>
         </div>
@@ -207,7 +197,7 @@ export function GuideCard({
 
   if (isMobileRow) {
     return (
-      <Link
+      <LocalizedAttributes><Link
         href={`/posts/${post.slug}`}
         className={["guides-card", "guides-card--mobile-row", className]
           .filter(Boolean)
@@ -220,22 +210,22 @@ export function GuideCard({
             className="guides-card__topic"
             style={{ background: palette.background, color: palette.color }}
           >
-            {resolvedTopic}
+            <LocalizedText>{resolvedTopic}</LocalizedText>
           </span>
-          <span className="guides-card__read">{minutes} min</span>
+          <span className="guides-card__read">{minutes}<LocalizedText>{" min"}</LocalizedText></span>
         </div>
-        <h3 className="guides-card__title">{post.title}</h3>
-        {post.dek ? <p className="guides-card__dek">{post.dek}</p> : null}
+        <h3 className="guides-card__title"><LocalizedText>{post.title}</LocalizedText></h3>
+        {post.dek ? <p className="guides-card__dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
         <div className="guides-card__foot">
-          <span>Pubblicata {publishedLabel}</span>
-          <span className="guides-card__cta">Leggi la guida</span>
+          <span><LocalizedText>{"Pubblicata "}</LocalizedText><LocalizedText>{publishedLabel}</LocalizedText></span>
+          <span className="guides-card__cta"><LocalizedText>{"Leggi la guida"}</LocalizedText></span>
         </div>
-      </Link>
+      </Link></LocalizedAttributes>
     );
   }
 
   return (
-    <Link
+    <LocalizedAttributes><Link
       href={`/posts/${post.slug}`}
       className={["guides-card", isCompact && "guides-card--compact", className]
         .filter(Boolean)
@@ -248,28 +238,28 @@ export function GuideCard({
           className="guides-card__topic"
           style={{ background: palette.background, color: palette.color }}
         >
-          {resolvedTopic}
+          <LocalizedText>{resolvedTopic}</LocalizedText>
         </span>
-        <span className="guides-card__read">{minutes} min</span>
+        <span className="guides-card__read">{minutes}<LocalizedText>{" min"}</LocalizedText></span>
       </div>
-      <h3 className="guides-card__title">{post.title}</h3>
-      {post.dek ? <p className="guides-card__dek">{post.dek}</p> : null}
+      <h3 className="guides-card__title"><LocalizedText>{post.title}</LocalizedText></h3>
+      {post.dek ? <p className="guides-card__dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
       <div className="guides-card__chips">
         {toolName ? (
           <span className="guides-card__chip guides-card__chip--tool">
-            {toolName}
+            <LocalizedText>{toolName}</LocalizedText>
           </span>
         ) : null}
         {updatedLabel && updatedLabel !== publishedLabel ? (
-          <span className="guides-card__chip">Aggiornata {updatedLabel}</span>
+          <span className="guides-card__chip"><LocalizedText>{"Aggiornata "}</LocalizedText><LocalizedText>{updatedLabel}</LocalizedText></span>
         ) : (
-          <span className="guides-card__chip">Pubblicata {publishedLabel}</span>
+          <span className="guides-card__chip"><LocalizedText>{"Pubblicata "}</LocalizedText><LocalizedText>{publishedLabel}</LocalizedText></span>
         )}
       </div>
       <div className="guides-card__foot">
-        <span>{resolvedTopic}</span>
-        <span className="guides-card__cta">Leggi la guida</span>
+        <span><LocalizedText>{resolvedTopic}</LocalizedText></span>
+        <span className="guides-card__cta"><LocalizedText>{"Leggi la guida"}</LocalizedText></span>
       </div>
-    </Link>
+    </Link></LocalizedAttributes>
   );
 }

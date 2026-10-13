@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { KeyRound } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -28,7 +29,7 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       data-sound-control="true"
       className="premium-button premium-button-primary min-h-12 w-full rounded-full px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
     >
-      {isBusy ? "Accesso in corso..." : "Accedi"}
+      <LocalizedText>{isBusy ? "Accesso in corso..." : "Accedi"}</LocalizedText>
     </button>
   );
 }
@@ -64,7 +65,7 @@ export function LoginForm({ errorCode }: LoginFormProps) {
       onSubmit={handleSubmit}
     >
       <label className="block">
-        <span className="mb-2 block text-sm font-semibold text-white/86">Email</span>
+        <span className="mb-2 block text-sm font-semibold text-white/86"><LocalizedText>{"Email"}</LocalizedText></span>
         <input
           type="email"
           name="email"
@@ -79,7 +80,7 @@ export function LoginForm({ errorCode }: LoginFormProps) {
       </label>
 
       <label className="block">
-        <span className="mb-2 block text-sm font-semibold text-white/86">Password</span>
+        <span className="mb-2 block text-sm font-semibold text-white/86"><LocalizedText>{"Password"}</LocalizedText></span>
         <div className="relative">
           <input
             type={isPasswordVisible ? "text" : "password"}
@@ -91,7 +92,7 @@ export function LoginForm({ errorCode }: LoginFormProps) {
             style={{ color: "white" }}
             required
           />
-          <button
+          <LocalizedAttributes><button
             type="button"
             onClick={() => setIsPasswordVisible((current) => !current)}
             className="absolute bottom-1.5 right-1.5 top-1.5 inline-flex items-center justify-center gap-1.5 rounded-full border border-white/12 bg-white/10 px-3 text-xs font-semibold text-white/76 transition hover:bg-white/16 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/28"
@@ -99,14 +100,14 @@ export function LoginForm({ errorCode }: LoginFormProps) {
             aria-label={isPasswordVisible ? "Nascondi password" : "Mostra password"}
           >
             <KeyRound className="size-3.5" aria-hidden="true" />
-            {isPasswordVisible ? "Proteggi" : "Mostra"}
-          </button>
+            <LocalizedText>{isPasswordVisible ? "Proteggi" : "Mostra"}</LocalizedText>
+          </button></LocalizedAttributes>
         </div>
       </label>
 
       {showError && errorCode ? (
         <p className="text-sm font-medium text-[#ffd1ca]" aria-live="polite">
-          {loginErrorMessages[errorCode]}
+          <LocalizedText>{loginErrorMessages[errorCode]}</LocalizedText>
         </p>
       ) : null}
 

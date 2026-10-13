@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { notFound } from "next/navigation";
 
 import { updateToolFormAction } from "@/app/(admin)/admin/actions/tools";
@@ -26,7 +27,7 @@ export default async function EditToolPage({ params }: EditToolPageProps) {
 
   return (
     <div className="page-shell py-6">
-      {!canWrite ? <ControlCenterNotice tone="warn">{runtime.writeMessage}</ControlCenterNotice> : null}
+      {!canWrite ? <ControlCenterNotice tone="warn"><LocalizedText>{runtime.writeMessage}</LocalizedText></ControlCenterNotice> : null}
       <ToolForm
         entityTitle={tool.name}
         entityStatus={tool.is_published ? "Pubblicato" : "Bozza"}

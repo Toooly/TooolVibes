@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { useMemo, useState } from "react";
 
@@ -127,8 +128,7 @@ export function WorkspaceStacks({
     <div className="tv-stacks">
       {stacks.length > 0 ? (
         <p className="tv-stacks-kicker">
-          {stacks.length} di {MAX_PERSONAL_STACKS} stack
-        </p>
+          {stacks.length}<LocalizedText>{" di "}</LocalizedText>{MAX_PERSONAL_STACKS}<LocalizedText>{" stack "}</LocalizedText></p>
       ) : null}
       <div className={stacks.length === 0 ? "tv-stacks-birth" : undefined}>
       {stacks.length > 0 && !creating ? (
@@ -136,9 +136,7 @@ export function WorkspaceStacks({
           type="button"
           className="account-btn-secondary"
           onClick={() => setCreating(true)}
-        >
-          Nuovo stack
-        </button>
+        ><LocalizedText>{"Nuovo stack "}</LocalizedText></button>
       ) : (
         <form
           className="tv-compose-stack"
@@ -160,27 +158,27 @@ export function WorkspaceStacks({
         >
           <div className="tv-compose-stack__preview" aria-hidden="true">
             <span className="tv-compose-stack__mark">
-              {(name.trim().slice(0, 2) || "+").toUpperCase()}
+              <LocalizedText>{(name.trim().slice(0, 2) || "+").toUpperCase()}</LocalizedText>
             </span>
             <span>
-              <p className="tv-compose-stack__name">{name.trim() || "Nuovo stack"}</p>
+              <p className="tv-compose-stack__name"><LocalizedText>{name.trim() || "Nuovo stack"}</LocalizedText></p>
               <p className="tv-compose-stack__desc">
-                {description.trim() || "Un banco di lavoro per i tool che usi insieme."}
+                <LocalizedText>{description.trim() || "Un banco di lavoro per i tool che usi insieme."}</LocalizedText>
               </p>
             </span>
           </div>
-          <p className="account-label">Nuovo stack</p>
+          <p className="account-label"><LocalizedText>{"Nuovo stack"}</LocalizedText></p>
           <label>
-            <span className="sr-only">Nome</span>
-            <input
+            <span className="sr-only"><LocalizedText>{"Nome"}</LocalizedText></span>
+            <LocalizedAttributes><input
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Es. AI Coding"
               maxLength={MAX_STACK_NAME_LENGTH}
-            />
+            /></LocalizedAttributes>
           </label>
           <label>
-            <span className="sr-only">Descrizione (opzionale)</span>
+            <span className="sr-only"><LocalizedText>{"Descrizione (opzionale)"}</LocalizedText></span>
             <textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
@@ -190,17 +188,13 @@ export function WorkspaceStacks({
             />
           </label>
           <div className="tv-home-actions">
-            <button type="submit" className="account-btn-primary">
-              Crea
-            </button>
+            <button type="submit" className="account-btn-primary"><LocalizedText>{"Crea "}</LocalizedText></button>
             {stacks.length > 0 ? (
               <button
                 type="button"
                 className="tv-home-textbtn"
                 onClick={() => setCreating(false)}
-              >
-                Annulla
-              </button>
+              ><LocalizedText>{"Annulla "}</LocalizedText></button>
             ) : null}
           </div>
         </form>
@@ -208,22 +202,15 @@ export function WorkspaceStacks({
 
       {leftover.length > 0 ? (
         <section className="tv-stacks-empty">
-          <h2 className="tv-stacks-empty__title">Lista precedente</h2>
-          <p className="tv-stacks-empty__copy">
-            Hai {leftover.length === 1 ? "1 tool" : `${leftover.length} tool`} nella vecchia lista.
-            Portali nello stack personale.
-          </p>
-          <button type="button" className="account-btn-secondary" onClick={() => adoptLegacyListaStack()}>
-            Porta nello stack
-          </button>
+          <h2 className="tv-stacks-empty__title"><LocalizedText>{"Lista precedente"}</LocalizedText></h2>
+          <p className="tv-stacks-empty__copy"><LocalizedText>{"Hai "}</LocalizedText><LocalizedText>{leftover.length === 1 ? "1 tool" : `${leftover.length} tool`}</LocalizedText><LocalizedText>{" nella vecchia lista. Portali nello stack personale. "}</LocalizedText></p>
+          <button type="button" className="account-btn-secondary" onClick={() => adoptLegacyListaStack()}><LocalizedText>{"Porta nello stack "}</LocalizedText></button>
         </section>
       ) : null}
 
       {archived.length > 0 ? (
         <section className="tv-stacks-empty" aria-labelledby="tv-stacks-archived">
-          <h2 id="tv-stacks-archived" className="tv-stacks-empty__title">
-            Stack archiviati
-          </h2>
+          <h2 id="tv-stacks-archived" className="tv-stacks-empty__title"><LocalizedText>{"Stack archiviati "}</LocalizedText></h2>
           <ul className="tv-stacks-tool-list">
             {archived.map((stack) => (
               <li key={stack.id} className="tv-stacks-tool">
@@ -232,9 +219,7 @@ export function WorkspaceStacks({
                   type="button"
                   className="tv-stacks-textbtn"
                   onClick={() => restorePersonalStack(stack.id)}
-                >
-                  Ripristina
-                </button>
+                ><LocalizedText>{"Ripristina "}</LocalizedText></button>
               </li>
             ))}
           </ul>
@@ -245,12 +230,9 @@ export function WorkspaceStacks({
         <section className="tv-stacks-empty">
           <WorkspaceEmptyMotif variant="stacks" />
           <h2 className="tv-stacks-empty__title">
-            {archived.length > 0 ? "Nessuno stack attivo" : "Nessuno stack ancora"}
+            <LocalizedText>{archived.length > 0 ? "Nessuno stack attivo" : "Nessuno stack ancora"}</LocalizedText>
           </h2>
-          <p className="tv-stacks-empty__copy">
-            Uno stack raggruppa i tool salvati per un lavoro reale. Non è una
-            raccolta da mostrare: è un banco di lavoro.
-          </p>
+          <p className="tv-stacks-empty__copy"><LocalizedText>{"Uno stack raggruppa i tool salvati per un lavoro reale. Non è una raccolta da mostrare: è un banco di lavoro. "}</LocalizedText></p>
         </section>
       ) : null}
       </div>
@@ -275,20 +257,20 @@ export function WorkspaceStacks({
                   >
                     <span className="tv-stacks-item__name">{stack.name}</span>
                     {stack.description ? (
-                      <span className="tv-stacks-item__desc">{stack.description}</span>
+                      <span className="tv-stacks-item__desc"><LocalizedText>{stack.description}</LocalizedText></span>
                     ) : null}
                     <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} />
                     {previews.length > 0 ? (
-                      <span className="tv-stacks-item__previews">{previews.join(" · ")}</span>
+                      <span className="tv-stacks-item__previews"><LocalizedText>{previews.join(" · ")}</LocalizedText></span>
                     ) : (
-                      <span className="tv-stacks-item__previews">Vuoto</span>
+                      <span className="tv-stacks-item__previews"><LocalizedText>{"Vuoto"}</LocalizedText></span>
                     )}
                     <span className="tv-stacks-item__meta">
-                      <span>{countLabel(stack.slugs.length)}</span>
-                      {updated ? <span> · {updated}</span> : null}
+                      <span><LocalizedText>{countLabel(stack.slugs.length)}</LocalizedText></span>
+                      {updated ? <span> · <LocalizedText>{updated}</LocalizedText></span> : null}
                     </span>
                     {memberCounts ? (
-                      <span className="tv-stacks-item__meta">{memberCounts}</span>
+                      <span className="tv-stacks-item__meta"><LocalizedText>{memberCounts}</LocalizedText></span>
                     ) : null}
                     <WorkspaceCompositionBar
                       evaluating={composition.evaluating}
@@ -344,7 +326,7 @@ function StackDetail({
         <WorkspaceMarkStrip catalog={catalog} slugs={stack.slugs} size="lg" />
       </div>
       <details className="tv-lib-menu">
-        <summary>Modifica stack</summary>
+        <summary><LocalizedText>{"Modifica stack"}</LocalizedText></summary>
       <form
         className="tv-stacks-edit"
         onSubmit={(event) => {
@@ -356,7 +338,7 @@ function StackDetail({
         }}
       >
         <label>
-          <span className="sr-only">Nome</span>
+          <span className="sr-only"><LocalizedText>{"Nome"}</LocalizedText></span>
           <input
             value={draftName}
             onChange={(event) => setDraftName(event.target.value)}
@@ -364,7 +346,7 @@ function StackDetail({
           />
         </label>
         <label>
-          <span>Descrizione</span>
+          <span><LocalizedText>{"Descrizione"}</LocalizedText></span>
           <textarea
             value={draftDescription}
             onChange={(event) => setDraftDescription(event.target.value)}
@@ -372,16 +354,14 @@ function StackDetail({
             rows={2}
           />
         </label>
-        <button type="submit" className="account-btn-secondary">
-          Aggiorna
-        </button>
+        <button type="submit" className="account-btn-secondary"><LocalizedText>{"Aggiorna "}</LocalizedText></button>
       </form>
       </details>
 
       <div className="tv-stacks-tools">
-        <p className="tv-stacks-kicker">Tool nello stack</p>
+        <p className="tv-stacks-kicker"><LocalizedText>{"Tool nello stack"}</LocalizedText></p>
         {stack.slugs.length === 0 ? (
-          <p className="tv-stacks-detail__copy">Nessun tool in questo stack.</p>
+          <p className="tv-stacks-detail__copy"><LocalizedText>{"Nessun tool in questo stack."}</LocalizedText></p>
         ) : (
           <ul className="tv-stacks-tool-list">
             {(["using", "evaluating", "selected", "deferred", "other"] as const).map((group) => {
@@ -410,7 +390,7 @@ function StackDetail({
               };
               return (
                 <li key={group} className="tv-stacks-group">
-                  <p className="tv-stacks-group__title">{titles[group]}</p>
+                  <p className="tv-stacks-group__title"><LocalizedText>{titles[group]}</LocalizedText></p>
                   <ul className="tv-stacks-tool-list">
                     {grouped.map((slug) => {
                       const tool = state.toolStates[slug];
@@ -428,10 +408,10 @@ function StackDetail({
                           <span className="tv-stacks-tool__id">
                             <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
                             <span>
-                              <Link href={`/toools/${slug}`}>{toolName(catalog, slug)}</Link>
+                              <Link href={`/toools/${slug}`}><LocalizedText>{toolName(catalog, slug)}</LocalizedText></Link>
                               <WorkspaceChip tone={(usage ?? outcome ?? "saved") as "saved"}>
-                                {" "}
-                                {status.label}
+                                <LocalizedText>{" "}</LocalizedText>
+                                <LocalizedText>{status.label}</LocalizedText>
                               </WorkspaceChip>
                               {replacedName && tool?.replacedBy ? (
                                 <WorkspaceReplacement
@@ -448,18 +428,14 @@ function StackDetail({
                                 type="button"
                                 className="tv-stacks-textbtn"
                                 onClick={() => markWorkspaceToolUsing(slug)}
-                              >
-                                Lo sto usando
-                              </button>
+                              ><LocalizedText>{"Lo sto usando "}</LocalizedText></button>
                             ) : null}
-                            {canMarkUsing ? " " : null}
+                            <LocalizedText>{canMarkUsing ? " " : null}</LocalizedText>
                             <button
                               type="button"
                               className="tv-stacks-textbtn"
                               onClick={() => removeToolFromPersonalStack(stack.id, slug)}
-                            >
-                              Togli
-                            </button>
+                            ><LocalizedText>{"Togli "}</LocalizedText></button>
                           </span>
                         </li>
                       );
@@ -473,25 +449,25 @@ function StackDetail({
       </div>
 
       <div className="tv-stacks-picker">
-        <p className="tv-stacks-kicker">Aggiungi da Salvati</p>
+        <p className="tv-stacks-kicker"><LocalizedText>{"Aggiungi da Salvati"}</LocalizedText></p>
         {savedOutside.length === 0 ? (
           <p className="tv-stacks-detail__copy">
-            {state.saved.slugs.length === 0
+            <LocalizedText>{state.saved.slugs.length === 0
               ? "Salva un tool in Salvati per poterlo mettere qui."
-              : "Tutti i tool salvati sono già in questo stack."}
+              : "Tutti i tool salvati sono già in questo stack."}</LocalizedText>
           </p>
         ) : (
           <>
             <label>
-              <span className="sr-only">Filtra i tool salvati</span>
-              <input
+              <span className="sr-only"><LocalizedText>{"Filtra i tool salvati"}</LocalizedText></span>
+              <LocalizedAttributes><input
                 value={pickerQuery}
                 onChange={(event) => setPickerQuery(event.target.value)}
                 placeholder="Cerca tra i salvati"
-              />
+              /></LocalizedAttributes>
             </label>
             {available.length === 0 ? (
-              <p className="tv-stacks-detail__copy">Nessun salvato corrisponde.</p>
+              <p className="tv-stacks-detail__copy"><LocalizedText>{"Nessun salvato corrisponde."}</LocalizedText></p>
             ) : (
               <ul className="tv-stacks-picker-list">
                 {available.map((slug) => (
@@ -505,7 +481,7 @@ function StackDetail({
                       }}
                     >
                       <WorkspaceCatalogMark catalog={catalog} slug={slug} size="xs" />
-                      {toolName(catalog, slug)}
+                      <LocalizedText>{toolName(catalog, slug)}</LocalizedText>
                     </button>
                   </li>
                 ))}
@@ -519,18 +495,13 @@ function StackDetail({
         <div className="tv-stacks-compare">
           {stack.slugs.length >
           Math.max(0, MAX_COMPARE_TOOLS - state.compare.slugs.length) ? (
-            <p className="tv-stacks-compare-hint">
-              Il confronto tiene al massimo {MAX_COMPARE_TOOLS}. Verranno
-              aggiunti i primi posti liberi.
-            </p>
+            <p className="tv-stacks-compare-hint"><LocalizedText>{"Il confronto tiene al massimo "}</LocalizedText>{MAX_COMPARE_TOOLS}<LocalizedText>{". Verranno aggiunti i primi posti liberi. "}</LocalizedText></p>
           ) : null}
           <Link
             href="/compare"
             className="account-btn-secondary"
             onClick={() => queueStackCompare(stack.slugs, state.compare.slugs)}
-          >
-            Confronta questi tool
-          </Link>
+          ><LocalizedText>{"Confronta questi tool "}</LocalizedText></Link>
         </div>
       ) : null}
 
@@ -539,17 +510,13 @@ function StackDetail({
           type="button"
           className="account-btn-secondary"
           onClick={() => restorePersonalStack(stack.id)}
-        >
-          Ripristina
-        </button>
+        ><LocalizedText>{"Ripristina "}</LocalizedText></button>
       ) : (
         <button
           type="button"
           className="account-btn-secondary"
           onClick={() => archivePersonalStack(stack.id)}
-        >
-          Archivia stack
-        </button>
+        ><LocalizedText>{"Archivia stack "}</LocalizedText></button>
       )}
     </section>
   );

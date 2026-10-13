@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { AccountProvider } from "@/components/account/account-provider";
 import { AuthContinuationProvider } from "@/components/account/auth-continuation-provider";
 import { RewardAuthBridge } from "@/components/rewards/reward-auth-bridge";
@@ -61,9 +62,7 @@ export default async function MarketingLayout({
   return (
     <div className="marketing-shell relative overflow-x-clip">
       <ScrollRestorationInit />
-      <a href="#main-content" className="skip-link">
-        Salta al contenuto
-      </a>
+      <a href="#main-content" className="skip-link"><LocalizedText>{"Salta al contenuto "}</LocalizedText></a>
       <AdvertisingConsentProvider>
       <CommercialClockProvider nowMs={renderNowMs}>
       <OrbitalProvider>

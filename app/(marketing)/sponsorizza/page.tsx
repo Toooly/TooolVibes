@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import {
   ArrowRight,
@@ -142,16 +143,9 @@ export default function SponsorizzaPage() {
       <section className="sponsorizza-hero" aria-labelledby="sponsorizza-hero-title">
         <div className="sponsorizza-hero__inner">
           <div className="sponsorizza-hero__copy">
-            <span className="sponsorizza-hero__eyebrow">TooolVibes Partner Experience</span>
-            <h1 id="sponsorizza-hero-title" className="sponsorizza-hero__title">
-              Porta il tuo tool davanti a chi sta già decidendo cosa usare.
-            </h1>
-            <p className="sponsorizza-hero__subtitle">
-              TooolVibes crea Partner Experience contestuali per prodotti selezionati,
-              davanti a founder, product manager e professionisti che stanno
-              confrontando tool per il loro stack. Non compri uno spazio:
-              costruiamo come il tuo prodotto entra in TooolVibes.
-            </p>
+            <span className="sponsorizza-hero__eyebrow"><LocalizedText>{"TooolVibes Partner Experience"}</LocalizedText></span>
+            <h1 id="sponsorizza-hero-title" className="sponsorizza-hero__title"><LocalizedText>{"Porta il tuo tool davanti a chi sta già decidendo cosa usare. "}</LocalizedText></h1>
+            <p className="sponsorizza-hero__subtitle"><LocalizedText>{"TooolVibes crea Partner Experience contestuali per prodotti selezionati, davanti a founder, product manager e professionisti che stanno confrontando tool per il loro stack. Non compri uno spazio: costruiamo come il tuo prodotto entra in TooolVibes. "}</LocalizedText></p>
             <SponsorOpportunityMailtoLink
               placementId="sponsor-page-hero"
               route="/sponsorizza"
@@ -159,122 +153,104 @@ export default function SponsorizzaPage() {
               className="sponsorizza-hero__cta"
             >
               <Mail aria-hidden="true" />
-              <span>{SPONSOR_EMAIL_LABEL}</span>
+              <span><LocalizedText>{SPONSOR_EMAIL_LABEL}</LocalizedText></span>
               <ArrowRight aria-hidden="true" />
             </SponsorOpportunityMailtoLink>
           </div>
 
-          <aside className="sponsorizza-hero__visual" aria-label="In evidenza · partner attivi">
+          <LocalizedAttributes><aside className="sponsorizza-hero__visual" aria-label="In evidenza · partner attivi">
             <div className="sponsorizza-hero__visual-title">
               <span>
-                <strong>Decision mode</strong> · audience attiva
-              </span>
-              <span>Live</span>
+                <strong><LocalizedText>{"Decision mode"}</LocalizedText></strong><LocalizedText>{" · audience attiva "}</LocalizedText></span>
+              <span><LocalizedText>{"Live"}</LocalizedText></span>
             </div>
             <div className="sponsorizza-hero__visual-row">
               <span className="sponsorizza-hero__visual-marker" aria-hidden="true">
                 <Target />
               </span>
               <span>
-                <strong>Founder & PM</strong>
-                <span>Cercano e confrontano tool per i loro stack operativi.</span>
+                <strong><LocalizedText>{"Founder & PM"}</LocalizedText></strong>
+                <span><LocalizedText>{"Cercano e confrontano tool per i loro stack operativi."}</LocalizedText></span>
               </span>
-              <em>Attivi</em>
+              <em><LocalizedText>{"Attivi"}</LocalizedText></em>
             </div>
             <div className="sponsorizza-hero__visual-row">
               <span className="sponsorizza-hero__visual-marker" aria-hidden="true">
                 <LayoutGrid />
               </span>
               <span>
-                <strong>Catalogo & Radar</strong>
-                <span>Navigazione, filtri e segnali live su Product Hunt.</span>
+                <strong><LocalizedText>{"Catalogo & Radar"}</LocalizedText></strong>
+                <span><LocalizedText>{"Navigazione, filtri e segnali live su Product Hunt."}</LocalizedText></span>
               </span>
-              <em>Live</em>
+              <em><LocalizedText>{"Live"}</LocalizedText></em>
             </div>
             <div className="sponsorizza-hero__visual-row">
               <span className="sponsorizza-hero__visual-marker" aria-hidden="true">
                 <BookOpenText />
               </span>
               <span>
-                <strong>Guide editoriali</strong>
-                <span>Letture di approfondimento su categorie e workflow.</span>
+                <strong><LocalizedText>{"Guide editoriali"}</LocalizedText></strong>
+                <span><LocalizedText>{"Letture di approfondimento su categorie e workflow."}</LocalizedText></span>
               </span>
-              <em>Indici</em>
+              <em><LocalizedText>{"Indici"}</LocalizedText></em>
             </div>
-          </aside>
+          </aside></LocalizedAttributes>
         </div>
       </section>
 
       {/* AUDIENCE */}
       <section className="sponsorizza-section" aria-labelledby="sponsorizza-audience-title">
         <header className="sponsorizza-section__header">
-          <span className="sponsorizza-section__eyebrow">Audience</span>
-          <h2 id="sponsorizza-audience-title" className="sponsorizza-section__title">
-            Chi raggiungi
-          </h2>
-          <p className="sponsorizza-section__lead">
-            L&rsquo;audience di TooolVibes sta attivamente esplorando, confrontando e valutando tool.
-            Non scorre passivamente: è in modalità decisionale, con un obiettivo chiaro e un budget da allocare.
-          </p>
+          <span className="sponsorizza-section__eyebrow"><LocalizedText>{"Audience"}</LocalizedText></span>
+          <h2 id="sponsorizza-audience-title" className="sponsorizza-section__title"><LocalizedText>{"Chi raggiungi "}</LocalizedText></h2>
+          <p className="sponsorizza-section__lead"><LocalizedText>{"L’audience di TooolVibes sta attivamente esplorando, confrontando e valutando tool. Non scorre passivamente: è in modalità decisionale, con un obiettivo chiaro e un budget da allocare. "}</LocalizedText></p>
         </header>
 
         <div className="sponsorizza-audience">
           <div className="sponsorizza-audience__copy">
-            <p>
-              Su TooolVibes le persone arrivano con un intento preciso: stanno scegliendo tool da inserire
-              in uno stack, validare un&rsquo;ipotesi di prodotto o sostituire qualcosa che non regge più.
-            </p>
-            <p>
-              La sponsorship ti inserisce in quel momento: quando la decisione è aperta e il confronto è già
-              in corso, non dopo che la scelta è stata fatta.
-            </p>
+            <p><LocalizedText>{"Su TooolVibes le persone arrivano con un intento preciso: stanno scegliendo tool da inserire in uno stack, validare un’ipotesi di prodotto o sostituire qualcosa che non regge più. "}</LocalizedText></p>
+            <p><LocalizedText>{"La sponsorship ti inserisce in quel momento: quando la decisione è aperta e il confronto è già in corso, non dopo che la scelta è stata fatta. "}</LocalizedText></p>
           </div>
 
-          <div className="sponsorizza-audience__visual" aria-label="Segnali di decision mode">
+          <LocalizedAttributes><div className="sponsorizza-audience__visual" aria-label="Segnali di decision mode">
             <div className="sponsorizza-audience__visual-row">
               <span className="dot" aria-hidden="true" />
               <span>
-                <strong>Ricerca attiva nel catalogo</strong>
-                <span>Filtri per categoria, confronto attributi, shortlist personali.</span>
+                <strong><LocalizedText>{"Ricerca attiva nel catalogo"}</LocalizedText></strong>
+                <span><LocalizedText>{"Filtri per categoria, confronto attributi, shortlist personali."}</LocalizedText></span>
               </span>
             </div>
             <div className="sponsorizza-audience__visual-row is-violet">
               <span className="dot" aria-hidden="true" />
               <span>
-                <strong>Confronto side-by-side</strong>
-                <span>Decision workspace con matrice di attributi e shortlist.</span>
+                <strong><LocalizedText>{"Confronto side-by-side"}</LocalizedText></strong>
+                <span><LocalizedText>{"Decision workspace con matrice di attributi e shortlist."}</LocalizedText></span>
               </span>
             </div>
             <div className="sponsorizza-audience__visual-row is-warm">
               <span className="dot" aria-hidden="true" />
               <span>
-                <strong>Segnali Radar e Product Hunt</strong>
-                <span>Lanci live, voti, commenti, evidenza recente.</span>
+                <strong><LocalizedText>{"Segnali Radar e Product Hunt"}</LocalizedText></strong>
+                <span><LocalizedText>{"Lanci live, voti, commenti, evidenza recente."}</LocalizedText></span>
               </span>
             </div>
             <div className="sponsorizza-audience__visual-row">
               <span className="dot" aria-hidden="true" />
               <span>
-                <strong>Lettura editoriale</strong>
-                <span>Guide, raccolte, approfondimenti tematici e di metodo.</span>
+                <strong><LocalizedText>{"Lettura editoriale"}</LocalizedText></strong>
+                <span><LocalizedText>{"Guide, raccolte, approfondimenti tematici e di metodo."}</LocalizedText></span>
               </span>
             </div>
-          </div>
+          </div></LocalizedAttributes>
         </div>
       </section>
 
       {/* PLACEMENT FORMATS */}
       <section className="sponsorizza-section" aria-labelledby="sponsorizza-formats-title">
         <header className="sponsorizza-section__header">
-          <span className="sponsorizza-section__eyebrow">Partner Experience</span>
-          <h2 id="sponsorizza-formats-title" className="sponsorizza-section__title">
-            Una partnership, pi&ugrave; contesti ad alta intenzione
-          </h2>
-          <p className="sponsorizza-section__lead">
-            La stessa identità e lo stesso racconto di prodotto prendono forma in tre contesti:
-            scoperta, confronto, lettura. Ogni esperienza è etichettata come contenuto
-            sponsorizzato e non influenza le valutazioni editoriali.
-          </p>
+          <span className="sponsorizza-section__eyebrow"><LocalizedText>{"Partner Experience"}</LocalizedText></span>
+          <h2 id="sponsorizza-formats-title" className="sponsorizza-section__title"><LocalizedText>{"Una partnership, più contesti ad alta intenzione "}</LocalizedText></h2>
+          <p className="sponsorizza-section__lead"><LocalizedText>{"La stessa identità e lo stesso racconto di prodotto prendono forma in tre contesti: scoperta, confronto, lettura. Ogni esperienza è etichettata come contenuto sponsorizzato e non influenza le valutazioni editoriali. "}</LocalizedText></p>
         </header>
 
         <div className="sponsorizza-formats">
@@ -294,19 +270,19 @@ export default function SponsorizzaPage() {
                 aria-labelledby={`sponsorizza-format-${card.slug}-title`}
               >
                 <span className="sponsorizza-format-card__index" aria-hidden="true">
-                  {card.index}
+                  <LocalizedText>{card.index}</LocalizedText>
                 </span>
                 <h3
                   id={`sponsorizza-format-${card.slug}-title`}
                   className="sponsorizza-format-card__title"
                 >
-                  {card.title}
+                  <LocalizedText>{card.title}</LocalizedText>
                 </h3>
-                <span className="sponsorizza-format-card__label">{card.label}</span>
-                <p className="sponsorizza-format-card__copy">{card.copy}</p>
+                <span className="sponsorizza-format-card__label"><LocalizedText>{card.label}</LocalizedText></span>
+                <p className="sponsorizza-format-card__copy"><LocalizedText>{card.copy}</LocalizedText></p>
                 <ul className="sponsorizza-format-card__bullets">
                   {card.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
+                    <li key={bullet}><LocalizedText>{bullet}</LocalizedText></li>
                   ))}
                 </ul>
               </article>
@@ -320,39 +296,23 @@ export default function SponsorizzaPage() {
         <div className="sponsorizza-independence">
           <span className="sponsorizza-independence__seal">
             <Sparkles aria-hidden="true" />
-            <span>Indipendenza editoriale</span>
+            <span><LocalizedText>{"Indipendenza editoriale"}</LocalizedText></span>
           </span>
           <h2
             id="sponsorizza-independence-title"
             className="sponsorizza-independence__title"
-          >
-            Indipendenza editoriale
-          </h2>
-          <p className="sponsorizza-independence__body">
-            La sponsorship <strong>non influenza mai</strong> le valutazioni, i punteggi, le classifiche
-            o le raccomandazioni di TooolVibes. Ogni placement è chiaramente etichettato come contenuto
-            sponsorizzato. I giudizi editoriali restano indipendenti e basati esclusivamente
-            sull&rsquo;analisi oggettiva dei tool.
-          </p>
+          ><LocalizedText>{"Indipendenza editoriale "}</LocalizedText></h2>
+          <p className="sponsorizza-independence__body"><LocalizedText>{"La sponsorship "}</LocalizedText><strong><LocalizedText>{"non influenza mai"}</LocalizedText></strong><LocalizedText>{" le valutazioni, i punteggi, le classifiche o le raccomandazioni di TooolVibes. Ogni placement è chiaramente etichettato come contenuto sponsorizzato. I giudizi editoriali restano indipendenti e basati esclusivamente sull’analisi oggettiva dei tool. "}</LocalizedText></p>
 
           <ul className="sponsorizza-independence__promises">
             <li>
-              <span>
-                Le valutazioni editoriali, i punteggi e le classifiche di TooolVibes restano
-                indipendenti dalla sponsorship.
-              </span>
+              <span><LocalizedText>{"Le valutazioni editoriali, i punteggi e le classifiche di TooolVibes restano indipendenti dalla sponsorship. "}</LocalizedText></span>
             </li>
             <li>
-              <span>
-                Ogni placement è chiaramente etichettato come contenuto sponsorizzato in ogni
-                superficie in cui appare.
-              </span>
+              <span><LocalizedText>{"Ogni placement è chiaramente etichettato come contenuto sponsorizzato in ogni superficie in cui appare. "}</LocalizedText></span>
             </li>
             <li>
-              <span>
-                I placement non compaiono nelle shortlist personali né influenzano i confronti
-                generati dagli utenti.
-              </span>
+              <span><LocalizedText>{"I placement non compaiono nelle shortlist personali né influenzano i confronti generati dagli utenti. "}</LocalizedText></span>
             </li>
           </ul>
         </div>
@@ -361,26 +321,20 @@ export default function SponsorizzaPage() {
       {/* LIVE EXAMPLE */}
       <section className="sponsorizza-section" aria-labelledby="sponsorizza-example-title">
         <header className="sponsorizza-section__header">
-          <span className="sponsorizza-section__eyebrow">Esempio reale</span>
-          <h2 id="sponsorizza-example-title" className="sponsorizza-section__title">
-            Un esempio reale
-          </h2>
-          <p className="sponsorizza-section__lead">
-            Taylora è una delle campagne partner attualmente live su TooolVibes. Questa è la
-            Partner Experience reale: non una card premium, ma un piccolo palcoscenico
-            editoriale con un visual che spiega il prodotto prima ancora del testo.
-          </p>
+          <span className="sponsorizza-section__eyebrow"><LocalizedText>{"Esempio reale"}</LocalizedText></span>
+          <h2 id="sponsorizza-example-title" className="sponsorizza-section__title"><LocalizedText>{"Un esempio reale "}</LocalizedText></h2>
+          <p className="sponsorizza-section__lead"><LocalizedText>{"Taylora è una delle campagne partner attualmente live su TooolVibes. Questa è la Partner Experience reale: non una card premium, ma un piccolo palcoscenico editoriale con un visual che spiega il prodotto prima ancora del testo. "}</LocalizedText></p>
         </header>
 
         <div className="sponsorizza-example">
-          <article
+          <LocalizedAttributes><article
             className="sponsorizza-example__frame sponsorizza-example__frame--experience"
             aria-label={`Partner Experience per ${TAYLORA_CAMPAIGN.name}`}
           >
             <div className="sponsorizza-example__copy">
               <span className="sponsorizza-example__ribbon">
                 <Sparkles aria-hidden="true" />
-                <span>Partner di TooolVibes</span>
+                <span><LocalizedText>{"Partner di TooolVibes"}</LocalizedText></span>
               </span>
 
               <div className="sponsorizza-example__identity">
@@ -389,19 +343,19 @@ export default function SponsorizzaPage() {
                 </span>
                 <div className="sponsorizza-example__identity-copy">
                   <strong>{TAYLORA_CAMPAIGN.name}</strong>
-                  <span>Partner di TooolVibes</span>
+                  <span><LocalizedText>{"Partner di TooolVibes"}</LocalizedText></span>
                 </div>
               </div>
 
-              <p className="sponsorizza-example__headline">{TAYLORA_CAMPAIGN.headline}</p>
+              <p className="sponsorizza-example__headline"><LocalizedText>{TAYLORA_CAMPAIGN.headline}</LocalizedText></p>
               <p className="sponsorizza-example__description">
-                {TAYLORA_CAMPAIGN.description}
+                <LocalizedText>{TAYLORA_CAMPAIGN.description}</LocalizedText>
               </p>
 
-              <div className="sponsorizza-example__meta" aria-label="Dettagli del placement">
-                <span>Disciplina · Contenuto sponsorizzato</span>
-                <span>Homepage · Partner Spotlight</span>
-              </div>
+              <LocalizedAttributes><div className="sponsorizza-example__meta" aria-label="Dettagli del placement">
+                <span><LocalizedText>{"Disciplina · Contenuto sponsorizzato"}</LocalizedText></span>
+                <span><LocalizedText>{"Homepage · Partner Spotlight"}</LocalizedText></span>
+              </div></LocalizedAttributes>
 
               <a
                 className="sponsorizza-example__cta"
@@ -409,7 +363,7 @@ export default function SponsorizzaPage() {
                 rel="sponsored noopener noreferrer"
                 target="_blank"
               >
-                <span>{TAYLORA_CAMPAIGN.ctaLabel}</span>
+                <span><LocalizedText>{TAYLORA_CAMPAIGN.ctaLabel}</LocalizedText></span>
                 <ArrowUpRight aria-hidden="true" />
               </a>
             </div>
@@ -422,22 +376,16 @@ export default function SponsorizzaPage() {
                 density="stage"
               />
             </div>
-          </article>
+          </article></LocalizedAttributes>
 
           <div className="sponsorizza-example__caption">
-            <strong>La stessa creatività che va in produzione</strong>
-            <span>
-              Il visual qui sopra è la Partner Experience reale: conoscenza, procedure e
-              corsi del partner confluiscono in un workspace protetto e raggiungono il team,
-              con tracciamento dei completamenti. Il placement mostra chiaramente la label
-              &ldquo;Partner di TooolVibes&rdquo;; nessun punteggio, valutazione o classifica di
-              TooolVibes è modificato dalla presenza di questa sponsorship.
-            </span>
+            <strong><LocalizedText>{"La stessa creatività che va in produzione"}</LocalizedText></strong>
+            <span><LocalizedText>{"Il visual qui sopra è la Partner Experience reale: conoscenza, procedure e corsi del partner confluiscono in un workspace protetto e raggiungono il team, con tracciamento dei completamenti. Il placement mostra chiaramente la label “Partner di TooolVibes”; nessun punteggio, valutazione o classifica di TooolVibes è modificato dalla presenza di questa sponsorship. "}</LocalizedText></span>
           </div>
         </div>
 
-        <div className="sponsorizza-partners" aria-label="Partner Experience live">
-          <p className="sponsorizza-partners__eyebrow">Partner Experience live</p>
+        <LocalizedAttributes><div className="sponsorizza-partners" aria-label="Partner Experience live">
+          <p className="sponsorizza-partners__eyebrow"><LocalizedText>{"Partner Experience live"}</LocalizedText></p>
           <ul className="sponsorizza-partners__grid">
             {LIVE_PARTNER_CAMPAIGNS.map((campaign) => (
               <li
@@ -456,47 +404,40 @@ export default function SponsorizzaPage() {
                 </div>
                 <div className="sponsorizza-partners__copy">
                   <strong>{campaign.name}</strong>
-                  <span>{campaign.eyebrow}</span>
+                  <span><LocalizedText>{campaign.eyebrow}</LocalizedText></span>
                   <a
                     href={buildPartnerDestinationUrl(campaign, "sponsorizza-preview")}
                     rel="sponsored noopener noreferrer"
                     target="_blank"
                   >
-                    <span>Visita {campaign.name}</span>
+                    <span><LocalizedText>{"Visita "}</LocalizedText>{campaign.name}</span>
                     <ArrowUpRight aria-hidden="true" />
-                    <span className="sr-only">(link sponsorizzato)</span>
+                    <span className="sr-only"><LocalizedText>{"(link sponsorizzato)"}</LocalizedText></span>
                   </a>
                 </div>
               </li>
             ))}
           </ul>
-          <p className="sponsorizza-partners__note">
-            Anteprime dimostrative dei mondi creativi attivi: non sono placement a pagamento
-            in questa pagina e non registrano impression di campagna.
-          </p>
-        </div>
+          <p className="sponsorizza-partners__note"><LocalizedText>{"Anteprime dimostrative dei mondi creativi attivi: non sono placement a pagamento in questa pagina e non registrano impression di campagna. "}</LocalizedText></p>
+        </div></LocalizedAttributes>
       </section>
 
       {/* PROCESS */}
       <section className="sponsorizza-section" aria-labelledby="sponsorizza-process-title">
         <header className="sponsorizza-section__header">
-          <span className="sponsorizza-section__eyebrow">Processo</span>
-          <h2 id="sponsorizza-process-title" className="sponsorizza-section__title">
-            Come funziona
-          </h2>
-          <p className="sponsorizza-section__lead">
-            Un percorso chiaro in cinque tappe: dalla prima richiesta al report di fine campagna.
-          </p>
+          <span className="sponsorizza-section__eyebrow"><LocalizedText>{"Processo"}</LocalizedText></span>
+          <h2 id="sponsorizza-process-title" className="sponsorizza-section__title"><LocalizedText>{"Come funziona "}</LocalizedText></h2>
+          <p className="sponsorizza-section__lead"><LocalizedText>{"Un percorso chiaro in cinque tappe: dalla prima richiesta al report di fine campagna. "}</LocalizedText></p>
         </header>
 
         <ol className="sponsorizza-process">
           {processSteps.map((step, index) => (
             <li key={step.title} className="sponsorizza-process__step">
               <span className="sponsorizza-process__index" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
+                <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
               </span>
-              <h3 className="sponsorizza-process__title">{step.title}</h3>
-              <p className="sponsorizza-process__copy">{step.copy}</p>
+              <h3 className="sponsorizza-process__title"><LocalizedText>{step.title}</LocalizedText></h3>
+              <p className="sponsorizza-process__copy"><LocalizedText>{step.copy}</LocalizedText></p>
             </li>
           ))}
         </ol>
@@ -506,14 +447,9 @@ export default function SponsorizzaPage() {
       <section className="sponsorizza-section" aria-labelledby="sponsorizza-final-title">
         <div className="sponsorizza-final-cta">
           <div className="sponsorizza-final-cta__copy">
-            <h2 id="sponsorizza-final-title" className="sponsorizza-final-cta__title">
-              Il prossimo tool in evidenza potrebbe essere il tuo.
-            </h2>
-            <p className="sponsorizza-final-cta__body">
-              Scrivi a{" "}
-              <a href="mailto:hello@tooolvibes.com">hello@tooolvibes.com</a>{" "}
-              per ricevere il media kit e i dettagli sui formati disponibili.
-            </p>
+            <h2 id="sponsorizza-final-title" className="sponsorizza-final-cta__title"><LocalizedText>{"Il prossimo tool in evidenza potrebbe essere il tuo. "}</LocalizedText></h2>
+            <p className="sponsorizza-final-cta__body"><LocalizedText>{"Scrivi a"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+              <a href="mailto:hello@tooolvibes.com"><LocalizedText>{"hello@tooolvibes.com"}</LocalizedText></a><LocalizedText>{" "}</LocalizedText><LocalizedText>{"per ricevere il media kit e i dettagli sui formati disponibili. "}</LocalizedText></p>
           </div>
           <SponsorOpportunityMailtoLink
             placementId="sponsor-page-final-cta"
@@ -522,7 +458,7 @@ export default function SponsorizzaPage() {
             className="sponsorizza-final-cta__email"
           >
             <Mail aria-hidden="true" />
-            <span>Scrivi a hello@tooolvibes.com</span>
+            <span><LocalizedText>{"Scrivi a hello@tooolvibes.com"}</LocalizedText></span>
             <ArrowRight aria-hidden="true" />
           </SponsorOpportunityMailtoLink>
         </div>

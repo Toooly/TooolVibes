@@ -1,3 +1,4 @@
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -34,7 +35,7 @@ export function SecondaryCardGrid({
     columns === 2 ? "secondary-grid--two" : columns === 3 ? "secondary-grid--three" : null;
 
   return (
-    <div
+    <LocalizedAttributes><div
       id={id}
       aria-label={ariaLabel}
       className={cn(
@@ -45,7 +46,7 @@ export function SecondaryCardGrid({
       )}
     >
       {children}
-    </div>
+    </div></LocalizedAttributes>
   );
 }
 

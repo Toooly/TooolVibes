@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect } from "react";
 import { motion } from "motion/react";
 
@@ -91,13 +92,13 @@ export function AchievementReveal({
         <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
       </svg>
       <span className="tv-reward-ach-pill__text">
-        <span className="tv-reward-ach-pill__eyebrow">{eyebrow}</span>
-        <span className="tv-reward-ach-pill__title">{envelope.title}</span>
+        <span className="tv-reward-ach-pill__eyebrow"><LocalizedText>{eyebrow}</LocalizedText></span>
+        <span className="tv-reward-ach-pill__title"><LocalizedText>{envelope.title}</LocalizedText></span>
         {compactLabel ? (
-          <span className="tv-reward-ach-pill__delta">{compactLabel}</span>
+          <span className="tv-reward-ach-pill__delta"><LocalizedText>{compactLabel}</LocalizedText></span>
         ) : null}
       </span>
-      <span className="sr-only">{envelope.accessibilityAnnouncement}</span>
+      <span className="sr-only"><LocalizedText>{envelope.accessibilityAnnouncement}</LocalizedText></span>
     </motion.div>
   );
 }

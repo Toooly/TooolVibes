@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { Target, Scale, Star } from "lucide-react";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
@@ -46,16 +47,14 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
       className="td-final-brief tv-emphasis tv-emphasis--decision"
       aria-labelledby="td-final-brief-heading"
     >
-      <p id="td-final-brief-heading" className="td-final-brief__eyebrow">
-        In sintesi
-      </p>
+      <p id="td-final-brief-heading" className="td-final-brief__eyebrow"><LocalizedText>{"In sintesi "}</LocalizedText></p>
       {briefSummary ? (
-        <p className="td-final-brief__summary">{briefSummary}</p>
+        <p className="td-final-brief__summary"><LocalizedText>{briefSummary}</LocalizedText></p>
       ) : null}
       {strengths.length > 0 ? (
         <ul className="td-final-brief__points">
           {strengths.map((point) => (
-            <li key={point}>{point}</li>
+            <li key={point}><LocalizedText>{point}</LocalizedText></li>
           ))}
         </ul>
       ) : null}
@@ -65,8 +64,8 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
             <span className="td-final-brief__icon" aria-hidden="true">
               {rowIndex === 0 ? <Target size={16} /> : rowIndex === 1 ? <Scale size={16} /> : <Star size={16} />}
             </span>
-            <dt>{row.dt}</dt>
-            <dd>{row.dd}</dd>
+            <dt><LocalizedText>{row.dt}</LocalizedText></dt>
+            <dd><LocalizedText>{row.dd}</LocalizedText></dd>
           </div>
         ))}
       </dl>

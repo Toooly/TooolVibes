@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
@@ -31,7 +32,7 @@ export function BrandLogo({
   const is3D = fallback === "3d" && threeDEnabled;
 
   return (
-    <div
+    <LocalizedAttributes><div
       className={cn(
         "relative flex shrink-0 items-center justify-center",
         className
@@ -43,15 +44,15 @@ export function BrandLogo({
       {is3D ? (
         <BrandLogo3D size={size} />
       ) : (
-        <Image
+        <LocalizedAttributes><Image
           src="/brand/tooolvibes-logo.png"
           alt="TooolVibes"
           width={size}
           height={size}
           className="h-full w-full object-contain"
           priority={priority}
-        />
+        /></LocalizedAttributes>
       )}
-    </div>
+    </div></LocalizedAttributes>
   );
 }

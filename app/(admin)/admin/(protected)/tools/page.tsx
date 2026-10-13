@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import {
@@ -57,7 +58,7 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
 
   return (
     <div className="page-shell py-6">
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         title="Gestione tool"
         description="Gestisci pubblicazione, evidenza e contenuti del catalogo."
         primaryHref="/admin/tools/new"
@@ -67,17 +68,17 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
           { label: "Pubblicati", value: publishedCount },
           { label: "In evidenza", value: featuredCount },
         ]}
-      />
+      /></LocalizedAttributes>
 
       {status && statusMessages[status] ? (
-        <ControlCenterNotice tone="ok">{statusMessages[status]}</ControlCenterNotice>
+        <ControlCenterNotice tone="ok"><LocalizedText>{statusMessages[status]}</LocalizedText></ControlCenterNotice>
       ) : null}
       {!runtime.canWrite ? (
-        <ControlCenterNotice tone="warn">{runtime.writeMessage}</ControlCenterNotice>
+        <ControlCenterNotice tone="warn"><LocalizedText>{runtime.writeMessage}</LocalizedText></ControlCenterNotice>
       ) : null}
       {runtime.warnings.map((warning) => (
         <ControlCenterNotice key={warning} tone="warn">
-          {getAdminToolWarningLabel(warning)}
+          <LocalizedText>{getAdminToolWarningLabel(warning)}</LocalizedText>
         </ControlCenterNotice>
       ))}
 
@@ -100,29 +101,25 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
                   ) : null}
                 </div>
                 <p className="tv-cc-card__meta">
-                  <span>{tool.category}</span>
-                  <span>Aggiornato {formatItalianDate(tool.updated_at)}</span>
-                  {tool.affiliate_url ? <span>Affiliate</span> : null}
+                  <span><LocalizedText>{tool.category}</LocalizedText></span>
+                  <span><LocalizedText>{"Aggiornato "}</LocalizedText><LocalizedText>{formatItalianDate(tool.updated_at)}</LocalizedText></span>
+                  {tool.affiliate_url ? <span><LocalizedText>{"Affiliate"}</LocalizedText></span> : null}
                 </p>
               </div>
               <div className="tv-cc-card__actions">
-                <Link href={`/admin/tools/${tool.id}/edit`} className="tv-cc-btn tv-cc-btn--primary">
-                  Modifica
-                </Link>
+                <Link href={`/admin/tools/${tool.id}/edit`} className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Modifica "}</LocalizedText></Link>
                 {tool.is_published ? (
-                  <Link href={`/toools/${tool.slug}`} className="tv-cc-btn tv-cc-btn--secondary">
-                    Apri scheda
-                  </Link>
+                  <Link href={`/toools/${tool.slug}`} className="tv-cc-btn tv-cc-btn--secondary"><LocalizedText>{"Apri scheda "}</LocalizedText></Link>
                 ) : null}
                 <AdminActionMenu>
                   <form action={toggleFeaturedAction.bind(null, tool.id, !tool.is_featured)}>
                     <button type="submit" disabled={!runtime.canWrite}>
-                      {tool.is_featured ? "Rimuovi evidenza" : "Metti in evidenza"}
+                      <LocalizedText>{tool.is_featured ? "Rimuovi evidenza" : "Metti in evidenza"}</LocalizedText>
                     </button>
                   </form>
                   <form action={togglePublishedAction.bind(null, tool.id, !tool.is_published)}>
                     <button type="submit" disabled={!runtime.canWrite}>
-                      {tool.is_published ? "Torna in bozza" : "Pubblica"}
+                      <LocalizedText>{tool.is_published ? "Torna in bozza" : "Pubblica"}</LocalizedText>
                     </button>
                   </form>
                   <DeleteWithConfirm
@@ -138,12 +135,12 @@ export default async function AdminToolsPage({ searchParams }: AdminToolsPagePro
           ))}
         </div>
       ) : (
-        <AdminEmptyState
+        <LocalizedAttributes><AdminEmptyState
           title="Nessun tool in questa vista"
           description="Cambia filtro o crea un nuovo tool per alimentare il catalogo."
           ctaHref="/admin/tools/new"
           ctaLabel="Nuovo tool"
-        />
+        /></LocalizedAttributes>
       )}
     </div>
   );

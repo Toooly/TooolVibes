@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";
@@ -22,7 +23,7 @@ export default function AdminMonetizationPage() {
   return (
     <div className="space-y-5">
       <CommercialSubnav current="/admin/monetization" />
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         kicker="Monetizzazione"
         title="Inventory nativa"
         description="Spazi partner mappati nel prodotto."
@@ -34,7 +35,7 @@ export default function AdminMonetizationPage() {
           { label: "prenotabili", value: stats.reserved },
           { label: "pianificati", value: stats.planned },
         ]}
-      />
+      /></LocalizedAttributes>
 
       <div className="tv-cc-editor-grid">
         <div className="space-y-3">
@@ -42,20 +43,20 @@ export default function AdminMonetizationPage() {
             <article key={placement.key} className="tv-cc-panel">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="tv-cc-panel__kicker">{placement.surface} / {placement.format}</p>
-                  <h2 className="tv-cc-panel__title">{placement.packageName}</h2>
+                  <p className="tv-cc-panel__kicker"><LocalizedText>{placement.surface}</LocalizedText> / <LocalizedText>{placement.format}</LocalizedText></p>
+                  <h2 className="tv-cc-panel__title"><LocalizedText>{placement.packageName}</LocalizedText></h2>
                 </div>
-                <span className="tv-cc-metric">{statusLabel[placement.status]}</span>
+                <span className="tv-cc-metric"><LocalizedText>{statusLabel[placement.status]}</LocalizedText></span>
               </div>
-              <p className="tv-cc-panel__desc">{placement.body}</p>
+              <p className="tv-cc-panel__desc"><LocalizedText>{placement.body}</LocalizedText></p>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <div className="tv-cc-panel">
-                  <p className="tv-cc-panel__kicker">Audience</p>
-                  <p className="tv-cc-panel__desc">{placement.audience}</p>
+                  <p className="tv-cc-panel__kicker"><LocalizedText>{"Audience"}</LocalizedText></p>
+                  <p className="tv-cc-panel__desc"><LocalizedText>{placement.audience}</LocalizedText></p>
                 </div>
                 <div className="tv-cc-panel">
-                  <p className="tv-cc-panel__kicker">CTA</p>
-                  <p className="tv-cc-panel__desc">{placement.ctaLabel} / {placement.href}</p>
+                  <p className="tv-cc-panel__kicker"><LocalizedText>{"CTA"}</LocalizedText></p>
+                  <p className="tv-cc-panel__desc"><LocalizedText>{placement.ctaLabel}</LocalizedText> / {placement.href}</p>
                 </div>
               </div>
             </article>
@@ -64,32 +65,28 @@ export default function AdminMonetizationPage() {
 
         <aside className="space-y-3">
           <div className="tv-cc-panel">
-            <p className="tv-cc-panel__kicker">Regola</p>
-            <h2 className="tv-cc-panel__title">Native first</h2>
-            <p className="tv-cc-panel__desc">
-              Ogni sponsor entra con contesto, disclosure e utilità. Se non aiuta la scelta del tool, non entra.
-            </p>
+            <p className="tv-cc-panel__kicker"><LocalizedText>{"Regola"}</LocalizedText></p>
+            <h2 className="tv-cc-panel__title"><LocalizedText>{"Native first"}</LocalizedText></h2>
+            <p className="tv-cc-panel__desc"><LocalizedText>{"Ogni sponsor entra con contesto, disclosure e utilità. Se non aiuta la scelta del tool, non entra. "}</LocalizedText></p>
           </div>
           <div className="tv-cc-panel">
-            <p className="tv-cc-panel__kicker">Da collegare dopo</p>
-            <p className="tv-cc-panel__desc">Campagne datate, reporting e CRUD Supabase restano fuori da questa vista.</p>
+            <p className="tv-cc-panel__kicker"><LocalizedText>{"Da collegare dopo"}</LocalizedText></p>
+            <p className="tv-cc-panel__desc"><LocalizedText>{"Campagne datate, reporting e CRUD Supabase restano fuori da questa vista."}</LocalizedText></p>
           </div>
           {plannedPlacements.length > 0 ? (
             <div className="tv-cc-panel">
-              <p className="tv-cc-panel__kicker">Non ancora visibili</p>
+              <p className="tv-cc-panel__kicker"><LocalizedText>{"Non ancora visibili"}</LocalizedText></p>
               <div className="mt-3 grid gap-2">
                 {plannedPlacements.map((placement) => (
                   <div key={placement.key}>
-                    <p className="text-sm font-semibold">{placement.surface}</p>
-                    <p className="tv-cc-card__meta">{placement.packageName}</p>
+                    <p className="text-sm font-semibold"><LocalizedText>{placement.surface}</LocalizedText></p>
+                    <p className="tv-cc-card__meta"><LocalizedText>{placement.packageName}</LocalizedText></p>
                   </div>
                 ))}
               </div>
             </div>
           ) : null}
-          <Link href="/admin/commercial/placements" className="tv-cc-btn tv-cc-btn--secondary">
-            Apri placement
-          </Link>
+          <Link href="/admin/commercial/placements" className="tv-cc-btn tv-cc-btn--secondary"><LocalizedText>{"Apri placement "}</LocalizedText></Link>
         </aside>
       </div>
     </div>

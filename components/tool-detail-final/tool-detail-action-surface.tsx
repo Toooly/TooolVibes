@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * TooolVibes — Tool Detail FINAL — Action Surface
  *
@@ -60,8 +61,8 @@ export function ToolDetailActionSurface({
   });
 
   return (
-    <div className="td-final-actions" role="group" aria-label="Azioni scheda">
-      <button
+    <LocalizedAttributes><div className="td-final-actions" role="group" aria-label="Azioni scheda">
+      <LocalizedAttributes><button
         type="button"
         onClick={() => {
           toggleCompare(slug);
@@ -85,22 +86,22 @@ export function ToolDetailActionSurface({
         }
       >
         <Columns3 size={17} aria-hidden="true" />
-        <span>{compareRank > 0 ? "In confronto" : "Confronta"}</span>
-      </button>
+        <span><LocalizedText>{compareRank > 0 ? "In confronto" : "Confronta"}</LocalizedText></span>
+      </button></LocalizedAttributes>
 
-      <a
+      <LocalizedAttributes><a
         href={externalUrl}
         target="_blank"
         rel={isAffiliateLink ? "sponsored noopener noreferrer" : "noopener noreferrer"}
         className="td-final-cta--secondary"
         aria-label={`Visita il sito ufficiale di ${name}`}
       >
-        <span>Visita</span>
+        <span><LocalizedText>{"Visita"}</LocalizedText></span>
         <ExternalLink size={15} aria-hidden="true" />
-      </a>
+      </a></LocalizedAttributes>
 
       <div className="td-final-save-cluster">
-        <button
+        <LocalizedAttributes><button
           type="button"
           {...saveHold}
           className={cn("td-final-cta--save", isSaved && "is-saved")}
@@ -113,8 +114,8 @@ export function ToolDetailActionSurface({
             aria-hidden="true"
             fill={isSaved ? "currentColor" : "none"}
           />
-          <span className="td-final-cta__label">{isSaved ? "Salvato" : "Salva"}</span>
-        </button>
+          <span className="td-final-cta__label"><LocalizedText>{isSaved ? "Salvato" : "Salva"}</LocalizedText></span>
+        </button></LocalizedAttributes>
         <SaveOverflow
           slug={slug}
           toolName={name}
@@ -123,25 +124,22 @@ export function ToolDetailActionSurface({
       </div>
 
       {isAffiliateLink ? (
-        <span className="td-final-affiliate-note">
-          Link affiliato: potremmo ricevere una commissione senza costi extra per te.
-        </span>
+        <span className="td-final-affiliate-note"><LocalizedText>{"Link affiliato: potremmo ricevere una commissione senza costi extra per te. "}</LocalizedText></span>
       ) : null}
 
       {compareRank > 0 ? (
-        <span
+        <LocalizedAttributes><span
           className="td-final-compare-rank"
           aria-label={`Selezionato, posizione ${compareRank}`}
         >
-          #{String(compareRank).padStart(2, "0")}
-          <span className="td-final-compare-rank__suffix">
-            di {compareCount}/{MAX_COMPARE_TOOLS}
+          #<LocalizedText>{String(compareRank).padStart(2, "0")}</LocalizedText>
+          <span className="td-final-compare-rank__suffix"><LocalizedText>{"di "}</LocalizedText>{compareCount}/{MAX_COMPARE_TOOLS}
           </span>
-        </span>
+        </span></LocalizedAttributes>
       ) : null}
 
       {compareCount > 0 ? (
-        <a
+        <LocalizedAttributes><a
           href="/compare"
           className={cn(
             "td-final-cta--secondary",
@@ -155,12 +153,12 @@ export function ToolDetailActionSurface({
           }
         >
           <span>
-            {compareCount >= MIN_COMPARE_TOOLS
+            <LocalizedText>{compareCount >= MIN_COMPARE_TOOLS
               ? "Apri confronto"
-              : `Confronto · ${compareCount}/{MAX_COMPARE_TOOLS}`}
+              : `Confronto · ${compareCount}/{MAX_COMPARE_TOOLS}`}</LocalizedText>
           </span>
-        </a>
+        </a></LocalizedAttributes>
       ) : null}
-    </div>
+    </div></LocalizedAttributes>
   );
 }

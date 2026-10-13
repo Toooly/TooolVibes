@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { ScenicLoading } from "@/components/layout/scenic-loading";
@@ -44,14 +45,12 @@ export function MemberOnlyGate({
   return (
     <section className="tv-member-gate" aria-labelledby="tv-member-only-gate-title">
       <div className="tv-member-gate__card">
-        <p className="tv-member-gate__kicker">{kicker}</p>
+        <p className="tv-member-gate__kicker"><LocalizedText>{kicker}</LocalizedText></p>
         <h1 id="tv-member-only-gate-title" className="tv-member-gate__title">
-          {title}
+          <LocalizedText>{title}</LocalizedText>
         </h1>
-        <p className="tv-member-gate__body">{body}</p>
-        <Link className="tv-member-gate__cta" href="/account">
-          Entra per continuare
-        </Link>
+        <p className="tv-member-gate__body"><LocalizedText>{body}</LocalizedText></p>
+        <Link className="tv-member-gate__cta" href="/account"><LocalizedText>{"Entra per continuare "}</LocalizedText></Link>
       </div>
     </section>
   );

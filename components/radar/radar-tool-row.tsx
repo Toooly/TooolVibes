@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * Compact Radar tool row (spec §6, §33) — deliberately NOT a Catalog card.
  *
@@ -48,7 +49,7 @@ export function RadarToolRow({
       data-catalog-status={tool.catalogStatus}
       data-expanded={expanded ? "true" : undefined}
     >
-      <button
+      <LocalizedAttributes><button
         type="button"
         className="tv-rx-row__main"
         onClick={event => {
@@ -60,28 +61,28 @@ export function RadarToolRow({
         aria-label={`${expanded ? "Chiudi" : "Apri"} dettagli di ${tool.name}`}
       >
         <span className="tv-rx-row__rank" aria-hidden="true">
-          {String(index + 1).padStart(2, "0")}
+          <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
         </span>
         <span className="tv-rx-row__identity" aria-hidden="true">
           {tool.thumbnailUrl && !thumbnailFailed ? (
             // eslint-disable-next-line @next/next/no-img-element -- factual source thumbnail; no invented catalog identity
-            <img src={tool.thumbnailUrl} width={40} height={40} alt="" loading="lazy" decoding="async" onError={() => setThumbnailFailed(true)} />
+            <LocalizedAttributes><img src={tool.thumbnailUrl} width={40} height={40} alt="" loading="lazy" decoding="async" onError={() => setThumbnailFailed(true)} /></LocalizedAttributes>
           ) : tool.name.slice(0, 1).toLocaleUpperCase("it-IT")}
         </span>
         <span className="tv-rx-row__body">
           <strong className="tv-rx-row__name">{tool.name}</strong>
-          <span className="tv-rx-row__tagline">{tool.tagline}</span>
+          <span className="tv-rx-row__tagline"><LocalizedText>{tool.tagline}</LocalizedText></span>
           <span className="tv-rx-row__meta">
-            <span>{tool.topicCluster.label}</span><span>{formatAge(tool.ageHours)}</span>
-            <span className="tv-rx-sr-only">{keySignal}</span>
+            <span><LocalizedText>{tool.topicCluster.label}</LocalizedText></span><span><LocalizedText>{formatAge(tool.ageHours)}</LocalizedText></span>
+            <span className="tv-rx-sr-only"><LocalizedText>{keySignal}</LocalizedText></span>
           </span>
         </span>
         <ChevronDown className="tv-rx-row__chevron" size={16} aria-hidden="true" />
-      </button>
+      </button></LocalizedAttributes>
       <span className="tv-rx-row__actions">
         {isExternal ? (
           <>
-            <button
+            <LocalizedAttributes><button
               type="button"
               className="tv-rx-row__watch"
               data-watched={watched ? "true" : "false"}
@@ -90,28 +91,24 @@ export function RadarToolRow({
               onClick={() => onToggleWatch(tool)}
             >
               <Eye size={13} aria-hidden="true" />
-            </button>
+            </button></LocalizedAttributes>
             <a
               className="tv-rx-row__open"
               href={tool.websiteUrl ?? tool.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-            >
-              Fonte
-              <ArrowUpRight size={12} aria-hidden="true" />
+            ><LocalizedText>{"Fonte "}</LocalizedText><ArrowUpRight size={12} aria-hidden="true" />
             </a>
           </>
         ) : (
           <>
             <ShortlistToggle slug={tool.catalogSlug ?? tool.id} mode="icon" toolName={tool.name} />
             <CompareToggle slug={tool.catalogSlug ?? tool.id} mode="icon" toolName={tool.name} />
-            <Link
+            <LocalizedAttributes><Link
               className="tv-rx-row__open"
               href={`/toools/${tool.catalogSlug ?? ""}`}
               aria-label={`Apri la scheda di ${tool.name}`}
-            >
-              Scheda
-            </Link>
+            ><LocalizedText>{"Scheda "}</LocalizedText></Link></LocalizedAttributes>
           </>
         )}
       </span>

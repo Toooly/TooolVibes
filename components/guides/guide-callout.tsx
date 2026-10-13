@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { cn } from "@/lib/utils";
 
 type GuideCalloutKind = "tip" | "warning" | "pro" | "decision";
@@ -30,19 +31,19 @@ export function GuideCallout({
   className,
 }: GuideCalloutProps) {
   return (
-    <aside
+    <LocalizedAttributes><aside
       className={cn("guides-callout", `guides-callout--${kind}`, className)}
       role={kind === "warning" ? "note" : undefined}
       aria-label={title ?? KIND_TITLE[kind]}
     >
       <span className="guides-callout__glyph" aria-hidden>
-        {KIND_GLYPH[kind]}
+        <LocalizedText>{KIND_GLYPH[kind]}</LocalizedText>
       </span>
       <div className="guides-callout__body">
-        <p className="guides-callout__title">{title ?? KIND_TITLE[kind]}</p>
+        <p className="guides-callout__title"><LocalizedText>{title ?? KIND_TITLE[kind]}</LocalizedText></p>
         <div className="guides-callout__content">{children}</div>
       </div>
-    </aside>
+    </aside></LocalizedAttributes>
   );
 }
 
@@ -59,17 +60,17 @@ export function GuideKeyTakeaways({
 }: GuideKeyTakeawaysProps) {
   if (!items || items.length === 0) return null;
   return (
-    <aside
+    <LocalizedAttributes><aside
       className={cn("guides-takeaways", className)}
       aria-label={title}
     >
-      <p className="guides-takeaways__title">{title}</p>
+      <p className="guides-takeaways__title"><LocalizedText>{title}</LocalizedText></p>
       <ul className="guides-takeaways__list">
         {items.map((item) => (
-          <li key={item}>{item}</li>
+          <li key={item}><LocalizedText>{item}</LocalizedText></li>
         ))}
       </ul>
-    </aside>
+    </aside></LocalizedAttributes>
   );
 }
 
@@ -80,8 +81,8 @@ export function GuideTakeawaysDisclosure({
   if (!items || items.length === 0) return null;
   return (
     <details className="guides-takeaways-disclosure">
-      <summary>Quando ti serve questa guida</summary>
-      <GuideKeyTakeaways title={title} items={items} />
+      <summary><LocalizedText>{"Quando ti serve questa guida"}</LocalizedText></summary>
+      <LocalizedAttributes><GuideKeyTakeaways title={title} items={items} /></LocalizedAttributes>
     </details>
   );
 }
@@ -119,22 +120,18 @@ export function GuideByline({
   return (
     <div className={cn("guides-byline", className)}>
       <span>
-        <strong>{author ?? "Team editoriale TooolVibes"}</strong> ha scritto
-        questa guida.
-      </span>
+        <strong><LocalizedText>{author ?? "Team editoriale TooolVibes"}</LocalizedText></strong><LocalizedText>{" ha scritto questa guida. "}</LocalizedText></span>
       {pub ? (
         <>
           <span className="guides-byline__dot" aria-hidden />
-          <span>
-            Pubblicata il <strong>{pub}</strong>
+          <span><LocalizedText>{"Pubblicata il "}</LocalizedText><strong><LocalizedText>{pub}</LocalizedText></strong>
           </span>
         </>
       ) : null}
       {upd && upd !== pub ? (
         <>
           <span className="guides-byline__dot" aria-hidden />
-          <span>
-            Aggiornata il <strong>{upd}</strong>
+          <span><LocalizedText>{"Aggiornata il "}</LocalizedText><strong><LocalizedText>{upd}</LocalizedText></strong>
           </span>
         </>
       ) : null}
@@ -142,8 +139,7 @@ export function GuideByline({
         <>
           <span className="guides-byline__dot" aria-hidden />
           <span>
-            <strong>{readingMinutes}</strong> minuti di lettura
-          </span>
+            <strong>{readingMinutes}</strong><LocalizedText>{" minuti di lettura "}</LocalizedText></span>
         </>
       ) : null}
     </div>

@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import {
@@ -92,7 +93,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
   return (
     <div className="page-shell py-6">
       <div className="space-y-6">
-        <ControlCenterHeader
+        <LocalizedAttributes><ControlCenterHeader
           title="Affiliati"
           description="Approva candidature, assegna il referral e genera il QR."
           primaryHref="/admin/affiliate-links"
@@ -102,7 +103,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
             { label: "Approvati", value: runtime.approvedCount },
             { label: "Totali", value: requests.length },
           ]}
-        />
+        /></LocalizedAttributes>
         {status && statusLabels[status] ? (
           <ControlCenterNotice
             tone={
@@ -111,17 +112,15 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                 : "ok"
             }
           >
-            {statusLabels[status]}
+            <LocalizedText>{statusLabels[status]}</LocalizedText>
           </ControlCenterNotice>
         ) : null}
         <ControlCenterFilters items={viewLinks} active={activeView} />
         <section className="tv-cc-panel rounded-[var(--radius-xl)] p-6 sm:p-8">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-5 soft-divider">
             <div>
-              <p className="editorial-label">Area affiliati</p>
-              <h2 className="text-display-card mt-2 text-[1.58rem] sm:text-[1.82rem]">
-                Candidature ricevute
-              </h2>
+              <p className="editorial-label"><LocalizedText>{"Area affiliati"}</LocalizedText></p>
+              <h2 className="text-display-card mt-2 text-[1.58rem] sm:text-[1.82rem]"><LocalizedText>{"Candidature ricevute "}</LocalizedText></h2>
             </div>
             <div className="flex flex-wrap gap-2">
               {viewLinks.map((item) => (
@@ -134,7 +133,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                       activeView === item.value ? "rgba(106,60,255,0.12)" : undefined,
                   }}
                 >
-                  {item.label} ({item.count})
+                  <LocalizedText>{item.label}</LocalizedText> ({item.count})
                 </Link>
               ))}
             </div>
@@ -156,17 +155,16 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                     <div className="space-y-4">
                       <div className="flex flex-wrap items-center gap-3">
                         <h2 className="text-2xl">
-                          {request.first_name} {request.last_name}
+                          <LocalizedText>{request.first_name}</LocalizedText> <LocalizedText>{request.last_name}</LocalizedText>
                         </h2>
                         <StatusBadge status={request.status} />
                       </div>
 
                       <div className="grid gap-2 text-sm" style={{ color: "var(--muted)" }}>
-                        <p>Email: {request.email}</p>
-                        {request.brand_name ? <p>Brand: {request.brand_name}</p> : null}
+                        <p><LocalizedText>{"Email: "}</LocalizedText>{request.email}</p>
+                        {request.brand_name ? <p><LocalizedText>{"Brand: "}</LocalizedText><LocalizedText>{request.brand_name}</LocalizedText></p> : null}
                         {request.website_url ? (
-                          <p>
-                            Sito:{" "}
+                          <p><LocalizedText>{"Sito:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
                             <a
                               href={request.website_url}
                               target="_blank"
@@ -174,22 +172,21 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                               className="underline hover:no-underline"
                               style={{ color: "var(--accent-strong)" }}
                             >
-                              {request.website_url}
+                              <LocalizedText>{request.website_url}</LocalizedText>
                             </a>
                           </p>
                         ) : null}
-                        {request.audience ? <p>Audience: {request.audience}</p> : null}
-                        {request.channels ? <p>Canali: {request.channels}</p> : null}
-                        {request.message ? <p>Messaggio: {request.message}</p> : null}
+                        {request.audience ? <p><LocalizedText>{"Audience: "}</LocalizedText><LocalizedText>{request.audience}</LocalizedText></p> : null}
+                        {request.channels ? <p><LocalizedText>{"Canali: "}</LocalizedText><LocalizedText>{request.channels}</LocalizedText></p> : null}
+                        {request.message ? <p><LocalizedText>{"Messaggio: "}</LocalizedText><LocalizedText>{request.message}</LocalizedText></p> : null}
                         {request.admin_notes ? (
-                          <p>
-                            Note interne:{" "}
+                          <p><LocalizedText>{"Note interne:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
                             <span style={{ color: "var(--muted-strong)" }}>
-                              {request.admin_notes}
+                              <LocalizedText>{request.admin_notes}</LocalizedText>
                             </span>
                           </p>
                         ) : null}
-                        <p>Ricevuta: {formatItalianDate(request.created_at)}</p>
+                        <p><LocalizedText>{"Ricevuta: "}</LocalizedText><LocalizedText>{formatItalianDate(request.created_at)}</LocalizedText></p>
                       </div>
                     </div>
 
@@ -202,9 +199,8 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                             background: "rgba(57,210,246,0.10)",
                           }}
                         >
-                          <p className="editorial-label">Referral attivo</p>
-                          <p className="mt-2 text-sm">
-                            Codice: <strong>{request.referral_code}</strong>
+                          <p className="editorial-label"><LocalizedText>{"Referral attivo"}</LocalizedText></p>
+                          <p className="mt-2 text-sm"><LocalizedText>{"Codice: "}</LocalizedText><strong><LocalizedText>{request.referral_code}</LocalizedText></strong>
                           </p>
                           <a
                             href={request.referral_url}
@@ -213,23 +209,23 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                             className="mt-2 block break-all text-sm underline hover:no-underline"
                             style={{ color: "var(--accent-strong)" }}
                           >
-                            {request.referral_url}
+                            <LocalizedText>{request.referral_url}</LocalizedText>
                           </a>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                          <LocalizedAttributes><img
                             src={getAffiliateQrCodeUrl(request.referral_url, 220)}
                             alt={`QR code affiliato ${request.referral_code}`}
                             className="mt-4 size-[11rem] rounded-[18px] border bg-white p-2"
                             style={{ borderColor: "var(--line)" }}
-                          />
+                          /></LocalizedAttributes>
                         </div>
                       ) : null}
 
                       <form action={updateAffiliateRequestAction} className="space-y-3">
                         <input type="hidden" name="id" value={request.id} />
                         <label className="block">
-                          <span className="mb-2 block text-sm font-semibold">Codice referral</span>
-                          <input
+                          <span className="mb-2 block text-sm font-semibold"><LocalizedText>{"Codice referral"}</LocalizedText></span>
+                          <LocalizedAttributes><input
                             name="referral_code"
                             defaultValue={request.referral_code ?? ""}
                             placeholder="es. mattia-ai"
@@ -238,10 +234,10 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                               borderColor: "var(--line)",
                               background: "rgba(255,255,255,0.06)",
                             }}
-                          />
+                          /></LocalizedAttributes>
                         </label>
                         <label className="block">
-                          <span className="mb-2 block text-sm font-semibold">Note interne</span>
+                          <span className="mb-2 block text-sm font-semibold"><LocalizedText>{"Note interne"}</LocalizedText></span>
                           <textarea
                             name="admin_notes"
                             rows={3}
@@ -263,9 +259,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                               value="reviewing"
                               disabled={!runtime.canWrite}
                               className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-sm font-semibold  disabled:cursor-not-allowed disabled:opacity-55"
-                            >
-                              In revisione
-                            </button>
+                            ><LocalizedText>{"In revisione "}</LocalizedText></button>
                           ) : null}
                           <button
                             type="submit"
@@ -277,9 +271,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                               background:
                                 "linear-gradient(135deg, var(--accent-strong), var(--accent))",
                             }}
-                          >
-                            Approva
-                          </button>
+                          ><LocalizedText>{"Approva "}</LocalizedText></button>
                           <button
                             type="submit"
                             name="status"
@@ -289,9 +281,7 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
                             style={{
                               background: "linear-gradient(135deg, #9a4130, #7f2f22)",
                             }}
-                          >
-                            Rifiuta
-                          </button>
+                          ><LocalizedText>{"Rifiuta "}</LocalizedText></button>
                         </div>
                       </form>
 
@@ -307,10 +297,10 @@ export default async function AffiliatesPage({ searchParams }: AffiliatesPagePro
               ))}
             </div>
           ) : (
-            <AdminEmptyState
+            <LocalizedAttributes><AdminEmptyState
               title="Nessuna richiesta affiliato"
               description="Le candidature inviate dalla pagina pubblica affiliati appariranno qui."
-            />
+            /></LocalizedAttributes>
           )}
         </section>
       </div>

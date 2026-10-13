@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { Sparkles } from "lucide-react";
 import type { BattleVerdict, NormalisedTool } from "./tool-battle-shared";
 
@@ -45,7 +46,7 @@ export function CompareVerdictCard({
     verdict.state === "personal_verdict";
 
   return (
-    <article
+    <LocalizedAttributes><article
       className="compare-verdict-card"
       data-layout={layoutMode}
       data-state={verdict.state}
@@ -54,7 +55,7 @@ export function CompareVerdictCard({
     >
       <header className="compare-verdict-card__header">
         <Sparkles className="size-4" aria-hidden="true" />
-        <h3 className="compare-verdict-card__title">{headline}</h3>
+        <h3 className="compare-verdict-card__title"><LocalizedText>{headline}</LocalizedText></h3>
       </header>
 
       {showWinner && winner ? (
@@ -68,15 +69,15 @@ export function CompareVerdictCard({
         </p>
       ) : null}
 
-      <span className="compare-verdict-card__label">{verdict.label}</span>
+      <span className="compare-verdict-card__label"><LocalizedText>{verdict.label}</LocalizedText></span>
 
       <ul className="compare-verdict-card__reasons">
         {verdict.reasons.map((reason) => (
           <li key={reason} className="compare-verdict-card__reason">
-            {reason}
+            <LocalizedText>{reason}</LocalizedText>
           </li>
         ))}
       </ul>
-    </article>
+    </article></LocalizedAttributes>
   );
 }

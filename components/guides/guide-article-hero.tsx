@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { formatItalianDate } from "@/lib/utils";
 import type { EditorialPostRecord } from "@/lib/types/article";
 
@@ -54,22 +55,21 @@ export function GuideArticleHero({
     >
       <div className="guides-article__hero-main">
         <div className="guides-article__hero-meta">
-          <span className="pill pill--accent">Guida</span>
-          <span className="pill" data-guide-pill="topic">{topicLabel}</span>
-          <span className="pill" data-guide-pill="date">Pubblicata {published}</span>
+          <span className="pill pill--accent"><LocalizedText>{"Guida"}</LocalizedText></span>
+          <span className="pill" data-guide-pill="topic"><LocalizedText>{topicLabel}</LocalizedText></span>
+          <span className="pill" data-guide-pill="date"><LocalizedText>{"Pubblicata "}</LocalizedText><LocalizedText>{published}</LocalizedText></span>
           {showUpdated ? (
-            <span className="pill" data-guide-pill="updated">
-              Aggiornata {updated}
+            <span className="pill" data-guide-pill="updated"><LocalizedText>{"Aggiornata "}</LocalizedText><LocalizedText>{updated}</LocalizedText>
             </span>
           ) : null}
-          <span className="pill" data-guide-pill="time">{readingMinutes} min di lettura</span>
+          <span className="pill" data-guide-pill="time">{readingMinutes}<LocalizedText>{" min di lettura"}</LocalizedText></span>
         </div>
 
         <h1 id="guide-article-title" className="guides-article__hero-h1">
-          {post.title}
+          <LocalizedText>{post.title}</LocalizedText>
         </h1>
 
-        {post.dek ? <p className="guides-article__hero-dek">{post.dek}</p> : null}
+        {post.dek ? <p className="guides-article__hero-dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useState } from "react";
 import Link from "@/components/ui/app-link";
 
@@ -41,22 +42,18 @@ export function DecisionJourney() {
   const activeIndex = DECISION_LIFECYCLE.indexOf(activeId);
 
   return (
-    <div className="tv-decision-track def-cockpit__journey" aria-label="Percorso di decisione TooolVibes">
-      <p className="def-cockpit__journey-kicker">
-        Percorso di decisione
-        {savedCount > 0 || compareCount > 0 ? (
+    <LocalizedAttributes><div className="tv-decision-track def-cockpit__journey" aria-label="Percorso di decisione TooolVibes">
+      <p className="def-cockpit__journey-kicker"><LocalizedText>{"Percorso di decisione "}</LocalizedText>{savedCount > 0 || compareCount > 0 ? (
           <span className="def-cockpit__journey-live">
-            {compareCount > 0 ? `${compareCount} in confronto` : null}
-            {compareCount > 0 && savedCount > 0 ? " · " : null}
-            {savedCount > 0 ? `${savedCount} salvati` : null}
+            <LocalizedText>{compareCount > 0 ? `${compareCount} in confronto` : null}</LocalizedText>
+            <LocalizedText>{compareCount > 0 && savedCount > 0 ? " · " : null}</LocalizedText>
+            <LocalizedText>{savedCount > 0 ? `${savedCount} salvati` : null}</LocalizedText>
           </span>
         ) : (
-          <span className="def-cockpit__journey-live def-cockpit__journey-live--idle">
-            Inizia dal catalogo
-          </span>
+          <span className="def-cockpit__journey-live def-cockpit__journey-live--idle"><LocalizedText>{"Inizia dal catalogo "}</LocalizedText></span>
         )}
       </p>
-      <ol className="tv-decision-track__rail" aria-label="Cinque tappe">
+      <LocalizedAttributes><ol className="tv-decision-track__rail" aria-label="Cinque tappe">
         {DECISION_LIFECYCLE.map((stage, index) => {
           const done = index < activeIndex;
           const active = index === activeIndex;
@@ -74,22 +71,22 @@ export function DecisionJourney() {
                 onClick={() => setOverrideId(stage)}
               >
                 <span className="tv-decision-track__dot" aria-hidden="true" />
-                <strong>{DECISION_LIFECYCLE_LABELS[stage]}</strong>
+                <strong><LocalizedText>{DECISION_LIFECYCLE_LABELS[stage]}</LocalizedText></strong>
               </button>
             </li>
           );
         })}
-      </ol>
+      </ol></LocalizedAttributes>
       <div className="tv-decision-track__panel" role="status">
         <p>
-          <span className="tv-decision-track__hint">{DECISION_LIFECYCLE_HINTS[activeId]}</span>
-          {" "}
-          {DECISION_LIFECYCLE_COPY[activeId]}
+          <span className="tv-decision-track__hint"><LocalizedText>{DECISION_LIFECYCLE_HINTS[activeId]}</LocalizedText></span>
+          <LocalizedText>{" "}</LocalizedText>
+          <LocalizedText>{DECISION_LIFECYCLE_COPY[activeId]}</LocalizedText>
         </p>
         <Link href={DECISION_LIFECYCLE_HREFS[activeId]}>
-          {DECISION_LIFECYCLE_CTAS[activeId]}
+          <LocalizedText>{DECISION_LIFECYCLE_CTAS[activeId]}</LocalizedText>
         </Link>
       </div>
-    </div>
+    </div></LocalizedAttributes>
   );
 }

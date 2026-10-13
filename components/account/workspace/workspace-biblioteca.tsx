@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { useEffect, useMemo, useState } from "react";
 
@@ -155,14 +156,10 @@ export function WorkspaceBiblioteca({
     return (
       <section className="tv-lib tv-lib--empty">
         <WorkspaceEmptyMotif variant="library" />
-        <p className="tv-lib-kicker">Salvati</p>
-        <h2 className="tv-lib-title">Nessun tool salvato ancora</h2>
-        <p className="tv-lib-copy">
-          Qui vive la tua libreria software: un solo inventario, con relazione e prossimo passo.
-        </p>
-        <Link className="tv-lib-cta" href="/archivio">
-          Inizia dal catalogo
-        </Link>
+        <p className="tv-lib-kicker"><LocalizedText>{"Salvati"}</LocalizedText></p>
+        <h2 className="tv-lib-title"><LocalizedText>{"Nessun tool salvato ancora"}</LocalizedText></h2>
+        <p className="tv-lib-copy"><LocalizedText>{"Qui vive la tua libreria software: un solo inventario, con relazione e prossimo passo. "}</LocalizedText></p>
+        <Link className="tv-lib-cta" href="/archivio"><LocalizedText>{"Inizia dal catalogo "}</LocalizedText></Link>
       </section>
     );
   }
@@ -171,30 +168,30 @@ export function WorkspaceBiblioteca({
     <div className="tv-lib">
       <div className="tv-lib-toolbar">
         <label className="tv-lib-search">
-          <span className="tv-lib-field-label">Cerca</span>
-          <input
+          <span className="tv-lib-field-label"><LocalizedText>{"Cerca"}</LocalizedText></span>
+          <LocalizedAttributes><input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Nome del tool"
             aria-label="Cerca in Salvati"
-          />
+          /></LocalizedAttributes>
         </label>
         <label className="tv-lib-select">
-          <span className="tv-lib-field-label">Ordina</span>
-          <select
+          <span className="tv-lib-field-label"><LocalizedText>{"Ordina"}</LocalizedText></span>
+          <LocalizedAttributes><select
             aria-label="Ordina i salvati"
             value={sort}
             onChange={(event) => setSort(event.target.value as SalvatiSort)}
           >
             {SALVATI_SORTS.map((id) => (
               <option key={id} value={id}>
-                {SALVATI_SORT_LABELS[id]}
+                <LocalizedText>{SALVATI_SORT_LABELS[id]}</LocalizedText>
               </option>
             ))}
-          </select>
+          </select></LocalizedAttributes>
         </label>
         {filterIds.length > 0 ? (
-          <div className="tv-lib-filters" role="group" aria-label="Relazione">
+          <LocalizedAttributes><div className="tv-lib-filters" role="group" aria-label="Relazione">
             {filterIds.map((id) => {
               const count = library.filterCounts[id];
               return (
@@ -205,12 +202,12 @@ export function WorkspaceBiblioteca({
                   className={filter === id ? "is-active" : undefined}
                   onClick={() => setFilter(id)}
                 >
-                  {SALVATI_LIBRARY_FILTER_LABELS[id]}
+                  <LocalizedText>{SALVATI_LIBRARY_FILTER_LABELS[id]}</LocalizedText>
                   <span className="tv-lib-filter-n">{count}</span>
                 </button>
               );
             })}
-          </div>
+          </div></LocalizedAttributes>
         ) : null}
         {filtersActive ? (
           <button
@@ -220,16 +217,14 @@ export function WorkspaceBiblioteca({
               setQuery("");
               setFilter("tutti");
             }}
-          >
-            Azzera filtri
-          </button>
+          ><LocalizedText>{"Azzera filtri "}</LocalizedText></button>
         ) : null}
       </div>
 
       {visible.length === 0 ? (
-        <p className="tv-lib-copy">{personalSearchEmptyMessage(parsedQuery)}</p>
+        <p className="tv-lib-copy"><LocalizedText>{personalSearchEmptyMessage(parsedQuery)}</LocalizedText></p>
       ) : (
-        <ul className="tv-lib-list" aria-label="Libreria software">
+        <LocalizedAttributes><ul className="tv-lib-list" aria-label="Libreria software">
           {visible.map((item) => (
             <LibraryRow
               key={item.slug}
@@ -252,7 +247,7 @@ export function WorkspaceBiblioteca({
               }
             />
           ))}
-        </ul>
+        </ul></LocalizedAttributes>
       )}
 
       {decide ? (
@@ -327,17 +322,17 @@ function LibraryRow({
       <WorkspaceCatalogMark catalog={catalog} slug={item.slug} size="lg" />
       <div className="tv-lib-row__main">
         <Link className="tv-lib-name" href={`/toools/${item.slug}`}>
-          {name}
+          <LocalizedText>{name}</LocalizedText>
         </Link>
-        {descriptor ? <p className="tv-lib-desc">{descriptor}</p> : null}
+        {descriptor ? <p className="tv-lib-desc"><LocalizedText>{descriptor}</LocalizedText></p> : null}
         <p className="tv-lib-meta">
           <WorkspaceChip tone={item.reviewDue ? "revisit" : relationshipTone(item)}>
-            {statusLabel}
+            <LocalizedText>{statusLabel}</LocalizedText>
           </WorkspaceChip>
           {noteExcerpt ? (
-            <span className="tv-lib-note-excerpt" title={noteExcerpt}>
-              {noteExcerpt}
-            </span>
+            <LocalizedAttributes><span className="tv-lib-note-excerpt" title={noteExcerpt}>
+              <LocalizedText>{noteExcerpt}</LocalizedText>
+            </span></LocalizedAttributes>
           ) : null}
         </p>
         <WorkspaceFilo
@@ -355,45 +350,43 @@ function LibraryRow({
       <div className="tv-lib-quick">
         {primary.href ? (
           <Link className="tv-lib-cta tv-lib-cta--row" href={primary.href}>
-            {primary.label}
+            <LocalizedText>{primary.label}</LocalizedText>
           </Link>
         ) : (
           <button type="button" className="tv-lib-cta tv-lib-cta--row" onClick={handlePrimary}>
-            {primary.label}
+            <LocalizedText>{primary.label}</LocalizedText>
           </button>
         )}
         <details className="tv-lib-menu">
-          <summary aria-label={`Azioni per ${name}`}>⋯</summary>
+          <LocalizedAttributes><summary aria-label={`Azioni per ${name}`}>⋯</summary></LocalizedAttributes>
           <div className="tv-lib-menu__panel">
             {item.inCompare ? (
-              <span className="tv-lib-action tv-lib-action--status">Nel confronto</span>
+              <span className="tv-lib-action tv-lib-action--status"><LocalizedText>{"Nel confronto"}</LocalizedText></span>
             ) : null}
             {stackLine ? (
-              <span className="tv-lib-action tv-lib-action--status">{stackLine}</span>
+              <span className="tv-lib-action tv-lib-action--status"><LocalizedText>{stackLine}</LocalizedText></span>
             ) : null}
             {revisitLine ? (
-              <span className="tv-lib-action tv-lib-action--status">{revisitLine}</span>
+              <span className="tv-lib-action tv-lib-action--status"><LocalizedText>{revisitLine}</LocalizedText></span>
             ) : null}
             {formatWorkspaceDate(item.updatedAt) ? (
               <span className="tv-lib-action tv-lib-action--status">
-                {formatWorkspaceDate(item.updatedAt)}
+                <LocalizedText>{formatWorkspaceDate(item.updatedAt)}</LocalizedText>
               </span>
             ) : null}
             {item.pinned ? (
-              <span className="tv-lib-action tv-lib-action--status">Fisso</span>
+              <span className="tv-lib-action tv-lib-action--status"><LocalizedText>{"Fisso"}</LocalizedText></span>
             ) : null}
-            <Link className="tv-lib-action" href={`/toools/${item.slug}`}>
-              Apri
-            </Link>
+            <Link className="tv-lib-action" href={`/toools/${item.slug}`}><LocalizedText>{"Apri "}</LocalizedText></Link>
             {item.compareFull ? (
-              <span className="tv-lib-action tv-lib-action--status">Confronto pieno</span>
+              <span className="tv-lib-action tv-lib-action--status"><LocalizedText>{"Confronto pieno"}</LocalizedText></span>
             ) : (
               <button
                 type="button"
                 className="tv-lib-action"
                 onClick={() => toggleWorkspaceCompare(item.slug)}
               >
-                {item.inCompare ? "Togli dal confronto" : "Confronta"}
+                <LocalizedText>{item.inCompare ? "Togli dal confronto" : "Confronta"}</LocalizedText>
               </button>
             )}
             {primary.kind === "valuta" || primary.kind === "rivedi" ? null : (
@@ -402,7 +395,7 @@ function LibraryRow({
                 className="tv-lib-action"
                 onClick={() => onDecidi(item.outcome ?? "selected")}
               >
-                {item.reviewDue ? "Rivedi" : "Valuta"}
+                <LocalizedText>{item.reviewDue ? "Rivedi" : "Valuta"}</LocalizedText>
               </button>
             )}
             {showMarkStopped ? (
@@ -411,13 +404,13 @@ function LibraryRow({
                 className="tv-lib-action"
                 onClick={() => markWorkspaceToolStopped(item.slug)}
               >
-                {usageActionLabel("stopped")}
+                <LocalizedText>{usageActionLabel("stopped")}</LocalizedText>
               </button>
             ) : null}
             {showMarkReplaced && otherSaved.length > 0 ? (
               <label className="tv-lib-action tv-lib-action--field">
-                <span>{usageActionLabel("replaced")}</span>
-                <select
+                <span><LocalizedText>{usageActionLabel("replaced")}</LocalizedText></span>
+                <LocalizedAttributes><select
                   aria-label={usageActionLabel("replaced")}
                   defaultValue=""
                   onChange={(event) => {
@@ -427,18 +420,18 @@ function LibraryRow({
                     event.target.value = "";
                   }}
                 >
-                  <option value="">Sostituisci con</option>
+                  <option value=""><LocalizedText>{"Sostituisci con"}</LocalizedText></option>
                   {otherSaved.map((slug) => (
                     <option key={slug} value={slug}>
-                      {toolName(catalog, slug)}
+                      <LocalizedText>{toolName(catalog, slug)}</LocalizedText>
                     </option>
                   ))}
-                </select>
+                </select></LocalizedAttributes>
               </label>
             ) : null}
             {item.column === "rimandato" ? (
               <div className="tv-lib-action tv-lib-action--field">
-                <span>Quando rivedere</span>
+                <span><LocalizedText>{"Quando rivedere"}</LocalizedText></span>
                 <RevisitWhenChips
                   onSelect={(revisitAt) => deferWorkspaceTool(item.slug, revisitAt)}
                 />
@@ -450,22 +443,20 @@ function LibraryRow({
               compact
             />
             <button type="button" className="tv-lib-action" onClick={onToggleNote}>
-              {noteOpen ? "Chiudi nota" : item.note ? "Modifica nota" : "Aggiungi nota"}
+              <LocalizedText>{noteOpen ? "Chiudi nota" : item.note ? "Modifica nota" : "Aggiungi nota"}</LocalizedText>
             </button>
             <button
               type="button"
               className="tv-lib-action"
               onClick={() => setWorkspacePinned(item.slug, !item.pinned)}
             >
-              {item.pinned ? "Togli fisso" : "Fissa"}
+              <LocalizedText>{item.pinned ? "Togli fisso" : "Fissa"}</LocalizedText>
             </button>
             <button
               type="button"
               className="tv-lib-action tv-lib-action--danger"
               onClick={() => toggleWorkspaceSaved(item.slug)}
-            >
-              Rimuovi dai salvati
-            </button>
+            ><LocalizedText>{"Rimuovi dai salvati "}</LocalizedText></button>
           </div>
         </details>
       </div>
@@ -480,7 +471,7 @@ function LibraryRow({
           }}
         >
           <label>
-            <span className="sr-only">Nota su {name}</span>
+            <span className="sr-only"><LocalizedText>{"Nota su "}</LocalizedText><LocalizedText>{name}</LocalizedText></span>
             <textarea
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
@@ -489,12 +480,8 @@ function LibraryRow({
             />
           </label>
           <div className="tv-lib-note__actions">
-            <button type="submit" className="tv-lib-action">
-              Salva nota
-            </button>
-            <button type="button" className="tv-lib-action" onClick={onToggleNote}>
-              Annulla
-            </button>
+            <button type="submit" className="tv-lib-action"><LocalizedText>{"Salva nota "}</LocalizedText></button>
+            <button type="button" className="tv-lib-action" onClick={onToggleNote}><LocalizedText>{"Annulla "}</LocalizedText></button>
             {item.note ? (
               <button
                 type="button"
@@ -503,9 +490,7 @@ function LibraryRow({
                   setWorkspaceNote(item.slug, null);
                   onToggleNote();
                 }}
-              >
-                Elimina
-              </button>
+              ><LocalizedText>{"Elimina "}</LocalizedText></button>
             ) : null}
           </div>
         </form>

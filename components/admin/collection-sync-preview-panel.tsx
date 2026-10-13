@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { applyCollectionSafeAlignAction } from "@/app/(admin)/admin/actions/collections";
@@ -114,22 +115,16 @@ export function CollectionSyncPreviewPanel({
           <p
             className="text-sm font-semibold uppercase tracking-[0.18em]"
             style={{ color: "var(--muted)" }}
-          >
-            Anteprima riallineamento
-          </p>
-          <h3 className="text-xl">Nessun riallineamento proposto.</h3>
-          <p className="text-sm leading-7" style={{ color: "var(--muted)" }}>
-            Su questa raccolta non c&apos;è un confronto tra sorgente locale e archivio reale abbastanza definito da
-            trasformarsi in anteprima. O è già allineata, oppure manca uno dei due lati del confronto.
-          </p>
+          ><LocalizedText>{"Anteprima riallineamento "}</LocalizedText></p>
+          <h3 className="text-xl"><LocalizedText>{"Nessun riallineamento proposto."}</LocalizedText></h3>
+          <p className="text-sm leading-7" style={{ color: "var(--muted)" }}><LocalizedText>{"Su questa raccolta non c'è un confronto tra sorgente locale e archivio reale abbastanza definito da trasformarsi in anteprima. O è già allineata, oppure manca uno dei due lati del confronto. "}</LocalizedText></p>
         </div>
         {lastSafeAlign ? (
           <div
             className="mt-5 rounded-[18px] border px-4 py-3 text-sm"
             style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
-          >
-            Ultimo riallineamento registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} -{" "}
-            {lastSafeAlign.aligned_fields.join(", ")}
+          ><LocalizedText>{"Ultimo riallineamento registrato: "}</LocalizedText><LocalizedText>{new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")}</LocalizedText> -<LocalizedText>{" "}</LocalizedText>
+            <LocalizedText>{lastSafeAlign.aligned_fields.join(", ")}</LocalizedText>
           </div>
         ) : null}
       </section>
@@ -154,17 +149,15 @@ export function CollectionSyncPreviewPanel({
     <section className="tv-cc-panel">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="tv-cc-panel__kicker">Anteprima riallineamento</p>
-          <h2 className="tv-cc-panel__title">{compact ? "Anteprima del riallineamento" : "Cosa cambierebbe prima di toccare la sorgente reale"}</h2>
-          <p className="tv-cc-panel__desc">Pannello descrittivo: distingue i cambi prudenti da quelli che restano una decisione editoriale.</p>
+          <p className="tv-cc-panel__kicker"><LocalizedText>{"Anteprima riallineamento"}</LocalizedText></p>
+          <h2 className="tv-cc-panel__title"><LocalizedText>{compact ? "Anteprima del riallineamento" : "Cosa cambierebbe prima di toccare la sorgente reale"}</LocalizedText></h2>
+          <p className="tv-cc-panel__desc"><LocalizedText>{"Pannello descrittivo: distingue i cambi prudenti da quelli che restano una decisione editoriale."}</LocalizedText></p>
         </div>
         {detailHref ? (
           <Link
             href={detailHref}
             className="tv-cc-btn tv-cc-btn--secondary rounded-full px-4 py-2 text-sm font-semibold"
-          >
-            Vedi anteprima
-          </Link>
+          ><LocalizedText>{"Vedi anteprima "}</LocalizedText></Link>
         ) : null}
       </div>
 
@@ -173,13 +166,13 @@ export function CollectionSyncPreviewPanel({
           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
           style={postureStyles}
         >
-          {posture.label}
+          <LocalizedText>{posture.label}</LocalizedText>
         </span>
         <span
           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
           style={riskStyles}
         >
-          {riskMeta.label}
+          <LocalizedText>{riskMeta.label}</LocalizedText>
         </span>
         <span
           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
@@ -187,14 +180,12 @@ export function CollectionSyncPreviewPanel({
             borderColor: "rgba(112,82,255,0.16)",
             background: "rgba(106,60,255,0.14)",
           }}
-        >
-            Sorgente pubblica -&gt; {getSourceLabel(preview.public_winner)}
+        ><LocalizedText>{"Sorgente pubblica -> "}</LocalizedText><LocalizedText>{getSourceLabel(preview.public_winner)}</LocalizedText>
         </span>
         <span
           className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
           style={{ borderColor: "var(--line)", background: "rgba(255,255,255,0.06)" }}
-        >
-          Destinazione -&gt; {getSourceLabel(preview.target)}
+        ><LocalizedText>{"Destinazione -> "}</LocalizedText><LocalizedText>{getSourceLabel(preview.target)}</LocalizedText>
         </span>
       </div>
 
@@ -202,10 +193,10 @@ export function CollectionSyncPreviewPanel({
         className="mt-5 rounded-[22px] border px-4 py-4 text-sm"
         style={postureStyles}
       >
-        <p className="font-semibold">{previewMeta.label}</p>
-        <p className="mt-2 leading-7">{preview.summary}</p>
+        <p className="font-semibold"><LocalizedText>{previewMeta.label}</LocalizedText></p>
+        <p className="mt-2 leading-7"><LocalizedText>{preview.summary}</LocalizedText></p>
         <p className="mt-2 leading-7" style={{ color: "var(--muted-strong)" }}>
-          {previewMeta.description} {riskMeta.description} {posture.description}
+          <LocalizedText>{previewMeta.description}</LocalizedText> <LocalizedText>{riskMeta.description}</LocalizedText> <LocalizedText>{posture.description}</LocalizedText>
         </p>
       </div>
 
@@ -227,7 +218,7 @@ export function CollectionSyncPreviewPanel({
               className="text-xs font-semibold uppercase tracking-[0.18em]"
               style={{ color: "var(--muted)" }}
             >
-              {item.label}
+              <LocalizedText>{item.label}</LocalizedText>
             </p>
             <p className="mt-2 text-lg">{item.value}</p>
           </article>
@@ -239,9 +230,7 @@ export function CollectionSyncPreviewPanel({
           <p
             className="text-sm font-semibold uppercase tracking-[0.18em]"
             style={{ color: "var(--muted)" }}
-          >
-            Campi che cambierebbero
-          </p>
+          ><LocalizedText>{"Campi che cambierebbero "}</LocalizedText></p>
           <div className="grid gap-3">
             {preview.field_changes.map((change) => (
               <article
@@ -250,13 +239,13 @@ export function CollectionSyncPreviewPanel({
                 style={getChangeStyles(change.kind)}
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-semibold">{change.label}</p>
+                  <p className="font-semibold"><LocalizedText>{change.label}</LocalizedText></p>
                   <span className="rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.16em]" style={getChangeStyles(change.kind)}>
-                    {change.kind === "safe" ? "candidato al riallineamento" : "richiede decisione"}
+                    <LocalizedText>{change.kind === "safe" ? "candidato al riallineamento" : "richiede decisione"}</LocalizedText>
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted-strong)" }}>
-                  {change.summary}
+                  <LocalizedText>{change.summary}</LocalizedText>
                 </p>
                 {!compact ? (
                   <div className="mt-3 grid gap-3 lg:grid-cols-3">
@@ -274,7 +263,7 @@ export function CollectionSyncPreviewPanel({
                           className="text-xs font-semibold uppercase tracking-[0.18em]"
                           style={{ color: "var(--muted)" }}
                         >
-                          {field.label}
+                          <LocalizedText>{field.label}</LocalizedText>
                         </p>
                         <p className="mt-2 text-sm leading-6">{field.value}</p>
                       </div>
@@ -292,9 +281,7 @@ export function CollectionSyncPreviewPanel({
           <p
             className="text-sm font-semibold uppercase tracking-[0.18em]"
             style={{ color: "var(--muted)" }}
-          >
-            Spazi tool che cambierebbero
-          </p>
+          ><LocalizedText>{"Spazi tool che cambierebbero "}</LocalizedText></p>
           <div className="grid gap-3">
             {preview.slot_changes.map((change, index) => (
               <article
@@ -313,7 +300,7 @@ export function CollectionSyncPreviewPanel({
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-semibold">
-                    {change.label}: {change.tool_slug}
+                    <LocalizedText>{change.label}</LocalizedText>: <LocalizedText>{change.tool_slug}</LocalizedText>
                   </p>
                   <span
                     className="rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.16em]"
@@ -328,11 +315,11 @@ export function CollectionSyncPreviewPanel({
                           : "rgba(243,191,76,0.12)",
                     }}
                   >
-                    {change.risk === "high" ? "impatto alto" : "da rivedere"}
+                    <LocalizedText>{change.risk === "high" ? "impatto alto" : "da rivedere"}</LocalizedText>
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-7" style={{ color: "var(--muted-strong)" }}>
-                  {change.summary}
+                  <LocalizedText>{change.summary}</LocalizedText>
                 </p>
                 {!compact ? (
                   <div className="mt-3 grid gap-3 lg:grid-cols-2">
@@ -349,7 +336,7 @@ export function CollectionSyncPreviewPanel({
                           className="text-xs font-semibold uppercase tracking-[0.18em]"
                           style={{ color: "var(--muted)" }}
                         >
-                          {field.label}
+                          <LocalizedText>{field.label}</LocalizedText>
                         </p>
                         <p className="mt-2 text-sm leading-6">{field.value}</p>
                       </div>
@@ -380,9 +367,8 @@ export function CollectionSyncPreviewPanel({
         <div
           className="mt-6 rounded-[18px] border px-4 py-3 text-sm"
           style={{ borderColor: "rgba(112,82,255,0.14)", background: "rgba(106,60,255,0.14)" }}
-        >
-          Ultimo riallineamento registrato: {new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")} -{" "}
-          {lastSafeAlign.aligned_fields.join(", ")}
+        ><LocalizedText>{"Ultimo riallineamento registrato: "}</LocalizedText><LocalizedText>{new Date(lastSafeAlign.applied_at).toLocaleString("it-IT")}</LocalizedText> -<LocalizedText>{" "}</LocalizedText>
+          <LocalizedText>{lastSafeAlign.aligned_fields.join(", ")}</LocalizedText>
         </div>
       ) : null}
 
@@ -394,9 +380,9 @@ export function CollectionSyncPreviewPanel({
             : getToneStyles("warning")
         }
       >
-        <p className="font-semibold">{safeAlignEligibility.label}</p>
+        <p className="font-semibold"><LocalizedText>{safeAlignEligibility.label}</LocalizedText></p>
         <p className="mt-2 leading-7" style={{ color: "var(--muted-strong)" }}>
-          {safeAlignEligibility.description}
+          <LocalizedText>{safeAlignEligibility.description}</LocalizedText>
         </p>
 
         {safeAlignEligibility.eligible && canSafeAlign && collectionId && returnTo ? (
@@ -407,14 +393,12 @@ export function CollectionSyncPreviewPanel({
             <button
               type="submit"
               className="tv-cc-btn tv-cc-btn--primary rounded-full px-4 py-2 text-sm font-semibold text-white"
-            >
-              Applica riallineamento sicuro
-            </button>
+            ><LocalizedText>{"Applica riallineamento sicuro "}</LocalizedText></button>
           </form>
         ) : safeAlignEligibility.eligible ? (
           <p className="mt-4" style={{ color: "var(--muted)" }}>
-            {safeAlignMessage ??
-              "Riallineamento sicuro non disponibile in questa istanza: servono salvataggio e registro modifiche attivi."}
+            <LocalizedText>{safeAlignMessage ??
+              "Riallineamento sicuro non disponibile in questa istanza: servono salvataggio e registro modifiche attivi."}</LocalizedText>
           </p>
         ) : null}
       </div>

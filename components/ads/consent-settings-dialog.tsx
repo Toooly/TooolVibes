@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -114,22 +115,17 @@ export function ConsentSettingsDialog() {
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
-            <h2 id="consent-settings-title" className="text-base font-semibold">
-              Personalizza preferenze
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Scegli quali finalità autorizzi. Puoi modificare le preferenze in
-              qualsiasi momento dal footer.
-            </p>
+            <h2 id="consent-settings-title" className="text-base font-semibold"><LocalizedText>{"Personalizza preferenze "}</LocalizedText></h2>
+            <p className="text-sm text-muted-foreground"><LocalizedText>{"Scegli quali finalità autorizzi. Puoi modificare le preferenze in qualsiasi momento dal footer. "}</LocalizedText></p>
           </div>
-          <button
+          <LocalizedAttributes><button
             type="button"
             onClick={() => closeSettings()}
             aria-label="Chiudi preferenze"
             className="rounded-md p-2 text-muted-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
           >
             ✕
-          </button>
+          </button></LocalizedAttributes>
         </div>
 
         <div className="rounded-lg border border-border bg-muted/40 p-3">
@@ -139,13 +135,9 @@ export function ConsentSettingsDialog() {
                 htmlFor="consent-advertising-switch"
                 className="text-sm font-medium"
               >
-                {advertisingLabel}
+                <LocalizedText>{advertisingLabel}</LocalizedText>
               </label>
-              <p className="text-xs text-muted-foreground">
-                Consente a TinyAdz di mostrare pubblicità e relativi componenti
-                tecnici (per esempio rilevamento bot e misurazione). Attivo solo
-                dopo il consenso.
-              </p>
+              <p className="text-xs text-muted-foreground"><LocalizedText>{"Consente a TinyAdz di mostrare pubblicità e relativi componenti tecnici (per esempio rilevamento bot e misurazione). Attivo solo dopo il consenso. "}</LocalizedText></p>
             </div>
             <span
               className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-within:outline-2 focus-within:outline-ring focus-within:outline-offset-2"
@@ -182,23 +174,17 @@ export function ConsentSettingsDialog() {
             type="button"
             onClick={() => denyNonNecessary()}
             className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
-          >
-            Rifiuta non necessari
-          </button>
+          ><LocalizedText>{"Rifiuta non necessari "}</LocalizedText></button>
           <button
             type="button"
             onClick={() => grantAll()}
             className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
-          >
-            Accetta tutto
-          </button>
+          ><LocalizedText>{"Accetta tutto "}</LocalizedText></button>
           <button
             type="button"
             onClick={handleSave}
             className="rounded-md bg-transparent px-4 py-2 text-sm font-semibold text-foreground underline hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
-          >
-            Salva preferenze
-          </button>
+          ><LocalizedText>{"Salva preferenze "}</LocalizedText></button>
         </div>
       </div>
     </div>,

@@ -1,3 +1,6 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/locale-provider";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
@@ -132,6 +135,7 @@ export function GuideMarkdown({
   onHeadings,
   className,
 }: GuideMarkdownProps) {
+  const { markdown, t } = useLocale();
   const { processed, callouts, takeaways } = preprocessContent(content);
   const usedIds = new Set<string>();
 
@@ -179,6 +183,8 @@ export function GuideMarkdown({
     <div className={cn("guides-markdown-flow", className)}>
       {parts.map((part, idx) => {
         if (part.type === "md") {
+          const sourceHeadings = [...part.value.matchAll(/^#{1,3}\s+(.+)$/gm)].map((match) => match[1].trim());
+          let headingIndex = 0;
           return (
             <div
               key={`md-${idx}`}
@@ -190,17 +196,17 @@ export function GuideMarkdown({
                 components={{
                   h1: ({ children }) => {
                     // Surface as h2 in the article body, with stable id.
-                    const text = flattenText(children);
+                    const text = sourceHeadings[headingIndex++] ?? flattenText(children);
                     const id = ensureUnique(text, usedIds);
                     return <h2 id={id}>{children}</h2>;
                   },
                   h2: ({ children }) => {
-                    const text = flattenText(children);
+                    const text = sourceHeadings[headingIndex++] ?? flattenText(children);
                     const id = ensureUnique(text, usedIds);
                     return <h2 id={id}>{children}</h2>;
                   },
                   h3: ({ children }) => {
-                    const text = flattenText(children);
+                    const text = sourceHeadings[headingIndex++] ?? flattenText(children);
                     const id = ensureUnique(text, usedIds);
                     return <h3 id={id}>{children}</h3>;
                   },
@@ -220,7 +226,7 @@ export function GuideMarkdown({
                   ),
                 }}
               >
-                {part.value}
+                {markdown(part.value)}
               </ReactMarkdown>
             </div>
           );
@@ -233,12 +239,12 @@ export function GuideMarkdown({
           const c = callouts[idxNum];
           if (!c) return null;
           return (
-            <GuideCallout key={part.value} kind={c.kind} title={c.title}>
+            <GuideCallout key={part.value} kind={c.kind} title={c.title ? t(c.title) : undefined}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
               >
-                {c.body}
+                {markdown(c.body)}
               </ReactMarkdown>
             </GuideCallout>
           );

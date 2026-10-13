@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { cn } from "@/lib/utils";
@@ -39,7 +40,7 @@ export function CatalogoFacetHead({
   className,
 }: CatalogoFacetHeadProps) {
   return (
-    <nav
+    <LocalizedAttributes><nav
       className={cn("catalogo-facet", className)}
       aria-label="Lente Catalogo"
       data-catalogo-facet-nav=""
@@ -54,10 +55,10 @@ export function CatalogoFacetHead({
             aria-current={isCurrent ? "page" : undefined}
             data-catalogo-facet={facet.id}
           >
-            {facet.label}
+            <LocalizedText>{facet.label}</LocalizedText>
           </Link>
         );
       })}
-    </nav>
+    </nav></LocalizedAttributes>
   );
 }

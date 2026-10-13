@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { useMemo } from "react";
 
@@ -25,9 +26,7 @@ export function HomeRadarPulse() {
       aria-labelledby="tv-home-radar-title"
       aria-busy={isLoading || undefined}
     >
-      <h2 id="tv-home-radar-title" className="tv-home-title">
-        Dal Radar
-      </h2>
+      <h2 id="tv-home-radar-title" className="tv-home-title"><LocalizedText>{"Dal Radar "}</LocalizedText></h2>
       <ul className="tv-home-radar__tiles">
         {items.map((item) => {
           const tagline = (item.tagline ?? "").trim();
@@ -38,10 +37,10 @@ export function HomeRadarPulse() {
                 <span className="tv-home-tile__body">
                   <span className="tv-home-tile__name">{item.name}</span>
                   <span className="tv-home-tile__meta">
-                    {formatRadarSignal(item)}
+                    <LocalizedText>{formatRadarSignal(item)}</LocalizedText>
                   </span>
                   {tagline ? (
-                    <span className="tv-home-tile__tag">{tagline}</span>
+                    <span className="tv-home-tile__tag"><LocalizedText>{tagline}</LocalizedText></span>
                   ) : null}
                 </span>
                 <span className="tv-home-tile__arrow" aria-hidden="true">
@@ -53,9 +52,7 @@ export function HomeRadarPulse() {
         })}
       </ul>
       <div className="tv-home-actions">
-        <Link className="tv-home-textbtn" href="/radar">
-          Apri Radar
-        </Link>
+        <Link className="tv-home-textbtn" href="/radar"><LocalizedText>{"Apri Radar "}</LocalizedText></Link>
       </div>
     </section>
   );

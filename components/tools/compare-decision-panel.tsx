@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 /**
  * Wave 8 — Compare decision door.
  * Live Scegli/Scarta/Rimanda form is gone. This is a thin trigger that
@@ -155,17 +156,13 @@ export function CompareDecisionPanel({
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="editorial-label">Decisione dal confronto</p>
-          <h3 id={titleId} className="mt-1 text-base font-semibold">
-            Registra decisione
-          </h3>
+          <p className="editorial-label"><LocalizedText>{"Decisione dal confronto"}</LocalizedText></p>
+          <h3 id={titleId} className="mt-1 text-base font-semibold"><LocalizedText>{"Registra decisione "}</LocalizedText></h3>
           <p className="compare-decision-panel__context mt-1 text-xs">
-            {contextLabel} · {candidateNames}
+            <LocalizedText>{contextLabel}</LocalizedText> · <LocalizedText>{candidateNames}</LocalizedText>
           </p>
           <fieldset className="mt-3">
-            <legend className="text-xs font-semibold uppercase tracking-[0.15em]">
-              Quale scegli?
-            </legend>
+            <legend className="text-xs font-semibold uppercase tracking-[0.15em]"><LocalizedText>{"Quale scegli? "}</LocalizedText></legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {tools.map((tool) => (
                 <label
@@ -190,14 +187,12 @@ export function CompareDecisionPanel({
             type="button"
             className="compare-decision-panel__decide"
             onClick={() => onDecidi?.(chosenSlug)}
-          >
-            Decidi
-          </button>
+          ><LocalizedText>{"Decidi "}</LocalizedText></button>
           <Link
             href={`/toools/${focusTool.slug}`}
             className="compare-decision-panel__view"
           >
-            {`Vedi ${focusTool.name}`}
+            <LocalizedText>{`Vedi ${focusTool.name}`}</LocalizedText>
             <ArrowRight size={12} />
           </Link>
         </div>

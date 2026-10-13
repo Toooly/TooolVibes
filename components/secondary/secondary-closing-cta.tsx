@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -43,11 +44,11 @@ export function SecondaryClosingCTA({
     >
       <div className="secondary-closing__inner">
         <div>
-          <h2 className="secondary-closing__title">{title}</h2>
-          {body ? <p className="secondary-closing__body">{body}</p> : null}
+          <h2 className="secondary-closing__title"><LocalizedText>{title}</LocalizedText></h2>
+          {body ? <p className="secondary-closing__body"><LocalizedText>{body}</LocalizedText></p> : null}
         </div>
         {actions ? (
-          <div className="secondary-closing__actions">{actions}</div>
+          <div className="secondary-closing__actions"><LocalizedText>{actions}</LocalizedText></div>
         ) : null}
       </div>
     </section>

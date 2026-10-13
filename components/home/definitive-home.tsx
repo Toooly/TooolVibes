@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { HeroDecisionScope } from "@/components/home/hero-decision-scope";
 import { IntentEntry } from "@/components/home/intent-entry";
 import {
@@ -35,22 +36,14 @@ function Cockpit({
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
       <div className="def-cockpit__inner">
         <div className="def-cockpit__hero">
-          <h1
+          <LocalizedAttributes><h1
             id="def-cockpit-title"
             className="def-cockpit__title"
             aria-label="Scegli il tool giusto. Ricorda perché."
-          >
-            Scegli il tool giusto. Ricorda perché.
-          </h1>
+          ><LocalizedText>{"Scegli il tool giusto. Ricorda perché. "}</LocalizedText></h1></LocalizedAttributes>
           <p className="def-cockpit__lede">
-            <span className="def-cockpit__lede-desktop">
-              Recensioni indipendenti, confronti chiari e guide pratiche per il
-              tuo lavoro con l&apos;AI.
-            </span>
-            <span className="def-cockpit__lede-mobile">
-              Recensioni indipendenti, confronti chiari e guide pratiche per il
-              tuo lavoro con l&apos;AI.
-            </span>
+            <span className="def-cockpit__lede-desktop"><LocalizedText>{"Recensioni indipendenti, confronti chiari e guide pratiche per il tuo lavoro con l'AI. "}</LocalizedText></span>
+            <span className="def-cockpit__lede-mobile"><LocalizedText>{"Recensioni indipendenti, confronti chiari e guide pratiche per il tuo lavoro con l'AI. "}</LocalizedText></span>
           </p>
           {toolCount > 0 ? <IntentEntry /> : null}
         </div>
@@ -76,9 +69,9 @@ export function DefinitiveHome({
           <a href={announcement.href}>
             {announcement.image ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={announcement.image} alt="" className="def-home__announcement-media" />
+              <LocalizedAttributes><img src={announcement.image} alt="" className="def-home__announcement-media" /></LocalizedAttributes>
             ) : null}
-            <span>{announcement.text}</span>
+            <span><LocalizedText>{announcement.text}</LocalizedText></span>
           </a>
         </p>
       ) : null}
@@ -99,11 +92,11 @@ function SponsorSection({
   const placement = resolvePublicMonetizationPlacement(placementKey, { now });
   if (!placement) return null;
   return (
-    <section
+    <LocalizedAttributes><section
       className="def-home__sponsor tv-partner-signal"
       aria-label="Partner Experience"
     >
-      <p className="tv-partner-signal__label">Partner Experience · Sponsorizzato</p>
+      <p className="tv-partner-signal__label"><LocalizedText>{"Partner Experience · Sponsorizzato"}</LocalizedText></p>
       <div className="def-home__sponsor-frame tv-partner-signal__shell">
         <FeaturedPartner
           placementKey={placementKey}
@@ -114,7 +107,7 @@ function SponsorSection({
       <div className="def-home__sponsor-opportunity">
         <SponsorOpportunityLink placementId="home-sponsor-opportunity" route="/" />
       </div>
-    </section>
+    </section></LocalizedAttributes>
   );
 }
 

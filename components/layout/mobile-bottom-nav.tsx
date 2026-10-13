@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * TooolVibes — Mobile Bottom Nav
  * Dynamic chrome: expanded labels → compact icons-only on scroll-down,
@@ -238,7 +239,7 @@ export function MobileBottomNav() {
       )}
       data-state={chromeState}
     >
-      <nav
+      <LocalizedAttributes><nav
         ref={(node) => {
           innerRef.current = node;
         }}
@@ -271,7 +272,7 @@ export function MobileBottomNav() {
                   ? `${savedCount} tool salvati`
                   : undefined;
             return (
-              <Link
+              <LocalizedAttributes key={item.id}><Link
                 key={item.id}
                 href={item.href}
                 prefetch={false}
@@ -301,7 +302,7 @@ export function MobileBottomNav() {
                     />
                   ) : null}
                   {badgeCount > 0 ? (
-                    <motion.span
+                    <LocalizedAttributes key={badgeCount}><motion.span
                       key={badgeCount}
                       initial={preferReducedMotion ? false : { scale: 0.4, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
@@ -310,18 +311,18 @@ export function MobileBottomNav() {
                       aria-label={badgeAria}
                     >
                       {badgeCount}
-                    </motion.span>
+                    </motion.span></LocalizedAttributes>
                   ) : null}
                   {item.id === "radar" ? (
                     <span aria-hidden="true" className="mobile-bottom-item__node" />
                   ) : null}
                 </span>
-                <span className="mobile-bottom-item__label">{item.label}</span>
-              </Link>
+                <span className="mobile-bottom-item__label"><LocalizedText>{item.label}</LocalizedText></span>
+              </Link></LocalizedAttributes>
             );
           })}
         </div>
-      </nav>
+      </nav></LocalizedAttributes>
     </div>
   );
 

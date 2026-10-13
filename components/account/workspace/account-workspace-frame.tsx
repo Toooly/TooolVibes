@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -47,7 +48,7 @@ function WorkspaceInteriorNav({
     { href: "/account/settings", label: "Impostazioni", current: surface === "settings" },
   ];
   return (
-    <nav className="tv-space-switch" aria-label="Il tuo spazio">
+    <LocalizedAttributes><nav className="tv-space-switch" aria-label="Il tuo spazio">
       {items.map((item) => (
         <Link
           key={item.href}
@@ -56,10 +57,10 @@ function WorkspaceInteriorNav({
           aria-current={item.current ? "page" : undefined}
           className={item.current ? "is-current" : undefined}
         >
-          {item.label}
+          <LocalizedText>{item.label}</LocalizedText>
         </Link>
       ))}
-    </nav>
+    </nav></LocalizedAttributes>
   );
 }
 
@@ -74,16 +75,16 @@ function WorkspacePageHead({
   if (view === "riprendi") {
     return (
       <header className="tv-app__pagehead">
-        <p className="tv-app__page-kicker">Spazio</p>
-        <h1 className="tv-app__page-title">Bentornato 👋</h1>
-        <p className="tv-app__page-lede">Cosa vuoi fare oggi?</p>
+        <p className="tv-app__page-kicker"><LocalizedText>{"Spazio"}</LocalizedText></p>
+        <h1 className="tv-app__page-title"><LocalizedText>{"Bentornato 👋"}</LocalizedText></h1>
+        <p className="tv-app__page-lede"><LocalizedText>{"Cosa vuoi fare oggi?"}</LocalizedText></p>
       </header>
     );
   }
   return (
     <header className="tv-app__pagehead">
-      <p className="tv-app__page-kicker">{WORKSPACE_VIEW_KICKERS[view]}</p>
-      <h1 className="tv-app__page-title">{WORKSPACE_VIEW_LABELS[view]}</h1>
+      <p className="tv-app__page-kicker"><LocalizedText>{WORKSPACE_VIEW_KICKERS[view]}</LocalizedText></p>
+      <h1 className="tv-app__page-title"><LocalizedText>{WORKSPACE_VIEW_LABELS[view]}</LocalizedText></h1>
     </header>
   );
 }

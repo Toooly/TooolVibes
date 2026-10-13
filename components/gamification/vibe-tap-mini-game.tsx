@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import {
   type CSSProperties,
   type FormEvent,
@@ -321,14 +322,14 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
       setAwardState("saved");
       void queryClient.invalidateQueries({ queryKey: ["game-profile"] });
       void badgeMutation.mutateAsync().catch(() => undefined);
-      toast.success("XP salvati nel profilo", {
-        description: `+${xpDelta} XP. Livello ${nextProfile.level}.`,
+      toast.success(<LocalizedText>{"XP salvati nel profilo"}</LocalizedText>, {
+        description: <LocalizedText>{`+${xpDelta} XP. Livello ${nextProfile.level}.`}</LocalizedText>,
       });
     },
     onError: () => {
       setAwardState("error");
-      toast.error("XP non salvati", {
-        description: "La partita resta visibile qui. Riprova quando la sessione e stabile.",
+      toast.error(<LocalizedText>{"XP non salvati"}</LocalizedText>, {
+        description: <LocalizedText>{"La partita resta visibile qui. Riprova quando la sessione e stabile."}</LocalizedText>,
       });
     },
   });
@@ -393,8 +394,8 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
     }
 
     void celebrateMiniGame(finalScore, finalRank);
-    toast.success(finalRank.startsWith("S") ? "Vibe Rush dominato" : "Vibe Rush completato", {
-      description: `Grado ${finalRank} - ${finalScore} vibe in ${selectedMode.seconds} secondi.`,
+    toast.success(<LocalizedText>{finalRank.startsWith("S") ? "Vibe Rush dominato" : "Vibe Rush completato"}</LocalizedText>, {
+      description: <LocalizedText>{`Grado ${finalRank} - ${finalScore} vibe in ${selectedMode.seconds} secondi.`}</LocalizedText>,
     });
     awardRunToProfile(finalScore, finalXp);
   }, [
@@ -642,7 +643,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
 
   return (
     <>
-      <button
+      <LocalizedAttributes><button
         ref={launcherRef}
         type="button"
         className={cn("vibe-mini-launcher", className)}
@@ -654,18 +655,18 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
           <Play size={15} />
           {badge ? (
             <span className="vibe-mini-launcher__core-badge" aria-hidden="true">
-              {badge}
+              <LocalizedText>{badge}</LocalizedText>
             </span>
           ) : (
             <span aria-hidden="true" />
           )}
         </span>
-        <span className="vibe-mini-launcher__label">Vibe Rush</span>
-      </button>
+        <span className="vibe-mini-launcher__label"><LocalizedText>{"Vibe Rush"}</LocalizedText></span>
+      </button></LocalizedAttributes>
 
       <AnimatePresence>
         {open ? (
-          <motion.div
+          <LocalizedAttributes><motion.div
             className="vibe-mini-game"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -674,12 +675,12 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
             aria-modal="true"
             aria-label="Minigioco Vibe Rush"
           >
-            <button
+            <LocalizedAttributes><button
               type="button"
               className="vibe-mini-game__backdrop"
               aria-label="Chiudi minigioco"
               onClick={closeGame}
-            />
+            /></LocalizedAttributes>
             <motion.div
               ref={panelRef}
               className="vibe-mini-game__panel"
@@ -690,19 +691,19 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
             >
               <div className="vibe-mini-game__top">
                 <div>
-                  <p className="vibe-mini-game__eyebrow">Minigioco a tocchi</p>
-                  <h2>Vibe Rush</h2>
+                  <p className="vibe-mini-game__eyebrow"><LocalizedText>{"Minigioco a tocchi"}</LocalizedText></p>
+                  <h2><LocalizedText>{"Vibe Rush"}</LocalizedText></h2>
                 </div>
-                <button type="button" aria-label="Chiudi Vibe Rush" onClick={closeGame}>
+                <LocalizedAttributes><button type="button" aria-label="Chiudi Vibe Rush" onClick={closeGame}>
                   <X size={18} />
-                </button>
+                </button></LocalizedAttributes>
               </div>
 
               <span className="sr-only" aria-live="polite" aria-atomic="true">
-                {announcement}
+                <LocalizedText>{announcement}</LocalizedText>
               </span>
 
-              <div className="vibe-mini-game__modes" aria-label="Modalità Vibe Rush">
+              <LocalizedAttributes><div className="vibe-mini-game__modes" aria-label="Modalità Vibe Rush">
                 {GAME_MODES.map((mode) => (
                   <button
                     key={mode.id}
@@ -711,30 +712,26 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                     disabled={running}
                     onClick={() => setModeId(mode.id)}
                   >
-                    <span>{mode.label}</span>
-                    <small>{mode.seconds}s</small>
+                    <span><LocalizedText>{mode.label}</LocalizedText></span>
+                    <small>{mode.seconds}<LocalizedText>{"s"}</LocalizedText></small>
                   </button>
                 ))}
-              </div>
+              </div></LocalizedAttributes>
 
               <div className="vibe-mini-game__mode-card">
                 <div>
-                  <strong>{selectedMode.title}</strong>
-                  <span>{selectedMode.description}</span>
+                  <strong><LocalizedText>{selectedMode.title}</LocalizedText></strong>
+                  <span><LocalizedText>{selectedMode.description}</LocalizedText></span>
                 </div>
-                <em>{selectedMode.perk}</em>
+                <em><LocalizedText>{selectedMode.perk}</LocalizedText></em>
               </div>
 
               <div className="vibe-mini-game__stats">
-                <span>
-                  Punti <strong><NumberFlow value={score} /></strong>
+                <span><LocalizedText>{"Punti "}</LocalizedText><strong><NumberFlow value={score} /></strong>
                 </span>
-                <span>
-                  Riserva <strong><NumberFlow value={bank} /></strong>
+                <span><LocalizedText>{"Riserva "}</LocalizedText><strong><NumberFlow value={bank} /></strong>
                 </span>
-                <span data-combo={combo}>
-                  Combo <strong>x
-                    <span className="vibe-mini-game__combo">
+                <span data-combo={combo}><LocalizedText>{"Combo "}</LocalizedText><strong><LocalizedText>{"x "}</LocalizedText><span className="vibe-mini-game__combo">
                       <NumberFlow value={combo} />
                       <motion.span
                         key={combo}
@@ -750,8 +747,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                     </span>
                   </strong>
                 </span>
-                <span>
-                  Tempo <CircularTimer seconds={timeLeft} total={selectedMode.seconds} />
+                <span><LocalizedText>{"Tempo "}</LocalizedText><CircularTimer seconds={timeLeft} total={selectedMode.seconds} />
                 </span>
               </div>
 
@@ -760,16 +756,13 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                   <div className="vibe-mini-game__arena-hud">
                     <span>
                       <MousePointer2 size={13} />
-                      +{tapPower}/tocco
-                    </span>
+                      +{tapPower}<LocalizedText>{"/tocco "}</LocalizedText></span>
                     <span>
                       <Gauge size={13} />
-                      {autoPower}/s
-                    </span>
+                      {autoPower}<LocalizedText>{"/s "}</LocalizedText></span>
                     <span>
                       <Flame size={13} />
-                      {critChance}% doppio
-                    </span>
+                      {critChance}<LocalizedText>{"% doppio "}</LocalizedText></span>
                   </div>
 
                   <span
@@ -778,7 +771,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                   />
 
                   {running ? targets.map((target) => (
-                    <motion.button
+                    <LocalizedAttributes key={target.id}><motion.button
                       key={target.id}
                       type="button"
                       className="vibe-mini-game__target"
@@ -812,10 +805,10 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                       aria-label={`Bonus Vibe Rush ${target.id}`}
                     >
                       <Sparkles size={15} />
-                    </motion.button>
+                    </motion.button></LocalizedAttributes>
                   )) : null}
 
-                  <button
+                  <LocalizedAttributes><button
                     type="button"
                     className="vibe-mini-game__core-tap"
                     data-running={running}
@@ -828,9 +821,9 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                     <span className="vibe-mini-game__core-orb">
                       <Zap size={24} />
                     </span>
-                    <strong>Tocca il centro</strong>
-                    <small>{streak > 0 ? `Serie da ${streak}` : "Carica vibe"}</small>
-                  </button>
+                    <strong><LocalizedText>{"Tocca il centro"}</LocalizedText></strong>
+                    <small><LocalizedText>{streak > 0 ? `Serie da ${streak}` : "Carica vibe"}</LocalizedText></small>
+                  </button></LocalizedAttributes>
 
                   <AnimatePresence>
                     {floaters.map((f) => (
@@ -848,7 +841,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                         }
                         style={{ left: `${f.x}%`, top: `${f.y}%` } as CSSProperties}
                       >
-                        {f.label ? `${f.label} ` : null}+{f.value}
+                        <LocalizedText>{f.label ? `${f.label} ` : null}</LocalizedText>+{f.value}
                       </motion.span>
                     ))}
                   </AnimatePresence>
@@ -863,25 +856,22 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                       }}
                       onClick={startGame}
                     >
-                      <Rocket size={16} />
-                      Avvia {selectedMode.label}
+                      <Rocket size={16} /><LocalizedText>{"Avvia "}</LocalizedText><LocalizedText>{selectedMode.label}</LocalizedText>
                     </button>
                   ) : null}
 
                   {finished ? (
                     <div className="vibe-mini-game__result">
                       <span className="vibe-mini-game__result-title">
-                        {rank.startsWith("S") ? "Partita leggendaria" : "Partita completata"}
+                        <LocalizedText>{rank.startsWith("S") ? "Partita leggendaria" : "Partita completata"}</LocalizedText>
                       </span>
-                      <span className="vibe-mini-game__result-rank">
-                        Grado {rank}
+                      <span className="vibe-mini-game__result-rank"><LocalizedText>{"Grado "}</LocalizedText><LocalizedText>{rank}</LocalizedText>
                       </span>
                       <span className="vibe-mini-game__result-score">
-                        <NumberFlow value={score} /> vibe raccolti
-                      </span>
-                      <span className="vibe-mini-game__result-xp">+{xp} XP - Record {Math.max(bestScore, score)}</span>
+                        <NumberFlow value={score} /><LocalizedText>{" vibe raccolti "}</LocalizedText></span>
+                      <span className="vibe-mini-game__result-xp">+{xp}<LocalizedText>{" XP - Record "}</LocalizedText>{Math.max(bestScore, score)}</span>
                       <span className="vibe-mini-game__result-save" data-state={awardState}>
-                        {awardState === "saving"
+                        <LocalizedText>{awardState === "saving"
                           ? "Salvataggio XP in corso..."
                           : awardState === "saved"
                             ? `XP salvati nel profilo: +${awardedXp || xp}`
@@ -889,7 +879,7 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                               ? "XP non salvati. Riprova dalla tua area utente."
                               : awardState === "guest"
                                 ? "Accedi per salvare XP, progressione e reward."
-                                : "Completa la partita per salvare gli XP."}
+                                : "Completa la partita per salvare gli XP."}</LocalizedText>
                       </span>
                       <div className="vibe-mini-game__result-actions">
                         <button
@@ -901,27 +891,21 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                           }}
                           onClick={startGame}
                         >
-                          <Zap size={16} />
-                          Gioca ancora
-                        </button>
-                        <button type="button" className="vibe-mini-game__hint-btn" onClick={closeGame}>
-                          Chiudi
-                        </button>
+                          <Zap size={16} /><LocalizedText>{"Gioca ancora "}</LocalizedText></button>
+                        <button type="button" className="vibe-mini-game__hint-btn" onClick={closeGame}><LocalizedText>{"Chiudi "}</LocalizedText></button>
                       </div>
                       {!profile ? (
                         <form className="vibe-mini-game__signup" onSubmit={handleSignup}>
-                          <p>Salva progressi, XP e risultato nel tuo profilo TooolVibes.</p>
+                          <p><LocalizedText>{"Salva progressi, XP e risultato nel tuo profilo TooolVibes."}</LocalizedText></p>
                           <div>
-                            <input
+                            <LocalizedAttributes><input
                               type="email"
                               value={signupEmail}
                               onChange={(event) => setSignupEmail(event.target.value)}
                               placeholder="la tua email"
                               autoComplete="email"
-                            />
-                            <button type="submit" disabled={!signupEmail.trim()}>
-                              Registrati
-                            </button>
+                            /></LocalizedAttributes>
+                            <button type="submit" disabled={!signupEmail.trim()}><LocalizedText>{"Registrati "}</LocalizedText></button>
                           </div>
                         </form>
                       ) : null}
@@ -930,10 +914,10 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                 </div>
 
                 <aside className="vibe-mini-game__side">
-                  <section className="vibe-mini-game__upgrades" aria-label="Potenziamenti Vibe Rush">
+                  <LocalizedAttributes><section className="vibe-mini-game__upgrades" aria-label="Potenziamenti Vibe Rush">
                     <div className="vibe-mini-game__side-title">
                       <Rocket size={14} />
-                      <span>Potenziamenti</span>
+                      <span><LocalizedText>{"Potenziamenti"}</LocalizedText></span>
                     </div>
                     {UPGRADE_DEFINITIONS.map((definition) => {
                       const level = upgrades[definition.id];
@@ -948,56 +932,54 @@ export function VibeTapMiniGame({ className, badge }: VibeTapMiniGameProps) {
                           className="vibe-mini-game__upgrade"
                         >
                           <span>
-                            <strong>{definition.label}</strong>
-                            <small>{definition.description}</small>
+                            <strong><LocalizedText>{definition.label}</LocalizedText></strong>
+                            <small><LocalizedText>{definition.description}</LocalizedText></small>
                           </span>
-                          <em>{maxed ? "Massimo" : `${cost}`}</em>
+                          <em><LocalizedText>{maxed ? "Massimo" : `${cost}`}</LocalizedText></em>
                         </button>
                       );
                     })}
-                  </section>
+                  </section></LocalizedAttributes>
 
-                  <section className="vibe-mini-game__missions" aria-label="Missioni partita">
+                  <LocalizedAttributes><section className="vibe-mini-game__missions" aria-label="Missioni partita">
                     <div className="vibe-mini-game__side-title">
                       <Target size={14} />
-                      <span>Missioni</span>
+                      <span><LocalizedText>{"Missioni"}</LocalizedText></span>
                     </div>
                     <div className="vibe-mini-game__mission">
-                      <span>Obiettivo modalità</span>
+                      <span><LocalizedText>{"Obiettivo modalità"}</LocalizedText></span>
                       <strong><NumberFlow value={missionTargetScore} />/{selectedMode.target}</strong>
                       <i style={{ "--mission-progress": `${missionTargetScore / selectedMode.target}` } as CSSProperties} />
                     </div>
                     <div className="vibe-mini-game__mission">
-                      <span>Combo x8</span>
+                      <span><LocalizedText>{"Combo x8"}</LocalizedText></span>
                       <strong><NumberFlow value={missionCombo} />/8</strong>
                       <i style={{ "--mission-progress": `${missionCombo / 8}` } as CSSProperties} />
                     </div>
                     <div className="vibe-mini-game__mission">
-                      <span>3 potenziamenti</span>
+                      <span><LocalizedText>{"3 potenziamenti"}</LocalizedText></span>
                       <strong><NumberFlow value={missionUpgrades} />/3</strong>
                       <i style={{ "--mission-progress": `${missionUpgrades / 3}` } as CSSProperties} />
                     </div>
-                  </section>
+                  </section></LocalizedAttributes>
 
-                  <section className="vibe-mini-game__facts" aria-label="Dati della partita">
+                  <LocalizedAttributes><section className="vibe-mini-game__facts" aria-label="Dati della partita">
                     <div className="vibe-mini-game__side-title">
                       <ShieldCheck size={14} />
-                      <span>Dati partita</span>
+                      <span><LocalizedText>{"Dati partita"}</LocalizedText></span>
                     </div>
-                    <span><Timer size={13} /> {selectedMode.seconds}s a disposizione</span>
-                    <span><Trophy size={13} /> Record {bestScore}</span>
-                    <span><Flame size={13} /> Grado attuale {rank}</span>
-                  </section>
+                    <span><Timer size={13} /> {selectedMode.seconds}<LocalizedText>{"s a disposizione"}</LocalizedText></span>
+                    <span><Trophy size={13} /><LocalizedText>{" Record "}</LocalizedText>{bestScore}</span>
+                    <span><Flame size={13} /><LocalizedText>{" Grado attuale "}</LocalizedText><LocalizedText>{rank}</LocalizedText></span>
+                  </section></LocalizedAttributes>
                 </aside>
               </div>
 
               {!running && !finished ? (
-                <p className="vibe-mini-game__hint">
-                  Scegli una modalità, tocca il centro, compra potenziamenti e completa le missioni.
-                </p>
+                <p className="vibe-mini-game__hint"><LocalizedText>{"Scegli una modalità, tocca il centro, compra potenziamenti e completa le missioni. "}</LocalizedText></p>
               ) : null}
             </motion.div>
-          </motion.div>
+          </motion.div></LocalizedAttributes>
         ) : null}
       </AnimatePresence>
     </>

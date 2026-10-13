@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useState } from "react";
 
 import {
@@ -39,13 +40,13 @@ export function WorkspaceFilo({
   if (!label && !noteExcerpt) return null;
 
   const noteLine = noteExcerpt ? (
-    <p className="tv-filo-note">Nota: {noteExcerpt}</p>
+    <p className="tv-filo-note"><LocalizedText>{"Nota: "}</LocalizedText><LocalizedText>{noteExcerpt}</LocalizedText></p>
   ) : null;
 
   if (events.length === 0) {
     return (
       <div className="tv-filo-snapshot">
-        {label ? <p className="tv-filo-l2">{label}</p> : null}
+        {label ? <p className="tv-filo-l2"><LocalizedText>{label}</LocalizedText></p> : null}
         {noteLine}
       </div>
     );
@@ -57,7 +58,7 @@ export function WorkspaceFilo({
       open={open}
       onToggle={(event) => setOpen(event.currentTarget.open)}
     >
-      <summary className="tv-filo__summary">{label}</summary>
+      <summary className="tv-filo__summary"><LocalizedText>{label}</LocalizedText></summary>
       <div className="tv-filo-events">
         {noteLine}
         {events.map((event) => {
@@ -65,9 +66,9 @@ export function WorkspaceFilo({
           return (
             <div key={event.id} className="tv-filo-event">
               {human.date ? (
-                <span className="tv-filo-event__date">{human.date}</span>
+                <span className="tv-filo-event__date"><LocalizedText>{human.date}</LocalizedText></span>
               ) : null}
-              <span className="tv-filo-event__line">{human.line}</span>
+              <span className="tv-filo-event__line"><LocalizedText>{human.line}</LocalizedText></span>
             </div>
           );
         })}

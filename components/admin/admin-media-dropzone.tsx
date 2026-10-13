@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useRef, useState } from "react";
 
 import { mediaFileRejection } from "@/lib/admin/media-mime";
@@ -103,11 +104,9 @@ export function AdminMediaDropzone({
           void takeFiles(event.dataTransfer.files);
         }}
       >
-        <p className="text-sm font-semibold">Trascina qui le immagini</p>
-        <p className="tv-cc-card__meta">JPEG, PNG, WebP o GIF. Massimo 8 MB. Puoi anche selezionarle.</p>
-        <button type="button" className="tv-cc-btn tv-cc-btn--primary" onClick={() => inputRef.current?.click()}>
-          Scegli file
-        </button>
+        <p className="text-sm font-semibold"><LocalizedText>{"Trascina qui le immagini"}</LocalizedText></p>
+        <p className="tv-cc-card__meta"><LocalizedText>{"JPEG, PNG, WebP o GIF. Massimo 8 MB. Puoi anche selezionarle."}</LocalizedText></p>
+        <button type="button" className="tv-cc-btn tv-cc-btn--primary" onClick={() => inputRef.current?.click()}><LocalizedText>{"Scegli file "}</LocalizedText></button>
         <input
           ref={inputRef}
           type="file"
@@ -125,12 +124,12 @@ export function AdminMediaDropzone({
             <li key={job.id} className="tv-cc-panel">
               <div className="flex items-center justify-between gap-3 text-sm">
                 <span className="min-w-0 truncate">{job.name}</span>
-                <span className="tv-cc-card__meta">{job.error ? "errore" : `${job.progress}%`}</span>
+                <span className="tv-cc-card__meta"><LocalizedText>{job.error ? "errore" : `${job.progress}%`}</LocalizedText></span>
               </div>
               <div className="tv-cc-drop__meter" aria-hidden="true">
                 <span style={{ width: `${job.error ? 100 : job.progress}%` }} />
               </div>
-              {job.error ? <p className="mt-2 text-sm text-amber-200">{job.error}</p> : null}
+              {job.error ? <p className="mt-2 text-sm text-amber-200"><LocalizedText>{job.error}</LocalizedText></p> : null}
             </li>
           ))}
         </ul>

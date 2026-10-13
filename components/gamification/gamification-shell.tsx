@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import { usePathname } from "next/navigation";
 
 import { GameMissionDrawer } from "@/components/gamification/game-mission-drawer";
@@ -43,7 +44,7 @@ export function GamificationShell({
   }
 
   return (
-    <div
+    <LocalizedAttributes><div
       className="shell-floating-dock"
       data-testid="shell-floating-dock"
       data-overlay-open={isOverlayOpen ? "true" : "false"}
@@ -54,6 +55,6 @@ export function GamificationShell({
         <VibeTapMiniGame className="shell-floating-dock__vibe-rush" />
       ) : null}
       {missionsEnabled ? <GameMissionDrawer /> : null}
-    </div>
+    </div></LocalizedAttributes>
   );
 }

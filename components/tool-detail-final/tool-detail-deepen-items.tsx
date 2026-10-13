@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { FileText, Settings, Target, Scale, User, HelpCircle } from "lucide-react";
 
 type Panel = {
@@ -36,10 +37,10 @@ export function ToolDetailDeepenItems({ panels }: { panels: Panel[] }) {
                panel.id === "experience" ? <User size={16} /> :
                <HelpCircle size={16} />}
             </span>
-            <span>{panel.title}</span>
+            <span><LocalizedText>{panel.title}</LocalizedText></span>
             <span className="td-final-deepen__chevron" aria-hidden="true" />
           </summary>
-          <div className="td-final-deepen__panel">{panel.content}</div>
+          <div className="td-final-deepen__panel"><LocalizedText>{panel.content}</LocalizedText></div>
         </details>
       ))}
     </>

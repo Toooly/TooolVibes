@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 export function AdminEmptyState({
@@ -14,14 +15,14 @@ export function AdminEmptyState({
   return (
     <div className="tv-cc-card" style={{ textAlign: "center", justifyItems: "center" }}>
       <div>
-        <h2 className="tv-cc-card__title">{title}</h2>
+        <h2 className="tv-cc-card__title"><LocalizedText>{title}</LocalizedText></h2>
         <p className="tv-cc-card__meta" style={{ justifyContent: "center" }}>
-          {description}
+          <LocalizedText>{description}</LocalizedText>
         </p>
       </div>
       {ctaHref && ctaLabel ? (
         <Link href={ctaHref} className="tv-cc-btn tv-cc-btn--primary">
-          {ctaLabel}
+          <LocalizedText>{ctaLabel}</LocalizedText>
         </Link>
       ) : null}
     </div>

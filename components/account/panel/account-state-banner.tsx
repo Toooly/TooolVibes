@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -74,8 +75,8 @@ export function AccountStateBanner({
       <div className="flex items-start gap-2.5 text-left">
         <Icon size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
         <div className="min-w-0">
-          <p className="text-sm font-semibold">{cell.title}</p>
-          <p className="mt-1 text-sm leading-6">{cell.body}</p>
+          <p className="text-sm font-semibold"><LocalizedText>{cell.title}</LocalizedText></p>
+          <p className="mt-1 text-sm leading-6"><LocalizedText>{cell.body}</LocalizedText></p>
           {cell.action && onAction ? (
             <button
               type="button"
@@ -87,7 +88,7 @@ export function AccountStateBanner({
               onClick={() => onAction(cell.action?.id ?? "")}
             >
               <RotateCcw size={14} aria-hidden="true" />
-              {cell.action.label}
+              <LocalizedText>{cell.action.label}</LocalizedText>
             </button>
           ) : null}
         </div>

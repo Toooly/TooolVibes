@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useState } from "react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
@@ -65,7 +66,7 @@ export function ReadingProgressBar({
   const scale = Math.max(0, Math.min(1, progress));
 
   return (
-    <div
+    <LocalizedAttributes><div
       className={`reading-progress ${className}`.trim()}
       role="progressbar"
       aria-label="Progresso di lettura"
@@ -83,6 +84,6 @@ export function ReadingProgressBar({
             : `transform ${MOTION_DURATION_MS.fast}ms linear`,
         }}
       />
-    </div>
+    </div></LocalizedAttributes>
   );
 }

@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { AdminSaveBanner } from "@/components/admin/admin-save-banner";
@@ -19,28 +20,28 @@ export default async function AdminCampaignsPage({
     <div className="space-y-5">
       <AdminSaveBanner saved={params.saved} />
       <CommercialSubnav current="/admin/commercial/campaigns" />
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         kicker="Commercial"
         title="Campagne"
         description="Lista operativa. Apri una campagna per creatività e delivery."
         primaryHref="/admin/commercial/campaigns/new"
         primaryLabel="Nuova campagna"
         metrics={[{ label: "totali", value: campaigns.length }]}
-      />
+      /></LocalizedAttributes>
       {groups.map((bucket) => {
         const items = campaigns.filter((campaign) => campaignBucket(campaign) === bucket);
         if (items.length === 0) return null;
         return (
           <section key={bucket} className="tv-cc-panel">
-            <h2 className="tv-cc-panel__kicker">{CAMPAIGN_BUCKET_LABEL[bucket]}</h2>
+            <h2 className="tv-cc-panel__kicker"><LocalizedText>{CAMPAIGN_BUCKET_LABEL[bucket]}</LocalizedText></h2>
             <div className="mt-3 overflow-x-auto">
               <table className="tv-cc-table">
                 <thead>
                   <tr>
-                    <th>Campagna</th>
-                    <th>Partner</th>
-                    <th>Stato</th>
-                    <th>Peso</th>
+                    <th><LocalizedText>{"Campagna"}</LocalizedText></th>
+                    <th><LocalizedText>{"Partner"}</LocalizedText></th>
+                    <th><LocalizedText>{"Stato"}</LocalizedText></th>
+                    <th><LocalizedText>{"Peso"}</LocalizedText></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -48,13 +49,11 @@ export default async function AdminCampaignsPage({
                   {items.map((campaign) => (
                     <tr key={campaign.id}>
                       <td>{campaign.name}</td>
-                      <td className="is-muted">{campaign.sponsorId}</td>
-                      <td className="is-muted">{campaign.status}</td>
+                      <td className="is-muted"><LocalizedText>{campaign.sponsorId}</LocalizedText></td>
+                      <td className="is-muted"><LocalizedText>{campaign.status}</LocalizedText></td>
                       <td className="is-muted">{campaign.rotationWeight ?? 1}</td>
                       <td>
-                        <Link href={`/admin/commercial/campaigns/${campaign.id}`} className="tv-cc-btn tv-cc-btn--secondary">
-                          Apri
-                        </Link>
+                        <Link href={`/admin/commercial/campaigns/${campaign.id}`} className="tv-cc-btn tv-cc-btn--secondary"><LocalizedText>{"Apri "}</LocalizedText></Link>
                       </td>
                     </tr>
                   ))}

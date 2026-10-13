@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 import { useActionState } from "react";
 
@@ -30,11 +31,11 @@ function FieldError({ error }: { error?: string }) {
     return null;
   }
 
-  return <p className="tv-cc-error">{error}</p>;
+  return <p className="tv-cc-error"><LocalizedText>{error}</LocalizedText></p>;
 }
 
 function FieldLabel({ label }: { label: string }) {
-  return <span className="tv-cc-label">{label}</span>;
+  return <span className="tv-cc-label"><LocalizedText>{label}</LocalizedText></span>;
 }
 
 function FormSection({
@@ -51,10 +52,10 @@ function FormSection({
   return (
     <section className="tv-cc-panel">
       <div className="border-b pb-4 soft-divider">
-        <p className="tv-cc-panel__kicker">{eyebrow}</p>
-        <h2 className="tv-cc-panel__title">{title}</h2>
+        <p className="tv-cc-panel__kicker"><LocalizedText>{eyebrow}</LocalizedText></p>
+        <h2 className="tv-cc-panel__title"><LocalizedText>{title}</LocalizedText></h2>
         <p className="tv-cc-panel__desc">
-          {description}
+          <LocalizedText>{description}</LocalizedText>
         </p>
       </div>
       <div className="mt-5">{children}</div>
@@ -76,9 +77,9 @@ function ToggleCard({
   return (
     <label className="tv-cc-panel flex items-center justify-between gap-4">
       <div>
-        <p className="text-sm font-semibold">{title}</p>
+        <p className="text-sm font-semibold"><LocalizedText>{title}</LocalizedText></p>
         <p className="tv-cc-panel__desc">
-          {description}
+          <LocalizedText>{description}</LocalizedText>
         </p>
       </div>
       <input name={name} type="checkbox" defaultChecked={defaultChecked} className="h-5 w-5" />
@@ -108,19 +109,19 @@ export function ToolForm({
   return (
     <EditorShell dirty={dirty} onDirty={markDirty}>
     <form action={formAction} className="space-y-8" onChange={markDirty}>
-      <EditorHeader backHref={backHref} eyebrow="Tool" title={entityTitle || values.name || "Nuovo tool"} status={entityStatus} updatedAt={updatedAt} />
+      <LocalizedAttributes><EditorHeader backHref={backHref} eyebrow="Tool" title={entityTitle || values.name || "Nuovo tool"} status={entityStatus} updatedAt={updatedAt} /></LocalizedAttributes>
       {sourceRequestId ? (
         <input type="hidden" name="source_request_id" value={sourceRequestId} />
       ) : null}
 
       {state.status === "error" && state.message ? (
         <div className="tv-cc-notice tv-cc-notice--warn">
-          {state.message}
+          <LocalizedText>{state.message}</LocalizedText>
         </div>
       ) : null}
 
       <fieldset disabled={disabled} className="space-y-6 disabled:opacity-60">
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Identità"
           title="Nome, categoria e informazioni essenziali"
           description="Qui definisci nome, slug, categoria e provenienza del tool. Se questi campi sono chiari, il sito pubblico resta più coerente e l'archivio è più semplice da gestire."
@@ -139,12 +140,12 @@ export function ToolForm({
 
             <label className="block">
               <FieldLabel label="Slug" />
-              <input
+              <LocalizedAttributes><input
                 name="slug"
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal nome"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.slug} />
             </label>
 
@@ -157,7 +158,7 @@ export function ToolForm({
               >
                 {toolCategories.map((category) => (
                   <option key={category} value={category}>
-                    {category}
+                    <LocalizedText>{category}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -166,12 +167,12 @@ export function ToolForm({
 
             <label className="block">
               <FieldLabel label="Tag" />
-              <input
+              <LocalizedAttributes><input
                 name="tags"
                 defaultValue={values.tags}
                 placeholder="ai, automazione, scrittura"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.tags} />
             </label>
 
@@ -198,9 +199,9 @@ export function ToolForm({
               <FieldError error={state.fieldErrors?.date_discovered} />
             </label>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Testi"
           title="Come il tool si presenta nel prodotto"
           description="Questa parte alimenta catalogo, scheda tool e contenuti editoriali. Scrivi testi chiari, già pronti per chi scopre il tool dal sito."
@@ -256,25 +257,25 @@ export function ToolForm({
 
             <label className="block">
               <FieldLabel label="URL affiliato (opzionale)" />
-              <input
+              <LocalizedAttributes><input
                 name="affiliate_url"
                 type="url"
                 defaultValue={values.affiliate_url ?? undefined}
                 placeholder="Se presente, viene usato come link principale nel sito pubblico"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.affiliate_url} />
             </label>
 
             <label className="block lg:col-span-2">
               <FieldLabel label="URL immagine di copertina" />
-              <input
+              <LocalizedAttributes><input
                 type="url"
                 defaultValue={values.cover_image_url}
                 readOnly
                 aria-label="URL copertina selezionato"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.cover_image_url} />
               <div className="mt-4">
                 <FieldLabel label="Scegli dalla media library" />
@@ -282,38 +283,35 @@ export function ToolForm({
               </div>
             </label>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Visibilità"
           title="Pubblicazione e posizionamento"
           description="L'ultima decisione è sempre editoriale: quando il tool è pronto, puoi pubblicarlo nel catalogo o promuoverlo nei punti più forti della selezione."
         >
           <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
             <div className="tv-cc-panel">
-              <p className="text-sm font-semibold">Nota operativa</p>
-              <p className="tv-cc-panel__desc">
-                Il salvataggio avviene in modo protetto e il form mantiene i dati inseriti anche
-                se manca un campo o il servizio non risponde.
-              </p>
+              <p className="text-sm font-semibold"><LocalizedText>{"Nota operativa"}</LocalizedText></p>
+              <p className="tv-cc-panel__desc"><LocalizedText>{"Il salvataggio avviene in modo protetto e il form mantiene i dati inseriti anche se manca un campo o il servizio non risponde. "}</LocalizedText></p>
             </div>
 
             <div className="grid gap-4">
-              <ToggleCard
+              <LocalizedAttributes><ToggleCard
                 name="is_featured"
                 title="Tool in evidenza"
                 description="Mostralo nella selezione della redazione e nei punti più curati del prodotto."
                 defaultChecked={values.is_featured}
-              />
-              <ToggleCard
+              /></LocalizedAttributes>
+              <LocalizedAttributes><ToggleCard
                 name="is_published"
                 title="Pubblicato"
                 description="Rende il tool visibile nel sito pubblico e nelle aree di scoperta."
                 defaultChecked={values.is_published}
-              />
+              /></LocalizedAttributes>
             </div>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
       </fieldset>
 
       <EditorStickyBar dirty={dirty} label={submitLabel} disabled={disabled} error={state.status === "error" ? state.message : undefined} />

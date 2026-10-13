@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { getAffiliateRequestsRuntime } from "@/lib/admin/affiliate-request-queries";
@@ -58,21 +59,17 @@ export default async function AdminDashboardPage() {
   return (
     <div className="page-shell py-6 sm:py-8">
       <header className="admin-overview">
-        <p className="admin-kicker">Oggi</p>
+        <p className="admin-kicker"><LocalizedText>{"Oggi"}</LocalizedText></p>
         <div className="admin-overview__top">
-          <h1 className="admin-overview__title">Cosa richiede attenzione</h1>
+          <h1 className="admin-overview__title"><LocalizedText>{"Cosa richiede attenzione"}</LocalizedText></h1>
           <div className="admin-overview__cta">
-            <Link href="/admin/tools/new" className="admin-overview__primary">
-              Nuovo tool
-            </Link>
-            <Link href="/admin/articles/new" className="admin-overview__secondary">
-              Nuova guida
-            </Link>
+            <Link href="/admin/tools/new" className="admin-overview__primary"><LocalizedText>{"Nuovo tool "}</LocalizedText></Link>
+            <Link href="/admin/articles/new" className="admin-overview__secondary"><LocalizedText>{"Nuova guida "}</LocalizedText></Link>
           </div>
         </div>
 
         {readOnly ? (
-          <p className="admin-note admin-note--warn">Una o più aree sono in sola lettura.</p>
+          <p className="admin-note admin-note--warn"><LocalizedText>{"Una o più aree sono in sola lettura."}</LocalizedText></p>
         ) : null}
 
         {queue.length > 0 ? (
@@ -80,24 +77,24 @@ export default async function AdminDashboardPage() {
             {queue.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="admin-queue__item">
-                  <span>{item.label}</span>
+                  <span><LocalizedText>{item.label}</LocalizedText></span>
                   <span aria-hidden="true">→</span>
                 </Link>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="admin-overview__empty">Nessun blocco operativo. Puoi creare o rivedere i contenuti.</p>
+          <p className="admin-overview__empty"><LocalizedText>{"Nessun blocco operativo. Puoi creare o rivedere i contenuti."}</LocalizedText></p>
         )}
       </header>
 
       {activity.length > 0 ? (
         <section className="admin-activity">
-          <p className="admin-kicker">Attività recente</p>
+          <p className="admin-kicker"><LocalizedText>{"Attività recente"}</LocalizedText></p>
           <ul>
             {activity.map((event) => (
               <li key={event.at + event.action}>
-                {event.action} · {event.entity}
+                <LocalizedText>{event.action}</LocalizedText> · <LocalizedText>{event.entity}</LocalizedText>
                 {event.id ? ` · ${event.id}` : ""}
               </li>
             ))}
@@ -105,13 +102,13 @@ export default async function AdminDashboardPage() {
         </section>
       ) : null}
 
-      <nav className="admin-destinations" aria-label="Aree operative">
+      <LocalizedAttributes><nav className="admin-destinations" aria-label="Aree operative">
         {destinations.map((item) => (
           <Link key={item.href} href={item.href} className="admin-destinations__item">
-            {item.label}
+            <LocalizedText>{item.label}</LocalizedText>
           </Link>
         ))}
-      </nav>
+      </nav></LocalizedAttributes>
     </div>
   );
 }

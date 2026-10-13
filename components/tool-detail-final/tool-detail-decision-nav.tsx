@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { bindShellScroll, readingLine } from "@/lib/shell/scroll-port";
@@ -83,7 +84,7 @@ export function ToolDetailDecisionNav({
   if (!showDeepen && !showAlternatives) return null;
 
   return (
-    <nav className="td-final-decision-nav" aria-label="Sezioni della scheda">
+    <LocalizedAttributes><nav className="td-final-decision-nav" aria-label="Sezioni della scheda">
       {items.map((item) => {
         const selected = active === item.id;
         return (
@@ -100,10 +101,10 @@ export function ToolDetailDecisionNav({
               }, 700);
             }}
           >
-            {item.label}
+            <LocalizedText>{item.label}</LocalizedText>
           </a>
         );
       })}
-    </nav>
+    </nav></LocalizedAttributes>
   );
 }

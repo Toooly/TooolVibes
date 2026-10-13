@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useMemo } from "react";
 import NumberFlow from "@number-flow/react";
 import { useMachine } from "@xstate/react";
@@ -212,8 +213,8 @@ export function GameMissionPanel({
         awardedXp += mission.xp_reward;
       }
     } catch (error) {
-      toast.error("Impossibile riscattare", {
-        description: error instanceof Error ? error.message : "Riprova più tardi.",
+      toast.error(<LocalizedText>{"Impossibile riscattare"}</LocalizedText>, {
+        description: <LocalizedText>{error instanceof Error ? error.message : "Riprova più tardi."}</LocalizedText>,
       });
       return;
     }
@@ -223,8 +224,8 @@ export function GameMissionPanel({
 
     sendReward({ type: "CLAIM" });
     void fireRewardBurst(variant);
-    toast.success("Ricompensa sbloccata", {
-      description: `+${xpToAward} XP. Totale: ${totalXp} XP.`,
+    toast.success(<LocalizedText>{"Ricompensa sbloccata"}</LocalizedText>, {
+      description: <LocalizedText>{`+${xpToAward} XP. Totale: ${totalXp} XP.`}</LocalizedText>,
     });
   }
 
@@ -240,27 +241,25 @@ export function GameMissionPanel({
       <div className="game-mission-panel__topline">
         <span className="game-mission-panel__eyebrow">
           <Sparkles aria-hidden="true" />
-          {eyebrow}
+          <LocalizedText>{eyebrow}</LocalizedText>
         </span>
-        <span className="game-mission-panel__xp" aria-label={`${displayXp} XP totali`}>
-          XP
-          <strong>
+        <LocalizedAttributes><span className="game-mission-panel__xp" aria-label={`${displayXp} XP totali`}><LocalizedText>{"XP "}</LocalizedText><strong>
             <NumberFlow value={displayXp} />
           </strong>
-        </span>
+        </span></LocalizedAttributes>
       </div>
 
       <div className="game-mission-panel__intro">
         <div>
-          <h2>{title}</h2>
-          <p>{description}</p>
+          <h2><LocalizedText>{title}</LocalizedText></h2>
+          <p><LocalizedText>{description}</LocalizedText></p>
         </div>
-        <div className="game-mission-panel__progress" aria-label={`${totals.progressPercent}% completato`}>
+        <LocalizedAttributes><div className="game-mission-panel__progress" aria-label={`${totals.progressPercent}% completato`}>
           <NumberFlow value={totals.progressPercent} suffix="%" />
           <span>
             {totals.completed}/{totals.missionCount}
           </span>
-        </div>
+        </div></LocalizedAttributes>
       </div>
 
       <div className="game-mission-panel__meter" aria-hidden="true">
@@ -271,7 +270,7 @@ export function GameMissionPanel({
         {isLoading ? (
           <article className="game-mission">
             <span className="game-mission__copy">
-              <strong>Caricamento missioni…</strong>
+              <strong><LocalizedText>{"Caricamento missioni…"}</LocalizedText></strong>
             </span>
           </article>
         ) : (
@@ -286,8 +285,8 @@ export function GameMissionPanel({
                   {complete || claimed ? <CheckCircle2 aria-hidden="true" /> : <Icon aria-hidden="true" />}
                 </span>
                 <span className="game-mission__copy">
-                  <strong>{mission.title}</strong>
-                  <small>{mission.description}</small>
+                  <strong><LocalizedText>{mission.title}</LocalizedText></strong>
+                  <small><LocalizedText>{mission.description}</LocalizedText></small>
                 </span>
                 <span className="game-mission__score">
                   <NumberFlow value={Math.min(mission.progress, mission.target)} />
@@ -302,10 +301,9 @@ export function GameMissionPanel({
       <div className="game-mission-panel__footer">
         <span className="game-mission-panel__reward">
           <Trophy aria-hidden="true" />
-          <span>Ricompensa</span>
+          <span><LocalizedText>{"Ricompensa"}</LocalizedText></span>
           <strong>
-            <NumberFlow value={totals.rewardXp} prefix="+" /> XP
-          </strong>
+            <NumberFlow value={totals.rewardXp} prefix="+" /><LocalizedText>{" XP "}</LocalizedText></strong>
         </span>
         <button
           type="button"
@@ -315,19 +313,13 @@ export function GameMissionPanel({
         >
           {isClaimed ? (
             <>
-              <CheckCircle2 aria-hidden="true" />
-              Riscattata
-            </>
+              <CheckCircle2 aria-hidden="true" /><LocalizedText>{"Riscattata "}</LocalizedText></>
           ) : canClaim ? (
             <>
-              <Sparkles aria-hidden="true" />
-              Riscatta
-            </>
+              <Sparkles aria-hidden="true" /><LocalizedText>{"Riscatta "}</LocalizedText></>
           ) : (
             <>
-              <LockKeyhole aria-hidden="true" />
-              Bloccata
-            </>
+              <LockKeyhole aria-hidden="true" /><LocalizedText>{"Bloccata "}</LocalizedText></>
           )}
         </button>
       </div>

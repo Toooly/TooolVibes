@@ -1,3 +1,4 @@
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 
 import { MemberOnlyGate } from "@/components/account/member-only-gate";
@@ -25,12 +26,12 @@ export const metadata: Metadata = createPublicPageMetadata({
 
 export default function RadarPage() {
   return (
-    <MemberOnlyGate
+    <LocalizedAttributes><MemberOnlyGate
       kicker="Radar completo"
       title="Accedi per esplorare tutti i segnali"
       body="La preview in homepage è pubblica. Il Radar completo con mappa, trend, Per te e Watchlist è riservato ai membri."
     >
       <RadarExperience />
-    </MemberOnlyGate>
+    </MemberOnlyGate></LocalizedAttributes>
   );
 }

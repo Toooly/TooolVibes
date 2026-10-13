@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Image from "next/image";
 import Link from "@/components/ui/app-link";
 import { notFound } from "next/navigation";
@@ -128,19 +129,17 @@ export default async function AdminCollectionDetailPage({
   return (
     <div className="page-shell py-8 sm:py-10">
       <div className="space-y-6">
-        <ControlCenterHeader
+        <LocalizedAttributes><ControlCenterHeader
           kicker="Raccolte"
           title={collection.title}
           description="Segnali, continuità pubblica e modifica nello stesso punto."
           backHref="/admin/collections"
           backLabel="Torna alle raccolte"
           metrics={metrics.map((item) => ({ label: item.label, value: item.value }))}
-        />
-        {statusMessage ? <ControlCenterNotice tone="ok">{statusMessage}</ControlCenterNotice> : null}
+        /></LocalizedAttributes>
+        {statusMessage ? <ControlCenterNotice tone="ok"><LocalizedText>{statusMessage}</LocalizedText></ControlCenterNotice> : null}
         {!runtime.canWrite ? (
-          <ControlCenterNotice tone="warn">
-            La raccolta è leggibile, ma il salvataggio reale resta disattivato.
-          </ControlCenterNotice>
+          <ControlCenterNotice tone="warn"><LocalizedText>{"La raccolta è leggibile, ma il salvataggio reale resta disattivato. "}</LocalizedText></ControlCenterNotice>
         ) : null}
         <div className="mb-4 flex flex-wrap gap-2">
           {topActions.map((action) => (
@@ -149,7 +148,7 @@ export default async function AdminCollectionDetailPage({
               href={action.href}
               className={action.primary ? "tv-cc-btn tv-cc-btn--primary" : "tv-cc-btn tv-cc-btn--ghost"}
             >
-              {action.label}
+              <LocalizedText>{action.label}</LocalizedText>
             </Link>
           ))}
         </div>
@@ -158,29 +157,27 @@ export default async function AdminCollectionDetailPage({
           <aside className="space-y-6">
             <section className="tv-cc-panel overflow-hidden p-0">
               <div className="relative min-h-[16rem]">
-                <Image
+                <LocalizedAttributes><Image
                   src={collection.cover_image_url}
                   alt={collection.title}
                   fill
                   sizes="(max-width: 1280px) 100vw, 34vw"
                   className="object-cover"
-                />
+                /></LocalizedAttributes>
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,35,0.08),rgba(18,15,35,0.72))]" />
                 <div className="absolute left-5 top-5 flex flex-wrap gap-2">
                   <span className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(24,17,12,0.28)" }}>
-                    {stateMeta.label}
+                    <LocalizedText>{stateMeta.label}</LocalizedText>
                   </span>
                   <span className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white" style={{ borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.08)" }}>
-                    {surfaceMeta.label}
+                    <LocalizedText>{surfaceMeta.label}</LocalizedText>
                   </span>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/64">
-                    Anteprima interna
-                  </p>
-                  <h2 className="mt-2 text-[2rem] leading-tight text-white">{collection.title}</h2>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/64"><LocalizedText>{"Anteprima interna "}</LocalizedText></p>
+                  <h2 className="mt-2 text-[2rem] leading-tight text-white"><LocalizedText>{collection.title}</LocalizedText></h2>
                   <p className="mt-3 max-w-[32rem] text-sm leading-6 text-white/78">
-                    {collection.description}
+                    <LocalizedText>{collection.description}</LocalizedText>
                   </p>
                 </div>
               </div>
@@ -204,7 +201,7 @@ export default async function AdminCollectionDetailPage({
                     className="tv-cc-panel"
                   >
                     <p className="text-xs font-semibold uppercase tracking-[0.18em]" >
-                      {item.label}
+                      <LocalizedText>{item.label}</LocalizedText>
                     </p>
                     <p className="mt-2 text-sm" >
                       {item.value}
@@ -215,9 +212,7 @@ export default async function AdminCollectionDetailPage({
             </section>
 
             <section className="tv-cc-panel">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em]" >
-                Segnali e controlli
-              </p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em]" ><LocalizedText>{"Segnali e controlli "}</LocalizedText></p>
               <div className="mt-4 grid gap-3">
                 {warnings.length > 0 ? (
                   warnings.map((issue, index) => (
@@ -235,17 +230,15 @@ export default async function AdminCollectionDetailPage({
                             : "rgba(243,191,76,0.12)",
                       }}
                     >
-                      <strong>{issue.level === "error" ? "Errore" : "Avviso"}:</strong>{" "}
-                      {issue.message}
+                      <strong><LocalizedText>{issue.level === "error" ? "Errore" : "Avviso"}</LocalizedText>:</strong><LocalizedText>{" "}</LocalizedText>
+                      <LocalizedText>{issue.message}</LocalizedText>
                     </div>
                   ))
                 ) : (
                   <div
                     className="rounded-[20px] border px-4 py-3 text-sm"
                     style={{ borderColor: "rgba(15,118,110,0.18)", background: "rgba(57,210,246,0.12)" }}
-                  >
-                    Nessun segnale aperto su questa raccolta.
-                  </div>
+                  ><LocalizedText>{"Nessun segnale aperto su questa raccolta. "}</LocalizedText></div>
                 )}
               </div>
             </section>
@@ -266,9 +259,7 @@ export default async function AdminCollectionDetailPage({
             ) : null}
 
             <section className="tv-cc-panel">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em]" >
-                Tool inclusi
-              </p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em]" ><LocalizedText>{"Tool inclusi "}</LocalizedText></p>
               <div className="mt-4 grid gap-3">
                 {collection.included_tools.map((slot, index) => {
                   const tool = toolsBySlug.get(slot.tool_slug);
@@ -280,16 +271,14 @@ export default async function AdminCollectionDetailPage({
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="font-semibold">
-                          {String(index + 1).padStart(2, "0")} - {tool?.name ?? slot.tool_slug}
+                          <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText> - {tool?.name ?? slot.tool_slug}
                         </p>
                         {slot.featured ? (
-                          <span className="tv-cc-metric">
-                            Tool guida
-                          </span>
+                          <span className="tv-cc-metric"><LocalizedText>{"Tool guida "}</LocalizedText></span>
                         ) : null}
                       </div>
                       <p className="mt-2 text-sm" >
-                        {slot.role}
+                        <LocalizedText>{slot.role}</LocalizedText>
                       </p>
                       {slot.note ? (
                         <p className="mt-2 text-sm leading-6" >
@@ -322,7 +311,7 @@ export default async function AdminCollectionDetailPage({
                         : "rgba(57,210,246,0.12)",
                 }}
               >
-                <strong>{readiness.label}:</strong> {readiness.summary}
+                <strong><LocalizedText>{readiness.label}</LocalizedText>:</strong> <LocalizedText>{readiness.summary}</LocalizedText>
               </div>
             ) : null}
             <div id="sync-preview" className="mb-6">

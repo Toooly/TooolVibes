@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import * as React from "react"
 import Image from "next/image"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -31,9 +32,9 @@ function Avatar({ alt = "", className, fallback = "TV", size, src, ...props }: A
   return (
     <span data-slot="avatar" className={cn(avatarVariants({ size }), className)} {...props}>
       {src ? (
-        <Image src={src} alt={alt} fill sizes="48px" className="object-cover" />
+        <LocalizedAttributes><Image src={src} alt={alt} fill sizes="48px" className="object-cover" /></LocalizedAttributes>
       ) : (
-        <span aria-hidden={alt ? "true" : undefined}>{fallback.slice(0, 2).toUpperCase()}</span>
+        <span aria-hidden={alt ? "true" : undefined}><LocalizedText>{fallback.slice(0, 2).toUpperCase()}</LocalizedText></span>
       )}
     </span>
   )

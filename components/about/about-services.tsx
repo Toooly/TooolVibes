@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
@@ -42,11 +43,11 @@ function ServiceCard({
       className="v-about-service-card"
     >
       <div className="flex items-start justify-between gap-4">
-        <span className="v-about-service-icon">{service.icon}</span>
-        <span className="v-about-service-label">{service.label}</span>
+        <span className="v-about-service-icon"><LocalizedText>{service.icon}</LocalizedText></span>
+        <span className="v-about-service-label"><LocalizedText>{service.label}</LocalizedText></span>
       </div>
-      <h3 className="v-about-service-title">{service.title}</h3>
-      <p className="v-about-service-copy">{service.copy}</p>
+      <h3 className="v-about-service-title"><LocalizedText>{service.title}</LocalizedText></h3>
+      <p className="v-about-service-copy"><LocalizedText>{service.copy}</LocalizedText></p>
     </motion.article>
   );
 }
@@ -57,7 +58,7 @@ export function AboutServices({ services, children }: AboutServicesProps) {
   const rest = services.slice(2);
 
   return (
-    <div aria-label="Servizi offerti">
+    <LocalizedAttributes><div aria-label="Servizi offerti">
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {lead.map((service, index) => (
           <ServiceCard
@@ -69,7 +70,7 @@ export function AboutServices({ services, children }: AboutServicesProps) {
         ))}
         {rest.length > 0 ? (
           <details className="v-about-services-more sm:contents">
-            <summary>Altri servizi</summary>
+            <summary><LocalizedText>{"Altri servizi"}</LocalizedText></summary>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 sm:contents">
               {rest.map((service, index) => (
                 <ServiceCard
@@ -84,6 +85,6 @@ export function AboutServices({ services, children }: AboutServicesProps) {
         ) : null}
       </div>
       {children}
-    </div>
+    </div></LocalizedAttributes>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useMemo, useState } from "react";
 
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
@@ -118,7 +119,7 @@ export function DesktopCompareView({
   const objectiveLabel = ranking.objectiveLabel ?? null;
 
   return (
-    <section className="desktop-compare" aria-label="Confronto desktop">
+    <LocalizedAttributes><section className="desktop-compare" aria-label="Confronto desktop">
       <CompareWorkbenchIdentity
         tools={sorted}
         onRemove={toggleCompare}
@@ -179,6 +180,6 @@ export function DesktopCompareView({
       />
 
       {decideDoor.sheet}
-    </section>
+    </section></LocalizedAttributes>
   );
 }

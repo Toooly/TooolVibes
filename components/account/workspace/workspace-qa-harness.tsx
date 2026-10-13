@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -215,7 +216,7 @@ export function WorkspaceQaHarness({
                 <WorkspaceShell initialView={initialView} />
               </LoopShellProvider>
             ) : (
-              <p>Apertura spazio…</p>
+              <p><LocalizedText>{"Apertura spazio…"}</LocalizedText></p>
             )}
           </AccountPreviewProvider>
         </DiscoveryPersistenceProvider>
@@ -234,10 +235,10 @@ function LegacyStackQa() {
       data-legacy-stack-qa=""
       className="min-h-dvh bg-[var(--tv-bg)] p-6 text-[var(--tv-ink-primary)]"
     >
-      <p className="tv-auth-sheet__eyebrow">Stack locale</p>
-      <h1 className="font-heading text-xl">{name}</h1>
+      <p className="tv-auth-sheet__eyebrow"><LocalizedText>{"Stack locale"}</LocalizedText></p>
+      <h1 className="font-heading text-xl"><LocalizedText>{name}</LocalizedText></h1>
       <p className="text-sm text-[var(--tv-ink-secondary)]">
-        {leftover.personalStacks[0]?.slugs.join(", ") || "Cursor, Claude Code"}
+        <LocalizedText>{leftover.personalStacks[0]?.slugs.join(", ") || "Cursor, Claude Code"}</LocalizedText>
       </p>
       <button
         type="button"
@@ -250,9 +251,7 @@ function LegacyStackQa() {
             origin: "save-overflow",
           })
         }
-      >
-        Aggiungi Windsurf
-      </button>
+      ><LocalizedText>{"Aggiungi Windsurf "}</LocalizedText></button>
     </div>
   );
 }
@@ -278,7 +277,7 @@ function PersonalSearchQa({ guest }: { guest: boolean }) {
         onOpenChange={() => {}}
       />
       {!guest ? (
-        <p className="tv-auth-sheet__title">usage:using · note:yes · stack:AI Coding</p>
+        <p className="tv-auth-sheet__title"><LocalizedText>{"usage:using · note:yes · stack:AI Coding"}</LocalizedText></p>
       ) : null}
     </div>
   );
@@ -308,8 +307,8 @@ function RadarPersonalQa({ guest }: { guest: boolean }) {
         />
         {!guest ? (
           <div>
-            <p className="tv-radar-personal-reason__eyebrow">Per te</p>
-            <p className="tv-radar-personal-reason">È tornato nel Radar e lo stai già usando.</p>
+            <p className="tv-radar-personal-reason__eyebrow"><LocalizedText>{"Per te"}</LocalizedText></p>
+            <p className="tv-radar-personal-reason"><LocalizedText>{"È tornato nel Radar e lo stai già usando."}</LocalizedText></p>
           </div>
         ) : null}
       </AuthContinuationProvider>
@@ -339,10 +338,10 @@ function DeepCompareQa({ guest }: { guest: boolean }) {
         />
         {!guest ? (
           <div>
-            <p className="compare-personal__eyebrow">Il tuo contesto</p>
-            <p className="compare-personal__chip">In uso</p>
-            <p className="compare-personal__chip">Stack: AI Coding</p>
-            <p className="compare-personal__chip">Nota presente</p>
+            <p className="compare-personal__eyebrow"><LocalizedText>{"Il tuo contesto"}</LocalizedText></p>
+            <p className="compare-personal__chip"><LocalizedText>{"In uso"}</LocalizedText></p>
+            <p className="compare-personal__chip"><LocalizedText>{"Stack: AI Coding"}</LocalizedText></p>
+            <p className="compare-personal__chip"><LocalizedText>{"Nota presente"}</LocalizedText></p>
           </div>
         ) : null}
       </AuthContinuationProvider>

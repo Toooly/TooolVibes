@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import {
   BrainCircuit,
   Code2,
@@ -84,9 +85,7 @@ export function AboutPage() {
           status="Team operativo"
           density="hero"
         />
-        <h1 className="v-about-identity__title mt-5 max-w-[16ch] text-balance">
-          Persone vere, prodotti digitali vivi.
-        </h1>
+        <h1 className="v-about-identity__title mt-5 max-w-[16ch] text-balance"><LocalizedText>{"Persone vere, prodotti digitali vivi. "}</LocalizedText></h1>
       </header>
 
       {/* ─── Hero composition (client island — motion) ─── */}
@@ -98,25 +97,17 @@ export function AboutPage() {
       <section className="v-about-services-section relative mt-8 py-7 sm:mt-10 sm:py-9">
         <div className="relative grid gap-7 lg:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)] lg:items-start">
           <div className="lg:sticky lg:top-28">
-            <PremiumBadge tone="dark" className="after:!hidden">
-              I servizi che offriamo
-            </PremiumBadge>
-            <h2 className="mt-4 max-w-[14ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]">
-              Dal caos al sistema.
-            </h2>
+            <PremiumBadge tone="dark" className="after:!hidden"><LocalizedText>{"I servizi che offriamo "}</LocalizedText></PremiumBadge>
+            <h2 className="mt-4 max-w-[14ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]"><LocalizedText>{"Dal caos al sistema. "}</LocalizedText></h2>
             <p className="mt-5 max-w-[34rem] text-[length:var(--tv-text-body)] leading-[var(--tv-leading-body)] text-[var(--tv-grammar-institutional-ink-secondary)]">
-              {servicesIntroCopy}
+              <LocalizedText>{servicesIntroCopy}</LocalizedText>
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-              <PremiumLink href={contactEmailDestination.href} tone="primary" className="tv-cta-primary">
-                Raccontaci il progetto
-              </PremiumLink>
+              <PremiumLink href={contactEmailDestination.href} tone="primary" className="tv-cta-primary"><LocalizedText>{"Raccontaci il progetto "}</LocalizedText></PremiumLink>
               <a
                 href="#servizi"
                 className="v-about-secondary-cta"
-              >
-                Vedi servizi
-                <span aria-hidden="true" className="v-about-secondary-cta__arrow">→</span>
+              ><LocalizedText>{"Vedi servizi "}</LocalizedText><span aria-hidden="true" className="v-about-secondary-cta__arrow">→</span>
               </a>
             </div>
           </div>
@@ -130,20 +121,16 @@ export function AboutPage() {
       {/* ─── Feature cards ─── */}
       <section className="motion-stagger mt-6 grid gap-3 sm:mt-8 md:grid-cols-3">
         <div className="mb-2 md:col-span-3">
-          <PremiumBadge tone="accent" className="after:!hidden">
-            Come lavoriamo
-          </PremiumBadge>
-          <h2 className="mt-3 max-w-[18ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]">
-            Una rotta, non una pila di card.
-          </h2>
+          <PremiumBadge tone="accent" className="after:!hidden"><LocalizedText>{"Come lavoriamo "}</LocalizedText></PremiumBadge>
+          <h2 className="mt-3 max-w-[18ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]"><LocalizedText>{"Una rotta, non una pila di card. "}</LocalizedText></h2>
         </div>
         {aboutFeatures.map(([Icon, title, copy]) => (
           <article key={title} className="v-about-feature-card">
             <Icon className="v-about-feature-icon" aria-hidden="true" />
             <h3 className="mt-4 font-[family-name:var(--tv-font-family-ui)] text-[length:var(--tv-text-h3)] font-semibold leading-[var(--tv-leading-heading)] text-[var(--tv-ink-primary)]">
-              {title}
+              <LocalizedText>{title}</LocalizedText>
             </h3>
-            <p className="mt-2 text-sm leading-6 text-[var(--tv-ink-secondary)]">{copy}</p>
+            <p className="mt-2 text-sm leading-6 text-[var(--tv-ink-secondary)]"><LocalizedText>{copy}</LocalizedText></p>
           </article>
         ))}
       </section>
@@ -152,16 +139,12 @@ export function AboutPage() {
       <section className="v-about-cta-section mt-6 flex flex-col gap-4 sm:mt-8 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <PremiumBadge tone="accent" className="after:!hidden">
-            <ShieldCheck className="mr-1 inline size-3.5" aria-hidden="true" />
-            Una community che costruisce
-          </PremiumBadge>
+            <ShieldCheck className="mr-1 inline size-3.5" aria-hidden="true" /><LocalizedText>{"Una community che costruisce "}</LocalizedText></PremiumBadge>
           <p className="mt-3 max-w-[48rem] text-[length:var(--tv-text-body)] leading-[var(--tv-leading-body)] text-[var(--tv-ink-secondary)]">
-            {communityCopy}
+            <LocalizedText>{communityCopy}</LocalizedText>
           </p>
         </div>
-        <PremiumLink href="/community" tone="ghost" className="w-full shrink-0 sm:w-auto">
-          Entra nella community
-        </PremiumLink>
+        <PremiumLink href="/community" tone="ghost" className="w-full shrink-0 sm:w-auto"><LocalizedText>{"Entra nella community "}</LocalizedText></PremiumLink>
       </section>
     </div>
   );

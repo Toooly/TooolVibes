@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect } from "react";
 import Link from "@/components/ui/app-link";
 
@@ -44,12 +45,8 @@ function CompareAddLinks({
             ? "compare-workbench-chrome__cta compare-workbench-chrome__cta--primary"
             : "compare-workbench-chrome__cta"
         }
-      >
-        Aggiungi da Salvati
-      </Link>
-      <Link href="/archivio" className="compare-workbench-chrome__cta">
-        Apri il catalogo
-      </Link>
+      ><LocalizedText>{"Aggiungi da Salvati "}</LocalizedText></Link>
+      <Link href="/archivio" className="compare-workbench-chrome__cta"><LocalizedText>{"Apri il catalogo "}</LocalizedText></Link>
     </div>
   );
 }
@@ -63,9 +60,7 @@ function ChiudiConfronto({ onClear }: { onClear: () => void }) {
         consumeCompareDecision();
         onClear();
       }}
-    >
-      Chiudi confronto
-    </button>
+    ><LocalizedText>{"Chiudi confronto "}</LocalizedText></button>
   );
 }
 
@@ -79,15 +74,14 @@ export function CompareWorkbenchEmpty() {
         data-compare-workbench-state="closed"
         aria-labelledby="compare-workbench-empty-title"
       >
-        <h2 id="compare-workbench-empty-title">Confronto chiuso.</h2>
-        <p>La decisione è registrata.</p>
+        <h2 id="compare-workbench-empty-title"><LocalizedText>{"Confronto chiuso."}</LocalizedText></h2>
+        <p><LocalizedText>{"La decisione è registrata."}</LocalizedText></p>
         <div className="compare-workbench-chrome__actions">
           {closed.slug ? (
             <Link
               href={`/toools/${closed.slug}`}
               className="compare-workbench-chrome__cta compare-workbench-chrome__cta--primary"
-            >
-              Vedi {closed.name}
+            ><LocalizedText>{"Vedi "}</LocalizedText>{closed.name}
             </Link>
           ) : null}
         </div>
@@ -102,11 +96,8 @@ export function CompareWorkbenchEmpty() {
       data-compare-workbench-state="empty"
       aria-labelledby="compare-workbench-empty-title"
     >
-      <h2 id="compare-workbench-empty-title">Servono due strumenti.</h2>
-      <p>
-        Questo è un confronto temporaneo, non una libreria: serve per
-        scegliere, poi si chiude.
-      </p>
+      <h2 id="compare-workbench-empty-title"><LocalizedText>{"Servono due strumenti."}</LocalizedText></h2>
+      <p><LocalizedText>{"Questo è un confronto temporaneo, non una libreria: serve per scegliere, poi si chiude. "}</LocalizedText></p>
       <CompareAddLinks primary />
     </section>
   );
@@ -140,16 +131,14 @@ export function CompareWorkbenchPrep({
           size="sm"
         />
         <h2 id="compare-workbench-prep-title">{tool.name}</h2>
-        <button
+        <LocalizedAttributes><button
           type="button"
           className="compare-workbench-chrome__remove"
           onClick={() => onRemove(tool.slug)}
           aria-label={`Rimuovi ${tool.name} dal confronto`}
-        >
-          Rimuovi
-        </button>
+        ><LocalizedText>{"Rimuovi "}</LocalizedText></button></LocalizedAttributes>
       </div>
-      <p>Serve ancora uno strumento per confrontare.</p>
+      <p><LocalizedText>{"Serve ancora uno strumento per confrontare."}</LocalizedText></p>
       <CompareAddLinks />
       <ChiudiConfronto onClear={onClear} />
     </section>
@@ -189,19 +178,17 @@ export function CompareWorkbenchIdentity({
         data-count={tools.length}
       >
         <div className="compare-workbench-identity__bar">
-          <h2 className="compare-workbench-identity__title">{title}</h2>
+          <h2 className="compare-workbench-identity__title"><LocalizedText>{title}</LocalizedText></h2>
           <div className="compare-workbench-identity__meta">
             {atCap ? (
-              <p className="compare-workbench-identity__cap">5 su 5</p>
+              <p className="compare-workbench-identity__cap"><LocalizedText>{"5 su 5"}</LocalizedText></p>
             ) : null}
             {decisionEnabled ? (
               <button
                 type="button"
                 className="compare-workbench-identity__decide"
                 onClick={onDecidi}
-              >
-                Decidi
-              </button>
+              ><LocalizedText>{"Decidi "}</LocalizedText></button>
             ) : null}
             <CompareDeepEntry />
             <ChiudiConfronto onClear={onClear} />
@@ -218,14 +205,12 @@ export function CompareWorkbenchIdentity({
                 size="xs"
               />
               <span className="compare-workbench-identity__name">{tool.name}</span>
-              <button
+              <LocalizedAttributes><button
                 type="button"
                 className="compare-workbench-chrome__remove"
                 onClick={() => onRemove(tool.slug)}
                 aria-label={`Rimuovi ${tool.name} dal confronto`}
-              >
-                Rimuovi
-              </button>
+              ><LocalizedText>{"Rimuovi "}</LocalizedText></button></LocalizedAttributes>
             </li>
           ))}
         </ul>
@@ -235,9 +220,7 @@ export function CompareWorkbenchIdentity({
           type="button"
           className="compare-workbench-decide-jump"
           onClick={onDecidi}
-        >
-          Decidi
-        </button>
+        ><LocalizedText>{"Decidi "}</LocalizedText></button>
       ) : null}
     </>
   );

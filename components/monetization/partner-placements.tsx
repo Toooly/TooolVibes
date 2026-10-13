@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import {
   ArrowRight,
@@ -78,7 +79,7 @@ function isOpenSlotPlacement(
 function SponsorDisclosure({ text }: { text: string }) {
   return (
     <span className="partner-placement__disclosure" data-sponsored="true">
-      {text}
+      <LocalizedText>{text}</LocalizedText>
     </span>
   );
 }
@@ -99,7 +100,7 @@ export function SponsorOpenSlot({
       placementId={placement.placementId ?? placement.key}
       route={trackerRoute}
     >
-      <aside
+      <LocalizedAttributes><aside
         aria-label="Opportunità sponsor"
         className={cn(
           "partner-placement",
@@ -116,13 +117,8 @@ export function SponsorOpenSlot({
       >
         <div className="partner-open__editorial">
           <PartnerMeta formatLabel="Disponibile" disclosure={placement.label} showFormat />
-          <h2 className="partner-open__headline">
-            Il prossimo tool qui potrebbe essere il tuo.
-          </h2>
-          <p className="partner-open__lede">
-            Identità, messaggio e visual narrativo costruiti intorno al tuo
-            prodotto.
-          </p>
+          <h2 className="partner-open__headline"><LocalizedText>{"Il prossimo tool qui potrebbe essere il tuo. "}</LocalizedText></h2>
+          <p className="partner-open__lede"><LocalizedText>{"Identità, messaggio e visual narrativo costruiti intorno al tuo prodotto. "}</LocalizedText></p>
           <div className="partner-placement__action partner-open__action">
             <Link
               href="/sponsorizza"
@@ -140,16 +136,16 @@ export function SponsorOpenSlot({
                 }
               }}
             >
-              <span>Sponsorizza il tuo tool su TooolVibes</span>
+              <span><LocalizedText>{"Sponsorizza il tuo tool su TooolVibes"}</LocalizedText></span>
               <ArrowUpRight aria-hidden="true" />
             </Link>
           </div>
-          <p className="partner-open__cue partner-open__kicker" data-typography="metadata">Partner Experience curate da TooolVibes</p>
+          <p className="partner-open__cue partner-open__kicker" data-typography="metadata"><LocalizedText>{"Partner Experience curate da TooolVibes"}</LocalizedText></p>
         </div>
         <div className="partner-open__visual" aria-hidden="true">
           <OpenSlotPreviewCreative />
         </div>
-      </aside>
+      </aside></LocalizedAttributes>
     </SponsorImpressionTracker>
   );
 }
@@ -180,7 +176,7 @@ export function SponsorOpportunityLink({
         }
       }}
     >
-      <span>Vuoi presentare il tuo tool qui?</span>
+      <span><LocalizedText>{"Vuoi presentare il tuo tool qui?"}</LocalizedText></span>
       <ArrowRight size={12} aria-hidden="true" style={{ marginLeft: "var(--tv-space-micro-xs)", verticalAlign: "middle" }} />
     </Link>
   );
@@ -199,7 +195,7 @@ function PartnerMeta({
     <div className="partner-placement__meta">
       <SponsorDisclosure text={disclosure} />
       {showFormat && formatLabel ? (
-        <span className="partner-placement__format">{formatLabel}</span>
+        <span className="partner-placement__format"><LocalizedText>{formatLabel}</LocalizedText></span>
       ) : null}
     </div>
   );
@@ -213,8 +209,8 @@ function PartnerEditorial({
 }) {
   return (
     <div className="partner-placement__editorial">
-      <h2>{placement.title}</h2>
-      <p>{placement.editorialReason}</p>
+      <h2><LocalizedText>{placement.title}</LocalizedText></h2>
+      <p><LocalizedText>{placement.editorialReason}</LocalizedText></p>
     </div>
   );
 }
@@ -243,7 +239,7 @@ function PartnerAction({
           variant === "secondary" && "partner-placement__action--secondary",
         )}
       >
-        <span>{placement.ctaLabel}</span>
+        <span><LocalizedText>{placement.ctaLabel}</LocalizedText></span>
         <ArrowUpRight aria-hidden="true" />
       </Link>
     </div>
@@ -333,8 +329,8 @@ export function FeaturedPartner({
         <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-stage__editorial">
           <PartnerMeta disclosure={placement.label} />
-          <h2 className="partner-stage__headline">{placement.title}</h2>
-          <p className="partner-stage__lede">{placement.editorialReason}</p>
+          <h2 className="partner-stage__headline"><LocalizedText>{placement.title}</LocalizedText></h2>
+          <p className="partner-stage__lede"><LocalizedText>{placement.editorialReason}</LocalizedText></p>
           <div className="partner-placement__cta-row partner-stage__cta-row">
             <SponsorClickHandler
               {...trackerProps}
@@ -408,8 +404,8 @@ export function PartnerEditorialInsert({
         <span className="partner-luminous__halo" aria-hidden="true" />
         <div className="partner-insert__main">
           <PartnerMeta disclosure={placement.label} />
-          <h2 className="partner-insert__headline">{placement.title}</h2>
-          <p className="partner-insert__lede">{placement.editorialReason}</p>
+          <h2 className="partner-insert__headline"><LocalizedText>{placement.title}</LocalizedText></h2>
+          <p className="partner-insert__lede"><LocalizedText>{placement.editorialReason}</LocalizedText></p>
           <SponsorClickHandler
             {...trackerProps}
             destination={placement.partner.href}

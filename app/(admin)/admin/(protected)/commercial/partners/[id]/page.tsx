@@ -1,3 +1,4 @@
+import { LocalizedAttributes } from "@/components/i18n/localized-text";
 import { notFound } from "next/navigation";
 
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";
@@ -16,13 +17,13 @@ export default async function AdminEditPartnerPage({
   return (
     <div className="space-y-5">
       <CommercialSubnav current="/admin/commercial/partners" />
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         kicker="Commercial"
         title={partner.name}
         description="Modifica identità e asset del partner."
         backHref="/admin/commercial/partners"
         backLabel="Torna ai partner"
-      />
+      /></LocalizedAttributes>
       <ManagedPartnerForm partner={partner} />
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { LocaleProvider } from "@/components/i18n/locale-provider";
 
 import { GlobalCommandPalette } from "@/components/app/global-command-palette";
 import { GlobalExperienceLayer } from "@/components/app/global-experience-layer";
@@ -59,6 +60,7 @@ export function RootProviders({
   );
 
   return (
+    <LocaleProvider>
     <PublicToolCatalogProvider tools={toolCatalog}>
       <ExperienceReleaseProvider
       audioEnabled={enableAudio}
@@ -98,5 +100,6 @@ export function RootProviders({
       </GamificationReleaseProvider>
       </ExperienceReleaseProvider>
     </PublicToolCatalogProvider>
+    </LocaleProvider>
   );
 }

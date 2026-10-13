@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { ArrowRight } from "lucide-react";
 
@@ -40,23 +41,17 @@ export async function CollectionAntiRecommendationV4({
       aria-labelledby="cx-anti-rec-title"
     >
       <header className="cx-anti-rec-v4__head">
-        <span className="cx-anti-rec-v4__eyebrow">
-          Onestà editoriale
-        </span>
-        <h2 id="cx-anti-rec-title" className="cx-anti-rec-v4__title">
-          Quando NON sceglierei questo stack
-        </h2>
+        <span className="cx-anti-rec-v4__eyebrow"><LocalizedText>{"Onestà editoriale "}</LocalizedText></span>
+        <h2 id="cx-anti-rec-title" className="cx-anti-rec-v4__title"><LocalizedText>{"Quando NON sceglierei questo stack "}</LocalizedText></h2>
       </header>
 
       {ar.not_for && (
-        <p className="cx-anti-rec-v4__body">{ar.not_for}</p>
+        <p className="cx-anti-rec-v4__body"><LocalizedText>{ar.not_for}</LocalizedText></p>
       )}
 
       {lookInstead.length > 0 && (
         <div className="cx-anti-rec-v4__instead">
-          <span className="cx-anti-rec-v4__instead-label">
-            Vai invece a
-          </span>
+          <span className="cx-anti-rec-v4__instead-label"><LocalizedText>{"Vai invece a "}</LocalizedText></span>
           <ul className="cx-anti-rec-v4__instead-list">
             {lookInstead.map((alt) => (
               <li
@@ -68,11 +63,11 @@ export async function CollectionAntiRecommendationV4({
                   className="cx-anti-rec-v4__instead-link"
                 >
                   <span className="cx-anti-rec-v4__instead-name">
-                    {alt.title}
+                    <LocalizedText>{alt.title}</LocalizedText>
                   </span>
                   {alt.stack_meta?.concise_promise && (
                     <span className="cx-anti-rec-v4__instead-promise">
-                      {alt.stack_meta.concise_promise}
+                      <LocalizedText>{alt.stack_meta.concise_promise}</LocalizedText>
                     </span>
                   )}
                   <ArrowRight

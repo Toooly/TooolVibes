@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { usePathname } from "next/navigation";
 import { useCommercialNow } from "@/components/monetization/commercial-clock";
@@ -40,29 +41,26 @@ export function SiteFooterV2() {
         <div className="tv-utility__identity">
           <Link href="/" className="tv-utility__brand">
             <BrandLogo size={36} fallback="png" />
-            <span className="tv-utility__wordmark">TooolVibes</span>
+            <span className="tv-utility__wordmark"><LocalizedText>{"TooolVibes"}</LocalizedText></span>
           </Link>
-          <p className="tv-utility__summary">
-            Il sistema decisionale per scegliere software con criterio,
-            non l&apos;ennesima directory di tool.
-          </p>
+          <p className="tv-utility__summary"><LocalizedText>{"Il sistema decisionale per scegliere software con criterio, non l'ennesima directory di tool. "}</LocalizedText></p>
         </div>
 
-        <nav aria-label="Navigazione del sito" className="tv-utility__nav">
+        <LocalizedAttributes><nav aria-label="Navigazione del sito" className="tv-utility__nav">
           <div className="tv-utility__group">
-            <h3>Esplora</h3>
+            <h3><LocalizedText>{"Esplora"}</LocalizedText></h3>
             <ul>
               {productLinks.map((link) => (
                 <li key={link.id}>
                   <Link href={link.href} className="tv-utility__link">
-                    {link.label}
+                    <LocalizedText>{link.label}</LocalizedText>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
           <div className="tv-utility__group">
-            <h3>TooolVibes</h3>
+            <h3><LocalizedText>{"TooolVibes"}</LocalizedText></h3>
             <ul>
               {companyLinks.map((link) => (
                 <li key={link.id}>
@@ -75,22 +73,20 @@ export function SiteFooterV2() {
                         : undefined
                     }
                   >
-                    {link.label}
+                    <LocalizedText>{link.label}</LocalizedText>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-        </nav>
+        </nav></LocalizedAttributes>
 
         <div className="tv-utility__service">
           <a
             href={contactEmailDestination.href}
             className="tv-utility__contact"
           >
-            <Mail size={14} aria-hidden="true" />
-            Scrivici
-          </a>
+            <Mail size={14} aria-hidden="true" /><LocalizedText>{"Scrivici "}</LocalizedText></a>
         </div>
 
         <div className="tv-utility__legal">
@@ -100,22 +96,17 @@ export function SiteFooterV2() {
               href={link.href}
               className="tv-utility__legal-link"
             >
-              {link.label}
+              <LocalizedText>{link.label}</LocalizedText>
             </Link>
           ))}
           <ConsentFooterLink />
         </div>
 
         <details className="tv-utility__disclosure">
-          <summary>Trasparenza e affiliazioni</summary>
-          <p className="tv-utility__disclosure-body">
-            Alcuni link su TooolVibes sono link affiliati. Se acquisti tramite
-            questi collegamenti, potremmo ricevere una commissione, senza costi
-            aggiuntivi per te. Le partnership commerciali non determinano le
-            valutazioni editoriali.
-          </p>
+          <summary><LocalizedText>{"Trasparenza e affiliazioni"}</LocalizedText></summary>
+          <p className="tv-utility__disclosure-body"><LocalizedText>{"Alcuni link su TooolVibes sono link affiliati. Se acquisti tramite questi collegamenti, potremmo ricevere una commissione, senza costi aggiuntivi per te. Le partnership commerciali non determinano le valutazioni editoriali. "}</LocalizedText></p>
         </details>
-        <p className="tv-utility__mark">TOOOLVIBES · {year}</p>
+        <p className="tv-utility__mark"><LocalizedText>{"TOOOLVIBES · "}</LocalizedText>{year}</p>
       </div>
     </footer>
   );

@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { ArrowRight } from "lucide-react";
 
@@ -71,43 +72,41 @@ export function CollectionDetailHeroV4({
         {/* ZONE 1 — IDENTITY */}
         <div className="cx-detail-hero-v4__identity">
           <div className="cx-detail-hero-v4__eyebrow">
-            <Link href="/collections" className="cx-detail-hero-v4__breadcrumb">
-              ← Tutte le raccolte
-            </Link>
+            <Link href="/collections" className="cx-detail-hero-v4__breadcrumb"><LocalizedText>{"← Tutte le raccolte "}</LocalizedText></Link>
             <span className="cx-detail-hero-v4__group">
-              {groupLabel?.toUpperCase()}
+              <LocalizedText>{groupLabel?.toUpperCase()}</LocalizedText>
             </span>
             {areaLabel && (
               <>
                 <span className="cx-detail-hero-v4__dot" aria-hidden="true">
                   ·
                 </span>
-                <span className="cx-detail-hero-v4__area">{areaLabel}</span>
+                <span className="cx-detail-hero-v4__area"><LocalizedText>{areaLabel}</LocalizedText></span>
               </>
             )}
           </div>
 
-          <h1 className="cx-detail-hero-v4__title">{collection.title}</h1>
+          <h1 className="cx-detail-hero-v4__title"><LocalizedText>{collection.title}</LocalizedText></h1>
 
           {collection.stack_meta?.concise_promise && (
             <p className="cx-detail-hero-v4__promise">
-              {collection.stack_meta.concise_promise}
+              <LocalizedText>{collection.stack_meta.concise_promise}</LocalizedText>
             </p>
           )}
 
           {job && (
-            <p className="cx-detail-hero-v4__job">{job}</p>
+            <p className="cx-detail-hero-v4__job"><LocalizedText>{job}</LocalizedText></p>
           )}
 
           {(audience || stage) && (
             <div className="cx-detail-hero-v4__audience">
               {audience && (
                 <span className="cx-detail-hero-v4__audience-tag">
-                  {audience}
+                  <LocalizedText>{audience}</LocalizedText>
                 </span>
               )}
               {stage && (
-                <span className="cx-detail-hero-v4__stage-tag">{stage}</span>
+                <span className="cx-detail-hero-v4__stage-tag"><LocalizedText>{stage}</LocalizedText></span>
               )}
             </div>
           )}
@@ -115,13 +114,11 @@ export function CollectionDetailHeroV4({
 
         {/* ZONE 2 — STACK GLANCE (hidden on small screens via CSS) */}
         {previewCores.length > 0 && (
-          <div className="cx-detail-hero-v4__stack" aria-label="Il flusso, in ordine">
+          <LocalizedAttributes><div className="cx-detail-hero-v4__stack" aria-label="Il flusso, in ordine">
             <div className="cx-detail-hero-v4__stack-head">
-              <span className="cx-detail-hero-v4__stack-label">
-                Il flusso, in ordine
-              </span>
+              <span className="cx-detail-hero-v4__stack-label"><LocalizedText>{"Il flusso, in ordine "}</LocalizedText></span>
               <span className="cx-detail-hero-v4__stack-count">
-                {coreCount} {coreCount === 1 ? "strumento" : "strumenti"}
+                {coreCount} <LocalizedText>{coreCount === 1 ? "strumento" : "strumenti"}</LocalizedText>
               </span>
             </div>
             <ol className="cx-detail-hero-v4__strip">
@@ -151,7 +148,7 @@ export function CollectionDetailHeroV4({
                     />
                     <div className="cx-detail-hero-v4__strip-meta">
                       <span className="cx-detail-hero-v4__strip-num">
-                        {String(index + 1).padStart(2, "0")}
+                        <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
                       </span>
                       <span className="cx-detail-hero-v4__strip-name">
                         {slot.tool.name}
@@ -161,25 +158,25 @@ export function CollectionDetailHeroV4({
                 </li>
               ))}
             </ol>
-          </div>
+          </div></LocalizedAttributes>
         )}
 
         {/* ZONE 3 — DECISION STRIP */}
         <div className="cx-detail-hero-v4__decision">
           {cost && (
             <div className="cx-detail-hero-v4__decision-item">
-              <span className="cx-detail-hero-v4__decision-label">Costo</span>
-              <span className="cx-detail-hero-v4__decision-value">{cost}</span>
+              <span className="cx-detail-hero-v4__decision-label"><LocalizedText>{"Costo"}</LocalizedText></span>
+              <span className="cx-detail-hero-v4__decision-value"><LocalizedText>{cost}</LocalizedText></span>
             </div>
           )}
           {setup && (
             <div className="cx-detail-hero-v4__decision-item">
-              <span className="cx-detail-hero-v4__decision-label">Setup</span>
-              <span className="cx-detail-hero-v4__decision-value">{setup}</span>
+              <span className="cx-detail-hero-v4__decision-label"><LocalizedText>{"Setup"}</LocalizedText></span>
+              <span className="cx-detail-hero-v4__decision-value"><LocalizedText>{setup}</LocalizedText></span>
             </div>
           )}
           <div className="cx-detail-hero-v4__decision-item">
-            <span className="cx-detail-hero-v4__decision-label">Tool</span>
+            <span className="cx-detail-hero-v4__decision-label"><LocalizedText>{"Tool"}</LocalizedText></span>
             <span className="cx-detail-hero-v4__decision-value">
               {toolCount}
             </span>
@@ -195,12 +192,10 @@ export function CollectionDetailHeroV4({
               "cx-detail-hero-v4__cta--primary",
             )}
           >
-            <span>Avvia questa raccolta</span>
+            <span><LocalizedText>{"Avvia questa raccolta"}</LocalizedText></span>
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
-          <Link href="/archivio" className="cx-detail-hero-v4__catalog">
-            Catalogo
-          </Link>
+          <Link href="/archivio" className="cx-detail-hero-v4__catalog"><LocalizedText>{"Catalogo "}</LocalizedText></Link>
         </div>
       </div>
     </header>

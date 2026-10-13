@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, TrendingUp } from "lucide-react";
 
@@ -93,7 +94,7 @@ export function CompareTrendList() {
   const isLoading = loadingRange === activeRange && !payload;
 
   return (
-    <section
+    <LocalizedAttributes><section
       className="compare-trend-list"
       aria-label="Tool in trend"
       aria-busy={isLoading}
@@ -102,9 +103,9 @@ export function CompareTrendList() {
       <div className="compare-trend-list__header">
         <div className="compare-trend-list__title">
           <TrendingUp className="size-4" />
-          <span>Lanci in trend</span>
+          <span><LocalizedText>{"Lanci in trend"}</LocalizedText></span>
         </div>
-        <div className="compare-trend-list__tabs" role="tablist" aria-label="Periodo">
+        <LocalizedAttributes><div className="compare-trend-list__tabs" role="tablist" aria-label="Periodo">
           {tabs.map((tab) => (
             <button
               key={tab.key}
@@ -114,10 +115,10 @@ export function CompareTrendList() {
               className={activeRange === tab.key ? "is-active" : undefined}
               onClick={() => setActiveRange(tab.key)}
             >
-              {tab.label}
+              <LocalizedText>{tab.label}</LocalizedText>
             </button>
           ))}
-        </div>
+        </div></LocalizedAttributes>
       </div>
 
       {isLoading || !payload ? (
@@ -148,28 +149,26 @@ export function CompareTrendList() {
               <span className="compare-trend-list__visual">
                 {item.thumbnailUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
-                  <img src={item.thumbnailUrl} alt="" loading="lazy" />
+                  <LocalizedAttributes><img src={item.thumbnailUrl} alt="" loading="lazy" /></LocalizedAttributes>
                 ) : (
                   <span>{item.name.slice(0, 2).toUpperCase()}</span>
                 )}
               </span>
               <span className="compare-trend-list__copy">
                 <strong>{item.name}</strong>
-                <small>{formatSignal(item)}</small>
+                <small><LocalizedText>{formatSignal(item)}</LocalizedText></small>
               </span>
-              <span className="compare-trend-list__open">
-                Apri scheda
-                <ExternalLink size={13} aria-hidden="true" />
+              <span className="compare-trend-list__open"><LocalizedText>{"Apri scheda "}</LocalizedText><ExternalLink size={13} aria-hidden="true" />
               </span>
             </a>
           ))}
         </div>
       ) : (
         <div className="compare-trend-list__empty" role="status">
-          <strong>{payload.message ?? "Classifica Product Hunt non disponibile."}</strong>
-          <span>Il radar resta vuoto finché non tornano dati reali.</span>
+          <strong><LocalizedText>{payload.message ?? "Classifica Product Hunt non disponibile."}</LocalizedText></strong>
+          <span><LocalizedText>{"Il radar resta vuoto finché non tornano dati reali."}</LocalizedText></span>
         </div>
       )}
-    </section>
+    </section></LocalizedAttributes>
   );
 }

@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import { ArrowRight, ArrowUpRight, BadgeCheck, Mail, QrCode, ShieldCheck } from "lucide-react";
 
@@ -61,7 +62,7 @@ const afterApprovalSteps = [
 export default function AffiliatiPage() {
   return (
     <SecondaryPageShell>
-      <SecondaryHero
+      <LocalizedAttributes><SecondaryHero
         tone="dark"
         layout="split"
         routeIndex="10"
@@ -71,20 +72,20 @@ export default function AffiliatiPage() {
         title="Porta TooolVibes alla tua community."
         lede="Cerchiamo creator, newsletter, community e professionisti che parlano con persone interessate a tool AI, automazioni e scelte software più lucide. Il programma è su richiesta: ogni candidatura viene letta."
         actions={
-          <a
+          <LocalizedAttributes><a
             href="#affiliate-application"
             className="secondary-card__cta"
             aria-label="Salta al modulo di candidatura affiliato"
           >
             <Mail aria-hidden="true" className="size-4" />
-            <span>Candidati ora</span>
+            <span><LocalizedText>{"Candidati ora"}</LocalizedText></span>
             <ArrowRight aria-hidden="true" className="size-4" />
-          </a>
+          </a></LocalizedAttributes>
         }
         signature={
           <>
             <span className="secondary-hero__signature-eyebrow">
-              <span>Indipendenza editoriale</span>
+              <span><LocalizedText>{"Indipendenza editoriale"}</LocalizedText></span>
             </span>
             <p
               style={{
@@ -95,9 +96,7 @@ export default function AffiliatiPage() {
                 lineHeight: 1.35,
                 fontWeight: 600,
               }}
-            >
-              La sponsorship non compra giudizi editoriali.
-            </p>
+            ><LocalizedText>{"La sponsorship non compra giudizi editoriali. "}</LocalizedText></p>
             <p
               style={{
                 margin: 0,
@@ -106,9 +105,7 @@ export default function AffiliatiPage() {
                 fontSize: "0.92rem",
                 lineHeight: 1.55,
               }}
-            >
-              Valutazioni, classifiche e raccomandazioni restano indipendenti da chi promuove TooolVibes. Ogni affiliazione è dichiarata.
-            </p>
+            ><LocalizedText>{"Valutazioni, classifiche e raccomandazioni restano indipendenti da chi promuove TooolVibes. Ogni affiliazione è dichiarata. "}</LocalizedText></p>
             <ul
               style={{
                 margin: "0.4rem 0 0",
@@ -122,128 +119,120 @@ export default function AffiliatiPage() {
                 lineHeight: 1.5,
               }}
             >
-              <li>· Codice referral personale</li>
-              <li>· Link tracciato e QR code</li>
-              <li>· Nuovo invio dopo 30 giorni</li>
+              <li><LocalizedText>{"· Codice referral personale"}</LocalizedText></li>
+              <li><LocalizedText>{"· Link tracciato e QR code"}</LocalizedText></li>
+              <li><LocalizedText>{"· Nuovo invio dopo 30 giorni"}</LocalizedText></li>
             </ul>
           </>
         }
-      />
+      /></LocalizedAttributes>
 
-      <section
+      <LocalizedAttributes><section
         className="affiliates-layout"
         aria-label="Modulo e vantaggi del programma"
       >
-        <aside
+        <LocalizedAttributes><aside
           className="affiliates-intro"
           aria-label="Per chi è il programma affiliati"
         >
-          <p className="secondary-section__eyebrow">Per chi è</p>
-          <h2 className="secondary-section__title">
-            Un programma per chi racconta tool con cura.
-          </h2>
-          <p className="secondary-section__lede">
-            Cerchiamo persone che parlano di tool AI, automazioni, no-code e scelte software a una
-            audience che vuole capire prima di installare. Non compri visibilità: costruiamo come
-            TooolVibes entra nelle tue conversazioni.
-          </p>
+          <p className="secondary-section__eyebrow"><LocalizedText>{"Per chi è"}</LocalizedText></p>
+          <h2 className="secondary-section__title"><LocalizedText>{"Un programma per chi racconta tool con cura. "}</LocalizedText></h2>
+          <p className="secondary-section__lede"><LocalizedText>{"Cerchiamo persone che parlano di tool AI, automazioni, no-code e scelte software a una audience che vuole capire prima di installare. Non compri visibilità: costruiamo come TooolVibes entra nelle tue conversazioni. "}</LocalizedText></p>
 
-          <dl className="affiliates-intro__list" aria-label="Criteri del programma">
+          <LocalizedAttributes><dl className="affiliates-intro__list" aria-label="Criteri del programma">
             <div className="affiliates-intro__item">
-              <dt>Valutazione</dt>
-              <dd>Personale, non automatica</dd>
+              <dt><LocalizedText>{"Valutazione"}</LocalizedText></dt>
+              <dd><LocalizedText>{"Personale, non automatica"}</LocalizedText></dd>
             </div>
             <div className="affiliates-intro__item">
-              <dt>Codice</dt>
-              <dd>Dedicato alla tua identità</dd>
+              <dt><LocalizedText>{"Codice"}</LocalizedText></dt>
+              <dd><LocalizedText>{"Dedicato alla tua identità"}</LocalizedText></dd>
             </div>
             <div className="affiliates-intro__item">
-              <dt>Nuovo invio</dt>
-              <dd>Dopo 30 giorni se rifiutato</dd>
+              <dt><LocalizedText>{"Nuovo invio"}</LocalizedText></dt>
+              <dd><LocalizedText>{"Dopo 30 giorni se rifiutato"}</LocalizedText></dd>
             </div>
-          </dl>
+          </dl></LocalizedAttributes>
 
           <div className="affiliates-intro__contact">
-            <p className="affiliates-intro__contact-label">
-              Domande prima di candidarti?
-            </p>
-            <a
+            <p className="affiliates-intro__contact-label"><LocalizedText>{"Domande prima di candidarti? "}</LocalizedText></p>
+            <LocalizedAttributes><a
               href={AFFILIATE_EMAIL}
               className="secondary-card__cta secondary-card__cta--ghost"
               aria-label="Scrivi a TooolVibes per chiedere informazioni sul programma affiliati"
             >
               <Mail aria-hidden="true" className="size-4" />
-              <span>Scrivi a hello@tooolvibes.com</span>
+              <span><LocalizedText>{"Scrivi a hello@tooolvibes.com"}</LocalizedText></span>
               <ArrowUpRight aria-hidden="true" className="size-4" />
-            </a>
+            </a></LocalizedAttributes>
           </div>
-        </aside>
+        </aside></LocalizedAttributes>
 
         <div id="affiliate-application" className="affiliates-form-wrap">
           <AffiliateApplicationForm />
         </div>
-      </section>
+      </section></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         eyebrow="Programma in 3 passi"
         title="Cosa succede quando ti candidi"
         lede="Un percorso lineare e trasparente. Nessuna procedura opaca, nessuna risposta automatica."
       >
         <SecondaryCardGrid columns={3}>
           {programSteps.map((step) => (
-            <SecondaryPrincipleCard
+            <LocalizedAttributes key={step.title}><SecondaryPrincipleCard
               key={step.title}
               icon={step.icon}
               title={step.title}
               copy={step.copy}
-            />
+            /></LocalizedAttributes>
           ))}
         </SecondaryCardGrid>
-      </SecondarySection>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondarySection
+      <LocalizedAttributes><SecondarySection
         tone="ivory"
         eyebrow="Dopo l'approvazione"
         title="Come funziona"
         lede="Una volta confermata la candidatura, il setup è meccanico: noi prepariamo tutto, tu ricevi i materiali."
       >
-        <ol className="affiliates-after" aria-label="Cosa succede dopo l'approvazione">
+        <LocalizedAttributes><ol className="affiliates-after" aria-label="Cosa succede dopo l'approvazione">
           {afterApprovalSteps.map((step) => (
             <li key={step.label} className="affiliates-after__step">
-              <span className="affiliates-after__label">{step.label}</span>
-              <h3 className="affiliates-after__title">{step.title}</h3>
-              <p className="affiliates-after__copy">{step.copy}</p>
+              <span className="affiliates-after__label"><LocalizedText>{step.label}</LocalizedText></span>
+              <h3 className="affiliates-after__title"><LocalizedText>{step.title}</LocalizedText></h3>
+              <p className="affiliates-after__copy"><LocalizedText>{step.copy}</LocalizedText></p>
             </li>
           ))}
-        </ol>
-      </SecondarySection>
+        </ol></LocalizedAttributes>
+      </SecondarySection></LocalizedAttributes>
 
-      <SecondaryClosingCTA
+      <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
         title="Hai una community che ascolta i tuoi consigli sui tool?"
         body="Candidati ora. La valutazione è personale: ti rispondiamo anche quando la risposta è onesta &quot;non è il nostro perimetro&quot;."
         actions={
           <>
-            <a
+            <LocalizedAttributes><a
               href="#affiliate-application"
               className="secondary-card__cta"
               aria-label="Salta al modulo di candidatura"
             >
               <Mail aria-hidden="true" className="size-4" />
-              <span>Candidati ora</span>
+              <span><LocalizedText>{"Candidati ora"}</LocalizedText></span>
               <ArrowRight aria-hidden="true" className="size-4" />
-            </a>
-            <a
+            </a></LocalizedAttributes>
+            <LocalizedAttributes><a
               href={AFFILIATE_EMAIL}
               className="secondary-card__cta secondary-card__cta--ghost"
               aria-label="Scrivi a TooolVibes per chiedere informazioni"
             >
-              <span>Scrivi a hello@tooolvibes.com</span>
+              <span><LocalizedText>{"Scrivi a hello@tooolvibes.com"}</LocalizedText></span>
               <ArrowUpRight aria-hidden="true" className="size-4" />
-            </a>
+            </a></LocalizedAttributes>
           </>
         }
-      />
+      /></LocalizedAttributes>
     </SecondaryPageShell>
   );
 }

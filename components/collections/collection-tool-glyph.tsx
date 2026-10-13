@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * CollectionToolGlyph — gradient square + favicon (or monogram) for
  * Collection cards.
@@ -136,16 +137,16 @@ export function CollectionToolGlyph({
     >
       {showFavicon && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <LocalizedAttributes><img
           src={faviconUrl}
           alt=""
           loading="lazy"
           decoding="async"
           className="h-[60%] w-[60%] object-contain"
           onError={() => setLogoFailed(true)}
-        />
+        /></LocalizedAttributes>
       )}
-      <span className={showFavicon ? "hidden" : "block"}>{letter}</span>
+      <span className={showFavicon ? "hidden" : "block"}><LocalizedText>{letter}</LocalizedText></span>
     </span>
   );
 }

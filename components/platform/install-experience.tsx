@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 /**
  * TooolVibes — Install Experience ("Porta TooolVibes sulla Home")
  *
@@ -119,35 +120,30 @@ export function InstallExperience({ engaged = true }: { engaged?: boolean }) {
       data-install-surface={isIOS ? "ios-manual" : "android-prompt"}
     >
       <div className="tv-install-sheet__inner">
-        <p className="tv-install-sheet__kicker">App-like, in un tocco</p>
-        <h2 id="tv-install-title" className="tv-install-sheet__title">
-          Porta TooolVibes sulla Home
-        </h2>
+        <p className="tv-install-sheet__kicker"><LocalizedText>{"App-like, in un tocco"}</LocalizedText></p>
+        <h2 id="tv-install-title" className="tv-install-sheet__title"><LocalizedText>{"Porta TooolVibes sulla Home "}</LocalizedText></h2>
         {isIOS ? (
           <ol className="tv-install-sheet__steps">
             <li>
-              <strong>Tocca Condividi</strong>
-              <span>l&apos;icona in basso su Safari</span>
+              <strong><LocalizedText>{"Tocca Condividi"}</LocalizedText></strong>
+              <span><LocalizedText>{"l'icona in basso su Safari"}</LocalizedText></span>
             </li>
             <li>
-              <strong>Scegli &ldquo;Aggiungi alla schermata Home&rdquo;</strong>
-              <span>scorri le azioni se non la vedi</span>
+              <strong><LocalizedText>{"Scegli “Aggiungi alla schermata Home”"}</LocalizedText></strong>
+              <span><LocalizedText>{"scorri le azioni se non la vedi"}</LocalizedText></span>
             </li>
             <li>
-              <strong>Conferma &ldquo;Aggiungi&rdquo;</strong>
-              <span>si apre come app, a tutto schermo</span>
+              <strong><LocalizedText>{"Conferma “Aggiungi”"}</LocalizedText></strong>
+              <span><LocalizedText>{"si apre come app, a tutto schermo"}</LocalizedText></span>
             </li>
           </ol>
         ) : (
-          <p className="tv-install-sheet__lede">
-            Installa TooolVibes dal browser: apertura come app, accesso piu
-            rapido, esperienza a tutto schermo.
-          </p>
+          <p className="tv-install-sheet__lede"><LocalizedText>{"Installa TooolVibes dal browser: apertura come app, accesso piu rapido, esperienza a tutto schermo. "}</LocalizedText></p>
         )}
         <ul className="tv-install-sheet__benefits">
-          <li>apertura come app</li>
-          <li>accesso piu rapido</li>
-          <li>esperienza full-screen</li>
+          <li><LocalizedText>{"apertura come app"}</LocalizedText></li>
+          <li><LocalizedText>{"accesso piu rapido"}</LocalizedText></li>
+          <li><LocalizedText>{"esperienza full-screen"}</LocalizedText></li>
         </ul>
         <div className="tv-install-sheet__actions">
           {!isIOS && deferred ? (
@@ -155,17 +151,13 @@ export function InstallExperience({ engaged = true }: { engaged?: boolean }) {
               type="button"
               className="tv-install-sheet__cta"
               onClick={installAndroid}
-            >
-              Installa TooolVibes
-            </button>
+            ><LocalizedText>{"Installa TooolVibes "}</LocalizedText></button>
           ) : null}
           <button
             type="button"
             className="tv-install-sheet__dismiss"
             onClick={dismiss}
-          >
-            Non ora
-          </button>
+          ><LocalizedText>{"Non ora "}</LocalizedText></button>
         </div>
       </div>
     </section>

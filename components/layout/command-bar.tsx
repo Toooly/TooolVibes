@@ -1,5 +1,8 @@
 "use client";
 
+import { LanguagePicker } from "@/components/i18n/language-picker";
+
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * TooolVibes — Command Bar
  * Definitive UI shell replacement (2026-07-24)
@@ -36,7 +39,7 @@ import { cn } from "@/lib/utils";
 
 function CommandBarBrand() {
   return (
-    <Link
+    <LocalizedAttributes><Link
       href="/"
       prefetch={false}
       aria-label="TooolVibes — home"
@@ -46,9 +49,9 @@ function CommandBarBrand() {
         <BrandLogo size={40} fallback="png" priority />
       </div>
       <div className="command-bar__brand-text">
-        <span className="command-bar__brand-word">TOOOLVIBES</span>
+        <span className="command-bar__brand-word"><LocalizedText>{"TOOOLVIBES"}</LocalizedText></span>
       </div>
-    </Link>
+    </Link></LocalizedAttributes>
   );
 }
 
@@ -80,7 +83,7 @@ export function CommandBar() {
         <CommandBarBrand />
 
         {/* Center: destinations as vertical-tab style */}
-        <nav
+        <LocalizedAttributes><nav
           aria-label="Destinazioni principali"
           className="command-bar__nav"
         >
@@ -99,7 +102,7 @@ export function CommandBar() {
                 <span className="command-bar__nav-glyph">
                   {Glyph ? <Glyph size={17} strokeWidth={1.8} aria-hidden="true" /> : null}
                 </span>
-                <span className="command-bar__nav-label">{item.label}</span>
+                <span className="command-bar__nav-label"><LocalizedText>{item.label}</LocalizedText></span>
                 {active ? (
                   <motion.span
                     layoutId="command-bar-marker"
@@ -112,11 +115,12 @@ export function CommandBar() {
               </Link>
             );
           })}
-        </nav>
+        </nav></LocalizedAttributes>
 
         {/* Right: search + utilities + account CTA */}
         <div className="command-bar__right">
-          <button
+          <LanguagePicker />
+          <LocalizedAttributes><button
             type="button"
             className={cn(
               "command-bar__search",
@@ -128,9 +132,9 @@ export function CommandBar() {
             onClick={() => setCommandOpen(true)}
           >
             <Search size={15} aria-hidden="true" />
-            <span className="command-bar__search-text">Cerca tool, raccolte…</span>
-            <kbd className="command-bar__search-kbd">⌘K</kbd>
-          </button>
+            <span className="command-bar__search-text"><LocalizedText>{"Cerca tool, raccolte…"}</LocalizedText></span>
+            <kbd className="command-bar__search-kbd"><LocalizedText>{"⌘K"}</LocalizedText></kbd>
+          </button></LocalizedAttributes>
 
           <div className="command-bar__utilities">
             <SoundToggleButton className="command-bar__util" />

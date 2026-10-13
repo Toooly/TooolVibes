@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import { cn } from "@/lib/utils";
@@ -12,16 +13,16 @@ const LINKS = [
 
 export function CommercialSubnav({ current }: { current: string }) {
   return (
-    <nav aria-label="Commercial" className="tv-cc-filters">
+    <LocalizedAttributes><nav aria-label="Commercial" className="tv-cc-filters">
       {LINKS.map((link) => (
         <Link
           key={link.href}
           href={link.href}
           className={cn("tv-cc-filter", current === link.href && "is-active")}
         >
-          {link.label}
+          <LocalizedText>{link.label}</LocalizedText>
         </Link>
       ))}
-    </nav>
+    </nav></LocalizedAttributes>
   );
 }

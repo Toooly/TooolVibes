@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { BrandLogo } from "@/components/layout/brand-logo";
 import { LoginForm } from "@/components/admin/login-form";
 import { PremiumPanel } from "@/components/ui/premium";
@@ -37,16 +38,12 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
           <div className="flex items-center gap-3">
             <BrandLogo size={52} priority />
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/64">
-                TooolVibes
-              </p>
-              <p className="text-sm text-white/58">Control Center</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/64"><LocalizedText>{"TooolVibes "}</LocalizedText></p>
+              <p className="text-sm text-white/58"><LocalizedText>{"Control Center"}</LocalizedText></p>
             </div>
           </div>
-          <h1 className="mt-4 text-[2rem] leading-[1.1] sm:text-[2.2rem]">Accedi al backoffice</h1>
-          <p className="mt-3 text-[0.98rem] leading-7 text-white/72">
-            Gestisci contenuti, strumenti e attività commerciali da un unico spazio.
-          </p>
+          <h1 className="mt-4 text-[2rem] leading-[1.1] sm:text-[2.2rem]"><LocalizedText>{"Accedi al backoffice"}</LocalizedText></h1>
+          <p className="mt-3 text-[0.98rem] leading-7 text-white/72"><LocalizedText>{"Gestisci contenuti, strumenti e attività commerciali da un unico spazio. "}</LocalizedText></p>
           <LoginForm errorCode={errorCode} />
         </PremiumPanel>
       </div>

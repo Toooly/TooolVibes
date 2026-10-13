@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { createToolFormAction } from "@/app/(admin)/admin/actions/tools";
 import { ControlCenterNotice } from "@/components/admin/control-center-header";
 import { ToolForm } from "@/components/admin/tool-form";
@@ -53,9 +54,9 @@ export default async function NewToolPage({ searchParams }: NewToolPageProps) {
 
   return (
     <div className="page-shell py-6">
-      {!canWrite ? <ControlCenterNotice tone="warn">{runtime.writeMessage}</ControlCenterNotice> : null}
+      {!canWrite ? <ControlCenterNotice tone="warn"><LocalizedText>{runtime.writeMessage}</LocalizedText></ControlCenterNotice> : null}
       {suggestionId && !suggestion ? (
-        <ControlCenterNotice tone="warn">Suggerimento non trovato. Puoi comunque creare il tool manualmente.</ControlCenterNotice>
+        <ControlCenterNotice tone="warn"><LocalizedText>{"Suggerimento non trovato. Puoi comunque creare il tool manualmente."}</LocalizedText></ControlCenterNotice>
       ) : null}
       <ToolForm
         action={createToolFormAction}

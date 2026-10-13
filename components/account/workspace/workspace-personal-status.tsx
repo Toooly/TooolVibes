@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useDiscoverySnapshot } from "@/lib/discovery/client-store";
 import { compactPersonalStatus } from "@/lib/account/workspace-lifecycle";
 import { cn } from "@/lib/utils";
@@ -54,7 +55,7 @@ export function WorkspacePersonalStatusBadge({
       data-tone={status.key}
       className={cn("tv-personal-status", className)}
     >
-      {status.label}
+      <LocalizedText>{status.label}</LocalizedText>
     </span>
   );
 }

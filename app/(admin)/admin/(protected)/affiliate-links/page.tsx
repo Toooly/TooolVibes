@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 
 import {
@@ -50,7 +51,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
 
   return (
     <div className="page-shell py-6">
-      <ControlCenterHeader
+      <LocalizedAttributes><ControlCenterHeader
         title="Link affiliati"
         description="Gestisci i link outbound del catalogo."
         primaryHref="/admin/affiliate-links/new"
@@ -59,11 +60,11 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
           { label: "Link", value: runtime.links.length },
           { label: "Attivi", value: activeCount },
         ]}
-      />
+      /></LocalizedAttributes>
 
       {status && statusLabels[status] ? (
         <ControlCenterNotice tone={status === "error" || status === "validation" ? "warn" : "ok"}>
-          {statusLabels[status]}
+          <LocalizedText>{statusLabels[status]}</LocalizedText>
         </ControlCenterNotice>
       ) : null}
 
@@ -73,7 +74,7 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
             <article key={link.id} className="tv-cc-card">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="tv-cc-card__title">{link.tool_name || link.destination_url}</h2>
+                  <h2 className="tv-cc-card__title"><LocalizedText>{link.tool_name || link.destination_url}</LocalizedText></h2>
                   <AdminStatusPill
                     active={link.is_active}
                     activeLabel="Attivo"
@@ -81,18 +82,16 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
                   />
                 </div>
                 <p className="tv-cc-card__meta">
-                  <span className="break-all">{buildTrackingPreview(link)}</span>
-                  <span>{formatItalianDate(link.created_at)}</span>
+                  <span className="break-all"><LocalizedText>{buildTrackingPreview(link)}</LocalizedText></span>
+                  <span><LocalizedText>{formatItalianDate(link.created_at)}</LocalizedText></span>
                 </p>
               </div>
               <div className="tv-cc-card__actions">
-                <Link href={`/admin/affiliate-links/${link.id}/edit`} className="tv-cc-btn tv-cc-btn--primary">
-                  Modifica
-                </Link>
+                <Link href={`/admin/affiliate-links/${link.id}/edit`} className="tv-cc-btn tv-cc-btn--primary"><LocalizedText>{"Modifica "}</LocalizedText></Link>
                 <AdminActionMenu>
                   <form action={toggleAffiliateLinkActiveAction.bind(null, link.id, !link.is_active)}>
                     <button type="submit" disabled={!runtime.canWrite}>
-                      {link.is_active ? "Disattiva" : "Attiva"}
+                      <LocalizedText>{link.is_active ? "Disattiva" : "Attiva"}</LocalizedText>
                     </button>
                   </form>
                   <DeleteWithConfirm
@@ -108,12 +107,12 @@ export default async function AffiliateLinksPage({ searchParams }: AffiliateLink
           ))}
         </div>
       ) : (
-        <AdminEmptyState
+        <LocalizedAttributes><AdminEmptyState
           title="Nessun link affiliato"
           description="Crea il primo link per tracciare le conversioni."
           ctaHref="/admin/affiliate-links/new"
           ctaLabel="Nuovo link"
-        />
+        /></LocalizedAttributes>
       )}
     </div>
   );

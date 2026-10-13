@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/components/i18n/locale-provider";
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
 import { navigateSite } from "@/lib/shell/document-navigation";
@@ -177,16 +179,18 @@ export function GlobalCommandPalette({
     () => parsePersonalSearchQuery(trimmedQuery),
     [trimmedQuery],
   );
+  const { t, locale } = useLocale();
+  const searchDocuments = useMemo(() => locale === "en" ? tools.map((tool) => ({ ...tool, categoryLabel: `${tool.categoryLabel} ${t(tool.categoryLabel)}`, shortDescription: `${tool.shortDescription} ${t(tool.shortDescription)}`, tags: [...tool.tags, ...tool.tags.map(t)] })) : tools, [tools, t, locale]);
   const searchEngine = resolveToolSearchEngine(unifiedSearchEnabled);
   const catalogQuery = parsedQuery.personal ? parsedQuery.text : trimmedQuery;
   const searchResults = useMemo(
     () =>
       catalogQuery
-        ? searchToolsWithEngine(tools, catalogQuery, searchEngine, {
+        ? searchToolsWithEngine(searchDocuments, catalogQuery, searchEngine, {
             limit: SEARCH_RESULTS_LIMIT,
-          })
+          }).map((result) => tools.find((tool) => tool.slug === result.slug) ?? result)
         : [],
-    [tools, catalogQuery, searchEngine],
+    [tools, searchDocuments, catalogQuery, searchEngine],
   );
 
   const featuredTools = useMemo(
@@ -499,9 +503,9 @@ export function GlobalCommandPalette({
           ) : Icon ? (
             <Icon className="size-4" />
           ) : null}
-          <span>{item.label}</span>
+          <span><LocalizedText>{item.label}</LocalizedText></span>
           {item.meta ? (
-            <span className="ml-auto text-xs text-[var(--muted)]">{item.meta}</span>
+            <span className="ml-auto text-xs text-[var(--muted)]"><LocalizedText>{item.meta}</LocalizedText></span>
           ) : item.trailingArrow ? (
             <ArrowRight className="ml-auto size-3.5 text-[var(--muted)]" />
           ) : null}
@@ -512,14 +516,14 @@ export function GlobalCommandPalette({
 
   return (
     <CommandDialog open={isOpen} onOpenChange={setCommandOpen} shouldFilter={false}>
-      <CommandInput
+      <LocalizedAttributes><CommandInput
         placeholder="Cerca tool, azioni o sezioni..."
         value={query}
         onValueChange={setQuery}
         aria-label="Cerca"
-      />
+      /></LocalizedAttributes>
       <CommandList>
-        <CommandEmpty>{emptyMessage}</CommandEmpty>
+        <CommandEmpty><LocalizedText>{emptyMessage}</LocalizedText></CommandEmpty>
         {suggestionItems.length > 0 ? (
           <CommandGroup heading="Ricerche personali">
             {renderItems(suggestionItems)}

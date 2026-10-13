@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 import { useActionState } from "react";
 
@@ -53,11 +54,11 @@ function FieldError({ error }: { error?: string }) {
     return null;
   }
 
-  return <p className="tv-cc-error">{error}</p>;
+  return <p className="tv-cc-error"><LocalizedText>{error}</LocalizedText></p>;
 }
 
 function FieldLabel({ label }: { label: string }) {
-  return <span className="tv-cc-label">{label}</span>;
+  return <span className="tv-cc-label"><LocalizedText>{label}</LocalizedText></span>;
 }
 
 function FormSection({
@@ -74,10 +75,10 @@ function FormSection({
   return (
     <section className="tv-cc-panel">
       <div className="border-b pb-4 soft-divider">
-        <p className="tv-cc-panel__kicker">{eyebrow}</p>
-        <h2 className="tv-cc-panel__title">{title}</h2>
+        <p className="tv-cc-panel__kicker"><LocalizedText>{eyebrow}</LocalizedText></p>
+        <h2 className="tv-cc-panel__title"><LocalizedText>{title}</LocalizedText></h2>
         <p className="tv-cc-panel__desc">
-          {description}
+          <LocalizedText>{description}</LocalizedText>
         </p>
       </div>
       <div className="mt-5">{children}</div>
@@ -103,11 +104,11 @@ function StatCard({
         className="text-xs font-semibold uppercase tracking-[0.18em]"
         
       >
-        {label}
+        <LocalizedText>{label}</LocalizedText>
       </p>
       <p className="mt-3 text-[1.8rem] leading-none">{value}</p>
       <p className="mt-2 text-sm leading-6" >
-        {detail}
+        <LocalizedText>{detail}</LocalizedText>
       </p>
     </article>
   );
@@ -166,10 +167,10 @@ export function CollectionForm({
   return (
     <EditorShell dirty={dirty} onDirty={markDirty}>
     <form action={formAction} className="space-y-8" onChange={markDirty}>
-      <EditorHeader backHref={backHref} eyebrow="Raccolta" title={entityTitle || values.title || "Nuova raccolta"} status={entityStatus} updatedAt={updatedAt} />
+      <LocalizedAttributes><EditorHeader backHref={backHref} eyebrow="Raccolta" title={entityTitle || values.title || "Nuova raccolta"} status={entityStatus} updatedAt={updatedAt} /></LocalizedAttributes>
       {state.status === "error" && state.message ? (
         <div className="tv-cc-notice tv-cc-notice--warn">
-          {state.message}
+          <LocalizedText>{state.message}</LocalizedText>
         </div>
       ) : null}
 
@@ -178,23 +179,15 @@ export function CollectionForm({
       <fieldset disabled={disabled} className="space-y-8 disabled:opacity-60">
         <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
           <article className="tv-cc-panel">
-            <p className="editorial-label">Postura della raccolta</p>
-            <h2 className="tv-cc-panel__title">
-              Taglio, accesso e densità della selezione nello stesso colpo d&apos;occhio
-            </h2>
-            <p className="tv-cc-panel__desc">
-              Questa sintesi ti aiuta a capire subito se la raccolta è leggera, densa, pubblica
-              o ancora in costruzione prima di entrare nei dettagli del modulo.
-            </p>
+            <p className="editorial-label"><LocalizedText>{"Postura della raccolta"}</LocalizedText></p>
+            <h2 className="tv-cc-panel__title"><LocalizedText>{"Taglio, accesso e densità della selezione nello stesso colpo d'occhio "}</LocalizedText></h2>
+            <p className="tv-cc-panel__desc"><LocalizedText>{"Questa sintesi ti aiuta a capire subito se la raccolta è leggera, densa, pubblica o ancora in costruzione prima di entrare nei dettagli del modulo. "}</LocalizedText></p>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                Accesso: {accessMeta.label}
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"><LocalizedText>{"Accesso: "}</LocalizedText><LocalizedText>{accessMeta.label}</LocalizedText>
               </span>
-              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                Stato: {editorialStateMeta.label}
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"><LocalizedText>{"Stato: "}</LocalizedText><LocalizedText>{editorialStateMeta.label}</LocalizedText>
               </span>
-              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                Formato: {surfaceMeta.label}
+              <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"><LocalizedText>{"Formato: "}</LocalizedText><LocalizedText>{surfaceMeta.label}</LocalizedText>
               </span>
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
@@ -221,29 +214,22 @@ export function CollectionForm({
           </article>
 
           <article className="tv-cc-panel">
-            <p className="tv-cc-panel__kicker">Guida editoriale</p>
-            <h2 className="tv-cc-panel__title">
-              Una raccolta forte deve restare leggibile anche quando la rivedi più tardi
-            </h2>
-            <p className="tv-cc-panel__desc">
-              Usa la tesi per spiegare la logica della selezione, non per ripetere i campi di base.
-              Nei tool inclusi, ogni ruolo dovrebbe raccontare il perché del tool nel percorso.
-            </p>
+            <p className="tv-cc-panel__kicker"><LocalizedText>{"Guida editoriale"}</LocalizedText></p>
+            <h2 className="tv-cc-panel__title"><LocalizedText>{"Una raccolta forte deve restare leggibile anche quando la rivedi più tardi "}</LocalizedText></h2>
+            <p className="tv-cc-panel__desc"><LocalizedText>{"Usa la tesi per spiegare la logica della selezione, non per ripetere i campi di base. Nei tool inclusi, ogni ruolo dovrebbe raccontare il perché del tool nel percorso. "}</LocalizedText></p>
             <div className="mt-4 grid gap-3">
-              <div className="tv-cc-panel text-sm">
-                Ordine editoriale corrente: <strong>{values.editorial_order || "999"}</strong>.
-                {values.featured_slot
+              <div className="tv-cc-panel text-sm"><LocalizedText>{"Ordine editoriale corrente: "}</LocalizedText><strong><LocalizedText>{values.editorial_order || "999"}</LocalizedText></strong>.
+                <LocalizedText>{values.featured_slot
                   ? ` Spazio in evidenza impostato su ${values.featured_slot}.`
-                  : " Nessuno spazio in evidenza attivo."}
+                  : " Nessuno spazio in evidenza attivo."}</LocalizedText>
               </div>
-              <div className="tv-cc-notice tv-cc-notice--ok">
-                Accesso impostato su <strong>{accessMeta.label}</strong>: {accessMeta.description}
+              <div className="tv-cc-notice tv-cc-notice--ok"><LocalizedText>{"Accesso impostato su "}</LocalizedText><strong><LocalizedText>{accessMeta.label}</LocalizedText></strong>: <LocalizedText>{accessMeta.description}</LocalizedText>
               </div>
             </div>
           </article>
         </div>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Identità"
           title="Base curatoriale e copertina"
           description="Titolo, slug e copertina devono reggere sia nella pagina raccolta sia nei punti di promozione pubblica. Qui conviene essere netti e riconoscibili."
@@ -262,12 +248,12 @@ export function CollectionForm({
 
             <label className="block">
               <FieldLabel label="Slug" />
-              <input
+              <LocalizedAttributes><input
                 name="slug"
                 defaultValue={values.slug}
                 placeholder="lascia vuoto per generarlo dal titolo"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.slug} />
             </label>
 
@@ -285,13 +271,13 @@ export function CollectionForm({
 
             <label className="block">
               <FieldLabel label="URL immagine di copertina" />
-              <input
+              <LocalizedAttributes><input
                 type="url"
                 defaultValue={values.cover_image_url}
                 readOnly
                 aria-label="URL copertina selezionato"
                 className="tv-cc-field"
-              />
+              /></LocalizedAttributes>
               <FieldError error={state.fieldErrors?.cover_image_url} />
               <div className="mt-4">
                 <FieldLabel label="Scegli dalla media library" />
@@ -310,9 +296,9 @@ export function CollectionForm({
               <FieldError error={state.fieldErrors?.cover_kicker} />
             </label>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Narrazione"
           title="Tesi, punti chiave e teaser premium"
           description="Questo blocco definisce perché la raccolta esiste, quali segnali mette in evidenza e quanto dell'approfondimento premium vuoi lasciare intravedere."
@@ -353,9 +339,9 @@ export function CollectionForm({
               <FieldError error={state.fieldErrors?.premium_teaser} />
             </label>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Postura"
           title="Tema, accesso e stato editoriale"
           description="Qui decidi dove vive la raccolta nel prodotto, per chi è pensata e se è pronta per stare nella parte pubblica o restare in lavorazione."
@@ -370,7 +356,7 @@ export function CollectionForm({
               >
                 {collectionThemes.map((theme) => (
                   <option key={theme} value={theme}>
-                    {theme}
+                    <LocalizedText>{theme}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -386,7 +372,7 @@ export function CollectionForm({
               >
                 {collectionAudiences.map((audience) => (
                   <option key={audience} value={audience}>
-                    {audience}
+                    <LocalizedText>{audience}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -402,7 +388,7 @@ export function CollectionForm({
               >
                 {collectionDifficulties.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
-                    {difficulty}
+                    <LocalizedText>{difficulty}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -418,7 +404,7 @@ export function CollectionForm({
               >
                 {collectionTones.map((tone) => (
                   <option key={tone} value={tone}>
-                    {tone}
+                    <LocalizedText>{tone}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -434,7 +420,7 @@ export function CollectionForm({
               >
                 {collectionAccessModes.map((access) => (
                   <option key={access} value={access}>
-                    {getCollectionAccessMeta(access).label}
+                    <LocalizedText>{getCollectionAccessMeta(access).label}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -450,7 +436,7 @@ export function CollectionForm({
               >
                 {collectionSurfaces.map((surface) => (
                   <option key={surface} value={surface}>
-                    {getCollectionSurfaceMeta(surface).label}
+                    <LocalizedText>{getCollectionSurfaceMeta(surface).label}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -466,7 +452,7 @@ export function CollectionForm({
               >
                 {collectionEditorialStates.map((editorialState) => (
                   <option key={editorialState} value={editorialState}>
-                    {getCollectionEditorialStateMeta(editorialState).label}
+                    <LocalizedText>{getCollectionEditorialStateMeta(editorialState).label}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -482,7 +468,7 @@ export function CollectionForm({
               >
                 {collectionFeaturedSlots.map((slot) => (
                   <option key={slot || "none"} value={slot}>
-                    {slot || "nessuno"}
+                    <LocalizedText>{slot || "nessuno"}</LocalizedText>
                   </option>
                 ))}
               </select>
@@ -500,9 +486,9 @@ export function CollectionForm({
               <FieldError error={state.fieldErrors?.editorial_order} />
             </label>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Timing"
           title="Programmazione e date pubbliche"
           description="Non servono sempre tutte, ma quando una raccolta esce o viene archiviata conviene lasciare un ritmo leggibile nell'archivio editoriale."
@@ -549,9 +535,9 @@ export function CollectionForm({
               />
             </label>
           </div>
-        </FormSection>
+        </FormSection></LocalizedAttributes>
 
-        <FormSection
+        <LocalizedAttributes><FormSection
           eyebrow="Sequenza tool"
           title="Sequenza, ruolo e tool guida"
           description="Questo è il cuore della raccolta. Ogni spazio deve dire chiaramente perché il tool entra nel percorso, non solo in che categoria vive."
@@ -559,18 +545,13 @@ export function CollectionForm({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
               <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                {availableTools.length} tool disponibili
-              </span>
+                {availableTools.length}<LocalizedText>{" tool disponibili "}</LocalizedText></span>
               <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                {filledSlots.length} spazi compilati
-              </span>
+                {filledSlots.length}<LocalizedText>{" spazi compilati "}</LocalizedText></span>
               <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                {publishedFilledSlots} pubblicati
-              </span>
+                {publishedFilledSlots}<LocalizedText>{" pubblicati "}</LocalizedText></span>
             </div>
-            <p className="text-sm leading-6" >
-              Un solo tool guida rende la lettura più chiara anche nelle card e nei teaser.
-            </p>
+            <p className="text-sm leading-6" ><LocalizedText>{"Un solo tool guida rende la lettura più chiara anche nelle card e nei teaser. "}</LocalizedText></p>
           </div>
 
           <div className="mt-5 grid gap-4">
@@ -585,26 +566,24 @@ export function CollectionForm({
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3 soft-divider">
                     <div>
-                      <p className="editorial-label">Slot {String(index + 1).padStart(2, "0")}</p>
+                      <p className="editorial-label"><LocalizedText>{"Slot "}</LocalizedText><LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText></p>
                       <p className="mt-1 text-sm font-semibold" >
-                        {selectedTool ? selectedTool.name : "Nessun tool selezionato"}
+                        <LocalizedText>{selectedTool ? selectedTool.name : "Nessun tool selezionato"}</LocalizedText>
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {selectedTool ? (
                         <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                          {selectedTool.category}
+                          <LocalizedText>{selectedTool.category}</LocalizedText>
                         </span>
                       ) : null}
                       {selectedTool ? (
                         <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                          {selectedTool.is_published === false ? "bozza" : "pubblicato"}
+                          <LocalizedText>{selectedTool.is_published === false ? "bozza" : "pubblicato"}</LocalizedText>
                         </span>
                       ) : null}
                       {slot.featured ? (
-                        <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]">
-                          tool guida
-                        </span>
+                        <span className="selection-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]"><LocalizedText>{"tool guida "}</LocalizedText></span>
                       ) : null}
                     </div>
                   </div>
@@ -618,11 +597,11 @@ export function CollectionForm({
                         className="tv-cc-field"
                         
                       >
-                        <option value="">Seleziona un tool</option>
+                        <option value=""><LocalizedText>{"Seleziona un tool"}</LocalizedText></option>
                         {availableTools.map((tool) => (
                           <option key={tool.slug} value={tool.slug}>
-                            {tool.name} · {tool.category}
-                            {tool.is_published === false ? " · bozza" : ""}
+                            {tool.name} · <LocalizedText>{tool.category}</LocalizedText>
+                            <LocalizedText>{tool.is_published === false ? " · bozza" : ""}</LocalizedText>
                           </option>
                         ))}
                       </select>
@@ -663,7 +642,7 @@ export function CollectionForm({
                       className="tv-cc-panel flex items-center justify-between xl:mt-7"
                       
                     >
-                      <span className="text-sm font-semibold">Tool guida</span>
+                      <span className="text-sm font-semibold"><LocalizedText>{"Tool guida"}</LocalizedText></span>
                       <input
                         name={`tool_featured_${index}`}
                         type="checkbox"
@@ -677,7 +656,7 @@ export function CollectionForm({
             })}
           </div>
           <FieldError error={state.fieldErrors?.included_tools} />
-        </FormSection>
+        </FormSection></LocalizedAttributes>
       </fieldset>
 
       <EditorStickyBar dirty={dirty} label={submitLabel} disabled={disabled} error={state.status === "error" ? state.message : undefined} />

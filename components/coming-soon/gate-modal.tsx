@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,20 +133,14 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
         className="tv-kbd-sheet relative z-10 w-full max-w-sm rounded-2xl border border-[rgba(124,77,255,0.18)] bg-[rgba(10,10,24,0.88)] p-6 shadow-2xl"
       >
         <div className="mb-5 text-center">
-          <h2 id={titleId} className="text-lg font-semibold text-[#F0EFFF]">
-            Accesso riservato
-          </h2>
-          <p id={descriptionId} className="mt-1 text-sm text-[#9E99B8]">
-            Inserisci la chiave per accedere al sito completo.
-          </p>
+          <h2 id={titleId} className="text-lg font-semibold text-[#F0EFFF]"><LocalizedText>{"Accesso riservato "}</LocalizedText></h2>
+          <p id={descriptionId} className="mt-1 text-sm text-[#9E99B8]"><LocalizedText>{"Inserisci la chiave per accedere al sito completo. "}</LocalizedText></p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor={passwordId} className="sr-only">
-              Password del varco interno
-            </label>
-            <Input
+            <label htmlFor={passwordId} className="sr-only"><LocalizedText>{"Password del varco interno "}</LocalizedText></label>
+            <LocalizedAttributes><Input
               type="password"
               ref={passwordRef}
               id={passwordId}
@@ -159,7 +154,7 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
               className="tv-kbd-input h-11 w-full rounded-xl border-[rgba(124,77,255,0.2)] bg-[rgba(18,18,42,0.6)] px-4 text-[#F0EFFF] placeholder:text-[#6B6690] focus-visible:border-[rgba(124,77,255,0.5)] focus-visible:ring-[rgba(124,77,255,0.25)]"
               aria-invalid={Boolean(error)}
               aria-describedby={error ? errorId : descriptionId}
-            />
+            /></LocalizedAttributes>
           </div>
 
           {error && (
@@ -169,7 +164,7 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
               aria-live="assertive"
               className="text-sm text-[#FF5252]"
             >
-              {error}
+              <LocalizedText>{error}</LocalizedText>
             </p>
           )}
 
@@ -180,9 +175,7 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
               onClick={onClose}
               disabled={loading}
               className="flex-1 rounded-xl border-[rgba(124,77,255,0.2)] bg-transparent text-[#9E99B8] hover:bg-[rgba(124,77,255,0.08)] hover:text-[#F0EFFF]"
-            >
-              Annulla
-            </Button>
+            ><LocalizedText>{"Annulla "}</LocalizedText></Button>
             <Button
               type="submit"
               disabled={loading}
@@ -190,9 +183,7 @@ export function GateModal({ open, onClose, onSuccess }: GateModalProps) {
             >
               {loading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
-              Entra
-            </Button>
+              ) : null}<LocalizedText>{"Entra "}</LocalizedText></Button>
           </div>
         </form>
       </div>

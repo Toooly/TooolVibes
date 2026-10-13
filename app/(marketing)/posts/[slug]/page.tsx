@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { Metadata } from "next";
 import Link from "@/components/ui/app-link";
 import { notFound } from "next/navigation";
@@ -214,7 +215,7 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
       <JsonLd data={postStructuredData} />
       <ReadingProgressBar contentSelector="[data-guides-article-body]" />
       <div className="guides-article">
-        <nav
+        <LocalizedAttributes><nav
           aria-label="Breadcrumb"
           style={{
             display: "flex",
@@ -228,14 +229,12 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
             padding: "0 0.25rem",
           }}
         >
-          <Link href="/posts" style={{ color: "var(--tv-accent-violet-on-dark)", textDecoration: "none" }}>
-            ← Tutte le guide
-          </Link>
+          <Link href="/posts" style={{ color: "var(--tv-accent-violet-on-dark)", textDecoration: "none" }}><LocalizedText>{"← Tutte le guide "}</LocalizedText></Link>
           <span aria-hidden>·</span>
-          <span>{kindLabel}</span>
+          <span><LocalizedText>{kindLabel}</LocalizedText></span>
           <span aria-hidden>·</span>
-          <span>{topicLabel}</span>
-        </nav>
+          <span><LocalizedText>{topicLabel}</LocalizedText></span>
+        </nav></LocalizedAttributes>
 
         <GuideArticleHero
           post={post}
@@ -244,16 +243,16 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
         />
 
         {tool ? (
-          <figure className="guides-article__hero-media" aria-label={`Visuale prodotto: ${tool.name}`}>
+          <LocalizedAttributes><figure className="guides-article__hero-media" aria-label={`Visuale prodotto: ${tool.name}`}>
             <span className="guides-article__hero-media-visual" aria-hidden="true">
               {toolWebsiteHost ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <LocalizedAttributes><img
                   src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(toolWebsiteHost)}&sz=128`}
                   alt=""
                   loading="eager"
                   decoding="async"
-                />
+                /></LocalizedAttributes>
               ) : (
                 <span className="guides-article__hero-media-glyph" aria-hidden="true">
                   {tool.name.charAt(0).toUpperCase()}
@@ -261,22 +260,22 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
               )}
             </span>
             <figcaption className="guides-article__hero-media-caption">
-              {tool.name} · {topicLabel}
+              {tool.name} · <LocalizedText>{topicLabel}</LocalizedText>
             </figcaption>
-          </figure>
+          </figure></LocalizedAttributes>
         ) : null}
 
         {isAuthoredPost && serverHeadings.length > 0 ? (
-          <nav className="guides-article__hero-index" aria-label="In questa guida">
-            <p className="guides-article__hero-index-title">In questa guida</p>
+          <LocalizedAttributes><nav className="guides-article__hero-index" aria-label="In questa guida">
+            <p className="guides-article__hero-index-title"><LocalizedText>{"In questa guida"}</LocalizedText></p>
             <ol>
               {serverHeadings.slice(0, 5).map((heading, index) => (
                 <li key={heading}>
-                  {index + 1}. {heading}
+                  {index + 1}. <LocalizedText>{heading}</LocalizedText>
                 </li>
               ))}
             </ol>
-          </nav>
+          </nav></LocalizedAttributes>
         ) : null}
 
         {isAuthoredPost ? (
@@ -294,9 +293,7 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
 
         <div className="guides-article__layout">
           <div className="guides-article-mobileheader">
-            <Link href="/posts" className="guides-article-mobileheader__back">
-              ← Tutte le guide
-            </Link>
+            <Link href="/posts" className="guides-article-mobileheader__back"><LocalizedText>{"← Tutte le guide "}</LocalizedText></Link>
             <HeaderAccountControl
               linkClassName="guides-article-mobileheader__account"
               menuClassName="guides-article-mobileheader__menu"
@@ -312,31 +309,31 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
                 data-guides-article-body
                 aria-labelledby="guide-article-title"
               >
-                <MemberPreviewGate
+                <LocalizedAttributes><MemberPreviewGate
                   title="Continua nel tuo spazio"
                   body="Il resto della guida resta nel tuo spazio, insieme alle decisioni e alle note sul tool."
                 >
                   <GuideMarkdown content={post.content_markdown ?? ""} />
-                  <GuideCallout kind="decision" title="In sintesi">
-                    {post.summary}
-                  </GuideCallout>
-                </MemberPreviewGate>
+                  <LocalizedAttributes><GuideCallout kind="decision" title="In sintesi">
+                    <LocalizedText>{post.summary}</LocalizedText>
+                  </GuideCallout></LocalizedAttributes>
+                </MemberPreviewGate></LocalizedAttributes>
               </article>
             ) : (
               <article className="guides-article__body" data-guides-article-body>
-                <p style={{ color: "var(--guides-text-soft)" }}>{post.summary}</p>
-                <MemberPreviewGate
+                <p style={{ color: "var(--guides-text-soft)" }}><LocalizedText>{post.summary}</LocalizedText></p>
+                <LocalizedAttributes><MemberPreviewGate
                   title="Continua nel tuo spazio"
                   body="Il resto della guida resta nel tuo spazio."
                 >
                   {post.details.length > 0 ? (
                     <ul>
                       {post.details.map((d) => (
-                        <li key={d}>{d}</li>
+                        <li key={d}><LocalizedText>{d}</LocalizedText></li>
                       ))}
                     </ul>
                   ) : null}
-                </MemberPreviewGate>
+                </MemberPreviewGate></LocalizedAttributes>
               </article>
             )}
 
@@ -373,11 +370,11 @@ const relatedTools = getToolsForGuide(guideContent, directoryTools);
               data-guide-partner-rail-host
             />
             {relatedTools.length > 0 ? (
-  <section className="guides-related-tools" aria-label="Tool correlati">
-    <p className="td-final-section-eyebrow">Tool correlati</p>
-    <h2 className="td-final-section-title">Tool menzionati in questa guida</h2>
+  <LocalizedAttributes><section className="guides-related-tools" aria-label="Tool correlati">
+    <p className="td-final-section-eyebrow"><LocalizedText>{"Tool correlati"}</LocalizedText></p>
+    <h2 className="td-final-section-title"><LocalizedText>{"Tool menzionati in questa guida"}</LocalizedText></h2>
     <EntityCardList entities={relatedTools.map((t) => ({ href: `/toools/${t.slug}`, title: t.name, kind: "tool" as const }))} />
-  </section>
+  </section></LocalizedAttributes>
 ) : null}
 <GuideRelatedRail
               tool={tool}

@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { ArrowRight, CornerDownRight, GitMerge } from "lucide-react";
 
@@ -42,12 +43,10 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
       aria-labelledby="cx-stack-flow-title"
     >
       <header className="cx-stack-flow-v4__head">
-        <h2 id="cx-stack-flow-title" className="sr-only">
-          Lo stack, in ordine
-        </h2>
+        <h2 id="cx-stack-flow-title" className="sr-only"><LocalizedText>{"Lo stack, in ordine "}</LocalizedText></h2>
       </header>
 
-      <ol className="cx-stack-flow-v4__list" aria-label="Stack CORE in ordine">
+      <LocalizedAttributes><ol className="cx-stack-flow-v4__list" aria-label="Stack CORE in ordine">
         {cores.map((slot, index) => {
           const toolHref = `/toools/${slot.tool.slug}`;
           const isManual = slot.manual_handoff === true;
@@ -61,12 +60,12 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
             >
               <div className="cx-stack-flow-v4__node" aria-hidden="true">
                 <span className="cx-stack-flow-v4__num">
-                  {String(index + 1).padStart(2, "0")}
+                  <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
                 </span>
               </div>
 
               <article className="cx-stack-flow-v4__stage">
-                <Link
+                <LocalizedAttributes><Link
                   href={toolHref}
                   className="cx-stack-flow-v4__row-link"
                   aria-label={`Vai alla scheda di ${slot.tool.name}`}
@@ -83,7 +82,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                   <span className="cx-stack-flow-v4__row-text">
                     {slot.stage && (
                       <span className="cx-stack-flow-v4__stage-label">
-                        {slot.stage}
+                        <LocalizedText>{slot.stage}</LocalizedText>
                       </span>
                     )}
                     <span className="cx-stack-flow-v4__tool">
@@ -91,14 +90,14 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                     </span>
                   </span>
                   <ArrowRight className="size-4 cx-stack-flow-v4__row-chevron" aria-hidden="true" />
-                </Link>
+                </Link></LocalizedAttributes>
                 <div className="cx-stack-flow-v4__stage-head">
                   {slot.stage && (
                     <span className="cx-stack-flow-v4__stage-label cx-stack-flow-v4__stage-label--full">
-                      {slot.stage}
+                      <LocalizedText>{slot.stage}</LocalizedText>
                     </span>
                   )}
-                  <Link
+                  <LocalizedAttributes><Link
                     href={toolHref}
                     className="cx-stack-flow-v4__tool cx-stack-flow-v4__tool--full"
                     aria-label={`Vai alla scheda di ${slot.tool.name}`}
@@ -106,7 +105,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                     aria-hidden="true"
                   >
                     {slot.tool.name}
-                  </Link>
+                  </Link></LocalizedAttributes>
                 </div>
 
                 <div className="cx-stack-flow-v4__row">
@@ -121,19 +120,17 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                   />
                   <div className="cx-stack-flow-v4__body">
                     {slot.role && (
-                      <h3 className="cx-stack-flow-v4__role">{slot.role}</h3>
+                      <h3 className="cx-stack-flow-v4__role"><LocalizedText>{slot.role}</LocalizedText></h3>
                     )}
                     {slot.why_chosen && (
-                      <p className="cx-stack-flow-v4__why">{slot.why_chosen}</p>
+                      <p className="cx-stack-flow-v4__why"><LocalizedText>{slot.why_chosen}</LocalizedText></p>
                     )}
 
                     {(slot.input || slot.output) && (
                       <div className="cx-stack-flow-v4__flow">
                         {slot.input && (
                           <div className="cx-stack-flow-v4__flow-cell">
-                            <span className="cx-stack-flow-v4__flow-key">
-                              ↓ Entra
-                            </span>
+                            <span className="cx-stack-flow-v4__flow-key"><LocalizedText>{"↓ Entra "}</LocalizedText></span>
                             <span className="cx-stack-flow-v4__flow-val">
                               {slot.input}
                             </span>
@@ -141,11 +138,9 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                         )}
                         {slot.output && (
                           <div className="cx-stack-flow-v4__flow-cell">
-                            <span className="cx-stack-flow-v4__flow-key">
-                              ↑ Esce
-                            </span>
+                            <span className="cx-stack-flow-v4__flow-key"><LocalizedText>{"↑ Esce "}</LocalizedText></span>
                             <span className="cx-stack-flow-v4__flow-val">
-                              {slot.output}
+                              <LocalizedText>{slot.output}</LocalizedText>
                             </span>
                           </div>
                         )}
@@ -171,8 +166,8 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                           />
                         )}
                         <span>
-                          {isManual ? "Passaggio manuale" : "Passaggio"}:{" "}
-                          {slot.next_handoff}
+                          <LocalizedText>{isManual ? "Passaggio manuale" : "Passaggio"}</LocalizedText>:<LocalizedText>{" "}</LocalizedText>
+                          <LocalizedText>{slot.next_handoff}</LocalizedText>
                         </span>
                       </p>
                     )}
@@ -183,7 +178,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                       slot.relevant_guide_slug) && (
                       <details className="cx-stack-flow-v4__details">
                         <summary className="cx-stack-flow-v4__details-summary">
-                          <span>Più dettagli su {slot.tool.name}</span>
+                          <span><LocalizedText>{"Più dettagli su "}</LocalizedText>{slot.tool.name}</span>
                           <ArrowRight
                             className="size-3 cx-stack-flow-v4__details-arrow"
                             aria-hidden="true"
@@ -192,34 +187,27 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                         <div className="cx-stack-flow-v4__details-body">
                           {slot.limitations && (
                             <div>
-                              <span className="cx-stack-flow-v4__details-label">
-                                Limiti
-                              </span>
-                              <p>{slot.limitations}</p>
+                              <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Limiti "}</LocalizedText></span>
+                              <p><LocalizedText>{slot.limitations}</LocalizedText></p>
                             </div>
                           )}
                           {slot.when_to_skip && (
                             <div>
-                              <span className="cx-stack-flow-v4__details-label">
-                                Quando saltarlo
-                              </span>
-                              <p>{slot.when_to_skip}</p>
+                              <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando saltarlo "}</LocalizedText></span>
+                              <p><LocalizedText>{slot.when_to_skip}</LocalizedText></p>
                             </div>
                           )}
                           {slot.replacement_trigger && (
                             <div>
-                              <span className="cx-stack-flow-v4__details-label">
-                                Quando cambiarlo
-                              </span>
-                              <p>{slot.replacement_trigger}</p>
+                              <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando cambiarlo "}</LocalizedText></span>
+                              <p><LocalizedText>{slot.replacement_trigger}</LocalizedText></p>
                             </div>
                           )}
                           {slot.relevant_guide_slug && (
                             <Link
                               href={`/posts/${slot.relevant_guide_slug}`}
                               className="cx-stack-flow-v4__guide-link"
-                            >
-                              Approfondisci {slot.tool.name}
+                            ><LocalizedText>{"Approfondisci "}</LocalizedText>{slot.tool.name}
                               <ArrowRight
                                 className="size-3"
                                 aria-hidden="true"
@@ -235,17 +223,17 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
             </li>
           );
         })}
-      </ol>
+      </ol></LocalizedAttributes>
       {collection.rationale ? (
           <details className="cx-stack-flow-v4__why">
-            <summary>Perché questa raccolta</summary>
-            <p className="cx-stack-flow-v4__lede">{collection.rationale}</p>
+            <summary><LocalizedText>{"Perché questa raccolta"}</LocalizedText></summary>
+            <p className="cx-stack-flow-v4__lede"><LocalizedText>{collection.rationale}</LocalizedText></p>
           </details>
         ) : null}
 
       {optionals.length > 0 && (
         <div className="cx-stack-flow-v4__optional">
-          <h3 className="cx-stack-flow-v4__sub-label">Aggiungi solo se serve</h3>
+          <h3 className="cx-stack-flow-v4__sub-label"><LocalizedText>{"Aggiungi solo se serve"}</LocalizedText></h3>
           <ul className="cx-stack-flow-v4__optional-list">
             {optionals.map((slot) => (
               <li
@@ -270,18 +258,18 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                   </Link>
                   {slot.stage && (
                     <span className="cx-stack-flow-v4__optional-stage">
-                      {slot.stage}
+                      <LocalizedText>{slot.stage}</LocalizedText>
                     </span>
                   )}
                 </div>
                 {slot.note && (
                   <p className="cx-stack-flow-v4__optional-note">
-                    {slot.note}
+                    <LocalizedText>{slot.note}</LocalizedText>
                   </p>
                 )}
                 {slot.when_to_skip && (
                   <p className="cx-stack-flow-v4__optional-skip">
-                    <strong>Quando saltarlo:</strong> {slot.when_to_skip}
+                    <strong><LocalizedText>{"Quando saltarlo:"}</LocalizedText></strong> <LocalizedText>{slot.when_to_skip}</LocalizedText>
                   </p>
                 )}
               </li>
@@ -292,9 +280,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
 
       {alternatives.length > 0 && (
         <div className="cx-stack-flow-v4__alternative">
-          <h3 className="cx-stack-flow-v4__sub-label">
-            Sostituisce, non aggiunge
-          </h3>
+          <h3 className="cx-stack-flow-v4__sub-label"><LocalizedText>{"Sostituisce, non aggiunge "}</LocalizedText></h3>
           <ul className="cx-stack-flow-v4__alternative-list">
             {alternatives.map((slot) => {
               const replaces = slot.alternatives ?? [];
@@ -331,18 +317,18 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                       </Link>
                       {slot.stage && (
                         <span className="cx-stack-flow-v4__alternative-stage">
-                          {slot.stage}
+                          <LocalizedText>{slot.stage}</LocalizedText>
                         </span>
                       )}
                     </div>
                     {slot.note && (
                       <p className="cx-stack-flow-v4__alternative-note">
-                        {slot.note}
+                        <LocalizedText>{slot.note}</LocalizedText>
                       </p>
                     )}
                     {replacesNames.length > 0 && (
                       <p className="cx-stack-flow-v4__alternative-replaces">
-                        <strong>Sostituisce</strong> {replacesNames.join(", ")}
+                        <strong><LocalizedText>{"Sostituisce"}</LocalizedText></strong> <LocalizedText>{replacesNames.join(", ")}</LocalizedText>
                       </p>
                     )}
                   </div>

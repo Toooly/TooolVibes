@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 /**
  * Wave 6 two-speed Save overflow + Wave 9 create/add stack from Speed 2.
  * Speed 2 = hold 400ms or ⋯. Desktop ≥1024 popover; below that a bottom sheet.
@@ -124,41 +125,31 @@ function SaveOverflowPanel({
     <div className="flex flex-col gap-3" data-save-overflow="">
       <div className="flex flex-col gap-1">
         {isSaved ? (
-          <p className="text-[length:var(--tv-text-xs)] text-[var(--tv-ink-muted-aa)]">
-            Nei Salvati
-          </p>
+          <p className="text-[length:var(--tv-text-xs)] text-[var(--tv-ink-muted-aa)]"><LocalizedText>{"Nei Salvati "}</LocalizedText></p>
         ) : null}
       </div>
 
       <div className="flex flex-col gap-1.5">
         {inCompare ? (
-          <p className="min-h-11 px-1 text-sm text-[var(--tv-ink-secondary)]">
-            Nel confronto
-          </p>
+          <p className="min-h-11 px-1 text-sm text-[var(--tv-ink-secondary)]"><LocalizedText>{"Nel confronto "}</LocalizedText></p>
         ) : compareFull ? (
           <div className="flex flex-col gap-1.5">
             <button
               type="button"
               disabled
               className="min-h-11 rounded-lg px-3 text-left text-sm text-[var(--tv-ink-muted-aa)] opacity-60"
-            >
-              Pieno · apri confronto
-            </button>
+            ><LocalizedText>{"Pieno · apri confronto "}</LocalizedText></button>
             <a
               href="/compare"
               className="min-h-11 px-3 text-sm font-medium text-[var(--tv-ink-secondary)] underline-offset-2 hover:underline"
-            >
-              Apri confronto
-            </a>
+            ><LocalizedText>{"Apri confronto "}</LocalizedText></a>
           </div>
         ) : (
           <button
             type="button"
             onClick={handleConfronta}
             className="min-h-11 rounded-lg px-3 text-left text-sm font-medium text-[var(--tv-ink-primary)] hover:bg-[var(--tv-surface-elevated)]"
-          >
-            Confronta
-          </button>
+          ><LocalizedText>{"Confronta "}</LocalizedText></button>
         )}
       </div>
 
@@ -200,14 +191,14 @@ export function SaveOverflow({
   );
   const triggerLabel = `Altre azioni per ${toolName}`;
   const title = (
-    <span data-save-overflow-title="">{toolName}</span>
+    <span data-save-overflow-title=""><LocalizedText>{toolName}</LocalizedText></span>
   );
   const description = `Azioni per ${toolName}`;
 
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger
+        <LocalizedAttributes><PopoverTrigger
           type="button"
           nativeButton
           data-save-overflow-trigger=""
@@ -217,7 +208,7 @@ export function SaveOverflow({
           aria-expanded={open}
         >
           <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
-        </PopoverTrigger>
+        </PopoverTrigger></LocalizedAttributes>
         {open ? (
           <PopoverContent
             align="end"
@@ -228,7 +219,7 @@ export function SaveOverflow({
             <PopoverHeader>
               <PopoverTitle>{title}</PopoverTitle>
               <PopoverDescription className="sr-only">
-                {description}
+                <LocalizedText>{description}</LocalizedText>
               </PopoverDescription>
             </PopoverHeader>
             <SaveOverflowPanel
@@ -244,7 +235,7 @@ export function SaveOverflow({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger
+      <LocalizedAttributes><SheetTrigger
         type="button"
         nativeButton
         data-save-overflow-trigger=""
@@ -254,7 +245,7 @@ export function SaveOverflow({
         aria-expanded={open}
       >
         <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
-      </SheetTrigger>
+      </SheetTrigger></LocalizedAttributes>
       {open ? (
         <SheetContent
           side="bottom"
@@ -268,7 +259,7 @@ export function SaveOverflow({
         >
           <SheetHeader>
             <SheetTitle>{title}</SheetTitle>
-            <SheetDescription className="sr-only">{description}</SheetDescription>
+            <SheetDescription className="sr-only"><LocalizedText>{description}</LocalizedText></SheetDescription>
           </SheetHeader>
           <div className="px-4 pb-2">
             <SaveOverflowPanel

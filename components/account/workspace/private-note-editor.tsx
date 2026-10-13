@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useId, useState } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -86,9 +87,7 @@ export function PrivateNoteEditor({
           type="button"
           className="tv-private-note__trigger"
           onClick={requestAuth}
-        >
-          Nota privata
-        </button>
+        ><LocalizedText>{"Nota privata "}</LocalizedText></button>
       </div>
     );
   }
@@ -107,9 +106,7 @@ export function PrivateNoteEditor({
             save(draft.trim() || null);
           }}
         >
-          <label className="tv-private-note__label" htmlFor={fieldId}>
-            Nota privata
-          </label>
+          <label className="tv-private-note__label" htmlFor={fieldId}><LocalizedText>{"Nota privata "}</LocalizedText></label>
           <textarea
             id={fieldId}
             className="tv-private-note__textarea"
@@ -128,32 +125,24 @@ export function PrivateNoteEditor({
           ) : null}
           {error ? (
             <p className="tv-private-note__error" role="alert">
-              {error}
+              <LocalizedText>{error}</LocalizedText>
             </p>
           ) : status === "saved" ? (
-            <p className="tv-private-note__status" id={statusId} role="status">
-              Salvata
-            </p>
+            <p className="tv-private-note__status" id={statusId} role="status"><LocalizedText>{"Salvata "}</LocalizedText></p>
           ) : null}
           <div className="tv-private-note__actions">
-            <button type="submit" className="tv-private-note__save">
-              Salva
-            </button>
+            <button type="submit" className="tv-private-note__save"><LocalizedText>{"Salva "}</LocalizedText></button>
             <button
               type="button"
               className="tv-private-note__cancel"
               onClick={() => setOpen(false)}
-            >
-              Annulla
-            </button>
+            ><LocalizedText>{"Annulla "}</LocalizedText></button>
             {note ? (
               <button
                 type="button"
                 className="tv-private-note__delete"
                 onClick={() => save(null)}
-              >
-                Elimina
-              </button>
+              ><LocalizedText>{"Elimina "}</LocalizedText></button>
             ) : null}
           </div>
         </form>
@@ -165,8 +154,8 @@ export function PrivateNoteEditor({
         >
           {note ? (
             <>
-              <span className="tv-private-note__kicker">Nota privata</span>
-              <span className="tv-private-note__preview">{preview}</span>
+              <span className="tv-private-note__kicker"><LocalizedText>{"Nota privata"}</LocalizedText></span>
+              <span className="tv-private-note__preview"><LocalizedText>{preview}</LocalizedText></span>
             </>
           ) : (
             "Nota privata"

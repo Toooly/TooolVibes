@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 import Link from "@/components/ui/app-link";
 
@@ -32,15 +33,15 @@ export function ControlCenterHeader({
   return (
     <header className={cn("tv-cc-header", className)}>
       <div>
-        <p className="tv-cc-kicker">{kicker}</p>
-        <h1 className="tv-cc-title">{title}</h1>
-        {description ? <p className="tv-cc-desc">{description}</p> : null}
+        <p className="tv-cc-kicker"><LocalizedText>{kicker}</LocalizedText></p>
+        <h1 className="tv-cc-title"><LocalizedText>{title}</LocalizedText></h1>
+        {description ? <p className="tv-cc-desc"><LocalizedText>{description}</LocalizedText></p> : null}
         {metrics && metrics.length > 0 ? (
           <div className="tv-cc-metrics">
             {metrics.map((item) => (
               <span key={item.label} className="tv-cc-metric">
                 <strong>{item.value}</strong>
-                {item.label}
+                <LocalizedText>{item.label}</LocalizedText>
               </span>
             ))}
           </div>
@@ -50,12 +51,12 @@ export function ControlCenterHeader({
         <div className="admin-sticky-actions">
           {backHref ? (
             <Link href={backHref} className="tv-cc-btn tv-cc-btn--ghost">
-              {backLabel ?? "Indietro"}
+              <LocalizedText>{backLabel ?? "Indietro"}</LocalizedText>
             </Link>
           ) : null}
           {primaryHref && primaryLabel ? (
             <Link href={primaryHref} className="tv-cc-btn tv-cc-btn--primary">
-              {primaryLabel}
+              <LocalizedText>{primaryLabel}</LocalizedText>
             </Link>
           ) : null}
         </div>
@@ -72,18 +73,18 @@ export function ControlCenterFilters({
   active: string;
 }) {
   return (
-    <nav className="tv-cc-filters" aria-label="Filtri">
+    <LocalizedAttributes><nav className="tv-cc-filters" aria-label="Filtri">
       {items.map((item) => (
         <Link
           key={item.value}
           href={item.href}
           className={cn("tv-cc-filter", active === item.value && "is-active")}
         >
-          {item.label}
-          {typeof item.count === "number" ? ` (${item.count})` : ""}
+          <LocalizedText>{item.label}</LocalizedText>
+          <LocalizedText>{typeof item.count === "number" ? ` (${item.count})` : ""}</LocalizedText>
         </Link>
       ))}
-    </nav>
+    </nav></LocalizedAttributes>
   );
 }
 

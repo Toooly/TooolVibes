@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/ui/app-link";
@@ -132,7 +133,7 @@ export function CompareSessionDock() {
   };
 
   const dock = (
-    <div
+    <LocalizedAttributes><div
       ref={dockRef}
       className="tv-compare-dock"
       data-compare-dock=""
@@ -146,7 +147,7 @@ export function CompareSessionDock() {
       aria-live="polite"
     >
       <div className="tv-compare-dock__inner">
-          <button
+          <LocalizedAttributes><button
             type="button"
             className="tv-compare-dock__toggle"
             aria-expanded={!collapsed}
@@ -159,7 +160,7 @@ export function CompareSessionDock() {
             onClick={toggle}
           >
             <ChevronUp size={16} aria-hidden="true" />
-          </button>
+          </button></LocalizedAttributes>
         <p className="tv-compare-dock__count" style={{ whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
           {slugs.length}/{MAX_COMPARE_TOOLS}
         </p>
@@ -170,14 +171,14 @@ export function CompareSessionDock() {
         >
           {slugs.map((slug) => (
             <li key={slug}>
-              <span>{toolName(slug)}</span>
-              <button
+              <span><LocalizedText>{toolName(slug)}</LocalizedText></span>
+              <LocalizedAttributes><button
                 type="button"
                 aria-label={`Togli ${toolName(slug)} dal confronto`}
                 onClick={() => toggleCompare(slug)}
               >
                 <X size={14} aria-hidden="true" />
-              </button>
+              </button></LocalizedAttributes>
             </li>
           ))}
         </ul>
@@ -187,10 +188,10 @@ export function CompareSessionDock() {
           className="tv-compare-dock__cta"
         >
           <Columns2 size={15} aria-hidden="true" />
-          {ready ? "Confronta" : "Aggiungi tool"}
+          <LocalizedText>{ready ? "Confronta" : "Aggiungi tool"}</LocalizedText>
         </Link>
       </div>
-    </div>
+    </div></LocalizedAttributes>
   );
 
   if (typeof document === "undefined") return null;

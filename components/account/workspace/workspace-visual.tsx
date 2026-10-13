@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { ReactNode } from "react";
 
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
@@ -88,7 +89,7 @@ export function WorkspaceCompositionBar({
   const total = evaluating + selected + using;
   if (total === 0) return null;
   return (
-    <span
+    <LocalizedAttributes><span
       className="tv-compose"
       aria-hidden="true"
       title={`${evaluating} in valutazione · ${selected} scelti · ${using} in uso`}
@@ -102,7 +103,7 @@ export function WorkspaceCompositionBar({
       {using > 0 ? (
         <span className="tv-compose__seg" data-tone="using" style={{ flex: using }} />
       ) : null}
-    </span>
+    </span></LocalizedAttributes>
   );
 }
 
@@ -146,12 +147,12 @@ export function WorkspaceDecisionTrace({
     <ol className="tv-story">
       {cast.length > 1 ? (
         <li className="tv-story__act" data-act="compare">
-          <p className="tv-story__kicker">Confronto</p>
+          <p className="tv-story__kicker"><LocalizedText>{"Confronto"}</LocalizedText></p>
           <ul className="tv-story__cast">
             {cast.map((item) => (
               <li key={item} className="tv-story__cast-item">
                 <WorkspaceCatalogMark catalog={catalog} slug={item} size="sm" />
-                <span>{toolName(catalog, item)}</span>
+                <span><LocalizedText>{toolName(catalog, item)}</LocalizedText></span>
               </li>
             ))}
           </ul>
@@ -160,28 +161,28 @@ export function WorkspaceDecisionTrace({
 
       <li className="tv-story__act" data-act={outcome ?? tool.stage ?? "saved"}>
         <p className="tv-story__kicker">
-          {outcome ? OUTCOME_STATE_LABELS[outcome] : STAGE_LABELS[(tool.stage ?? "saved") as ShortlistStage]}
+          <LocalizedText>{outcome ? OUTCOME_STATE_LABELS[outcome] : STAGE_LABELS[(tool.stage ?? "saved") as ShortlistStage]}</LocalizedText>
         </p>
         <div className="tv-story__hero">
           <WorkspaceCatalogMark catalog={catalog} slug={slug} size="md" />
           <span>
-            <strong>{toolName(catalog, slug)}</strong>
-            {outcomeDate ? <span className="tv-story__when">{outcomeDate}</span> : null}
+            <strong><LocalizedText>{toolName(catalog, slug)}</LocalizedText></strong>
+            {outcomeDate ? <span className="tv-story__when"><LocalizedText>{outcomeDate}</LocalizedText></span> : null}
           </span>
         </div>
-        {tool.useCase ? <p className="tv-story__context">{tool.useCase}</p> : null}
-        {objective ? <p className="tv-story__context">{objective}</p> : null}
-        {why ? <p className="tv-story__why">{why}</p> : null}
+        {tool.useCase ? <p className="tv-story__context"><LocalizedText>{tool.useCase}</LocalizedText></p> : null}
+        {objective ? <p className="tv-story__context"><LocalizedText>{objective}</LocalizedText></p> : null}
+        {why ? <p className="tv-story__why"><LocalizedText>{why}</LocalizedText></p> : null}
       </li>
 
       {usage && usage !== "replaced" ? (
         <li className="tv-story__act" data-act={usage}>
-          <p className="tv-story__kicker">{USAGE_STATE_LABELS[usage]}</p>
+          <p className="tv-story__kicker"><LocalizedText>{USAGE_STATE_LABELS[usage]}</LocalizedText></p>
           <div className="tv-story__hero">
             <WorkspaceCatalogMark catalog={catalog} slug={slug} size="sm" />
-            <span>{toolName(catalog, slug)}</span>
+            <span><LocalizedText>{toolName(catalog, slug)}</LocalizedText></span>
             {formatWorkspaceDate(tool.updatedAt) ? (
-              <span className="tv-story__when">{formatWorkspaceDate(tool.updatedAt)}</span>
+              <span className="tv-story__when"><LocalizedText>{formatWorkspaceDate(tool.updatedAt)}</LocalizedText></span>
             ) : null}
           </div>
         </li>
@@ -189,7 +190,7 @@ export function WorkspaceDecisionTrace({
 
       {usage === "replaced" && tool.replacedBy ? (
         <li className="tv-story__act" data-act="replaced">
-          <p className="tv-story__kicker">Sostituito da</p>
+          <p className="tv-story__kicker"><LocalizedText>{"Sostituito da"}</LocalizedText></p>
           <WorkspaceReplacement
             catalog={catalog}
             fromSlug={slug}
@@ -217,13 +218,13 @@ export function WorkspaceReplacement({
   return (
     <p className="tv-replace">
       <WorkspaceCatalogMark catalog={catalog} slug={fromSlug} size="sm" />
-      <span>{toolName(catalog, fromSlug)}</span>
+      <span><LocalizedText>{toolName(catalog, fromSlug)}</LocalizedText></span>
       <span className="tv-replace__arrow" aria-hidden="true">
         →
       </span>
       <WorkspaceCatalogMark catalog={catalog} slug={toSlug} size="sm" />
-      <span>{toolName(catalog, toSlug)}</span>
-      {when ? <span className="tv-trace__detail">{when}</span> : null}
+      <span><LocalizedText>{toolName(catalog, toSlug)}</LocalizedText></span>
+      {when ? <span className="tv-trace__detail"><LocalizedText>{when}</LocalizedText></span> : null}
     </p>
   );
 }

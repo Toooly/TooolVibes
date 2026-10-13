@@ -1,3 +1,4 @@
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import type { CuratedCollection } from "@/lib/types/collection";
 import { pickFeaturedCollection } from "@/lib/collections/visual-identity";
 
@@ -18,14 +19,12 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
             aria-labelledby="cx-index-empty-title"
           >
             <div className="mobile-library-empty__content">
-              <span className="mobile-library-empty__kicker">Raccolte</span>
-              <h1 id="cx-index-empty-title">Nessuna raccolta disponibile.</h1>
-              <p>Le raccolte sono in preparazione. Intanto esplora il catalogo.</p>
+              <span className="mobile-library-empty__kicker"><LocalizedText>{"Raccolte"}</LocalizedText></span>
+              <h1 id="cx-index-empty-title"><LocalizedText>{"Nessuna raccolta disponibile."}</LocalizedText></h1>
+              <p><LocalizedText>{"Le raccolte sono in preparazione. Intanto esplora il catalogo."}</LocalizedText></p>
             </div>
             <div className="mobile-library-empty__actions">
-              <a href="/archivio" className="mobile-library-empty__cta">
-                Esplora i tool
-              </a>
+              <a href="/archivio" className="mobile-library-empty__cta"><LocalizedText>{"Esplora i tool "}</LocalizedText></a>
             </div>
           </section>
         </div>
@@ -43,10 +42,10 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
       <div className="cx-index__inner">
         <header className="cx-index__masthead motion-reveal">
           <div>
-            <h1 className="cx-index__title">Raccolte</h1>
+            <h1 className="cx-index__title"><LocalizedText>{"Raccolte"}</LocalizedText></h1>
           </div>
           <div>
-            <p className="cx-index__lede">Stack completi per risultati concreti.</p>
+            <p className="cx-index__lede"><LocalizedText>{"Stack completi per risultati concreti."}</LocalizedText></p>
           </div>
         </header>
 
@@ -56,7 +55,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
           </div>
         ) : null}
 
-        <MemberPreviewGate
+        <LocalizedAttributes><MemberPreviewGate
           title="Continua nel tuo spazio"
           body="Le altre raccolte restano nel tuo spazio."
         >
@@ -65,7 +64,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
               <CollectionCardV4 key={collection.slug} collection={collection} />
             ))}
           </div>
-        </MemberPreviewGate>
+        </MemberPreviewGate></LocalizedAttributes>
       </div>
     </div>
   );

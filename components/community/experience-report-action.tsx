@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useEffect, useId, useState, type FormEvent } from "react";
 
 import { useAccount } from "@/components/account/account-provider";
@@ -100,7 +101,7 @@ export function ExperienceReportAction({
   if (blocked || phase === "reported") {
     return (
       <p className="td-final-experience__report-status" role="status">
-        {blocked ? "L\u2019hai gi\u00e0 segnalata." : "Segnalazione inviata."}
+        <LocalizedText>{blocked ? "L\u2019hai gi\u00e0 segnalata." : "Segnalazione inviata."}</LocalizedText>
       </p>
     );
   }
@@ -111,21 +112,14 @@ export function ExperienceReportAction({
         type="button"
         className="td-final-experience__report"
         onClick={() => setOpen(true)}
-      >
-        Segnala
-      </button>
+      ><LocalizedText>{"Segnala "}</LocalizedText></button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="td-final-report-dialog" showCloseButton={false}>
-          <DialogTitle className="td-final-report-dialog__title">
-            Segnala questa esperienza
-          </DialogTitle>
-          <DialogDescription className="td-final-report-dialog__description">
-            Aiutaci a controllare contenuti che potrebbero non rispettare le
-            regole di TooolVibes.
-          </DialogDescription>
+          <DialogTitle className="td-final-report-dialog__title"><LocalizedText>{"Segnala questa esperienza "}</LocalizedText></DialogTitle>
+          <DialogDescription className="td-final-report-dialog__description"><LocalizedText>{"Aiutaci a controllare contenuti che potrebbero non rispettare le regole di TooolVibes. "}</LocalizedText></DialogDescription>
           <form className="td-final-report-dialog__form" onSubmit={submit} noValidate>
             <fieldset className="td-final-report-dialog__fieldset">
-              <legend>Motivo</legend>
+              <legend><LocalizedText>{"Motivo"}</LocalizedText></legend>
               {COMMUNITY_REPORT_REASONS.map((value) => (
                 <label key={value} className="td-final-report-dialog__option">
                   <input
@@ -143,9 +137,7 @@ export function ExperienceReportAction({
                 </label>
               ))}
             </fieldset>
-            <label className="td-final-report-dialog__label" htmlFor={`${formId}-details`}>
-              Dettagli
-              <textarea
+            <label className="td-final-report-dialog__label" htmlFor={`${formId}-details`}><LocalizedText>{"Dettagli "}</LocalizedText><textarea
                 id={`${formId}-details`}
                 className="td-final-report-dialog__textarea"
                 value={details}
@@ -163,7 +155,7 @@ export function ExperienceReportAction({
             </label>
             {error ? (
               <p className="td-final-report-dialog__error" id={errorId} role="alert">
-                {error}
+                <LocalizedText>{error}</LocalizedText>
               </p>
             ) : null}
             <div className="td-final-report-dialog__actions">
@@ -172,7 +164,7 @@ export function ExperienceReportAction({
                 className="td-final-experience__more"
                 disabled={busy || !reason}
               >
-                {busy ? "Invio\u2026" : "Invia segnalazione"}
+                <LocalizedText>{busy ? "Invio\u2026" : "Invia segnalazione"}</LocalizedText>
               </button>
               <button
                 type="button"
@@ -181,9 +173,7 @@ export function ExperienceReportAction({
                   setOpen(false);
                   setError(null);
                 }}
-              >
-                Annulla
-              </button>
+              ><LocalizedText>{"Annulla "}</LocalizedText></button>
             </div>
           </form>
         </DialogContent>

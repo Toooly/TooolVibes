@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/localized-text";
 import { useMemo, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -45,13 +46,13 @@ export function ResponsiveDisclosureCard({
     >
       <div className="flex min-h-11 items-center gap-3 md:min-h-0 md:flex-col md:items-start">
         <span className="grid size-10 shrink-0 place-items-center rounded-2xl border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] text-[var(--tv-accent-brand-aa)] md:size-12 md:rounded-[18px]">
-          {icon}
+          <LocalizedText>{icon}</LocalizedText>
         </span>
         <h2
           id={titleId}
           className="min-w-0 text-[1rem] leading-tight text-[var(--tv-ink-primary)] md:mt-2 md:text-[1.36rem] md:leading-[1.08]"
         >
-          {title}
+          <LocalizedText>{title}</LocalizedText>
         </h2>
         <button
           type="button"

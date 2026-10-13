@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useState, useMemo, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
@@ -209,9 +210,7 @@ export function MobileShortlistBoard({
           aria-labelledby="mobile-library-decisions-title"
         >
           <h2 id="mobile-library-decisions-title">
-            <ClipboardCheck size={14} />
-            Decisioni registrate
-          </h2>
+            <ClipboardCheck size={14} /><LocalizedText>{"Decisioni registrate "}</LocalizedText></h2>
           <ul className="mt-2 flex flex-col gap-2">
             {decidedTools.map((tool) => {
               const outcome = decisionOutcomes[tool.slug];
@@ -225,39 +224,37 @@ export function MobileShortlistBoard({
 
               return (
                 <li key={tool.slug} className="mobile-library-board__decision">
-                  <button
+                  <LocalizedAttributes><button
                     type="button"
                     onClick={() => setNoteSlug(tool.slug)}
                     aria-label={`Apri decisione di ${tool.name}`}
                     className="text-sm font-semibold underline-offset-2 hover:underline"
                   >
                     {tool.name}
-                  </button>
+                  </button></LocalizedAttributes>
                   <span
                     className="shortlist-decision-chip"
                     data-outcome={outcome}
                   >
-                    {meta.stateLabel}
+                    <LocalizedText>{meta.stateLabel}</LocalizedText>
                   </span>
                   {usageLine ? (
-                    <span className="shortlist-usage-chip">{usageLine}</span>
+                    <span className="shortlist-usage-chip"><LocalizedText>{usageLine}</LocalizedText></span>
                   ) : null}
                   <span className="shortlist-decision-meta">
-                    {outcome === "deferred"
+                    <LocalizedText>{outcome === "deferred"
                       ? (formatRevisitLine(decisionRevisitAts[tool.slug]) ??
                         "Rivedi: data da impostare")
-                      : `Registrata ${formatDecisionTimestamp(decisionUpdatedAts[tool.slug])}`}
+                      : `Registrata ${formatDecisionTimestamp(decisionUpdatedAts[tool.slug])}`}</LocalizedText>
                   </span>
-                  <button
+                  <LocalizedAttributes><button
                     type="button"
                     onClick={() => reopenWorkspaceDecision(tool.slug)}
                     aria-label={`Riapri decisione di ${tool.name}`}
                     data-sonic-action="update"
                     className="shortlist-sheet-chip"
                   >
-                    <RotateCcw size={12} />
-                    Riapri
-                  </button>
+                    <RotateCcw size={12} /><LocalizedText>{"Riapri "}</LocalizedText></button></LocalizedAttributes>
                 </li>
               );
             })}
@@ -269,9 +266,7 @@ export function MobileShortlistBoard({
       {readyToCompare.length > 0 && (
         <div className="mobile-library-board__compare">
           <h2>
-            <GitCompare size={14} />
-            Pronti per confrontare
-          </h2>
+            <GitCompare size={14} /><LocalizedText>{"Pronti per confrontare "}</LocalizedText></h2>
           <div className="mobile-library-board__compare-list">
             {readyToCompare.map((tool) => (
               <Link
@@ -283,21 +278,21 @@ export function MobileShortlistBoard({
                 <span>{tool.name}</span>
               </Link>
             ))}
-            <Link
+            <LocalizedAttributes><Link
               href="/compare"
               className="mobile-library-board__compare-chip mobile-library-board__compare-chip--open"
               aria-label={`Apri il confronto con ${readyToCompare.length} tool`}
               data-sonic-action="navigate"
             >
-              <span>Apri il confronto</span>
+              <span><LocalizedText>{"Apri il confronto"}</LocalizedText></span>
               <ArrowRight size={13} aria-hidden="true" />
-            </Link>
+            </Link></LocalizedAttributes>
           </div>
         </div>
       )}
 
       {/* Shelves */}
-      <MobileLibraryShelf
+      <LocalizedAttributes><MobileLibraryShelf
         title="Preferiti"
         icon={Heart}
         tools={favoriteTools}
@@ -309,9 +304,9 @@ export function MobileShortlistBoard({
         toolUsages={toolUsages}
         toolReplacedBy={toolReplacedBy}
         onOpenMemory={setNoteSlug}
-      />
+      /></LocalizedAttributes>
 
-      <MobileLibraryShelf
+      <LocalizedAttributes><MobileLibraryShelf
         title="Da provare"
         icon={Bookmark}
         tools={toTryTools}
@@ -323,9 +318,9 @@ export function MobileShortlistBoard({
         toolUsages={toolUsages}
         toolReplacedBy={toolReplacedBy}
         onOpenMemory={setNoteSlug}
-      />
+      /></LocalizedAttributes>
 
-      <MobileLibraryShelf
+      <LocalizedAttributes><MobileLibraryShelf
         title="Recenti"
         icon={Clock}
         tools={recentTools}
@@ -337,7 +332,7 @@ export function MobileShortlistBoard({
         toolUsages={toolUsages}
         toolReplacedBy={toolReplacedBy}
         onOpenMemory={setNoteSlug}
-      />
+      /></LocalizedAttributes>
 
       {/* Decision memory bottom sheet (B32) */}
       <AnimatePresence>
@@ -387,12 +382,12 @@ function MobileLibraryHero({
           <Library size={22} />
         </div>
         <div>
-          <span className="mobile-library-hero__eyebrow">Salvati</span>
-          <h1 id="mobile-library-title">I tuoi Salvati</h1>
+          <span className="mobile-library-hero__eyebrow"><LocalizedText>{"Salvati"}</LocalizedText></span>
+          <h1 id="mobile-library-title"><LocalizedText>{"I tuoi Salvati"}</LocalizedText></h1>
           <p>
-            {totalCount > 0
+            <LocalizedText>{totalCount > 0
               ? `${totalCount} candidati. Salvare non è decidere.`
-              : "I Salvati sono il tavolo di lavoro. La decisione è il motivo della scelta."}
+              : "I Salvati sono il tavolo di lavoro. La decisione è il motivo della scelta."}</LocalizedText>
           </p>
         </div>
       </div>
@@ -401,7 +396,7 @@ function MobileLibraryHero({
         {stats.map((item) => (
           <div key={item.label} className="mobile-library-hero__stat">
             <strong>{item.value}</strong>
-            <span>{item.label}</span>
+            <span><LocalizedText>{item.label}</LocalizedText></span>
           </div>
         ))}
       </div>
@@ -449,7 +444,7 @@ function MobileLibraryShelf({
     >
       <div className="mobile-library-shelf__header">
         <Icon size={14} style={{ color }} />
-        <h2 style={{ color }}>{title}</h2>
+        <h2 style={{ color }}><LocalizedText>{title}</LocalizedText></h2>
         <span>{tools.length}</span>
       </div>
 
@@ -476,10 +471,8 @@ function MobileLibraryShelf({
           <span className="mobile-library-shelf__empty-icon" aria-hidden="true">
             <PlusCircle size={20} />
           </span>
-          <p className="mobile-library-shelf__empty-text">{emptyText}</p>
-          <Link href="/archivio" className="mobile-library-shelf__empty-cta">
-            Esplora candidati
-            <ArrowRight size={14} aria-hidden="true" />
+          <p className="mobile-library-shelf__empty-text"><LocalizedText>{emptyText}</LocalizedText></p>
+          <Link href="/archivio" className="mobile-library-shelf__empty-cta"><LocalizedText>{"Esplora candidati "}</LocalizedText><ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
       )}
@@ -524,7 +517,7 @@ function LibraryBook({
       className="mobile-library-book"
       style={{ "--book-color": color } as CSSProperties}
     >
-      <Link
+      <LocalizedAttributes><Link
         href={`/toools/${tool.slug}`}
         className="mobile-library-book__cover"
         aria-label={`Apri la scheda di ${tool.name}`}
@@ -532,45 +525,45 @@ function LibraryBook({
         <span className="mobile-library-book__face">
           {iconUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- TODO(B66): migrate this runtime image after the image contract is unified.
-            <img src={iconUrl} alt="" loading="lazy" />
+            <LocalizedAttributes><img src={iconUrl} alt="" loading="lazy" /></LocalizedAttributes>
           ) : (
             <span>{tool.name.slice(0, 2).toUpperCase()}</span>
           )}
         </span>
-      </Link>
+      </Link></LocalizedAttributes>
       <div className="mobile-library-book__meta">
         <strong>{tool.name}</strong>
-        <span>{getStageLabel(tool.stage)}</span>
+        <span><LocalizedText>{getStageLabel(tool.stage)}</LocalizedText></span>
         {decisionOutcome ? (
           <span>
-            {decisionOutcomeMeta[decisionOutcome].stateLabel}
-            {decisionOutcome === "deferred" &&
+            <LocalizedText>{decisionOutcomeMeta[decisionOutcome].stateLabel}</LocalizedText>
+            <LocalizedText>{decisionOutcome === "deferred" &&
             formatRevisitLine(decisionRevisitAt)
               ? ` · ${formatRevisitLine(decisionRevisitAt)}`
-              : ""}
+              : ""}</LocalizedText>
           </span>
         ) : null}
         {formatUsageLine(usage, replacedByName) ? (
-          <span>{formatUsageLine(usage, replacedByName)}</span>
+          <span><LocalizedText>{formatUsageLine(usage, replacedByName)}</LocalizedText></span>
         ) : null}
       </div>
       <div className="mobile-library-book__remove-wrap">
-        <button
+        <LocalizedAttributes><button
           type="button"
           onClick={onOpenMemory}
           className="mobile-library-book__remove mobile-library-book__remove--memory"
           aria-label={`Apri nota e decisione di ${tool.name}`}
         >
           <NotebookPen size={12} />
-        </button>
-        <button
+        </button></LocalizedAttributes>
+        <LocalizedAttributes><button
           type="button"
           onClick={() => toggleSaved(tool.slug)}
           className="mobile-library-book__remove"
           aria-label={`Rimuovi ${tool.name} dai salvati`}
         >
           <Trash2 size={12} />
-        </button>
+        </button></LocalizedAttributes>
       </div>
     </motion.div>
   );
@@ -640,7 +633,7 @@ function MobileNoteSheet({
   const noteId = `shortlist-sheet-note-${slug}`;
 
   return (
-    <motion.div
+    <LocalizedAttributes><motion.div
       initial={preferReducedMotion ? false : { y: 16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={preferReducedMotion ? undefined : { y: 12, opacity: 0 }}
@@ -651,31 +644,31 @@ function MobileNoteSheet({
       aria-label={`Memoria decisionale di ${toolName}`}
     >
       <div className="mobile-shortlist-board__sheet-header">
-        <button
+        <LocalizedAttributes><button
           type="button"
           onClick={onClose}
           className="mobile-shortlist-board__sheet-close"
           aria-label="Chiudi memoria decisionale"
         >
           <X size={16} />
-        </button>
+        </button></LocalizedAttributes>
       </div>
       <div className="mobile-shortlist-board__sheet-body">
         {!editable ? (
           <>
-            <h3>Nota personale</h3>
+            <h3><LocalizedText>{"Nota personale"}</LocalizedText></h3>
             {memory.note ? (
               <p>{memory.note}</p>
             ) : (
-              <p className="is-empty">Nessuna nota per questo tool.</p>
+              <p className="is-empty"><LocalizedText>{"Nessuna nota per questo tool."}</LocalizedText></p>
             )}
           </>
         ) : (
           <>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="editorial-label">Memoria decisionale</p>
-                <h3 className="mt-1 text-base font-semibold">{toolName}</h3>
+                <p className="editorial-label"><LocalizedText>{"Memoria decisionale"}</LocalizedText></p>
+                <h3 className="mt-1 text-base font-semibold"><LocalizedText>{toolName}</LocalizedText></h3>
               </div>
               <button
                 type="button"
@@ -685,41 +678,39 @@ function MobileNoteSheet({
                 className="shortlist-sheet-chip"
               >
                 <Pin size={12} />
-                {memory.is_pinned ? "In primo piano" : "Metti in primo piano"}
+                <LocalizedText>{memory.is_pinned ? "In primo piano" : "Metti in primo piano"}</LocalizedText>
               </button>
             </div>
 
             <div className="mt-4">
-              <p className="editorial-label">Stato nei Salvati</p>
+              <p className="editorial-label"><LocalizedText>{"Stato nei Salvati"}</LocalizedText></p>
               <div className="mt-3">
                 <ShortlistStageToggle slug={slug} />
               </div>
             </div>
 
             <div className="mt-4">
-              <p className="editorial-label">Decisione</p>
+              <p className="editorial-label"><LocalizedText>{"Decisione"}</LocalizedText></p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setDecideOpen(true)}
                   data-sonic-action="tab"
                   className="shortlist-sheet-chip shortlist-sheet-chip--decide"
-                >
-                  Decidi
-                </button>
+                ><LocalizedText>{"Decidi "}</LocalizedText></button>
               </div>
               {decisionOutcome ? (
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <p className="shortlist-sheet-meta">
-                    {decisionOutcomeMeta[decisionOutcome].stateLabel}
-                    {formatUsageLine(usage, replacedByName)
+                    <LocalizedText>{decisionOutcomeMeta[decisionOutcome].stateLabel}</LocalizedText>
+                    <LocalizedText>{formatUsageLine(usage, replacedByName)
                       ? ` · ${formatUsageLine(usage, replacedByName)}`
-                      : ""}
-                    {decisionOutcome === "deferred"
+                      : ""}</LocalizedText>
+                    <LocalizedText>{decisionOutcome === "deferred"
                       ? ` · ${formatRevisitLine(decisionRevisitAt) ?? "Rivedi: data da impostare"}`
                       : ` · Registrata ${formatDecisionTimestamp(
                           decisionUpdatedAt ?? memory.updated_at,
-                        )}`}
+                        )}`}</LocalizedText>
                   </p>
                   <button
                     type="button"
@@ -730,9 +721,7 @@ function MobileNoteSheet({
                     data-sonic-action="update"
                     className="shortlist-sheet-chip"
                   >
-                    <RotateCcw size={12} />
-                    Riapri decisione
-                  </button>
+                    <RotateCcw size={12} /><LocalizedText>{"Riapri decisione "}</LocalizedText></button>
                 </div>
               ) : null}
               {decisionOutcome === "selected" && !usage ? (
@@ -743,7 +732,7 @@ function MobileNoteSheet({
                     data-sonic-action="update"
                     className="shortlist-sheet-chip"
                   >
-                    {usageActionLabel("using")}
+                    <LocalizedText>{usageActionLabel("using")}</LocalizedText>
                   </button>
                 </div>
               ) : null}
@@ -758,7 +747,7 @@ function MobileNoteSheet({
                     data-sonic-action="update"
                     className="shortlist-sheet-chip"
                   >
-                    {usageActionLabel("stopped")}
+                    <LocalizedText>{usageActionLabel("stopped")}</LocalizedText>
                   </button>
                   {replacementCandidates.length > 0 ? (
                     <button
@@ -768,14 +757,14 @@ function MobileNoteSheet({
                       data-sonic-action="tab"
                       className="shortlist-sheet-chip"
                     >
-                      {usageActionLabel("replaced")}
+                      <LocalizedText>{usageActionLabel("replaced")}</LocalizedText>
                     </button>
                   ) : null}
                 </div>
               ) : null}
               {(pendingReplace || usage === "replaced") &&
               replacementCandidates.length > 0 ? (
-                <div
+                <LocalizedAttributes><div
                   className="tool-rail mt-3 -mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1"
                   role="group"
                   aria-label="Sostituito con"
@@ -798,13 +787,13 @@ function MobileNoteSheet({
                       </button>
                     );
                   })}
-                </div>
+                </div></LocalizedAttributes>
               ) : null}
             </div>
 
             <div className="mt-4">
-              <p className="editorial-label">Motivo del salvataggio</p>
-              <div
+              <p className="editorial-label"><LocalizedText>{"Motivo del salvataggio"}</LocalizedText></p>
+              <LocalizedAttributes><div
                 className="tool-rail mt-3 -mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1"
                 role="group"
                 aria-label="Motivo del salvataggio"
@@ -824,17 +813,15 @@ function MobileNoteSheet({
                       data-sonic-action="tab"
                       className="shortlist-sheet-chip"
                     >
-                      {meta.label}
+                      <LocalizedText>{meta.label}</LocalizedText>
                     </button>
                   );
                 })}
-              </div>
+              </div></LocalizedAttributes>
             </div>
 
             <div className="mt-4">
-              <label className="editorial-label" htmlFor={noteId}>
-                Nota personale
-              </label>
+              <label className="editorial-label" htmlFor={noteId}><LocalizedText>{"Nota personale "}</LocalizedText></label>
               <textarea
                 id={noteId}
                 value={noteDraft}
@@ -847,8 +834,8 @@ function MobileNoteSheet({
               />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <p className="shortlist-sheet-meta">
-                  {noteDraft.length}/2000 · Ultimo salvataggio:{" "}
-                  {formatDecisionTimestamp(memory.updated_at)}
+                  {noteDraft.length}<LocalizedText>{"/2000 · Ultimo salvataggio:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
+                  <LocalizedText>{formatDecisionTimestamp(memory.updated_at)}</LocalizedText>
                 </p>
                 <button
                   type="button"
@@ -860,7 +847,7 @@ function MobileNoteSheet({
                   data-dirty={noteIsDirty ? "true" : "false"}
                   className="shortlist-sheet-chip shortlist-sheet-chip--save"
                 >
-                  {noteIsDirty ? "Salva nota" : "Nota salvata"}
+                  <LocalizedText>{noteIsDirty ? "Salva nota" : "Nota salvata"}</LocalizedText>
                 </button>
               </div>
             </div>
@@ -876,7 +863,7 @@ function MobileNoteSheet({
         source="shortlist"
         defaultOutcome={decisionOutcome ?? "selected"}
       />
-    </motion.div>
+    </motion.div></LocalizedAttributes>
   );
 }
 
@@ -899,18 +886,16 @@ function MobileLibraryEmpty({
       aria-labelledby="mobile-library-empty-title"
     >
       <div className="mobile-library-empty__content">
-        <span className="mobile-library-empty__kicker">Salvati</span>
-        <h1 id="mobile-library-empty-title">
-          Niente di salvato, ancora.
-        </h1>
-        <p>Salva i candidati. La decisione arriva dopo, con un motivo.</p>
+        <span className="mobile-library-empty__kicker"><LocalizedText>{"Salvati"}</LocalizedText></span>
+        <h1 id="mobile-library-empty-title"><LocalizedText>{"Niente di salvato, ancora. "}</LocalizedText></h1>
+        <p><LocalizedText>{"Salva i candidati. La decisione arriva dopo, con un motivo."}</LocalizedText></p>
       </div>
       {starterTools.length > 0 ? (
-        <div
+        <LocalizedAttributes><div
           className="mobile-library-empty__starter"
           aria-label="Tool da cui partire"
         >
-          <span>Da valutare per iniziare</span>
+          <span><LocalizedText>{"Da valutare per iniziare"}</LocalizedText></span>
           <div>
             {starterTools.map((tool) => (
               <Link key={tool.slug} href={`/toools/${tool.slug}`}>
@@ -918,29 +903,26 @@ function MobileLibraryEmpty({
               </Link>
             ))}
           </div>
-        </div>
+        </div></LocalizedAttributes>
       ) : null}
       <div className="mobile-library-empty__actions">
-        <Link href="/archivio" className="mobile-library-empty__cta">
-          Esplora i tool
-          <ArrowRight size={15} aria-hidden="true" />
+        <Link href="/archivio" className="mobile-library-empty__cta"><LocalizedText>{"Esplora i tool "}</LocalizedText><ArrowRight size={15} aria-hidden="true" />
         </Link>
         <div className="mobile-library-empty__recommendations">
           <Link
             href="/archivio"
             className="mobile-library-empty__recommendation-card"
           >
-            <strong>Esplora catalogo</strong>
+            <strong><LocalizedText>{"Esplora catalogo"}</LocalizedText></strong>
             <span>
-              {tools.length} tool in {categoryCount} categorie da restringere.
-            </span>
+              {tools.length}<LocalizedText>{" tool in "}</LocalizedText>{categoryCount}<LocalizedText>{" categorie da restringere. "}</LocalizedText></span>
           </Link>
           <Link
             href="/collections"
             className="mobile-library-empty__recommendation-card"
           >
-            <strong>Parti da uno stack</strong>
-            <span>Raccolte con ruoli, limiti e ordine di lavoro.</span>
+            <strong><LocalizedText>{"Parti da uno stack"}</LocalizedText></strong>
+            <span><LocalizedText>{"Raccolte con ruoli, limiti e ordine di lavoro."}</LocalizedText></span>
           </Link>
         </div>
       </div>
