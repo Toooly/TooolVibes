@@ -49,6 +49,8 @@
   background: var(--tv-instrument-surface);
 }
 .tv-sys-segmented__option {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,10 +64,23 @@
   font-size: var(--tv-text-sm);
   cursor: pointer;
   white-space: nowrap;
-  transition: opacity var(--tv-motion-fast) var(--tv-ease-standard);
+  transition: color var(--tv-motion-fast) var(--tv-ease-standard), border-color var(--tv-motion-fast) var(--tv-ease-standard);
+}
+.tv-sys-segmented__marker {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--tv-surface-selected);
+  pointer-events: none;
+}
+.tv-sys-segmented__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: inherit;
 }
 .tv-sys-segmented__option[data-active="true"] {
-  background: var(--tv-surface-selected);
   color: var(--tv-ink-primary);
   border-color: var(--tv-border-interactive);
 }

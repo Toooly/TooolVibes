@@ -674,7 +674,7 @@ export function RadarExperience() {
                     else setUrlState({ category: null, query: null });
                   }}><ArrowLeft size={16} aria-hidden="true" /><LocalizedText>{microStack ? focusedCluster?.label : "Mercato"}</LocalizedText></button>}
                   <span className="tv-rx-mobile-navigation__context"><LocalizedText>{microStack ? `${microStack.ageLabel} · ${microStack.memberIds.length} segnali` : focusedCluster ? `${focusedCluster.label} · ${filteredTools.length}` : "Scegli un’area"}</LocalizedText></span>
-                  <button type="button" data-browse-list aria-controls="tv-rx-list-title" disabled={isLoading || filteredTools.length === 0} onClick={handleBrowseList}><LocalizedText>{"Elenco"}</LocalizedText></button>
+                  <button type="button" data-browse-list aria-controls={filteredTools.length > 0 ? "tv-rx-list-title" : undefined} disabled={isLoading || filteredTools.length === 0} onClick={handleBrowseList}><LocalizedText>{"Elenco"}</LocalizedText></button>
                 </div>
               {/* §2/§5 — geometry and the map interaction contract are frozen. */}
               {isLoading ? (

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 
 import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
 import {
-  getPrefersReducedMotion,
   shouldEnableRevealObserver,
 } from "@/lib/motion/reduced-motion";
 
@@ -31,8 +31,8 @@ const motionSelectors = [
 ].join(",");
 
 const STAGGER_STEP_MS = MOTION_DURATION_MS.staggerStep;
-const STAGGER_MAX_MS = MOTION_DURATION_MS.standard + MOTION_DURATION_MS.staggerStep * 5;
-const REVEAL_CLEANUP_MS = MOTION_DURATION_MS.epic + MOTION_DURATION_MS.staggerStep;
+const STAGGER_MAX_MS = MOTION_DURATION_MS.base;
+const REVEAL_CLEANUP_MS = MOTION_DURATION_MS.deliberate + MOTION_DURATION_MS.fast;
 
 function getMotionDelay(element: HTMLElement) {
   const parent = element.parentElement;
@@ -67,18 +67,28 @@ function isRendered(element: HTMLElement) {
 }
 
 export function MotionObserver() {
+  const reduceMotion = useReducedMotion();
+  const revealed = useRef(new WeakSet<HTMLElement>());
   useEffect(() => {
-    const reduceMotion = getPrefersReducedMotion();
     let observer: IntersectionObserver | null = null;
     let mutationObserver: MutationObserver | null = null;
     let startTimer: number | null = null;
     let introFallbackTimer: number | null = null;
     let started = false;
     let startAfterIntro: (() => void) | null = null;
+    let prepareFrame = 0;
+    const prepared = new Set<HTMLElement>();
+    const cleanupTimers = new Set<number>();
+    const resetElement = (element: HTMLElement) => {
+      element.removeAttribute("data-motion-observed");
+      element.classList.remove("is-visible");
+      element.style.removeProperty("--motion-delay");
+      prepared.delete(element);
+    };
 
-    if (!shouldEnableRevealObserver(reduceMotion)) {
+    if (!shouldEnableRevealObserver(reduceMotion) || typeof IntersectionObserver === "undefined") {
       document.documentElement.dataset.motionReady = "false";
-      return;
+      return () => { delete document.documentElement.dataset.motionReady; };
     }
 
     const startObserver = () => {
@@ -101,11 +111,12 @@ export function MotionObserver() {
               Number.parseInt(element.style.getPropertyValue("--motion-delay"), 10) || 0;
 
             element.classList.add("is-visible");
-            window.setTimeout(() => {
-              element.removeAttribute("data-motion-observed");
-              element.classList.remove("is-visible");
-              element.style.removeProperty("--motion-delay");
+            revealed.current.add(element);
+            const timer = window.setTimeout(() => {
+              resetElement(element);
+              cleanupTimers.delete(timer);
             }, REVEAL_CLEANUP_MS + delay);
+            cleanupTimers.add(timer);
 
             observer?.unobserve(element);
           });
@@ -119,6 +130,8 @@ export function MotionObserver() {
       const prepareElement = (element: HTMLElement) => {
         if (
           element.dataset.motionObserved ||
+          revealed.current.has(element) ||
+          element.parentElement?.closest("[data-motion-observed='true']") ||
           element.closest("[data-no-motion]") ||
           element.closest("[aria-hidden='true']")
         ) {
@@ -134,6 +147,7 @@ export function MotionObserver() {
         }
 
         element.dataset.motionObserved = "true";
+        prepared.add(element);
         const delay = getMotionDelay(element);
         if (delay > 0) {
           element.style.setProperty("--motion-delay", `${delay}ms`);
@@ -150,9 +164,15 @@ export function MotionObserver() {
         root.querySelectorAll<HTMLElement>(motionSelectors).forEach(prepareElement);
       };
 
-      window.requestAnimationFrame(() => prepareRoot(document));
+      prepareFrame = window.requestAnimationFrame(() => prepareRoot(document));
 
       mutationObserver = new MutationObserver((mutations) => {
+        prepared.forEach((element) => {
+          if (!element.isConnected) {
+            observer?.unobserve(element);
+            resetElement(element);
+          }
+        });
         mutations.forEach((mutation) => {
           mutation.addedNodes.forEach((node) => {
             if (node instanceof HTMLElement) {
@@ -167,6 +187,18 @@ export function MotionObserver() {
         subtree: true,
       });
     };
+
+    const revealFocusedContent = (event: FocusEvent) => {
+      if (!(event.target instanceof Element)) return;
+      let element = event.target.closest<HTMLElement>("[data-motion-observed='true']");
+      while (element) {
+        observer?.unobserve(element);
+        revealed.current.add(element);
+        resetElement(element);
+        element = element.parentElement?.closest<HTMLElement>("[data-motion-observed='true']") ?? null;
+      }
+    };
+    document.addEventListener("focusin", revealFocusedContent);
 
     const queueObserverStart = () => {
       if (document.documentElement.classList.contains("brand-intro-active")) {
@@ -208,9 +240,13 @@ export function MotionObserver() {
       }
       observer?.disconnect();
       mutationObserver?.disconnect();
+      document.removeEventListener("focusin", revealFocusedContent);
+      window.cancelAnimationFrame(prepareFrame);
+      cleanupTimers.forEach((timer) => window.clearTimeout(timer));
+      prepared.forEach(resetElement);
       delete document.documentElement.dataset.motionReady;
     };
-  }, []);
+  }, [reduceMotion]);
 
   return null;
 }

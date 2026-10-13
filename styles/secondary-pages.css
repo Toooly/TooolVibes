@@ -580,6 +580,7 @@
 
 .method-track__summary {
   display: grid;
+  min-height: var(--tv-button-min-height-touch);
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
   column-gap: 0.9rem;
@@ -1307,7 +1308,7 @@
 
   .secondary-hero {
     padding-block: var(--tv-space-px-5);
-    padding-inline: 0;
+    padding-inline: var(--tv-space-4);
   }
 
   .secondary-hero__signature:has(.secondary-hero__signature-verbs) {

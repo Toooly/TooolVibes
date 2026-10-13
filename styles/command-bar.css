@@ -381,7 +381,9 @@
 @media (prefers-reduced-motion: reduce) {
   .command-control,
   .command-control__icon,
-  .command-control__state {
+  .command-control__state,
+  .command-bar__account-panel a,
+  .command-bar__account-panel button {
     transition: none;
   }
 
@@ -416,6 +418,8 @@
   gap: 2px;
   background: var(--tv-bg-base);
   border: 1px solid var(--tv-border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: var(--tv-overlay-radius-popover);
+  box-shadow: var(--tv-elevation-modal);
 }
 
 .command-bar__account-panel a,
@@ -429,6 +433,25 @@
   background: transparent;
   border: 0;
   cursor: pointer;
+  border-radius: var(--tv-radius-control);
+  transition: background var(--tv-duration-fast) var(--tv-easing-standard), color var(--tv-duration-fast) var(--tv-easing-standard);
+}
+
+.command-bar__account-panel a:focus-visible,
+.command-bar__account-panel button:focus-visible {
+  outline: 2px solid var(--tv-focus-ring);
+  outline-offset: -2px;
+}
+
+.command-bar__account-panel button.is-destructive {
+  color: var(--tv-status-danger);
+}
+
+@media (hover: hover) {
+  .command-bar__account-panel a:hover,
+  .command-bar__account-panel button:hover {
+    background: var(--tv-surface-elevated);
+  }
 }
 
 

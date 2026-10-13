@@ -8,8 +8,9 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
  * Analytics: deferred — no save_completed / save_speed2_* events in this wave.
  */
 
-import { useEffect, useState } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { useAccount } from "@/components/account/account-provider";
 import { useAuthContinuation } from "@/components/account/auth-continuation-provider";
@@ -131,25 +132,27 @@ function SaveOverflowPanel({
 
       <div className="flex flex-col gap-1.5">
         {inCompare ? (
-          <p className="min-h-11 px-1 text-sm text-[var(--tv-ink-secondary)]"><LocalizedText>{"Nel confronto "}</LocalizedText></p>
+          <p className="flex min-h-11 items-center gap-2 rounded-lg border border-[var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] px-3 text-sm text-[var(--tv-ink-primary)]"><Check className="size-4 text-[var(--tv-accent-brand-aa)]" aria-hidden="true" /><LocalizedText>{"Nel confronto "}</LocalizedText></p>
         ) : compareFull ? (
           <div className="flex flex-col gap-1.5">
-            <button
+            <Button
               type="button"
+              variant="ghost"
               disabled
-              className="min-h-11 rounded-lg px-3 text-left text-sm text-[var(--tv-ink-muted-aa)] opacity-60"
-            ><LocalizedText>{"Pieno · apri confronto "}</LocalizedText></button>
+              className="min-h-11 w-full justify-start"
+            ><LocalizedText>{"Pieno · apri confronto "}</LocalizedText></Button>
             <a
               href="/compare"
               className="min-h-11 px-3 text-sm font-medium text-[var(--tv-ink-secondary)] underline-offset-2 hover:underline"
             ><LocalizedText>{"Apri confronto "}</LocalizedText></a>
           </div>
         ) : (
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={handleConfronta}
-            className="min-h-11 rounded-lg px-3 text-left text-sm font-medium text-[var(--tv-ink-primary)] hover:bg-[var(--tv-surface-elevated)]"
-          ><LocalizedText>{"Confronta "}</LocalizedText></button>
+            className="min-h-11 w-full justify-start"
+          ><LocalizedText>{"Confronta "}</LocalizedText></Button>
         )}
       </div>
 
@@ -181,6 +184,7 @@ export function SaveOverflow({
   triggerClassName,
 }: SaveOverflowProps) {
   const { open, setOpen } = useSaveOverflowOpen(slug);
+  const panelRef = useRef<HTMLDivElement>(null);
   const isDesktop = useDesktopSaveOverflow();
   const compareCount = useToolWorkspaceStore((state) => state.compareSlugs.length);
   const compareLive = compareCount > 0;
@@ -209,26 +213,26 @@ export function SaveOverflow({
         >
           <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
         </PopoverTrigger></LocalizedAttributes>
-        {open ? (
-          <PopoverContent
-            align="end"
-            side="bottom"
-            className="tv-save-overflow-popover w-72"
-            data-save-overflow=""
-          >
-            <PopoverHeader>
-              <PopoverTitle>{title}</PopoverTitle>
-              <PopoverDescription className="sr-only">
-                <LocalizedText>{description}</LocalizedText>
-              </PopoverDescription>
-            </PopoverHeader>
-            <SaveOverflowPanel
-              slug={slug}
-              toolName={toolName}
-              onClose={() => setOpen(false)}
-            />
-          </PopoverContent>
-        ) : null}
+        <PopoverContent
+          ref={panelRef}
+          initialFocus={panelRef}
+          align="end"
+          side="bottom"
+          className="tv-save-overflow-popover w-72"
+          data-save-overflow=""
+        >
+          <PopoverHeader>
+            <PopoverTitle>{title}</PopoverTitle>
+            <PopoverDescription className="sr-only">
+              <LocalizedText>{description}</LocalizedText>
+            </PopoverDescription>
+          </PopoverHeader>
+          <SaveOverflowPanel
+            slug={slug}
+            toolName={toolName}
+            onClose={() => setOpen(false)}
+          />
+        </PopoverContent>
       </Popover>
     );
   }
@@ -246,30 +250,30 @@ export function SaveOverflow({
       >
         <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
       </SheetTrigger></LocalizedAttributes>
-      {open ? (
-        <SheetContent
-          side="bottom"
-          data-save-overflow=""
-          data-save-overflow-sheet=""
-          data-compare-live={compareLive ? "true" : undefined}
-          className={cn(
-            "td-final-save-overflow-sheet ar4-save-overflow-sheet",
-            overflowSheetPaddingClass(compareLive),
-          )}
-        >
-          <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
-            <SheetDescription className="sr-only"><LocalizedText>{description}</LocalizedText></SheetDescription>
-          </SheetHeader>
-          <div className="px-4 pb-2">
-            <SaveOverflowPanel
-              slug={slug}
-              toolName={toolName}
-              onClose={() => setOpen(false)}
-            />
-          </div>
-        </SheetContent>
-      ) : null}
+      <SheetContent
+        ref={panelRef}
+        initialFocus={panelRef}
+        side="bottom"
+        data-save-overflow=""
+        data-save-overflow-sheet=""
+        data-compare-live={compareLive ? "true" : undefined}
+        className={cn(
+          "td-final-save-overflow-sheet ar4-save-overflow-sheet",
+          overflowSheetPaddingClass(compareLive),
+        )}
+      >
+        <SheetHeader>
+          <SheetTitle>{title}</SheetTitle>
+          <SheetDescription className="sr-only"><LocalizedText>{description}</LocalizedText></SheetDescription>
+        </SheetHeader>
+        <div className="px-4 pb-2">
+          <SaveOverflowPanel
+            slug={slug}
+            toolName={toolName}
+            onClose={() => setOpen(false)}
+          />
+        </div>
+      </SheetContent>
     </Sheet>
   );
 }

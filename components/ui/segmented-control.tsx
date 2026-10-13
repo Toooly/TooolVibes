@@ -1,7 +1,10 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import { useRef, type ReactNode } from "react";
+import { useId, useRef, type ReactNode } from "react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
+import { layoutMarkerTransition } from "@/lib/motion/transitions";
 import { cn } from "@/lib/utils";
 
 /** One native control model for tabs and mutually exclusive choices. */
@@ -18,6 +21,8 @@ export function SegmentedControl<T extends string>({
   optionClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const markerId = useId();
+  const preferReducedMotion = useReducedMotion();
   return (
     <LocalizedAttributes><div ref={ref} className={cn("tv-sys-segmented", className)} role={tabs ? "tablist" : "group"} aria-label={label}>
       {options.map((option, index) => (
@@ -42,8 +47,19 @@ export function SegmentedControl<T extends string>({
             onValueChange(options[next].value);
           }}
         >
-          {option.icon ? <span aria-hidden="true"><LocalizedText>{option.icon}</LocalizedText></span> : null}
-          <LocalizedText>{option.label}</LocalizedText>
+          {value === option.value ? (
+            <motion.span
+              aria-hidden="true"
+              className="tv-sys-segmented__marker"
+              layoutId={`${markerId}-selection`}
+              initial={false}
+              transition={layoutMarkerTransition({ preferReducedMotion })}
+            />
+          ) : null}
+          <span className="tv-sys-segmented__label">
+            {option.icon ? <span className="tv-sys-segmented__icon" aria-hidden="true"><LocalizedText>{option.icon}</LocalizedText></span> : null}
+            <LocalizedText>{option.label}</LocalizedText>
+          </span>
         </button>
       ))}
     </div></LocalizedAttributes>

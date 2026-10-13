@@ -7352,5 +7352,9 @@
   "Costo contenuto rispetto a tool enterprise": "Lower cost than enterprise tools",
   "Nessun CRM integrato: i lead qualificati vanno gestiti in Notion/Sheets": "No built-in CRM; manage qualified leads in Notion or Sheets",
   "Follow-up automatico multi-step (no lead dimenticato)": "Automated follow-up sequences, so no lead is forgotten",
-  "Quanto costa {0}?": "How much does {0} cost?"
+  "Quanto costa {0}?": "How much does {0} cost?",
+  "Eccellente": "Excellent",
+  "Ottimo": "Great",
+  "Buono": "Good",
+  "Discreto": "Fair"
 }

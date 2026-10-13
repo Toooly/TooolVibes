@@ -89,6 +89,7 @@ export function HeaderAccountControl({
           ) : null}
         </summary></LocalizedAttributes>
         <div
+          data-account-menu-panel=""
           className={panelClassName}
           onClick={(event) => {
             if (event.target instanceof Element && event.target.closest("a, button") && menuRef.current) {
@@ -164,7 +165,10 @@ function FloatingAccountMenu({
     };
     place();
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
     };
     const onPointer = (event: PointerEvent) => {
       const target = event.target as Node;
@@ -172,11 +176,11 @@ function FloatingAccountMenu({
       setOpen(false);
     };
     document.addEventListener("keydown", onKey);
-    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("pointerdown", onPointer, true);
     window.addEventListener("resize", place);
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("pointerdown", onPointer, true);
       window.removeEventListener("resize", place);
     };
   }, [open]);
@@ -193,9 +197,15 @@ function FloatingAccountMenu({
         className={linkClassName}
         aria-label={label}
         aria-expanded={open}
-        aria-haspopup="menu"
+        aria-controls={`${titleId}-panel`}
         aria-busy={busy || undefined}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          if (!open) {
+            const rect = buttonRef.current?.getBoundingClientRect();
+            if (rect) setBox({ top: rect.bottom + 8, right: Math.max(12, window.innerWidth - rect.right) });
+          }
+          setOpen((value) => !value);
+        }}
       >
         <User size={18} aria-hidden="true" />
       </button></LocalizedAttributes>
@@ -204,10 +214,15 @@ function FloatingAccountMenu({
             <>
               <LocalizedAttributes><button type="button" className="td-final-account-scrim" aria-label="Chiudi menu account" onClick={() => setOpen(false)} /></LocalizedAttributes>
               <div
+                data-account-menu-panel=""
                 ref={panelRef}
                 className={panelClassName}
-                role="menu"
+                id={`${titleId}-panel`}
+                role="region"
                 aria-labelledby={titleId}
+                onClick={(event) => {
+                  if (event.target instanceof Element && event.target.closest("a, button")) setOpen(false);
+                }}
                 style={{ top: box.top, right: box.right }}
               >
                 <p id={titleId} className="td-final-account-menu__title"><LocalizedText>{"Il tuo spazio"}</LocalizedText></p>

@@ -26,7 +26,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "flex size-full flex-col overflow-hidden rounded-[var(--tv-radius-modal)]! border border-[color:var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-2 text-[var(--tv-ink-primary)] shadow-[var(--tv-elevation-floating)]",
+        "flex min-h-0 w-full max-h-[inherit] flex-col overflow-hidden rounded-[var(--tv-radius-modal)]! border border-[color:var(--tv-border-subtle)] bg-[var(--tv-surface-elevated)] p-2 text-[var(--tv-ink-primary)] shadow-[var(--tv-elevation-floating)]",
         className
       )}
       {...props}
@@ -55,7 +55,7 @@ function CommandDialog({
     <Dialog {...props}>
       <DialogContent
         className={cn(
-          "top-1/3 max-w-[42rem] translate-y-0 overflow-hidden rounded-[var(--tv-radius-modal)]! border border-[color:var(--tv-border-subtle)] bg-transparent p-0 shadow-none ring-0 duration-[var(--tv-duration-base)] ease-[var(--tv-easing-standard)] data-open:fade-in-0 data-open:slide-in-from-top-2 data-closed:fade-out-0 data-closed:slide-out-to-top-2 data-open:zoom-in-100 data-closed:zoom-out-100",
+          "top-[min(20dvh,8rem)] w-[min(42rem,calc(100vw-2rem))] max-h-[calc(100dvh-min(20dvh,8rem)-1rem)] max-w-none translate-y-0 overflow-hidden rounded-[var(--tv-radius-modal)]! border border-[color:var(--tv-border-subtle)] bg-transparent p-0 shadow-none ring-0 duration-[var(--tv-duration-base)] ease-[var(--tv-easing-standard)]",
           className
         )}
         showCloseButton={showCloseButton}
@@ -77,12 +77,12 @@ function CommandInput({
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
-    <div data-slot="command-input-wrapper" className="p-1 pb-0">
+    <div data-slot="command-input-wrapper" className="shrink-0 p-1 pb-0">
       <InputGroup className="h-12! rounded-[var(--tv-radius-lg)]! border-white/10 bg-white/8 px-1 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
         <CommandPrimitive.Input
           data-slot="command-input"
           className={cn(
-            "w-full text-sm text-[var(--tv-ink-primary)] outline-hidden placeholder:text-[var(--tv-ink-muted-aa)] disabled:cursor-not-allowed disabled:opacity-50",
+            "w-full text-base text-[var(--tv-ink-primary)] outline-hidden placeholder:text-[var(--tv-ink-muted-aa)] disabled:cursor-not-allowed disabled:opacity-50 md:pointer-fine:text-sm",
             className
           )}
           {...props}
@@ -103,7 +103,7 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "no-scrollbar max-h-[28rem] scroll-py-2 overflow-x-hidden overflow-y-auto p-1 outline-none",
+        "no-scrollbar min-h-0 max-h-[28rem] flex-1 scroll-py-2 overflow-x-hidden overflow-y-auto overscroll-contain p-1 outline-none",
         className
       )}
       {...props}

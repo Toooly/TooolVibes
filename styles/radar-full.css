@@ -1718,7 +1718,7 @@ svg .tv-rx-map__ring-label { fill: var(--tv-color-ink-200); font-family: var(--t
   .tv-rx[data-focus="local"] .tv-rx__rail:not(:has(.tv-rx-preview)) { display: none; }
   .tv-rx .tv-rx__tabs { width: 100%; gap: 0; }
   .tv-rx .tv-rx__tab { flex: 1 1 0; min-width: 0; padding-inline: var(--tv-space-2); font-size: var(--tv-text-xs); gap: var(--tv-space-1); }
-  .tv-rx__tab > span { display: none; }
+  .tv-rx__tab .tv-sys-segmented__icon { display: none; }
   .tv-rx-telemetry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--tv-space-1) var(--tv-space-2); }
   .tv-rx-telemetry__identity { grid-column: 1; grid-row: 1; gap: var(--tv-space-1); }
   .tv-rx .tv-rx-range { margin-inline-start: 0; width: fit-content; grid-column: 1; grid-row: 2; }

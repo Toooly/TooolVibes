@@ -27,12 +27,13 @@ vi.mock("@/components/account/account-provider", () => ({
 
 import { HeaderAccountControl } from "@/components/layout/header-account-control";
 
-function renderControl() {
+function renderControl(floating = false) {
   return render(
     createElement(HeaderAccountControl, {
       linkClassName: "command-bar__account",
       menuClassName: "command-bar__account-menu",
       panelClassName: "command-bar__account-panel",
+      floating,
     }),
   );
 }
@@ -123,5 +124,19 @@ describe("HeaderAccountControl", () => {
     fireEvent.click(screen.getByRole("button", { name: "Esci" }));
     expect(menu.open).toBe(false);
     expect(accountState.signOut).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the floating account disclosure accessible and restores focus after Escape", () => {
+    accountState.status = "authenticated";
+    renderControl(true);
+    const trigger = screen.getByRole("button", { name: "Il tuo spazio" });
+    fireEvent.click(trigger);
+    const panel = screen.getByRole("region", { name: "Il tuo spazio" });
+    expect(panel.id).toBe(trigger.getAttribute("aria-controls"));
+    fireEvent.pointerDown(panel);
+    expect(trigger.getAttribute("aria-expanded")).toBe("true");
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("region", { name: "Il tuo spazio" })).toBeNull();
+    expect(document.activeElement).toBe(trigger);
   });
 });

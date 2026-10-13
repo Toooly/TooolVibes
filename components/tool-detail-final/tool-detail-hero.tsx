@@ -1,5 +1,4 @@
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import Link from "@/components/ui/app-link";
 
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 
@@ -7,7 +6,7 @@ import { ToolDetailScore } from "./tool-detail-score";
 
 /**
  * A. Hero (Identity)
- * Server component. Breadcrumb, avatar, category, name, deck, compact
+ * Server component. Avatar, category, name, deck, compact
  * score · level. Actions live in ToolDetailActionSurface (rendered by
  * ToolDetailFinalPage after this component — exactly one instance).
  * Meta (date, reading time, domain, tags) lives in Approfondisci → Dati tecnici.
@@ -21,14 +20,6 @@ type ToolDetailHeroProps = {
 export function ToolDetailHero({ tool }: ToolDetailHeroProps) {
   return (
     <div className="td-final-hero__identity">
-      <LocalizedAttributes><nav className="td-final-hero__breadcrumb" aria-label="Percorso">
-        <Link href="/"><LocalizedText>{"Home"}</LocalizedText></Link>
-        <span className="td-final-hero__breadcrumb-dot" aria-hidden="true" />
-        <Link href="/archivio"><LocalizedText>{"Catalogo"}</LocalizedText></Link>
-        <span className="td-final-hero__breadcrumb-dot" aria-hidden="true" />
-        <span aria-current="page">{tool.name}</span>
-      </nav></LocalizedAttributes>
-
       <div className="td-final-hero__row">
         <span className="td-final-hero__avatar" aria-hidden="true">
           {tool.domain ? (

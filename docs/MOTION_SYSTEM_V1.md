@@ -104,6 +104,22 @@ Hook: `lib/hooks/use-reduced-motion.ts` (SSR snapshot `false`, then client sync 
 - Celebrations (future) require `aria-live` text and Escape dismiss
 - Reduced motion is first-class
 
+## Shared interaction refinement
+
+- Base UI owns dialog, sheet, popover and tooltip presence, including exit. Keep
+  content mounted under its controlled root so closing transitions can finish.
+- Dialogs and sheets use 240 ms transitions; popovers and account disclosures
+  use 180 ms; tooltips use 120 ms. Use opacity, scale and short translation.
+- Do not restore global blur, rotation or clip-path overrides for overlays and
+  toasts. Sonner and Vaul keep their own presentation lifecycles.
+- `SegmentedControl` uses an instance-scoped layout marker and native keyboard
+  selection. Tabs and chips retain 44 px targets on small screens.
+- `MotionObserver` reveals a surface once, avoids nested reveals, releases removed
+  nodes and pending work, and immediately reveals content reached by keyboard.
+  Changes to reduced-motion preferences take effect during the current session.
+- Page entrance uses opacity only to preserve sticky and fixed positioning.
+  Guide reading progress uses `scaleX` rather than animated width.
+
 ## Performance
 
 - Prefer CSS variables for chrome transitions

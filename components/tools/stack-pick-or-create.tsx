@@ -11,6 +11,8 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
 import { useEffect, useId, useMemo, useState } from "react";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 import {
   addToolToPersonalStack,
@@ -164,13 +166,13 @@ export function StackPickOrCreate({
       {manyStacks ? (
         <label className="px-1">
           <span className="sr-only"><LocalizedText>{"Filtra stack"}</LocalizedText></span>
-          <LocalizedAttributes><input
+          <LocalizedAttributes><Input
             data-stack-pick-filter=""
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
             placeholder="Filtra stack"
             autoComplete="off"
-            className="min-h-11 w-full rounded-lg border border-[var(--tv-border-subtle)] bg-transparent px-3 text-sm text-[var(--tv-ink-primary)]"
+            className="min-h-11"
           /></LocalizedAttributes>
         </label>
       ) : null}
@@ -225,7 +227,7 @@ export function StackPickOrCreate({
         >
           <label className="flex flex-col gap-1">
             <span className="text-[length:var(--tv-text-xs)] text-[var(--tv-ink-secondary)]"><LocalizedText>{"Nuovo stack "}</LocalizedText></span>
-            <input
+            <Input
               value={draftName}
               onChange={(event) => setDraftName(event.target.value)}
               onKeyDown={(event) => {
@@ -235,14 +237,15 @@ export function StackPickOrCreate({
               }}
               maxLength={MAX_STACK_NAME_LENGTH}
               autoComplete="off"
-              className="min-h-11 w-full rounded-lg border border-[var(--tv-border-subtle)] bg-transparent px-3 text-sm text-[var(--tv-ink-primary)]"
+              className="min-h-11"
             />
           </label>
-          <button
+          <Button
             type="submit"
+            variant="activation"
             disabled={draftName.trim() === ""}
-            className="min-h-11 rounded-lg px-3 text-left text-sm font-medium text-[var(--tv-ink-primary)] hover:bg-[var(--tv-surface-elevated)] disabled:opacity-50"
-          ><LocalizedText>{"Crea "}</LocalizedText></button>
+            className="min-h-11 w-full"
+          ><LocalizedText>{"Crea "}</LocalizedText></Button>
         </form>
       ) : null}
     </section>

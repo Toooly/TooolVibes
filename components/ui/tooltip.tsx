@@ -3,10 +3,11 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
+import { MOTION_DURATION_MS } from "@/lib/motion/tokens"
 import { useOverlayPortalContainer } from "@/components/ui/overlay-provider"
 
 function TooltipProvider({
-  delay = 0,
+  delay = MOTION_DURATION_MS.base,
   ...props
 }: TooltipPrimitive.Provider.Props) {
   return (
@@ -52,7 +53,7 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "z-[var(--tv-z-floating)] inline-flex w-fit max-w-xs origin-(--transform-origin) items-center gap-1.5 rounded-[var(--tv-overlay-radius-tooltip)] bg-foreground px-3 py-1.5 text-xs text-background has-data-[slot=kbd]:pr-1.5 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-[var(--tv-z-floating)] **:data-[slot=kbd]:rounded-sm data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            "z-[var(--tv-z-floating)] inline-flex w-fit max-w-xs origin-(--transform-origin) items-center gap-1.5 rounded-[var(--tv-overlay-radius-tooltip)] bg-foreground px-3 py-1.5 text-xs text-background has-data-[slot=kbd]:pr-1.5 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-[var(--tv-z-floating)] **:data-[slot=kbd]:rounded-sm transition-[opacity,scale] duration-[var(--tv-duration-fast)] ease-[var(--tv-easing-decelerate)] data-starting-style:opacity-0 data-starting-style:scale-[0.98] data-ending-style:opacity-0 data-ending-style:scale-[0.98] motion-reduce:transition-none",
             className
           )}
           {...props}

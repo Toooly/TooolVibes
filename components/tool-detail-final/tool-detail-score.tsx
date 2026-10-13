@@ -25,7 +25,7 @@ export function ToolDetailScore({ tool, showVerdictPill = true }: ToolDetailScor
           <span className="td-final-score__number">{assessment.value.toFixed(1)}</span>
           <span className="td-final-score__scale">/ 10</span>
           {showVerdictPill ? (
-            <span className="td-final-score__verdict">{editorialScoreBand(assessment.value)}</span>
+            <span className="td-final-score__verdict"><LocalizedText>{editorialScoreBand(assessment.value)}</LocalizedText></span>
           ) : null}
         </>
       ) : (

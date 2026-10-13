@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils"
  * props and mirrored by the `data-pressed` attribute for styling.
  */
 const chipVariants = cva(
-  "group/chip inline-flex w-fit shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border border-transparent font-medium whitespace-nowrap outline-none select-none transition-[color,background-color,border-color] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5",
+  "group/chip inline-flex min-h-11 w-fit shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full border border-transparent font-medium whitespace-nowrap outline-none select-none transition-[color,background-color,border-color] duration-[var(--tv-duration-fast)] motion-reduce:transition-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50 md:min-h-0 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5",
   {
     variants: {
       variant: {
