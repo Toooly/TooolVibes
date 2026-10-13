@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { navigateSite } from "@/lib/shell/document-navigation";
 
 type Hit = { id: string; label: string; href: string };
 type Groups = Record<string, Hit[]>;
@@ -60,7 +61,7 @@ export function AdminCommandPalette() {
       if (event.key === "Enter" && active) {
         event.preventDefault();
         setOpen(false);
-        router.push(active.href);
+        navigateSite(active.href, router);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -104,7 +105,7 @@ export function AdminCommandPalette() {
                         className={`flex min-h-11 w-full items-center rounded-xl px-3 text-left text-sm text-white ${active?.id === hit.id && active?.href === hit.href ? "bg-white/12" : "hover:bg-white/8"}`}
                         onClick={() => {
                           setOpen(false);
-                          router.push(hit.href);
+                          navigateSite(hit.href, router);
                         }}
                       >
                         {hit.label}

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { DefinitiveArchive } from "@/components/archive/definitive-archive";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";

@@ -2,16 +2,16 @@
 
 import { useEffect } from "react";
 import { initScrollRestoration } from "@/lib/shell/scroll-restoration";
-import { initChunkRecovery } from "@/lib/shell/chunk-recovery";
+import { markDocumentReady } from "@/lib/shell/document-startup-recovery";
 
 /**
- * Mount once to activate exact history scroll restoration and chunk-load
- * error recovery across the app. Both initializers are idempotent.
+ * Mount once to activate exact history scroll restoration.
+ * Next owns pending-navigation recovery; loaded-page errors use the boundary.
  */
 export function ScrollRestorationInit() {
   useEffect(() => {
+    markDocumentReady();
     initScrollRestoration();
-    initChunkRecovery();
   }, []);
   return null;
 }

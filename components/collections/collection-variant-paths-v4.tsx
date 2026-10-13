@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { GitBranch } from "lucide-react";
 
 import type { CuratedCollection, CollectionStackVariant } from "@/lib/types/collection";

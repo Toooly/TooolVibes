@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import ReactMarkdown from "react-markdown";
 
 import { GuideThumbnail } from "./guide-thumbnail";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { GuideMasthead } from "@/components/guides/guide-masthead";
 import { GuideCard } from "@/components/guides/guide-card";

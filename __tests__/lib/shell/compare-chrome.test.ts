@@ -10,20 +10,20 @@ import {
 } from "@/lib/shell/compare-chrome";
 
 describe("compare chrome state machine", () => {
-  it("starts expanded on comparison routes and compact elsewhere", () => {
-    expect(initialCompareChrome("/archivio").chrome).toBe("expanded");
-    expect(initialCompareChrome("/toools/atlas-ai").chrome).toBe("expanded");
-    expect(initialCompareChrome("/").chrome).toBe("expanded");
+  it("starts compact on every floating comparison entry", () => {
+    expect(initialCompareChrome("/archivio").chrome).toBe("compact");
+    expect(initialCompareChrome("/toools/atlas-ai").chrome).toBe("compact");
+    expect(initialCompareChrome("/").chrome).toBe("compact");
     expect(initialCompareChrome("/account").chrome).toBe("compact");
     expect(initialCompareChrome("/account/settings").chrome).toBe("compact");
     expect(initialCompareChrome("/sponsorizza").chrome).toBe("compact");
     expect(initialCompareChrome("/posts/guida").chrome).toBe("compact");
     expect(comparePrefersCompact("/account")).toBe(true);
-    expect(comparePrefersCompact("/collections/stack")).toBe(false);
+    expect(comparePrefersCompact("/collections/stack")).toBe(true);
   });
 
   it("collapses only after a real downward delta, not noise", () => {
-    let state = initialCompareChrome("/archivio");
+    let state: CompareGesture = { chrome: "expanded", down: 0, up: 0 };
     state = reduceCompareScroll(state, { y: 20, prevY: 16, prefersCompact: false });
     expect(state.chrome).toBe("expanded");
     state = reduceCompareScroll(state, {
@@ -70,7 +70,7 @@ describe("compare chrome state machine", () => {
       prefersCompact: false,
     });
     // Reached top from a collapsed tray: remains compact until explicit toggle.
-    // (initialCompareChrome still starts expanded near top on fresh route entry;
+    // (initialCompareChrome starts compact on fresh route entry;
     // the reducer itself never flips compact->expanded.)
     expect(atTop.chrome).toBe("compact");
   });

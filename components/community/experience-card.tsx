@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { ExperienceReportAction } from "@/components/community/experience-report-action";
 import { durationBucketLabel } from "@/lib/community/duration";

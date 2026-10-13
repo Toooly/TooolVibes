@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { useAccount } from "@/components/account/account-provider";
 import { salvatiHref } from "@/components/account/workspace/workspace-model";

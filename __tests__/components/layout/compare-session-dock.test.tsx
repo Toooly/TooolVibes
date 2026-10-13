@@ -86,9 +86,19 @@ describe("CompareSessionDock states", () => {
     expect(trayHeight()).toBe("0px");
   });
 
-  it("appears with one candidate, expanded on comparison routes", () => {
+  it.each(["/", "/archivio", "/toools/chatgpt", "/collections"])("keeps the initial comparison compact on %s", pathname => {
+    navRuntime.pathname = pathname;
+    seedWorkspace(compareState("atlas-ai", "gamma-app"));
+    render(<CompareSessionDock />);
+    expect(document.querySelector("[data-compare-dock]")?.getAttribute("data-compare-chrome")).toBe("compact");
+    expect(screen.queryByRole("button", { name: /Togli / })).toBeNull();
+    expect(screen.getByRole("link", { name: "Confronta" }).getAttribute("href")).toBe("/compare");
+  });
+
+  it("appears compact with one candidate and exposes inspection on request", () => {
     seedWorkspace(compareState("atlas-ai"));
     render(<CompareSessionDock />);
+    fireEvent.click(screen.getByRole("button", { name: "Mostra i tool in confronto" }));
     const dock = document.querySelector("[data-compare-dock]");
     expect(dock).toBeTruthy();
     expect(dock?.getAttribute("data-compare-chrome")).toBe("expanded");
@@ -104,6 +114,7 @@ describe("CompareSessionDock states", () => {
   it("marks ready at two candidates with Confronta", () => {
     seedWorkspace(compareState("atlas-ai", "gamma-app"));
     render(<CompareSessionDock />);
+    fireEvent.click(screen.getByRole("button", { name: "Mostra i tool in confronto" }));
     const dock = document.querySelector("[data-compare-dock]");
     expect(dock?.hasAttribute("data-ready")).toBe(true);
     expect(dock?.getAttribute("data-count")).toBe("2");
@@ -140,6 +151,7 @@ describe("CompareSessionDock states", () => {
   it("collapses on toggle and re-expands from the compact control", () => {
     seedWorkspace(compareState("atlas-ai", "gamma-app"));
     render(<CompareSessionDock />);
+    fireEvent.click(screen.getByRole("button", { name: "Mostra i tool in confronto" }));
     fireEvent.click(
       screen.getByRole("button", { name: "Nascondi i tool in confronto" }),
     );
@@ -172,7 +184,7 @@ describe("CompareSessionDock states", () => {
     expect(screen.getByRole("link", { name: "Confronta" })).toBeTruthy();
   });
 
-  it("stays collapsed on guide routes", () => {
+  it("starts compact on guide routes but allows deliberate inspection", () => {
     navRuntime.pathname = "/posts/come-scegliere";
     seedWorkspace(compareState("atlas-ai", "gamma-app"));
     render(<CompareSessionDock />);
@@ -180,7 +192,7 @@ describe("CompareSessionDock states", () => {
     expect(dock?.hasAttribute("data-compare-dock-collapsed")).toBe(true);
     expect(
       screen.queryByRole("button", { name: "Mostra i tool in confronto" }),
-    ).toBeNull();
+    ).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Togli / })).toBeNull();
   });
 });

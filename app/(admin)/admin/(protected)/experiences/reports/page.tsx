@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { AdminStatusPill } from "@/components/admin/admin-status-pill";

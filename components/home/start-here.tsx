@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { useAccount } from "@/components/account/account-provider";
 

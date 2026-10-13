@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { motion } from "motion/react";
 import NumberFlow from "@number-flow/react";
 

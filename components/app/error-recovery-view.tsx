@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { isChunkLoadError, recoverChunkLoadError } from "@/lib/shell/chunk-recovery";
+
 export type ErrorRecoveryViewProps = {
   error: Error & { digest?: string };
   reset: () => void;
@@ -22,6 +25,11 @@ export function ErrorRecoveryView({
   as: Component = "main",
   homeHref,
 }: ErrorRecoveryViewProps) {
+  const assetFailure = isChunkLoadError(error.message ?? "");
+  useEffect(() => {
+    recoverChunkLoadError(error);
+  }, [error]);
+
   return (
     <Component className="error-recovery-view">
       <section className="error-recovery-view__panel" aria-labelledby="error-recovery-title">
@@ -39,10 +47,10 @@ export function ErrorRecoveryView({
         <div className="error-recovery-view__actions">
           <button
             type="button"
-            onClick={reset}
+            onClick={() => assetFailure ? window.location.reload() : reset()}
             className="error-recovery-view__primary"
           >
-            Riprova
+            {assetFailure ? "Ricarica pagina" : "Riprova"}
           </button>
           {homeHref ? (
             <a

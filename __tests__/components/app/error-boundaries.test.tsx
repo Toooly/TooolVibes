@@ -8,6 +8,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import SegmentError from "@/app/error";
 import GlobalError from "@/app/global-error";
 import { ErrorRecoveryView } from "@/components/app/error-recovery-view";
+import * as chunkRecovery from "@/lib/shell/chunk-recovery";
 
 /**
  * axe runs on rendered fragments, not on full pages: `region` and
@@ -99,6 +100,16 @@ describe("B53 app/global-error.tsx — document boundary", () => {
 });
 
 describe("B53 ErrorRecoveryView — contratto presentazionale", () => {
+  it("handles a caught asset error and offers document reload when automatic recovery is exhausted", () => {
+    const recover = vi.spyOn(chunkRecovery, "recoverChunkLoadError").mockReturnValue(false);
+    const error = new Error("Loading chunk 1234 failed");
+    render(<ErrorRecoveryView error={error} reset={vi.fn()} homeHref="/" />);
+    expect(recover).toHaveBeenCalledWith(error);
+    expect(screen.getByRole("button", { name: "Ricarica pagina" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Riprova" })).toBeNull();
+    recover.mockRestore();
+  });
+
   it("omette digest e link home quando non forniti", () => {
     const { container } = render(
       <ErrorRecoveryView error={new Error("boom")} reset={() => {}} />,

@@ -2,6 +2,7 @@
 
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { navigateSite } from "@/lib/shell/document-navigation";
 
 import { useAccount } from "@/components/account/account-provider";
 import { workspaceViewHref } from "@/components/account/workspace/workspace-model";
@@ -13,7 +14,7 @@ export function ShortlistRouteGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (authenticated) {
-      router.replace(workspaceViewHref("salvati"));
+      navigateSite(workspaceViewHref("salvati"), router, true);
     }
   }, [authenticated, router]);
 

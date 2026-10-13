@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { ArrowRight, CornerDownRight, GitMerge } from "lucide-react";
 
 import type { CuratedCollection } from "@/lib/types/collection";

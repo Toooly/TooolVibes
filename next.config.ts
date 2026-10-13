@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
   // Bun does not reliably propagate OpenNext's private build env to `next build`.
   output: "standalone",
   outputFileTracingRoot: process.cwd(),
+  experimental: {
+    // Preserve the destination when client navigation fails across releases.
+    appNavFailHandling: true,
+  },
   env: {
     TOOOLVIBES_RELEASE_SHA: process.env.TOOOLVIBES_RELEASE_SHA ?? "development",
     TOOOLVIBES_RELEASE_NAME:
@@ -34,26 +38,6 @@ const nextConfig: NextConfig = {
           nodeEnv: process.env.NODE_ENV,
           supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
         }),
-      },
-      {
-        // Prevent year-long CDN caching of HTML that references content-hashed
-        // JS chunks. After a deploy, stale HTML + missing/replaced chunks =
-        // ChunkLoadError on the client. Match the ISR stale-time (300s) and
-        // allow stale-while-revalidate so the CDN serves cached HTML briefly
-        // while refreshing in the background.
-        //
-        // RSC payloads (request header RSC: 1) must NEVER be cached — they
-        // contain dynamic per-request data. The `missing` matcher excludes them.
-        source: "/:path*",
-        missing: [
-          { type: "header", key: "RSC" },
-        ],
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, s-maxage=300, stale-while-revalidate=600",
-          },
-        ],
       },
     ];
   },

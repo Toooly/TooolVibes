@@ -2,27 +2,15 @@ export type CompareChrome = "expanded" | "compact";
 
 /** Downward travel before the tray collapses. Ignores sub-threshold jitter. */
 export const COMPARE_COLLAPSE_DELTA = 72;
-/** Near the top of the scrollport the comparison tray stays expanded. */
+/** Legacy top-zone threshold; reaching it never opens the floating tray. */
 export const COMPARE_TOP_ZONE = 12;
 /** Ignore the opposite gesture briefly so Safari bounce cannot flicker. */
 export const COMPARE_LOCK_MS = 360;
 const SCROLL_NOISE = 8;
 
-const EXPANDED_PREFIXES = [
-  "/archivio",
-  "/toools",
-  "/collections",
-  "/shortlist",
-  "/radar",
-  "/tags",
-];
-
 export function comparePrefersExpanded(pathname: string | null): boolean {
-  if (!pathname) return false;
-  if (pathname === "/") return true;
-  return EXPANDED_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
+  // The full comparison belongs to its workbench; the floating entry is quiet.
+  return pathname === "/compare";
 }
 
 export function comparePrefersCompact(pathname: string | null): boolean {
@@ -49,7 +37,7 @@ export function reduceCompareScroll(
 ): CompareGesture {
   if (input.y < 0) return { ...state, down: 0, up: 0 };
   // FINAL CONTRACT: even returning to the top zone never auto-expands.
-  // Fresh route entry starts expanded via initialCompareChrome; the reducer
+  // Fresh route entry starts compact via initialCompareChrome; the reducer
   // itself only flips expanded->compact on downward intent.
   const delta = input.y - input.prevY;
   if (Math.abs(delta) < SCROLL_NOISE) return state;

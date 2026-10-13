@@ -35,6 +35,8 @@
 }
 
 html {
+  background: var(--tv-bg-base);
+  color-scheme: dark;
   scroll-behavior: smooth;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   scrollbar-width: thin;

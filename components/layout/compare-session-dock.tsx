@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { usePathname } from "next/navigation";
-import { ChevronUp, X } from "lucide-react";
+import { ChevronUp, Columns2, X } from "lucide-react";
 
 import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
@@ -118,7 +118,7 @@ export function CompareSessionDock() {
   if (hidden) return null;
 
   const ready = slugs.length >= 2;
-  const collapsed = !expanded || guideRoute;
+  const collapsed = !expanded;
   const listMounted = !collapsed;
 
   const toggle = () => {
@@ -146,7 +146,6 @@ export function CompareSessionDock() {
       aria-live="polite"
     >
       <div className="tv-compare-dock__inner">
-        {!guideRoute ? (
           <button
             type="button"
             className="tv-compare-dock__toggle"
@@ -161,7 +160,6 @@ export function CompareSessionDock() {
           >
             <ChevronUp size={16} aria-hidden="true" />
           </button>
-        ) : null}
         <p className="tv-compare-dock__count" style={{ whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
           {slugs.length}/{MAX_COMPARE_TOOLS}
         </p>
@@ -188,6 +186,7 @@ export function CompareSessionDock() {
           prefetch={false}
           className="tv-compare-dock__cta"
         >
+          <Columns2 size={15} aria-hidden="true" />
           {ready ? "Confronta" : "Aggiungi tool"}
         </Link>
       </div>

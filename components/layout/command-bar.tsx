@@ -16,7 +16,7 @@
  * (kept around as legacy alias for one cycle).
  */
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";

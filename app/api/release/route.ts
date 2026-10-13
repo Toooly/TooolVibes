@@ -8,7 +8,7 @@ export const revalidate = 0;
 export function GET() {
   return NextResponse.json(releaseMetadata, {
     headers: {
-      "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+      "Cache-Control": "no-store",
     },
   });
 }

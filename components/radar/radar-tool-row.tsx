@@ -9,7 +9,7 @@
  * The row and the quick preview can never disagree about what a signal is.
  */
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { useId, useState, type ReactNode } from "react";
 import { ArrowUpRight, ChevronDown, Eye } from "lucide-react";
 

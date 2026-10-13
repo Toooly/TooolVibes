@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { AdminSaveBanner } from "@/components/admin/admin-save-banner";
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";

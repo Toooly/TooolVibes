@@ -21,6 +21,9 @@ import { buildSignalClientFlagSnapshot } from "@/lib/signal-progression/client-f
 import { isPublicProductOpen } from "@/lib/gate/public-product-open";
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
 
+// Documents must reference the current release, never an ISR copy with old chunks.
+export const dynamic = "force-dynamic";
+
 export default async function MarketingLayout({
   children,
 }: Readonly<{

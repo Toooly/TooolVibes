@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { useAccount } from "@/components/account/account-provider";
 import { useAuthContinuation } from "@/components/account/auth-continuation-provider";

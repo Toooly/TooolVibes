@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { ExperienceModerationControls } from "@/components/admin/experience-moderation-controls";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";

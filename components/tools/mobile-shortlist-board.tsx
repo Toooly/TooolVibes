@@ -19,7 +19,7 @@ import {
   PlusCircle,
   RotateCcw,
 } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { DecisionSheet } from "@/components/account/workspace/decision-sheet";
 import {

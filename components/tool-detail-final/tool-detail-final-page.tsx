@@ -10,7 +10,7 @@ import {
   defaultSocialImage,
 } from "@/lib/seo/metadata";
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 
 import { ToolDetailHero } from "./tool-detail-hero";

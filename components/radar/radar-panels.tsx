@@ -6,7 +6,7 @@
  * `lib/radar/radar-per-te.ts`, `lib/radar/radar-watch.ts`.
  */
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { ArrowUpRight, Bookmark, ChartNoAxesColumn, Eye, EyeOff, Lightbulb, Search } from "lucide-react";
 import { MetricStrip } from "@/components/ui/metric-strip";
 

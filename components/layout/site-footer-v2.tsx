@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { usePathname } from "next/navigation";
 import { useCommercialNow } from "@/components/monetization/commercial-clock";
 import { Mail } from "lucide-react";

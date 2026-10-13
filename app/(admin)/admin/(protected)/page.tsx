@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { getAffiliateRequestsRuntime } from "@/lib/admin/affiliate-request-queries";
 import { getAdminActivity } from "@/lib/admin/admin-activity";

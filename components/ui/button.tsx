@@ -1,7 +1,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 import { ArrowRight, Loader2 } from "lucide-react"
-import Link from "next/link"
+import Link from "@/components/ui/app-link"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

@@ -8,7 +8,7 @@
  * logged-only Radar experience can evolve independently.
  */
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { useMemo } from "react";
 import { ArrowRight, ChevronUp, MessageCircle } from "lucide-react";
 

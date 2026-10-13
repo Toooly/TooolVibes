@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { CommercialSubnav } from "@/components/admin/commercial-subnav";
 import { ControlCenterHeader } from "@/components/admin/control-center-header";

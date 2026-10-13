@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { User, UserPlus } from "lucide-react";
 
 import { useAccount } from "@/components/account/account-provider";

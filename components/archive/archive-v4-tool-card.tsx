@@ -17,7 +17,7 @@
  */
 
 import { Target } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { Bookmark, Star } from "lucide-react";
 

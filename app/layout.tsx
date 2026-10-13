@@ -11,6 +11,7 @@ import { siteConfig } from "@/lib/config/site";
 import { defaultSocialImage, organizationLogoUrl } from "@/lib/seo/metadata";
 import { getPublicToolCatalogSnapshot } from "@/lib/data/public-tool-catalog";
 import { isPublicProductOpen } from "@/lib/gate/public-product-open";
+import { documentStartupRecoveryScript } from "@/lib/shell/document-startup-recovery";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -84,6 +85,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#0b0620",
+  colorScheme: "dark",
   interactiveWidget: "resizes-content",
 };
 
@@ -142,7 +145,9 @@ export default async function RootLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <head />
+      <head>
+        <script id="tv-document-recovery" dangerouslySetInnerHTML={{ __html: documentStartupRecoveryScript(process.env.TOOOLVIBES_RELEASE_SHA ?? "development") }} />
+      </head>
       <body>
         {isGateOpen && (
           <JsonLd data={structuredData} />

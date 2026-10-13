@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { useMemo } from "react";
 
 import { HOME_RADAR_CAP } from "@/lib/account/workspace-pipeline";

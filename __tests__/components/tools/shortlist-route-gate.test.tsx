@@ -80,3 +80,12 @@ describe("Wave 3 ShortlistRouteGate", () => {
     expect(routerRuntime.replace).not.toHaveBeenCalled();
   });
 });
+
+// This suite tests destination selection; document transport is covered separately.
+vi.mock("@/lib/shell/document-navigation", async importOriginal => {
+  const actual = await importOriginal<typeof import("@/lib/shell/document-navigation")>();
+  return { ...actual, navigateSite: (href: string, router: { push: (href: string) => void; replace: (href: string) => void }, replace = false) => {
+    if (replace) router.replace(href);
+    else router.push(href);
+  } };
+});

@@ -13,7 +13,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { usePathname, useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { BrandLogo } from "./brand-logo";

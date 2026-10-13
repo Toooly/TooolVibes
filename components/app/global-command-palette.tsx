@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
+import { navigateSite } from "@/lib/shell/document-navigation";
 import {
   ArrowRight,
   Bookmark,
@@ -461,7 +462,7 @@ export function GlobalCommandPalette({
 
   function openPath(href: string, sound: "nav" | "detail" = "nav") {
     playTooolvibesSound(sound);
-    router.push(href);
+    navigateSite(href, router);
     close();
   }
 

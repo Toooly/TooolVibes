@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 
 import { importMockCollectionsAction } from "@/app/(admin)/admin/actions/collections";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";

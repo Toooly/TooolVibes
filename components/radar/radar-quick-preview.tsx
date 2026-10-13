@@ -17,7 +17,7 @@
  * workspace semantics are never corrupted.
  */
 
-import Link from "next/link";
+import Link from "@/components/ui/app-link";
 import { useState } from "react";
 import { ArrowUpRight, ChevronDown, ChevronUp, Eye, X } from "lucide-react";
 
