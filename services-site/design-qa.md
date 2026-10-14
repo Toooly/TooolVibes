@@ -36,6 +36,6 @@ Date: 2026-10-14
 - Color and glow: passed — concentrated on the service objects, restrained elsewhere.
 - Responsive behavior: passed — no overflow, clipping or unreadable UI at the tested breakpoints.
 - Accessibility: passed — meaningful alt text, reduced-motion support and unchanged semantic flow.
-- Performance: passed — three lazy-loaded WebP assets total approximately 324 KB.
+- Performance: passed — lazy-loaded WebP assets use responsive 640/1280 px sources; mobile variants are approximately 38–42 KB each.
 
 final result: passed
