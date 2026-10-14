@@ -1,0 +1,4 @@
+RESEND_API_KEY=
+SERVICES_NOTIFY_EMAIL=
+# Cloudflare test key: safe for localhost only and always passes dummy tokens.
+TOOOLVIBES_TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA

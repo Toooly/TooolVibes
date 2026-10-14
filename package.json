@@ -42,7 +42,13 @@
     "preview": "npm run build:cloudflare && opennextjs-cloudflare preview",
     "deploy": "node scripts/refuse-unguarded-cloudflare-deploy.mjs",
     "deploy:local": "node scripts/refuse-unguarded-cloudflare-deploy.mjs",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "services:dev": "wrangler dev --config services-site/wrangler.jsonc --port 8788",
+    "services:typegen": "wrangler types --config services-site/wrangler.jsonc services-site/worker-configuration.d.ts",
+    "services:typecheck": "tsc --noEmit -p services-site/tsconfig.json",
+    "services:test": "vitest run services-site/tests",
+    "services:dry-run": "wrangler deploy --config services-site/wrangler.jsonc --dry-run",
+    "services:deploy": "wrangler deploy --config services-site/wrangler.jsonc"
   },
   "dependencies": {
     "@base-ui/react": "1.6.0",
