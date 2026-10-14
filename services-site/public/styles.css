@@ -125,7 +125,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .brand { display: inline-flex; align-items: center; gap: .7rem; width: max-content; font-weight: 800; letter-spacing: -.03em; font-size: 1.25rem; }
-.brand img { border-radius: .8rem; }
+.brand img { object-fit: contain; filter: drop-shadow(0 .35rem .8rem rgba(89, 45, 255, .26)); }
 
 .desktop-nav { display: flex; align-items: center; gap: clamp(1.25rem, 3vw, 2.8rem); }
 .desktop-nav a, .site-footer a { color: var(--ink-soft); text-decoration: none; transition: color .2s ease; }
@@ -248,10 +248,10 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 .flow-legend li { counter-increment: stage; }
 .flow-legend li::before { margin-right: .35rem; color: var(--cyan); content: "0" counter(stage); font-size: .72rem; font-weight: 800; }
 .service-visual { position: relative; min-width: 0; margin: 0; display: grid; place-items: center; }
-.service-visual img { width: 100%; height: auto; object-fit: contain; filter: drop-shadow(0 2rem 3.5rem rgba(0,0,0,.34)); transform: translateZ(0); will-change: transform; }
-.service-visual--chatbot { width: min(100%, 43rem); justify-self: end; }
-.service-visual--social { width: min(100%, 47rem); justify-self: start; }
-.service-visual--web { width: min(100%, 45rem); justify-self: end; }
+.service-visual img { width: 100%; height: auto; object-fit: contain; filter: drop-shadow(0 2.25rem 4rem rgba(34,70,210,.18)); transform: translateZ(0); will-change: transform; }
+.service-visual--chatbot { width: min(100%, 46rem); justify-self: end; }
+.service-visual--social { width: min(100%, 50rem); justify-self: start; }
+.service-visual--web { width: min(100%, 48rem); justify-self: end; }
 
 .service--social { grid-template-columns: minmax(30rem, 1.2fr) minmax(19rem, .8fr); }
 .service--social .section-copy { order: 2; }
