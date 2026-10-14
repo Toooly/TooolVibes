@@ -3,12 +3,25 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import dictionary from "@/public/locales/en.json";
 import tools from "@/lib/data/tool-extended-content.json";
+import { directoryTools } from "@/lib/data/tooolvibes-directory";
 import { createTranslator, ENGLISH_DICTIONARY_URL, translateMarkdown } from "@/lib/i18n/locale";
 
 const t = createTranslator(dictionary);
 function urls(source: string) { return [...source.matchAll(/https?:\/\/[^\s)<>]+/g)].map((match) => match[0]); }
 
 describe("English editorial content", () => {
+  it("translates every paragraph and catalog excerpt in the rewritten tool cards", () => {
+    for (const tool of directoryTools) {
+      for (const excerpt of [tool.shortDescription, tool.longDescription, tool.whyItMatters, ...tool.useCases, ...tool.highlights]) {
+        expect(t(excerpt), `${tool.slug}: ${excerpt}`).not.toBe(excerpt);
+      }
+      for (const line of tools[tool.slug as keyof typeof tools].split("\n").filter(Boolean)) {
+        const prose = line.replace(/^(?:## |[-*] |\d+\. )/, "");
+        if (prose === "FAQ") continue;
+        expect(t(prose), `${tool.slug}: ${prose}`).not.toBe(prose);
+      }
+    }
+  });
   it("versions the dictionary from its exact content to prevent stale caches", () => {
     const content = readFileSync(new URL("../../public/locales/en.json", import.meta.url));
     const fingerprint = createHash("sha256").update(content).digest("hex").slice(0, 12);

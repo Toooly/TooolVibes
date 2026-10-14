@@ -1,9 +1,9 @@
 /**
  * Tool extended editorial content.
  *
- * Generated from docs/final-copy/tools/*_FINAL_COPY.md on 2026-08-02.
- * Contains the editorial body (Overview, Features, Use cases, Strengths, Limitations,
- * Editorial verdict, FAQ) for each of the 30 published tools.
+ * Authored Italian editorial copy for the 30 catalog tools, with matching
+ * English translations in the locale dictionary. The JSON file below is the
+ * canonical body source for the tool detail renderer.
  *
  * The body is rendered as Markdown in tool-detail-final/tool-detail-extended-content.tsx
  * and is only displayed when the tool page has a non-empty extended copy.

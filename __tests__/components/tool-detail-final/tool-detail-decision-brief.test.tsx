@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { ToolDetailDecisionBrief } from "@/components/tool-detail-final/tool-detail-decision-brief";
 import { completeToolPublicFixture } from "@/__tests__/fixtures/tool-public";
@@ -52,6 +52,26 @@ function makeTool(overrides: Partial<ToolPublicView> = {}): ToolPublicView {
 }
 
 describe("ToolDetailDecisionBrief", () => {
+  afterEach(cleanup);
+  it("uses the authored verdict separately from the catalog rationale", () => {
+    const { container } = render(<ToolDetailDecisionBrief tool={makeTool({
+      whyItMatters: "Riduce il lavoro iniziale.",
+      editorialReview: "Riduce il lavoro iniziale.",
+      extendedContent: "## Verdetto editoriale\n\n**Cosa ci convince:** Utile per testare un percorso completo.",
+    })} />);
+    expect(container.querySelector(".td-final-brief__summary")?.textContent).toBe("Riduce il lavoro iniziale.");
+    expect(container.querySelector("dl")?.textContent).toContain("Utile per testare un percorso completo.");
+    expect(screen.getAllByText("Riduce il lavoro iniziale.")).toHaveLength(1);
+  });
+
+  it("does not repeat the verdict as an introductory paragraph", () => {
+    const { container } = render(<ToolDetailDecisionBrief tool={makeTool({
+      whyItMatters: "Solido per MVP.",
+    })} />);
+    expect(container.querySelector(".td-final-brief__summary")).toBeNull();
+    expect(screen.getAllByText("Solido per MVP.")).toHaveLength(1);
+  });
+
   it("renders In sintesi with Ideale per and Verdetto, omitting junk highlight trade-offs", () => {
     const { container } = render(<ToolDetailDecisionBrief tool={makeTool()} />);
 
@@ -63,7 +83,7 @@ describe("ToolDetailDecisionBrief", () => {
     expect(dts).toEqual(["Ideale per", "Verdetto"]);
     expect(screen.getByText("Validare MVP.")).toBeTruthy();
     expect(screen.queryByText("Dal prompt all'app")).toBeNull();
-    expect(screen.queryByText("Trade-off")).toBeNull();
+    expect(screen.queryByText("Da considerare")).toBeNull();
     expect(screen.getAllByText("Solido per MVP.").length).toBeGreaterThan(0);
   });
 
@@ -82,7 +102,7 @@ describe("ToolDetailDecisionBrief", () => {
     const dts = Array.from(container.querySelectorAll("dt")).map(
       (node) => node.textContent?.trim(),
     );
-    expect(dts).toContain("Trade-off");
+    expect(dts).toContain("Da considerare");
     expect(screen.getByText("Veloce sul prototipo, debole in produzione.")).toBeTruthy();
     expect(screen.queryByText("Dal prompt all'app")).toBeNull();
   });

@@ -159,11 +159,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["vibe-coding", "ai-app-builder"],
     shortDescription:
-      "AI app builder che trasforma un'idea in un'app funzionante in pochi minuti.",
+      "Crea app da una descrizione, con database, accesso utenti e pubblicazione nello stesso ambiente.",
     longDescription:
-      "Blink è pensato per passare da prompt a interfaccia, logica e prima esperienza prodotto senza aprire subito un ciclo di sviluppo pesante. Accorcia il tempo tra intuizione, prototipo e primo test reale.",
+      "Blink riunisce la costruzione dell’app e i servizi necessari a metterla online. Puoi partire da un’idea, ottenere una prima versione navigabile e modificarla attraverso la conversazione con l’AI.",
     whyItMatters:
-      "Se vuoi validare un'idea in fretta con una resa credibile, Blink è il profilo più diretto da aprire per primo.",
+      "Il vantaggio è poter provare un flusso completo prima di investire nello sviluppo di un prodotto più articolato.",
     externalUrl: "https://blink.new/?aff=toool",
     originalSourceUrl: "https://www.tooolvibes.com/p/blink-new",
     featured: true,
@@ -174,11 +174,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "2 min",
     sourceSite: "tooolvibes.com",
     useCases: [
-      "Validare un MVP in ore invece che in settimane",
-      "Costruire una web app da prompt per un test rapido",
-      "Mostrare un concept navigabile a clienti o investitori",
+      "Validare un’idea con un prototipo utilizzabile.",
+      "Preparare una demo che mostri il percorso dall’inizio al risultato.",
+      "Realizzare un piccolo strumento interno per un processo definito.",
     ],
-    highlights: ["Dal prompt all'app", "MVP rapido", "Web app"],
+    highlights: [
+      "Flusso unificato",
+      "Iterazione rapida",
+      "Test concreti",
+    ],
     accentFrom: "#6d3bff",
     accentTo: "#43c6ff",
   }),
@@ -192,11 +196,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["vibe-coding", "ai-app-builder"],
     shortDescription:
-      "Builder AI per creare app da prompt, iterare rapidamente e pubblicare progetti mobile/web.",
+      "Costruisci app mobile e web descrivendo l’idea e affinando il risultato con l’AI.",
     longDescription:
-      "VibeCode spinge sulla velocità di iterazione: generi una base applicativa, la rifinisci rapidamente e capisci se il prodotto merita il passaggio successivo.",
+      "VibeCode porta un’idea a una prima applicazione utilizzabile attraverso un’interfaccia conversazionale. È pensato per esplorare e modificare un progetto mobile o web senza partire da un ambiente di sviluppo vuoto.",
     whyItMatters:
-      "È uno dei builder da considerare quando la priorità è testare, iterare e pubblicare velocemente.",
+      "Aiuta a capire se un’idea funziona quando viene usata, oltre a mostrarne l’aspetto.",
     externalUrl: "https://www.vibecodeapp.com/sign-up?code=ref-39fsyj6mgbtp",
     originalSourceUrl: "https://www.tooolvibes.com/p/vibecode",
     featured: true,
@@ -206,11 +210,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "tooolvibes.com",
     useCases: [
-      "Iterare una app mobile o web da prompt",
-      "Accelerare il passaggio da idea a demo pubblicabile",
-      "Ridurre il tempo tra concept e feedback reale",
+      "Provare un’app mobile con un percorso essenziale.",
+      "Condividere una demo web per raccogliere riscontri.",
+      "Confrontare due soluzioni di navigazione prima dello sviluppo.",
     ],
-    highlights: ["Iterazione", "Mobile e web", "Pubblicazione"],
+    highlights: [
+      "Avvio guidato",
+      "Due contesti",
+      "Revisioni successive",
+    ],
     accentFrom: "#5b34ff",
     accentTo: "#9f5bff",
   }),
@@ -223,11 +231,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["no-code", "ai-app-builder", "website-builder"],
     shortDescription:
-      "Piattaforma visuale no-code/AI per creare web app production-grade.",
+      "Progetta web app con un editor visuale, collegando interfaccia, dati e logica.",
     longDescription:
-      "WeWeb è una scelta matura quando vuoi restare veloce senza perdere controllo sul front-end, sulle integrazioni e sulla tenuta del progetto nel tempo.",
+      "WeWeb permette di costruire il frontend di una web app con strumenti visuali e di collegarlo ai servizi che gestiscono i dati. È adatto a chi cerca un approccio no-code con maggiore controllo sulla struttura del progetto.",
     whyItMatters:
-      "Quando il progetto deve restare no-code ma sembrare pronto per andare in produzione, WeWeb merita attenzione vera.",
+      "Rende più accessibile la costruzione dell’interfaccia senza confondere il lavoro visuale con la gestione del backend.",
     externalUrl:
       "https://dashboard.weweb.io/sign-up/e97a27ca-e319-49f0-a2b7-ea042d3c6b36",
     originalSourceUrl: "https://www.tooolvibes.com/p/blink-61f26b689a7da189",
@@ -238,11 +246,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "tooolvibes.com",
     useCases: [
-      "Costruire web app senza ripartire da zero",
-      "Collegare frontend visuale e backend esterni",
-      "Portare un progetto no-code a uno standard serio",
+      "Costruire un portale clienti collegato a un backend esistente.",
+      "Creare un gestionale interno con schermate dedicate.",
+      "Prototipare una web app con dati e azioni reali.",
     ],
-    highlights: ["No-code pro", "Backend", "Produzione"],
+    highlights: [
+      "Controllo visuale",
+      "Servizi separati",
+      "Struttura riutilizzabile",
+    ],
     accentFrom: "#2c5cff",
     accentTo: "#43c6ff",
   }),
@@ -267,11 +279,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["headless-cms", "no-code", "automation"],
     shortDescription:
-      "CMS headless con AI, API, flussi e strumenti per accelerare progetti guidati dai contenuti.",
+      "Organizza contenuti strutturati in un CMS headless e distribuiscili alle tue applicazioni.",
     longDescription:
-      "CosmicJS aiuta a organizzare contenuti, modelli, API e flussi editoriali in modo pulito. È un buon centro operativo per cataloghi, siti editoriali e web app guidate dai contenuti.",
+      "Cosmic separa la gestione dei contenuti dal sito o dall’app che li presenta. Redattori e sviluppatori possono lavorare sullo stesso patrimonio informativo, con modelli e API dedicati.",
     whyItMatters:
-      "Non è solo un CMS: è un centro operativo quando contenuti e struttura devono restare gestibili nel tempo.",
+      "È utile quando gli stessi contenuti devono restare ordinati e raggiungere più interfacce.",
     externalUrl: "https://app.cosmicjs.com/signup?ref=TOOOLVIBES",
     originalSourceUrl: "https://www.tooolvibes.com/p/cosmicjs",
     featured: true,
@@ -281,11 +293,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "tooolvibes.com",
     useCases: [
-      "Gestire contenuti strutturati via API",
-      "Dare ordine a progetti editoriali o cataloghi",
-      "Velocizzare flussi tra contenuti, team e frontend",
+      "Gestire un catalogo con schede e campi ricorrenti.",
+      "Pubblicare contenuti su un sito e su un’app.",
+      "Separare il lavoro della redazione da quello sul frontend.",
     ],
-    highlights: ["API al centro", "Flussi", "CMS"],
+    highlights: [
+      "Contenuti strutturati",
+      "Frontend indipendente",
+      "Ruoli distinti",
+    ],
     accentFrom: "#6f3cff",
     accentTo: "#ffb14a",
   }),
@@ -299,11 +315,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["ai-app-builder", "no-code"],
     shortDescription:
-      "Builder no-code per app AI con backend, database, autenticazione, hosting e pubblicazione integrati.",
+      "Builder AI dismesso: la chiusura del servizio era prevista per il 1° agosto 2026.",
     longDescription:
-      "Mocha si posiziona bene quando vuoi un builder che non si fermi alla UI: backend, database, accesso e pubblicazione fanno parte della promessa.",
+      "Mocha proponeva la creazione di app con database, backend, accesso utenti e hosting integrati. Il team ha annunciato la chiusura del servizio per il 1° agosto 2026: questa scheda conserva il contesto del prodotto e non lo presenta come una scelta per nuovi progetti.",
     whyItMatters:
-      "È un builder da valutare quando vuoi un sistema più integrato e meno frizione operativa tra idea e rilascio.",
+      "Prima di scegliere un builder conta anche la continuità del servizio: Mocha è ora un caso da consultare in ottica di migrazione.",
     externalUrl: "https://getmocha.com/?via=toool",
     originalSourceUrl: "https://www.tooolvibes.com/p/mocha",
     featured: true,
@@ -313,11 +329,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "tooolvibes.com",
     useCases: [
-      "Costruire una app con backend e accesso inclusi",
-      "Ridurre i passaggi tra costruzione, dati e pubblicazione",
-      "Lanciare velocemente un prodotto no-code completo",
+      "Ricostruire il contesto di un progetto già realizzato con Mocha.",
+      "Valutare una migrazione verso un builder ancora operativo.",
+      "Controllare dove sono conservati codice e dati esportati.",
     ],
-    highlights: ["App completa", "Database", "Accesso"],
+    highlights: [
+      "Contesto conservato",
+      "Fonte consultabile",
+      "Lezione operativa",
+    ],
     accentFrom: "#8a3cff",
     accentTo: "#ff6eb3",
   }),
@@ -330,11 +350,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["ui-builder", "ai-app-builder"],
     shortDescription:
-      "Builder AI di Vercel per creare interfacce, app, componenti e progetti pronti alla pubblicazione.",
+      "Trasforma descrizioni e riferimenti visuali in interfacce e applicazioni con l’AI di Vercel.",
     longDescription:
-      "v0 è forte quando la partita si gioca su UI, componenti e velocità di esecuzione front-end. Aiuta a esplorare direzioni visuali e portare il codice in un flusso moderno.",
+      "v0 aiuta a costruire e modificare interfacce e applicazioni attraverso la conversazione. La prima versione diventa una base da rivedere, collegare ai dati e integrare nel progetto.",
     whyItMatters:
-      "Per UI, componenti e frontend veloci da validare, v0 resta uno dei riferimenti più chiari del panorama AI builder.",
+      "È utile quando vuoi rendere concreta una direzione visuale e lavorare subito su una versione navigabile.",
     externalUrl: "https://v0.app/",
     originalSourceUrl: "https://www.tooolvibes.com/p/v0",
     featured: true,
@@ -344,11 +364,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "tooolvibes.com",
     useCases: [
-      "Generare UI e componenti da prompt",
-      "Accelerare il lavoro su prototipi frontend",
-      "Passare da idea visuale a codice più in fretta",
+      "Esplorare un’interfaccia prima di svilupparla in dettaglio.",
+      "Preparare componenti da integrare in un progetto web.",
+      "Costruire una demo con percorsi e contenuti realistici.",
     ],
-    highlights: ["UI", "Componenti", "Frontend"],
+    highlights: [
+      "Risultato concreto",
+      "Revisioni mirate",
+      "Continuità tecnica",
+    ],
     accentFrom: "#3d4357",
     accentTo: "#6d3bff",
   }),
@@ -362,11 +386,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["vibe-coding", "ai-app-builder", "website-builder"],
     shortDescription:
-      "AI web app & site builder per generare progetti React/Tailwind, iterare, esportare e pubblicare.",
+      "Crea siti e web app da prompt, poi modifica, esporta o pubblica il progetto.",
     longDescription:
-      "Meku interessa chi vuole restare nel mondo React/Tailwind ma partire da una spinta AI concreta: genera una base moderna, la iteri e poi puoi riprendere controllo del progetto.",
+      "Meku combina generazione AI, modifiche conversazionali e strumenti di pubblicazione. È rivolto a chi vuole partire da una base web utilizzabile e conservare la possibilità di proseguire sul codice.",
     whyItMatters:
-      "È il tipo di builder che piace a chi vuole accelerare senza perdere il filo del codice e della struttura.",
+      "Riduce il lavoro iniziale senza obbligarti a valutare il progetto soltanto attraverso una demo chiusa.",
     externalUrl: "https://meku.dev/?aff=YFlSqMxPUaEb",
     originalSourceUrl: "https://www.tooolvibes.com/p/meku",
     featured: true,
@@ -376,11 +400,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "tooolvibes.com",
     useCases: [
-      "Generare basi React/Tailwind da cui partire",
-      "Costruire siti o web app con iterazione veloce",
-      "Esportare e continuare un progetto fuori dal builder",
+      "Preparare una prima versione di un sito o di una web app.",
+      "Costruire una demo da condividere con clienti e collaboratori.",
+      "Consegnare una base di progetto a un team di sviluppo.",
     ],
-    highlights: ["React", "Tailwind", "Esportazione"],
+    highlights: [
+      "Partenza rapida",
+      "Codice disponibile",
+      "Flusso continuo",
+    ],
     accentFrom: "#11b8d8",
     accentTo: "#5b34ff",
   }),
@@ -393,11 +421,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["ai-writing", "productivity"],
     shortDescription:
-      "Assistente AI per scrittura, ricerca, citazioni e documenti accademici.",
+      "Scrivi documenti di ricerca con supporto AI, fonti consultabili e citazioni.",
     longDescription:
-      "Jenni AI aiuta a trasformare appunti e ricerche in documenti più ordinati, con supporto a citazioni, outline e scrittura assistita.",
+      "Jenni AI riunisce scrittura assistita e lavoro sulle fonti in un ambiente dedicato alla ricerca. Può aiutare a organizzare una bozza, sviluppare paragrafi e collegare le citazioni ai materiali utilizzati.",
     whyItMatters:
-      "È un buon punto di ingresso per chi vuole usare l'AI sulla scrittura senza costruire flussi complessi.",
+      "Il valore è tenere vicini argomentazione e fonti, riducendo i passaggi tra lettura, scrittura e bibliografia.",
     externalUrl: "https://jenni.ai/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/jenny-ai_2",
     featured: false,
@@ -407,11 +435,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "2 min",
     sourceSite: "weblium",
     useCases: [
-      "Preparare bozze e documenti lunghi",
-      "Gestire citazioni e fonti",
-      "Velocizzare ricerca e struttura dei testi",
+      "Organizzare una prima bozza di tesi o articolo.",
+      "Rielaborare paragrafi mantenendo il legame con le fonti.",
+      "Preparare una revisione della letteratura da controllare.",
     ],
-    highlights: ["Ricerca", "Citazioni", "Scrittura"],
+    highlights: [
+      "Fonti vicine al testo",
+      "Bozza più ordinata",
+      "Citazioni assistite",
+    ],
     accentFrom: "#7c4dff",
     accentTo: "#38bdf8",
   }),
@@ -424,11 +456,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["ai-image"],
     shortDescription:
-      "Generatore AI di headshot professionali per profili, CV, LinkedIn e team.",
+      "Trasforma le tue fotografie in ritratti professionali per profili, CV e pagine team.",
     longDescription:
-      "BetterPic genera ritratti professionali a partire da foto personali, utile per profili, team page, CV e asset LinkedIn coerenti.",
+      "BetterPic genera ritratti con l’AI a partire dalle fotografie caricate. È una soluzione da valutare quando servono immagini coerenti per una presenza professionale, senza organizzare subito un servizio fotografico.",
     whyItMatters:
-      "Risolve un bisogno chiaro e veloce: avere headshot credibili senza organizzare uno shooting.",
+      "Risponde a un bisogno preciso: aggiornare l’immagine professionale con un flusso guidato.",
     externalUrl: "https://www.betterpic.io/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/betterpic_1",
     featured: false,
@@ -438,11 +470,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "2 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare headshot per profili professionali",
-      "Uniformare immagini di un team",
-      "Aggiornare CV e LinkedIn con asset curati",
+      "Aggiornare la fotografia di un profilo professionale.",
+      "Preparare immagini per CV e presentazioni personali.",
+      "Dare una direzione visiva comune alla pagina di un team.",
     ],
-    highlights: ["Ritratti", "LinkedIn", "Team"],
+    highlights: [
+      "Obiettivo definito",
+      "Scelta tra varianti",
+      "Preparazione semplificata",
+    ],
     accentFrom: "#6d3bff",
     accentTo: "#f472b6",
   }),
@@ -455,11 +491,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["ai-image", "ai-video"],
     shortDescription:
-      "Suite AI per generare immagini, video, shorts e contenuti creativi da prompt.",
+      "Esplora immagini e video generati con l’AI in una piattaforma creativa dedicata.",
     longDescription:
-      "Imagine Art unisce generazione visuale e strumenti creativi per passare da prompt a immagini, video e asset social più rapidamente.",
+      "Imagine Art riunisce strumenti per generare e rielaborare contenuti visuali. Può servire per esplorare una direzione creativa, preparare varianti e sviluppare materiali da rifinire prima della pubblicazione.",
     whyItMatters:
-      "È utile quando vuoi produrre creatività visiva senza rimbalzare tra troppe app separate.",
+      "Aiuta a confrontare più possibilità visuali prima di scegliere dove investire il lavoro di produzione.",
     externalUrl: "https://www.imagine.art/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/imagine-art-ai_1",
     featured: false,
@@ -469,11 +505,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "2 min",
     sourceSite: "weblium",
     useCases: [
-      "Generare immagini da prompt",
-      "Creare asset video brevi",
-      "Produrre visual per campagne e social",
+      "Esplorare una direzione per una campagna o un progetto.",
+      "Preparare riferimenti visuali per un brief creativo.",
+      "Creare varianti da valutare in un layout reale.",
     ],
-    highlights: ["Immagini", "Video", "Creatività"],
+    highlights: [
+      "Esplorazione veloce",
+      "Più formati",
+      "Iterazione guidata",
+    ],
     accentFrom: "#8b5cf6",
     accentTo: "#06b6d4",
   }),
@@ -486,11 +526,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["ai-video", "productivity"],
     shortDescription:
-      "Piattaforma video con hosting, ricerca AI nei video, embed e condivisione.",
+      "Ospita video e ritrova i passaggi che ti interessano attraverso la ricerca nei contenuti.",
     longDescription:
-      "Muse AI combina hosting video, ricerca semantica nei contenuti e condivisione tramite embed, rendendo più gestibile un archivio video.",
+      "Muse AI combina gestione video e ricerca all’interno delle registrazioni. È utile per organizzare lezioni, webinar e archivi che devono essere consultati anche senza guardare ogni video dall’inizio.",
     whyItMatters:
-      "Quando i video diventano tanti, la ricerca interna e l'organizzazione fanno la differenza.",
+      "Il valore cresce quando ritrovare un passaggio conta quanto conservare la registrazione.",
     externalUrl: "https://muse.ai/",
     fallbackUrl: "https://skiv.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/muse_1",
@@ -501,11 +541,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "2 min",
     sourceSite: "weblium",
     useCases: [
-      "Ospitare video e renderli ricercabili",
-      "Creare embed per siti e knowledge base",
-      "Organizzare archivi video con ricerca AI",
+      "Rendere consultabile un archivio di webinar.",
+      "Organizzare lezioni e materiali di formazione.",
+      "Ritrovare un passaggio in una registrazione lunga.",
     ],
-    highlights: ["Hosting", "Ricerca AI", "Incorporamento"],
+    highlights: [
+      "Ricerca contestuale",
+      "Archivio condiviso",
+      "Consultazione mirata",
+    ],
     accentFrom: "#2563eb",
     accentTo: "#a855f7",
   }),
@@ -519,11 +563,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "beginner",
     segments: ["sales", "marketing"],
     shortDescription:
-      "Tool per estrarre lead verificati da Google Maps, Instagram, LinkedIn e altre fonti pubbliche.",
+      "Raccogli contatti da fonti pubbliche per costruire liste di aziende e potenziali clienti.",
     longDescription:
-      "Socleads aiuta team sales e founder a raccogliere lead da fonti pubbliche, con un flusso pensato per velocizzare prospecting e outreach.",
+      "Socleads aiuta a trovare e organizzare contatti attraverso ricerche su fonti pubbliche. È una base per la ricerca commerciale: qualità, pertinenza e modalità di utilizzo dei dati richiedono comunque una valutazione.",
     whyItMatters:
-      "Per chi deve creare una pipeline da zero, riduce il lavoro manuale sulle prime liste di contatti.",
+      "Riduce la raccolta manuale quando hai già definito quali aziende cerchi e perché potrebbero essere pertinenti.",
     externalUrl: "https://socleads.com/?ref=_lcMNGtlQjjQ",
     originalSourceUrl: "https://tooolvibes.com/all-tools/socleads_1",
     featured: false,
@@ -533,11 +577,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "2 min",
     sourceSite: "weblium",
     useCases: [
-      "Costruire liste lead per outbound",
-      "Raccogliere contatti da fonti pubbliche",
-      "Accelerare prospecting commerciale",
+      "Ricercare aziende in un settore e in un’area specifici.",
+      "Preparare una lista da qualificare prima del contatto.",
+      "Confrontare la copertura di diverse fonti pubbliche.",
     ],
-    highlights: ["Lead", "Vendite", "Contatti"],
+    highlights: [
+      "Meno ricerca manuale",
+      "Liste mirate",
+      "Dati riutilizzabili",
+    ],
     accentFrom: "#0ea5e9",
     accentTo: "#7c3aed",
   }),
@@ -550,11 +598,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["marketing", "automation"],
     shortDescription:
-      "Piattaforma per unificare dati marketing, attribution e connettori verso BI/warehouse.",
+      "Collega dati marketing e aziendali agli strumenti di analisi, ai database e ai sistemi AI.",
     longDescription:
-      "Windsor AI centralizza dati marketing da canali diversi, li porta verso strumenti BI o warehouse e aiuta a leggere attribution e performance.",
+      "Windsor AI raccoglie dati da servizi diversi e li porta negli ambienti in cui vengono analizzati. È utile quando report e dashboard richiedono importazioni manuali ricorrenti.",
     whyItMatters:
-      "È utile quando report e dashboard iniziano a diventare più importanti delle singole campagne.",
+      "Sposta il lavoro dalla preparazione ripetitiva dei file alla lettura e al controllo dei dati.",
     externalUrl: "https://www.windsor.ai/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/windsor-ai_2",
     featured: false,
@@ -564,11 +612,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Unificare dati advertising e analytics",
-      "Inviare dati verso BI e warehouse",
-      "Costruire report marketing più affidabili",
+      "Preparare una dashboard con dati di più piattaforme.",
+      "Centralizzare report marketing per un team o un cliente.",
+      "Alimentare un database destinato all’analisi.",
     ],
-    highlights: ["Dati", "Attribuzione", "BI"],
+    highlights: [
+      "Fonti collegate",
+      "Report ripetibili",
+      "Destinazioni diverse",
+    ],
     accentFrom: "#4338ca",
     accentTo: "#22c55e",
   }),
@@ -582,11 +634,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["ai-writing", "marketing"],
     shortDescription:
-      "Piattaforma AI per brief SEO, scrittura, ottimizzazione contenuti e analisi SERP.",
+      "Analizza argomenti e risultati di ricerca per preparare brief e contenuti più completi.",
     longDescription:
-      "Frase AI lavora su ricerca SERP, brief, outline e ottimizzazione dei contenuti per rendere il processo SEO più rapido e controllabile.",
+      "Frase AI supporta la ricerca editoriale, la costruzione di brief e la revisione dei contenuti. Aiuta a individuare domande e temi da trattare, lasciando all’autore il compito di sviluppare una risposta utile e originale.",
     whyItMatters:
-      "Per content team e founder, riduce il salto tra keyword research, brief e pubblicazione.",
+      "Rende più ordinata la preparazione di un articolo, soprattutto quando ricerca e scrittura sono affidate a persone diverse.",
     externalUrl: "https://www.frase.io/?via=tool57",
     originalSourceUrl: "https://tooolvibes.com/all-tools/frase-ai_1",
     featured: false,
@@ -596,11 +648,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare brief SEO più velocemente",
-      "Ottimizzare contenuti già pubblicati",
-      "Analizzare SERP e intenti di ricerca",
+      "Preparare un brief prima di scrivere un articolo.",
+      "Aggiornare una pagina che non risponde più bene alle domande dei lettori.",
+      "Coordinare ricerca e scrittura in un team editoriale.",
     ],
-    highlights: ["SEO", "Brief", "SERP"],
+    highlights: [
+      "Ricerca organizzata",
+      "Brief condivisibili",
+      "Revisione mirata",
+    ],
     accentFrom: "#7c3aed",
     accentTo: "#14b8a6",
   }),
@@ -623,11 +679,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["ai-video"],
     shortDescription:
-      "Piattaforma AI video per creare contenuti con avatar, voiceover e script testuali.",
+      "Crea video con avatar e voce a partire da uno script, per formazione e comunicazione.",
     longDescription:
-      "Synthesia trasforma script in video con avatar e voiceover, ideale per formazione, onboarding, contenuti corporate e comunicazione scalabile.",
+      "Synthesia AI trasforma testi in video presentati da avatar. È utile per materiali che devono essere prodotti o aggiornati con regolarità, come formazione, procedure e comunicazioni interne.",
     whyItMatters:
-      "Permette di produrre video professionali senza set, camera e speaker ogni volta.",
+      "Riduce il lavoro di ripresa quando il contenuto cambia spesso ma il formato può restare coerente.",
     externalUrl: "https://www.synthesia.io/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/synthesia-ai_1",
     featured: false,
@@ -637,11 +693,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare video training da script",
-      "Produrre contenuti corporate multilingua",
-      "Velocizzare onboarding e tutorial",
+      "Preparare un modulo di formazione interna.",
+      "Spiegare una procedura che viene aggiornata spesso.",
+      "Adattare una comunicazione per pubblici di lingue diverse.",
     ],
-    highlights: ["Avatar", "Video", "Voce fuori campo"],
+    highlights: [
+      "Aggiornamenti semplici",
+      "Formato coerente",
+      "Produzione senza riprese",
+    ],
     accentFrom: "#4f46e5",
     accentTo: "#ec4899",
   }),
@@ -655,11 +715,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["no-code", "productivity"],
     shortDescription:
-      "Tool per trasformare database Notion in app web/mobile con permessi e sync.",
+      "Trasforma i dati di Notion in un’app con schermate e accessi dedicati.",
     longDescription:
-      "NotionApps prende database Notion e li trasforma in app utilizzabili, con permessi, interfacce e sincronizzazione pensate per team e clienti.",
+      "NotionApps permette di costruire interfacce utilizzabili a partire da database Notion. È utile per portali e piccoli strumenti operativi quando i dati sono già organizzati in Notion e devono raggiungere altri utenti.",
     whyItMatters:
-      "È perfetto quando Notion è già il backend operativo e serve un'interfaccia più pulita.",
+      "Evita di spostare subito i dati in un nuovo sistema per offrire un’esperienza più semplice a chi li consulta.",
     externalUrl: "https://www.notionapps.com?via=toool",
     originalSourceUrl: "https://tooolvibes.com/all-tools/notionapps_1",
     featured: false,
@@ -669,11 +729,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Trasformare database Notion in app",
-      "Creare portali per clienti o team",
-      "Usare Notion come base dati operativa",
+      "Creare un portale clienti basato su dati Notion.",
+      "Pubblicare un catalogo o una raccolta consultabile.",
+      "Offrire a un team una vista operativa più semplice.",
     ],
-    highlights: ["Notion", "App", "Sincronizzazione"],
+    highlights: [
+      "Dati riutilizzati",
+      "Interfaccia dedicata",
+      "Avvio contenuto",
+    ],
     accentFrom: "#111827",
     accentTo: "#8b5cf6",
   }),
@@ -687,11 +751,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["ai-writing", "marketing"],
     shortDescription:
-      "Tool AI per trasformare video, audio, URL e contenuti in blog post SEO-ready.",
+      "Trasforma video, audio e altri materiali in bozze di articoli da rivedere e pubblicare.",
     longDescription:
-      "Blogify aiuta a riproporre contenuti già esistenti in articoli ottimizzati, riducendo il tempo tra video, audio o link e pubblicazione sul blog.",
+      "Blogify aiuta a riutilizzare contenuti esistenti in forma scritta. È pensato per chi produce video, interviste o podcast e vuole ricavarne articoli leggibili senza riscrivere tutto dalla pagina bianca.",
     whyItMatters:
-      "È utile quando hai asset ma manca il tempo per trasformarli in contenuti evergreen.",
+      "Dà una seconda vita ai contenuti già prodotti, a patto di adattarli alle esigenze della lettura.",
     externalUrl: "https://blogify.ai?fpr=n2ogi",
     originalSourceUrl: "https://tooolvibes.com/all-tools/blogify_1",
     featured: false,
@@ -701,11 +765,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Trasformare video in blog post",
-      "Riproporre contenuti audio in articoli",
-      "Aumentare output SEO da asset esistenti",
+      "Ricavare un articolo da un episodio di podcast.",
+      "Trasformare un webinar in un contenuto consultabile.",
+      "Riutilizzare un’intervista in un formato editoriale diverso.",
     ],
-    highlights: ["Blog", "Riuso contenuti", "SEO"],
+    highlights: [
+      "Materiali valorizzati",
+      "Bozza iniziale",
+      "Formato consultabile",
+    ],
     accentFrom: "#a855f7",
     accentTo: "#f97316",
   }),
@@ -718,11 +786,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["customer-support", "sales"],
     shortDescription:
-      "Software live chat per supporto clienti, vendite e conversazioni realtime.",
+      "Gestisci conversazioni con i visitatori del sito e offri supporto durante la navigazione.",
     longDescription:
-      "LiveChat porta conversazioni realtime su siti e prodotti digitali, con strumenti per supporto, vendita e gestione team.",
+      "LiveChat offre una chat per parlare con clienti e visitatori, organizzare le conversazioni e collegarle al lavoro del team. È utile quando una risposta tempestiva può chiarire un dubbio o sbloccare una richiesta.",
     whyItMatters:
-      "Quando il traffico cresce, una live chat solida può aumentare conversione e qualità del supporto.",
+      "Avvicina il supporto al momento in cui la persona incontra il problema.",
     externalUrl: "https://www.livechat.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/livechat_1",
     featured: false,
@@ -732,11 +800,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Gestire chat realtime su sito",
-      "Supportare utenti e clienti",
-      "Convertire lead durante la navigazione",
+      "Rispondere ai dubbi prima di un acquisto.",
+      "Aiutare chi incontra un problema sul sito.",
+      "Raccogliere richieste da riprendere con un contesto chiaro.",
     ],
-    highlights: ["Chat", "Supporto", "Vendite"],
+    highlights: [
+      "Supporto contestuale",
+      "Conversazioni organizzate",
+      "Collegamenti operativi",
+    ],
     accentFrom: "#2563eb",
     accentTo: "#22c55e",
   }),
@@ -757,11 +829,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["customer-support", "ai-agents", "automation"],
     shortDescription:
-      "Piattaforma per creare chatbot AI di supporto, vendita e automazione conversazionale.",
+      "Crea un chatbot per rispondere a domande ricorrenti e guidare richieste di supporto o vendita.",
     longDescription:
-      "ChatBot permette di creare assistenti conversazionali per FAQ, vendita, routing e automazioni senza dover costruire ogni flusso da zero.",
+      "ChatBot permette di progettare assistenti conversazionali per siti e flussi di assistenza. È utile quando molte richieste seguono percorsi simili e possono essere gestite con contenuti e passaggi definiti.",
     whyItMatters:
-      "È una scorciatoia concreta per automatizzare conversazioni frequenti senza perdere controllo sull'esperienza.",
+      "Può alleggerire le richieste ripetitive, mantenendo un percorso chiaro verso il supporto umano.",
     externalUrl: "https://www.chatbot.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/chatbot_1",
     featured: false,
@@ -771,11 +843,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Automatizzare FAQ e supporto iniziale",
-      "Qualificare lead tramite conversazione",
-      "Collegare chatbot a flussi operativi",
+      "Rispondere alle domande più frequenti sul servizio.",
+      "Raccogliere informazioni iniziali prima del supporto umano.",
+      "Guidare una richiesta commerciale attraverso passaggi definiti.",
     ],
-    highlights: ["Chatbot", "Automazioni", "AI"],
+    highlights: [
+      "Perimetro definito",
+      "Risposte organizzate",
+      "Primo filtro",
+    ],
     accentFrom: "#4f46e5",
     accentTo: "#06b6d4",
   }),
@@ -795,11 +871,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["customer-support", "automation"],
     shortDescription:
-      "Ticketing system per gestire comunicazioni clienti, automazioni e supporto team.",
+      "Riunisci richieste clienti in ticket assegnabili, con stato, storico e responsabilità chiari.",
     longDescription:
-      "HelpDesk organizza richieste clienti, ticket, priorità e automazioni per dare struttura al supporto quando email e chat non bastano più.",
+      "HelpDesk organizza il lavoro di assistenza attraverso ticket e flussi condivisi. Serve a evitare che una richiesta resti dispersa tra email, persone e passaggi senza un responsabile.",
     whyItMatters:
-      "Aiuta a non perdere conversazioni importanti e rende il supporto più misurabile.",
+      "Rende visibile chi sta seguendo una richiesta e quale passaggio manca per risolverla.",
     externalUrl: "https://www.helpdesk.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/helpdesk_1",
     featured: false,
@@ -809,11 +885,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Gestire ticket clienti",
-      "Automatizzare priorità e assegnazioni",
-      "Tenere traccia di SLA e conversazioni",
+      "Centralizzare le email di assistenza.",
+      "Gestire richieste che passano tra più persone.",
+      "Seguire arretrati e casi ancora aperti.",
     ],
-    highlights: ["Ticket", "Supporto", "SLA"],
+    highlights: [
+      "Contesto conservato",
+      "Responsabilità visibile",
+      "Processo condiviso",
+    ],
     accentFrom: "#0f766e",
     accentTo: "#6366f1",
   }),
@@ -826,11 +906,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["website-builder", "ai-app-builder", "no-code"],
     shortDescription:
-      "AI website builder che crea, modifica e pubblica siti tramite conversazione.",
+      "Crea e modifica un sito attraverso una conversazione, senza partire da un editor vuoto.",
     longDescription:
-      "Wegic porta la creazione di siti in una logica conversazionale: descrivi cosa vuoi, iteri con l'assistente e pubblichi un risultato pronto.",
+      "Wegic costruisce siti a partire da descrizioni e indicazioni visuali. Puoi chiedere modifiche alla struttura e ai contenuti, preparando una prima presenza online da controllare prima della pubblicazione.",
     whyItMatters:
-      "È adatto a chi vuole un sito credibile rapidamente senza perdersi nei dettagli del builder.",
+      "Abbassa la soglia di partenza per chi sa cosa vuole comunicare ma non vuole comporre ogni pagina manualmente.",
     externalUrl: "https://wegic.ai/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/wegic_1",
     featured: false,
@@ -840,11 +920,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare siti tramite chat",
-      "Iterare copy e layout velocemente",
-      "Pubblicare una presenza online in poco tempo",
+      "Preparare un sito vetrina per un’attività.",
+      "Realizzare una pagina dedicata a un servizio.",
+      "Provare la struttura di un sito prima di un lavoro su misura.",
     ],
-    highlights: ["Sito", "Chat", "Pubblicazione"],
+    highlights: [
+      "Partenza semplice",
+      "Revisioni accessibili",
+      "Percorso guidato",
+    ],
     accentFrom: "#6d3bff",
     accentTo: "#38bdf8",
   }),
@@ -857,11 +941,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["ai-video", "marketing"],
     shortDescription:
-      "AI video ad generator per trasformare URL, immagini e testi in video ads pronti.",
+      "Trasforma immagini, testi e pagine prodotto in bozze di video pubblicitari.",
     longDescription:
-      "Vidau aiuta a creare video ads partendo da URL, immagini e testi, con un flusso pensato per campagne, ecommerce e creatività performance.",
+      "Vidau aiuta a creare video promozionali partendo da materiali già disponibili. È utile per esplorare messaggi e varianti creative prima di investire in una produzione più articolata.",
     whyItMatters:
-      "Riduce il tempo tra idea creativa e prima variante video testabile.",
+      "Rende più semplice preparare varianti da testare, senza trattare il primo video generato come un annuncio già validato.",
     externalUrl: "https://www.vidau.ai/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/vidau_1",
     featured: false,
@@ -871,11 +955,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare video ads da URL prodotto",
-      "Testare varianti creative velocemente",
-      "Produrre asset video per ecommerce",
+      "Esplorare messaggi diversi per lo stesso prodotto.",
+      "Preparare bozze video per una campagna.",
+      "Adattare materiali esistenti a un formato promozionale.",
     ],
-    highlights: ["Annunci", "Video", "Creatività"],
+    highlights: [
+      "Asset riutilizzati",
+      "Varianti confrontabili",
+      "Produzione iniziale ridotta",
+    ],
     accentFrom: "#db2777",
     accentTo: "#7c3aed",
   }),
@@ -896,11 +984,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["payments"],
     shortDescription:
-      "Piattaforma per pagamenti SaaS, abbonamenti, tax compliance e Merchant of Record.",
+      "Gestisci la vendita di software e prodotti digitali con pagamenti e abbonamenti in un servizio Merchant of Record.",
     longDescription:
-      "Lemon Squeezy gestisce pagamenti, abbonamenti, tasse e Merchant of Record, alleggerendo la complessità commerciale per prodotti digitali e SaaS.",
+      "Lemon Squeezy gestisce la vendita di prodotti digitali come Merchant of Record. Riunisce checkout, abbonamenti e gestione delle imposte sulle transazioni coperte dal servizio.",
     whyItMatters:
-      "È utile quando vuoi vendere software o prodotti digitali senza costruire subito tutta la gestione fiscale e dei pagamenti.",
+      "Può ridurre il numero di sistemi da coordinare per vendere un prodotto digitale a clienti di paesi diversi.",
     externalUrl: "https://www.lemonsqueezy.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/lemon-squeezy_1",
     featured: false,
@@ -910,11 +998,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Vendere prodotti digitali",
-      "Gestire abbonamenti SaaS",
-      "Demandare tax compliance e billing",
+      "Vendere un software o un prodotto digitale ammesso.",
+      "Gestire un abbonamento con un checkout dedicato.",
+      "Ridurre la frammentazione tra vendita e gestione delle transazioni.",
     ],
-    highlights: ["Pagamenti", "MoR", "SaaS"],
+    highlights: [
+      "Vendita integrata",
+      "Ricorrenze gestite",
+      "Ambito internazionale",
+    ],
     accentFrom: "#f59e0b",
     accentTo: "#8b5cf6",
   }),
@@ -927,11 +1019,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["ai-video", "marketing"],
     shortDescription:
-      "Tool AI per trasformare screen recording in video demo/tutorial professionali.",
+      "Trasforma registrazioni dello schermo in demo e tutorial con narrazione e montaggio assistiti dall’AI.",
     longDescription:
-      "VibrantSnap prende screen recording e li trasforma in demo o tutorial più rifiniti, con un output più adatto a prodotto, onboarding e marketing.",
+      "VibrantSnap lavora sulle registrazioni dello schermo per creare video che spiegano un prodotto. Aiuta a rifinire la narrazione e a rendere più chiari i passaggi mostrati in demo, tutorial e materiali di onboarding.",
     whyItMatters:
-      "Per SaaS e creator, migliora la qualità percepita delle demo senza montaggi lunghi.",
+      "Riduce il lavoro di rifinitura delle spiegazioni video che il team deve produrre e aggiornare spesso.",
     externalUrl: "https://www.vibrantsnap.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/vibrantsnap_1",
     featured: false,
@@ -941,11 +1033,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Trasformare registrazioni schermo in demo",
-      "Creare tutorial prodotto più curati",
-      "Migliorare video per onboarding e marketing",
+      "Spiegare una nuova funzione con una demo breve.",
+      "Preparare un tutorial per il centro assistenza.",
+      "Aggiornare una registrazione utilizzata nell’onboarding.",
     ],
-    highlights: ["Demo", "Schermo", "Tutorial"],
+    highlights: [
+      "Percorso visibile",
+      "Narrazione rivedibile",
+      "Dettagli più leggibili",
+    ],
     accentFrom: "#06b6d4",
     accentTo: "#7c3aed",
   }),
@@ -958,11 +1054,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "intermediate",
     segments: ["marketing", "ai-writing"],
     shortDescription:
-      "Tool AI per creare contenuti LinkedIn, personal branding e crescita professionale.",
+      "Organizza idee e bozze per pubblicare contenuti LinkedIn con maggiore continuità.",
     longDescription:
-      "ReachifyMe supporta la creazione di contenuti LinkedIn e personal branding con idee, testi e ritmo editoriale più sostenibile.",
+      "ReachifyMe aiuta a sviluppare contenuti per LinkedIn, dalle idee alla bozza. È utile quando vuoi costruire una routine editoriale senza affidare all’AI la tua esperienza o il tuo punto di vista.",
     whyItMatters:
-      "È utile quando LinkedIn è un canale di crescita ma manca una routine di contenuti chiara.",
+      "Riduce l’attrito tra un’idea annotata e un post che puoi rivedere e pubblicare.",
     externalUrl: "https://reachifyme.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/reachifyme_1",
     featured: false,
@@ -972,11 +1068,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "3 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare post LinkedIn con più continuità",
-      "Costruire personal branding",
-      "Trasformare idee in contenuti pubblicabili",
+      "Trasformare un’esperienza professionale in un post.",
+      "Dare ordine a una raccolta di idee per LinkedIn.",
+      "Preparare bozze da rivedere prima della pubblicazione.",
     ],
-    highlights: ["LinkedIn", "Contenuti", "Brand"],
+    highlights: [
+      "Canale definito",
+      "Avvio più semplice",
+      "Routine sostenibile",
+    ],
     accentFrom: "#2563eb",
     accentTo: "#8b5cf6",
   }),
@@ -990,11 +1090,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "expert",
     segments: ["automation", "no-code"],
     shortDescription:
-      "Piattaforma visuale per creare automazioni, flussi e integrazioni tra app e API.",
+      "Collega app e API con automazioni visuali che trasformano dati e coordinano azioni.",
     longDescription:
-      "Make permette di progettare automazioni visuali tra app, API e dati, con una potenza superiore ai flussi semplici quando serve orchestrare processi reali.",
+      "Make permette di costruire scenari che collegano servizi, elaborano informazioni e avviano azioni. È utile per processi ripetitivi che oggi richiedono passaggi manuali tra più strumenti.",
     whyItMatters:
-      "È uno dei pilastri no-code per automatizzare operazioni, marketing, dati e processi interni.",
+      "Rende visibile il percorso dei dati e aiuta a trasformare una sequenza operativa in un flusso ripetibile.",
     externalUrl: "https://www.make.com/en/register?pc=imaketoool",
     originalSourceUrl: "https://tooolvibes.com/all-tools/makecom_1",
     featured: false,
@@ -1004,11 +1104,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "4 min",
     sourceSite: "weblium",
     useCases: [
-      "Automatizzare flussi tra strumenti",
-      "Collegare app, API e database",
-      "Costruire processi operativi scalabili",
+      "Trasferire richieste da un modulo al CRM.",
+      "Aggiornare dati tra servizi che devono restare allineati.",
+      "Preparare report o notifiche da eventi ricorrenti.",
     ],
-    highlights: ["Flussi", "API", "Automazioni"],
+    highlights: [
+      "Flusso visibile",
+      "Logica configurabile",
+      "Passaggi riutilizzabili",
+    ],
     accentFrom: "#6d3bff",
     accentTo: "#ec4899",
   }),
@@ -1021,11 +1125,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "expert",
     segments: ["productivity", "ai-agents"],
     shortDescription:
-      "Wearable AI open-source che registra, trascrive, ricorda e trasforma conversazioni in azioni.",
+      "Un dispositivo indossabile che trascrive conversazioni e le trasforma in appunti consultabili.",
     longDescription:
-      "Omi porta l'AI personale su un dispositivo wearable, con trascrizione, memoria e azioni generate dalle conversazioni quotidiane.",
+      "Omi combina un dispositivo indossabile e un’app per conservare informazioni dalle conversazioni. Può aiutare a ritrovare dettagli e preparare appunti, con attenzione a contesto, consenso e gestione dei dati.",
     whyItMatters:
-      "È interessante per chi vuole sperimentare personal AI e memoria aumentata oltre la classica app web.",
+      "È interessante quando il problema è ricordare e riorganizzare conversazioni frequenti, oltre alle sole riunioni online.",
     externalUrl: "https://www.omi.me/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/omi-app-ai",
     featured: false,
@@ -1035,11 +1139,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "4 min",
     sourceSite: "weblium",
     useCases: [
-      "Trascrivere conversazioni importanti",
-      "Creare memoria personale consultabile",
-      "Trasformare meeting e dialoghi in azioni",
+      "Conservare appunti di una conversazione concordata.",
+      "Ritrovare decisioni e dettagli da rivedere.",
+      "Preparare un promemoria da verificare dopo una riunione.",
     ],
-    highlights: ["Wearable", "Memoria", "Assistente personale"],
+    highlights: [
+      "Contesto fuori dal desktop",
+      "Informazioni consultabili",
+      "Estensibilità",
+    ],
     accentFrom: "#111827",
     accentTo: "#06b6d4",
   }),
@@ -1053,11 +1161,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "expert",
     segments: ["ai-agents", "automation"],
     shortDescription:
-      "Builder visuale open-source per creare agenti AI, RAG, chat e flussi LangChain.",
+      "Costruisci flussi e agenti AI con un editor visuale open-source.",
     longDescription:
-      "Flowise è un builder visuale per creare flussi AI, agenti e RAG basati su LangChain con maggiore controllo tecnico.",
+      "Flowise permette di collegare modelli, fonti dati e strumenti in applicazioni AI visuali. È utile per team tecnici che vogliono prototipare e organizzare flussi senza scrivere ogni collegamento da zero.",
     whyItMatters:
-      "È una scelta forte per chi vuole costruire automazioni AI serie senza scrivere tutto da zero.",
+      "Rende più leggibile l’orchestrazione di un’applicazione AI, mantenendo visibili componenti e passaggi.",
     externalUrl: "https://flowiseai.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/flowise-ai_1",
     featured: false,
@@ -1067,11 +1175,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "4 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare chatflow e agenti AI",
-      "Prototipare flussi RAG",
-      "Costruire automazioni AI più controllabili",
+      "Prototipare una chat basata su documenti.",
+      "Disegnare un flusso AI con più componenti.",
+      "Valutare un agente con azioni circoscritte.",
     ],
-    highlights: ["Agenti", "RAG", "LangChain"],
+    highlights: [
+      "Architettura visibile",
+      "Base open-source",
+      "Prototipi modulari",
+    ],
     accentFrom: "#0f766e",
     accentTo: "#7c3aed",
   }),
@@ -1084,11 +1196,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "expert",
     segments: ["marketing", "sales"],
     shortDescription:
-      "Software affiliate/referral per startup SaaS, integrabile con Stripe, Paddle e Chargebee.",
+      "Organizza un programma di affiliazione SaaS con tracciamento, commissioni e gestione dei partner.",
     longDescription:
-      "Tolt aiuta startup SaaS a creare programmi affiliate e referral, collegandosi a sistemi di pagamento e tracciando partner, commissioni e performance.",
+      "Tolt aiuta a gestire programmi di affiliazione per prodotti SaaS. Collega i risultati dei referral alle commissioni e al lavoro con i partner, secondo le integrazioni e le regole configurate.",
     whyItMatters:
-      "È utile quando vuoi trasformare utenti, creator o partner in un canale di crescita misurabile.",
+      "Dà struttura a un canale di crescita che altrimenti rischia di essere gestito con fogli e verifiche manuali.",
     externalUrl: "https://tolt.com/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/tolt_1",
     featured: false,
@@ -1098,11 +1210,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "4 min",
     sourceSite: "weblium",
     useCases: [
-      "Lanciare un programma affiliate SaaS",
-      "Tracciare partner e commissioni",
-      "Collegare referral a billing e pagamenti",
+      "Lanciare un programma di affiliazione per un SaaS.",
+      "Seguire referral e commissioni senza un foglio separato.",
+      "Organizzare la collaborazione con partner e creator.",
     ],
-    highlights: ["Affiliazioni", "Referral", "SaaS"],
+    highlights: [
+      "Programma organizzato",
+      "Regole tracciabili",
+      "Meno verifiche manuali",
+    ],
     accentFrom: "#7c3aed",
     accentTo: "#22c55e",
   }),
@@ -1125,11 +1241,11 @@ export const directoryTools: DirectoryTool[] = [
     level: "expert",
     segments: ["ai-agents", "automation", "no-code"],
     shortDescription:
-      "Piattaforma no-code e multi-agent per creare agenti AI specializzati e flussi business.",
+      "Crea agenti AI specializzati e coordina flussi con conoscenze e strumenti dedicati.",
     longDescription:
-      "AgentX permette di creare agenti AI specializzati e flussi multi-agent senza partire da una struttura tecnica complessa.",
+      "AgentX permette di costruire agenti AI per compiti definiti e di combinarli in flussi di lavoro. È utile per esplorare assistenza e automazioni quando puoi specificare fonti, azioni consentite e risultato atteso.",
     whyItMatters:
-      "È rilevante per chi vuole portare agenti AI dentro processi business senza un setup troppo pesante.",
+      "Aiuta a passare da un assistente generico a un compito operativo con un perimetro riconoscibile.",
     externalUrl: "https://www.agentx.so/",
     originalSourceUrl: "https://tooolvibes.com/all-tools/agentx_1",
     featured: false,
@@ -1139,11 +1255,15 @@ export const directoryTools: DirectoryTool[] = [
     readingTime: "4 min",
     sourceSite: "weblium",
     useCases: [
-      "Creare agenti AI specializzati",
-      "Automatizzare processi business",
-      "Prototipare flussi multi-agent",
+      "Preparare un assistente per domande su materiali aziendali.",
+      "Prototipare un agente con azioni limitate e controllabili.",
+      "Suddividere un processo AI in compiti verificabili.",
     ],
-    highlights: ["Agenti", "No-code", "Flussi"],
+    highlights: [
+      "Compiti definiti",
+      "Informazioni dedicate",
+      "Coordinamento",
+    ],
     accentFrom: "#4f46e5",
     accentTo: "#f97316",
   }),

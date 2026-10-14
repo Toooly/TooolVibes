@@ -57,16 +57,13 @@ export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView
   const lower = alt.level && ["beginner", "intermediate"].includes(alt.level);
   const higher = alt.level === "expert";
 
-  if (higher && sharedTags.length > 0) {
-    return `Versione più avanzata, utile se ${current.name} ti sta stretto su ${sharedTags[0]}.`;
-  }
-  if (lower && sharedGroups.length > 0) {
-    return `Curva di apprendimento più dolce, buona alternativa se ${current.name} risulta complesso.`;
-  }
-  if (differentGroup) {
-    return `Approccio diverso su ${differentGroup.replaceAll("-", " ")} rispetto a ${current.name}.`;
-  }
-  return null;
+  const hasComparisonContext =
+    (higher && sharedTags.length > 0) ||
+    (lower && sharedGroups.length > 0) ||
+    Boolean(differentGroup);
+
+  // Taxonomy identifies context; the authored copy explains the actual tool.
+  return hasComparisonContext ? alt.shortDescription.trim() || null : null;
 }
 
 /**
@@ -76,8 +73,8 @@ export function buildAlternativeWhy(current: ToolPublicView, alt: ToolPublicView
 export function deriveEssentialDifference(current: ToolPublicView, alt: ToolPublicView): string | null {
   const diffGroups = alt.filterGroups.filter((g) => !current.filterGroups.includes(g));
 
-  if (alt.level === "expert" && current.level !== "expert") return "Più avanzato";
-  if (alt.level === "beginner" && current.level !== "beginner") return "Più accessibile";
+  if (alt.level === "expert" && current.level !== "expert") return "Livello avanzato";
+  if (alt.level === "beginner" && current.level !== "beginner") return "Livello base";
   if (diffGroups.length > 0) {
     return diffGroups[0].replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
   }

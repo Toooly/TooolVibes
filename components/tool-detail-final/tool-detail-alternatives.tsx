@@ -80,7 +80,7 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
                 {assessment.value !== null ? (
                   <>
                     <strong>{assessment.value.toFixed(1)}</strong>
-                    <span>{editorialScoreBand(assessment.value)}</span>
+                    <span><LocalizedText>{editorialScoreBand(assessment.value)}</LocalizedText></span>
                   </>
                 ) : (
                   <em><LocalizedText>{"Da valutare"}</LocalizedText></em>

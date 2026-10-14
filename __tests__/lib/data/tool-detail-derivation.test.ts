@@ -133,9 +133,8 @@ describe("deriveScoreDimensions", () => {
 });
 
 describe("buildAlternativeWhy", () => {
-  it("mentions the current tool name", () => {
+  it("uses the authored description for a tool with a different filter group", () => {
     const current = makeTool({ name: "Blink" });
-    // alt has a different filterGroup so we exercise the "Approccio diverso" branch
     const alt = makeTool({
       slug: "vibecode",
       name: "VibeCode",
@@ -144,14 +143,14 @@ describe("buildAlternativeWhy", () => {
       featured: false,
     });
     const why = buildAlternativeWhy(current, alt);
-    expect(why).toContain("Blink");
+    expect(why).toBe(alt.shortDescription);
   });
 
-  it("mentions higher level when alt is expert", () => {
+  it("uses the authored description instead of inferring benefits from a higher level", () => {
     const current = makeTool({ name: "Blink", level: "intermediate" });
     const alt = makeTool({ slug: "vibecode", name: "VibeCode", level: "expert" });
     const why = buildAlternativeWhy(current, alt);
-    expect(why).toMatch(/avanzata|stretto/i);
+    expect(why).toBe(alt.shortDescription);
   });
 
   it("omits generic complementary copy when there is no real difference", () => {
@@ -174,10 +173,10 @@ describe("deriveEssentialDifference", () => {
   it("returns a unique level or group fact", () => {
     const current = makeTool({ name: "Blink", level: "intermediate" });
     const expert = makeTool({ slug: "vibecode", name: "VibeCode", level: "expert" });
-    expect(deriveEssentialDifference(current, expert)).toBe("Più avanzato");
+    expect(deriveEssentialDifference(current, expert)).toBe("Livello avanzato");
 
     const beginner = makeTool({ slug: "easy", name: "Easy", level: "beginner" });
-    expect(deriveEssentialDifference(current, beginner)).toBe("Più accessibile");
+    expect(deriveEssentialDifference(current, beginner)).toBe("Livello base");
 
     const grouped = makeTool({
       slug: "nocode",

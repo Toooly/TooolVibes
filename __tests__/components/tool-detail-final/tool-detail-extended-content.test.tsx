@@ -73,7 +73,7 @@ describe("ToolDetailExtendedContent public markdown", () => {
     const text = container.textContent ?? "";
 
     expect(text).toContain("Testo pubblico della scheda.");
-    expect(text).toContain("FAQ");
+    expect(text).toContain("Domande frequenti");
     expect(text).not.toContain("CTA e stati");
     expect(text).not.toContain("Non mostrare questo blocco interno.");
     expect(text).not.toContain("Non ripetere le alternative qui.");
@@ -109,8 +109,8 @@ describe("ToolDetailExtendedContent public markdown", () => {
     }
 
     const text = container.textContent ?? "";
-    expect(text).toContain("Overview");
-    expect(text).toContain("FAQ");
+    expect(text).toContain("Come funziona");
+    expect(text).toContain("Domande frequenti");
     expect(text).not.toContain("Dati tecnici");
     expect(text).toContain("Testo pubblico della scheda.");
     expect(text).toContain("Verifica sul sito ufficiale.");

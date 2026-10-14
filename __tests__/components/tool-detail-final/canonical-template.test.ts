@@ -103,7 +103,8 @@ describe("canonical tool detail template", () => {
   it("accordion auto-positions summary below sticky nav on open", () => {
     const deepenItems = readFileSync("components/tool-detail-final/tool-detail-deepen-items.tsx", "utf8");
     expect(deepenItems).toContain("onToggle");
-    expect(deepenItems).toContain("td-final-decision-nav");
+    expect(deepenItems).toContain("readingLine()");
+    expect(deepenItems).toContain("scrollToSection(el");
   });
 
   it("alternatives carousel has no 100vw overflow", () => {

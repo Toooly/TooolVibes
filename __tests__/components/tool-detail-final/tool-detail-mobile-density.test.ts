@@ -10,9 +10,11 @@ function read(rel: string) {
 }
 
 describe("tool detail mobile density", () => {
-  it("keeps breadcrumb in the hero DOM and drops Ideale per from facts", () => {
+  it("keeps one page breadcrumb and drops Ideale per from hero facts", () => {
     const hero = read("components/tool-detail-final/tool-detail-hero.tsx");
-    expect(hero).toMatch(/td-final-hero__breadcrumb/);
+    const page = read("components/tool-detail-final/tool-detail-final-page.tsx");
+    expect(page).toMatch(/td-final-breadcrumb/);
+    expect(hero).not.toMatch(/td-final-hero__breadcrumb/);
     expect(hero).toMatch(/td-final-hero__level/);
     expect(hero).not.toMatch(/td-final-hero__bestfor/);
     expect(hero).not.toMatch(/Ideale per/);
@@ -21,20 +23,18 @@ describe("tool detail mobile density", () => {
     expect(hero).not.toMatch(/In evidenza/);
   });
 
-  it("hides breadcrumb, compare rank, and Apri confronto on mobile", () => {
+  it("keeps the page breadcrumb while hiding redundant compare controls on mobile", () => {
     const css = read("styles/tool-detail-final.css");
     expect(css).toMatch(/@media \(max-width: 47\.99rem\)/);
-    expect(css).toMatch(
-      /\.td-final-hero__breadcrumb\s*\{\s*display:\s*none;/,
-    );
+    expect(css).not.toMatch(/\.td-final-hero__breadcrumb/);
     expect(css).toMatch(/\.td-final-compare-rank/);
     expect(css).toMatch(/\.td-final-cta--open-compare/);
   });
 
-  it("caps mobile hero type and removes the double gutter", () => {
+  it("caps mobile hero type without truncating the description", () => {
     const css = read("styles/tool-detail-final.css");
     expect(css).toMatch(/\.td-final-hero__name \{\s*font-size: 1\.75rem;/);
-    expect(css).toMatch(/-webkit-line-clamp:\s*2/);
+    expect(css).not.toMatch(/-webkit-line-clamp/);
     expect(css).not.toMatch(/clamp\(2\.2rem, 12vw, 3\.4rem\)/);
     expect(css).toMatch(/padding-inline:\s*0/);
   });

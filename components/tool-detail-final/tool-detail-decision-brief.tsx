@@ -23,8 +23,8 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
   const tradeOff = extractMarkdownTradeOff(markdown.byId.verdict);
   const verdict =
     tool.editorialNote?.trim() ||
-    tool.editorialReview?.trim() ||
     extractMarkdownVerdict(markdown.byId.verdict) ||
+    tool.editorialReview?.trim() ||
     null;
 
   const strengths = (markdown.byId.strengths ?? "")
@@ -32,11 +32,12 @@ export function ToolDetailDecisionBrief({ tool }: ToolDetailDecisionBriefProps) 
     .map((line) => line.replace(/^\s*[-*]\s*/, "").replace(/\*\*/g, "").trim())
     .filter((line) => line.length > 2)
     .slice(0, 3);
-  const briefSummary = (tool.whyItMatters ?? "").trim() || (verdict ?? "");
+  const rationale = (tool.whyItMatters ?? "").trim();
+  const briefSummary = rationale && rationale !== verdict ? rationale : null;
 
   const rows = [
     fit ? { dt: "Ideale per", dd: fit } : null,
-    tradeOff ? { dt: "Trade-off", dd: tradeOff } : null,
+    tradeOff ? { dt: "Da considerare", dd: tradeOff } : null,
     verdict ? { dt: "Verdetto", dd: verdict } : null,
   ].filter((row): row is { dt: string; dd: string } => row !== null);
 

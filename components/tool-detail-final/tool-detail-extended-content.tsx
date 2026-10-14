@@ -62,7 +62,7 @@ export function ToolDetailExtendedContent({
   if (parsed.byId.overview || dimensions.length > 0) {
     panels.push({
       id: "overview",
-      title: "Overview",
+      title: "Come funziona",
       content: (
         <>
           {parsed.byId.overview ? <MarkdownBody content={parsed.byId.overview} /> : null}
@@ -123,7 +123,7 @@ export function ToolDetailExtendedContent({
   if (parsed.byId.experience) {
     panels.push({
       id: "experience",
-      title: "Esperienza",
+      title: "Come provarlo",
       content: <MarkdownBody content={parsed.byId.experience} />,
     });
   }
@@ -131,7 +131,7 @@ export function ToolDetailExtendedContent({
   if (parsed.byId.faq) {
     panels.push({
       id: "faq",
-      title: "FAQ",
+      title: "Domande frequenti",
       content: <MarkdownBody content={parsed.byId.faq} />,
     });
   }

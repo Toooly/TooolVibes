@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactNode } from "react";
 import { useLocale } from "./locale-provider";
 
 /** Only presentation strings are translated; component props and stored values stay intact. */
@@ -19,9 +19,12 @@ export function LocalizedText({ children, separator }: { children: ReactNode; se
   return <>{localizeNode(children, t)}</>;
 }
 
-export function LocalizedAttributes({ children, ...forwarded }: { children: ReactElement } & Record<string, unknown>) {
+export function LocalizedAttributes({ children, ...forwarded }: { children: ReactNode } & Record<string, unknown>) {
   const { t } = useLocale();
-  const element = children as ReactElement<Record<string, unknown>>;
+  // Server-rendered children can still be a promise or a collection here.
+  // Let React resolve those instead of reading props on an opaque node.
+  if (!isValidElement<Record<string, unknown>>(children)) return <>{children}</>;
+  const element = children;
   const props: Record<string, unknown> = { ...forwarded };
   if (typeof forwarded.className === "string") props.className = [element.props.className, forwarded.className].filter(Boolean).join(" ");
   if (forwarded.style && typeof forwarded.style === "object") props.style = { ...forwarded.style, ...(typeof element.props.style === "object" ? element.props.style : {}) };

@@ -40,7 +40,7 @@ function informationRows(tool: ToolPublicView): Array<{ dt: string; dd: ReactNod
     rows.push({ dt: "Pubblicato", dd: formatItalianDate(tool.publishedAt) });
   }
   if (tool.readingTime) {
-    rows.push({ dt: "Analisi", dd: tool.readingTime });
+    rows.push({ dt: "Lettura", dd: tool.readingTime });
   }
   if (tool.tags.length > 0) {
     rows.push({
