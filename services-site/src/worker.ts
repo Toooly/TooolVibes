@@ -154,7 +154,6 @@ async function verifyTurnstile(env: Env, request: Request, token: string) {
     const hostnameMatches =
       requestHost === "localhost" ||
       requestHost === "127.0.0.1" ||
-      !result.hostname ||
       result.hostname === env.SITE_HOST;
     return result.success === true && result.action === TURNSTILE_ACTION && hostnameMatches;
   } catch {
@@ -210,30 +209,20 @@ async function notifyLead(env: Env, payload: ContactPayload) {
       <p><strong>Servizio:</strong> ${escapeHtml(service)}</p>
       <p><strong>Messaggio:</strong></p>
       <p>${escapeHtml(payload.message).replaceAll("\n", "<br>")}</p>
+      <p><strong>Origine:</strong> servizi.tooolvibes.eu</p>
     `,
-    text: `Nuova richiesta servizi\nNome: ${payload.name}\nEmail: ${payload.email}${companyLine}\nServizio: ${service}\n\n${payload.message}`,
+    text: `Nuova richiesta servizi\nNome: ${payload.name}\nEmail: ${payload.email}${companyLine}\nServizio: ${service}\n\n${payload.message}\n\nOrigine: servizi.tooolvibes.eu`,
   });
 }
 
-async function sendReceipt(env: Env, payload: ContactPayload) {
-  await sendEmail(env, {
-    to: payload.email,
-    subject: "Abbiamo ricevuto la tua richiesta",
-    html: `
-      <h1>Richiesta ricevuta</h1>
-      <p>Ciao ${escapeHtml(payload.name)},</p>
-      <p>abbiamo ricevuto il tuo messaggio su <strong>${escapeHtml(NEED_LABELS[payload.need])}</strong>.</p>
-      <p>Lo leggiamo e ti rispondiamo appena possibile con un primo orientamento concreto.</p>
-      <p>TooolVibes</p>
-    `,
-    text: `Ciao ${payload.name}, abbiamo ricevuto la tua richiesta su ${NEED_LABELS[payload.need]}. Ti risponderemo appena possibile.`,
-  });
-}
-
-async function handleContact(request: Request, env: Env, ctx: ExecutionContext) {
+async function handleContact(request: Request, env: Env) {
   if (!sameOrigin(request)) return json({ ok: false, message: "Origine non autorizzata." }, 403);
   if (!request.headers.get("Content-Type")?.toLowerCase().startsWith("application/json")) {
     return json({ ok: false, message: "Formato della richiesta non valido." }, 415);
+  }
+  const rateLimit = await env.CONTACT_RATE_LIMITER.limit({ key: "services-contact" });
+  if (!rateLimit.success) {
+    return json({ ok: false, message: "Troppe richieste. Riprova tra poco." }, 429);
   }
 
   let input: unknown;
@@ -263,11 +252,6 @@ async function handleContact(request: Request, env: Env, ctx: ExecutionContext) 
     return json({ ok: false, message: "Il messaggio non è partito. Riprova tra poco." }, 502);
   }
 
-  ctx.waitUntil(
-    sendReceipt(env, payload).catch(() => {
-      console.warn(JSON.stringify({ event: "services_receipt_failed" }));
-    }),
-  );
   console.log(JSON.stringify({ event: "services_contact_received", need: payload.need }));
   return json({ ok: true, message: "Messaggio inviato." });
 }
@@ -290,7 +274,7 @@ async function handleEvent(request: Request) {
 }
 
 export default {
-  async fetch(request, env, ctx): Promise<Response> {
+  async fetch(request, env): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/config" && request.method === "GET") {
@@ -302,7 +286,13 @@ export default {
       });
     }
     if (url.pathname === "/api/contact" && request.method === "POST") {
-      return handleContact(request, env, ctx);
+      return handleContact(request, env);
+    }
+    if (url.pathname === "/api/contact") {
+      return new Response(JSON.stringify({ ok: false, message: "Metodo non disponibile." }), {
+        status: 405,
+        headers: { ...jsonHeaders, Allow: "POST" },
+      });
     }
     if (url.pathname === "/api/event" && request.method === "POST") {
       return handleEvent(request);

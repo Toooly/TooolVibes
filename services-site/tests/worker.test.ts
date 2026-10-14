@@ -39,7 +39,7 @@ describe("TooolVibes Servizi contact contract", () => {
     expect(isPlausibleSubmissionTime(now - 3 * 60 * 60 * 1_000 - 1, now)).toBe(false);
   });
 
-  it("validates Turnstile and dispatches notification plus receipt", async () => {
+  it("validates Turnstile and dispatches one internal notification", async () => {
     const mockedFetch = vi
       .fn()
       .mockResolvedValueOnce(
@@ -48,8 +48,7 @@ describe("TooolVibes Servizi contact contract", () => {
           { status: 200 },
         ),
       )
-      .mockResolvedValueOnce(new Response(JSON.stringify({ id: "notification" }), { status: 200 }))
-      .mockResolvedValueOnce(new Response(JSON.stringify({ id: "receipt" }), { status: 200 }));
+      .mockResolvedValueOnce(new Response(JSON.stringify({ id: "notification" }), { status: 200 }));
     vi.stubGlobal("fetch", mockedFetch);
 
     const pending: Promise<unknown>[] = [];
@@ -64,8 +63,9 @@ describe("TooolVibes Servizi contact contract", () => {
       RESEND_API_KEY: "re_test",
       SERVICES_NOTIFY_EMAIL: "studio@example.it",
       TOOOLVIBES_TURNSTILE_SECRET_KEY: "turnstile-secret",
-      SERVICES_EMAIL_FROM: "TooolVibes <noreply@tooolvibes.eu>",
+      SERVICES_EMAIL_FROM: "Tooolvibes <info@tooolvibes.eu>",
       SITE_HOST: "servizi.tooolvibes.eu",
+      CONTACT_RATE_LIMITER: { limit: vi.fn().mockResolvedValue({ success: true }) },
     } as unknown as Env;
     const request = new Request("https://servizi.tooolvibes.eu/api/contact", {
       method: "POST",
@@ -81,10 +81,18 @@ describe("TooolVibes Servizi contact contract", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ ok: true });
-    expect(mockedFetch).toHaveBeenCalledTimes(3);
+    expect(mockedFetch).toHaveBeenCalledTimes(2);
     expect(mockedFetch.mock.calls[0]?.[0]).toBe(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
     );
     expect(mockedFetch.mock.calls[1]?.[0]).toBe("https://api.resend.com/emails");
+    const emailRequest = mockedFetch.mock.calls[1]?.[1] as RequestInit;
+    const emailBody = JSON.parse(String(emailRequest.body));
+    expect(emailBody).toMatchObject({
+      from: "Tooolvibes <info@tooolvibes.eu>",
+      to: ["studio@example.it"],
+      reply_to: "giulia@example.it",
+    });
+    expect(emailBody.text).toContain("Origine: servizi.tooolvibes.eu");
   });
 });

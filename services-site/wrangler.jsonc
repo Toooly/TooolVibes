@@ -21,9 +21,19 @@
   "vars": {
     "SITE_URL": "https://servizi.tooolvibes.eu",
     "SITE_HOST": "servizi.tooolvibes.eu",
-    "SERVICES_EMAIL_FROM": "TooolVibes Servizi <noreply@tooolvibes.eu>",
-    "SERVICES_TURNSTILE_SITE_KEY": "0x4AAAAAAEiFbs9UcBewdZxB"
+    "SERVICES_EMAIL_FROM": "Tooolvibes <info@tooolvibes.eu>",
+    "SERVICES_TURNSTILE_SITE_KEY": "0x4AAAAAAFWusYRJtZYS29MA"
   },
+  "ratelimits": [
+    {
+      "name": "CONTACT_RATE_LIMITER",
+      "namespace_id": "2026101401",
+      "simple": {
+        "limit": 30,
+        "period": 60
+      }
+    }
+  ],
   "secrets": {
     "required": [
       "RESEND_API_KEY",
