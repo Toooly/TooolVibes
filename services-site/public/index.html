@@ -151,9 +151,7 @@
         </a>
       </section>
 
-      <div id="servizi" class="section-anchor" aria-hidden="true"></div>
-
-      <section class="service service--ai section-shell" aria-labelledby="service-ai-title" data-service="ai">
+      <section id="servizi" class="service service--ai section-shell" aria-labelledby="service-ai-title" data-service="ai">
         <div class="section-copy" data-reveal>
           <p class="section-number">01</p>
           <h2 id="service-ai-title">Conversazioni che portano avanti <span class="text-gradient">il lavoro.</span></h2>
@@ -214,7 +212,14 @@
           <p>Web, AI e contenuti possono partire separati. Quando serve, li progettiamo perché lavorino insieme.</p>
         </div>
         <div class="ecosystem-map" role="img" aria-label="Web, AI e social collegati in un unico ecosistema" data-reveal>
-          <svg aria-hidden="true" viewBox="0 0 660 520" fill="none"><path d="M330 74 92 420h476L330 74Z" /></svg>
+          <svg aria-hidden="true" viewBox="0 0 660 520" fill="none">
+            <ellipse cx="330" cy="268" rx="250" ry="174" />
+            <circle cx="330" cy="268" r="112" />
+            <path d="M330 268V74M330 268 92 420M330 268l238 152" />
+          </svg>
+          <div class="ecosystem-core" aria-hidden="true">
+            <span><img src="/assets/tooolvibes-logo.png" alt="" width="54" height="54" /></span>
+          </div>
           <div class="ecosystem-node ecosystem-node--web"><span>Web</span><small>Esperienza</small></div>
           <div class="ecosystem-node ecosystem-node--ai"><span>AI</span><small>Automazione</small></div>
           <div class="ecosystem-node ecosystem-node--social"><span>Social</span><small>Continuità</small></div>
