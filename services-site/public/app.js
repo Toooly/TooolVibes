@@ -103,9 +103,9 @@
     const link = journey.querySelector("[data-journey-link]");
     const previewLink = journey.querySelector("[data-journey-preview-link]");
     const services = {
-      web: { description: "Siti, landing page ed e-commerce.", target: "#servizi", label: "Esplora siti e web" },
-      social: { description: "Dall’identità del brand ai contenuti, fino alla pubblicazione.", target: "#contenuti", label: "Esplora automazione contenuti" },
-      ai: { description: "Richieste, risposte e nuovi contatti. Un passo dopo l’altro.", target: "#chatbot", label: "Esplora chatbot AI" },
+      web: { description: "Siti, landing page ed e-commerce.", target: "#servizi", label: "Esplora il servizio: siti e web" },
+      social: { description: "Dall’identità del brand ai contenuti, fino alla pubblicazione.", target: "#contenuti", label: "Esplora il servizio: automazione contenuti" },
+      ai: { description: "Richieste, risposte e nuovi contatti. Un passo dopo l’altro.", target: "#chatbot", label: "Esplora il servizio: chatbot AI" },
     };
     function selectJourney(service) {
       const selected = services[service];
