@@ -113,6 +113,38 @@
     );
   }
 
+  const sequenceSections = document.querySelectorAll("[data-sequence]");
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const sequenceObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in-view");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12 });
+    sequenceSections.forEach((section) => sequenceObserver.observe(section));
+  }
+
+  const ecosystem = document.querySelector("[data-ecosystem]");
+  if (ecosystem) {
+    const modules = ecosystem.querySelectorAll("[data-eco-select]");
+    const details = ecosystem.querySelectorAll("[data-eco-detail]");
+    function selectService(service) {
+      ecosystem.dataset.active = service;
+      modules.forEach((module) => {
+        module.setAttribute("aria-pressed", String(module.dataset.ecoSelect === service));
+      });
+      details.forEach((detail) => {
+        detail.hidden = detail.dataset.ecoDetail !== service;
+      });
+    }
+    modules.forEach((module) => {
+      module.addEventListener("click", () => selectService(module.dataset.ecoSelect));
+    });
+    ecosystem.classList.add("has-selection");
+    selectService("web");
+  }
+
   if (!contactForm || !formStatus) return;
 
   const startedAt = contactForm.elements.namedItem("startedAt");
