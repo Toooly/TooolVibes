@@ -400,7 +400,7 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
   html { scroll-padding-top: 5.35rem; }
   .site-header__inner { min-height: 4.7rem; }
   .brand { font-size: 1.05rem; }.brand img { width: 36px; height: 36px; }
-  .hero { padding-top: 7.75rem; padding-bottom: 4.25rem; gap: .75rem; }
+  .hero { padding-top: 7.75rem; padding-bottom: 4rem; gap: 1.5rem; }
   .hero h1 .text-gradient { white-space: normal; }
   .hero::before, .hero__scroll { display: none; }
   h1 { font-size: clamp(3.25rem, 14vw, 5.25rem); }
@@ -408,18 +408,21 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
   .hero__copy > p, .section-copy > p, .contact__copy > p, .ecosystem__copy > p { font-size: 1.05rem; }
   .hero__actions { align-items: stretch; flex-direction: column; }
   .hero__actions .button { width: 100%; min-height: 3.5rem; }
-  .hero-orbit { min-height: 28rem; margin-top: .35rem; }
-  .hero-orbit::before { inset: 4% -8% 0; background: radial-gradient(circle at 50% 53%, rgba(30,156,255,.2), rgba(117,51,225,.12) 37%, transparent 70%); }
-  .hero-orbit::after { inset: 20% 3% 11%; border-color: rgba(94,159,255,.18); }
-  .ambient-glow { inset: 0 -8%; background: radial-gradient(circle at 50% 53%, rgba(39,216,238,.22), rgba(95,54,225,.12) 34%, transparent 69%); }
+  .hero-orbit { width: min(100%, 38rem); min-height: clamp(30rem, 78vw, 36rem); margin-top: .4rem; }
+  .hero-orbit::before { inset: 2% -7% -2%; background: radial-gradient(circle at 50% 51%, rgba(30,156,255,.22), rgba(117,51,225,.13) 38%, transparent 70%); }
+  .hero-orbit::after { inset: 17% 1% 10%; border-color: rgba(94,159,255,.21); box-shadow: 0 0 4.5rem rgba(39,216,238,.08), inset 0 0 3.5rem rgba(135,92,255,.07); }
+  .ambient-glow { inset: -2% -9%; background: radial-gradient(circle at 50% 50%, rgba(39,216,238,.24), rgba(95,54,225,.14) 36%, transparent 69%); }
   .orbit-lines ellipse, .orbit-lines path { stroke-opacity: 1; }
-  .orbit-core { top: 52%; width: 5.75rem; height: 5.75rem; box-shadow: 0 0 0 .75rem rgba(39,216,238,.035), 0 0 3.5rem rgba(39,216,238,.2); }.orbit-core img { width: 46px; height: 46px; }
+  .orbit-core { top: 50%; z-index: 4; width: 6.1rem; height: 6.1rem; box-shadow: 0 0 0 .75rem rgba(39,216,238,.04), 0 0 3.75rem rgba(39,216,238,.24); }.orbit-core img { width: 48px; height: 48px; }
+  .orbit-node { display: grid; justify-items: center; text-align: center; }
+  .orbit-node strong { display: block; width: 100%; white-space: nowrap; }
   .orbit-node__icon { width: 3rem; height: 3rem; }
-  .orbit-node--chat { left: 0; top: 8%; }.orbit-node--social { right: 0; top: 10%; }.orbit-node--web { right: 35%; bottom: 0; }
-  .mini-chat { left: 1rem; top: 4rem; width: 12.5rem; }.mini-chat span { font-size: .64rem; }.mini-chat span:last-child { display: none; }
-  .mini-social { right: 1rem; top: 4rem; width: 9.5rem; height: 7rem; }
-  .mini-browser { right: -2.6rem; bottom: 4rem; width: 13rem; height: 8rem; }
-  .orbit-lines { inset: 4% 0 0; width: 100%; }
+  .orbit-node--chat { left: 0; top: 3%; width: 10rem; }.orbit-node--social { right: 0; top: 4%; width: 7rem; }.orbit-node--web { left: 50%; right: auto; bottom: 0; width: 7rem; transform: translateX(-50%); }
+  .mini-chat { left: 0; top: 5.15rem; width: clamp(12.25rem, 37vw, 15rem); }.mini-chat span { font-size: .64rem; }.mini-chat span:last-child { display: none; }
+  .mini-social { right: 0; top: 5.15rem; width: clamp(9.25rem, 28vw, 11rem); height: clamp(7.25rem, 19vw, 8.5rem); }
+  .mini-browser { left: 50%; right: auto; bottom: 4.75rem; width: clamp(17rem, 52vw, 20rem); height: clamp(8.5rem, 23vw, 10rem); transform: translateX(-50%); }
+  .mini-chat, .mini-social, .mini-browser { border-color: rgba(94,159,255,.34); box-shadow: 0 1.5rem 3.5rem rgba(1,6,20,.48), 0 0 2rem rgba(62,104,244,.11); backdrop-filter: blur(10px); }
+  .orbit-lines { inset: 1% 0 0; width: 100%; }
   .service { gap: 1.65rem; }
   .plain-list, .flow-legend { gap: .45rem .8rem; font-size: .86rem; }
   .service::after { inset: 7% -18vw; background: radial-gradient(ellipse at 50% 68%, var(--scene-glow, rgba(25,116,240,.15)), transparent 62%); }
