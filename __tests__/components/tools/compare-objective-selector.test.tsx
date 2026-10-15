@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { createElement, Fragment, type ReactNode } from "react";
-import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within, waitFor } from "@testing-library/react";
 import axe from "axe-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -75,6 +75,11 @@ vi.mock("motion/react", () => {
       createElement(Fragment, null, children),
   };
 });
+
+function selectedValue(element: HTMLElement) {
+  if (!(element instanceof HTMLSelectElement)) throw new Error("Expected a select control");
+  return element.value;
+}
 
 const T0 = "2026-07-17T10:00:00.000Z";
 
@@ -318,70 +323,48 @@ describe("useCompareObjective — persistenza (B34)", () => {
   });
 });
 
-describe("ToolBattleView — viewport esclusivo e flag (B34)", () => {
-  beforeEach(() => {
-    seedWorkspace(compareState("atlas-ai", "gamma-app"));
-  });
-
-  it("obiettivo persistito: stesso stato e stessa lettura dopo il cambio viewport", () => {
+describe("ToolBattleView V2 — viewport esclusivo e flag", () => {
+  beforeEach(() => { seedWorkspace(compareState("atlas-ai", "gamma-app")); });
+  it("conserva obiettivo e filtro tra le superfici senza renderer duplicati", async () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
-
     const { container } = render(<ToolBattleView tools={VIEWS} />);
-
-    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(1);
-    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(0);
-    expectRadioChecked(screen.getByRole("radio", { name: "Risparmiare tempo" }), true);
-
-    const expected = objectiveScoreOf("gamma-app", "save-time");
-    expect(expected).toBe(objectiveScoreOf("gamma-app", null));
-    expect(screen.getAllByText("Gamma").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText("Valutazione editoriale in preparazione").length).toBeGreaterThanOrEqual(1);
-
+    await screen.findByRole("combobox", { name: "Primo tool" });
+    expect(container.querySelectorAll('[data-compare-renderer="mobile"]')).toHaveLength(1);
+    expect(selectedValue(screen.getByRole("combobox", { name: "Obiettivo" }))).toBe("save-time");
+    fireEvent.click(screen.getByRole("checkbox"));
     setDesktopViewport(true);
-
-    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(0);
-    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(1);
-    expectRadioChecked(screen.getByRole("radio", { name: "Risparmiare tempo" }), true);
-    expect(screen.getAllByText("Valutazione editoriale in preparazione").length).toBeGreaterThanOrEqual(1);
+    await waitFor(() => expect(container.querySelectorAll('[data-compare-renderer="desktop"]')).toHaveLength(1));
+    expect(container.querySelector('[data-compare-renderer="mobile"]')).toBeNull();
+    expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
+    expect(selectedValue(screen.getByRole("combobox", { name: "Obiettivo" }))).toBe("save-time");
+    expect(objectiveScoreOf("gamma-app", "save-time")).toBe(objectiveScoreOf("gamma-app", null));
   });
-
-  it("la priorità resta una guida senza delta numerici", () => {
+  it("guida la lettura senza vincitori automatici o delta numerici", async () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
-
     render(<ToolBattleView tools={VIEWS} />);
-
+    await screen.findByRole("combobox", { name: "Primo tool" });
     expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
-    expect(screen.getAllByText(/non assegna un vincitore automatico/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/senza assegnare un vincitore automatico/i)).toBeTruthy();
   });
-
-  it("cambio obiettivo sopravvive allo swap tra superfici", () => {
+  it("cambio obiettivo sopravvive allo swap tra superfici", async () => {
     render(<ToolBattleView tools={VIEWS} />);
-
-    fireEvent.click(screen.getByRole("radio", { name: "Collaborare" }));
-    expectRadioChecked(screen.getByRole("radio", { name: "Collaborare" }), true);
-
+    await screen.findByRole("combobox", { name: "Primo tool" });
+    fireEvent.change(screen.getByRole("combobox", { name: "Obiettivo" }), { target: { value: "collaborate" } });
     setDesktopViewport(true);
-
-    expect(screen.getAllByRole("radio", { name: "Collaborare" })).toHaveLength(1);
-    expectRadioChecked(screen.getByRole("radio", { name: "Collaborare" }), true);
+    await waitFor(() => expect(document.querySelector('.cv-desktop')).not.toBeNull());
+    expect(selectedValue(screen.getByRole("combobox", { name: "Obiettivo" }))).toBe("collaborate");
     expect(window.localStorage.getItem(COMPARE_OBJECTIVE_STORAGE_KEY)).toBe("collaborate");
   });
-
-  it("flag OFF: nessun selettore e nessun delta anche con obiettivo persistito", () => {
+  it("flag OFF: nessun selettore anche con obiettivo persistito", async () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
-
     render(<ToolBattleView tools={VIEWS} objectiveEnabled={false} />);
-
-    expect(screen.queryByRole("group", { name: "Obiettivo del confronto" })).toBeNull();
+    await screen.findByRole("combobox", { name: "Primo tool" });
+    expect(screen.queryByRole("combobox", { name: "Obiettivo" })).toBeNull();
     expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
-
-    expect(screen.getAllByText("Valutazione editoriale in preparazione").length).toBeGreaterThanOrEqual(1);
   });
-
   it("nessuna violazione axe sul confronto con selettore obiettivo", async () => {
-    window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
-
     const { container } = render(<ToolBattleView tools={VIEWS} />);
+    await screen.findByRole("combobox", { name: "Primo tool" });
     await expectNoAxeViolations(container);
   });
 });

@@ -8,6 +8,7 @@ import {
   render,
   screen,
   within,
+  waitFor,
 } from "@testing-library/react";
 import axe from "axe-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -197,6 +198,14 @@ function confirmDecision(outcome?: "Scelto" | "Scartato" | "Rimandato") {
     fireEvent.click(within(sheet).getByRole("radio", { name: outcome }));
   }
   fireEvent.click(within(sheet).getByRole("button", { name: "Salva decisione" }));
+}
+
+async function confirmV2Decision() {
+  fireEvent.click(screen.getByRole("button", { name: "Scegli Atlas AI" }));
+  await waitFor(() => expect(document.querySelector("[data-decision-sheet]")).not.toBeNull());
+  const sheet = document.querySelector("[data-decision-sheet]") as HTMLElement;
+  fireEvent.click(within(sheet).getByRole("button", { name: "Salva decisione" }));
+  await waitFor(() => expect(readPersistedWorkspace().compare.slugs).toEqual([]));
 }
 
 let desktopViewport = false;
@@ -398,21 +407,14 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeNull();
   });
 
-  it("deep link: il contesto della decisione dichiara l'obiettivo attivo", () => {
+  it("deep link V2: la decisione persiste l'obiettivo attivo", async () => {
+    vi.useRealTimers();
     window.history.replaceState(null, "", "/compare?objective=save-time");
-
     render(<ToolBattleView tools={VIEWS} />);
-    revealMobileResult();
-
-    const region = decisionRegion();
-    expect(region.textContent).toContain("Confronto orientato a Risparmiare tempo");
-
-    // La decisione registrata dal deep link persiste come qualsiasi altra.
-    confirmDecision("Scelto");
+    await screen.findByRole("button", { name: "Scegli Atlas AI" });
+    await confirmV2Decision();
     const persisted = readPersistedWorkspace();
-    expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe(
-      "selected",
-    );
+    expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("selected");
     expect(persisted.toolStates["atlas-ai"].compareObjective).toBe("save-time");
   });
 
@@ -429,23 +431,17 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeTruthy();
   });
 
-  it("la decisione resta unica quando il viewport cambia superficie", () => {
+  it("la decisione V2 resta unica quando cambia il viewport", async () => {
+    vi.useRealTimers();
     const { container } = render(<ToolBattleView tools={VIEWS} />);
-    expect(container.querySelectorAll(".mobile-compare-arena")).toHaveLength(1);
-    expect(container.querySelectorAll(".desktop-compare")).toHaveLength(0);
-
-    revealMobileResult();
-    confirmDecision("Scelto");
+    await screen.findByRole("button", { name: "Scegli Atlas AI" });
+    expect(container.querySelectorAll('[data-compare-renderer="mobile"]')).toHaveLength(1);
+    expect(container.querySelector('[data-compare-renderer="desktop"]')).toBeNull();
+    await confirmV2Decision();
     expect(readPersistedWorkspace().compare.slugs).toEqual([]);
-
     setDesktopViewport(true);
-    expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe(
-      "selected",
-    );
-    expect(readPersistedWorkspace().compare.slugs).toEqual([]);
-    expect(
-      screen.queryByRole("region", { name: "Registra decisione" }),
-    ).toBeNull();
+    expect(readPersistedWorkspace().toolStates["atlas-ai"].decision?.outcome).toBe("selected");
+    expect(screen.queryByRole("button", { name: "Scegli Atlas AI" })).toBeNull();
   });
 
   it("nessuna violazione axe sul confronto con pannello decisione", async () => {
@@ -475,20 +471,16 @@ describe("CompareDecisionPanel — B35 choose/motivazione/ritorno (FLOW-604)", (
     ).toBeNull();
   });
 
-  it("persists the stored compare objective on Scegli and keeps the Salvati CTA", () => {
+  it("V2 persists the stored compare objective on an explicit choice", async () => {
+    vi.useRealTimers();
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
     render(<ToolBattleView tools={VIEWS} />);
-    revealMobileResult();
-
-    confirmDecision("Scelto");
-
+    await screen.findByRole("button", { name: "Scegli Atlas AI" });
+    await confirmV2Decision();
     const persisted = readPersistedWorkspace();
     expect(persisted.toolStates["atlas-ai"].decision?.outcome).toBe("selected");
     expect(persisted.toolStates["atlas-ai"].compareObjective).toBe("save-time");
     expect(persisted.compare.slugs).toEqual([]);
-    expect(
-      screen.queryByRole("link", { name: /Vai ai Salvati/ }),
-    ).toBeNull();
-    expect(screen.queryByRole("link", { name: /Vedi / })?.getAttribute("href") ?? "").not.toContain("shortlist");
+    expect(persisted.toolStates["atlas-ai"].alternatives).toEqual(["gamma-app"]);
   });
 });
