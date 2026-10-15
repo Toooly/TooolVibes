@@ -95,24 +95,6 @@
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
   }
 
-  const pointerScene = document.querySelector("[data-pointer-scene]");
-  if (pointerScene && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
-    let frame = 0;
-    pointerScene.addEventListener(
-      "pointermove",
-      (event) => {
-        if (frame) return;
-        frame = requestAnimationFrame(() => {
-          const bounds = pointerScene.getBoundingClientRect();
-          pointerScene.style.setProperty("--mx", `${event.clientX - bounds.left}px`);
-          pointerScene.style.setProperty("--my", `${event.clientY - bounds.top}px`);
-          frame = 0;
-        });
-      },
-      { passive: true },
-    );
-  }
-
   const sequenceSections = document.querySelectorAll("[data-sequence]");
   if (!reduceMotion && "IntersectionObserver" in window) {
     const sequenceObserver = new IntersectionObserver((entries, observer) => {
