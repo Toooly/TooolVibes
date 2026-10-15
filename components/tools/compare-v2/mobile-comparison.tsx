@@ -13,7 +13,7 @@ import {
   KeyDifferences,
   type ComparisonPresentationProps,
 } from "./comparison-parts";
-import { CompareText as T, useCompareCopy } from "./compare-copy";
+import { useCompareCopy } from "./compare-copy";
 
 type Props = ComparisonPresentationProps & {
   pair: string[];
@@ -42,19 +42,21 @@ export default function MobileComparison({
           <div className="cv-pair__tool" key={index}>
             <ComparisonMark key={tool.slug} tool={tool} />
             <label>
-              <span className="cv-eyebrow">
-                {t(index === 0 ? "Primo tool" : "Secondo tool")}
-              </span>
+              <span className="cv-pair__name">{tool.name}</span>
               <select
                 aria-label={t(index === 0 ? "Primo tool" : "Secondo tool")}
                 value={tool.slug}
-                onChange={(event) =>
+                onChange={(event) => {
+                  if (event.target.value === "__replace__") {
+                    onManage(tool.slug, event.currentTarget);
+                    return;
+                  }
                   onPairChange(
                     pair.map((slug, position) =>
                       position === index ? event.target.value : slug,
                     ),
-                  )
-                }
+                  );
+                }}
               >
                 {model.tools.map((candidate) => (
                   <option
@@ -65,29 +67,22 @@ export default function MobileComparison({
                     {candidate.name}
                   </option>
                 ))}
+                <option value="__replace__">{t("Altro tool…")}</option>
               </select>
             </label>
-            <button
-              className="cv-link"
-              type="button"
-              onClick={() => onManage(tool.slug)}
-              aria-label={`${t("Sostituisci")} ${tool.name}`}
-            >
-              <T>Sostituisci</T>
-            </button>
           </div>
         ))}
+        <span className="cv-pair__versus" aria-hidden="true">
+          VS
+        </span>
       </section>
       <div className="cv-filter-row">
         <DifferencesSwitch
           checked={differencesOnly}
           onChange={onDifferencesChange}
         />
-        <span className="cv-muted">
-          {model.tools.length} <T>selezionati</T>
-        </span>
       </div>
-      <KeyDifferences model={paired} rows={differences} />
+      <KeyDifferences key={pair.join("|")} model={paired} rows={differences} />
       <section className="cv-details" aria-label={t("Criteri")}>
         {COMPARISON_GROUPS.map((group) => (
           <ComparisonDisclosure

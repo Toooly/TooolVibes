@@ -344,7 +344,8 @@ describe("ToolBattleView V2 — viewport esclusivo e flag", () => {
     render(<ToolBattleView tools={VIEWS} />);
     await screen.findByRole("combobox", { name: "Primo tool" });
     expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
-    expect(screen.getByText(/senza assegnare un vincitore automatico/i)).toBeTruthy();
+    expect(screen.queryByText(/^winner$/i)).toBeNull();
+    expect(screen.getByRole("button", { name: "Scegli Gamma" })).toBeTruthy();
   });
   it("cambio obiettivo sopravvive allo swap tra superfici", async () => {
     render(<ToolBattleView tools={VIEWS} />);

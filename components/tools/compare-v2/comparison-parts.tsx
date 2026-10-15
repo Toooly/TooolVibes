@@ -10,11 +10,13 @@ import type {
 } from "@/lib/compare/comparison-view-model";
 import { CompareText as T, useCompareCopy } from "./compare-copy";
 
+export type ComparisonFocusTarget = Pick<HTMLElement, "focus" | "isConnected">;
+
 export type ComparisonPresentationProps = {
   model: ComparisonViewModel;
   differencesOnly: boolean;
   onDifferencesChange: (value: boolean) => void;
-  onManage: (slug?: string) => void;
+  onManage: (slug?: string, trigger?: ComparisonFocusTarget) => void;
   onRemove: (slug: string) => void;
   onDecide?: (slug: string) => void;
 };
@@ -111,7 +113,7 @@ export function KeyDifferences({
   return (
     <section className="cv-key" aria-labelledby="cv-key-title">
       <h2 id="cv-key-title">
-        <T>Differenze da cui partire</T>
+        <T>Differenze chiave</T>
       </h2>
       {rows.length ? (
         <ol>
@@ -188,6 +190,7 @@ export function ComparisonDisclosure({
       {open ? (
         <div
           id={region}
+          key={`${differencesOnly}-${model.tools.map((tool) => tool.slug).join("|")}`}
           className={
             desktop
               ? "cv-group__rows cv-group__rows--desktop"

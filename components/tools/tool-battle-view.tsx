@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccount } from "@/components/account/account-provider";
 import { salvatiHref } from "@/components/account/workspace/workspace-model";
 import Link from "@/components/ui/app-link";
@@ -20,6 +20,7 @@ import {
   MIN_COMPARE_TOOLS,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
+import type { ComparisonFocusTarget } from "./compare-v2/comparison-parts";
 import { CompareText as T, useCompareCopy } from "./compare-v2/compare-copy";
 import {
   captureCompareDecisionTarget,
@@ -78,6 +79,7 @@ export function ToolBattleView({
   const [manager, setManager] = useState<{ replacing: string | null } | null>(
     null,
   );
+  const managerTrigger = useRef<ComparisonFocusTarget | null>(null);
   const [target, setTarget] = useState<CompareDecisionTarget | null>(null);
   const [notice, setNotice] = useState("");
   const activeObjective = objectiveEnabled ? objective : null;
@@ -98,6 +100,17 @@ export function ToolBattleView({
     return () => media.removeEventListener("change", update);
   }, []);
 
+  function openManager(
+    replacing: string | null,
+    trigger?: ComparisonFocusTarget,
+  ) {
+    managerTrigger.current =
+      trigger ??
+      (document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null);
+    setManager({ replacing });
+  }
   function selectTool(slug: string) {
     const current = useToolWorkspaceStore.getState().compareSlugs;
     const replacing = manager?.replacing;
@@ -138,7 +151,8 @@ export function ToolBattleView({
     model,
     differencesOnly,
     onDifferencesChange: setDifferencesOnly,
-    onManage: (slug?: string) => setManager({ replacing: slug ?? null }),
+    onManage: (slug?: string, trigger?: ComparisonFocusTarget) =>
+      openManager(slug ?? null, trigger),
     onRemove: removeTool,
     onDecide: decisionEnabled ? decide : undefined,
   };
@@ -147,11 +161,8 @@ export function ToolBattleView({
     <section className="cv-workspace" aria-label={t("Confronto")}>
       {showIntro ? (
         <header className="cv-intro">
-          <p className="cv-eyebrow">
-            <T>Confronta e scegli</T>
-          </p>
           <h1>
-            <T>Poche differenze. Una scelta più chiara.</T>
+            <T>Confronta e scegli</T>
           </h1>
           <p className="cv-muted">
             <T>
@@ -164,43 +175,31 @@ export function ToolBattleView({
       ) : null}
       <div className="cv-toolbar">
         <div className="cv-toolbar__actions">
-          <button
-            className="cv-button cv-button--primary"
-            type="button"
-            disabled={slugs.length >= MAX_COMPARE_TOOLS}
-            onClick={() => setManager({ replacing: null })}
-          >
-            <span aria-hidden="true">＋ </span>
-            <T>Aggiungi tool</T>
-          </button>
+          {desktop || model.tools.length < MIN_COMPARE_TOOLS ? (
+            <button
+              className="cv-button cv-button--primary"
+              type="button"
+              disabled={slugs.length >= MAX_COMPARE_TOOLS}
+              onClick={(event) => openManager(null, event.currentTarget)}
+            >
+              <span aria-hidden="true">＋</span>
+              <T>Aggiungi tool</T>
+            </button>
+          ) : null}
           {slugs.length ? (
-            <>
-              <button
-                className="cv-button"
-                type="button"
-                onClick={() => setManager({ replacing: null })}
-              >
-                <T>Gestisci tool</T>
-                <span className="cv-count">
-                  {slugs.length}/{MAX_COMPARE_TOOLS}
-                </span>
-              </button>
-              <button
-                className="cv-link"
-                type="button"
-                onClick={() => {
-                  consumeCompareDecision();
-                  clearCompare();
-                  setNotice("");
-                }}
-              >
-                <T>Azzera confronto</T>
-              </button>
-            </>
+            <button
+              className="cv-button"
+              type="button"
+              aria-label={t("Gestisci tool")}
+              onClick={(event) => openManager(null, event.currentTarget)}
+            >
+              {desktop ? <T>Gestisci tool</T> : <T>Tool</T>}
+              <span className="cv-count">{slugs.length}</span>
+            </button>
           ) : null}
         </div>
         {objectiveEnabled && model.tools.length >= MIN_COMPARE_TOOLS ? (
-          <label className="cv-objective">
+          <label className="cv-objective" data-active={!!objective}>
             <span>
               <T>Obiettivo</T>
             </span>
@@ -224,7 +223,7 @@ export function ToolBattleView({
           </label>
         ) : null}
       </div>
-      {objectiveEnabled && activeObjective ? (
+      {desktop && objectiveEnabled && activeObjective ? (
         <p className="cv-footnote">
           <T>
             La scelta resta tua: l’obiettivo ordina i criteri, senza assegnare
@@ -308,8 +307,15 @@ export function ToolBattleView({
           tools={tools}
           selected={slugs}
           replacing={manager.replacing}
+          returnFocusTo={managerTrigger.current}
           onSelect={selectTool}
           onRemove={removeTool}
+          onClear={() => {
+            consumeCompareDecision();
+            clearCompare();
+            setManager(null);
+            setNotice("");
+          }}
           onClose={() => {
             setManager(null);
             setNotice("");

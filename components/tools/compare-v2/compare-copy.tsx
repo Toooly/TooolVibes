@@ -19,6 +19,9 @@ const english: Record<string, string> = {
     "Pick a pair, read the differences and decide what to try.",
   "Due–quattro tool, con i dati che servono per decidere.":
     "Two to four tools, with the facts you need to decide.",
+  Tool: "Tools",
+  "Altro tool…": "Another tool…",
+  "Differenze chiave": "Key differences",
   "Gestisci tool": "Manage tools",
   "Aggiungi tool": "Add a tool",
   "Azzera confronto": "Clear comparison",

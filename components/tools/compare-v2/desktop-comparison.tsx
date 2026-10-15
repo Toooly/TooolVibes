@@ -83,7 +83,7 @@ export default function DesktopComparison({
               <button
                 className="cv-link"
                 type="button"
-                onClick={() => onManage(tool.slug)}
+                onClick={(event) => onManage(tool.slug, event.currentTarget)}
                 aria-label={`${t("Sostituisci")} ${tool.name}`}
               >
                 <T>Sostituisci</T>
@@ -107,7 +107,21 @@ export default function DesktopComparison({
         />
         <nav className="cv-group-nav" aria-label={t("Criteri")}>
           {COMPARISON_GROUPS.map((group) => (
-            <a href={`#cv-group-${group.id}`} key={group.id}>
+            <a
+              href={`#cv-group-${group.id}`}
+              key={group.id}
+              onClick={() => {
+                const trigger = document
+                  .getElementById(`cv-group-${group.id}`)
+                  ?.querySelector("button");
+                if (trigger?.getAttribute("aria-expanded") === "false")
+                  trigger.click();
+                trigger?.focus({ preventScroll: true });
+                window.requestAnimationFrame?.(() =>
+                  trigger?.focus({ preventScroll: true }),
+                );
+              }}
+            >
               <T>{group.label}</T>
             </a>
           ))}

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+import type { ComparisonFocusTarget } from "./comparison-parts";
 import { CompareText as T, useCompareCopy } from "./compare-copy";
 
 type Props = {
@@ -10,7 +11,9 @@ type Props = {
   replacing: string | null;
   onSelect: (slug: string) => void;
   onRemove: (slug: string) => void;
+  onClear: () => void;
   onClose: () => void;
+  returnFocusTo?: ComparisonFocusTarget | null;
 };
 export default function ComparisonManager({
   tools,
@@ -18,21 +21,29 @@ export default function ComparisonManager({
   replacing,
   onSelect,
   onRemove,
+  onClear,
   onClose,
+  returnFocusTo,
 }: Props) {
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDialogElement>(null);
+  const backdropPress = useRef(false);
   const t = useCompareCopy();
   useEffect(() => {
     const dialog = ref.current;
-    const previousFocus = document.activeElement;
+    const previousFocus = returnFocusTo ?? document.activeElement;
     dialog?.showModal();
     return () => {
       dialog?.close();
-      if (previousFocus instanceof HTMLElement && previousFocus.isConnected)
-        previousFocus.focus({ preventScroll: true });
+      const returnTo =
+        previousFocus instanceof HTMLElement && previousFocus.isConnected
+          ? previousFocus
+          : document.querySelector<HTMLButtonElement>(
+              ".cv-toolbar__actions button:not(:disabled)",
+            );
+      returnTo?.focus({ preventScroll: true });
     };
-  }, []);
+  }, [returnFocusTo]);
   const normalized = query.trim().toLocaleLowerCase();
   const filtered = tools.filter((tool) =>
     `${tool.name} ${tool.categoryLabel}`
@@ -48,8 +59,13 @@ export default function ComparisonManager({
         event.preventDefault();
         onClose();
       }}
+      onPointerDown={(event) => {
+        backdropPress.current = event.target === event.currentTarget;
+      }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (event.target === event.currentTarget && backdropPress.current)
+          onClose();
+        backdropPress.current = false;
       }}
     >
       <div className="cv-manager__surface">
@@ -57,24 +73,34 @@ export default function ComparisonManager({
           <h2 id="cv-manager-title">
             <T>{replacing ? "Sostituisci" : "Aggiungi tool"}</T>
           </h2>
-          <button className="cv-button" type="button" onClick={onClose}>
-            <T>Chiudi</T>
+          <button
+            className="cv-button cv-manager__close"
+            type="button"
+            onClick={onClose}
+            aria-label={t("Chiudi")}
+          >
+            <span aria-hidden="true">×</span>
           </button>
         </header>
         {!replacing && selected.length > 0 ? (
-          <div className="cv-manager__selected">
-            {selected.map((slug) => (
-              <button
-                className="cv-button"
-                key={slug}
-                type="button"
-                onClick={() => onRemove(slug)}
-                aria-label={`${t("Rimuovi")} ${tools.find((tool) => tool.slug === slug)?.name ?? slug}`}
-              >
-                {tools.find((tool) => tool.slug === slug)?.name ?? slug}{" "}
-                <span aria-hidden="true">×</span>
-              </button>
-            ))}
+          <div className="cv-manager__selection">
+            <div className="cv-manager__selected">
+              {selected.map((slug) => (
+                <button
+                  className="cv-button"
+                  key={slug}
+                  type="button"
+                  onClick={() => onRemove(slug)}
+                  aria-label={`${t("Rimuovi")} ${tools.find((tool) => tool.slug === slug)?.name ?? slug}`}
+                >
+                  {tools.find((tool) => tool.slug === slug)?.name ?? slug}{" "}
+                  <span aria-hidden="true">×</span>
+                </button>
+              ))}
+            </div>
+            <button className="cv-link" type="button" onClick={onClear}>
+              <T>Azzera confronto</T>
+            </button>
           </div>
         ) : null}
         {!replacing && selected.length >= MAX_COMPARE_TOOLS ? (

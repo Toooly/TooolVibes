@@ -153,7 +153,9 @@ describe("Compare V2 shared state and distinct presentations", () => {
     seed(["alpha", "beta", "gamma", "delta", "epsilon"]);
     render(<ToolBattleView tools={tools} />);
     await ready();
-    fireEvent.click(screen.getByRole("button", { name: "Sostituisci alpha" }));
+    const first = screen.getByRole("combobox", { name: "Primo tool" });
+    first.focus();
+    fireEvent.change(first, { target: { value: "__replace__" } });
     const dialog = await screen.findByRole("dialog");
     fireEvent.change(within(dialog).getByRole("searchbox"), {
       target: { value: "zeta" },
@@ -170,6 +172,7 @@ describe("Compare V2 shared state and distinct presentations", () => {
     expect(
       selectedValue(screen.getByRole("combobox", { name: "Primo tool" })),
     ).toBe("zeta");
+    expect(document.activeElement).toBe(first);
     expect(useToolWorkspaceStore.getState().savedSlugs).toEqual(["alpha"]);
   });
   it("manages tools in place, including an empty or incomplete comparison", async () => {
@@ -228,6 +231,53 @@ describe("Compare V2 shared state and distinct presentations", () => {
     await ready();
     expect(screen.queryByRole("combobox", { name: "Obiettivo" })).toBeNull();
     expect(screen.queryByRole("button", { name: /Scegli alpha/ })).toBeNull();
+  });
+  it("opens the target section and moves focus from desktop section navigation", async () => {
+    resize(true);
+    render(<ToolBattleView tools={tools} />);
+    await waitFor(() =>
+      expect(document.querySelector(".cv-desktop")).not.toBeNull(),
+    );
+    fireEvent.click(screen.getByRole("link", { name: "Prezzi e condizioni" }));
+    const trigger = screen.getByRole("button", {
+      name: /^Prezzi e condizioni/,
+    });
+    expect(trigger.getAttribute("aria-expanded")).toBe("true");
+    expect(document.activeElement).toBe(trigger);
+    expect(trigger.getAttribute("aria-controls")).toBeTruthy();
+  });
+  it("clears from the manager, preserves Save and restores focus to the empty-state action", async () => {
+    render(<ToolBattleView tools={tools} />);
+    await ready();
+    const manage = screen.getByRole("button", { name: "Gestisci tool" });
+    manage.focus();
+    fireEvent.click(manage);
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Azzera confronto" }),
+    );
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(useToolWorkspaceStore.getState().compareSlugs).toEqual([]);
+    expect(useToolWorkspaceStore.getState().savedSlugs).toEqual(["alpha"]);
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: /Aggiungi tool/ }),
+    );
+  });
+  it("closes only a press that starts on the backdrop and remains reopenable", async () => {
+    render(<ToolBattleView tools={tools} />);
+    await ready();
+    const manage = screen.getByRole("button", { name: "Gestisci tool" });
+    manage.focus();
+    fireEvent.click(manage);
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(dialog);
+    expect(screen.getByRole("dialog")).toBe(dialog);
+    fireEvent.pointerDown(dialog);
+    fireEvent.click(dialog);
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(document.activeElement).toBe(manage);
+    fireEvent.click(manage);
+    expect(await screen.findByRole("dialog")).toBeTruthy();
   });
   it("has accessible labels and disclosure controls", async () => {
     const { container } = render(<ToolBattleView tools={tools} />);
