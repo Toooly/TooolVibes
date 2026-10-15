@@ -95,6 +95,41 @@
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
   }
 
+  const journey = document.querySelector("[data-journey]");
+  if (journey) {
+    const choices = journey.querySelectorAll("[data-journey-select]");
+    const scenes = journey.querySelectorAll("[data-journey-scene]");
+    const description = journey.querySelector("[data-journey-description]");
+    const link = journey.querySelector("[data-journey-link]");
+    const previewLink = journey.querySelector("[data-journey-preview-link]");
+    const services = {
+      web: { description: "Siti, landing page ed e-commerce.", target: "#servizi", label: "Esplora siti e web" },
+      social: { description: "Dall’identità del brand ai contenuti, fino alla pubblicazione.", target: "#contenuti", label: "Esplora automazione contenuti" },
+      ai: { description: "Richieste, risposte e nuovi contatti. Un passo dopo l’altro.", target: "#chatbot", label: "Esplora chatbot AI" },
+    };
+    function selectJourney(service) {
+      const selected = services[service];
+      if (!selected || journey.dataset.active === service) return;
+      journey.dataset.active = service;
+      choices.forEach((choice) => choice.setAttribute("aria-pressed", String(choice.dataset.journeySelect === service)));
+      scenes.forEach((scene) => { scene.hidden = scene.dataset.journeyScene !== service; });
+      description.textContent = selected.description;
+      link.setAttribute("href", selected.target);
+      link.setAttribute("aria-label", selected.label);
+      previewLink.setAttribute("href", selected.target);
+      previewLink.setAttribute("aria-label", selected.label);
+    }
+    choices.forEach((choice) => choice.addEventListener("click", () => selectJourney(choice.dataset.journeySelect)));
+    journey.querySelector("[data-journey-controls]").hidden = false;
+    link.setAttribute("aria-label", services.web.label);
+    if (!reduceMotion && "IntersectionObserver" in window) {
+      const journeyObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => journey.classList.toggle("is-in-view", entry.isIntersecting));
+      }, { threshold: 0.15 });
+      journeyObserver.observe(journey);
+    }
+  }
+
   const sequenceSections = document.querySelectorAll("[data-sequence]");
   if (!reduceMotion && "IntersectionObserver" in window) {
     const sequenceObserver = new IntersectionObserver((entries, observer) => {

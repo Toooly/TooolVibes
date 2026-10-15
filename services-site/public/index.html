@@ -110,6 +110,56 @@
         </a>
       </section>
 
+      <section class="journey section-shell" aria-labelledby="journey-title" data-journey data-active="web">
+        <div class="journey__controls">
+          <h2 id="journey-title">Da dove vuoi<br /> partire?</h2>
+          <div class="journey__choices" role="group" aria-label="Scegli un servizio da esplorare" data-journey-controls hidden>
+            <button type="button" aria-pressed="true" aria-controls="journey-preview" data-journey-select="web"><span>01</span><strong>Siti &amp; web</strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
+            <button type="button" aria-pressed="false" aria-controls="journey-preview" data-journey-select="social"><span>02</span><strong>Automazione contenuti</strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
+            <button type="button" aria-pressed="false" aria-controls="journey-preview" data-journey-select="ai"><span>03</span><strong>Chatbot AI</strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
+          </div>
+          <noscript><nav class="journey__fallback" aria-label="Esplora i servizi"><a href="#servizi">Siti &amp; web</a><a href="#contenuti">Automazione contenuti</a><a href="#chatbot">Chatbot AI</a></nav></noscript>
+          <p class="journey__description" data-journey-description aria-live="polite" aria-atomic="true">Siti, landing page ed e-commerce.</p>
+          <a class="journey__link" href="#servizi" data-journey-link>Esplora il servizio <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
+        </div>
+        <figure class="journey__visual" id="journey-preview" aria-label="Anteprima illustrativa del servizio selezionato">
+          <svg class="journey__ribbon" viewBox="0 0 820 530" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="journey-spectrum" x1="60" y1="280" x2="780" y2="360" gradientUnits="userSpaceOnUse"><stop stop-color="#27d8ee"/><stop offset=".48" stop-color="#4d8dff"/><stop offset="1" stop-color="#875cff"/></linearGradient>
+              <radialGradient id="journey-spark"><stop stop-color="#e0fcff"/><stop offset=".15" stop-color="#27d8ee" stop-opacity=".85"/><stop offset="1" stop-color="#27d8ee" stop-opacity="0"/></radialGradient>
+              <path id="journey-loop" d="M90 360C-45 181 233 184 416 131S823 69 764 247 557 495 317 455 5 313 116 242" />
+            </defs>
+            <g class="journey__threads" stroke="url(#journey-spectrum)">
+              <use href="#journey-loop" transform="translate(0 -18)"/><use href="#journey-loop" transform="translate(0 -12)"/><use href="#journey-loop" transform="translate(0 -6)"/><use href="#journey-loop"/>
+              <use href="#journey-loop" transform="translate(0 6)"/><use href="#journey-loop" transform="translate(0 12)"/><use href="#journey-loop" transform="translate(0 18)"/><use href="#journey-loop" transform="translate(0 24)"/>
+              <use href="#journey-loop" transform="translate(0 30)"/><use href="#journey-loop" transform="translate(0 36)"/><use href="#journey-loop" transform="translate(0 42)"/><use href="#journey-loop" transform="translate(0 48)"/>
+            </g>
+            <use class="journey__signal" href="#journey-loop" stroke="url(#journey-spectrum)" stroke-width="3" pathLength="100" />
+            <circle cx="74" cy="333" r="16" fill="url(#journey-spark)"/><circle cx="770" cy="217" r="12" fill="url(#journey-spark)"/>
+          </svg>
+          <a class="journey__window" href="#servizi" aria-label="Esplora siti e web" data-journey-preview-link>
+            <div class="journey__chrome" aria-hidden="true"><i></i><i></i><i></i><span></span></div>
+            <div class="journey__scene journey__scene--web" data-journey-scene="web" aria-hidden="true">
+              <img class="journey__portal" src="/assets/journey-portal.webp" alt="" width="960" height="640" loading="lazy" decoding="async" />
+              <div class="journey__web-copy"><b>Il tuo prossimo<br />progetto.</b><span class="journey__sample-cta">Inizia da qui <svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></div>
+              <div class="journey__web-footer"><span>Chiaro da usare.</span><span>Semplice scegliere.</span><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div>
+            </div>
+            <div class="journey__scene journey__scene--social" data-journey-scene="social" aria-hidden="true" hidden>
+              <div class="journey__social-heading"><b>Un’identità.<br />Tante possibilità.</b><div class="journey__swatches"><i></i><i></i><i></i></div></div>
+              <div class="journey__editorial"><div class="journey__post"><img src="/assets/journey-portal.webp" alt="" width="960" height="640" loading="lazy" decoding="async"/><span>Il tuo brand,<br />ogni giorno.</span></div><div class="journey__calendar"><span>Calendario editoriale</span><div><i>L</i><i>M</i><i>M</i><i>G</i><i>V</i><i></i><i class="is-planned"></i><i></i><i class="is-planned"></i><i></i><i class="is-planned"></i><i></i><i class="is-planned"></i><i></i><i class="is-planned"></i></div><small>Identità · Contenuti · Pubblicazione</small></div></div>
+            </div>
+            <div class="journey__scene journey__scene--ai" data-journey-scene="ai" aria-hidden="true" hidden>
+              <div class="journey__chat-heading"><img src="/assets/tooolvibes-logo.png" alt="" width="32" height="32"/><b>Una conversazione.<br />Il prossimo passo.</b></div>
+              <div class="journey__message journey__message--user">Vorrei informazioni sui vostri servizi.</div>
+              <div class="journey__message journey__message--reply">Certo. Stai pensando a un sito, ai contenuti o a un’automazione?</div>
+              <div class="journey__chat-route"><span>Richiesta</span><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg><span>Risposta</span><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg><span>Contatto</span></div>
+            </div>
+          </a>
+          <figcaption>Esempio illustrativo</figcaption>
+        </figure>
+        <a class="journey__continue" href="#servizi" aria-label="Scorri e scopri i tre servizi"><span></span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></a>
+      </section>
+
       <section id="servizi" class="service service--web section-shell" aria-labelledby="service-web-title" data-service="web">
         <figure class="service-visual service-visual--web" data-reveal>
           <img src="/assets/service-web-v2.webp" srcset="/assets/service-web-v2-640.webp 640w, /assets/service-web-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 72rem) calc(100vw - 5rem), 48vw" width="1280" height="721" loading="lazy" decoding="async" alt="Esperienza web coordinata su laptop e smartphone con atmosfera orbitale" />
@@ -122,7 +172,7 @@
         </div>
       </section>
 
-      <section class="service service--social section-shell" aria-labelledby="service-social-title" data-service="social">
+      <section id="contenuti" class="service service--social section-shell" aria-labelledby="service-social-title" data-service="social">
         <figure class="service-visual service-visual--social" data-reveal>
           <img src="/assets/service-social-v2.webp" srcset="/assets/service-social-v2-640.webp 640w, /assets/service-social-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 72rem) calc(100vw - 5rem), 48vw" width="1280" height="640" loading="lazy" decoding="async" alt="Identità visiva trasformata in contenuti e calendario editoriale" />
         </figure>
@@ -136,7 +186,7 @@
         </div>
       </section>
 
-      <section class="service service--ai section-shell" aria-labelledby="service-ai-title" data-service="ai">
+      <section id="chatbot" class="service service--ai section-shell" aria-labelledby="service-ai-title" data-service="ai">
         <div class="section-copy" data-reveal>
           <p class="section-number">03</p>
           <h2 id="service-ai-title">Conversazioni che portano avanti <span class="text-gradient">il lavoro.</span></h2>

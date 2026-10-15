@@ -31,4 +31,19 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain("prefers-reduced-motion: reduce");
     expect(css).toContain("@media (max-width: 48rem)");
   });
+
+  it("provides one responsive service explorer in the requested service order", () => {
+    expect(html.match(/data-journey-select="(web|social|ai)"/g)).toEqual([
+      'data-journey-select="web"',
+      'data-journey-select="social"',
+      'data-journey-select="ai"',
+    ]);
+    expect(html.match(/id="journey-preview"/g)).toHaveLength(1);
+    for (const target of ["servizi", "contenuti", "chatbot"]) {
+      expect(html).toContain(`id="${target}"`);
+      expect(html).toContain(`href="#${target}"`);
+    }
+    expect(html).toContain('<noscript><nav class="journey__fallback"');
+    expect(html).not.toContain('class="hero-orbit"');
+  });
 });
