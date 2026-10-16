@@ -46,4 +46,27 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).toContain('<noscript><nav class="journey__fallback"');
     expect(html).not.toContain('class="hero-orbit"');
   });
+
+  it("uses the top explorer without a second ecosystem section", () => {
+    expect(html).toContain('id="esplora"');
+    expect(html).toContain('class="button button--secondary" href="#esplora"');
+    expect(html).not.toContain('id="ecosistema"');
+    expect(css).not.toContain(".ecosystem");
+  });
+
+  it("shows service-specific prices with genuine contact links", () => {
+    for (const service of ["web", "social", "ai"]) {
+      expect(html).toContain(`data-service-price="${service}"`);
+    }
+    expect(html).toContain("Riferimento indicativo <span>1.299 €</span>");
+    expect(html).toContain("Riferimento indicativo <span>998 €</span>");
+    expect(html).toContain("Tre mesi a prezzo ordinario <s>1.800 €</s>");
+    expect(html).toContain('599 <span>€</span>');
+    expect(html).toContain('600 <span>€</span> <small>/ 3 mesi</small>');
+    expect(html).toContain('499 <span>€</span>');
+    expect(html).toContain("3 mesi al prezzo di 1");
+    expect(css).toContain("service-depth-in");
+    expect(html).toContain("600 € complessivi per tre mesi");
+    expect(html).not.toContain("IVA");
+  });
 });
