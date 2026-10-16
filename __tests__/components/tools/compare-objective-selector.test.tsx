@@ -328,7 +328,7 @@ describe("ToolBattleView V2 — viewport esclusivo e flag", () => {
   it("conserva obiettivo e filtro tra le superfici senza renderer duplicati", async () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
     const { container } = render(<ToolBattleView tools={VIEWS} />);
-    await screen.findByRole("combobox", { name: "Primo tool" });
+    await screen.findByRole("region", { name: "Tool a confronto" });
     expect(container.querySelectorAll('[data-compare-renderer="mobile"]')).toHaveLength(1);
     expect(selectedValue(screen.getByRole("combobox", { name: "Obiettivo" }))).toBe("save-time");
     fireEvent.click(screen.getByRole("checkbox"));
@@ -342,14 +342,14 @@ describe("ToolBattleView V2 — viewport esclusivo e flag", () => {
   it("guida la lettura senza vincitori automatici o delta numerici", async () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
     render(<ToolBattleView tools={VIEWS} />);
-    await screen.findByRole("combobox", { name: "Primo tool" });
+    await screen.findByRole("region", { name: "Tool a confronto" });
     expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
     expect(screen.queryByText(/^winner$/i)).toBeNull();
     expect(screen.getByRole("button", { name: "Scegli Gamma" })).toBeTruthy();
   });
   it("cambio obiettivo sopravvive allo swap tra superfici", async () => {
     render(<ToolBattleView tools={VIEWS} />);
-    await screen.findByRole("combobox", { name: "Primo tool" });
+    await screen.findByRole("region", { name: "Tool a confronto" });
     fireEvent.change(screen.getByRole("combobox", { name: "Obiettivo" }), { target: { value: "collaborate" } });
     setDesktopViewport(true);
     await waitFor(() => expect(document.querySelector('.cv-desktop')).not.toBeNull());
@@ -359,13 +359,13 @@ describe("ToolBattleView V2 — viewport esclusivo e flag", () => {
   it("flag OFF: nessun selettore anche con obiettivo persistito", async () => {
     window.localStorage.setItem(COMPARE_OBJECTIVE_STORAGE_KEY, "save-time");
     render(<ToolBattleView tools={VIEWS} objectiveEnabled={false} />);
-    await screen.findByRole("combobox", { name: "Primo tool" });
+    await screen.findByRole("region", { name: "Tool a confronto" });
     expect(screen.queryByRole("combobox", { name: "Obiettivo" })).toBeNull();
     expect(screen.queryByText(/\+\d+ obiettivo/)).toBeNull();
   });
   it("nessuna violazione axe sul confronto con selettore obiettivo", async () => {
     const { container } = render(<ToolBattleView tools={VIEWS} />);
-    await screen.findByRole("combobox", { name: "Primo tool" });
+    await screen.findByRole("region", { name: "Tool a confronto" });
     await expectNoAxeViolations(container);
   });
 });

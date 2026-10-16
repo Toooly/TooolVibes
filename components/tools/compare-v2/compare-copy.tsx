@@ -20,6 +20,9 @@ const english: Record<string, string> = {
   "Due–quattro tool, con i dati che servono per decidere.":
     "Two to four tools, with the facts you need to decide.",
   Tool: "Tools",
+  Gestisci: "Manage",
+  "Tool a confronto": "Tools in this comparison",
+  "Tutti i tool, un criterio alla volta.": "All your tools, one criterion at a time.",
   "Altro tool…": "Another tool…",
   "Differenze chiave": "Key differences",
   "Gestisci tool": "Manage tools",

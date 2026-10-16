@@ -13,7 +13,6 @@ import {
 } from "@/lib/compare/compare-objective";
 import {
   buildComparisonViewModel,
-  resolveComparisonPair,
 } from "@/lib/compare/comparison-view-model";
 import {
   MAX_COMPARE_TOOLS,
@@ -74,7 +73,6 @@ export function ToolBattleView({
   const clearCompare = useToolWorkspaceStore((state) => state.clearCompare);
   const { objective, setObjective } = useCompareObjective();
   const [desktop, setDesktop] = useState<boolean | null>(null);
-  const [pair, setPair] = useState<string[]>([]);
   const [differencesOnly, setDifferencesOnly] = useState(false);
   const [manager, setManager] = useState<{ replacing: string | null } | null>(
     null,
@@ -119,11 +117,6 @@ export function ToolBattleView({
       if (slug !== replacing) {
         toggleCompare(replacing);
         toggleCompare(slug);
-        setPair(
-          resolveComparisonPair(current, pair).map((item) =>
-            item === replacing ? slug : item,
-          ),
-        );
       }
     } else if (current.length >= MAX_COMPARE_TOOLS) {
       setNotice("Hai raggiunto il limite di tool.");
@@ -168,7 +161,7 @@ export function ToolBattleView({
             <T>
               {desktop
                 ? "Due–quattro tool, con i dati che servono per decidere."
-                : "Scegli una coppia, leggi le differenze e decidi cosa provare."}
+                : "Tutti i tool, un criterio alla volta."}
             </T>
           </p>
         </header>
@@ -193,7 +186,7 @@ export function ToolBattleView({
               aria-label={t("Gestisci tool")}
               onClick={(event) => openManager(null, event.currentTarget)}
             >
-              {desktop ? <T>Gestisci tool</T> : <T>Tool</T>}
+              {desktop ? <T>Gestisci tool</T> : <T>Gestisci</T>}
               <span className="cv-count">{slugs.length}</span>
             </button>
           ) : null}
@@ -231,7 +224,7 @@ export function ToolBattleView({
           </T>
         </p>
       ) : null}
-      {slugs.length > 4 ? (
+      {desktop && slugs.length > 4 ? (
         <p className="cv-footnote">
           <T>Confronta 2–4 candidati per una lettura più diretta.</T>
         </p>
@@ -296,11 +289,7 @@ export function ToolBattleView({
       ) : desktop ? (
         <DesktopComparison {...presentation} />
       ) : (
-        <MobileComparison
-          {...presentation}
-          pair={pair}
-          onPairChange={setPair}
-        />
+        <MobileComparison {...presentation} />
       )}
       {manager ? (
         <ComparisonManager

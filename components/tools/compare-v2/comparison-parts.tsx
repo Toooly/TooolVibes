@@ -106,9 +106,11 @@ export function DifferencesSwitch({
 export function KeyDifferences({
   model,
   rows,
+  stacked = false,
 }: {
   model: ComparisonViewModel;
   rows: ComparisonCriterion[];
+  stacked?: boolean;
 }) {
   return (
     <section className="cv-key" aria-labelledby="cv-key-title">
@@ -126,7 +128,9 @@ export function KeyDifferences({
               <div
                 className="cv-key__values"
                 style={{
-                  gridTemplateColumns: `repeat(${model.tools.length}, minmax(0, 1fr))`,
+                  gridTemplateColumns: stacked
+                    ? "minmax(0, 1fr)"
+                    : `repeat(${model.tools.length}, minmax(0, 1fr))`,
                 }}
               >
                 {model.tools.map((tool) => (
@@ -155,6 +159,7 @@ export function ComparisonDisclosure({
   differencesOnly,
   desktop = false,
   initialOpen = false,
+  stacked = false,
 }: {
   id: string;
   title: string;
@@ -163,6 +168,7 @@ export function ComparisonDisclosure({
   differencesOnly: boolean;
   desktop?: boolean;
   initialOpen?: boolean;
+  stacked?: boolean;
 }) {
   const [open, setOpen] = useState(initialOpen);
   const region = useId();
@@ -211,7 +217,9 @@ export function ComparisonDisclosure({
                 <div
                   className="cv-criterion__values"
                   style={{
-                    gridTemplateColumns: `repeat(${model.tools.length}, minmax(0, 1fr))`,
+                    gridTemplateColumns: stacked
+                      ? "minmax(0, 1fr)"
+                      : `repeat(${model.tools.length}, minmax(0, 1fr))`,
                   }}
                 >
                   {model.tools.map((tool) => (

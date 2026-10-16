@@ -92,15 +92,12 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 async function ready() {
-  return screen.findByRole("combobox", { name: "Primo tool" });
+  return screen.findByRole("region", { name: "Tool a confronto" });
 }
 describe("Compare V2 shared state and distinct presentations", () => {
-  it("compares a pair, retains pool and filter on resize, mounts one renderer", async () => {
+  it("shows the entire selection and retains the filter on resize with one renderer", async () => {
     const { container } = render(<ToolBattleView tools={tools} />);
     await ready();
-    fireEvent.change(screen.getByRole("combobox", { name: "Secondo tool" }), {
-      target: { value: "gamma" },
-    });
     fireEvent.click(
       screen.getByRole("checkbox", { name: "Mostra solo differenze" }),
     );
@@ -118,9 +115,10 @@ describe("Compare V2 shared state and distinct presentations", () => {
     );
     resize(false);
     await ready();
-    expect(
-      selectedValue(screen.getByRole("combobox", { name: "Secondo tool" })),
-    ).toBe("gamma");
+    expect(within(screen.getByRole("region", { name: "Tool a confronto" })).getAllByRole("listitem")).toHaveLength(3);
+    expect(screen.queryByRole("combobox", { name: "Secondo tool" })).toBeNull();
+    expect(container.querySelectorAll(".cv-key__values > div").length % 3).toBe(0);
+    expect(screen.getByRole("button", { name: "Scegli gamma" })).toBeTruthy();
     expect(useToolWorkspaceStore.getState().compareSlugs).toEqual([
       "alpha",
       "beta",
@@ -128,7 +126,8 @@ describe("Compare V2 shared state and distinct presentations", () => {
     ]);
     expect(useToolWorkspaceStore.getState().savedSlugs).toEqual(["alpha"]);
   });
-  it("unmounts closed details and removes equivalent rows from the matrix", async () => {
+  it("unmounts closed details and compares differences across the entire selection", async () => {
+    seed(["alpha", "beta"]);
     const { container } = render(<ToolBattleView tools={tools} />);
     await ready();
     expect(container.querySelectorAll(".cv-group__rows")).toHaveLength(0);
@@ -140,22 +139,23 @@ describe("Compare V2 shared state and distinct presentations", () => {
     expect(
       container.querySelector('.cv-criterion[data-criterion="best-for"]'),
     ).toBeNull();
-    fireEvent.change(screen.getByRole("combobox", { name: "Secondo tool" }), {
-      target: { value: "gamma" },
-    });
+    fireEvent.click(screen.getByRole("button", { name: "Gestisci tool" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: /gamma/ }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(
       container.querySelector('.cv-criterion[data-criterion="best-for"]'),
     ).not.toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /^In sintesi/ }));
     expect(container.querySelectorAll(".cv-group__rows")).toHaveLength(0);
   });
-  it("replaces at the canonical cap and preserves saved state and pair position", async () => {
+  it("replaces at the canonical cap and preserves saved state with a valid focus target", async () => {
     seed(["alpha", "beta", "gamma", "delta", "epsilon"]);
     render(<ToolBattleView tools={tools} />);
     await ready();
-    const first = screen.getByRole("combobox", { name: "Primo tool" });
+    const first = screen.getByRole("button", { name: "Sostituisci alpha" });
     first.focus();
-    fireEvent.change(first, { target: { value: "__replace__" } });
+    fireEvent.click(first);
     const dialog = await screen.findByRole("dialog");
     fireEvent.change(within(dialog).getByRole("searchbox"), {
       target: { value: "zeta" },
@@ -169,10 +169,10 @@ describe("Compare V2 shared state and distinct presentations", () => {
       "epsilon",
       "zeta",
     ]);
-    expect(
-      selectedValue(screen.getByRole("combobox", { name: "Primo tool" })),
-    ).toBe("zeta");
-    expect(document.activeElement).toBe(first);
+    expect(screen.queryByRole("button", { name: "Sostituisci alpha" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Sostituisci zeta" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Scegli zeta" })).toBeTruthy();
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Gestisci tool" }));
     expect(useToolWorkspaceStore.getState().savedSlugs).toEqual(["alpha"]);
   });
   it("manages tools in place, including an empty or incomplete comparison", async () => {
