@@ -54,19 +54,51 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain(".ecosystem");
   });
 
+  it("animates secondary details without brighter markers or perpetual motion", () => {
+    expect(css).toContain("@media (prefers-reduced-motion: no-preference)");
+    expect(css).toContain("detail-arrive .6s");
+    expect(css).toContain("detail-signal 1.6s ease-in-out var(--detail-delay) 2");
+    const marker = css.match(/\.plain-list li::before \{([^}]+)\}/)?.[1];
+    expect(marker).toContain("width: .2rem");
+    expect(marker).not.toContain("box-shadow");
+    expect(marker).toContain("var(--ink-muted)");
+  });
+
   it("shows service-specific prices with genuine contact links", () => {
     for (const service of ["web", "social", "ai"]) {
       expect(html).toContain(`data-service-price="${service}"`);
     }
     expect(html).toContain("Riferimento indicativo <span>1.299 €</span>");
-    expect(html).toContain("Riferimento indicativo <span>998 €</span>");
+    expect(html).not.toContain("998 €");
     expect(html).toContain("Tre mesi a prezzo ordinario <s>1.800 €</s>");
     expect(html).toContain('599 <span>€</span>');
     expect(html).toContain('600 <span>€</span> <small>/ 3 mesi</small>');
-    expect(html).toContain('499 <span>€</span>');
+    expect(html).toContain('249 <span>€</span> <small>attivazione</small>');
+    expect(html).toContain('+ <strong>49 €</strong> / mese di gestione');
+    expect(html).toContain("consumi e integrazioni definiti nel preventivo");
     expect(html).toContain("3 mesi al prezzo di 1");
     expect(css).toContain("service-depth-in");
     expect(html).toContain("600 € complessivi per tre mesi");
     expect(html).not.toContain("IVA");
+  });
+
+  it("highlights final prices without inventing historical discounts", () => {
+    expect(css).toContain("--price-accent: #7cebb4");
+    expect(css).toContain("--price-comparison: #eea0aa");
+    expect(css).toContain("price-arrive .9s");
+    expect(css).toContain("price-light 2.4s");
+    expect(html).not.toContain("<s>1.299 €</s>");
+    expect(html.match(/<s>/g)).toHaveLength(1);
+  });
+
+  it("choreographs native preview details and starts service motion at the visual", () => {
+    for (const animation of ["journey-portal-depth", "journey-post-arrive", "journey-chip", "journey-message", "journey-route", "service-flow"]) {
+      expect(css).toContain(`@keyframes ${animation}`);
+    }
+    expect(html.match(/class="service-visual__flow"/g)).toHaveLength(3);
+    expect(css).toContain(".service-visual.is-in-view .service-visual__pulse");
+    const app = readFileSync(resolve(root, "app.js"), "utf8");
+    expect(app).toContain('querySelectorAll("[data-service], .service-visual")');
+    expect(app).toContain('journeyObserver.observe(journey.querySelector(".journey__visual"))');
   });
 });

@@ -90,7 +90,7 @@
       },
       { threshold: 0.28 },
     );
-    document.querySelectorAll("[data-service]").forEach((element) => sceneObserver.observe(element));
+    document.querySelectorAll("[data-service], .service-visual").forEach((element) => sceneObserver.observe(element));
   } else {
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
   }
@@ -126,7 +126,7 @@
       const journeyObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => journey.classList.toggle("is-in-view", entry.isIntersecting));
       }, { threshold: 0.15 });
-      journeyObserver.observe(journey);
+      journeyObserver.observe(journey.querySelector(".journey__visual"));
     }
   }
 
