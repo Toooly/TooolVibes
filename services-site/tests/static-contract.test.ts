@@ -97,13 +97,12 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).not.toContain("998 €");
     expect(html).toContain("Anziché <s>1.800 €</s>");
     expect(html).toContain("Anziché <s>499 € + 79 €/mese</s>");
-    expect(html).toContain('599 <span>€</span>');
-    expect(html).toContain('600 <span>€</span> <small>/ 3 mesi</small>');
-    expect(html).toContain('249 <span>€</span> <small class="service-offer__recurring">+ <strong>49 €</strong>/mese</small>');
+    expect(html).toContain('service-offer__amount">599</span> <span>€</span>');
+    expect(html).toContain('service-offer__amount">600</span> <span>€</span> <small>/ 3 mesi</small>');
+    expect(html).toContain('service-offer__amount">249</span> <span>€</span> <small class="service-offer__recurring">+ <strong>49 €</strong>/mese</small>');
     expect(html).toContain("consumi e integrazioni definiti nel preventivo");
     expect(html).toContain("3 mesi al prezzo di 1");
     expect(css).toContain("service-depth-in");
-    expect(html).toContain("600 € complessivi per tre mesi");
     expect(html).not.toContain("IVA");
   });
 
@@ -116,6 +115,35 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html.match(/<s>/g)).toHaveLength(3);
     expect(css).toContain("flex-wrap: nowrap");
     expect(css).toContain("white-space: nowrap");
+    expect(html.match(/class="service-offer__amount"/g)).toHaveLength(3);
+  });
+
+  it("removes the comparison-price accordion and its presentation", () => {
+    expect(html).not.toContain("riferimenti-prezzi");
+    expect(html).not.toContain("Come leggere i prezzi di confronto");
+    expect(css).not.toContain(".price-reference");
+  });
+
+  it("provides a collapsible contact with three progressive steps", () => {
+    expect(html).toContain('<details id="contatti" class="contact-panel" data-contact-panel>');
+    expect(html.match(/data-form-step="[012]"/g)).toHaveLength(3);
+    expect(html).toContain('aria-label="Passaggi della richiesta"');
+    expect(html).toContain("data-step-next");
+    const app = readFileSync(resolve(root, "app.js"), "utf8");
+    expect(app).toContain("contactPanel.open = true");
+    expect(app).toContain("contactPanel.open = false");
+    expect(app).toContain('link.closest("[data-service]")?.dataset.service');
+    expect(app).toContain("invalid?.closest(\"[data-form-step]\")");
+    expect(css).toContain(".contact-stage[hidden]");
+  });
+
+  it("makes service illustrations explorable without new raster assets", () => {
+    const app = readFileSync(resolve(root, "app.js"), "utf8");
+    expect(app).toContain('caption.className = "service-demo"');
+    expect(app).toContain('button.setAttribute("aria-pressed"');
+    expect(app).toContain("animation.currentTime = 0");
+    expect(css).toContain(".service-visual__focus");
+    expect(html.match(/src="\/assets\/service-.*?-v2.webp"/g)).toHaveLength(3);
   });
 
   it("separates web and AI accents and normalizes section subtitles", () => {

@@ -62,6 +62,52 @@
   syncHeader();
   window.addEventListener("scroll", syncHeader, { passive: true });
 
+  const sceneStories = {
+    web: [["Design", "Gerarchia e contenuti guidano la lettura.", "35%", "40%"], ["Responsive", "La stessa esperienza, dal computer allo smartphone.", "76%", "56%"], ["Contatto", "Un invito chiaro a fare il passo successivo.", "38%", "63%"]],
+    social: [["Identità", "Colori e linguaggio visivo restano riconoscibili.", "26%", "43%"], ["Contenuti", "L’identità prende forma nei contenuti.", "52%", "55%"], ["Pubblicazione", "Il calendario organizza la continuità dei contenuti.", "76%", "48%"]],
+    ai: [["Richiesta", "La conversazione parte da una domanda concreta.", "41%", "34%"], ["Risposta", "Informazioni utili, nel contesto della richiesta.", "46%", "51%"], ["Contatto", "La conversazione può diventare un nuovo contatto.", "75%", "55%"]],
+  };
+  document.querySelectorAll("[data-service] .service-visual").forEach((figure) => {
+    const story = sceneStories[figure.closest("[data-service]").dataset.service];
+    if (!story) return;
+    const art = document.createElement("div");
+    art.className = "service-visual__art";
+    art.append(...figure.children);
+    const focus = document.createElement("span");
+    focus.className = "service-visual__focus";
+    focus.setAttribute("aria-hidden", "true");
+    art.append(focus);
+    const caption = document.createElement("figcaption");
+    caption.className = "service-demo";
+    const controls = document.createElement("div");
+    controls.className = "service-demo__steps";
+    controls.setAttribute("role", "group");
+    controls.setAttribute("aria-label", "Esplora le fasi del servizio");
+    const description = document.createElement("p");
+    description.setAttribute("aria-live", "polite");
+    story.forEach(([label, text, x, y], index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      button.setAttribute("aria-pressed", String(index === 0));
+      button.addEventListener("click", () => {
+        controls.querySelectorAll("button").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+        description.textContent = text;
+        focus.style.setProperty("--focus-x", x);
+        focus.style.setProperty("--focus-y", y);
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          figure.querySelector(".service-visual__pulse").getAnimations().forEach((animation) => { animation.currentTime = 0; animation.play(); });
+        }
+      });
+      controls.append(button);
+    });
+    description.textContent = story[0][1];
+    focus.style.setProperty("--focus-x", story[0][2]);
+    focus.style.setProperty("--focus-y", story[0][3]);
+    caption.append(controls, description);
+    figure.append(art, caption);
+  });
+
   if (!reduceMotion && "IntersectionObserver" in window) {
     body.classList.add("motion-ready");
     const revealObserver = new IntersectionObserver(
@@ -142,6 +188,92 @@
     sequenceSections.forEach((section) => sequenceObserver.observe(section));
   }
   if (!contactForm || !formStatus) return;
+
+  const contactPanel = document.querySelector("[data-contact-panel]");
+  const contactContext = document.querySelector("[data-contact-context]");
+  const formSteps = [...contactForm.querySelectorAll("[data-form-step]")];
+  const stepButtons = [...contactForm.querySelectorAll("[data-step-target]")];
+  const nextStep = contactForm.querySelector("[data-step-next]");
+  const previousStep = contactForm.querySelector("[data-step-back]");
+  let currentStep = 0;
+
+  function syncContactContext() {
+    const selected = contactForm.querySelector('[name="need"]:checked');
+    contactContext.textContent = selected ? selected.nextElementSibling.textContent : "Scegli da dove vuoi partire.";
+    contactPanel.dataset.kind = selected?.value || "";
+  }
+
+  function showStep(index, focus = false) {
+    currentStep = index;
+    formSteps.forEach((step, i) => { step.hidden = i !== index; });
+    stepButtons.forEach((button, i) => {
+      if (i === index) button.setAttribute("aria-current", "step");
+      else button.removeAttribute("aria-current");
+      button.classList.toggle("is-complete", i < index);
+    });
+    previousStep.hidden = index === 0;
+    nextStep.hidden = index === formSteps.length - 1;
+    setStatus("");
+    if (focus) formSteps[index].querySelector("input, textarea")?.focus({ preventScroll: true });
+  }
+
+  function goToStep(index) {
+    for (let i = 0; i < index; i++) {
+      const invalid = [...formSteps[i].querySelectorAll("input, textarea")].find((field) => !field.validity.valid);
+      if (invalid) {
+        showStep(i);
+        invalid.reportValidity();
+        setStatus("Completa i campi indicati per continuare.", "error");
+        return;
+      }
+    }
+    showStep(index, true);
+  }
+
+  contactForm.querySelector("[data-contact-steps]").hidden = false;
+  contactForm.querySelector("[data-contact-actions]").hidden = false;
+  nextStep.addEventListener("click", () => goToStep(currentStep + 1));
+  previousStep.addEventListener("click", () => showStep(currentStep - 1, true));
+  stepButtons.forEach((button) => button.addEventListener("click", () => goToStep(Number(button.dataset.stepTarget))));
+  contactPanel.addEventListener("toggle", () => {
+    if (contactPanel.open && contactForm.classList.contains("is-success")) {
+      contactForm.classList.remove("is-success");
+      syncContactContext();
+      setStatus("");
+    }
+  });
+  contactForm.addEventListener("change", (event) => {
+    if (event.target.name === "need") syncContactContext();
+  });
+  contactForm.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && event.target.matches("input") && currentStep < 2) {
+      event.preventDefault();
+      goToStep(currentStep + 1);
+    }
+  });
+
+  function openContact(service) {
+    contactPanel.open = true;
+    contactForm.classList.remove("is-success");
+    const need = { web: "web", social: "social", ai: "automation" }[service];
+    if (need) {
+      contactForm.querySelector(`[name="need"][value="${need}"]`).checked = true;
+      showStep(1);
+    }
+    syncContactContext();
+  }
+  document.querySelectorAll('a[href="#contatti"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      openContact(link.closest("[data-service]")?.dataset.service);
+      requestAnimationFrame(() => contactPanel.querySelector("summary").focus({ preventScroll: true }));
+    });
+  });
+  window.addEventListener("hashchange", () => {
+    if (window.location.hash === "#contatti") openContact();
+  });
+  showStep(0);
+  if (window.location.hash === "#contatti") openContact();
 
   const startedAt = contactForm.elements.namedItem("startedAt");
   const turnstileShell = document.querySelector("[data-turnstile]");
@@ -224,6 +356,9 @@
     contactForm.classList.remove("is-success");
 
     if (!contactForm.checkValidity()) {
+      const invalid = contactForm.querySelector(":invalid");
+      const step = invalid?.closest("[data-form-step]");
+      if (step) showStep(Number(step.dataset.formStep));
       contactForm.reportValidity();
       setStatus("Controlla i campi indicati e riprova.", "error");
       return;
@@ -277,7 +412,11 @@
 
       contactForm.reset();
       contactForm.classList.add("is-success");
+      showStep(0);
       setStatus("Messaggio inviato. Ti risponderemo appena possibile.", "success");
+      contactContext.textContent = "Messaggio inviato. Ti risponderemo appena possibile.";
+      contactPanel.open = false;
+      contactPanel.querySelector("summary").focus({ preventScroll: true });
       if (startedAt) startedAt.value = String(Date.now());
       turnstileToken = "";
       if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
