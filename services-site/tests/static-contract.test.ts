@@ -93,13 +93,13 @@ describe("TooolVibes Servizi static contract", () => {
     for (const service of ["web", "social", "ai"]) {
       expect(html).toContain(`data-service-price="${service}"`);
     }
-    expect(html).toContain("Riferimento indicativo <span>1.299 €</span>");
+    expect(html).toContain("Anziché <s>1.299 €</s>");
     expect(html).not.toContain("998 €");
-    expect(html).toContain("Tre mesi a prezzo ordinario <s>1.800 €</s>");
+    expect(html).toContain("Anziché <s>1.800 €</s>");
+    expect(html).toContain("Anziché <s>499 € + 79 €/mese</s>");
     expect(html).toContain('599 <span>€</span>');
     expect(html).toContain('600 <span>€</span> <small>/ 3 mesi</small>');
-    expect(html).toContain('249 <span>€</span> <small>attivazione</small>');
-    expect(html).toContain('+ <strong>49 €</strong> / mese di gestione');
+    expect(html).toContain('249 <span>€</span> <small class="service-offer__recurring">+ <strong>49 €</strong>/mese</small>');
     expect(html).toContain("consumi e integrazioni definiti nel preventivo");
     expect(html).toContain("3 mesi al prezzo di 1");
     expect(css).toContain("service-depth-in");
@@ -107,13 +107,23 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).not.toContain("IVA");
   });
 
-  it("highlights final prices without inventing historical discounts", () => {
+  it("highlights compact final prices and explicit comparison amounts", () => {
     expect(css).toContain("--price-accent: #7cebb4");
     expect(css).toContain("--price-comparison: #eea0aa");
     expect(css).toContain("price-arrive .9s");
     expect(css).toContain("price-light 2.4s");
-    expect(html).not.toContain("<s>1.299 €</s>");
-    expect(html.match(/<s>/g)).toHaveLength(1);
+    expect(html).not.toContain("Riferimento indicativo");
+    expect(html.match(/<s>/g)).toHaveLength(3);
+    expect(css).toContain("flex-wrap: nowrap");
+    expect(css).toContain("white-space: nowrap");
+  });
+
+  it("separates web and AI accents and normalizes section subtitles", () => {
+    expect(css).toContain("--service-web: #6fa9ff");
+    expect(css).toContain("--service-ai: #70e4af");
+    expect(css).toContain("--subtitle-size:");
+    expect(css).toContain("font-size: var(--subtitle-size)");
+    expect(css).toContain("@keyframes control-response");
   });
 
   it("choreographs native preview details and starts service motion at the visual", () => {
