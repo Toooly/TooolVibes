@@ -54,14 +54,39 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain(".ecosystem");
   });
 
-  it("animates secondary details without brighter markers or perpetual motion", () => {
+  it("composes the hero on two lines with restrained orbital service indices", () => {
+    expect(html.match(/class="hero__title-line"/g)).toHaveLength(2);
+    expect(html).toContain("Il digitale, costruito</span>");
+    expect(html.match(/class="journey__index" aria-hidden="true">[123]<\/span>/g)).toHaveLength(3);
+    expect(css).toContain("white-space: nowrap");
+    expect(css).toContain("@keyframes index-orbit");
+    expect(css).toContain("@keyframes control-sheen");
+    expect(css).toContain(".button:disabled::before { display: none; }");
+  });
+
+  it("animates benefit icons without bullets or perpetual motion", () => {
     expect(css).toContain("@media (prefers-reduced-motion: no-preference)");
     expect(css).toContain("detail-arrive .6s");
     expect(css).toContain("detail-signal 1.6s ease-in-out var(--detail-delay) 2");
-    const marker = css.match(/\.plain-list li::before \{([^}]+)\}/)?.[1];
-    expect(marker).toContain("width: .2rem");
-    expect(marker).not.toContain("box-shadow");
-    expect(marker).toContain("var(--ink-muted)");
+    expect(css).toContain(".service.is-in-view .service-benefits svg");
+    expect(css).not.toContain(".plain-list");
+    expect(css).not.toContain(".flow-legend");
+  });
+
+  it("uses the exact requested benefit lists with decorative native icons", () => {
+    const expected = [
+      ["Restyling siti web", "Design responsive", "Prenotazioni online", "Ottimizzazione SEO", "Integrazione WhatsApp", "Moduli di acquisizione contatti", "Manutenzione e assistenza"],
+      ["Identità professionale", "Contenuti automatici", "Social sempre attivi", "Tempo risparmiato"],
+      ["Risposte immediate", "Assistenza 24/7", "Nuovi contatti", "Prenotazioni automatiche", "Follow-up intelligenti"],
+    ];
+    const lists = [...html.matchAll(/<ul class="service-benefits"[^>]*>([\s\S]*?)<\/ul>/g)];
+    expect(lists).toHaveLength(3);
+    lists.forEach((list, index) => {
+      expect([...list[1].matchAll(/<span>([^<]+)<\/span>/g)].map((match) => match[1])).toEqual(expected[index]);
+      expect(list[1].match(/<svg aria-hidden="true"/g)).toHaveLength(expected[index].length);
+    });
+    expect(html).not.toContain('class="plain-list"');
+    expect(html).not.toContain('class="flow-legend"');
   });
 
   it("shows service-specific prices with genuine contact links", () => {
