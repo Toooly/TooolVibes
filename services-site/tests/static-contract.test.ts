@@ -111,7 +111,7 @@ describe("TooolVibes Servizi static contract", () => {
   it("highlights compact final prices and explicit comparison amounts", () => {
     expect(css).toContain("--price-accent: #7cebb4");
     expect(css).toContain("--price-comparison: #eea0aa");
-    expect(css).toContain("price-border-glow 2.4s");
+    expect(css).toContain("price-border-flow 4.8s");
     expect(html).not.toContain("Riferimento indicativo");
     expect(html.match(/<s>/g)).toHaveLength(3);
     expect(css).toContain("flex-wrap: nowrap");
@@ -128,10 +128,13 @@ describe("TooolVibes Servizi static contract", () => {
   it("places prices in a dedicated right column and shows shared monthly capacity without fake scarcity", () => {
     expect(html.match(/class="service-offer__value"/g)).toHaveLength(3);
     expect(html.match(/class="service-capacity"/g)).toHaveLength(3);
-    expect(html.match(/Fino a 4, tra tutti i servizi\./g)).toHaveLength(3);
-    expect(html).not.toContain('Fino a 3, tra tutti i servizi.');
-    expect(html.match(/class="service-capacity__number" aria-hidden="true">04/g)).toHaveLength(3);
-    expect(html.match(/class="service-capacity__slots" aria-hidden="true"><i><\/i><i><\/i><i><\/i><i><\/i>/g)).toHaveLength(3);
+    expect(html.match(/Pianificazione del mese: <b>3 spazi su 5\.<\/b>/g)).toHaveLength(3);
+    expect(html.match(/class="service-capacity__note">Le richieste restano aperte\./g)).toHaveLength(3);
+    expect(html.match(/Facciamo spazio alla tua idea\./g)).toHaveLength(3);
+    expect(html).not.toContain('Fino a 4, tra tutti i servizi.');
+    expect(html.match(/class="service-capacity__number" aria-hidden="true"/g)).toHaveLength(3);
+    expect(html.match(/<span>05<\/span><span>04<\/span><span>03<\/span>/g)).toHaveLength(3);
+    expect(html.match(/class="is-assigned"/g)).toHaveLength(6);
     expect(html.match(/<a class="service-capacity" href="#contatti"/g)).toHaveLength(3);
     expect(css).not.toContain('@keyframes capacity-signal');
     expect(html).not.toMatch(/posti rimasti|scade tra|data-countdown/i);
@@ -139,15 +142,29 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain("grid-template-columns: minmax(0,1fr) auto");
   });
 
-  it("shares one CTA interaction and animates only the pricing border", () => {
+  it("shares one CTA interaction and animates the border and confirmed capacity without moving prices", () => {
     expect(css).toContain('.button:is(:hover,:focus-visible,:active):not(:disabled)::before { animation: control-sheen .75s');
     expect(css).not.toContain('animation: control-response');
     expect(css).not.toContain('.button--secondary:is(:hover,:focus-visible) svg');
-    expect(css).toContain('.service-offer.is-in-view::before { animation: price-border-glow 2.4s ease-in-out 2 both');
+    expect(css).toContain('.service-offer.is-in-view::after { animation: price-border-flow 4.8s ease-in-out infinite alternate');
+    expect(css).toContain('mask-composite: exclude');
+    expect(css).toContain('opacity: .85');
+    expect(css).toContain('@keyframes capacity-count');
+    expect(css).toContain('@keyframes capacity-tone');
     for (const animation of ['price-arrive', 'price-light', 'price-line', 'capacity-slot', 'capacity-arrive', 'capacity-orbit', 'capacity-response']) expect(css).not.toContain(`@keyframes ${animation}`);
     expect(css).not.toContain('.service-offer__price::before');
     const app = readFileSync(resolve(root, "app.js"), "utf8");
     expect(app).toContain('querySelectorAll(".service-offer").forEach((element) => sceneObserver.observe(element))');
+  });
+
+  it("uses five native scarcity arcs and bounded neon surfaces without changing offer copy", () => {
+    expect(html.match(/class="service-capacity__orbit"/g)).toHaveLength(3);
+    expect(html.match(/<circle cx="24" cy="24" r="21" pathLength="100"\/>/g)).toHaveLength(15);
+    expect(css).toContain('.service-capacity__orbit circle:nth-child(n+4)');
+    expect(css).toContain('@keyframes capacity-ring-status');
+    expect(css).toContain('text-shadow: 0 0 1.2rem rgba(124,235,180,.16)');
+    expect(css).not.toContain('.service-capacity__number::before');
+    expect(css).toContain('.service-capacity small b { color: #f5ce8b; font-weight: 650; white-space: nowrap; }');
   });
 
   it("provides a collapsible contact with three progressive steps", () => {
