@@ -328,6 +328,22 @@
   let turnstileWidgetId = null;
   let turnstileToken = "";
   let turnstilePromise = null;
+  let tokenIssuedAt = 0;
+  let verificationWaiter = null;
+
+  function clearVerification() {
+    turnstileToken = "";
+    tokenIssuedAt = 0;
+  }
+
+  function finishVerification(error, token) {
+    const waiter = verificationWaiter;
+    if (!waiter) return;
+    verificationWaiter = null;
+    clearTimeout(waiter.timer);
+    if (error) waiter.reject(error);
+    else waiter.resolve(token);
+  }
 
   if (startedAt) startedAt.value = String(Date.now());
 
@@ -340,7 +356,7 @@
   async function loadTurnstile() {
     if (turnstileWidgetId !== null || turnstilePromise) return turnstilePromise;
     turnstilePromise = (async () => {
-      const configResponse = await fetch("/api/config", { headers: { Accept: "application/json" } });
+      const configResponse = await fetch("/api/config", { headers: { Accept: "application/json" }, signal: AbortSignal.timeout(8_000) });
       if (!configResponse.ok) throw new Error("config-unavailable");
       const config = await configResponse.json();
       const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
@@ -354,8 +370,9 @@
           script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
           script.async = true;
           script.defer = true;
-          script.onload = resolve;
-          script.onerror = () => reject(new Error("turnstile-load-failed"));
+          const timer = setTimeout(() => { script.remove(); reject(new Error("turnstile-load-timeout")); }, 15_000);
+          script.onload = () => { clearTimeout(timer); resolve(); };
+          script.onerror = () => { clearTimeout(timer); script.remove(); reject(new Error("turnstile-load-failed")); };
           document.head.append(script);
         });
       }
@@ -364,18 +381,33 @@
       turnstileWidgetId = window.turnstile.render(turnstileShell, {
         sitekey: siteKey,
         action: "services_contact",
+        execution: "execute",
         appearance: "interaction-only",
+        "refresh-expired": "manual",
         theme: "dark",
         size: "flexible",
         callback: (token) => {
           turnstileToken = token;
+          tokenIssuedAt = Date.now();
+          finishVerification(null, token);
         },
         "expired-callback": () => {
-          turnstileToken = "";
+          clearVerification();
+          finishVerification(new Error("verification-expired"));
         },
         "error-callback": () => {
-          turnstileToken = "";
-          setStatus("La verifica anti-spam non è disponibile. Riprova tra poco.", "error");
+          clearVerification();
+          finishVerification(new Error("verification-unavailable"));
+          return true;
+        },
+        "timeout-callback": () => finishVerification(new Error("verification-timeout")),
+        "unsupported-callback": () => finishVerification(new Error("verification-unsupported")),
+        "before-interactive-callback": () => {
+          if (!verificationWaiter) return;
+          clearTimeout(verificationWaiter.timer);
+          verificationWaiter.timer = setTimeout(() => finishVerification(new Error("verification-timeout")), 120_000);
+          setStatus("Conferma di non essere un robot nel controllo qui sopra. Poi invieremo la richiesta.");
+          turnstileShell.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
         },
       });
     })();
@@ -387,6 +419,21 @@
       throw error;
     }
     return turnstilePromise;
+  }
+
+  async function acquireVerification(force = false) {
+    await loadTurnstile();
+    if (!force && turnstileToken && Date.now() - tokenIssuedAt < 240_000 && !window.turnstile.isExpired(turnstileWidgetId)) return turnstileToken;
+    clearVerification();
+    return new Promise((resolve, reject) => {
+      verificationWaiter = { resolve, reject, timer: setTimeout(() => finishVerification(new Error("verification-timeout")), 30_000) };
+      try {
+        window.turnstile.reset(turnstileWidgetId);
+        window.turnstile.execute(turnstileWidgetId);
+      } catch {
+        finishVerification(new Error("verification-unavailable"));
+      }
+    });
   }
 
   const formObserver = "IntersectionObserver" in window
@@ -415,30 +462,17 @@
       return;
     }
 
-    try {
-      await loadTurnstile();
-    } catch {
-      setStatus("La verifica anti-spam non è disponibile. Riprova tra poco.", "error");
-      return;
-    }
-
-    if (!turnstileToken) {
-      setStatus("Completa la verifica anti-spam per inviare il messaggio.", "error");
-      return;
-    }
-
-    if (submitPending) return;
     submitPending = true;
+    contactForm.setAttribute("aria-busy", "true");
     contactPanel.dataset.state = "sending";
-    contactContext.textContent = "Stiamo inviando la tua richiesta…";
+    contactContext.textContent = "Verifichiamo la tua richiesta…";
 
     const submitButton = contactForm.querySelector('button[type="submit"]');
     const submitLabel = submitButton.querySelector("span");
     const originalLabel = submitLabel.textContent;
     submitButton.disabled = true;
-    submitLabel.textContent = "Invio in corso…";
-    setStatus("Stiamo inviando il messaggio.");
-    track("contact_submit");
+    submitLabel.textContent = "Verifica in corso…";
+    setStatus("Verifichiamo l’invio. Se richiesto, completa il controllo qui sopra.");
 
     const data = new FormData(contactForm);
     const payload = {
@@ -450,18 +484,35 @@
       privacyAccepted: data.get("privacyAccepted") === "on",
       companyWebsite: String(data.get("companyWebsite") || ""),
       startedAt: Number(data.get("startedAt") || 0),
-      turnstileToken,
+      turnstileToken: "",
     };
+    const lockedFields = [...contactForm.querySelectorAll('input:not(:disabled),textarea:not(:disabled),button:not(:disabled)')];
+    lockedFields.forEach((field) => { field.disabled = true; });
 
     let failureMessage = "Il messaggio non è partito. Riprova tra poco.";
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) {
+      failureMessage = "Non riusciamo a completare il controllo di sicurezza. I dati sono ancora qui: riprova tra poco.";
+      payload.turnstileToken = await acquireVerification();
+      track("contact_submit");
+      for (let attempt = 0; attempt < 2; attempt++) {
+        submitLabel.textContent = "Invio in corso…";
+        setStatus("Stiamo inviando il messaggio.");
+        failureMessage = "Non abbiamo ricevuto conferma dell’invio. I dati restano nel modulo: riprova tra poco.";
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload),
+          signal: AbortSignal.timeout(30_000),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (response.ok) break;
+        if (response.status === 400 && result.code === "verification_required" && attempt === 0) {
+          submitLabel.textContent = "Rinnovo verifica…";
+          setStatus("Rinnoviamo il controllo di sicurezza. Non devi ricompilare nulla.");
+          failureMessage = "Il controllo non è stato completato. I dati restano nel modulo: riprova tra poco.";
+          payload.turnstileToken = await acquireVerification(true);
+          continue;
+        }
         failureMessage = result.message || failureMessage;
         throw new Error("request-failed");
       }
@@ -475,16 +526,16 @@
       contactPanel.open = false;
       contactPanel.querySelector("summary").focus({ preventScroll: true });
       if (startedAt) startedAt.value = String(Date.now());
-      turnstileToken = "";
-      if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
+      clearVerification();
       track("contact_success");
     } catch {
       setStatus(failureMessage, "error");
-      if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
-      turnstileToken = "";
+      clearVerification();
       track("contact_error");
     } finally {
       submitPending = false;
+      contactForm.removeAttribute("aria-busy");
+      lockedFields.forEach((field) => { field.disabled = false; });
       delete contactPanel.dataset.state;
       if (!contactForm.classList.contains("is-success")) {
         syncContactContext();

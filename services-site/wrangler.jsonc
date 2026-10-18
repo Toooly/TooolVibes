@@ -32,6 +32,14 @@
         "limit": 30,
         "period": 60
       }
+    },
+    {
+      "name": "THANK_YOU_RATE_LIMITER",
+      "namespace_id": "2026101802",
+      "simple": {
+        "limit": 1,
+        "period": 60
+      }
     }
   ],
   "secrets": {

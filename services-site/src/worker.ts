@@ -1,3 +1,5 @@
+import { thankYouEmail } from "./thank-you-email";
+
 const MAX_CONTACT_BYTES = 24_000;
 const MAX_EVENT_BYTES = 512;
 const MIN_FORM_TIME_MS = 2_500;
@@ -63,7 +65,9 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(value);
+  const local = value.split("@")[0];
+  return local.length <= 64 && !local.startsWith(".") && !local.endsWith(".") && !local.includes("..") &&
+    /^[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z](?:[a-z0-9-]{0,61}[a-z0-9])$/iu.test(value);
 }
 
 export function parseContactPayload(input: unknown): ContactPayload | null {
@@ -131,8 +135,16 @@ async function readJsonBody(request: Request, limit: number) {
   return JSON.parse(text) as unknown;
 }
 
-async function verifyTurnstile(env: Env, request: Request, token: string) {
-  if (!token || !env.TOOOLVIBES_TURNSTILE_SECRET_KEY) return false;
+type Verification = { ok: true } | { ok: false; unavailable: boolean };
+
+function verificationFailure(reason: string, unavailable = false): Verification {
+  console.warn(JSON.stringify({ event: "services_verification_failed", reason }));
+  return { ok: false, unavailable };
+}
+
+async function verifyTurnstile(env: Env, request: Request, token: string): Promise<Verification> {
+  if (!env.TOOOLVIBES_TURNSTILE_SECRET_KEY) return verificationFailure("missing-secret", true);
+  if (!token) return verificationFailure("missing-token");
 
   const body = new URLSearchParams({
     secret: env.TOOOLVIBES_TURNSTILE_SECRET_KEY,
@@ -142,43 +154,60 @@ async function verifyTurnstile(env: Env, request: Request, token: string) {
   const remoteIp = request.headers.get("CF-Connecting-IP");
   if (remoteIp) body.set("remoteip", remoteIp);
 
-  try {
-    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      body,
-      signal: AbortSignal.timeout(5_000),
-    });
-    if (!response.ok) return false;
-    const result = (await response.json()) as TurnstileResponse;
-    const requestHost = new URL(request.url).hostname;
-    const hostnameMatches =
-      requestHost === "localhost" ||
-      requestHost === "127.0.0.1" ||
-      result.hostname === env.SITE_HOST;
-    return result.success === true && result.action === TURNSTILE_ACTION && hostnameMatches;
-  } catch {
-    return false;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+        signal: AbortSignal.timeout(5_000),
+      });
+      if (!response.ok) {
+        if (attempt === 0 && response.status >= 500) continue;
+        return verificationFailure("upstream-http", true);
+      }
+      const result = (await response.json()) as TurnstileResponse;
+      if (result?.success !== true) {
+        const knownCodes = new Set(["missing-input-secret", "invalid-input-secret", "missing-input-response", "invalid-input-response", "bad-request", "timeout-or-duplicate", "internal-error"]);
+        const codes = Array.isArray(result?.["error-codes"]) ? result["error-codes"].filter((code) => knownCodes.has(code)) : [];
+        if (attempt === 0 && codes.includes("internal-error")) continue;
+        const unavailable = codes.some((code) => ["missing-input-secret", "invalid-input-secret", "internal-error", "bad-request"].includes(code));
+        return verificationFailure(codes.join(",") || "unclassified-rejection", unavailable);
+      }
+      const requestHost = new URL(request.url).hostname;
+      const hostnameMatches =
+        requestHost === "localhost" ||
+        requestHost === "127.0.0.1" ||
+        result.hostname === env.SITE_HOST;
+      if (result.action !== TURNSTILE_ACTION) return verificationFailure("action-mismatch", true);
+      if (!hostnameMatches) return verificationFailure("hostname-mismatch", true);
+      return { ok: true };
+    } catch {
+      if (attempt === 1) return verificationFailure("upstream-unavailable", true);
+    }
   }
+  return verificationFailure("upstream-unavailable", true);
 }
 
 type ResendMessage = {
-  to: string;
+  to: string[];
   subject: string;
   html: string;
   text: string;
   replyTo?: string;
 };
 
-async function sendEmail(env: Env, message: ResendMessage) {
+async function sendEmail(env: Env, message: ResendMessage, idempotencyKey: string) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
       "Content-Type": "application/json",
+      "Idempotency-Key": idempotencyKey,
     },
     body: JSON.stringify({
       from: env.SERVICES_EMAIL_FROM,
-      to: [message.to],
+      to: message.to,
       subject: message.subject,
       html: message.html,
       text: message.text,
@@ -193,12 +222,17 @@ async function sendEmail(env: Env, message: ResendMessage) {
   }
 }
 
-async function notifyLead(env: Env, payload: ContactPayload) {
+async function notifyLead(env: Env, payload: ContactPayload, deliveryId: string) {
   const service = NEED_LABELS[payload.need];
   const companyLine = payload.company ? `\nAzienda o progetto: ${payload.company}` : "";
+  const recipients = [...new Set((env.SERVICES_NOTIFY_EMAIL || "").split(",").map((email) => email.trim().toLowerCase()))];
+  if (!recipients.length || recipients.length > 10 || recipients.some((email) => !isValidEmail(email))) {
+    console.error(JSON.stringify({ event: "services_recipient_configuration_invalid" }));
+    throw new Error("recipient-configuration-invalid");
+  }
 
   await sendEmail(env, {
-    to: env.SERVICES_NOTIFY_EMAIL,
+    to: recipients,
     replyTo: payload.email,
     subject: `Nuova richiesta servizi: ${service}`,
     html: `
@@ -212,10 +246,30 @@ async function notifyLead(env: Env, payload: ContactPayload) {
       <p><strong>Origine:</strong> servizi.tooolvibes.eu</p>
     `,
     text: `Nuova richiesta servizi\nNome: ${payload.name}\nEmail: ${payload.email}${companyLine}\nServizio: ${service}\n\n${payload.message}\n\nOrigine: servizi.tooolvibes.eu`,
-  });
+  }, `services-lead/${deliveryId}`);
 }
 
-async function handleContact(request: Request, env: Env) {
+async function acknowledgeLead(env: Env, payload: ContactPayload, deliveryId: string) {
+  try {
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(payload.email));
+    const key = [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    if (!(await env.THANK_YOU_RATE_LIMITER.limit({ key })).success) return;
+    const message = { to: [payload.email], replyTo: "info@tooolvibes.eu", ...thankYouEmail(NEED_LABELS[payload.need]) };
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        await sendEmail(env, message, `services-thanks/${deliveryId}`);
+        console.log(JSON.stringify({ event: "services_confirmation_sent" }));
+        return;
+      } catch {
+        if (attempt === 1) throw new Error("confirmation-failed");
+      }
+    }
+  } catch {
+    console.error(JSON.stringify({ event: "services_confirmation_failed" }));
+  }
+}
+
+async function handleContact(request: Request, env: Env, ctx: ExecutionContext) {
   if (!sameOrigin(request)) return json({ ok: false, message: "Origine non autorizzata." }, 403);
   if (!request.headers.get("Content-Type")?.toLowerCase().startsWith("application/json")) {
     return json({ ok: false, message: "Formato della richiesta non valido." }, 415);
@@ -242,17 +296,26 @@ async function handleContact(request: Request, env: Env) {
   if (!isPlausibleSubmissionTime(payload.startedAt)) {
     return json({ ok: false, message: "Invio troppo rapido o sessione scaduta. Ricarica e riprova." }, 400);
   }
-  if (!(await verifyTurnstile(env, request, payload.turnstileToken))) {
-    return json({ ok: false, message: "Verifica anti-spam non riuscita. Riprova." }, 400);
+  const verification = await verifyTurnstile(env, request, payload.turnstileToken);
+  if (!verification.ok) {
+    return json({
+      ok: false,
+      code: verification.unavailable ? "verification_unavailable" : "verification_required",
+      message: verification.unavailable
+        ? "La verifica di sicurezza è temporaneamente non disponibile. I dati restano nel modulo: riprova tra poco."
+        : "Rinnoviamo la verifica di sicurezza. I dati restano nel modulo.",
+    }, verification.unavailable ? 503 : 400);
   }
 
+  const deliveryId = crypto.randomUUID();
   try {
-    await notifyLead(env, payload);
+    await notifyLead(env, payload, deliveryId);
   } catch {
     return json({ ok: false, message: "Il messaggio non è partito. Riprova tra poco." }, 502);
   }
 
   console.log(JSON.stringify({ event: "services_contact_received", need: payload.need }));
+  ctx.waitUntil(acknowledgeLead(env, payload, deliveryId));
   return json({ ok: true, message: "Messaggio inviato." });
 }
 
@@ -274,7 +337,7 @@ async function handleEvent(request: Request) {
 }
 
 export default {
-  async fetch(request, env): Promise<Response> {
+  async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/config" && request.method === "GET") {
@@ -286,7 +349,7 @@ export default {
       });
     }
     if (url.pathname === "/api/contact" && request.method === "POST") {
-      return handleContact(request, env);
+      return handleContact(request, env, ctx);
     }
     if (url.pathname === "/api/contact") {
       return new Response(JSON.stringify({ ok: false, message: "Metodo non disponibile." }), {

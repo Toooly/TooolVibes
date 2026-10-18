@@ -483,6 +483,7 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 .method-ready:not([data-phase="0"]) .method-browser { transform: rotate(-1deg); }.method-ready[data-phase="2"] .method-block,.method-ready[data-phase="3"] .method-block { border-color: transparent; background: #111e37; }.method-ready[data-phase="2"] .method-image img,.method-ready[data-phase="3"] .method-image img { opacity: 1; }.method-ready[data-phase="2"] .method-phone,.method-ready[data-phase="3"] .method-phone { opacity: 1; transform: none; }.method-ready[data-phase="2"] .method-copy em,.method-ready[data-phase="3"] .method-copy em { background: var(--cyan); }.method-ready[data-phase="2"] .method-blueprint,.method-ready[data-phase="3"] .method-blueprint { opacity: .15; }
 .method-ready[data-phase="3"] .method-chart { opacity: 1; }.method-ready[data-phase="3"] .method-chart__line { stroke-dashoffset: 0; }.method-ready[data-phase="3"] .method-page { opacity: .2; }.method-page { transition: opacity .7s; }
 @media (max-width: 48rem) {
+  .method-ready .method-track { height: 340svh; min-height: 110rem; }
   .method-ready .method-frame { top: 6.25rem; grid-template-columns: minmax(0,1fr); gap: 1rem; padding-block: 1rem; }
   .method-art { aspect-ratio: 1.7; }.method-copy b { font-size: clamp(.7rem,3vw,1rem); }.method-phone b { font-size: clamp(.5rem,2.2vw,.7rem); }
   .method-ready .process-line { min-height: 8.5rem; }.method-ready .process-step__number { float: left; margin: .1rem 1rem 2rem 0; font-size: 2.5rem; }.method-ready .process-step h3 { font-size: 1.5rem; }

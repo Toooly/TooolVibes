@@ -155,6 +155,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(app).toContain('preference.addEventListener("change", syncMethodMotion)');
     expect(app).toContain('section.classList.toggle("method-ready", enabled)');
     expect(app).toContain("requestAnimationFrame(updateMethod)");
+    expect(css).toContain(".method-ready .method-track { height: 340svh; min-height: 110rem; }");
   });
 
   it("guides form completion with inline errors and a message hint", () => {
