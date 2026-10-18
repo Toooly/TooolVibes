@@ -119,6 +119,19 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html.match(/class="service-offer__amount"/g)).toHaveLength(3);
   });
 
+  it("highlights service names in responsive accent pills, separate from promotions", () => {
+    expect([...html.matchAll(/class="service-offer__label">([^<]+)<\/p>/g)].map((match) => match[1])).toEqual([
+      "Sito web", "Automazione contenuti", "Attivazione chatbot",
+    ]);
+    const labelStyles = css.match(/\.service-offer__label \{([^}]+)\}/)?.[1];
+    expect(labelStyles).toContain("width: fit-content");
+    expect(labelStyles).toContain("max-width: 100%");
+    expect(labelStyles).toContain("border-radius: 999px");
+    expect(labelStyles).toContain("var(--service-accent)");
+    expect(labelStyles).toContain("box-shadow:");
+    expect(html).toContain('<p class="service-offer__promotion">3 mesi al prezzo di 1</p>');
+  });
+
   it("removes the comparison-price accordion and its presentation", () => {
     expect(html).not.toContain("riferimenti-prezzi");
     expect(html).not.toContain("Come leggere i prezzi di confronto");
