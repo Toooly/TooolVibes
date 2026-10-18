@@ -165,7 +165,6 @@
 
       <section id="servizi" class="service service--web section-shell" aria-labelledby="service-web-title" data-service="web">
         <figure class="service-visual service-visual--web" data-reveal>
-          <svg class="service-visual__flow" viewBox="0 0 1000 650" fill="none" preserveAspectRatio="none" aria-hidden="true"><path class="service-visual__track" d="M110 465C-25 565 200 635 440 590S965 490 884 352"/><path class="service-visual__pulse" pathLength="100" d="M110 465C-25 565 200 635 440 590S965 490 884 352"/></svg>
           <img src="/assets/service-web-v2.webp" srcset="/assets/service-web-v2-640.webp 640w, /assets/service-web-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 72rem) calc(100vw - 5rem), 48vw" width="1280" height="721" loading="lazy" decoding="async" alt="Esperienza web coordinata su laptop e smartphone con atmosfera orbitale" />
         </figure>
         <div class="section-copy" data-reveal>
@@ -194,7 +193,6 @@
 
       <section id="contenuti" class="service service--social section-shell" aria-labelledby="service-social-title" data-service="social">
         <figure class="service-visual service-visual--social" data-reveal>
-          <svg class="service-visual__flow" viewBox="0 0 1000 650" fill="none" preserveAspectRatio="none" aria-hidden="true"><path class="service-visual__track" d="M95 350C-10 510 270 635 525 565S995 440 892 250"/><path class="service-visual__pulse" pathLength="100" d="M95 350C-10 510 270 635 525 565S995 440 892 250"/></svg>
           <img src="/assets/service-social-v2.webp" srcset="/assets/service-social-v2-640.webp 640w, /assets/service-social-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 72rem) calc(100vw - 5rem), 48vw" width="1280" height="640" loading="lazy" decoding="async" alt="Identità visiva trasformata in contenuti e calendario editoriale" />
         </figure>
         <div class="section-copy" data-reveal>
@@ -245,17 +243,32 @@
         </div>
 
         <figure class="service-visual service-visual--chatbot" data-reveal>
-          <svg class="service-visual__flow" viewBox="0 0 1000 650" fill="none" preserveAspectRatio="none" aria-hidden="true"><path class="service-visual__track" d="M105 300C-30 475 220 640 530 575S990 420 900 285"/><path class="service-visual__pulse" pathLength="100" d="M105 300C-30 475 220 640 530 575S990 420 900 285"/></svg>
           <img src="/assets/service-chatbot-v2.webp" srcset="/assets/service-chatbot-v2-640.webp 640w, /assets/service-chatbot-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 72rem) calc(100vw - 5rem), 48vw" width="1280" height="854" loading="lazy" decoding="async" alt="Interfaccia chatbot coordinata tra desktop, smartphone, canali e messaggi" />
         </figure>
       </section>
 
-      <section id="processo" class="process section-shell" aria-labelledby="process-title" data-sequence>
+      <section id="processo" class="process section-shell" aria-labelledby="process-title">
         <div class="process__heading" data-reveal>
           <p class="section-kicker">Come lavoriamo</p>
           <h2 id="process-title">Dall’idea a qualcosa che <span class="text-gradient">funziona.</span></h2>
           <p>Un percorso semplice, trasparente e costruito intorno ai tuoi obiettivi.</p>
         </div>
+        <div class="method-track" data-method-track>
+        <div class="method-frame">
+          <div class="method-art" aria-hidden="true" hidden>
+            <div class="method-blueprint"></div>
+            <div class="method-browser">
+              <div class="method-chrome"><i></i><i></i><i></i><span></span></div>
+              <div class="method-page">
+                <div class="method-block method-copy"><b>Il tuo prossimo<br />progetto.</b><i></i><i></i><em></em></div>
+                <div class="method-block method-image"><img src="/assets/journey-portal.webp" width="960" height="640" alt="" loading="lazy" decoding="async" /></div>
+                <div class="method-block method-tile"><i></i><i></i></div>
+                <div class="method-block method-tile"><i></i><i></i></div>
+              </div>
+              <svg class="method-chart" viewBox="0 0 400 190" fill="none"><path class="method-chart__guide" d="M25 155H375M25 105H375M25 55H375"/><path class="method-chart__line" pathLength="100" d="M25 154C78 151 73 114 127 125S176 74 223 85 269 45 312 55 342 24 375 20"/></svg>
+            </div>
+            <div class="method-phone"><span></span><b>Il tuo prossimo<br />progetto.</b><img src="/assets/journey-portal.webp" alt="" width="960" height="640" loading="lazy" decoding="async" /><i></i><i></i></div>
+          </div>
         <ol class="process-line">
           <li class="process-step">
             <div class="process-art" aria-hidden="true">
@@ -304,6 +317,9 @@
             <div class="process-step__copy"><span class="process-step__number">04</span><h3>Ottimizziamo</h3><p>Analizziamo i risultati e individuiamo nuove opportunità di miglioramento.</p></div>
           </li>
         </ol>
+          <div class="method-rail" aria-hidden="true" hidden><span>Analizziamo</span><span>Progettiamo</span><span>Realizziamo</span><span>Ottimizziamo</span></div>
+        </div>
+        </div>
       </section>
 
 
@@ -320,7 +336,8 @@
             <span><strong>Parliamo del tuo progetto</strong><small data-contact-context aria-live="polite">Scegli da dove vuoi partire.</small></span>
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14"/><path class="contact-summary__vertical" d="M12 5v14"/></svg>
           </summary>
-        <form class="contact-form" data-contact-form novalidate>
+        <form class="contact-form" data-contact-form method="post" action="/api/contact" novalidate>
+          <noscript><p class="contact-stage__welcome">Per inviare la richiesta, attiva JavaScript: serve alla verifica anti-spam.</p></noscript>
           <input type="hidden" name="startedAt" value="" />
           <div class="honeypot" aria-hidden="true">
             <label>Lascia vuoto questo campo <input type="text" name="companyWebsite" tabindex="-1" autocomplete="off" /></label>
@@ -332,20 +349,25 @@
             <button type="button" data-step-target="2"><span aria-hidden="true">3</span>Contatti</button>
           </nav>
           <div class="contact-stage" data-form-step="0">
+          <p class="contact-stage__welcome">Anche un’idea ancora da definire è un buon punto di partenza.</p>
           <fieldset class="need-fieldset">
             <legend>Di cosa hai bisogno?</legend>
             <div class="need-options">
-              <label><input type="radio" name="need" value="web" required /><span>Sito, landing o e-commerce</span></label>
-              <label><input type="radio" name="need" value="social" /><span>Social e contenuti</span></label>
-              <label><input type="radio" name="need" value="automation" /><span>Chatbot e automazioni</span></label>
-              <label><input type="radio" name="need" value="multiple" /><span>Più servizi</span></label>
+              <label><input type="radio" name="need" value="web" aria-describedby="need-error" required /><span>Sito, landing o e-commerce</span></label>
+              <label><input type="radio" name="need" value="social" aria-describedby="need-error" /><span>Social e contenuti</span></label>
+              <label><input type="radio" name="need" value="automation" aria-describedby="need-error" /><span>Chatbot e automazioni</span></label>
+              <label><input type="radio" name="need" value="multiple" aria-describedby="need-error" /><span>Più servizi</span></label>
             </div>
+            <p class="field-error" id="need-error" hidden>Scegli il servizio da cui vuoi partire, oppure “Più servizi”.</p>
           </fieldset>
           </div>
           <div class="contact-stage" data-form-step="1">
+          <div class="contact-stage__heading"><h3>Partiamo dalla tua idea.</h3><p>Bastano poche righe: cosa vorresti fare e cosa oggi ti rallenta.</p></div>
           <div class="field">
             <label for="message">Messaggio</label>
-            <textarea id="message" name="message" rows="5" required minlength="20" maxlength="2000" placeholder="Raccontaci il progetto, il punto in cui sei e cosa vorresti rendere più semplice."></textarea>
+            <textarea id="message" name="message" rows="5" required minlength="20" maxlength="2000" aria-describedby="message-hint message-error" placeholder="Raccontaci il progetto, il punto in cui sei e cosa vorresti rendere più semplice."></textarea>
+            <p class="field-hint" id="message-hint"><span data-message-help>Almeno 20 caratteri: bastano una o due frasi.</span><span data-message-count aria-hidden="true">0 / 2000</span></p>
+            <p class="field-error" id="message-error" hidden>Raccontaci qualcosa in più: servono almeno 20 caratteri.</p>
           </div>
           <div class="field">
             <label for="company">Azienda o progetto <span>(opzionale)</span></label>
@@ -353,25 +375,29 @@
           </div>
           </div>
           <div class="contact-stage" data-form-step="2">
+          <div class="contact-stage__heading"><h3>Dove possiamo risponderti?</h3><p>Un ultimo passo per permetterci di ricontattarti.</p></div>
           <div class="field-grid">
             <div class="field">
               <label for="name">Nome</label>
-              <input id="name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80" />
+              <input id="name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80" aria-describedby="name-error" />
+              <p class="field-error" id="name-error" hidden>Come ti chiami? Scrivi almeno due caratteri.</p>
             </div>
             <div class="field">
               <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" inputmode="email" />
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" inputmode="email" aria-describedby="email-error" placeholder="nome@azienda.it" />
+              <p class="field-error" id="email-error" hidden>Controlla l’email, ad esempio nome@azienda.it.</p>
             </div>
           </div>
           <label class="privacy-check">
-            <input type="checkbox" name="privacyAccepted" required />
+            <input type="checkbox" name="privacyAccepted" required aria-describedby="privacyAccepted-error" />
             <span>Ho letto l’<a href="/privacy/">informativa privacy</a> e acconsento al trattamento dei dati per ricevere una risposta.</span>
           </label>
+          <p class="field-error" id="privacyAccepted-error" hidden>Conferma di aver letto l’informativa per inviare la richiesta.</p>
 
           <div class="turnstile-shell" data-turnstile></div>
 
-          <button class="button button--primary contact-form__submit" type="submit">
-            <span>Parliamo del tuo progetto</span>
+          <button class="button button--primary contact-form__submit" type="submit" disabled>
+            <span>Invia la richiesta</span>
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </button>
           </div>

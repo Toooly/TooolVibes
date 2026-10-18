@@ -62,50 +62,14 @@
   syncHeader();
   window.addEventListener("scroll", syncHeader, { passive: true });
 
-  const sceneStories = {
-    web: [["Design", "Gerarchia e contenuti guidano la lettura.", "35%", "40%"], ["Responsive", "La stessa esperienza, dal computer allo smartphone.", "76%", "56%"], ["Contatto", "Un invito chiaro a fare il passo successivo.", "38%", "63%"]],
-    social: [["Identità", "Colori e linguaggio visivo restano riconoscibili.", "26%", "43%"], ["Contenuti", "L’identità prende forma nei contenuti.", "52%", "55%"], ["Pubblicazione", "Il calendario organizza la continuità dei contenuti.", "76%", "48%"]],
-    ai: [["Richiesta", "La conversazione parte da una domanda concreta.", "41%", "34%"], ["Risposta", "Informazioni utili, nel contesto della richiesta.", "46%", "51%"], ["Contatto", "La conversazione può diventare un nuovo contatto.", "75%", "55%"]],
+  const serviceScreens = {
+    web: `<svg class="service-screen" viewBox="0 0 1280 721" aria-hidden="true"><path fill="#0c1434" d="m391 319 122 15-18 95-121-15Z"/><g class="screen-bars" fill="#45d8f0"><path d="m394 386 10 1-5 23-10-1Z"/><path d="m414 375 10 1-7 26-10-1Z"/><path d="m436 363 10 1-8 41-10-1Z"/><path d="m458 350 10 1-10 53-10-1Z"/><path d="m479 341 10 1-12 67-10-1Z"/></g><path class="screen-action" fill="#82f2cf" d="m893 484 133 17-2 13-134-18Z"/><path class="screen-cursor" fill="#f4f0e8" stroke="#071020" stroke-width="3" d="m995 496 5 29 7-9 13-2Z"/><path class="screen-confirm" d="m957 495 7 8 14-12"/></svg>`,
+    social: `<svg class="service-screen" viewBox="0 0 1280 640" aria-hidden="true"><path class="screen-transfer" pathLength="100" d="M477 271C513 221 544 208 562 211M666 213C714 211 748 244 777 286"/><g class="screen-publish" fill="#c195ff"><path d="m898 311 62 1v7l-62-1Z"/><path d="m892 379 65 2v7l-65-2Z"/><path d="m884 447 66 2v7l-66-2Z"/></g><g class="screen-checks"><path d="m998 326 5 5 9-10"/><path d="m998 397 5 5 9-10"/><path d="m991 465 5 5 9-10"/></g></svg>`,
+    ai: `<svg class="service-screen" viewBox="0 0 1280 854" aria-hidden="true"><path fill="#09122d" d="m591 210 260 23v91l-260-23Zm-31 100 291 26v78l-291-26Z"/><g class="screen-request"><path fill="#263752" d="m610 225 214 19q18 2 18 18v35q0 17-18 15l-214-19q-15-1-15-17v-36q0-16 15-15Z"/><path class="screen-copy" d="m621 249 175 16m-175 5 104 9"/></g><g class="screen-reply"><path fill="#5340d9" d="m585 318 236 21q20 2 20 19v31q0 18-20 16l-236-21q-20-2-20-19v-31q0-18 20-16Z"/><path class="screen-copy" d="m587 343 182 16m-182 4 117 11"/></g><path class="screen-transfer" pathLength="100" d="M311 337h20q21 0 21 21v112q0 22 22 22h65"/><path class="screen-confirm" d="m766 458 8 9 17-17"/></svg>`,
   };
   document.querySelectorAll("[data-service] .service-visual").forEach((figure) => {
-    const story = sceneStories[figure.closest("[data-service]").dataset.service];
-    if (!story) return;
-    const art = document.createElement("div");
-    art.className = "service-visual__art";
-    art.append(...figure.children);
-    const focus = document.createElement("span");
-    focus.className = "service-visual__focus";
-    focus.setAttribute("aria-hidden", "true");
-    art.append(focus);
-    const caption = document.createElement("figcaption");
-    caption.className = "service-demo";
-    const controls = document.createElement("div");
-    controls.className = "service-demo__steps";
-    controls.setAttribute("role", "group");
-    controls.setAttribute("aria-label", "Esplora le fasi del servizio");
-    const description = document.createElement("p");
-    description.setAttribute("aria-live", "polite");
-    story.forEach(([label, text, x, y], index) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = label;
-      button.setAttribute("aria-pressed", String(index === 0));
-      button.addEventListener("click", () => {
-        controls.querySelectorAll("button").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-        description.textContent = text;
-        focus.style.setProperty("--focus-x", x);
-        focus.style.setProperty("--focus-y", y);
-        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          figure.querySelector(".service-visual__pulse").getAnimations().forEach((animation) => { animation.currentTime = 0; animation.play(); });
-        }
-      });
-      controls.append(button);
-    });
-    description.textContent = story[0][1];
-    focus.style.setProperty("--focus-x", story[0][2]);
-    focus.style.setProperty("--focus-y", story[0][3]);
-    caption.append(controls, description);
-    figure.append(art, caption);
+    const screen = serviceScreens[figure.closest("[data-service]").dataset.service];
+    if (screen) figure.insertAdjacentHTML("beforeend", screen);
   });
 
   if (!reduceMotion && "IntersectionObserver" in window) {
@@ -176,18 +140,59 @@
     }
   }
 
-  const sequenceSections = document.querySelectorAll("[data-sequence]");
-  if (!reduceMotion && "IntersectionObserver" in window) {
-    const sequenceObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-in-view");
-        observer.unobserve(entry.target);
-      });
-    }, { threshold: 0.12 });
-    sequenceSections.forEach((section) => sequenceObserver.observe(section));
+  const method = document.querySelector("[data-method-track]");
+  if (method) {
+    const section = method.closest(".process");
+    const frame = method.querySelector(".method-frame");
+    const steps = [...method.querySelectorAll(".process-step")];
+    const markers = [...method.querySelectorAll(".method-rail span")];
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let visible = false;
+    let scheduled = false;
+    let activePhase = -1;
+    function updateMethod() {
+      scheduled = false;
+      if (!visible || preference.matches) return;
+      const top = frame.getBoundingClientRect().top;
+      const stickyTop = parseFloat(getComputedStyle(frame).top);
+      const distance = Math.max(1, method.offsetHeight - frame.offsetHeight);
+      const progress = Math.max(0, Math.min(1, (stickyTop - method.getBoundingClientRect().top) / distance));
+      const phase = Math.min(3, Math.floor(progress * 4));
+      section.style.setProperty("--method-progress", String(progress));
+      if (phase !== activePhase) {
+        activePhase = phase;
+        section.dataset.phase = String(phase);
+        steps.forEach((step, index) => step.classList.toggle("is-current", index === phase));
+        markers.forEach((marker, index) => marker.classList.toggle("is-current", index === phase));
+      }
+      if (top < -frame.offsetHeight) visible = false;
+    }
+    function scheduleMethod() {
+      if (visible && !scheduled && !preference.matches) {
+        scheduled = true;
+        requestAnimationFrame(updateMethod);
+      }
+    }
+    function syncMethodMotion() {
+      const enabled = !preference.matches && "IntersectionObserver" in window;
+      section.classList.toggle("method-ready", enabled);
+      method.querySelector(".method-art").hidden = !enabled;
+      method.querySelector(".method-rail").hidden = !enabled;
+      if (enabled) { visible = true; scheduleMethod(); }
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        visible = entries.some((entry) => entry.isIntersecting);
+        scheduleMethod();
+      }, { rootMargin: "100px" }).observe(method);
+    }
+    window.addEventListener("scroll", scheduleMethod, { passive: true });
+    window.addEventListener("resize", scheduleMethod, { passive: true });
+    preference.addEventListener("change", syncMethodMotion);
+    syncMethodMotion();
   }
   if (!contactForm || !formStatus) return;
+  contactForm.querySelector('button[type="submit"]').disabled = false;
 
   const contactPanel = document.querySelector("[data-contact-panel]");
   const contactContext = document.querySelector("[data-contact-context]");
@@ -196,6 +201,36 @@
   const nextStep = contactForm.querySelector("[data-step-next]");
   const previousStep = contactForm.querySelector("[data-step-back]");
   let currentStep = 0;
+  let submitPending = false;
+  let validationMessage = false;
+
+  function clearValidationFeedback() {
+    if (validationMessage && [...formSteps[currentStep].querySelectorAll("input,textarea")].every((field) => field.validity.valid)) setStatus("");
+  }
+
+  function showFieldError(field) {
+    const error = document.getElementById(`${field.name}-error`);
+    if (!error) return;
+    const valid = field.validity.valid;
+    error.hidden = valid;
+    const fields = field.name === "need" ? contactForm.querySelectorAll('[name="need"]') : [field];
+    fields.forEach((input) => {
+      if (valid) input.removeAttribute("aria-invalid");
+      else input.setAttribute("aria-invalid", "true");
+    });
+  }
+
+  function invalidField(step) {
+    const fields = [...step.querySelectorAll("input, textarea")];
+    fields.forEach(showFieldError);
+    return fields.find((field) => !field.validity.valid);
+  }
+
+  function updateMessageHint() {
+    const length = contactForm.elements.namedItem("message").value.length;
+    contactForm.querySelector("[data-message-count]").textContent = `${length} / 2000`;
+    contactForm.querySelector("[data-message-help]").textContent = length >= 20 ? "Perfetto, puoi passare ai contatti." : "Almeno 20 caratteri: bastano una o due frasi.";
+  }
 
   function syncContactContext() {
     const selected = contactForm.querySelector('[name="need"]:checked');
@@ -205,6 +240,7 @@
 
   function showStep(index, focus = false) {
     currentStep = index;
+    contactPanel.dataset.step = String(index);
     formSteps.forEach((step, i) => { step.hidden = i !== index; });
     stepButtons.forEach((button, i) => {
       if (i === index) button.setAttribute("aria-current", "step");
@@ -219,11 +255,12 @@
 
   function goToStep(index) {
     for (let i = 0; i < index; i++) {
-      const invalid = [...formSteps[i].querySelectorAll("input, textarea")].find((field) => !field.validity.valid);
+      const invalid = invalidField(formSteps[i]);
       if (invalid) {
         showStep(i);
-        invalid.reportValidity();
+        invalid.focus();
         setStatus("Completa i campi indicati per continuare.", "error");
+        validationMessage = true;
         return;
       }
     }
@@ -243,7 +280,17 @@
     }
   });
   contactForm.addEventListener("change", (event) => {
-    if (event.target.name === "need") syncContactContext();
+    if (event.target.name === "need") { syncContactContext(); showFieldError(event.target); }
+    if (event.target.name === "privacyAccepted") showFieldError(event.target);
+    clearValidationFeedback();
+  });
+  contactForm.addEventListener("input", (event) => {
+    if (event.target.name === "message") updateMessageHint();
+    if (event.target.getAttribute("aria-invalid") === "true") showFieldError(event.target);
+    clearValidationFeedback();
+  });
+  contactForm.addEventListener("focusout", (event) => {
+    if (event.target.matches('input:not([type="radio"]):not([type="checkbox"]),textarea') && event.target.value) showFieldError(event.target);
   });
   contactForm.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && event.target.matches("input") && currentStep < 2) {
@@ -258,6 +305,7 @@
     const need = { web: "web", social: "social", ai: "automation" }[service];
     if (need) {
       contactForm.querySelector(`[name="need"][value="${need}"]`).checked = true;
+      showFieldError(contactForm.querySelector(`[name="need"][value="${need}"]`));
       showStep(1);
     }
     syncContactContext();
@@ -284,6 +332,7 @@
   if (startedAt) startedAt.value = String(Date.now());
 
   function setStatus(message, state = "") {
+    validationMessage = false;
     formStatus.textContent = message;
     formStatus.className = `form-status${state ? ` is-${state}` : ""}`;
   }
@@ -352,15 +401,17 @@
 
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (submitPending) return;
     setStatus("");
     contactForm.classList.remove("is-success");
 
     if (!contactForm.checkValidity()) {
-      const invalid = contactForm.querySelector(":invalid");
+      const invalid = contactForm.querySelector("input:invalid,textarea:invalid");
       const step = invalid?.closest("[data-form-step]");
-      if (step) showStep(Number(step.dataset.formStep));
-      contactForm.reportValidity();
+      if (step) { showStep(Number(step.dataset.formStep)); invalidField(step); }
+      invalid?.focus({ preventScroll: true });
       setStatus("Controlla i campi indicati e riprova.", "error");
+      validationMessage = true;
       return;
     }
 
@@ -375,6 +426,11 @@
       setStatus("Completa la verifica anti-spam per inviare il messaggio.", "error");
       return;
     }
+
+    if (submitPending) return;
+    submitPending = true;
+    contactPanel.dataset.state = "sending";
+    contactContext.textContent = "Stiamo inviando la tua richiesta…";
 
     const submitButton = contactForm.querySelector('button[type="submit"]');
     const submitLabel = submitButton.querySelector("span");
@@ -411,6 +467,7 @@
       }
 
       contactForm.reset();
+      updateMessageHint();
       contactForm.classList.add("is-success");
       showStep(0);
       setStatus("Messaggio inviato. Ti risponderemo appena possibile.", "success");
@@ -427,6 +484,12 @@
       turnstileToken = "";
       track("contact_error");
     } finally {
+      submitPending = false;
+      delete contactPanel.dataset.state;
+      if (!contactForm.classList.contains("is-success")) {
+        syncContactContext();
+        if (!contactPanel.open) contactContext.textContent = "Messaggio non inviato. Riapri per riprovare.";
+      }
       submitButton.disabled = false;
       submitLabel.textContent = originalLabel;
     }

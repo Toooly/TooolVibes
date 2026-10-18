@@ -24,6 +24,8 @@ describe("TooolVibes Servizi static contract", () => {
     }
     expect(html).toContain('role="status"');
     expect(html).toContain('aria-live="polite"');
+    expect(html).toContain('method="post" action="/api/contact"');
+    expect(html).toContain('type="submit" disabled');
   });
 
   it("provides visible focus, reduced motion and mobile adaptations", () => {
@@ -67,7 +69,7 @@ describe("TooolVibes Servizi static contract", () => {
   it("animates benefit icons without bullets or perpetual motion", () => {
     expect(css).toContain("@media (prefers-reduced-motion: no-preference)");
     expect(css).toContain("detail-arrive .6s");
-    expect(css).toContain("detail-signal 1.6s ease-in-out var(--detail-delay) 2");
+    expect(css).toContain("detail-arrive .6s var(--ease) var(--detail-delay) both");
     expect(css).toContain(".service.is-in-view .service-benefits svg");
     expect(css).not.toContain(".plain-list");
     expect(css).not.toContain(".flow-legend");
@@ -102,7 +104,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).toContain('service-offer__amount">249</span> <span>€</span> <small class="service-offer__recurring">+ <strong>49 €</strong>/mese</small>');
     expect(html).toContain("consumi e integrazioni definiti nel preventivo");
     expect(html).toContain("3 mesi al prezzo di 1");
-    expect(css).toContain("service-depth-in");
+    expect(css).toContain("scene-frame");
     expect(html).not.toContain("IVA");
   });
 
@@ -137,13 +139,31 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain(".contact-stage[hidden]");
   });
 
-  it("makes service illustrations explorable without new raster assets", () => {
+  it("animates native service screen interiors without extra controls or raster assets", () => {
     const app = readFileSync(resolve(root, "app.js"), "utf8");
-    expect(app).toContain('caption.className = "service-demo"');
-    expect(app).toContain('button.setAttribute("aria-pressed"');
-    expect(app).toContain("animation.currentTime = 0");
-    expect(css).toContain(".service-visual__focus");
+    expect(app.match(/class="service-screen"/g)).toHaveLength(3);
+    expect(app).not.toContain("service-demo");
+    expect(css).not.toContain(".service-visual__focus");
+    expect(css).not.toContain("service-breathe");
     expect(html.match(/src="\/assets\/service-.*?-v2.webp"/g)).toHaveLength(3);
+  });
+
+  it("uses one reversible scroll-driven method with a readable reduced-motion fallback", () => {
+    const app = readFileSync(resolve(root, "app.js"), "utf8");
+    expect(html).toContain("data-method-track");
+    expect(html.match(/class="method-browser"/g)).toHaveLength(1);
+    expect(app).toContain('preference.addEventListener("change", syncMethodMotion)');
+    expect(app).toContain('section.classList.toggle("method-ready", enabled)');
+    expect(app).toContain("requestAnimationFrame(updateMethod)");
+  });
+
+  it("guides form completion with inline errors and a message hint", () => {
+    for (const field of ["name", "email", "message", "need", "privacyAccepted"]) expect(html).toContain(`id="${field}-error"`);
+    expect(html).toContain("data-message-count");
+    expect(html).toContain("Invia la richiesta");
+    const app = readFileSync(resolve(root, "app.js"), "utf8");
+    expect(app).toContain("if (submitPending) return");
+    expect(app).toContain('input.setAttribute("aria-invalid", "true")');
   });
 
   it("separates web and AI accents and normalizes section subtitles", () => {
@@ -155,11 +175,11 @@ describe("TooolVibes Servizi static contract", () => {
   });
 
   it("choreographs native preview details and starts service motion at the visual", () => {
-    for (const animation of ["journey-portal-depth", "journey-post-arrive", "journey-chip", "journey-message", "journey-route", "service-flow"]) {
+    for (const animation of ["journey-portal-depth", "journey-post-arrive", "journey-chip", "journey-message", "journey-route", "screen-route"]) {
       expect(css).toContain(`@keyframes ${animation}`);
     }
-    expect(html.match(/class="service-visual__flow"/g)).toHaveLength(3);
-    expect(css).toContain(".service-visual.is-in-view .service-visual__pulse");
+    expect(html).not.toContain("service-visual__flow");
+    expect(css).toContain(".service-visual.is-in-view .screen-reply");
     const app = readFileSync(resolve(root, "app.js"), "utf8");
     expect(app).toContain('querySelectorAll("[data-service], .service-visual")');
     expect(app).toContain('journeyObserver.observe(journey.querySelector(".journey__visual"))');
