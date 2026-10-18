@@ -67,9 +67,52 @@
     social: `<svg class="service-screen" viewBox="0 0 1280 640" aria-hidden="true"><path class="screen-transfer" pathLength="100" d="M477 271C513 221 544 208 562 211M666 213C714 211 748 244 777 286"/><g class="screen-publish" fill="#c195ff"><path d="m898 311 62 1v7l-62-1Z"/><path d="m892 379 65 2v7l-65-2Z"/><path d="m884 447 66 2v7l-66-2Z"/></g><g class="screen-checks"><path d="m998 326 5 5 9-10"/><path d="m998 397 5 5 9-10"/><path d="m991 465 5 5 9-10"/></g></svg>`,
     ai: `<svg class="service-screen" viewBox="0 0 1280 854" aria-hidden="true"><path fill="#09122d" d="m591 210 260 23v91l-260-23Zm-31 100 291 26v78l-291-26Z"/><g class="screen-request"><path fill="#263752" d="m610 225 214 19q18 2 18 18v35q0 17-18 15l-214-19q-15-1-15-17v-36q0-16 15-15Z"/><path class="screen-copy" d="m621 249 175 16m-175 5 104 9"/></g><g class="screen-reply"><path fill="#5340d9" d="m585 318 236 21q20 2 20 19v31q0 18-20 16l-236-21q-20-2-20-19v-31q0-18 20-16Z"/><path class="screen-copy" d="m587 343 182 16m-182 4 117 11"/></g><path class="screen-transfer" pathLength="100" d="M311 337h20q21 0 21 21v112q0 22 22 22h65"/><path class="screen-confirm" d="m766 458 8 9 17-17"/></svg>`,
   };
+  const sceneLayers = {
+    web: "M938 246C913 246 896 261 891 286L825 612Q817 651 848 660L1000 682Q1033 687 1043 651L1101 289Q1105 259 1074 253Z",
+    social: "M550 313L689 329Q704 331 701 346L676 514Q674 529 659 526L520 507Q504 505 507 490L534 328Q536 310 550 313Z",
+    ai: "M937 295Q905 290 896 325L808 682Q799 715 831 725L982 751Q1015 756 1024 721L1092 344Q1097 313 1068 308Z",
+  };
   document.querySelectorAll("[data-service] .service-visual").forEach((figure) => {
-    const screen = serviceScreens[figure.closest("[data-service]").dataset.service];
-    if (screen) figure.insertAdjacentHTML("beforeend", screen);
+    const service = figure.closest("[data-service]").dataset.service;
+    const screen = serviceScreens[service];
+    if (!screen) return;
+    figure.insertAdjacentHTML("beforeend", screen);
+    const svg = figure.querySelector(".service-screen");
+    const image = figure.querySelector("img");
+    const outline = sceneLayers[service];
+    const id = `scene-${service}`;
+    const height = image.getAttribute("height");
+    // Reuse the already selected responsive artwork: no second asset or mobile illustration.
+    svg.insertAdjacentHTML("afterbegin", `<defs><clipPath id="${id}-clip"><path d="${outline}"/></clipPath><mask id="${id}-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1280" height="${height}"><rect width="1280" height="${height}" fill="white"/><path d="${outline}" fill="black"/></mask></defs><g class="scene-art"><image width="1280" height="${height}" mask="url(#${id}-mask)"/><g class="scene-layer"><image width="1280" height="${height}" clip-path="url(#${id}-clip)"/></g></g>`);
+    const sources = [...svg.querySelectorAll("image")];
+    const loaded = new Set();
+    sources.forEach((source) => {
+      source.addEventListener("load", () => {
+        loaded.add(source);
+        if (loaded.size === sources.length) figure.classList.add("has-layered-scene");
+      });
+      source.addEventListener("error", () => {
+        loaded.delete(source);
+        figure.classList.remove("has-layered-scene");
+      });
+    });
+    const syncSource = () => {
+      loaded.clear();
+      figure.classList.remove("has-layered-scene");
+      sources.forEach((source) => source.setAttribute("href", image.currentSrc || image.src));
+    };
+    image.addEventListener("load", syncSource);
+    if (image.complete && image.naturalWidth) syncSource();
+    if (service === "web") {
+      svg.querySelectorAll(".screen-action,.screen-cursor,.screen-confirm").forEach((element) => svg.querySelector(".scene-layer").append(element));
+      svg.insertAdjacentHTML("beforeend", '<path class="screen-trend" pathLength="100" d="M531 422C550 424 557 394 576 403S602 395 624 378"/>');
+    }
+    const route = svg.querySelector(".screen-transfer");
+    if (route) {
+      const signal = route.cloneNode();
+      signal.setAttribute("class", "screen-signal");
+      route.after(signal);
+    }
   });
 
   if (!reduceMotion && "IntersectionObserver" in window) {
@@ -101,6 +144,7 @@
       { threshold: 0.28 },
     );
     document.querySelectorAll("[data-service], .service-visual").forEach((element) => sceneObserver.observe(element));
+    document.querySelectorAll(".service-offer").forEach((element) => sceneObserver.observe(element));
   } else {
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
   }

@@ -111,8 +111,7 @@ describe("TooolVibes Servizi static contract", () => {
   it("highlights compact final prices and explicit comparison amounts", () => {
     expect(css).toContain("--price-accent: #7cebb4");
     expect(css).toContain("--price-comparison: #eea0aa");
-    expect(css).toContain("price-arrive .9s");
-    expect(css).toContain("price-light 2.4s");
+    expect(css).toContain("price-border-glow 2.4s");
     expect(html).not.toContain("Riferimento indicativo");
     expect(html.match(/<s>/g)).toHaveLength(3);
     expect(css).toContain("flex-wrap: nowrap");
@@ -124,6 +123,31 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).not.toContain("riferimenti-prezzi");
     expect(html).not.toContain("Come leggere i prezzi di confronto");
     expect(css).not.toContain(".price-reference");
+  });
+
+  it("places prices in a dedicated right column and shows shared monthly capacity without fake scarcity", () => {
+    expect(html.match(/class="service-offer__value"/g)).toHaveLength(3);
+    expect(html.match(/class="service-capacity"/g)).toHaveLength(3);
+    expect(html.match(/Fino a 4, tra tutti i servizi\./g)).toHaveLength(3);
+    expect(html).not.toContain('Fino a 3, tra tutti i servizi.');
+    expect(html.match(/class="service-capacity__number" aria-hidden="true">04/g)).toHaveLength(3);
+    expect(html.match(/class="service-capacity__slots" aria-hidden="true"><i><\/i><i><\/i><i><\/i><i><\/i>/g)).toHaveLength(3);
+    expect(html.match(/<a class="service-capacity" href="#contatti"/g)).toHaveLength(3);
+    expect(css).not.toContain('@keyframes capacity-signal');
+    expect(html).not.toMatch(/posti rimasti|scade tra|data-countdown/i);
+    expect(css).toContain("container-type: inline-size");
+    expect(css).toContain("grid-template-columns: minmax(0,1fr) auto");
+  });
+
+  it("shares one CTA interaction and animates only the pricing border", () => {
+    expect(css).toContain('.button:is(:hover,:focus-visible,:active):not(:disabled)::before { animation: control-sheen .75s');
+    expect(css).not.toContain('animation: control-response');
+    expect(css).not.toContain('.button--secondary:is(:hover,:focus-visible) svg');
+    expect(css).toContain('.service-offer.is-in-view::before { animation: price-border-glow 2.4s ease-in-out 2 both');
+    for (const animation of ['price-arrive', 'price-light', 'price-line', 'capacity-slot', 'capacity-arrive', 'capacity-orbit', 'capacity-response']) expect(css).not.toContain(`@keyframes ${animation}`);
+    expect(css).not.toContain('.service-offer__price::before');
+    const app = readFileSync(resolve(root, "app.js"), "utf8");
+    expect(app).toContain('querySelectorAll(".service-offer").forEach((element) => sceneObserver.observe(element))');
   });
 
   it("provides a collapsible contact with three progressive steps", () => {
@@ -146,6 +170,14 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain(".service-visual__focus");
     expect(css).not.toContain("service-breathe");
     expect(html.match(/src="\/assets\/service-.*?-v2.webp"/g)).toHaveLength(3);
+    expect(app).toContain('image.currentSrc || image.src');
+    expect(app).toContain('source.addEventListener("error"');
+    expect(app).toContain('loaded.size === sources.length');
+    expect(app).not.toContain('<use href="#${id}-source"');
+    expect(app).toContain('class="scene-layer"');
+    expect(app).toContain('image.getAttribute("height")');
+    expect(css).toContain("scene-depth 4.8s");
+    expect(css).toContain("screen-signal 2.2s");
   });
 
   it("uses one reversible scroll-driven method with a readable reduced-motion fallback", () => {
@@ -172,7 +204,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain("--service-ai: #70e4af");
     expect(css).toContain("--subtitle-size:");
     expect(css).toContain("font-size: var(--subtitle-size)");
-    expect(css).toContain("@keyframes control-response");
+    expect(css).toContain("@keyframes control-sheen");
   });
 
   it("choreographs native preview details and starts service motion at the visual", () => {
