@@ -58,7 +58,13 @@
     if (event.key === "Escape") setMenu(false);
   });
 
-  const syncHeader = () => header?.classList.toggle("is-scrolled", window.scrollY > 18);
+  let headerScrolled = null;
+  const syncHeader = () => {
+    const scrolled = window.scrollY > 18;
+    if (scrolled === headerScrolled) return;
+    headerScrolled = scrolled;
+    header?.classList.toggle("is-scrolled", scrolled);
+  };
   syncHeader();
   window.addEventListener("scroll", syncHeader, { passive: true });
 
@@ -149,60 +155,6 @@
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
   }
 
-  function collectSceneAnimations(element) {
-    const animations = element.getAnimations({ subtree: true }).filter((animation) => animation.animationName && Number.isFinite(animation.effect.getComputedTiming().endTime));
-    animations.forEach((animation) => animation.pause());
-    return { animations, duration: Math.max(1, ...animations.map((animation) => animation.effect.getComputedTiming().endTime)) };
-  }
-
-  function seekSceneAnimations(sequence, progress) {
-    sequence.animations.forEach((animation) => { animation.currentTime = Math.max(0, Math.min(1, progress)) * sequence.duration; });
-  }
-
-  // The artwork advances with the reader instead of finishing while it is still entering the viewport.
-  if ("IntersectionObserver" in window && "getAnimations" in Element.prototype) {
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const visible = new Map();
-    let scheduled = false;
-    function updateServiceMotion() {
-      scheduled = false;
-      if (preference.matches) return;
-      visible.forEach((state, figure) => {
-        if (!figure.classList.contains("is-in-view")) return;
-        if (state.key !== figure.className) {
-          state.key = figure.className;
-          state.sequence = collectSceneAnimations(figure);
-        }
-        const rect = figure.getBoundingClientRect();
-        const progress = (window.innerHeight * .9 - rect.top) / Math.max(rect.height, window.innerHeight * .75);
-        seekSceneAnimations(state.sequence, progress);
-      });
-    }
-    function scheduleServiceMotion() {
-      if (!scheduled && visible.size && !preference.matches) {
-        scheduled = true;
-        requestAnimationFrame(updateServiceMotion);
-      }
-    }
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) visible.set(entry.target, { key: null, sequence: null });
-        else visible.delete(entry.target);
-      });
-      scheduleServiceMotion();
-    });
-    document.querySelectorAll(".service-visual").forEach((figure) => {
-      observer.observe(figure);
-      new MutationObserver(scheduleServiceMotion).observe(figure, { attributes: true, attributeFilter: ["class"] });
-    });
-    window.addEventListener("scroll", scheduleServiceMotion, { passive: true });
-    window.addEventListener("resize", scheduleServiceMotion, { passive: true });
-    preference.addEventListener("change", () => {
-      visible.forEach((state) => { state.key = null; });
-      scheduleServiceMotion();
-    });
-  }
-
   const journey = document.querySelector("[data-journey]");
   if (journey) {
     const choices = journey.querySelectorAll("[data-journey-select]");
@@ -217,9 +169,12 @@
     let guided = false;
     let visible = false;
     let scheduled = false;
-    let sequence = null;
-    let sequenceService = null;
     let stickyTop = 0;
+    let start = 0;
+    let distance = 1;
+    let activePhase = -1;
+    let viewportWidth = 0;
+    let availableHeight = 0;
     const services = {
       web: { description: "Siti, landing page ed e-commerce.", target: "#servizi", label: "Esplora il servizio: siti e web" },
       social: { description: "Dall’identità del brand ai contenuti, fino alla pubblicazione.", target: "#contenuti", label: "Esplora il servizio: automazione contenuti" },
@@ -240,8 +195,7 @@
     choices.forEach((choice) => choice.addEventListener("click", () => {
       const service = choice.dataset.journeySelect;
       if (!guided) { selectJourney(service); return; }
-      const distance = Math.max(1, track.offsetHeight - frame.offsetHeight);
-      const top = window.scrollY + track.getBoundingClientRect().top - stickyTop + distance * (order.indexOf(service) + .12) / order.length;
+      const top = start + distance * (order.indexOf(service) + .12) / order.length;
       window.scrollTo({ top, behavior: "smooth" });
     }));
     journey.querySelector("[data-journey-controls]").hidden = false;
@@ -249,17 +203,12 @@
     function updateJourneyMotion() {
       scheduled = false;
       if (!guided || !visible) return;
-      const distance = Math.max(1, track.offsetHeight - frame.offsetHeight);
-      const progress = Math.max(0, Math.min(1, (stickyTop - track.getBoundingClientRect().top) / distance));
+      const progress = Math.max(0, Math.min(1, (window.scrollY - start) / distance));
       const phase = Math.min(order.length - 1, Math.floor(progress * order.length));
-      const localProgress = Math.min(1, progress * order.length - phase);
+      if (phase === activePhase) return;
+      activePhase = phase;
       selectJourney(order[phase]);
-      choices.forEach((choice, index) => choice.style.setProperty("--choice-progress", String(index < phase ? 1 : index === phase ? localProgress : 0)));
-      if (sequenceService !== order[phase]) {
-        sequenceService = order[phase];
-        sequence = collectSceneAnimations(scenes[phase]);
-      }
-      seekSceneAnimations(sequence, (localProgress - .04) / .76);
+      choices.forEach((choice, index) => choice.style.setProperty("--choice-progress", index <= phase ? "1" : "0"));
     }
     function scheduleJourneyMotion() {
       if (guided && visible && !scheduled) {
@@ -267,29 +216,40 @@
         requestAnimationFrame(updateJourneyMotion);
       }
     }
+    function measureJourney() {
+      start = window.scrollY + track.getBoundingClientRect().top - stickyTop;
+      distance = Math.max(1, track.offsetHeight - frame.offsetHeight);
+    }
     function syncJourneyMotion() {
+      if (window.innerWidth !== viewportWidth) {
+        viewportWidth = window.innerWidth;
+        availableHeight = window.innerHeight;
+      }
       stickyTop = (header?.querySelector(".site-header__inner")?.offsetHeight || 76) + 12;
-      guided = !preference.matches && window.innerWidth <= 768 && frame.offsetHeight + stickyTop + 64 < window.innerHeight && "IntersectionObserver" in window && "getAnimations" in Element.prototype;
+      guided = !preference.matches && viewportWidth <= 768 && frame.offsetHeight + stickyTop + 64 < availableHeight && "IntersectionObserver" in window;
       journey.style.setProperty("--journey-sticky-top", `${stickyTop}px`);
       track.style.setProperty("--journey-frame-height", `${frame.offsetHeight}px`);
       journey.classList.toggle("journey--guided", guided);
       journey.classList.toggle("is-in-view", visible && !preference.matches);
       description.setAttribute("aria-live", guided ? "off" : "polite");
-      if (sequence) sequence.animations.forEach((animation) => preference.matches ? animation.cancel() : animation.play());
-      sequenceService = null;
+      activePhase = -1;
+      measureJourney();
       scheduleJourneyMotion();
     }
     if ("IntersectionObserver" in window) {
       const journeyObserver = new IntersectionObserver((entries) => {
         visible = entries.some((entry) => entry.isIntersecting);
         journey.classList.toggle("is-in-view", visible && !preference.matches);
-        sequenceService = null;
+        if (visible && guided) measureJourney();
         scheduleJourneyMotion();
       }, { rootMargin: "100px" });
       journeyObserver.observe(track);
     }
     window.addEventListener("scroll", scheduleJourneyMotion, { passive: true });
-    window.addEventListener("resize", syncJourneyMotion, { passive: true });
+    // Mobile browser chrome changes height while scrolling; it must not collapse or restart the sticky track.
+    window.addEventListener("resize", () => {
+      if (window.innerWidth !== viewportWidth) syncJourneyMotion();
+    }, { passive: true });
     preference.addEventListener("change", syncJourneyMotion);
     if ("ResizeObserver" in window) new ResizeObserver(syncJourneyMotion).observe(frame);
     document.fonts?.ready.then(syncJourneyMotion);
@@ -302,26 +262,30 @@
     const frame = method.querySelector(".method-frame");
     const steps = [...method.querySelectorAll(".process-step")];
     const markers = [...method.querySelectorAll(".method-rail span")];
+    const rail = method.querySelector(".method-rail");
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     let visible = false;
     let scheduled = false;
     let activePhase = -1;
+    let start = 0;
+    let distance = 1;
+    function measureMethod() {
+      const stickyTop = parseFloat(getComputedStyle(frame).top) || 0;
+      start = window.scrollY + method.getBoundingClientRect().top - stickyTop;
+      distance = Math.max(1, method.offsetHeight - frame.offsetHeight);
+    }
     function updateMethod() {
       scheduled = false;
       if (!visible || preference.matches) return;
-      const top = frame.getBoundingClientRect().top;
-      const stickyTop = parseFloat(getComputedStyle(frame).top);
-      const distance = Math.max(1, method.offsetHeight - frame.offsetHeight);
-      const progress = Math.max(0, Math.min(1, (stickyTop - method.getBoundingClientRect().top) / distance));
+      const progress = Math.max(0, Math.min(1, (window.scrollY - start) / distance));
       const phase = Math.min(3, Math.floor(progress * 4));
-      section.style.setProperty("--method-progress", String(progress));
+      rail.style.setProperty("--method-progress", progress.toFixed(3));
       if (phase !== activePhase) {
         activePhase = phase;
         section.dataset.phase = String(phase);
         steps.forEach((step, index) => step.classList.toggle("is-current", index === phase));
         markers.forEach((marker, index) => marker.classList.toggle("is-current", index === phase));
       }
-      if (top < -frame.offsetHeight) visible = false;
     }
     function scheduleMethod() {
       if (visible && !scheduled && !preference.matches) {
@@ -334,16 +298,23 @@
       section.classList.toggle("method-ready", enabled);
       method.querySelector(".method-art").hidden = !enabled;
       method.querySelector(".method-rail").hidden = !enabled;
-      if (enabled) { visible = true; scheduleMethod(); }
+      if (enabled) { measureMethod(); visible = true; scheduleMethod(); }
     }
     if ("IntersectionObserver" in window) {
       new IntersectionObserver((entries) => {
         visible = entries.some((entry) => entry.isIntersecting);
+        if (visible) measureMethod();
         scheduleMethod();
       }, { rootMargin: "100px" }).observe(method);
     }
     window.addEventListener("scroll", scheduleMethod, { passive: true });
-    window.addEventListener("resize", scheduleMethod, { passive: true });
+    const resizeMethod = () => { measureMethod(); scheduleMethod(); };
+    window.addEventListener("resize", resizeMethod, { passive: true });
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(resizeMethod);
+      observer.observe(method);
+      observer.observe(frame);
+    }
     preference.addEventListener("change", syncMethodMotion);
     syncMethodMotion();
   }

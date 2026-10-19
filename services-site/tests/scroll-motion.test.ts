@@ -18,7 +18,7 @@ function setup(height = 844) {
   const preference = { matches: false, addEventListener: (_: string, callback: () => void) => listeners.push(callback) };
   const frames: FrameRequestCallback[] = [];
   const observers: Array<{ callback: (entries: unknown[], observer?: { unobserve: () => void }) => void; elements: Element[] }> = [];
-  const animations = new Map<Element, { animationName: string; currentTime: number; pause: ReturnType<typeof vi.fn>; play: ReturnType<typeof vi.fn>; cancel: ReturnType<typeof vi.fn>; effect: { getComputedTiming: () => { endTime: number } } }>();
+  const animationQueries = vi.fn(() => [] as Animation[]);
   w.matchMedia = () => preference as unknown as MediaQueryList;
   w.requestAnimationFrame = (callback) => { frames.push(callback); return frames.length; };
   w.IntersectionObserver = class {
@@ -27,17 +27,15 @@ function setup(height = 844) {
     observe(element: Element) { this.elements.push(element); }
     unobserve() {}
   } as unknown as typeof IntersectionObserver;
-  w.Element.prototype.getAnimations = function () {
-    if (!animations.has(this)) animations.set(this, { animationName: "scene-content", currentTime: 0, pause: vi.fn(), play: vi.fn(), cancel: vi.fn(), effect: { getComputedTiming: () => ({ endTime: 5000 }) } });
-    return [animations.get(this)] as unknown as Animation[];
-  };
+  w.Element.prototype.getAnimations = animationQueries;
   w.fetch = vi.fn(async () => new Response(null, { status: 204 }));
   w.scrollTo = vi.fn();
-  Object.defineProperty(w, "innerWidth", { value: 390 });
-  Object.defineProperty(w, "innerHeight", { value: height });
+  Object.defineProperty(w, "innerWidth", { configurable: true, value: 390 });
+  Object.defineProperty(w, "innerHeight", { configurable: true, value: height });
   Object.defineProperty(frame, "offsetHeight", { value: 558 });
   Object.defineProperty(track, "offsetHeight", { get: () => journey.classList.contains("journey--guided") ? 2358 : 558 });
-  track.getBoundingClientRect = () => ({ top: 1000 - w.scrollY }) as DOMRect;
+  const trackReads = vi.fn(() => ({ top: 1000 - w.scrollY }) as DOMRect);
+  track.getBoundingClientRect = trackReads;
   w.eval(readFileSync(resolve(root, "app.js"), "utf8"));
   function flush() { while (frames.length) frames.shift()!(0); }
   function enter(element: Element) {
@@ -50,7 +48,7 @@ function setup(height = 844) {
     w.dispatchEvent(new w.Event("scroll"));
     flush();
   }
-  return { w, journey, track, preference, listeners, animations, enter, flush, progress };
+  return { w, journey, track, preference, listeners, animationQueries, trackReads, enter, flush, progress };
 }
 
 describe("Scroll-paced services motion", () => {
@@ -105,22 +103,55 @@ describe("Scroll-paced services motion", () => {
     expect(setup(600).journey.classList.contains("journey--guided")).toBe(false);
   });
 
-  it("scrubs service artwork interiors rather than letting their animations run ahead", () => {
+  it("does not seek native animations, read layout or rewrite choice styles on each scroll frame", () => {
     const ui = setup();
+    ui.enter(ui.track);
+    ui.progress(.15);
+    const reads = ui.trackReads.mock.calls.length;
+    const styles = vi.spyOn(ui.w.CSSStyleDeclaration.prototype, "setProperty");
+    for (const progress of [.16, .17, .18, .19]) ui.progress(progress);
+    expect(ui.trackReads).toHaveBeenCalledTimes(reads);
+    expect(styles.mock.calls.filter(([property]) => property === "--choice-progress")).toHaveLength(0);
     const figure = ui.w.document.querySelector(".service-visual") as HTMLElement;
-    let top = 700;
-    figure.getBoundingClientRect = () => ({ top, height: 300 }) as DOMRect;
     ui.enter(figure);
-    const animation = ui.animations.get(figure)!;
-    const initialTime = animation.currentTime;
-    expect(animation.pause).toHaveBeenCalled();
-    top = 300;
     ui.w.dispatchEvent(new ui.w.Event("scroll"));
     ui.flush();
-    expect(animation.currentTime).toBeGreaterThan(initialTime);
-    top = 700;
-    ui.w.dispatchEvent(new ui.w.Event("scroll"));
+    expect(ui.animationQueries).not.toHaveBeenCalled();
+    styles.mockRestore();
+  });
+
+  it("does not collapse the mobile track when the address bar changes viewport height", () => {
+    const ui = setup();
+    ui.enter(ui.track);
+    ui.progress(.5);
+    for (const height of [650, 700, 844]) {
+      Object.defineProperty(ui.w, "innerHeight", { value: height });
+      ui.w.dispatchEvent(new ui.w.Event("resize"));
+      ui.flush();
+      expect(ui.journey.classList.contains("journey--guided")).toBe(true);
+      expect(ui.journey.dataset.active).toBe("social");
+    }
+  });
+
+  it("caches method geometry and limits continuous progress styling to its rail", () => {
+    const ui = setup();
+    const method = ui.w.document.querySelector(".method-track") as HTMLElement;
+    const frame = method.querySelector(".method-frame") as HTMLElement;
+    const reads = vi.fn(() => ({ top: 5000 - ui.w.scrollY }) as DOMRect);
+    method.getBoundingClientRect = reads;
+    Object.defineProperty(method, "offsetHeight", { value: 2500 });
+    Object.defineProperty(frame, "offsetHeight", { value: 500 });
+    ui.enter(method);
+    const initialReads = reads.mock.calls.length;
+    for (const [progress, phase] of [[.1, "0"], [.4, "1"], [.7, "2"], [.9, "3"], [.4, "1"]] as const) {
+      Object.defineProperty(ui.w, "scrollY", { value: 5000 + 2000 * progress });
+      ui.w.dispatchEvent(new ui.w.Event("scroll"));
+      ui.flush();
+      expect(ui.w.document.querySelector(".process")?.getAttribute("data-phase")).toBe(phase);
+    }
+    expect(reads).toHaveBeenCalledTimes(initialReads);
+    expect(method.querySelector<HTMLElement>(".method-rail")?.style.getPropertyValue("--method-progress")).toBe("0.400");
+    expect(ui.w.document.querySelector<HTMLElement>(".process")?.style.getPropertyValue("--method-progress")).toBe("");
     ui.flush();
-    expect(animation.currentTime).toBe(initialTime);
   });
 });
