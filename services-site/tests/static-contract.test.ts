@@ -62,7 +62,10 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html.match(/class="journey__track"/g)).toHaveLength(1);
     expect(css).toContain(".journey--guided .journey__frame { position: sticky;");
     expect(css).toContain("210svh");
-    expect(app).toContain("frame.offsetHeight + stickyTop + 64 < availableHeight");
+    expect(app).toContain("frame.offsetHeight + stickyTop + cueSpace < availableHeight");
+    expect(app).toContain("track.before(title)");
+    expect(app).toContain("track.after(connection)");
+    expect(css).toContain(".journey--compact .journey__visual");
     expect(app).toContain('description.setAttribute("aria-live", guided ? "off" : "polite")');
     expect(app).toContain("requestAnimationFrame(updateJourneyMotion)");
     expect(app).toContain("if (phase === activePhase) return");

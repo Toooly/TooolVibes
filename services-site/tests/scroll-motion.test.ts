@@ -7,7 +7,7 @@ const root = resolve(process.cwd(), "services-site/public");
 const documents: JSDOM[] = [];
 afterEach(() => documents.splice(0).forEach((dom) => dom.window.close()));
 
-function setup(height = 844) {
+function setup(height = 844, frameHeight = 558) {
   const dom = new JSDOM(readFileSync(resolve(root, "index.html"), "utf8"), { url: "https://servizi.tooolvibes.eu", runScripts: "outside-only" });
   documents.push(dom);
   const w = dom.window;
@@ -32,8 +32,8 @@ function setup(height = 844) {
   w.scrollTo = vi.fn();
   Object.defineProperty(w, "innerWidth", { configurable: true, value: 390 });
   Object.defineProperty(w, "innerHeight", { configurable: true, value: height });
-  Object.defineProperty(frame, "offsetHeight", { value: 558 });
-  Object.defineProperty(track, "offsetHeight", { get: () => journey.classList.contains("journey--guided") ? 2358 : 558 });
+  Object.defineProperty(frame, "offsetHeight", { get: () => journey.classList.contains("journey--compact") ? Math.min(frameHeight, 390) : frameHeight });
+  Object.defineProperty(track, "offsetHeight", { get: () => journey.classList.contains("journey--guided") ? frame.offsetHeight + 1800 : frame.offsetHeight });
   const trackReads = vi.fn(() => ({ top: 1000 - w.scrollY }) as DOMRect);
   track.getBoundingClientRect = trackReads;
   w.eval(readFileSync(resolve(root, "app.js"), "utf8"));
@@ -100,7 +100,38 @@ describe("Scroll-paced services motion", () => {
     (ui.journey.querySelector('[data-journey-select="social"]') as HTMLButtonElement).click();
     expect(ui.journey.dataset.active).toBe("social");
     expect(ui.w.scrollTo).not.toHaveBeenCalled();
-    expect(setup(600).journey.classList.contains("journey--guided")).toBe(false);
+    expect(setup(400).journey.classList.contains("journey--guided")).toBe(false);
+  });
+
+  it.each([650, 680])("keeps the guide enabled with Safari browser chrome at %ipx height", (height) => {
+    const ui = setup(height, 470);
+    expect(ui.journey.classList.contains("journey--guided")).toBe(true);
+    expect(ui.journey.querySelector(":scope > #journey-title")).not.toBeNull();
+    expect(ui.journey.querySelector(":scope > .journey__connection")).not.toBeNull();
+    ui.enter(ui.track);
+    ui.progress(.5);
+    expect(ui.journey.dataset.active).toBe("social");
+  });
+
+  it("uses compact geometry on short phones without duplicating the title or artwork", () => {
+    const ui = setup(548, 470);
+    expect(ui.journey.classList.contains("journey--compact")).toBe(true);
+    expect(ui.journey.classList.contains("journey--guided")).toBe(true);
+    expect(ui.journey.querySelectorAll("#journey-title")).toHaveLength(1);
+    expect(ui.journey.querySelectorAll("[data-journey-scene]")).toHaveLength(3);
+  });
+
+  it("returns the same introduction to the desktop layout after orientation changes", () => {
+    const ui = setup(650, 470);
+    const title = ui.journey.querySelector("#journey-title");
+    Object.defineProperty(ui.w, "innerWidth", { value: 1440 });
+    ui.w.dispatchEvent(new ui.w.Event("resize"));
+    expect(ui.journey.querySelector(".journey__controls #journey-title")).toBe(title);
+    expect(ui.journey.classList.contains("journey--guided")).toBe(false);
+    Object.defineProperty(ui.w, "innerWidth", { value: 390 });
+    ui.w.dispatchEvent(new ui.w.Event("resize"));
+    expect(ui.journey.querySelector(":scope > #journey-title")).toBe(title);
+    expect(ui.journey.querySelectorAll(".journey__connection")).toHaveLength(1);
   });
 
   it("does not seek native animations, read layout or rewrite choice styles on each scroll frame", () => {

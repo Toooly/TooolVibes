@@ -347,8 +347,9 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 }
 @media (max-width: 48rem) {
   .journey { grid-template-columns: 1fr; gap: .75rem; padding-top: 0; padding-bottom: 3.5rem; }
-  .journey__controls h2 { margin-bottom: 1.25rem; font-size: clamp(2rem,8vw,3rem); line-height: 1.05; }
-  .journey__controls h2 br { display: none; }
+  .journey__controls h2, .journey > h2 { margin-bottom: 1.25rem; font-size: clamp(2rem,8vw,3rem); line-height: 1.05; letter-spacing: -.055em; }
+  .journey__controls h2 br, .journey > h2 br { display: none; }
+  .journey > .journey__connection { margin-top: .75rem; }
   .journey__choices { grid-template-columns: repeat(3,minmax(0,1fr)); gap: .4rem; }
   .journey__choices button { min-height: 5.7rem; padding: .75rem .65rem; grid-template-columns: 1fr auto; align-content: start; align-items: center; gap: .6rem .25rem; }
   .journey__choices strong { grid-column: 1 / -1; grid-row: 2; font-size: .85rem; line-height: 1.25; }
@@ -362,6 +363,20 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
   .journey__web-copy { gap: .6rem; }.journey__web-copy b { font-size: 6.5cqw; }
   .journey__visual figcaption { right: 7%; font-size: .65rem; }
   .journey__continue { left: calc(50% - 1.375rem); bottom: -3rem; height: 3rem; }.journey__continue span { height: 1.25rem; }
+  .journey--compact .journey__frame { gap: .4rem; }
+  .journey--compact .journey__choices button { min-height: 4.5rem; padding: .6rem; gap: .35rem .25rem; }
+  .journey--compact .journey__description { margin-top: .7rem; }
+  .journey--compact .journey__visual { width: 100%; min-height: 0; aspect-ratio: 820/480; margin-top: 0; }
+  .journey--compact .journey__window { left: 6%; top: 3%; width: 88%; height: 85%; }
+  .journey--compact .journey__chrome { min-height: 1.1rem; }
+  .journey--compact .journey__scene--social { gap: 2.5%; padding-block: 3%; }
+  .journey--compact .journey__calendar > div { margin-top: 1.5cqw; gap: .2rem; }
+  .journey--compact .journey__calendar small { margin-top: 1cqw; }
+  .journey--compact .journey__scene--ai { padding: 2% 5%; }
+  .journey--compact .journey__chat-heading { margin-bottom: 2%; }
+  .journey--compact .journey__message { padding-block: 1.5%; }
+  .journey--compact .journey__visual figcaption { bottom: -.25rem; }
+  .journey--compact .journey__continue { height: 2.75rem; bottom: -2.75rem; }
 }
 
 .service { position: relative; min-height: 48rem; padding-top: var(--section-space); padding-bottom: var(--section-space); display: grid; grid-template-columns: minmax(19rem, .82fr) minmax(28rem, 1.18fr); align-items: center; gap: clamp(2.5rem, 5vw, 5.5rem); isolation: isolate; }

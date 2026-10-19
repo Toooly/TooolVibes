@@ -164,6 +164,9 @@
     const previewLink = journey.querySelector("[data-journey-preview-link]");
     const frame = journey.querySelector(".journey__frame");
     const track = journey.querySelector(".journey__track");
+    const controls = journey.querySelector(".journey__controls");
+    const title = journey.querySelector("h2");
+    const connection = journey.querySelector(".journey__connection");
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const order = ["web", "social", "ai"];
     let guided = false;
@@ -224,9 +227,20 @@
       if (window.innerWidth !== viewportWidth) {
         viewportWidth = window.innerWidth;
         availableHeight = window.innerHeight;
+        // Like the method, keep the introduction outside the mobile sticky scene.
+        if (viewportWidth <= 768) {
+          track.before(title);
+          track.after(connection);
+        } else {
+          controls.prepend(title);
+          controls.append(connection);
+        }
       }
+      const compact = viewportWidth <= 768 && availableHeight < 640;
+      journey.classList.toggle("journey--compact", compact);
       stickyTop = (header?.querySelector(".site-header__inner")?.offsetHeight || 76) + 12;
-      guided = !preference.matches && viewportWidth <= 768 && frame.offsetHeight + stickyTop + 64 < availableHeight && "IntersectionObserver" in window;
+      const cueSpace = compact ? 52 : 64;
+      guided = !preference.matches && viewportWidth <= 768 && frame.offsetHeight + stickyTop + cueSpace < availableHeight && "IntersectionObserver" in window;
       journey.style.setProperty("--journey-sticky-top", `${stickyTop}px`);
       track.style.setProperty("--journey-frame-height", `${frame.offsetHeight}px`);
       journey.classList.toggle("journey--guided", guided);
