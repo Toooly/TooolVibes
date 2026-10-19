@@ -56,6 +56,20 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain(".ecosystem");
   });
 
+  it("paces the same mobile explorer with native reversible scroll and manual controls", () => {
+    const app = readFileSync(resolve(root, "app.js"), "utf8");
+    expect(html.match(/class="journey__frame"/g)).toHaveLength(1);
+    expect(html.match(/class="journey__track"/g)).toHaveLength(1);
+    expect(css).toContain(".journey--guided .journey__frame { position: sticky;");
+    expect(css).toContain("210svh");
+    expect(app).toContain("frame.offsetHeight + stickyTop + 64 < window.innerHeight");
+    expect(app).toContain('description.setAttribute("aria-live", guided ? "off" : "polite")');
+    expect(app).toContain("requestAnimationFrame(updateJourneyMotion)");
+    expect(app).toContain("seekSceneAnimations(sequence, (localProgress - .04) / .76)");
+    expect(app).not.toContain('addEventListener("touchmove"');
+    expect(app).not.toContain('addEventListener("wheel"');
+  });
+
   it("composes the hero on two lines with restrained orbital service indices", () => {
     expect(html.match(/class="hero__title-line"/g)).toHaveLength(2);
     expect(html).toContain("Il digitale, costruito</span>");
@@ -138,16 +152,22 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain(".price-reference");
   });
 
-  it("places prices in a dedicated right column and shows shared monthly capacity without fake scarcity", () => {
+  it("places prices in a right column and keeps availability specific to each service", () => {
     expect(html.match(/class="service-offer__value"/g)).toHaveLength(3);
     expect(html.match(/class="service-capacity"/g)).toHaveLength(3);
-    expect(html.match(/Pianificazione del mese: <b>3 spazi su 5\.<\/b>/g)).toHaveLength(3);
+    expect(html).toContain('data-available="1"');
+    expect(html).toContain('data-available="3"');
+    expect(html).toContain('data-available="request"');
+    expect(html).toContain("1 sito disponibile su 5");
+    expect(html).toContain("3 automazioni disponibili su 5");
+    expect(html).toContain("Disponibilità su richiesta");
     expect(html.match(/class="service-capacity__note">Le richieste restano aperte\./g)).toHaveLength(3);
-    expect(html.match(/Facciamo spazio alla tua idea\./g)).toHaveLength(3);
-    expect(html).not.toContain('Fino a 4, tra tutti i servizi.');
+    expect(html).not.toContain("tra tutti i servizi");
     expect(html.match(/class="service-capacity__number" aria-hidden="true"/g)).toHaveLength(3);
-    expect(html.match(/<span>05<\/span><span>04<\/span><span>03<\/span>/g)).toHaveLength(3);
-    expect(html.match(/class="is-assigned"/g)).toHaveLength(6);
+    expect(html).toContain("<span>00</span><span>01</span><span>01</span>");
+    expect(html).toContain("<span>00</span><span>02</span><span>03</span>");
+    expect(html).not.toContain("<span>05</span>");
+    expect(html.match(/class="is-assigned"/g)).toHaveLength(12);
     expect(html.match(/<a class="service-capacity" href="#contatti"/g)).toHaveLength(3);
     expect(css).not.toContain('@keyframes capacity-signal');
     expect(html).not.toMatch(/posti rimasti|scade tra|data-countdown/i);
@@ -171,13 +191,13 @@ describe("TooolVibes Servizi static contract", () => {
   });
 
   it("uses five native scarcity arcs and bounded neon surfaces without changing offer copy", () => {
-    expect(html.match(/class="service-capacity__orbit"/g)).toHaveLength(3);
-    expect(html.match(/<circle cx="24" cy="24" r="21" pathLength="100"\/>/g)).toHaveLength(15);
-    expect(css).toContain('.service-capacity__orbit circle:nth-child(n+4)');
+    expect(html.match(/class="service-capacity__orbit"/g)).toHaveLength(2);
+    expect(html.match(/<circle (?:class="is-assigned" )?cx="24" cy="24" r="21" pathLength="100"\/>/g)).toHaveLength(10);
+    expect(css).toContain('.service-capacity__orbit circle.is-assigned');
     expect(css).toContain('@keyframes capacity-ring-status');
     expect(css).toContain('text-shadow: 0 0 1.2rem rgba(124,235,180,.16)');
     expect(css).not.toContain('.service-capacity__number::before');
-    expect(css).toContain('.service-capacity small b { color: #f5ce8b; font-weight: 650; white-space: nowrap; }');
+    expect(css).toContain('.service-capacity small b { color: var(--capacity-accent,#f5ce8b); font-weight: 650; }');
   });
 
   it("provides a collapsible contact with three progressive steps", () => {
@@ -245,6 +265,6 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain(".service-visual.is-in-view .screen-reply");
     const app = readFileSync(resolve(root, "app.js"), "utf8");
     expect(app).toContain('querySelectorAll("[data-service], .service-visual")');
-    expect(app).toContain('journeyObserver.observe(journey.querySelector(".journey__visual"))');
+    expect(app).toContain("journeyObserver.observe(track)");
   });
 });

@@ -112,6 +112,8 @@
       </section>
 
       <section id="esplora" class="journey section-shell" aria-labelledby="journey-title" data-journey data-active="web">
+        <div class="journey__track">
+        <div class="journey__frame">
         <div class="journey__controls">
           <h2 id="journey-title">Da dove vuoi<br /> partire?</h2>
           <div class="journey__choices" role="group" aria-label="Scegli un servizio da esplorare" data-journey-controls hidden>
@@ -161,6 +163,8 @@
           <figcaption>Esempio illustrativo</figcaption>
         </figure>
         <a class="journey__continue" href="#servizi" aria-label="Scorri e scopri i tre servizi"><span></span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></a>
+        </div>
+        </div>
       </section>
 
       <section id="servizi" class="service service--web section-shell" aria-labelledby="service-web-title" data-service="web">
@@ -188,7 +192,12 @@
               <p class="service-offer__comparison">Anziché <s>1.299 €</s></p>
               <p class="service-offer__price"><span class="service-offer__amount">599</span> <span>€</span></p>
             </div>
-            <a class="service-capacity" href="#contatti" aria-label="Parliamo del tuo progetto: 3 spazi su 5 nella pianificazione di questo mese, tra tutti i servizi. Le richieste restano aperte."><span class="service-capacity__number" aria-hidden="true"><svg class="service-capacity__orbit" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/></svg><span class="service-capacity__counter"><span class="service-capacity__digits"><span>05</span><span>04</span><span>03</span></span></span></span><span class="service-capacity__copy"><strong>Facciamo spazio alla tua idea.</strong><small>Pianificazione del mese: <b>3 spazi su 5.</b><span class="service-capacity__note">Le richieste restano aperte.</span></small></span><svg class="service-capacity__arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg><span class="service-capacity__slots" aria-hidden="true"><i></i><i></i><i></i><i class="is-assigned"></i><i class="is-assigned"></i></span></a>
+            <a class="service-capacity" href="#contatti" data-available="1" aria-label="Parliamo del tuo sito web: 1 sito disponibile su 5 nella pianificazione di questo mese. Le richieste restano aperte.">
+              <span class="service-capacity__number" aria-hidden="true"><svg class="service-capacity__orbit" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" pathLength="100"/><circle class="is-assigned" cx="24" cy="24" r="21" pathLength="100"/><circle class="is-assigned" cx="24" cy="24" r="21" pathLength="100"/><circle class="is-assigned" cx="24" cy="24" r="21" pathLength="100"/><circle class="is-assigned" cx="24" cy="24" r="21" pathLength="100"/></svg><span class="service-capacity__counter"><span class="service-capacity__digits"><span>00</span><span>01</span><span>01</span></span></span></span>
+              <span class="service-capacity__copy"><strong>C’è spazio per il tuo sito.</strong><small><b>1 sito disponibile</b><span class="service-capacity__limit">Fino a 5 nuovi siti al mese.</span><span class="service-capacity__note">Le richieste restano aperte.</span></small></span>
+              <svg class="service-capacity__arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+              <span class="service-capacity__slots" aria-hidden="true"><i></i><i class="is-assigned"></i><i class="is-assigned"></i><i class="is-assigned"></i><i class="is-assigned"></i></span>
+            </a>
             <a class="button button--primary" href="#contatti">Parliamo del tuo progetto<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a>
           </div>
         </div>
@@ -217,7 +226,12 @@
               <p class="service-offer__comparison">Anziché <s>1.800 €</s></p>
               <p class="service-offer__price"><span class="service-offer__amount">600</span> <span>€</span> <small>/ 3 mesi</small></p>
             </div>
-            <a class="service-capacity" href="#contatti" aria-label="Parliamo del tuo progetto: 3 spazi su 5 nella pianificazione di questo mese, tra tutti i servizi. Le richieste restano aperte."><span class="service-capacity__number" aria-hidden="true"><svg class="service-capacity__orbit" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/></svg><span class="service-capacity__counter"><span class="service-capacity__digits"><span>05</span><span>04</span><span>03</span></span></span></span><span class="service-capacity__copy"><strong>Facciamo spazio alla tua idea.</strong><small>Pianificazione del mese: <b>3 spazi su 5.</b><span class="service-capacity__note">Le richieste restano aperte.</span></small></span><svg class="service-capacity__arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg><span class="service-capacity__slots" aria-hidden="true"><i></i><i></i><i></i><i class="is-assigned"></i><i class="is-assigned"></i></span></a>
+            <a class="service-capacity" href="#contatti" data-available="3" aria-label="Parliamo dei tuoi contenuti: 3 automazioni disponibili su 5 nella pianificazione di questo mese. Le richieste restano aperte.">
+              <span class="service-capacity__number" aria-hidden="true"><svg class="service-capacity__orbit" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle class="is-assigned" cx="24" cy="24" r="21" pathLength="100"/><circle class="is-assigned" cx="24" cy="24" r="21" pathLength="100"/></svg><span class="service-capacity__counter"><span class="service-capacity__digits"><span>00</span><span>02</span><span>03</span></span></span></span>
+              <span class="service-capacity__copy"><strong>Più continuità per il tuo brand.</strong><small><b>3 automazioni disponibili</b><span class="service-capacity__limit">Fino a 5 nuove attivazioni al mese.</span><span class="service-capacity__note">Le richieste restano aperte.</span></small></span>
+              <svg class="service-capacity__arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+              <span class="service-capacity__slots" aria-hidden="true"><i></i><i></i><i></i><i class="is-assigned"></i><i class="is-assigned"></i></span>
+            </a>
             <a class="button button--primary" href="#contatti">Parliamo del tuo progetto<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a>
           </div>
         </div>
@@ -244,7 +258,11 @@
               <p class="service-offer__price"><span class="service-offer__amount">249</span> <span>€</span> <small class="service-offer__recurring">+ <strong>49 €</strong>/mese</small></p>
             </div>
             <p class="service-offer__note">Perimetro del servizio, consumi e integrazioni definiti nel preventivo.</p>
-            <a class="service-capacity" href="#contatti" aria-label="Parliamo del tuo progetto: 3 spazi su 5 nella pianificazione di questo mese, tra tutti i servizi. Le richieste restano aperte."><span class="service-capacity__number" aria-hidden="true"><svg class="service-capacity__orbit" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/><circle cx="24" cy="24" r="21" pathLength="100"/></svg><span class="service-capacity__counter"><span class="service-capacity__digits"><span>05</span><span>04</span><span>03</span></span></span></span><span class="service-capacity__copy"><strong>Facciamo spazio alla tua idea.</strong><small>Pianificazione del mese: <b>3 spazi su 5.</b><span class="service-capacity__note">Le richieste restano aperte.</span></small></span><svg class="service-capacity__arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg><span class="service-capacity__slots" aria-hidden="true"><i></i><i></i><i></i><i class="is-assigned"></i><i class="is-assigned"></i></span></a>
+            <a class="service-capacity" href="#contatti" data-available="request" aria-label="Parliamo del tuo chatbot AI: disponibilità su richiesta. Le richieste restano aperte.">
+              <span class="service-capacity__number" aria-hidden="true"><svg class="service-capacity__symbol" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 1-12 7L3 20l1.5-4A8 8 0 1 1 20 11Z"/><path d="M8 10h8m-8 4h5"/></svg></span>
+              <span class="service-capacity__copy"><strong>Facciamo spazio al tuo chatbot.</strong><small><b>Disponibilità su richiesta</b><span class="service-capacity__limit">Troviamo insieme la prima data utile.</span><span class="service-capacity__note">Le richieste restano aperte.</span></small></span>
+              <svg class="service-capacity__arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </a>
             <a class="button button--primary" href="#contatti">Parliamo del tuo progetto<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a>
           </div>
         </div>

@@ -149,6 +149,60 @@
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
   }
 
+  function collectSceneAnimations(element) {
+    const animations = element.getAnimations({ subtree: true }).filter((animation) => animation.animationName && Number.isFinite(animation.effect.getComputedTiming().endTime));
+    animations.forEach((animation) => animation.pause());
+    return { animations, duration: Math.max(1, ...animations.map((animation) => animation.effect.getComputedTiming().endTime)) };
+  }
+
+  function seekSceneAnimations(sequence, progress) {
+    sequence.animations.forEach((animation) => { animation.currentTime = Math.max(0, Math.min(1, progress)) * sequence.duration; });
+  }
+
+  // The artwork advances with the reader instead of finishing while it is still entering the viewport.
+  if ("IntersectionObserver" in window && "getAnimations" in Element.prototype) {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const visible = new Map();
+    let scheduled = false;
+    function updateServiceMotion() {
+      scheduled = false;
+      if (preference.matches) return;
+      visible.forEach((state, figure) => {
+        if (!figure.classList.contains("is-in-view")) return;
+        if (state.key !== figure.className) {
+          state.key = figure.className;
+          state.sequence = collectSceneAnimations(figure);
+        }
+        const rect = figure.getBoundingClientRect();
+        const progress = (window.innerHeight * .9 - rect.top) / Math.max(rect.height, window.innerHeight * .75);
+        seekSceneAnimations(state.sequence, progress);
+      });
+    }
+    function scheduleServiceMotion() {
+      if (!scheduled && visible.size && !preference.matches) {
+        scheduled = true;
+        requestAnimationFrame(updateServiceMotion);
+      }
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visible.set(entry.target, { key: null, sequence: null });
+        else visible.delete(entry.target);
+      });
+      scheduleServiceMotion();
+    });
+    document.querySelectorAll(".service-visual").forEach((figure) => {
+      observer.observe(figure);
+      new MutationObserver(scheduleServiceMotion).observe(figure, { attributes: true, attributeFilter: ["class"] });
+    });
+    window.addEventListener("scroll", scheduleServiceMotion, { passive: true });
+    window.addEventListener("resize", scheduleServiceMotion, { passive: true });
+    preference.addEventListener("change", () => {
+      visible.forEach((state) => { state.key = null; });
+      scheduleServiceMotion();
+    });
+  }
+
   const journey = document.querySelector("[data-journey]");
   if (journey) {
     const choices = journey.querySelectorAll("[data-journey-select]");
@@ -156,6 +210,16 @@
     const description = journey.querySelector("[data-journey-description]");
     const link = journey.querySelector("[data-journey-link]");
     const previewLink = journey.querySelector("[data-journey-preview-link]");
+    const frame = journey.querySelector(".journey__frame");
+    const track = journey.querySelector(".journey__track");
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const order = ["web", "social", "ai"];
+    let guided = false;
+    let visible = false;
+    let scheduled = false;
+    let sequence = null;
+    let sequenceService = null;
+    let stickyTop = 0;
     const services = {
       web: { description: "Siti, landing page ed e-commerce.", target: "#servizi", label: "Esplora il servizio: siti e web" },
       social: { description: "Dall’identità del brand ai contenuti, fino alla pubblicazione.", target: "#contenuti", label: "Esplora il servizio: automazione contenuti" },
@@ -173,15 +237,63 @@
       previewLink.setAttribute("href", selected.target);
       previewLink.setAttribute("aria-label", selected.label);
     }
-    choices.forEach((choice) => choice.addEventListener("click", () => selectJourney(choice.dataset.journeySelect)));
+    choices.forEach((choice) => choice.addEventListener("click", () => {
+      const service = choice.dataset.journeySelect;
+      if (!guided) { selectJourney(service); return; }
+      const distance = Math.max(1, track.offsetHeight - frame.offsetHeight);
+      const top = window.scrollY + track.getBoundingClientRect().top - stickyTop + distance * (order.indexOf(service) + .12) / order.length;
+      window.scrollTo({ top, behavior: "smooth" });
+    }));
     journey.querySelector("[data-journey-controls]").hidden = false;
     link.setAttribute("aria-label", services.web.label);
-    if (!reduceMotion && "IntersectionObserver" in window) {
-      const journeyObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => journey.classList.toggle("is-in-view", entry.isIntersecting));
-      }, { threshold: 0.15 });
-      journeyObserver.observe(journey.querySelector(".journey__visual"));
+    function updateJourneyMotion() {
+      scheduled = false;
+      if (!guided || !visible) return;
+      const distance = Math.max(1, track.offsetHeight - frame.offsetHeight);
+      const progress = Math.max(0, Math.min(1, (stickyTop - track.getBoundingClientRect().top) / distance));
+      const phase = Math.min(order.length - 1, Math.floor(progress * order.length));
+      const localProgress = Math.min(1, progress * order.length - phase);
+      selectJourney(order[phase]);
+      choices.forEach((choice, index) => choice.style.setProperty("--choice-progress", String(index < phase ? 1 : index === phase ? localProgress : 0)));
+      if (sequenceService !== order[phase]) {
+        sequenceService = order[phase];
+        sequence = collectSceneAnimations(scenes[phase]);
+      }
+      seekSceneAnimations(sequence, (localProgress - .04) / .76);
     }
+    function scheduleJourneyMotion() {
+      if (guided && visible && !scheduled) {
+        scheduled = true;
+        requestAnimationFrame(updateJourneyMotion);
+      }
+    }
+    function syncJourneyMotion() {
+      stickyTop = (header?.querySelector(".site-header__inner")?.offsetHeight || 76) + 12;
+      guided = !preference.matches && window.innerWidth <= 768 && frame.offsetHeight + stickyTop + 64 < window.innerHeight && "IntersectionObserver" in window && "getAnimations" in Element.prototype;
+      journey.style.setProperty("--journey-sticky-top", `${stickyTop}px`);
+      track.style.setProperty("--journey-frame-height", `${frame.offsetHeight}px`);
+      journey.classList.toggle("journey--guided", guided);
+      journey.classList.toggle("is-in-view", visible && !preference.matches);
+      description.setAttribute("aria-live", guided ? "off" : "polite");
+      if (sequence) sequence.animations.forEach((animation) => preference.matches ? animation.cancel() : animation.play());
+      sequenceService = null;
+      scheduleJourneyMotion();
+    }
+    if ("IntersectionObserver" in window) {
+      const journeyObserver = new IntersectionObserver((entries) => {
+        visible = entries.some((entry) => entry.isIntersecting);
+        journey.classList.toggle("is-in-view", visible && !preference.matches);
+        sequenceService = null;
+        scheduleJourneyMotion();
+      }, { rootMargin: "100px" });
+      journeyObserver.observe(track);
+    }
+    window.addEventListener("scroll", scheduleJourneyMotion, { passive: true });
+    window.addEventListener("resize", syncJourneyMotion, { passive: true });
+    preference.addEventListener("change", syncJourneyMotion);
+    if ("ResizeObserver" in window) new ResizeObserver(syncJourneyMotion).observe(frame);
+    document.fonts?.ready.then(syncJourneyMotion);
+    syncJourneyMotion();
   }
 
   const method = document.querySelector("[data-method-track]");
