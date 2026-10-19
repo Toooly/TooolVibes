@@ -332,6 +332,97 @@
     preference.addEventListener("change", syncMethodMotion);
     syncMethodMotion();
   }
+  function initAvailabilityNotice() {
+    const notice = document.querySelector("[data-availability-notice]");
+    if (!notice || !("IntersectionObserver" in window)) return;
+    const storageKey = "services-availability-seen";
+    try { if (sessionStorage.getItem(storageKey)) return; } catch { /* Storage can be unavailable in private browsers. */ }
+
+    const cta = notice.querySelector("[data-notice-cta]");
+    const panel = document.querySelector("[data-contact-panel]");
+    const blockers = new Set();
+    const enteredAt = performance.now();
+    let candidate = null;
+    let shown = false;
+    let pending = 0;
+    let expiry = 0;
+
+    const clearPending = () => { window.clearTimeout(pending); pending = 0; };
+    const remember = () => {
+      shown = true;
+      try { sessionStorage.setItem(storageKey, "1"); } catch { /* Keep the in-memory limit when storage is blocked. */ }
+    };
+    const dismiss = () => {
+      clearPending();
+      window.clearTimeout(expiry);
+      const hadFocus = notice.contains(document.activeElement);
+      notice.hidden = true;
+      if (hadFocus && candidate) {
+        const heading = candidate.querySelector("h2");
+        heading.setAttribute("tabindex", "-1");
+        heading.focus({ preventScroll: true });
+      }
+    };
+    const blocked = () => document.hidden || blockers.size > 0 || panel?.open || menuToggle?.getAttribute("aria-expanded") === "true" || document.activeElement?.matches("input,textarea,select,[contenteditable=true]");
+    const schedule = () => {
+      clearPending();
+      if (blocked() || !candidate) { dismiss(); return; }
+      if (shown) return;
+      pending = window.setTimeout(() => {
+        pending = 0;
+        if (blocked() || !candidate) return;
+        // Availability has one source of truth: the existing, service-specific pricing block.
+        const capacity = candidate.querySelector(".service-capacity");
+        const title = capacity?.querySelector("small b")?.textContent.trim();
+        const detail = capacity?.querySelector(".service-capacity__limit")?.textContent.trim();
+        if (!title || !detail) return;
+        notice.dataset.service = candidate.dataset.service;
+        cta.dataset.contactService = candidate.dataset.service;
+        notice.hidden = false;
+        notice.querySelector("[data-notice-service]").textContent = candidate.querySelector(".service-offer__label").textContent;
+        notice.querySelector("[data-notice-title]").textContent = title;
+        notice.querySelector("[data-notice-detail]").textContent = detail;
+        remember();
+        expiry = window.setTimeout(() => { if (!notice.matches(":hover,:focus-within")) dismiss(); }, 12_000);
+      }, Math.max(5_000, 20_000 - (performance.now() - enteredAt)));
+    };
+
+    const serviceObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) candidate = entry.target;
+        else if (candidate === entry.target) candidate = null;
+      }
+      schedule();
+    }, { rootMargin: "-20% 0px -35% 0px" });
+    document.querySelectorAll("[data-service]").forEach((service) => serviceObserver.observe(service));
+
+    const blockerObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => entry.isIntersecting ? blockers.add(entry.target) : blockers.delete(entry.target));
+      schedule();
+    });
+    document.querySelectorAll("#contatti,.service-offer .button,.site-footer").forEach((element) => blockerObserver.observe(element));
+    notice.querySelector("[data-notice-close]").addEventListener("click", dismiss);
+    notice.addEventListener("pointerenter", () => window.clearTimeout(expiry));
+    notice.addEventListener("focusin", () => window.clearTimeout(expiry));
+    const resumeExpiry = () => {
+      window.clearTimeout(expiry);
+      if (!notice.hidden && !notice.matches(":hover,:focus-within")) expiry = window.setTimeout(dismiss, 12_000);
+    };
+    notice.addEventListener("pointerleave", resumeExpiry);
+    notice.addEventListener("focusout", () => queueMicrotask(resumeExpiry));
+    document.addEventListener("visibilitychange", schedule);
+    document.addEventListener("focusin", schedule);
+    document.addEventListener("focusout", () => queueMicrotask(schedule));
+    menuToggle?.addEventListener("click", schedule);
+    panel?.addEventListener("toggle", schedule);
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !notice.hidden) dismiss(); });
+    document.querySelectorAll('a[href="#contatti"]').forEach((link) => link.addEventListener("click", () => {
+      remember();
+      dismiss();
+    }));
+  }
+  initAvailabilityNotice();
+
   if (!contactForm || !formStatus) return;
   contactForm.querySelector('button[type="submit"]').disabled = false;
 
@@ -454,7 +545,7 @@
   document.querySelectorAll('a[href="#contatti"]').forEach((link) => {
     link.addEventListener("click", (event) => {
       if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      openContact(link.closest("[data-service]")?.dataset.service);
+      openContact(link.dataset.contactService || link.closest("[data-service]")?.dataset.service);
       requestAnimationFrame(() => contactPanel.querySelector("summary").focus({ preventScroll: true }));
     });
   });
