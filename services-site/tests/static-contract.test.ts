@@ -64,7 +64,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain("210svh");
     expect(app).toContain("frame.offsetHeight + stickyTop + cueSpace < availableHeight");
     expect(app).toContain("track.before(title)");
-    expect(app).toContain("track.after(connection)");
+    expect(app).not.toContain("journey__connection");
     expect(css).toContain(".journey--compact .journey__visual");
     expect(app).toContain('description.setAttribute("aria-live", guided ? "off" : "polite")');
     expect(app).toContain("requestAnimationFrame(updateJourneyMotion)");
@@ -150,6 +150,16 @@ describe("TooolVibes Servizi static contract", () => {
     expect(labelStyles).toContain("var(--service-accent)");
     expect(labelStyles).toContain("box-shadow:");
     expect(html).toContain('<p class="service-offer__promotion">3 mesi al prezzo di 1</p>');
+    expect([...html.matchAll(/class="section-number__label">([^<]+)<\/span>/g)].map((match) => match[1])).toEqual([
+      "Sito web", "Automazione contenuti", "Attivazione chatbot AI",
+    ]);
+    expect(css).toMatch(/\.section-number__label \{ position: absolute;[^}]*bottom: calc\(100% \+ .55rem\)/);
+  });
+
+  it("removes the explorer connection copy and its responsive presentation", () => {
+    expect(html).not.toContain("Un servizio per iniziare");
+    expect(html).not.toContain("journey__connection");
+    expect(css).not.toContain("journey__connection");
   });
 
   it("removes the comparison-price accordion and its presentation", () => {
@@ -170,9 +180,9 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html.match(/class="service-capacity__note">Scrivici per concordare la partenza\./g)).toHaveLength(3);
     expect(html).not.toContain("tra tutti i servizi");
     expect(html.match(/class="service-capacity__number" aria-hidden="true"/g)).toHaveLength(3);
-    expect(html).toContain("<span>00</span><span>01</span><span>01</span>");
-    expect(html).toContain("<span>00</span><span>02</span><span>03</span>");
-    expect(html).not.toContain("<span>05</span>");
+    expect(html).toContain("<span>05</span><span>04</span><span>03</span><span>02</span><span>01</span>");
+    expect(html).toContain("<span>05</span><span>04</span><span>03</span>");
+    expect(html).not.toContain("<span>00</span>");
     expect(html.match(/class="is-assigned"/g)).toHaveLength(12);
     expect(html.match(/<a class="service-capacity" href="#contatti"/g)).toHaveLength(3);
     expect(css).not.toContain('@keyframes capacity-signal');
@@ -190,6 +200,10 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain('opacity: .85');
     expect(css).toContain('@keyframes capacity-count');
     expect(css).toContain('@keyframes capacity-tone');
+    expect(css).toContain('steps(var(--count-steps),end)');
+    expect(css).toContain('.service-capacity.has-counted .service-capacity__digits');
+    expect(css).toContain('capacity-breathe 6.4s ease-in-out infinite');
+    expect(css).toContain('notice-bloom 1.6s ease-out both');
     for (const animation of ['price-arrive', 'price-light', 'price-line', 'capacity-slot', 'capacity-arrive', 'capacity-orbit', 'capacity-response']) expect(css).not.toContain(`@keyframes ${animation}`);
     expect(css).not.toContain('.service-offer__price::before');
     const app = readFileSync(resolve(root, "app.js"), "utf8");
@@ -276,7 +290,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).not.toContain("service-visual__flow");
     expect(css).toContain(".service-visual.is-in-view .screen-reply");
     const app = readFileSync(resolve(root, "app.js"), "utf8");
-    expect(app).toContain('querySelectorAll("[data-service], .service-visual")');
+    expect(app).toContain('querySelectorAll(".service[data-service], .service-visual")');
     expect(app).toContain("journeyObserver.observe(track)");
   });
 });

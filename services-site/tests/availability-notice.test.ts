@@ -224,4 +224,31 @@ describe("Contextual availability notice", () => {
     ui.advance();
     expect(ui.notice.dataset.service).toBe("web");
   });
+
+  it("updates the launcher name and accent for each service and explorer phase", () => {
+    const ui = setup("dismissed");
+    for (const kind of ["web", "social", "ai"]) {
+      ui.enter(kind); ui.advance();
+      expect(ui.launcher.hidden).toBe(false);
+      expect(ui.launcher.dataset.service).toBe(kind);
+      expect(ui.launcher.querySelector("[data-launcher-service]")!.textContent).toBe(ui.service(kind).querySelector(".service-offer__label")!.textContent);
+      ui.enter(kind, false);
+    }
+    const journey = ui.w.document.querySelector<HTMLElement>("[data-journey]")!;
+    ui.serviceObserver!.callback([{ target: journey, isIntersecting: true }]);
+    for (const kind of ["social", "ai", "web"]) {
+      journey.querySelector<HTMLButtonElement>(`[data-journey-select="${kind}"]`)!.click();
+      expect(ui.launcher.dataset.service).toBe(kind);
+    }
+    expect(ui.w.fetch).not.toHaveBeenCalled();
+  });
+
+  it("keeps the next visible section context when resize re-enters a preceding section", () => {
+    const ui = setup("dismissed");
+    ui.enter("social"); ui.advance();
+    ui.enter("web");
+    expect(ui.launcher.dataset.service).toBe("social");
+    ui.launcher.click();
+    expect(ui.notice.dataset.service).toBe("social");
+  });
 });

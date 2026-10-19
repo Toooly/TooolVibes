@@ -38,8 +38,8 @@ function setup(height = 844, frameHeight = 558) {
   track.getBoundingClientRect = trackReads;
   w.eval(readFileSync(resolve(root, "app.js"), "utf8"));
   function flush() { while (frames.length) frames.shift()!(0); }
-  function enter(element: Element) {
-    observers.filter((observer) => observer.elements.includes(element)).forEach((observer) => observer.callback([{ target: element, isIntersecting: true }], { unobserve() {} }));
+  function enter(element: Element, isIntersecting = true) {
+    observers.filter((observer) => observer.elements.includes(element)).forEach((observer) => observer.callback([{ target: element, isIntersecting }], { unobserve() {} }));
     flush();
   }
   function progress(value: number) {
@@ -58,6 +58,8 @@ describe("Scroll-paced services motion", () => {
       const capacity = ui.w.document.querySelector(`[data-service-price="${service}"] .service-capacity`)!;
       expect(capacity.getAttribute("data-available")).toBe(String(available));
       expect(Number(capacity.querySelector(".service-capacity__digits > span:last-child")?.textContent)).toBe(available);
+      const digits = [...capacity.querySelectorAll(".service-capacity__digits > span")].map((digit) => Number(digit.textContent));
+      expect(digits).toEqual(Array.from({ length: 6 - available }, (_, index) => 5 - index));
       expect(capacity.querySelectorAll(".service-capacity__slots i:not(.is-assigned)")).toHaveLength(available);
       expect(capacity.querySelectorAll(".service-capacity__orbit circle:not(.is-assigned)")).toHaveLength(available);
       expect(capacity.getAttribute("aria-label")).toContain(`${available} `);
@@ -67,6 +69,20 @@ describe("Scroll-paced services motion", () => {
     expect(chatbot.textContent).toContain("Disponibilità su richiesta");
     expect(chatbot.querySelector(".service-capacity__digits")).toBeNull();
     expect(chatbot.querySelector(".service-capacity__slots")).toBeNull();
+  });
+
+  it("starts capacity motion only when visible and never resets the completed countdown", () => {
+    const ui = setup();
+    const capacity = ui.w.document.querySelector('.service-capacity[data-available="1"]')!;
+    expect(capacity.classList.contains("has-counted")).toBe(false);
+    ui.enter(capacity);
+    expect(capacity.classList.contains("is-in-view")).toBe(true);
+    expect(capacity.classList.contains("has-counted")).toBe(true);
+    ui.enter(capacity, false);
+    expect(capacity.classList.contains("is-in-view")).toBe(false);
+    expect(capacity.classList.contains("has-counted")).toBe(true);
+    ui.enter(capacity);
+    expect(capacity.classList.contains("has-counted")).toBe(true);
   });
 
   it("holds three readable phases and reverses them with native scrolling", () => {
@@ -107,7 +123,7 @@ describe("Scroll-paced services motion", () => {
     const ui = setup(height, 470);
     expect(ui.journey.classList.contains("journey--guided")).toBe(true);
     expect(ui.journey.querySelector(":scope > #journey-title")).not.toBeNull();
-    expect(ui.journey.querySelector(":scope > .journey__connection")).not.toBeNull();
+    expect(ui.journey.querySelector(".journey__connection")).toBeNull();
     ui.enter(ui.track);
     ui.progress(.5);
     expect(ui.journey.dataset.active).toBe("social");
@@ -131,7 +147,7 @@ describe("Scroll-paced services motion", () => {
     Object.defineProperty(ui.w, "innerWidth", { value: 390 });
     ui.w.dispatchEvent(new ui.w.Event("resize"));
     expect(ui.journey.querySelector(":scope > #journey-title")).toBe(title);
-    expect(ui.journey.querySelectorAll(".journey__connection")).toHaveLength(1);
+    expect(ui.journey.querySelectorAll(".journey__connection")).toHaveLength(0);
   });
 
   it("does not seek native animations, read layout or rewrite choice styles on each scroll frame", () => {

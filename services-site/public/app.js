@@ -140,6 +140,7 @@
         entries.forEach((entry) => {
           entry.target.classList.toggle("is-in-view", entry.isIntersecting);
           if (!entry.isIntersecting) return;
+          if (entry.target.matches(".service-capacity")) entry.target.classList.add("has-counted");
           const service = entry.target.dataset.service;
           if (service && !trackedSections.has(service)) {
             trackedSections.add(service);
@@ -149,8 +150,9 @@
       },
       { threshold: 0.28 },
     );
-    document.querySelectorAll("[data-service], .service-visual").forEach((element) => sceneObserver.observe(element));
+    document.querySelectorAll(".service[data-service], .service-visual").forEach((element) => sceneObserver.observe(element));
     document.querySelectorAll(".service-offer").forEach((element) => sceneObserver.observe(element));
+    document.querySelectorAll(".service-capacity").forEach((element) => sceneObserver.observe(element));
   } else {
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));
   }
@@ -166,7 +168,6 @@
     const track = journey.querySelector(".journey__track");
     const controls = journey.querySelector(".journey__controls");
     const title = journey.querySelector("h2");
-    const connection = journey.querySelector(".journey__connection");
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const order = ["web", "social", "ai"];
     let guided = false;
@@ -194,6 +195,7 @@
       link.setAttribute("aria-label", selected.label);
       previewLink.setAttribute("href", selected.target);
       previewLink.setAttribute("aria-label", selected.label);
+      journey.dispatchEvent(new CustomEvent("servicechange"));
     }
     choices.forEach((choice) => choice.addEventListener("click", () => {
       const service = choice.dataset.journeySelect;
@@ -230,10 +232,8 @@
         // Like the method, keep the introduction outside the mobile sticky scene.
         if (viewportWidth <= 768) {
           track.before(title);
-          track.after(connection);
         } else {
           controls.prepend(title);
-          controls.append(connection);
         }
       }
       const compact = viewportWidth <= 768 && availableHeight < 640;
@@ -354,7 +354,21 @@
 
     const clearPending = () => { window.clearTimeout(pending); pending = 0; };
     const blocked = () => document.hidden || blockers.size > 0 || menuToggle?.getAttribute("aria-expanded") === "true" || document.activeElement?.matches("input,textarea,select,[contenteditable=true]");
-    const syncLauncher = () => { launcher.hidden = !ready || blocked() || !notice.hidden; };
+    const currentService = () => {
+      // At a section boundary, prefer the next visible service even after a resize re-enters the previous one.
+      const visibleService = services.findLast((service) => contexts.has(service));
+      if (visibleService) return visibleService;
+      if (contexts.has(journey)) return services.find((service) => service.dataset.service === journey.dataset.active) || candidate;
+      return candidate;
+    };
+    const syncLauncher = () => {
+      const service = currentService();
+      if (service && launcher.dataset.service !== service.dataset.service) {
+        launcher.dataset.service = service.dataset.service;
+        launcher.querySelector("[data-launcher-service]").textContent = service.querySelector(".service-offer__label").textContent;
+      }
+      launcher.hidden = !ready || blocked() || !notice.hidden;
+    };
     const rememberDismissal = () => {
       dismissedUntil = Date.now() + 15 * 60_000;
       try { sessionStorage.setItem(storageKey, String(dismissedUntil)); } catch { /* Keep the temporary preference in memory. */ }
@@ -368,11 +382,6 @@
       if (manual) rememberDismissal();
       syncLauncher();
       if (hadFocus && !launcher.hidden) launcher.focus({ preventScroll: true });
-    };
-    const currentService = () => {
-      if (contexts.has(candidate)) return candidate;
-      if (contexts.has(journey)) return services.find((service) => service.dataset.service === journey.dataset.active) || candidate;
-      return candidate;
     };
     const resumeExpiry = () => {
       window.clearTimeout(expiry);
@@ -440,6 +449,7 @@
     document.addEventListener("focusin", schedule);
     document.addEventListener("focusout", () => queueMicrotask(schedule));
     menuToggle?.addEventListener("click", schedule);
+    journey?.addEventListener("servicechange", schedule);
     panel?.addEventListener("toggle", schedule);
     document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !notice.hidden) dismiss(true); });
     document.querySelectorAll('a[href="#contatti"]').forEach((link) => link.addEventListener("click", () => {
