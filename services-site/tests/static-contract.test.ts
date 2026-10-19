@@ -18,6 +18,22 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).not.toMatch(/href=["']\/(archivio|radar|account|compare|shop)/i);
   });
 
+  it("uses the same compact vertical service composition on desktop and mobile", () => {
+    const service = css.match(/\.service \{([^}]+)\}/)![1];
+    expect(service).toContain("grid-template-columns: minmax(0,1fr)");
+    expect(service).toContain("justify-items: center");
+    expect(service).not.toContain("min-height");
+    const copy = css.match(/\.section-copy \{([^}]+)\}/)![1];
+    expect(copy).toContain("order: -1");
+    expect(copy).toContain("max-width: 34rem");
+    for (const [kind, width] of [["chatbot", "27.5rem"], ["social", "28rem"], ["web", "27.75rem"]]) {
+      expect(css).toContain(`.service-visual--${kind} { width: min(100%, ${width}); }`);
+    }
+    expect(css).not.toContain(".service--social { grid-template-columns:");
+    expect(css).not.toContain(".service--social .section-copy { order: 2;");
+    expect(html.match(/sizes="\(max-width: 48rem\) calc\(100vw - 1rem\), 28rem"/g)).toHaveLength(3);
+  });
+
   it("contains the complete accessible lead form", () => {
     for (const name of ["name", "email", "company", "need", "message", "privacyAccepted"]) {
       expect(html).toContain(`name="${name}"`);
