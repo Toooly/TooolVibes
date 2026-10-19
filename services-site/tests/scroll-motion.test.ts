@@ -7,7 +7,7 @@ const root = resolve(process.cwd(), "services-site/public");
 const documents: JSDOM[] = [];
 afterEach(() => documents.splice(0).forEach((dom) => dom.window.close()));
 
-function setup(height = 844, frameHeight = 558) {
+function setup(height = 844, frameHeight = 558, width = 390) {
   const dom = new JSDOM(readFileSync(resolve(root, "index.html"), "utf8"), { url: "https://servizi.tooolvibes.eu", runScripts: "outside-only" });
   documents.push(dom);
   const w = dom.window;
@@ -30,7 +30,7 @@ function setup(height = 844, frameHeight = 558) {
   w.Element.prototype.getAnimations = animationQueries;
   w.fetch = vi.fn(async () => new Response(null, { status: 204 }));
   w.scrollTo = vi.fn();
-  Object.defineProperty(w, "innerWidth", { configurable: true, value: 390 });
+  Object.defineProperty(w, "innerWidth", { configurable: true, value: width });
   Object.defineProperty(w, "innerHeight", { configurable: true, value: height });
   Object.defineProperty(frame, "offsetHeight", { get: () => journey.classList.contains("journey--compact") ? Math.min(frameHeight, 390) : frameHeight });
   Object.defineProperty(track, "offsetHeight", { get: () => journey.classList.contains("journey--guided") ? frame.offsetHeight + 1800 : frame.offsetHeight });
@@ -142,12 +142,55 @@ describe("Scroll-paced services motion", () => {
     const title = ui.journey.querySelector("#journey-title");
     Object.defineProperty(ui.w, "innerWidth", { value: 1440 });
     ui.w.dispatchEvent(new ui.w.Event("resize"));
-    expect(ui.journey.querySelector(".journey__controls #journey-title")).toBe(title);
-    expect(ui.journey.classList.contains("journey--guided")).toBe(false);
+    expect(ui.journey.querySelector(":scope > #journey-title")).toBe(title);
+    expect(ui.journey.classList.contains("journey--guided")).toBe(true);
     Object.defineProperty(ui.w, "innerWidth", { value: 390 });
     ui.w.dispatchEvent(new ui.w.Event("resize"));
     expect(ui.journey.querySelector(":scope > #journey-title")).toBe(title);
     expect(ui.journey.querySelectorAll(".journey__connection")).toHaveLength(0);
+  });
+
+  it.each([1280, 1440, 1728])("paces the desktop explorer at %ipx with the same reversible phases", (width) => {
+    const ui = setup(900, 450, width);
+    ui.enter(ui.track);
+    expect(ui.journey.classList.contains("journey--guided")).toBe(true);
+    expect(ui.journey.querySelector(":scope > #journey-title")).not.toBeNull();
+    for (const [progress, service] of [[.15, "web"], [.5, "social"], [.85, "ai"], [.5, "social"]] as const) {
+      ui.progress(progress);
+      expect(ui.journey.dataset.active).toBe(service);
+    }
+    expect(ui.animationQueries).not.toHaveBeenCalled();
+  });
+
+  it("retains manual choices on tablets and desktop windows too short for a sticky stage", () => {
+    for (const ui of [setup(900, 450, 1024), setup(600, 500, 1440)]) {
+      expect(ui.journey.classList.contains("journey--guided")).toBe(false);
+      (ui.journey.querySelector('[data-journey-select="ai"]') as HTMLButtonElement).click();
+      expect(ui.journey.dataset.active).toBe("ai");
+      expect(ui.w.scrollTo).not.toHaveBeenCalled();
+    }
+  });
+
+  it("rechecks desktop height without changing mobile browser-chrome behavior", () => {
+    const ui = setup(900, 450, 1440);
+    expect(ui.journey.classList.contains("journey--guided")).toBe(true);
+    Object.defineProperty(ui.w, "innerHeight", { value: 500 });
+    ui.w.dispatchEvent(new ui.w.Event("resize"));
+    expect(ui.journey.classList.contains("journey--guided")).toBe(false);
+    Object.defineProperty(ui.w, "innerHeight", { value: 900 });
+    ui.w.dispatchEvent(new ui.w.Event("resize"));
+    expect(ui.journey.classList.contains("journey--guided")).toBe(true);
+  });
+
+  it("closes the mobile menu when entering the desktop navigation layout", () => {
+    const ui = setup();
+    const toggle = ui.w.document.querySelector<HTMLButtonElement>("[data-menu-toggle]")!;
+    toggle.click();
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    Object.defineProperty(ui.w, "innerWidth", { value: 1280 });
+    ui.w.dispatchEvent(new ui.w.Event("resize"));
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(ui.w.document.querySelector<HTMLElement>("[data-mobile-nav]")!.hidden).toBe(true);
   });
 
   it("does not seek native animations, read layout or rewrite choice styles on each scroll frame", () => {

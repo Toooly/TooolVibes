@@ -226,11 +226,13 @@
       distance = Math.max(1, track.offsetHeight - frame.offsetHeight);
     }
     function syncJourneyMotion() {
+      // Desktop window height is user-controlled; mobile chrome must not restart a sticky story.
+      if (window.innerWidth !== viewportWidth || window.innerWidth > 1024) availableHeight = window.innerHeight;
       if (window.innerWidth !== viewportWidth) {
         viewportWidth = window.innerWidth;
-        availableHeight = window.innerHeight;
-        // Like the method, keep the introduction outside the mobile sticky scene.
-        if (viewportWidth <= 768) {
+        if (viewportWidth > 1024) setMenu(false);
+        // Keep the heading outside both guided stages; the tablet fallback retains its manual layout.
+        if (viewportWidth <= 768 || viewportWidth > 1024) {
           track.before(title);
         } else {
           controls.prepend(title);
@@ -240,7 +242,7 @@
       journey.classList.toggle("journey--compact", compact);
       stickyTop = (header?.querySelector(".site-header__inner")?.offsetHeight || 76) + 12;
       const cueSpace = compact ? 52 : 64;
-      guided = !preference.matches && viewportWidth <= 768 && frame.offsetHeight + stickyTop + cueSpace < availableHeight && "IntersectionObserver" in window;
+      guided = !preference.matches && (viewportWidth <= 768 || viewportWidth > 1024) && frame.offsetHeight + stickyTop + cueSpace < availableHeight && "IntersectionObserver" in window;
       journey.style.setProperty("--journey-sticky-top", `${stickyTop}px`);
       track.style.setProperty("--journey-frame-height", `${frame.offsetHeight}px`);
       journey.classList.toggle("journey--guided", guided);
@@ -262,7 +264,7 @@
     window.addEventListener("scroll", scheduleJourneyMotion, { passive: true });
     // Mobile browser chrome changes height while scrolling; it must not collapse or restart the sticky track.
     window.addEventListener("resize", () => {
-      if (window.innerWidth !== viewportWidth) syncJourneyMotion();
+      if (window.innerWidth !== viewportWidth || window.innerWidth > 1024) syncJourneyMotion();
     }, { passive: true });
     preference.addEventListener("change", syncJourneyMotion);
     if ("ResizeObserver" in window) new ResizeObserver(syncJourneyMotion).observe(frame);

@@ -18,7 +18,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).not.toMatch(/href=["']\/(archivio|radar|account|compare|shop)/i);
   });
 
-  it("uses the same compact vertical service composition on desktop and mobile", () => {
+  it("preserves the compact vertical mobile service composition and shared artwork", () => {
     const service = css.match(/\.service \{([^}]+)\}/)![1];
     expect(service).toContain("grid-template-columns: minmax(0,1fr)");
     expect(service).toContain("justify-items: center");
@@ -32,6 +32,31 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain(".service--social { grid-template-columns:");
     expect(css).not.toContain(".service--social .section-copy { order: 2;");
     expect(html.match(/sizes="\(max-width: 48rem\) calc\(100vw - 1rem\), 28rem"/g)).toHaveLength(3);
+  });
+
+  it("scopes the desktop art direction above 1024px while preserving the mobile foundations", () => {
+    const desktop = css.slice(css.indexOf("/* Desktop composition."), css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
+    expect(desktop).toContain("@media (min-width: 64.01rem)");
+    expect(desktop).toContain(".hero__actions { justify-content: center;");
+    expect(desktop).toContain("grid-template-columns: minmax(0,1.4fr) minmax(18rem,.9fr)");
+    expect(desktop).toContain(".service-offer__value { grid-column: 3;");
+    expect(desktop).toContain(".service-offer .service-capacity { grid-column: 2;");
+    expect(desktop).toContain(".method-rail { grid-column: 2;");
+    expect(desktop).toContain("calc(100svh - 17rem)");
+    expect(desktop).not.toContain(".service-visual--web");
+    expect(html.match(/class="service-visual /g)).toHaveLength(3);
+  });
+
+  it("layers the shared artwork into desktop service backgrounds without covering controls", () => {
+    const desktop = css.slice(css.indexOf("/* Desktop composition."), css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
+    const artwork = desktop.match(/\.service \.service-visual \{([^}]+)\}/)![1];
+    expect(artwork).toContain("grid-area: 1 / 1");
+    expect(artwork).toContain("z-index: 0");
+    expect(artwork).toContain("pointer-events: none");
+    expect(artwork).toContain("mask-image:");
+    expect(desktop).toContain(".service .section-copy { grid-area: 1 / 1;");
+    expect(desktop).toContain("max-width: min(62%,26rem)");
+    expect(desktop).not.toContain("background-image: url(");
   });
 
   it("contains the complete accessible lead form", () => {
