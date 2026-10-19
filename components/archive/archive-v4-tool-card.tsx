@@ -1,21 +1,7 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-/**
- * TooolVibes — Archive V4 Tool Card (CATALOG FINAL V2, 2026-10-02)
- *
- * V3 contract:
- *  - Two actions only: Save + Compare. No overflow/third action.
- *  - Card body opens Tool Detail via stretched link.
- *  - Mobile anatomy: TOP (logo + identity), BODY (desc + Ideale per),
- *    FOOTER (score + Save + Compare).
- *  - State semantics: SAVED = luminous perimeter, COMPARE = interior wash +
- *    watermark, FEATURED = gold. These meanings never overlap.
- *  - Save tap fires a one-shot perimeter trace (~650ms) then settles to a
- *    stable thin luminous border.
- *  - Editorial (gold) border is preserved when saved; saved uses an inner
- *    violet trace on editorial cards.
- */
+/** Catalog card: save/compare state stays stable; feedback belongs to the action. */
 
 import { Target } from "lucide-react";
 import Link from "@/components/ui/app-link";
@@ -31,6 +17,7 @@ import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { computeEditorialScore } from "@/lib/data/editorial-score";
 import { cn } from "@/lib/utils";
+import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
 import { CompareToggle } from "@/components/tools/compare-toggle";
 import { useCardReveal } from "@/lib/hooks/use-card-reveal";
 
@@ -49,8 +36,6 @@ const TIER_LABEL: Record<"primary" | "secondary" | "tertiary", string> = {
   secondary: "In vetrina",
   tertiary: "Selezione TooolVibes",
 };
-
-const SAVE_TRACE_DURATION_MS = 650;
 
 function ArchiveV4ToolCard({
   tool,
@@ -73,46 +58,12 @@ function ArchiveV4ToolCard({
   const showRank = isSelected && typeof rank === "number" && !personalWord;
   const revealRef = useCardReveal<HTMLElement>(rank && rank <= 6 ? (rank - 1) * 28 : 0);
   const [logoFailed, setLogoFailed] = useState(false);
-  const [justSaved, setJustSaved] = useState(false);
-  const [compareFresh, setCompareFresh] = useState(false);
-  const [justUnsaved, setJustUnsaved] = useState(false);
-  const [showSaveAck, setShowSaveAck] = useState(false);
-  const saveAckTimerRef = useRef<number | null>(null);
-  const [justUncompared, setJustUncompared] = useState(false);
-
+  const [saveFeedback, setSaveFeedback] = useState(false);
   const saveTimerRef = useRef<number | null>(null);
-  const compareTimerRef = useRef<number | null>(null);
-  const unsaveTimerRef = useRef<number | null>(null);
-  const uncompareTimerRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    return () => {
-      if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
-      if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
-      if (unsaveTimerRef.current) window.clearTimeout(unsaveTimerRef.current);
-      if (saveAckTimerRef.current) window.clearTimeout(saveAckTimerRef.current);
-      const ucTimer = uncompareTimerRef.current;
-      if (ucTimer) window.clearTimeout(ucTimer);
-    };
+  useEffect(() => () => {
+    if (saveTimerRef.current !== null) window.clearTimeout(saveTimerRef.current);
   }, []);
-
-  const prevSelectedRef = useRef(isSelected);
-  useEffect(() => {
-    // Clear all animation timers before starting new one
-    if (compareTimerRef.current) window.clearTimeout(compareTimerRef.current);
-    const ucTimer2 = uncompareTimerRef.current;
-    if (ucTimer2) window.clearTimeout(ucTimer2);
-    setCompareFresh(false);
-    setJustUncompared(false);
-    if (isSelected && !prevSelectedRef.current) {
-      setCompareFresh(true);
-      compareTimerRef.current = window.setTimeout(() => setCompareFresh(false), 400);
-    } else if (!isSelected && prevSelectedRef.current) {
-      setJustUncompared(true);
-      uncompareTimerRef.current = window.setTimeout(() => setJustUncompared(false), 240);
-    }
-    prevSelectedRef.current = isSelected;
-  }, [isSelected]);
 
   const handleCardActivate = (event: MouseEvent<HTMLElement>) => {
     if (event.defaultPrevented) return;
@@ -143,23 +94,13 @@ function ArchiveV4ToolCard({
     event.stopPropagation();
     const wasSaved = isSaved;
     toggleSaved(tool.slug);
-    // Clear all animation timers before starting new one
-    if (saveTimerRef.current) window.clearTimeout(saveTimerRef.current);
-    if (unsaveTimerRef.current) window.clearTimeout(unsaveTimerRef.current);
-    setJustSaved(false);
-    setJustUnsaved(false);
+    if (saveTimerRef.current !== null) window.clearTimeout(saveTimerRef.current);
+    setSaveFeedback(!wasSaved);
     if (!wasSaved) {
-      setJustSaved(true);
-      saveTimerRef.current = window.setTimeout(
-        () => setJustSaved(false),
-        SAVE_TRACE_DURATION_MS,
-      );
-      setShowSaveAck(true);
-      if (saveAckTimerRef.current) window.clearTimeout(saveAckTimerRef.current);
-      saveAckTimerRef.current = window.setTimeout(() => setShowSaveAck(false), 1500);
-    } else {
-      setJustUnsaved(true);
-      unsaveTimerRef.current = window.setTimeout(() => setJustUnsaved(false), 240);
+      saveTimerRef.current = window.setTimeout(() => {
+        setSaveFeedback(false);
+        saveTimerRef.current = null;
+      }, MOTION_DURATION_MS.standard);
     }
   };
 
@@ -201,8 +142,6 @@ function ArchiveV4ToolCard({
         effectiveTier && `is-tier-${effectiveTier}`,
         reduced && "is-reduced",
         showSponsoredBadge && "is-sponsored",
-        justSaved && "is-save-trace", justUnsaved && "is-unsave-fade",
-        compareFresh && "is-compare-fresh", justUncompared && "is-uncompare-fade",
         className,
       )}
       onClick={handleCardActivate}
@@ -252,12 +191,13 @@ function ArchiveV4ToolCard({
           </h3>
           <p className="ar4-card__category"><LocalizedText>{tool.categoryLabel}</LocalizedText></p>
         </div>
+        <div className="ar4-card__badges">
         {showEditorialBadge ? (
           <LocalizedAttributes><span
             className="ar4-card__status ar4-card__status--editorial"
-            aria-label="In evidenza"
+            aria-label="Scelta della redazione"
           >
-            <Star size={11} aria-hidden="true" /><LocalizedText>{"In evidenza "}</LocalizedText></span></LocalizedAttributes>
+            <Star size={11} aria-hidden="true" /><LocalizedText>{"Scelta della redazione "}</LocalizedText></span></LocalizedAttributes>
         ) : null}
         {showTierBadge ? (
           <span
@@ -276,6 +216,7 @@ function ArchiveV4ToolCard({
             aria-label="Contenuto sponsorizzato"
           ><LocalizedText>{"Contenuto sponsorizzato "}</LocalizedText></span></LocalizedAttributes>
         ) : null}
+        </div>
       </div>
 
       {/* 2. DESCRIPTION: 2-line editorial block */}
@@ -339,12 +280,13 @@ function ArchiveV4ToolCard({
               type="button"
               className="ar4-card__bookmark"
               data-saved={isSaved || undefined}
+              data-save-feedback={isSaved && saveFeedback ? "added" : undefined}
               aria-pressed={isSaved}
               aria-label={isSaved ? `Rimuovi ${tool.name} dai salvati` : `Salva ${tool.name}`}
               onClick={handleSave}
             >
               <Bookmark
-                className="ar4-card__bookmark-icon"
+                className="ar4-card__bookmark-icon tool-action__icon"
                 aria-hidden="true"
                 fill={isSaved ? "currentColor" : "none"}
               />
@@ -362,15 +304,9 @@ function ArchiveV4ToolCard({
       {showSponsoredBadge ? (
         <p className="ar4-card__disclosure"><LocalizedText>{"Link affiliato: potremmo ricevere una commissione, senza costi aggiuntivi per te. "}</LocalizedText></p>
       ) : null}
-      {/* Save acknowledgement pill */}
-      {showSaveAck && (
-        <div className="tv-save-ack" role="status" aria-live="polite">
-          <svg width="12" height="12" viewBox="0 0 10 14" fill="currentColor" aria-hidden="true">
-            <path d="M1 1h8v12l-4-3-4 3z" />
-          </svg>
-          <span><LocalizedText>{"Salvato"}</LocalizedText></span>
-        </div>
-      )}
+      {saveFeedback && isSaved ? (
+        <span className="sr-only" role="status"><LocalizedText>Salvato</LocalizedText></span>
+      ) : null}
     </article>
   );
 }

@@ -96,6 +96,17 @@ export function getSoundKind(element: HTMLElement): SoundKind {
 }
 
 export function addPulse(element: HTMLElement) {
+  // Save/compare own their icon feedback; do not stack a whole-button pulse.
+  if (element.closest([
+    ".ar4-card__bookmark",
+    ".td-final-cta--save",
+    ".td-final-cta--primary",
+    ".td-final-alt-actions button",
+    '[data-sonic-action="save"]',
+    '[data-sonic-action="compare"]',
+  ].join(", "))) return;
+  const kind = getSoundKind(element);
+  if (kind === "save" || kind === "compare") return;
   const targets = [element];
   const brandMark =
     element.querySelector<HTMLElement>(".brand-mark") ??

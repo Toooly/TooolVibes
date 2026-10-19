@@ -1519,6 +1519,59 @@
   .ar4-ivory__promoted-grid { grid-template-columns: 2fr 1fr 1fr; gap: 20px; }
 }
 
+/* Desktop catalog: one consistent anatomy and aligned action rows. */
+@media (min-width: 1280px) {
+  .ar4-intro__inner { padding-block: 36px; align-items: center; }
+  .ar4-intro__title { font-size: clamp(2.5rem, 3.6vw, 3.5rem); }
+  .ar4-categories__inner { padding-block: 24px; }
+  .ar4-filters__inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; overflow: visible; }
+  .ar4-filters__group--sort { margin-left: auto; flex-shrink: 0; }
+  .ar4-grid__inner { padding-top: 32px; }
+  .ar4-grid__list { align-items: stretch; }
+  .ar4-grid__list > li:has(> .ar4-card) { min-width: 0; display: grid; grid-row: span 6; grid-template-rows: subgrid; }
+  .ar4-grid__list > li > .ar4-card { grid-row: span 6; }
+  .ar4-shell .ar4-card {
+    display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: subgrid; row-gap: 12px;
+    padding: 20px !important; min-height: 0;
+  }
+  .ar4-shell .ar4-card__top {
+    display: grid; grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-rows: minmax(44px, max-content) auto; gap: 8px 12px; align-items: center; align-content: start; min-height: 58px;
+  }
+  .ar4-shell .ar4-card__avatar { width: 44px; height: 44px; grid-column: 1; grid-row: 1; }
+  .ar4-shell .ar4-card__identity { grid-column: 2; grid-row: 1; }
+  .ar4-shell .ar4-card__top { grid-row: 1; }
+  .ar4-shell .ar4-card__badges { display: flex; grid-column: 1 / -1; flex-wrap: wrap; gap: 6px; }
+  .ar4-shell .ar4-card__badges > .ar4-card__status { position: static; margin: 0; }
+  .ar4-shell .ar4-card__best { grid-row: 3; }
+  .ar4-shell .ar4-card__enriched { grid-row: 4; }
+  .ar4-shell .ar4-card__actions { grid-row: 5; }
+  .ar4-shell .ar4-card__disclosure { grid-row: 6; }
+  .ar4-shell .ar4-card[data-tier]::before { content: none !important; }
+  .ar4-shell .ar4-card[data-tier]::after { top: 0 !important; left: 20px !important; right: 20px !important; width: auto !important; height: 2px !important; box-shadow: none !important; filter: none !important; }
+  .ar4-shell .ar4-card__name { font-size: 19px !important; line-height: 1.25 !important; }
+  .ar4-shell .ar4-card__category { font-size: 13px !important; line-height: 1.5 !important; }
+  .ar4-shell .ar4-card__desc {
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+    grid-row: 2; overflow: hidden; padding-top: 0 !important;
+    font-size: 14px !important; line-height: 1.5 !important;
+  }
+  .ar4-shell .ar4-card__desc::before { content: none !important; }
+  .ar4-shell .ar4-card__best {
+    display: grid !important; grid-template-columns: 20px minmax(0, 1fr);
+    padding: 12px !important; align-items: flex-start !important;
+    border-radius: var(--tv-radius-md); gap: 8px !important;
+  }
+  .ar4-shell .ar4-card__best-label { display: block !important; margin-bottom: 4px; font-size: 11px !important; }
+  .ar4-shell .ar4-card__best-text { font-size: 13px !important; line-height: 1.5; }
+  .ar4-shell .ar4-card__enriched { margin: 0; }
+  .ar4-shell .ar4-card__actions { margin-top: 0; padding-top: 14px; border-top: 1px solid var(--tv-border-subtle); }
+  .ar4-shell .ar4-card__control-rail { display: flex; width: 100%; justify-content: flex-start; flex-wrap: nowrap; gap: 10px; }
+  .ar4-shell .ar4-card__toggles { margin-left: auto; }
+  .ar4-shell .ar4-card__score { white-space: nowrap; }
+  .ar4-shell .ar4-card__disclosure { display: block; margin: 0; font-size: 11px; line-height: 1.5; }
+}
+
 /* Tablet card anatomy — controlled metadata, not miniaturized */
 @media (min-width: 768px) and (max-width: 1279px) {
   .ar4-card {
@@ -2887,34 +2940,6 @@ a.archive-v4-card:focus-visible {
   .ar4-applied { padding-inline: var(--tv-gutter-desktop); }
 }
 
-/* ============================================================
-   V3.2 MAIN PASS — catalog lead row (composition break, CSS-only)
-   First result renders as a full-width horizontal editorial row so
-   the grid never reads as an undifferentiated dark-card stack.
-   Stretched-link + action rail contracts are untouched.
-   ============================================================ */
-@media (min-width: 1280px) {
-  .ar4-grid__list > li:first-child {
-    grid-column: 1 / -1;
-  }
-  .ar4-grid__list > li:first-child .ar4-card {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-    grid-template-areas:
-      "top triage"
-      "desc actions";
-    gap: var(--tv-rhythm-related-lg) clamp(1.5rem, 3vw, 3rem);
-    align-items: center;
-    border-top: 2px solid var(--tv-accent-gold);
-  }
-  .ar4-grid__list > li:first-child .ar4-card__top { grid-area: top; }
-  .ar4-grid__list > li:first-child .ar4-card__desc { grid-area: desc; }
-  .ar4-grid__list > li:first-child .ar4-card__triage { grid-area: triage; }
-  .ar4-grid__list > li:first-child .ar4-card__actions { grid-area: actions; justify-content: flex-end; }
-  .ar4-grid__list > li:first-child .ar4-card__name-text {
-    font-size: 1.35rem;
-  }
-}
 @media (min-width: 600px) and (max-width: 1279px) {
   .ar4-grid__list > li:first-child {
     grid-column: 1 / -1;
@@ -3139,11 +3164,6 @@ a.archive-v4-card:focus-visible {
     linear-gradient(#fff 0 0);
   mask-composite: exclude;
   pointer-events: none;
-  animation: ar4-cmp-orbit 3.2s linear infinite;
-}
-
-@keyframes ar4-cmp-orbit {
-  to { --ar4-cmp-angle: 360deg; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3539,50 +3559,6 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── 8. SAVE TRACE: one-shot perimeter sweep ── */
-@property --ar4-save-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.ar4-card.is-save-trace::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: -1px !important;
-  border-radius: inherit !important;
-  padding: 1.5px !important;
-  background: conic-gradient(
-    from var(--ar4-save-angle),
-    transparent 0deg,
-    transparent 290deg,
-    rgba(139, 108, 255, 0.85) 330deg,
-    rgba(255, 255, 255, 0.45) 350deg,
-    transparent 360deg
-  ) !important;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0) !important;
-  -webkit-mask-composite: xor !important;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0) !important;
-  mask-composite: exclude !important;
-  pointer-events: none !important;
-  animation: ar4-save-trace 650ms linear 1 both !important;
-  z-index: 2 !important;
-}
-
-@keyframes ar4-save-trace {
-  from { --ar4-save-angle: 0deg; opacity: 1; }
-  to { --ar4-save-angle: 360deg; opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ar4-card.is-save-trace::after {
-    animation: none !important;
-    content: none !important;
-  }
-}
 
 /* ── 9. REVEAL MOTION: settle-in, no color flash ── */
 @media (prefers-reduced-motion: no-preference) {
@@ -4053,46 +4029,6 @@ a.archive-v4-card:focus-visible {
   }
 }
 
-/* Metallic ambient pulse (subtle, refined) */
-@media (prefers-reduced-motion: no-preference) {
-  .ar4-card[data-tier="primary"]::before,
-  .ar4-card.is-tier-primary::before {
-    animation: ar4-metal-pulse-gold 4s ease-in-out infinite !important;
-  }
-  .ar4-card[data-tier="secondary"]::before,
-  .ar4-card.is-tier-secondary::before {
-    animation: ar4-metal-pulse-silver 4s ease-in-out infinite !important;
-  }
-  .ar4-card[data-tier="tertiary"]::before,
-  .ar4-card.is-tier-tertiary::before {
-    animation: ar4-metal-pulse-bronze 4s ease-in-out infinite !important;
-  }
-}
-
-@keyframes ar4-metal-pulse-gold {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-@keyframes ar4-metal-pulse-silver {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 0.95; }
-}
-@keyframes ar4-metal-pulse-bronze {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 0.95; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ar4-card[data-tier="primary"]::before,
-  .ar4-card.is-tier-primary::before,
-  .ar4-card[data-tier="secondary"]::before,
-  .ar4-card.is-tier-secondary::before,
-  .ar4-card[data-tier="tertiary"]::before,
-  .ar4-card.is-tier-tertiary::before {
-    animation: none !important;
-  }
-}
-
 /* ── TASK 1: METALLIC + SAVED coexist ── */
 .ar4-card[data-tier="primary"][data-saved],
 .ar4-card.is-tier-primary[data-saved] {
@@ -4277,44 +4213,8 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── SAVED: one-shot luminous perimeter trace (550-750ms) ── */
-.ar4-card.is-save-trace::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: -2px !important;
-  border-radius: inherit !important;
-  padding: 2px !important;
-  background: conic-gradient(
-    from var(--ar4-save-angle),
-    transparent 0deg,
-    transparent 270deg,
-    rgba(244, 194, 62, 0.9) 320deg,
-    rgba(245, 201, 104, 0.6) 345deg,
-    rgba(255, 255, 255, 0.35) 355deg,
-    transparent 360deg
-  ) !important;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0) !important;
-  -webkit-mask-composite: xor !important;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0) !important;
-  mask-composite: exclude !important;
-  pointer-events: none !important;
-  animation: ar4-save-trace 650ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-  z-index: 2 !important;
-}
 
 /* ── SAVED: brief local glow bloom on activation ── */
-.ar4-card.is-save-trace {
-  animation: ar4-save-bloom 650ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-}
-
-@keyframes ar4-save-bloom {
-  0% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(244,194,62,.25), 0 0 20px -2px rgba(244,194,62,.2), 0 0 40px -8px rgba(244,194,62,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(244,194,62,.1); }
-  30% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 2px rgba(244,194,62,.4), 0 0 32px 0 rgba(244,194,62,.3), 0 0 60px -4px rgba(244,194,62,.15), inset 0 1px 0 rgba(255,255,255,.1), inset 0 0 0 1px rgba(244,194,62,.2); }
-  100% { box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(244,194,62,.25), 0 0 20px -2px rgba(244,194,62,.2), 0 0 40px -8px rgba(244,194,62,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(244,194,62,.1); }
-}
 
 /* ── COMPARE: enhanced rest state ── */
 .ar4-card[data-selected] {
@@ -4357,17 +4257,6 @@ a.archive-v4-card:focus-visible {
 .ar4-card[data-selected]::after {
   content: none !important;
   animation: none !important;
-}
-
-/* ── COMPARE: one-shot energy sweep on activation ── */
-.ar4-card[data-selected].is-compare-fresh {
-  animation: ar4-compare-activate 320ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-}
-
-@keyframes ar4-compare-activate {
-  0% { background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.02) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.06) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%); }
-  50% { background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.14) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.12) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%); }
-  100% { background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.09) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.1) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%); }
 }
 
 /* ── SAVED + COMPARE: coexist ── */
@@ -4471,18 +4360,6 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── REDUCED MOTION: static states, no animation ── */
-@media (prefers-reduced-motion: reduce) {
-  .ar4-card.is-save-trace::after {
-    content: none !important;
-    animation: none !important;
-  }
-  .ar4-card.is-save-trace {
-    animation: none !important;
-  }
-  .ar4-card[data-selected].is-compare-fresh {
-    animation: none !important;
-  }
-}
 
 /* ============================================================
    SAVE & COMPARE FINAL MOTION LANGUAGE (2026-10-03 Phase 2)
@@ -4493,88 +4370,8 @@ a.archive-v4-card:focus-visible {
    ============================================================ */
 
 /* ── BOOKMARK PING: micro-GUI from Save button ── */
-.ar4-card.is-save-trace .ar4-card__bookmark::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: -6px !important;
-  border-radius: 12px !important;
-  border: 2px solid rgba(244, 194, 62, 0.6) !important;
-  opacity: 0 !important;
-  animation: ar4-bookmark-ping 240ms cubic-bezier(0.16, 1, 0.3, 1) 80ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-@keyframes ar4-bookmark-ping {
-  0% { opacity: 0.8; transform: scale(0.7); }
-  50% { opacity: 0.5; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1.15); }
-}
 
 /* Bookmark echo glyph — small luminous bookmark that rises from the button */
-.ar4-card.is-save-trace .ar4-card__bookmark::after {
-  content: "" !important;
-  position: absolute !important;
-  top: -4px !important;
-  left: 50% !important;
-  width: 10px !important;
-  height: 14px !important;
-  margin-left: -5px !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath d='M1 1h8v12l-4-3-4 3z' fill='%23f4c23e' opacity='0.85'/%3E%3C/svg%3E") no-repeat center !important;
-  background-size: contain !important;
-  opacity: 0 !important;
-  animation: ar4-bookmark-rise 300ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-@keyframes ar4-bookmark-rise {
-  0% { opacity: 0.9; transform: translateY(2px) scale(0.6); }
-  40% { opacity: 0.7; transform: translateY(-6px) scale(0.9); }
-  100% { opacity: 0; transform: translateY(-12px) scale(0.5); }
-}
-
-/* ── COMPARE MICRO-GUI: dual-panel split signal from Compare button ── */
-.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: -5px !important;
-  border-radius: 10px !important;
-  border: 2px solid rgba(57, 210, 246, 0.5) !important;
-  opacity: 0 !important;
-  animation: ar4-compare-ping 220ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-@keyframes ar4-compare-ping {
-  0% { opacity: 0.7; transform: scale(0.7); }
-  50% { opacity: 0.4; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1.15); }
-}
-
-/* Dual-panel split micro-icon that emerges from Compare button */
-.ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
-  content: "" !important;
-  position: absolute !important;
-  top: -3px !important;
-  left: 50% !important;
-  width: 16px !important;
-  height: 12px !important;
-  margin-left: -8px !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12'%3E%3Crect x='0' y='0' width='6' height='12' rx='1' fill='none' stroke='%2339d2f6' stroke-width='1.5' opacity='0.7'/%3E%3Crect x='10' y='0' width='6' height='12' rx='1' fill='none' stroke='%236a3cff' stroke-width='1.5' opacity='0.7'/%3E%3C/svg%3E") no-repeat center !important;
-  background-size: contain !important;
-  opacity: 0 !important;
-  animation: ar4-compare-split 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-@keyframes ar4-compare-split {
-  0% { opacity: 0.8; transform: translateY(2px) scaleX(0.5); }
-  40% { opacity: 0.6; transform: translateY(-4px) scaleX(1.1); }
-  100% { opacity: 0; transform: translateY(-8px) scaleX(0.8); }
-}
 
 /* ── ENHANCED WATERMARK: calibrated opacity 0.10 ── */
 .ar4-card[data-selected]::before {
@@ -4593,32 +4390,6 @@ a.archive-v4-card:focus-visible {
     linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%) !important;
 }
 
-/* ── ENHANCED COMPARE ACTIVATION: diagonal sweep + field intensify ── */
-.ar4-card[data-selected].is-compare-fresh {
-  animation: ar4-compare-sweep 400ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-}
-
-@keyframes ar4-compare-sweep {
-  0% {
-    background:
-      radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.03) 0%, transparent 60%),
-      radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.06) 0%, transparent 55%),
-      linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
-  }
-  35% {
-    background:
-      radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.18) 0%, transparent 60%),
-      radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.16) 0%, transparent 55%),
-      linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
-  }
-  100% {
-    background:
-      radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.12) 0%, transparent 55%),
-      linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
-  }
-}
-
 /* ── ENHANCED SAVE REST: stronger perimeter + depth ── */
 .ar4-card[data-saved] {
   border-color: rgba(244, 194, 62, 0.55) !important;
@@ -4633,45 +4404,6 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── UNSAVE: clean reverse fade (240ms) ── */
-.ar4-card.is-unsave-fade {
-  animation: ar4-unsave-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
-}
-
-@keyframes ar4-unsave-fade {
-  0% {
-    border-color: rgba(244, 194, 62, 0.55);
-    box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(244,194,62,.25), 0 0 24px -2px rgba(244,194,62,.2), 0 0 48px -8px rgba(244,194,62,.1), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(244,194,62,.1);
-  }
-  100% {
-    border-color: rgba(139, 108, 255, 0.2);
-    box-shadow: 0 2px 8px rgba(0,0,0,.28), 0 10px 28px rgba(0,0,0,.2), 0 0 0 1px rgba(139,108,255,.08), 0 0 24px -6px rgba(139,108,255,.06), inset 0 1px 0 rgba(255,255,255,.07), inset 0 -1px 0 rgba(0,0,0,.15), inset 1px 0 0 rgba(139,108,255,.03);
-  }
-}
-
-/* ── UNCOMPARE: clean reverse fade (240ms) ── */
-.ar4-card.is-uncompare-fade {
-  animation: ar4-uncompare-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
-}
-
-@keyframes ar4-uncompare-fade {
-  0% {
-    background: radial-gradient(ellipse at 50% 50%, rgba(57,210,246,0.12) 0%, transparent 60%), radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.12) 0%, transparent 55%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
-    border-color: rgba(57, 210, 246, 0.3);
-  }
-  100% {
-    background: radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.08) 0%, transparent 55%), radial-gradient(ellipse at 15% 90%, rgba(106,60,255,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(139,108,255,0.03) 0%, transparent 70%), linear-gradient(165deg, #1c1438 0%, #150f32 50%, #100b28 100%);
-    border-color: rgba(139, 108, 255, 0.2);
-  }
-}
-
-/* Watermark fade on uncompare */
-.ar4-card.is-uncompare-fade::before {
-  animation: ar4-watermark-out 200ms ease-out 1 both !important;
-}
-@keyframes ar4-watermark-out {
-  0% { opacity: 0.10; }
-  100% { opacity: 0; }
-}
 
 /* ── BUTTON PRESS: subtle compression ── */
 .ar4-card__bookmark:active,
@@ -4681,25 +4413,6 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── REDUCED MOTION: all static ── */
-@media (prefers-reduced-motion: reduce) {
-  .ar4-card.is-save-trace .ar4-card__bookmark::before,
-  .ar4-card.is-save-trace .ar4-card__bookmark::after,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
-    animation: none !important;
-    content: none !important;
-  }
-  .ar4-card.is-save-trace,
-  .ar4-card.is-compare-fresh,
-  .ar4-card.is-unsave-fade,
-  .ar4-card.is-uncompare-fade {
-    animation: none !important;
-  }
-  .ar4-card.is-save-trace::after {
-    content: none !important;
-    animation: none !important;
-  }
-}
 
 /* ============================================================
    CARD INFORMATION DENSITY — Guest Compact / Auth Enriched
@@ -4834,80 +4547,8 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── 3. SAVE ACTIVATION: capture → seal → stored ── */
-.ar4-card.is-save-trace::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: -3px !important;
-  border-radius: inherit !important;
-  padding: 2.5px !important;
-  background: conic-gradient(
-    from var(--ar4-save-angle),
-    transparent 0deg,
-    transparent 260deg,
-    rgba(252, 215, 92, 1) 310deg,
-    rgba(244, 194, 62, 0.8) 335deg,
-    rgba(255, 255, 255, 0.5) 352deg,
-    transparent 360deg
-  ) !important;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
-  -webkit-mask-composite: xor !important;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
-  mask-composite: exclude !important;
-  pointer-events: none !important;
-  animation: ar4-save-trace 700ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-  z-index: 2 !important;
-}
-
-.ar4-card.is-save-trace {
-  animation: ar4-save-bloom 700ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-}
-
-@keyframes ar4-save-bloom {
-  0% { box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 2px rgba(244,194,62,.35), 0 0 28px -2px rgba(244,194,62,.25), 0 0 55px -8px rgba(244,194,62,.12), inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(244,194,62,.1); }
-  35% { box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 3px rgba(252,215,92,.5), 0 0 40px 2px rgba(252,215,92,.3), 0 0 70px -2px rgba(244,194,62,.15), inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px rgba(244,194,62,.2); }
-  100% { box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 2px rgba(244,194,62,.35), 0 0 28px -2px rgba(244,194,62,.25), 0 0 55px -8px rgba(244,194,62,.12), inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(244,194,62,.1); }
-}
 
 /* Bookmark ping */
-.ar4-card.is-save-trace .ar4-card__bookmark::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: -6px !important;
-  border-radius: 12px !important;
-  border: 2px solid rgba(252, 215, 92, 0.6) !important;
-  opacity: 0 !important;
-  animation: ar4-bookmark-ping 240ms cubic-bezier(0.16, 1, 0.3, 1) 80ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-.ar4-card.is-save-trace .ar4-card__bookmark::after {
-  content: "" !important;
-  position: absolute !important;
-  top: -4px !important;
-  left: 50% !important;
-  width: 10px !important;
-  height: 14px !important;
-  margin-left: -5px !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14'%3E%3Cpath d='M1 1h8v12l-4-3-4 3z' fill='%23fcd75c' opacity='0.9'/%3E%3C/svg%3E") no-repeat center !important;
-  background-size: contain !important;
-  opacity: 0 !important;
-  animation: ar4-bookmark-rise 300ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-@keyframes ar4-bookmark-ping {
-  0% { opacity: 0.7; transform: scale(0.7); }
-  50% { opacity: 0.4; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1.15); }
-}
-
-@keyframes ar4-bookmark-rise {
-  0% { opacity: 0.9; transform: translateY(2px) scale(0.6); }
-  40% { opacity: 0.6; transform: translateY(-6px) scale(0.9); }
-  100% { opacity: 0; transform: translateY(-12px) scale(0.5); }
-}
 
 /* Bookmark button: gold active */
 .ar4-card__bookmark[data-saved] {
@@ -4961,59 +4602,6 @@ a.archive-v4-card:focus-visible {
   animation: none !important;
 }
 
-/* Compare activation: analysis sweep */
-.ar4-card[data-selected].is-compare-fresh {
-  animation: ar4-compare-sweep 450ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-}
-
-@keyframes ar4-compare-sweep {
-  0% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.03) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.04) 0%, transparent 50%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
-  35% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.25) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.12) 0%, transparent 50%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
-  100% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.08) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(5,206,251,0.06) 0%, transparent 45%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
-}
-
-/* Compare ping */
-.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: -5px !important;
-  border-radius: 10px !important;
-  border: 2px solid rgba(5, 206, 251, 0.5) !important;
-  opacity: 0 !important;
-  animation: ar4-compare-ping 220ms cubic-bezier(0.16, 1, 0.3, 1) 60ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-@keyframes ar4-compare-ping {
-  0% { opacity: 0.6; transform: scale(0.7); }
-  50% { opacity: 0.35; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1.15); }
-}
-
-/* Compare dual-panel split */
-.ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
-  content: "" !important;
-  position: absolute !important;
-  top: -3px !important;
-  left: 50% !important;
-  width: 16px !important;
-  height: 12px !important;
-  margin-left: -8px !important;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12'%3E%3Crect x='0' y='0' width='6' height='12' rx='1' fill='none' stroke='%2305cefb' stroke-width='1.5' opacity='0.8'/%3E%3Crect x='10' y='0' width='6' height='12' rx='1' fill='none' stroke='%2305cefb' stroke-width='1.5' opacity='0.8'/%3E%3C/svg%3E") no-repeat center !important;
-  background-size: contain !important;
-  opacity: 0 !important;
-  animation: ar4-compare-split 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms 1 both !important;
-  pointer-events: none !important;
-  z-index: 3 !important;
-}
-
-@keyframes ar4-compare-split {
-  0% { opacity: 0.7; transform: translateY(2px) scaleX(0.5); }
-  40% { opacity: 0.5; transform: translateY(-4px) scaleX(1.1); }
-  100% { opacity: 0; transform: translateY(-8px) scaleX(0.8); }
-}
-
 /* Compare button active: cyan */
 .ar4-card__toggles [data-sonic-action="compare"].is-active {
   border-color: rgba(5, 206, 251, 0.5) !important;
@@ -5042,32 +4630,6 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── 6. UNSAVE / UNCOMPARE ── */
-.ar4-card.is-unsave-fade {
-  animation: ar4-unsave-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
-}
-
-@keyframes ar4-unsave-fade {
-  0% { border-color: rgba(244, 194, 62, 0.7); box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 2px rgba(244,194,62,.35), 0 0 28px -2px rgba(244,194,62,.25), 0 0 55px -8px rgba(244,194,62,.12), inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(244,194,62,.1); }
-  100% { border-color: rgba(133, 103, 223, 0.15); box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.3), 0 0 0 1px rgba(133,103,223,.05), inset 0 1px 0 rgba(255,255,255,.04), inset 0 -1px 0 rgba(0,0,0,.12); }
-}
-
-.ar4-card.is-uncompare-fade {
-  animation: ar4-uncompare-fade 240ms cubic-bezier(0.4, 0, 0.2, 1) 1 both !important;
-}
-
-@keyframes ar4-uncompare-fade {
-  0% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.08) 0%, transparent 50%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); border-color: rgba(5, 206, 251, 0.4); }
-  100% { background: radial-gradient(ellipse at 85% 10%, rgba(106,60,255,0.04) 0%, transparent 50%), linear-gradient(180deg, #0d0b2a 0%, #0b0926 40%, #080820 100%); border-color: rgba(133, 103, 223, 0.15); }
-}
-
-.ar4-card.is-uncompare-fade::before {
-  animation: ar4-watermark-out 200ms ease-out 1 both !important;
-}
-
-@keyframes ar4-watermark-out {
-  0% { opacity: 0.15; }
-  100% { opacity: 0; }
-}
 
 /* ── 7. PODIUM METALLIC + SAVE/COMPARE ── */
 .ar4-card[data-tier="primary"][data-saved],
@@ -5294,22 +4856,6 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── 12. REDUCED MOTION ── */
-@media (prefers-reduced-motion: reduce) {
-  .ar4-card.is-save-trace::after,
-  .ar4-card.is-save-trace .ar4-card__bookmark::before,
-  .ar4-card.is-save-trace .ar4-card__bookmark::after,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
-    animation: none !important;
-    content: none !important;
-  }
-  .ar4-card.is-save-trace,
-  .ar4-card.is-compare-fresh,
-  .ar4-card.is-unsave-fade,
-  .ar4-card.is-uncompare-fade {
-    animation: none !important;
-  }
-}
 
 /* ============================================================
    CATALOG MOBILE FINAL CONVERGENCE — Reference-Locked
@@ -5671,87 +5217,10 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── SAVE ACKNOWLEDGEMENT: small floating pill ── */
-.tv-save-ack {
-  position: fixed !important;
-  bottom: calc(var(--tv-bottom-nav-total, 3.625rem) + env(safe-area-inset-bottom, 0px) + 12px) !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  z-index: 100 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  padding: 6px 14px !important;
-  border-radius: 999px !important;
-  background: rgba(244, 194, 62, 0.15) !important;
-  border: 1px solid rgba(244, 194, 62, 0.35) !important;
-  color: #F4C23E !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  white-space: nowrap !important;
-  pointer-events: none !important;
-  animation: ar4-save-ack 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 16px -4px rgba(244, 194, 62, 0.15) !important;
-}
-
-@keyframes ar4-save-ack {
-  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
-  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
-}
 
 /* ── MOTION: Save trace ── */
-.ar4-card.is-save-trace::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: -2px !important;
-  border-radius: inherit !important;
-  padding: 2px !important;
-  background: conic-gradient(
-    from var(--ar4-save-angle),
-    transparent 0deg,
-    transparent 260deg,
-    rgba(252, 215, 92, 1) 310deg,
-    rgba(244, 194, 62, 0.8) 335deg,
-    rgba(255, 255, 255, 0.5) 352deg,
-    transparent 360deg
-  ) !important;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
-  -webkit-mask-composite: xor !important;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
-  mask-composite: exclude !important;
-  pointer-events: none !important;
-  animation: ar4-save-trace 650ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-  z-index: 2 !important;
-}
-
-/* ── MOTION: Compare scan front ── */
-.ar4-card[data-selected].is-compare-fresh {
-  animation: ar4-compare-scan 400ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-}
-
-@keyframes ar4-compare-scan {
-  0% { background: radial-gradient(ellipse at 0% 50%, rgba(5,206,251,0.2) 0%, transparent 40%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
-  50% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.18) 0%, transparent 55%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
-  100% { background: radial-gradient(ellipse at 50% 50%, rgba(5,206,251,0.12) 0%, transparent 55%), radial-gradient(ellipse at 85% 10%, rgba(34,211,238,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(5,206,251,0.04) 0%, transparent 45%), linear-gradient(180deg, #0b0c30 0%, #090a28 40%, #070822 100%); }
-}
 
 /* ── REDUCED MOTION ── */
-@media (prefers-reduced-motion: reduce) {
-  .ar4-card.is-save-trace::after,
-  .ar4-card.is-save-trace .ar4-card__bookmark::before,
-  .ar4-card.is-save-trace .ar4-card__bookmark::after,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::after,
-  .ar4-card.is-unsave-fade,
-  .ar4-card.is-uncompare-fade,
-  .tv-save-ack {
-    animation: none !important;
-  }
-  .ar4-card.is-save-trace::after {
-    content: none !important;
-  }
-}
 
 
 /* ═══════════════════════════════════════════════════════════════
@@ -5823,10 +5292,6 @@ a.archive-v4-card:focus-visible {
 }
 
 /* ── F1 Dedup: suppress Save ack when achievement pill is showing ── */
-.tv-reward-host[data-reward-active="achievement"] ~ * .tv-save-ack,
-body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
-  display: none !important;
-}
 
 /* ── F2: Auth card height reduction ── */
 @media (max-width: 767px) {
@@ -5939,11 +5404,6 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
   background: linear-gradient(135deg, rgba(5, 206, 251, 0.06) 0%, transparent 40%, transparent 60%, rgba(5, 206, 251, 0.04) 100%) !important;
 }
 
-/* ── Compare scan animation (preserved) ── */
-.ar4-card[data-selected].is-compare-fresh {
-  animation: ar4-compare-scan 400ms cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-}
-
 /* ============================================================
    TRUE REFERENCE REPRODUCTION — Final Art-Direction Pass
    Source: FINAL-UI-STYLE-REFERENCE.png
@@ -5966,11 +5426,13 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 
 /* ── A. DEFAULT MATERIAL: deep midnight with violet depth ── */
 .ar4-card {
-  background:
+  --ar4-card-surface:
     radial-gradient(ellipse at 50% -5%, rgba(133, 103, 223, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 30% 60%, rgba(180, 120, 80, 0.04) 0%, transparent 45%),
     radial-gradient(ellipse at 85% 15%, rgba(106, 60, 255, 0.05) 0%, transparent 45%),
     radial-gradient(ellipse at 10% 85%, rgba(80, 50, 160, 0.04) 0%, transparent 40%),
-    linear-gradient(175deg, #100d2e 0%, #0c0a28 35%, #090822 70%, #07061e 100%) !important;
+    linear-gradient(175deg, #100d2e 0%, #0c0a28 35%, #090822 70%, #07061e 100%);
+  background:
+    var(--ar4-card-surface) !important;
   border: 1px solid rgba(133, 103, 223, 0.18) !important;
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.35),
@@ -5988,10 +5450,12 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 /* ── B. SAVE: gold material state — OWNS the outer card ── */
 .ar4-card[data-saved] {
   border-color: rgba(244, 194, 62, 0.65) !important;
-  background:
+  --ar4-card-surface:
     radial-gradient(ellipse at 50% -5%, rgba(244, 194, 62, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse at 85% 15%, rgba(252, 215, 92, 0.04) 0%, transparent 45%),
-    linear-gradient(175deg, #100d2e 0%, #0c0a28 35%, #090822 70%, #07061e 100%) !important;
+    linear-gradient(175deg, #100d2e 0%, #0c0a28 35%, #090822 70%, #07061e 100%);
+  background:
+    var(--ar4-card-surface) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3),
@@ -6036,11 +5500,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-selected] {
   border-color: rgba(5, 206, 251, 0.3) !important;
   background:
-    radial-gradient(ellipse at 65% 45%, rgba(10, 180, 240, 0.32) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 15%, rgba(34, 211, 238, 0.2) 0%, transparent 50%),
-    radial-gradient(ellipse at 15% 90%, rgba(5, 206, 251, 0.14) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 100%, rgba(5, 206, 251, 0.1) 0%, transparent 45%),
-    linear-gradient(175deg, #080a28 0%, #060824 35%, #04061e 70%, #030518 100%) !important;
+    var(--ar4-card-surface) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3),
@@ -6051,13 +5511,15 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
     inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Compare layer: cyan ambient field */
-.ar4-card[data-selected] .ar4-card__compare-layer {
-  opacity: 1 !important;
+/* Compare material stays mounted so selection can cross-fade. */
+.ar4-card__compare-layer {
   background:
     radial-gradient(ellipse at 60% 50%, rgba(5, 206, 251, 0.25) 0%, transparent 65%),
     radial-gradient(ellipse at 85% 25%, rgba(34, 211, 238, 0.18) 0%, transparent 55%) !important;
   box-shadow: inset 0 0 30px -6px rgba(5, 206, 251, 0.06) !important;
+}
+.ar4-card[data-selected] .ar4-card__compare-layer {
+  opacity: 1 !important;
 }
 
 /* Compare watermark: LARGE dual-panel (25-35% card width) */
@@ -6092,9 +5554,7 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 .ar4-card[data-saved][data-selected] {
   border-color: rgba(255, 225, 100, 0.7) !important;
   background:
-    radial-gradient(ellipse at 55% 50%, rgba(10, 180, 240, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% -5%, rgba(255, 210, 70, 0.1) 0%, transparent 45%),
-    linear-gradient(175deg, #0e0c30 0%, #0a0a2a 35%, #080824 70%, #06061e 100%) !important;
+    var(--ar4-card-surface) !important;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.4),
     0 10px 30px rgba(0, 0, 0, 0.3),
@@ -6535,23 +5995,10 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
 
 /* ═══════════════════════════════════════════════════════════════
    MOTION & INTERACTION PERFORMANCE PASS (final)
-   All overrides. Existing CSS untouched above.
+   Semantic icon colours; action feedback is owned by the shared icon motion.
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── GHOST REMOVAL: kill detached floating icon clones ── */
-.ar4-card.is-save-trace .ar4-card__bookmark::after,
-.ar4-card.is-compare-fresh [data-sonic-action="compare"]::after {
-  content: none !important;
-  animation: none !important;
-  display: none !important;
-}
-
-.ar4-card.is-save-trace .ar4-card__bookmark::before,
-.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
-  animation: none !important;
-  content: none !important;
-  display: none !important;
-}
 
 /* ── ICON COLOR CONTRACT: semantic gold/cyan (beats mockup-parity lavender) ── */
 .ar4-shell .ar4-card__toggles > .ar4-card__bookmark,
@@ -6587,156 +6034,17 @@ body:has(.tv-reward-host[data-reward-active="achievement"]) .tv-save-ack {
   color: #05CEFB !important;
 }
 
-/* ── ON-ICON MOTION: compress-rebound-settle on real icon ── */
-@keyframes ar4-icon-activate {
-  0% { transform: scale(1); }
-  27% { transform: scale(0.92); }
-  62% { transform: scale(1.10); }
-  100% { transform: scale(1); }
-}
-
-@keyframes ar4-halo-pulse {
-  0% { transform: scale(0.75); opacity: 0.45; }
-  100% { transform: scale(1.45); opacity: 0; }
-}
-
-.ar4-card.is-save-trace .ar4-card__bookmark svg {
-  animation: ar4-icon-activate 260ms cubic-bezier(.22,.8,.2,1) 1 both !important;
-  will-change: transform !important;
-}
-
-.ar4-card.is-compare-fresh [data-sonic-action="compare"] svg {
-  animation: ar4-icon-activate 260ms cubic-bezier(.22,.8,.2,1) 1 both !important;
-  will-change: transform !important;
-}
-
-/* Halo pulse on actual button (no detached glyph) */
-.ar4-card.is-save-trace .ar4-card__bookmark {
-  position: relative !important;
-}
-.ar4-card.is-save-trace .ar4-card__bookmark::before {
-  content: "" !important;
-  display: block !important;
-  position: absolute !important;
-  inset: -4px !important;
-  border-radius: inherit !important;
-  border: 2px solid rgba(255, 210, 70, 0.5) !important;
-  background: transparent !important;
-  pointer-events: none !important;
-  animation: ar4-halo-pulse 280ms cubic-bezier(.22,.8,.2,1) 1 both !important;
-  will-change: transform, opacity !important;
-}
-
-.ar4-card.is-compare-fresh [data-sonic-action="compare"] {
-  position: relative !important;
-}
-.ar4-card.is-compare-fresh [data-sonic-action="compare"]::before {
-  content: "" !important;
-  display: block !important;
-  position: absolute !important;
-  inset: -4px !important;
-  border-radius: inherit !important;
-  border: 2px solid rgba(5, 206, 251, 0.5) !important;
-  background: transparent !important;
-  pointer-events: none !important;
-  animation: ar4-halo-pulse 280ms cubic-bezier(.22,.8,.2,1) 1 both !important;
-  will-change: transform, opacity !important;
-}
-
-/* ── STAGED STATE ONSET: progressive visual layering ── */
-.ar4-card__save-layer {
-  transition: opacity 340ms cubic-bezier(.22,.8,.2,1) 60ms !important;
-}
-
-.ar4-card__compare-layer {
-  transition: opacity 340ms cubic-bezier(.22,.8,.2,1) 60ms !important;
-}
-
-/* Watermark: always mounted, transition opacity */
+/* Saved and compared materials settle without moving the card. */
+.ar4-card__save-layer,
+.ar4-card__compare-layer,
 .ar4-card__watermark {
-  opacity: 0 !important;
-  transition: opacity 300ms cubic-bezier(.22,.8,.2,1) 100ms, transform 300ms cubic-bezier(.22,.8,.2,1) 100ms !important;
-  transform: scale(0.95) !important;
+  transition: opacity var(--tv-duration-base) var(--tv-easing-standard) !important;
 }
-.ar4-card[data-selected] .ar4-card__watermark {
-  opacity: 0.38 !important;
-  transform: scale(1) !important;
-}
-
-/* Compare scan front: static gradient, transform-only */
-.ar4-card.is-compare-fresh .ar4-card__compare-layer::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  background: linear-gradient(90deg, transparent 0%, rgba(5, 206, 251, 0.15) 45%, rgba(5, 206, 251, 0.25) 50%, rgba(5, 206, 251, 0.15) 55%, transparent 100%) !important;
-  pointer-events: none !important;
-  animation: ar4-scan-front 350ms cubic-bezier(.22,.8,.2,1) 1 both !important;
-  will-change: transform, opacity !important;
-}
-
-@keyframes ar4-scan-front {
-  0% { transform: translate3d(-130%, 0, 0); opacity: 1; }
-  100% { transform: translate3d(330%, 0, 0); opacity: 0; }
-}
-
-/* ── SAVE TRACE: static conic, transform-only rotation ── */
-.ar4-card.is-save-trace::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: -1px !important;
-  border-radius: inherit !important;
-  padding: 2px !important;
-  background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 210, 70, 0.7) 30deg, rgba(255, 255, 255, 0.4) 50deg, transparent 70deg) !important;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
-  -webkit-mask-composite: xor !important;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
-  mask-composite: exclude !important;
-  pointer-events: none !important;
-  animation: ar4-trace-rotate 500ms cubic-bezier(.22,.8,.2,1) 1 both !important;
-  will-change: transform, opacity !important;
-  z-index: 2 !important;
-}
-
-@keyframes ar4-trace-rotate {
-  0% { transform: rotate(0deg); opacity: 1; }
-  80% { opacity: 1; }
-  100% { transform: rotate(360deg); opacity: 0; }
-}
-
-/* ── PERFORMANCE: kill paint-heavy animation triggers ── */
-.ar4-card.is-save-trace .ar4-card__save-layer,
-.ar4-card.is-unsave-fade .ar4-card__save-layer {
-  animation: none !important;
-}
-.ar4-card.is-compare-fresh .ar4-card__compare-layer,
-.ar4-card.is-uncompare-fade .ar4-card__compare-layer {
-  animation: none !important;
-}
-
-/* Card transition: no background (gradients don't interpolate) */
-.ar4-card {
-  transition: border-color 280ms cubic-bezier(.22,.8,.2,1), box-shadow 280ms cubic-bezier(.22,.8,.2,1) !important;
-}
-
-/* ── REDUCED MOTION: immediate semantic state ── */
 @media (prefers-reduced-motion: reduce) {
-  .ar4-card.is-save-trace .ar4-card__bookmark svg,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"] svg,
-  .ar4-card.is-save-trace .ar4-card__bookmark::before,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
-  .ar4-card.is-save-trace::after,
-  .ar4-card.is-compare-fresh .ar4-card__compare-layer::after {
-    animation: none !important;
-  }
-  .ar4-card.is-save-trace .ar4-card__bookmark::before,
-  .ar4-card.is-compare-fresh [data-sonic-action="compare"]::before,
-  .ar4-card.is-save-trace::after,
-  .ar4-card.is-compare-fresh .ar4-card__compare-layer::after {
-    content: none !important;
-  }
   .ar4-card__save-layer,
   .ar4-card__compare-layer,
-  .ar4-card__watermark {
-    transition: none !important;
-  }
+  .ar4-card__watermark { transition: none !important; }
 }
+
+.ar4-card__badges { display: contents; }
+.ar4-card__watermark { position: absolute; pointer-events: none; }

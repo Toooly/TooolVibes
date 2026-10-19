@@ -58,6 +58,28 @@ describe("ShortlistToggle primitive", () => {
     expect(button.getAttribute("aria-pressed")).toBe("false");
   });
 
+  it("acknowledges only the clicked save and cancels feedback on quick removal", () => {
+    vi.useFakeTimers();
+    render(<><ShortlistToggle slug="cursor" mode="icon" toolName="Cursor" /><ShortlistToggle slug="blink" mode="icon" toolName="Blink" /></>);
+    const cursor = screen.getByRole("button", { name: "Salva Cursor" });
+    const blink = screen.getByRole("button", { name: "Salva Blink" });
+    fireEvent.click(cursor);
+    expect(cursor.getAttribute("data-save-feedback")).toBe("added");
+    expect(blink.hasAttribute("data-save-feedback")).toBe(false);
+    fireEvent.click(cursor);
+    act(() => vi.advanceTimersByTime(2000));
+    expect(cursor.hasAttribute("data-save-feedback")).toBe(false);
+    expect(cursor.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("restores saved state without replaying click feedback", () => {
+    render(<ShortlistToggle slug="cursor" mode="icon" toolName="Cursor" />);
+    act(() => seedWorkspace([{ type: "saved/toggle", slug: "cursor", at: "2026-10-19T08:00:00Z" }]));
+    const button = screen.getByRole("button", { name: "Rimuovi Cursor dai salvati" });
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    expect(button.hasAttribute("data-save-feedback")).toBe(false);
+  });
+
   it("exposes aria-pressed and a tool-specific aria-label", () => {
     render(<ShortlistToggle slug="cursor" mode="icon" toolName="Cursor" />);
     const button = screen.getByRole("button", { name: "Salva Cursor" });

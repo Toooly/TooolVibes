@@ -268,7 +268,7 @@ describe("InteractionSoundLayerV2 facade — interaction playback", () => {
     expect(document.documentElement.dataset.tvSound).toBe("on");
     expect(
       screen.getByRole("button", { name: "Salva" }).classList
-    ).toContain("is-sonic-tap");
+    ).not.toContain("is-sonic-tap");
   });
 
   it("plays hover tones after unlock on fine pointers with throttle", () => {
@@ -365,7 +365,7 @@ describe("InteractionSoundLayerV2 facade — route change and visibility", () =>
 });
 
 describe("InteractionSoundLayerV2 facade — audio off and reduced motion", () => {
-  it("stays silent with persisted opt-out: no context, no tone, pulse intact", () => {
+  it("stays silent with persisted opt-out and leaves save feedback to the action", () => {
     window.localStorage.setItem(SOUND_STORAGE_KEY, "true");
     render(
       <>
@@ -377,7 +377,7 @@ describe("InteractionSoundLayerV2 facade — audio off and reduced motion", () =
     unlockViaPointerDown();
     expect(
       screen.getByRole("button", { name: "Salva" }).classList
-    ).toContain("is-sonic-tap");
+    ).not.toContain("is-sonic-tap");
     expect(FakeAudioContext.instances).toHaveLength(0);
     dispatchSoundPlay("route");
     expect(FakeAudioContext.instances).toHaveLength(0);

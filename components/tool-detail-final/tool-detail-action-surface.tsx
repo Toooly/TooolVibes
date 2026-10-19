@@ -9,7 +9,7 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
  * Namespace: .td-final-*
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Bookmark, Columns3, ExternalLink } from "lucide-react";
 
 import {
@@ -17,6 +17,7 @@ import {
   MIN_COMPARE_TOOLS,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
+import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils";
 import { SaveOverflow } from "@/components/tools/save-overflow";
 import { feedback } from "@/lib/feedback";
@@ -50,10 +51,22 @@ export function ToolDetailActionSurface({
   const compareCount = compareSlugs.length;
   const isAtMax = compareCount >= MAX_COMPARE_TOOLS && compareRank === 0;
 
+  const [confirmedAction, setConfirmedAction] = useState<"save" | "compare" | null>(null);
+  const confirmationTimer = useRef<number | null>(null);
+  useEffect(() => () => {
+    if (confirmationTimer.current !== null) window.clearTimeout(confirmationTimer.current);
+  }, []);
+  function acknowledge(action: "save" | "compare", added: boolean) {
+    if (confirmationTimer.current !== null) window.clearTimeout(confirmationTimer.current);
+    setConfirmedAction(added ? action : null);
+    if (added) confirmationTimer.current = window.setTimeout(() => setConfirmedAction(null), MOTION_DURATION_MS.standard);
+  }
+
   const saveHold = useSaveHold({
     isSaved,
     onToggle: () => {
       toggleSaved(slug);
+      acknowledge("save", !isSaved);
       feedback.success();
     },
     onSpeed2Open: () => openSaveOverflow(slug),
@@ -65,10 +78,12 @@ export function ToolDetailActionSurface({
       <LocalizedAttributes><button
         type="button"
         onClick={() => {
-          toggleCompare(slug);
+          const result = toggleCompare(slug);
+          if (!result.limited) acknowledge("compare", result.added);
           feedback.selection();
         }}
         className="td-final-cta--primary"
+        data-compare-feedback={compareRank > 0 && confirmedAction === "compare" ? "added" : undefined}
         aria-pressed={compareRank > 0}
         aria-label={
           compareRank > 0
@@ -85,7 +100,7 @@ export function ToolDetailActionSurface({
               : "Confronta"
         }
       >
-        <Columns3 size={17} aria-hidden="true" />
+        <Columns3 className="tool-action__icon" size={17} aria-hidden="true" />
         <span><LocalizedText>{compareRank > 0 ? "In confronto" : "Confronta"}</LocalizedText></span>
       </button></LocalizedAttributes>
 
@@ -106,10 +121,12 @@ export function ToolDetailActionSurface({
           {...saveHold}
           className={cn("td-final-cta--save", isSaved && "is-saved")}
           aria-pressed={isSaved}
+          data-save-feedback={isSaved && confirmedAction === "save" ? "added" : undefined}
           aria-label={isSaved ? `Rimuovi ${name} dai Salvati` : `Salva ${name}`}
           title={isSaved ? "Salvato" : "Salva"}
         >
           <Bookmark
+            className="tool-action__icon"
             size={17}
             aria-hidden="true"
             fill={isSaved ? "currentColor" : "none"}

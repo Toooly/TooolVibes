@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
+  addPulse,
   getAnimationSoundKind,
   getSoundKind,
   isSoundKind,
@@ -99,5 +100,31 @@ describe("sound-mapping getAnimationSoundKind", () => {
     const toast = document.createElement("div");
     toast.classList.add("motion-toast");
     expect(getAnimationSoundKind("anything", toast)).toBe("toast");
+  });
+});
+
+
+describe("action feedback ownership", () => {
+  it("leaves save and compare feedback to the action, while retaining other tap pulses", () => {
+    const frame = vi.spyOn(window, "requestAnimationFrame").mockImplementation(() => 0);
+    try {
+      for (const label of ["Salva Cursor", "Confronta Cursor"]) {
+        const button = inWrapper(document.createElement("button"));
+        button.setAttribute("aria-label", label);
+        addPulse(button);
+      }
+      expect(frame).not.toHaveBeenCalled();
+      const translatedSave = inWrapper(document.createElement("button"));
+      translatedSave.className = "ar4-card__bookmark";
+      translatedSave.setAttribute("aria-label", "Save Cursor");
+      addPulse(translatedSave);
+      expect(frame).not.toHaveBeenCalled();
+      const menu = inWrapper(document.createElement("button"));
+      menu.setAttribute("aria-label", "Apri menu");
+      addPulse(menu);
+      expect(frame).toHaveBeenCalledTimes(1);
+    } finally {
+      frame.mockRestore();
+    }
   });
 });

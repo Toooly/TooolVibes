@@ -6754,10 +6754,7 @@ img {
   }
 
   .toggle-chip-glow.is-active {
-    box-shadow:
-      0 14px 28px rgba(67, 48, 199, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.68),
-      0 0 0 4px rgba(112, 82, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   .toggle-chip-glow.is-ready {
@@ -6767,9 +6764,6 @@ img {
       0 0 0 4px rgba(255, 200, 61, 0.1);
   }
 
-  .toggle-chip-glow.is-fresh {
-    animation: chip-pop var(--tv-duration-reward) var(--tv-easing-spring-snappy);
-  }
 
   .progress-track {
     position: relative;
@@ -26061,7 +26055,8 @@ img {
   width: 74%;
 }
 
-/* Final desktop cleanup: header fit, compact saved shelves, catalog controls. */
+/* Saved shelves: retain compact covers on mobile, use full cards on desktop. */
+@media (max-width: 1279px) {
 
 .mobile-library-shelf__rail {
   display: flex !important;
@@ -26150,6 +26145,8 @@ img {
 .mobile-library-book__remove {
   right: auto !important;
   bottom: auto !important;
+}
+
 }
 
 .mobile-tool-card__actions {
@@ -28147,35 +28144,34 @@ img {
 }
 
 
-/* Final decision feedback — save / compare chips */
-.selection-chip.is-fresh,
-.toggle-chip-glow.is-fresh {
-  box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--tv-accent-primary) 35%, transparent),
-    0 8px 22px color-mix(in srgb, var(--tv-accent-primary) 22%, transparent);
+/* Save / compare: fixed controls, one acknowledgement on the real icon. */
+.tool-action__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
 }
+.selection-chip:active { transform: none; }
+.selection-chip:active .tool-action__icon,
+.ar4-card__bookmark:active .tool-action__icon { transform: scale(0.92); }
 
-.selection-chip.is-active,
-.toggle-chip-glow.is-active {
-  border-color: color-mix(in srgb, var(--tv-accent-primary) 40%, transparent);
+@keyframes tool-action-confirm {
+  0% { opacity: 0.5; transform: scale(0.75); }
+  65% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
 }
-
-.selection-chip:active,
-.toggle-chip-glow:active {
-  transform: translateY(1px) scale(0.98);
+@media (prefers-reduced-motion: no-preference) {
+  [data-save-feedback="added"] .tool-action__icon,
+  [data-compare-feedback="added"] .tool-action__icon {
+    animation: tool-action-confirm var(--tv-duration-base) var(--tv-easing-decelerate) both;
+  }
 }
-
 @media (prefers-reduced-motion: reduce) {
-  .selection-chip,
-  .toggle-chip-glow {
-    transition: none !important;
-  }
+  .selection-chip { transition: none !important; }
   .selection-chip:hover,
-  .toggle-chip-glow:hover,
   .selection-chip:active,
-  .toggle-chip-glow:active {
-    transform: none !important;
-  }
+  .selection-chip .tool-action__icon,
+  .ar4-card__bookmark .tool-action__icon { transform: none !important; }
 }
 
 

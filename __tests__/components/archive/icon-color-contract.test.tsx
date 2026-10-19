@@ -109,8 +109,11 @@ describe("Icon Color Contract", () => {
     const cssPath = path.join(process.cwd(), "styles", "archive-v4.css");
     const css = fs.readFileSync(cssPath, "utf-8");
     
-    // Ghost removal overrides must exist
-    expect(css).toContain("GHOST REMOVAL");
-    expect(css).toContain("ar4-icon-activate");
+    const globalCss = fs.readFileSync(path.join(process.cwd(), "app", "globals.css"), "utf-8");
+    const card = fs.readFileSync(path.join(process.cwd(), "components", "archive", "archive-v4-tool-card.tsx"), "utf-8");
+    expect(css).not.toContain("ar4-trace-rotate");
+    expect(card).not.toContain('"is-save-trace"');
+    expect(card).toContain("data-save-feedback");
+    expect(globalCss).toContain("tool-action-confirm");
   });
 });

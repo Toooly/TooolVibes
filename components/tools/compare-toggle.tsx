@@ -2,10 +2,10 @@
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
-import { Columns2 } from "lucide-react";
+import { Check, Columns2 } from "lucide-react";
 
 import { MOTION_DURATION_MS } from "@/lib/motion/tokens";
-import { MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
+import { MAX_COMPARE_TOOLS, useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 
 type CompareToggleProps = {
   slug: string;
@@ -28,57 +28,34 @@ export function CompareToggle({
   const count = compareSlugs.length;
   const isSelected = compareSlugs.includes(slug);
   const [isFresh, setIsFresh] = useState(false);
-  const previousCountRef = useRef(0);
-  const mountedRef = useRef(false);
   const freshTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (mountedRef.current && previousCountRef.current !== count) {
-      setIsFresh(true);
-
-      if (freshTimerRef.current) {
-        window.clearTimeout(freshTimerRef.current);
-      }
-
-      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), MOTION_DURATION_MS.reward);
-    }
-
-    previousCountRef.current = count;
-    mountedRef.current = true;
     onChange?.(isSelected);
+  }, [isSelected, onChange]);
 
-    return () => {
-      if (freshTimerRef.current) {
-        window.clearTimeout(freshTimerRef.current);
-      }
-    };
-  }, [count, isSelected, onChange]);
+  useEffect(() => () => {
+    if (freshTimerRef.current !== null) window.clearTimeout(freshTimerRef.current);
+  }, []);
 
   const handleToggle = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
     const result = toggleCompare(slug);
-    if (result.limited) {
-      return;
+    if (result.limited) return;
+
+    // Acknowledge only this button's addition, never unrelated count changes.
+    if (freshTimerRef.current !== null) window.clearTimeout(freshTimerRef.current);
+    setIsFresh(result.added);
+    if (result.added) {
+      freshTimerRef.current = window.setTimeout(() => {
+        setIsFresh(false);
+        freshTimerRef.current = null;
+      }, MOTION_DURATION_MS.standard);
     }
-
-    const nextCount = result.added ? count + 1 : Math.max(0, count - 1);
-
-    if (nextCount !== previousCountRef.current) {
-      setIsFresh(true);
-
-      if (freshTimerRef.current) {
-        window.clearTimeout(freshTimerRef.current);
-      }
-
-      freshTimerRef.current = window.setTimeout(() => setIsFresh(false), MOTION_DURATION_MS.reward);
-    }
-
-    previousCountRef.current = nextCount;
   };
 
-  const isReady = count >= MIN_COMPARE_TOOLS;
 
   if (mode === "icon") {
     const ariaLabel = toolName
@@ -92,9 +69,9 @@ export function CompareToggle({
       <LocalizedAttributes><button
         type="button"
         onClick={handleToggle}
-        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-colors duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
+        className={`selection-chip toggle-chip-glow inline-flex h-8.5 w-8.5 items-center justify-center rounded-full border transition-colors duration-[var(--tv-duration-base)] ${
           isSelected ? "is-active" : ""
-        } ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
+        }`}
         style={{
           display: "inline-flex",
           // COMPARE = Logo Cyan (#22D3EE) — canonical Catalog semantics
@@ -106,9 +83,12 @@ export function CompareToggle({
         }}
         aria-pressed={isSelected}
         aria-label={ariaLabel}
+        data-compare-feedback={isSelected && isFresh ? "added" : undefined}
         data-sonic-action="compare"
       >
-        <Columns2 className="h-4 w-4" aria-hidden="true" />
+        <span className="compare-toggle__icon tool-action__icon" aria-hidden="true">
+          {isSelected ? <Check className="h-4 w-4" /> : <Columns2 className="h-4 w-4" />}
+        </span>
       </button></LocalizedAttributes>
     );
   }
@@ -117,9 +97,9 @@ export function CompareToggle({
     <button
       type="button"
       onClick={handleToggle}
-      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-colors duration-[var(--tv-duration-base)] hover:-translate-y-0.5 ${
+      className={`selection-chip toggle-chip-glow text-ui-strong inline-flex items-center gap-2 rounded-full border transition-colors duration-[var(--tv-duration-base)] ${
         compact ? "px-2.75 py-1.25 text-xs" : "justify-center px-4 py-2.25 text-xs sm:text-[0.78rem]"
-      } ${isSelected ? "is-active" : ""} ${isReady ? "is-ready" : ""} ${isFresh ? "is-fresh" : ""}`}
+      } ${isSelected ? "is-active" : ""}`}
       style={{
         // COMPARE = Logo Cyan — same canonical semantics as icon mode.
         borderColor: isSelected ? "#22d3ee" : "rgba(34, 211, 238, 0.3)",
@@ -127,10 +107,11 @@ export function CompareToggle({
         color: isSelected ? "#0b0620" : "#22d3ee",
       }}
       aria-pressed={isSelected}
+      data-compare-feedback={isSelected && isFresh ? "added" : undefined}
       data-sonic-action="compare"
     >
       <span
-        className="h-1.25 w-1.25 rounded-full"
+        className="tool-action__icon h-1.25 w-1.25 rounded-full"
         style={{
           background: isSelected ? "#22c55e" : "#ef4444",
           boxShadow: isSelected ? "0 0 0 4px rgba(34,197,94,0.14)" : "0 0 0 4px rgba(239,68,68,0.14)",
@@ -138,9 +119,7 @@ export function CompareToggle({
       />
       <LocalizedText>{compact ? "Confronta" : isSelected ? "Aggiunto al confronto" : "Aggiungi al confronto"}</LocalizedText>
       <span
-        className={`count-badge-live rounded-full bg-white/10 px-1.5 py-0.5 text-xs ${count > 0 ? "is-active" : ""} ${
-          isReady ? "is-ready" : ""
-        } ${isFresh ? "is-fresh" : ""}`}
+        className={`count-badge-live rounded-full bg-white/10 px-1.5 py-0.5 text-xs ${count > 0 ? "is-active" : ""}`}
         style={{ color: "var(--muted)" }}
       >
         {count}/{MAX_COMPARE_TOOLS}
