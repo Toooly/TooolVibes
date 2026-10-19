@@ -48,6 +48,20 @@ async function setup(responses: Array<{ status: number; code?: string }> = [{ st
 }
 
 describe("Services verification lifecycle", () => {
+  it("names the next action at each step and keeps the service selection intact", async () => {
+    const ui = await setup();
+    const next = ui.form.querySelector<HTMLButtonElement>("[data-step-next]")!;
+    expect(next.textContent).toContain("Raccontaci l’idea");
+    next.click();
+    expect(ui.w.document.querySelector<HTMLElement>("[data-contact-panel]")!.dataset.step).toBe("1");
+    expect(next.textContent).toContain("Vai ai contatti");
+    next.click();
+    expect(ui.w.document.querySelector<HTMLElement>("[data-contact-panel]")!.dataset.step).toBe("2");
+    expect(next.hidden).toBe(true);
+    expect(ui.form.querySelector('button[type="submit"]')!.textContent).toContain("Invia il messaggio");
+    expect((ui.form.elements.namedItem("need") as RadioNodeList).value).toBe("web");
+  });
+
   it("acquires a fresh token on submit and sends exactly once", async () => {
     const ui = await setup();
     expect(ui.execute).not.toHaveBeenCalled();

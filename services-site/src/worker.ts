@@ -270,13 +270,13 @@ async function acknowledgeLead(env: Env, payload: ContactPayload, deliveryId: st
 }
 
 async function handleContact(request: Request, env: Env, ctx: ExecutionContext) {
-  if (!sameOrigin(request)) return json({ ok: false, message: "Origine non autorizzata." }, 403);
+  if (!sameOrigin(request)) return json({ ok: false, message: "Riapri la pagina dei servizi e riprova." }, 403);
   if (!request.headers.get("Content-Type")?.toLowerCase().startsWith("application/json")) {
-    return json({ ok: false, message: "Formato della richiesta non valido." }, 415);
+    return json({ ok: false, message: "Non riusciamo a leggere questo invio. Riapri la pagina e riprova." }, 415);
   }
   const rateLimit = await env.CONTACT_RATE_LIMITER.limit({ key: "services-contact" });
   if (!rateLimit.success) {
-    return json({ ok: false, message: "Troppe richieste. Riprova tra poco." }, 429);
+    return json({ ok: false, message: "Abbiamo ricevuto molti messaggi in poco tempo. Attendi un momento e riprova." }, 429);
   }
 
   let input: unknown;
@@ -284,17 +284,17 @@ async function handleContact(request: Request, env: Env, ctx: ExecutionContext) 
     input = await readJsonBody(request, MAX_CONTACT_BYTES);
   } catch (error) {
     const status = error instanceof Error && error.message === "body-too-large" ? 413 : 400;
-    return json({ ok: false, message: "Non siamo riusciti a leggere il messaggio." }, status);
+    return json({ ok: false, message: "Non siamo riusciti a leggere il messaggio. Riprova: quello che hai scritto resta nel modulo." }, status);
   }
 
   const payload = parseContactPayload(input);
-  if (!payload) return json({ ok: false, message: "Controlla i campi e riprova." }, 400);
+  if (!payload) return json({ ok: false, message: "Controlla i campi compilati e prova a inviare di nuovo." }, 400);
 
   if (payload.companyWebsite) {
     return json({ ok: true, message: "Messaggio ricevuto." });
   }
   if (!isPlausibleSubmissionTime(payload.startedAt)) {
-    return json({ ok: false, message: "Invio troppo rapido o sessione scaduta. Ricarica e riprova." }, 400);
+    return json({ ok: false, message: "Attendi un momento e riprova. Se il problema continua, copia il messaggio prima di ricaricare la pagina." }, 400);
   }
   const verification = await verifyTurnstile(env, request, payload.turnstileToken);
   if (!verification.ok) {
@@ -302,8 +302,8 @@ async function handleContact(request: Request, env: Env, ctx: ExecutionContext) 
       ok: false,
       code: verification.unavailable ? "verification_unavailable" : "verification_required",
       message: verification.unavailable
-        ? "La verifica di sicurezza è temporaneamente non disponibile. I dati restano nel modulo: riprova tra poco."
-        : "Rinnoviamo la verifica di sicurezza. I dati restano nel modulo.",
+        ? "Il controllo di sicurezza non è disponibile in questo momento. Quello che hai scritto è ancora qui: riprova tra poco."
+        : "Serve un nuovo controllo di sicurezza. Non devi ricompilare il modulo.",
     }, verification.unavailable ? 503 : 400);
   }
 
@@ -311,7 +311,7 @@ async function handleContact(request: Request, env: Env, ctx: ExecutionContext) 
   try {
     await notifyLead(env, payload, deliveryId);
   } catch {
-    return json({ ok: false, message: "Il messaggio non è partito. Riprova tra poco." }, 502);
+    return json({ ok: false, message: "Non siamo riusciti a inviare il messaggio. Il testo è ancora nel modulo: riprova tra poco." }, 502);
   }
 
   console.log(JSON.stringify({ event: "services_contact_received", need: payload.need }));

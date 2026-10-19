@@ -179,9 +179,9 @@
     let viewportWidth = 0;
     let availableHeight = 0;
     const services = {
-      web: { description: "Siti, landing page ed e-commerce.", target: "#servizi", label: "Esplora il servizio: siti e web" },
-      social: { description: "Dall’identità del brand ai contenuti, fino alla pubblicazione.", target: "#contenuti", label: "Esplora il servizio: automazione contenuti" },
-      ai: { description: "Richieste, risposte e nuovi contatti. Un passo dopo l’altro.", target: "#chatbot", label: "Esplora il servizio: chatbot AI" },
+      web: { description: "Siti chiari, pensati per farti scegliere.", target: "#servizi", label: "Scopri come possiamo aiutarti con il tuo sito" },
+      social: { description: "Contenuti coerenti, senza rincorrere il calendario.", target: "#contenuti", label: "Scopri come possiamo aiutarti con i tuoi contenuti" },
+      ai: { description: "Risposte utili. Più tempo per i tuoi clienti.", target: "#chatbot", label: "Scopri come possiamo aiutarti con un chatbot AI" },
     };
     function selectJourney(service) {
       const selected = services[service];
@@ -334,80 +334,106 @@
   }
   function initAvailabilityNotice() {
     const notice = document.querySelector("[data-availability-notice]");
-    if (!notice || !("IntersectionObserver" in window)) return;
-    const storageKey = "services-availability-seen";
-    try { if (sessionStorage.getItem(storageKey)) return; } catch { /* Storage can be unavailable in private browsers. */ }
-
+    const launcher = document.querySelector("[data-notice-launcher]");
+    if (!notice || !launcher) return;
+    const storageKey = "services-availability-dismissed-until";
     const cta = notice.querySelector("[data-notice-cta]");
     const panel = document.querySelector("[data-contact-panel]");
+    const services = [...document.querySelectorAll(".service[data-service]")];
+    const contexts = new Set();
     const blockers = new Set();
+    const shownServices = new Set();
     const enteredAt = performance.now();
-    let candidate = null;
-    let shown = false;
+    let candidate = services[0];
+    let ready = false;
+    let lastShownAt = -Infinity;
+    let dismissedUntil = 0;
     let pending = 0;
     let expiry = 0;
+    try { dismissedUntil = Number(sessionStorage.getItem(storageKey)) || 0; } catch { /* Manual access also works when browser storage is blocked. */ }
 
     const clearPending = () => { window.clearTimeout(pending); pending = 0; };
-    const remember = () => {
-      shown = true;
-      try { sessionStorage.setItem(storageKey, "1"); } catch { /* Keep the in-memory limit when storage is blocked. */ }
+    const blocked = () => document.hidden || blockers.size > 0 || menuToggle?.getAttribute("aria-expanded") === "true" || document.activeElement?.matches("input,textarea,select,[contenteditable=true]");
+    const syncLauncher = () => { launcher.hidden = !ready || blocked() || !notice.hidden; };
+    const rememberDismissal = () => {
+      dismissedUntil = Date.now() + 15 * 60_000;
+      try { sessionStorage.setItem(storageKey, String(dismissedUntil)); } catch { /* Keep the temporary preference in memory. */ }
     };
-    const dismiss = () => {
+    const dismiss = (manual = false) => {
       clearPending();
       window.clearTimeout(expiry);
       const hadFocus = notice.contains(document.activeElement);
       notice.hidden = true;
-      if (hadFocus && candidate) {
-        const heading = candidate.querySelector("h2");
-        heading.setAttribute("tabindex", "-1");
-        heading.focus({ preventScroll: true });
-      }
+      launcher.setAttribute("aria-expanded", "false");
+      if (manual) rememberDismissal();
+      syncLauncher();
+      if (hadFocus && !launcher.hidden) launcher.focus({ preventScroll: true });
     };
-    const blocked = () => document.hidden || blockers.size > 0 || panel?.open || menuToggle?.getAttribute("aria-expanded") === "true" || document.activeElement?.matches("input,textarea,select,[contenteditable=true]");
-    const schedule = () => {
-      clearPending();
-      if (blocked() || !candidate) { dismiss(); return; }
-      if (shown) return;
-      pending = window.setTimeout(() => {
-        pending = 0;
-        if (blocked() || !candidate) return;
-        // Availability has one source of truth: the existing, service-specific pricing block.
-        const capacity = candidate.querySelector(".service-capacity");
-        const title = capacity?.querySelector("small b")?.textContent.trim();
-        const detail = capacity?.querySelector(".service-capacity__limit")?.textContent.trim();
-        if (!title || !detail) return;
-        notice.dataset.service = candidate.dataset.service;
-        cta.dataset.contactService = candidate.dataset.service;
-        notice.hidden = false;
-        notice.querySelector("[data-notice-service]").textContent = candidate.querySelector(".service-offer__label").textContent;
-        notice.querySelector("[data-notice-title]").textContent = title;
-        notice.querySelector("[data-notice-detail]").textContent = detail;
-        remember();
-        expiry = window.setTimeout(() => { if (!notice.matches(":hover,:focus-within")) dismiss(); }, 12_000);
-      }, Math.max(5_000, 20_000 - (performance.now() - enteredAt)));
+    const currentService = () => {
+      if (contexts.has(candidate)) return candidate;
+      if (contexts.has(journey)) return services.find((service) => service.dataset.service === journey.dataset.active) || candidate;
+      return candidate;
     };
-
-    const serviceObserver = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) candidate = entry.target;
-        else if (candidate === entry.target) candidate = null;
-      }
-      schedule();
-    }, { rootMargin: "-20% 0px -35% 0px" });
-    document.querySelectorAll("[data-service]").forEach((service) => serviceObserver.observe(service));
-
-    const blockerObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => entry.isIntersecting ? blockers.add(entry.target) : blockers.delete(entry.target));
-      schedule();
-    });
-    document.querySelectorAll("#contatti,.service-offer .button,.site-footer").forEach((element) => blockerObserver.observe(element));
-    notice.querySelector("[data-notice-close]").addEventListener("click", dismiss);
-    notice.addEventListener("pointerenter", () => window.clearTimeout(expiry));
-    notice.addEventListener("focusin", () => window.clearTimeout(expiry));
     const resumeExpiry = () => {
       window.clearTimeout(expiry);
-      if (!notice.hidden && !notice.matches(":hover,:focus-within")) expiry = window.setTimeout(dismiss, 12_000);
+      if (!notice.hidden && !notice.matches(":hover,:focus-within")) expiry = window.setTimeout(() => dismiss(), 16_000);
     };
+    const show = (manual = false) => {
+      clearPending();
+      const service = currentService();
+      if (blocked() || !service || (!manual && (shownServices.has(service.dataset.service) || shownServices.size >= 2 || Date.now() < dismissedUntil))) return;
+      // The pricing block owns the numbers and copy, including the non-numeric chatbot availability.
+      const capacity = service.querySelector(".service-capacity");
+      const title = capacity?.querySelector("small b")?.textContent.trim();
+      const detail = capacity?.querySelector(".service-capacity__limit")?.textContent.trim();
+      if (!title || !detail) return;
+      notice.dataset.service = service.dataset.service;
+      cta.dataset.contactService = service.dataset.service;
+      notice.querySelector("[data-notice-service]").textContent = service.querySelector(".service-offer__label").textContent;
+      notice.querySelector("[data-notice-title]").textContent = title;
+      notice.querySelector("[data-notice-detail]").textContent = detail;
+      const slots = notice.querySelector("[data-notice-slots]");
+      slots.replaceChildren(...[...capacity.querySelectorAll(".service-capacity__slots i")].map((slot) => slot.cloneNode()));
+      slots.hidden = !slots.childElementCount;
+      notice.hidden = false;
+      launcher.setAttribute("aria-expanded", "true");
+      shownServices.add(service.dataset.service);
+      lastShownAt = performance.now();
+      syncLauncher();
+      resumeExpiry();
+      if (manual) notice.querySelector("[data-notice-close]").focus({ preventScroll: true });
+    };
+    const schedule = () => {
+      clearPending();
+      if (blocked()) { dismiss(); return; }
+      syncLauncher();
+      const service = currentService();
+      if (!ready || !contexts.size || !notice.hidden || !service || shownServices.has(service.dataset.service) || shownServices.size >= 2 || Date.now() < dismissedUntil) return;
+      pending = window.setTimeout(() => show(), Math.max(1_500, 8_000 - (performance.now() - enteredAt), 45_000 - (performance.now() - lastShownAt)));
+    };
+
+    if ("IntersectionObserver" in window) {
+      const serviceObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            contexts.add(entry.target);
+            if (entry.target !== journey) candidate = entry.target;
+          } else contexts.delete(entry.target);
+        }
+        schedule();
+      }, { rootMargin: "-15% 0px -15% 0px" });
+      [...services, journey].filter(Boolean).forEach((service) => serviceObserver.observe(service));
+      const blockerObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => entry.isIntersecting ? blockers.add(entry.target) : blockers.delete(entry.target));
+        schedule();
+      });
+      document.querySelectorAll(".contact,.method-frame,.site-footer").forEach((element) => blockerObserver.observe(element));
+    }
+    window.setTimeout(() => { ready = true; schedule(); }, 4_000);
+    launcher.addEventListener("click", () => show(true));
+    notice.querySelector("[data-notice-close]").addEventListener("click", () => dismiss(true));
+    notice.addEventListener("pointerenter", () => window.clearTimeout(expiry));
+    notice.addEventListener("focusin", () => window.clearTimeout(expiry));
     notice.addEventListener("pointerleave", resumeExpiry);
     notice.addEventListener("focusout", () => queueMicrotask(resumeExpiry));
     document.addEventListener("visibilitychange", schedule);
@@ -415,9 +441,9 @@
     document.addEventListener("focusout", () => queueMicrotask(schedule));
     menuToggle?.addEventListener("click", schedule);
     panel?.addEventListener("toggle", schedule);
-    document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !notice.hidden) dismiss(); });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !notice.hidden) dismiss(true); });
     document.querySelectorAll('a[href="#contatti"]').forEach((link) => link.addEventListener("click", () => {
-      remember();
+      rememberDismissal();
       dismiss();
     }));
   }
@@ -461,12 +487,12 @@
   function updateMessageHint() {
     const length = contactForm.elements.namedItem("message").value.length;
     contactForm.querySelector("[data-message-count]").textContent = `${length} / 2000`;
-    contactForm.querySelector("[data-message-help]").textContent = length >= 20 ? "Perfetto, puoi passare ai contatti." : "Almeno 20 caratteri: bastano una o due frasi.";
+    contactForm.querySelector("[data-message-help]").textContent = length >= 20 ? "Hai aggiunto tutto? Passiamo ai tuoi contatti." : "Una o due frasi bastano per iniziare (minimo 20 caratteri).";
   }
 
   function syncContactContext() {
     const selected = contactForm.querySelector('[name="need"]:checked');
-    contactContext.textContent = selected ? selected.nextElementSibling.textContent : "Scegli da dove vuoi partire.";
+    contactContext.textContent = selected ? selected.nextElementSibling.textContent : "Scegli il servizio. Al resto pensiamo insieme.";
     contactPanel.dataset.kind = selected?.value || "";
   }
 
@@ -481,6 +507,7 @@
     });
     previousStep.hidden = index === 0;
     nextStep.hidden = index === formSteps.length - 1;
+    nextStep.querySelector("[data-next-label]").textContent = index === 0 ? "Raccontaci l’idea" : "Vai ai contatti";
     setStatus("");
     if (focus) formSteps[index].querySelector("input, textarea")?.focus({ preventScroll: true });
   }
@@ -491,7 +518,7 @@
       if (invalid) {
         showStep(i);
         invalid.focus();
-        setStatus("Completa i campi indicati per continuare.", "error");
+        setStatus("Manca solo qualche dettaglio: completa i campi indicati per continuare.", "error");
         validationMessage = true;
         return;
       }
@@ -638,7 +665,7 @@
           if (!verificationWaiter) return;
           clearTimeout(verificationWaiter.timer);
           verificationWaiter.timer = setTimeout(() => finishVerification(new Error("verification-timeout")), 120_000);
-          setStatus("Conferma di non essere un robot nel controllo qui sopra. Poi invieremo la richiesta.");
+          setStatus("Completa il controllo qui sopra: subito dopo invieremo il tuo messaggio.");
           turnstileShell.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
         },
       });
@@ -689,7 +716,7 @@
       const step = invalid?.closest("[data-form-step]");
       if (step) { showStep(Number(step.dataset.formStep)); invalidField(step); }
       invalid?.focus({ preventScroll: true });
-      setStatus("Controlla i campi indicati e riprova.", "error");
+      setStatus("Controlla i campi indicati: poi puoi inviare il messaggio.", "error");
       validationMessage = true;
       return;
     }
@@ -697,14 +724,14 @@
     submitPending = true;
     contactForm.setAttribute("aria-busy", "true");
     contactPanel.dataset.state = "sending";
-    contactContext.textContent = "Verifichiamo la tua richiesta…";
+    contactContext.textContent = "Prepariamo il tuo messaggio…";
 
     const submitButton = contactForm.querySelector('button[type="submit"]');
     const submitLabel = submitButton.querySelector("span");
     const originalLabel = submitLabel.textContent;
     submitButton.disabled = true;
     submitLabel.textContent = "Verifica in corso…";
-    setStatus("Verifichiamo l’invio. Se richiesto, completa il controllo qui sopra.");
+    setStatus("Il messaggio è pronto. Se compare un controllo di sicurezza, completalo qui sopra.");
 
     const data = new FormData(contactForm);
     const payload = {
@@ -721,15 +748,15 @@
     const lockedFields = [...contactForm.querySelectorAll('input:not(:disabled),textarea:not(:disabled),button:not(:disabled)')];
     lockedFields.forEach((field) => { field.disabled = true; });
 
-    let failureMessage = "Il messaggio non è partito. Riprova tra poco.";
+    let failureMessage = "Non siamo riusciti a inviare il messaggio. Quello che hai scritto è ancora qui: riprova tra poco.";
     try {
-      failureMessage = "Non riusciamo a completare il controllo di sicurezza. I dati sono ancora qui: riprova tra poco.";
+      failureMessage = "Il controllo di sicurezza non è disponibile in questo momento. Non hai perso nulla: riprova tra poco.";
       payload.turnstileToken = await acquireVerification();
       track("contact_submit");
       for (let attempt = 0; attempt < 2; attempt++) {
         submitLabel.textContent = "Invio in corso…";
-        setStatus("Stiamo inviando il messaggio.");
-        failureMessage = "Non abbiamo ricevuto conferma dell’invio. I dati restano nel modulo: riprova tra poco.";
+        setStatus("Stiamo inviando la tua idea al nostro team.");
+        failureMessage = "Non abbiamo ancora la conferma dell’invio. Quello che hai scritto resta qui: riprova tra poco.";
         const response = await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -739,9 +766,9 @@
         const result = await response.json().catch(() => ({}));
         if (response.ok) break;
         if (response.status === 400 && result.code === "verification_required" && attempt === 0) {
-          submitLabel.textContent = "Rinnovo verifica…";
-          setStatus("Rinnoviamo il controllo di sicurezza. Non devi ricompilare nulla.");
-          failureMessage = "Il controllo non è stato completato. I dati restano nel modulo: riprova tra poco.";
+          submitLabel.textContent = "Un ultimo controllo…";
+          setStatus("Aggiorniamo il controllo di sicurezza. Non devi ricompilare nulla.");
+          failureMessage = "Il controllo non è andato a buon fine. La tua idea è ancora qui: riprova tra poco.";
           payload.turnstileToken = await acquireVerification(true);
           continue;
         }
@@ -753,8 +780,8 @@
       updateMessageHint();
       contactForm.classList.add("is-success");
       showStep(0);
-      setStatus("Messaggio inviato. Ti risponderemo appena possibile.", "success");
-      contactContext.textContent = "Messaggio inviato. Ti risponderemo appena possibile.";
+      setStatus("Il tuo messaggio è arrivato. Ti risponderemo all’email che ci hai lasciato.", "success");
+      contactContext.textContent = "Il tuo messaggio è arrivato. Ti risponderemo all’email che ci hai lasciato.";
       contactPanel.open = false;
       contactPanel.querySelector("summary").focus({ preventScroll: true });
       if (startedAt) startedAt.value = String(Date.now());
@@ -771,7 +798,7 @@
       delete contactPanel.dataset.state;
       if (!contactForm.classList.contains("is-success")) {
         syncContactContext();
-        if (!contactPanel.open) contactContext.textContent = "Messaggio non inviato. Riapri per riprovare.";
+        if (!contactPanel.open) contactContext.textContent = "Il messaggio non è stato inviato. Riapri il modulo: quello che hai scritto è ancora lì.";
       }
       submitButton.disabled = false;
       submitLabel.textContent = originalLabel;

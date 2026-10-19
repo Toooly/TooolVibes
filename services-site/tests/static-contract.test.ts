@@ -78,7 +78,7 @@ describe("TooolVibes Servizi static contract", () => {
 
   it("composes the hero on two lines with restrained orbital service indices", () => {
     expect(html.match(/class="hero__title-line"/g)).toHaveLength(2);
-    expect(html).toContain("Il digitale, costruito</span>");
+    expect(html).toContain("Il digitale, al lavoro</span>");
     expect(html.match(/class="journey__index" aria-hidden="true">[123]<\/span>/g)).toHaveLength(3);
     expect(css).toContain("white-space: nowrap");
     expect(css).toContain("@keyframes index-orbit");
@@ -97,9 +97,9 @@ describe("TooolVibes Servizi static contract", () => {
 
   it("uses the exact requested benefit lists with decorative native icons", () => {
     const expected = [
-      ["Restyling siti web", "Design responsive", "Prenotazioni online", "Ottimizzazione SEO", "Integrazione WhatsApp", "Moduli di acquisizione contatti", "Manutenzione e assistenza"],
-      ["Identità professionale", "Contenuti automatici", "Social sempre attivi", "Tempo risparmiato"],
-      ["Risposte immediate", "Assistenza 24/7", "Nuovi contatti", "Prenotazioni automatiche", "Follow-up intelligenti"],
+      ["Un nuovo volto al tuo sito", "Chiaro su ogni schermo", "Prenotazioni dal sito", "Più facile da trovare online", "WhatsApp a portata di clic", "Contattarti è più semplice", "Assistenza anche dopo il lancio"],
+      ["Un’identità che ti distingue", "Contenuti creati con AI", "Pubblicazioni regolari", "Più tempo per la tua attività"],
+      ["Risposte senza attese", "Assistenza a ogni ora", "Nuovi contatti da seguire", "Prenotazioni in autonomia", "Messaggi per ricontattare"],
     ];
     const lists = [...html.matchAll(/<ul class="service-benefits"[^>]*>([\s\S]*?)<\/ul>/g)];
     expect(lists).toHaveLength(3);
@@ -122,7 +122,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).toContain('service-offer__amount">599</span> <span>€</span>');
     expect(html).toContain('service-offer__amount">600</span> <span>€</span> <small>/ 3 mesi</small>');
     expect(html).toContain('service-offer__amount">249</span> <span>€</span> <small class="service-offer__recurring">+ <strong>49 €</strong>/mese</small>');
-    expect(html).toContain("consumi e integrazioni definiti nel preventivo");
+    expect(html).toContain("Funzioni, integrazioni e costi di utilizzo vengono definiti nel tuo preventivo.");
     expect(html).toContain("3 mesi al prezzo di 1");
     expect(css).toContain("scene-frame");
     expect(html).not.toContain("IVA");
@@ -141,7 +141,7 @@ describe("TooolVibes Servizi static contract", () => {
 
   it("highlights service names in responsive accent pills, separate from promotions", () => {
     expect([...html.matchAll(/class="service-offer__label">([^<]+)<\/p>/g)].map((match) => match[1])).toEqual([
-      "Sito web", "Automazione contenuti", "Attivazione chatbot",
+      "Sito web", "Automazione contenuti", "Attivazione chatbot AI",
     ]);
     const labelStyles = css.match(/\.service-offer__label \{([^}]+)\}/)?.[1];
     expect(labelStyles).toContain("width: fit-content");
@@ -164,10 +164,10 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).toContain('data-available="1"');
     expect(html).toContain('data-available="3"');
     expect(html).toContain('data-available="request"');
-    expect(html).toContain("1 sito disponibile su 5");
-    expect(html).toContain("3 automazioni disponibili su 5");
+    expect(html).toContain("questo mese resta 1 posto su 5");
+    expect(html).toContain("questo mese restano 3 posti su 5");
     expect(html).toContain("Disponibilità su richiesta");
-    expect(html.match(/class="service-capacity__note">Le richieste restano aperte\./g)).toHaveLength(3);
+    expect(html.match(/class="service-capacity__note">Scrivici per concordare la partenza\./g)).toHaveLength(3);
     expect(html).not.toContain("tra tutti i servizi");
     expect(html.match(/class="service-capacity__number" aria-hidden="true"/g)).toHaveLength(3);
     expect(html).toContain("<span>00</span><span>01</span><span>01</span>");
@@ -249,10 +249,16 @@ describe("TooolVibes Servizi static contract", () => {
   it("guides form completion with inline errors and a message hint", () => {
     for (const field of ["name", "email", "message", "need", "privacyAccepted"]) expect(html).toContain(`id="${field}-error"`);
     expect(html).toContain("data-message-count");
-    expect(html).toContain("Invia la richiesta");
+    expect(html).toContain("Invia il messaggio");
     const app = readFileSync(resolve(root, "app.js"), "utf8");
     expect(app).toContain("if (submitPending) return");
     expect(app).toContain('input.setAttribute("aria-invalid", "true")');
+  });
+
+  it("keeps longer Italian method descriptions aligned beside their number on mobile", () => {
+    expect(css).toContain("grid-template-columns: 2.9rem minmax(0,1fr)");
+    expect(css).toContain(".method-ready .process-step p { grid-column: 2; grid-row: 2; max-width: none; }");
+    expect(css).not.toContain("float: left");
   });
 
   it("separates web and AI accents and normalizes section subtitles", () => {

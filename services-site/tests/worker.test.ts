@@ -169,7 +169,7 @@ describe("TooolVibes Servizi contact contract", () => {
     const confirmationRequest = mockedFetch.mock.calls[2]?.[1] as RequestInit;
     const confirmation = JSON.parse(String(confirmationRequest.body));
     expect(confirmation).toMatchObject({ from: "Tooolvibes <info@tooolvibes.eu>", to: ["giulia@example.it"], reply_to: "info@tooolvibes.eu" });
-    expect(confirmation.text).toContain("Il primo passo è fatto.");
+    expect(confirmation.text).toContain("La tua idea è arrivata.");
     expect(confirmation.text).not.toContain(validPayload.message);
     expect(confirmation.html).toContain('lang="it"');
     expect(confirmation.html).toContain("#050916");

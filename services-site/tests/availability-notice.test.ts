@@ -11,8 +11,9 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function setup(storage: "new" | "seen" | "blocked" = "new", observerAvailable = true) {
+function setup(storage: "new" | "seen" | "dismissed" | "blocked" = "new", observerAvailable = true) {
   vi.useFakeTimers();
+  const start = Date.now();
   const dom = new JSDOM(readFileSync(resolve(root, "index.html"), "utf8"), {
     url: "https://servizi.tooolvibes.eu", runScripts: "outside-only", pretendToBeVisual: true,
   });
@@ -20,6 +21,8 @@ function setup(storage: "new" | "seen" | "blocked" = "new", observerAvailable = 
   const w = dom.window;
   w.matchMedia = () => ({ matches: true, addEventListener() {} }) as unknown as MediaQueryList;
   w.fetch = vi.fn(async () => new Response(null, { status: 204 }));
+  vi.spyOn(w.performance, "now").mockImplementation(() => Date.now() - start);
+  vi.spyOn(w.Date, "now").mockImplementation(() => Date.now());
   const observers: Array<{ callback: (entries: unknown[]) => void; targets: Element[]; options?: IntersectionObserverInit }> = [];
   if (observerAvailable) w.IntersectionObserver = class {
     targets: Element[] = [];
@@ -28,19 +31,21 @@ function setup(storage: "new" | "seen" | "blocked" = "new", observerAvailable = 
     unobserve() {}
   } as unknown as typeof IntersectionObserver;
   if (storage === "seen") w.sessionStorage.setItem("services-availability-seen", "1");
+  if (storage === "dismissed") w.sessionStorage.setItem("services-availability-dismissed-until", String(start + 900_000));
   if (storage === "blocked") {
     vi.spyOn(w.Storage.prototype, "getItem").mockImplementation(() => { throw new Error("Storage disabled"); });
     vi.spyOn(w.Storage.prototype, "setItem").mockImplementation(() => { throw new Error("Storage disabled"); });
   }
   w.eval(readFileSync(resolve(root, "app.js"), "utf8"));
   const notice = w.document.querySelector<HTMLElement>("[data-availability-notice]")!;
-  const serviceObserver = observers.find((observer) => observer.options?.rootMargin === "-20% 0px -35% 0px");
-  const blockerObserver = observers.find((observer) => observer.targets.includes(w.document.querySelector("#contatti")!));
-  const service = (kind: string) => w.document.querySelector(`[data-service="${kind}"]`)!;
+  const launcher = w.document.querySelector<HTMLButtonElement>("[data-notice-launcher]")!;
+  const serviceObserver = observers.find((observer) => observer.options?.rootMargin === "-15% 0px -15% 0px");
+  const blockerObserver = observers.find((observer) => observer.targets.includes(w.document.querySelector(".contact")!));
+  const service = (kind: string) => w.document.querySelector(`.service[data-service="${kind}"]`)!;
   const enter = (kind = "web", isIntersecting = true) => serviceObserver?.callback([{ target: service(kind), isIntersecting }]);
   const block = (selector: string, isIntersecting: boolean) => blockerObserver?.callback([{ target: w.document.querySelector(selector), isIntersecting }]);
-  const advance = (ms = 21_000) => vi.advanceTimersByTime(ms);
-  return { w, notice, enter, block, advance, service };
+  const advance = (ms = 8_001) => vi.advanceTimersByTime(ms);
+  return { w, notice, launcher, enter, block, advance, service, serviceObserver };
 }
 
 describe("Contextual availability notice", () => {
@@ -48,15 +53,16 @@ describe("Contextual availability notice", () => {
     const ui = setup();
     ui.advance();
     expect(ui.notice.hidden).toBe(true);
+    expect(ui.launcher.hidden).toBe(false);
     ui.enter();
-    ui.advance(4_999);
+    ui.advance(1_499);
     expect(ui.notice.hidden).toBe(true);
     ui.advance(2);
     expect(ui.notice.hidden).toBe(false);
-    expect(ui.notice.textContent).toContain("1 sito disponibile");
-    expect(ui.notice.textContent).toContain("Fino a 5 nuovi siti al mese.");
+    expect(ui.notice.textContent).toContain("1 posto per il tuo sito");
+    expect(ui.notice.textContent).toContain("Seguiamo fino a 5 nuovi siti al mese.");
     expect(ui.notice.textContent).not.toMatch(/acquistato|prenotato|pochi minuti|persone online/i);
-    expect(ui.w.sessionStorage.getItem("services-availability-seen")).toBe("1");
+    expect(ui.launcher.hidden).toBe(true);
   });
 
   it.each(["web", "social", "ai"])("keeps %s data, accent and form context in sync", (kind) => {
@@ -67,6 +73,7 @@ describe("Contextual availability notice", () => {
     expect(ui.notice.dataset.service).toBe(kind);
     const source = ui.service(kind).querySelector(".service-capacity small b")!;
     expect(ui.notice.querySelector("[data-notice-title]")!.textContent).toBe(source.textContent);
+    expect(ui.notice.querySelectorAll("[data-notice-slots] i:not(.is-assigned)")).toHaveLength(kind === "web" ? 1 : kind === "social" ? 3 : 0);
     ui.notice.querySelector<HTMLAnchorElement>("[data-notice-cta]")!.click();
     expect(ui.notice.hidden).toBe(true);
     const panel = ui.w.document.querySelector<HTMLDetailsElement>("[data-contact-panel]")!;
@@ -76,20 +83,20 @@ describe("Contextual availability notice", () => {
     expect(ui.w.fetch).not.toHaveBeenCalledWith("/api/contact", expect.anything());
   });
 
-  it("does not show against visible pricing actions, contact section or footer", () => {
+  it("does not cover the contact section, guided method or footer", () => {
     const ui = setup();
     ui.enter();
-    for (const selector of [".service-offer .button", "#contatti", ".site-footer"]) {
+    for (const selector of [".contact", ".method-frame", ".site-footer"]) {
       ui.block(selector, true);
       ui.advance();
       expect(ui.notice.hidden).toBe(true);
       ui.block(selector, false);
     }
-    ui.advance(5_001);
+    ui.advance(1_501);
     expect(ui.notice.hidden).toBe(false);
-    ui.block("#contatti", true);
+    ui.block(".contact", true);
     expect(ui.notice.hidden).toBe(true);
-    ui.block("#contatti", false);
+    ui.block(".contact", false);
     ui.advance();
     expect(ui.notice.hidden).toBe(true);
   });
@@ -102,7 +109,7 @@ describe("Contextual availability notice", () => {
     ui.advance();
     expect(ui.notice.hidden).toBe(true);
     menu.click();
-    ui.advance(5_001);
+    ui.advance(1_501);
     expect(ui.notice.hidden).toBe(false);
     ui.w.document.querySelector<HTMLInputElement>('[name="name"]')!.focus();
     expect(ui.notice.hidden).toBe(true);
@@ -120,22 +127,22 @@ describe("Contextual availability notice", () => {
     expect(ui.notice.hidden).toBe(false);
     close.dispatchEvent(new ui.w.KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     expect(ui.notice.hidden).toBe(true);
-    expect(ui.w.document.activeElement).toBe(ui.service("web").querySelector("h2"));
+    expect(ui.w.document.activeElement).toBe(ui.launcher);
     ui.enter("social");
     ui.advance();
     expect(ui.notice.hidden).toBe(true);
   });
 
-  it("expires once and respects the session limit after reload", () => {
+  it("expires to the launcher and does not exclude returning visitors with the old seen flag", () => {
     const ui = setup();
     ui.enter();
     ui.advance();
     expect(ui.notice.hidden).toBe(false);
-    ui.advance(12_001);
+    ui.advance(16_001);
     expect(ui.notice.hidden).toBe(true);
     const revisited = setup("seen");
     revisited.enter(); revisited.advance();
-    expect(revisited.notice.hidden).toBe(true);
+    expect(revisited.notice.hidden).toBe(false);
   });
 
   it("cancels stale pending notices and suppresses hidden-tab interruptions", () => {
@@ -147,11 +154,11 @@ describe("Contextual availability notice", () => {
     expect(ui.notice.hidden).toBe(true);
     Object.defineProperty(ui.w.document, "hidden", { configurable: true, value: false });
     ui.w.document.dispatchEvent(new ui.w.Event("visibilitychange"));
-    ui.advance(5_001);
+    ui.advance(1_501);
     expect(ui.notice.hidden).toBe(false);
   });
 
-  it("fails quietly without storage or IntersectionObserver and adds no network requests", () => {
+  it("keeps manual access working without storage or IntersectionObserver and adds no network requests", () => {
     const ui = setup("blocked");
     ui.enter(); ui.advance();
     expect(ui.notice.hidden).toBe(false);
@@ -162,5 +169,59 @@ describe("Contextual availability notice", () => {
     const unsupported = setup("new", false);
     unsupported.advance();
     expect(unsupported.notice.hidden).toBe(true);
+    expect(unsupported.launcher.hidden).toBe(false);
+    unsupported.launcher.click();
+    expect(unsupported.notice.hidden).toBe(false);
+  });
+
+  it("can be reopened after dismissal, including a preference remembered from an earlier visit", () => {
+    const ui = setup("dismissed");
+    ui.enter(); ui.advance();
+    expect(ui.notice.hidden).toBe(true);
+    expect(ui.launcher.hidden).toBe(false);
+    ui.launcher.click();
+    expect(ui.notice.hidden).toBe(false);
+    expect(ui.launcher.getAttribute("aria-expanded")).toBe("true");
+    ui.notice.querySelector<HTMLButtonElement>("[data-notice-close]")!.click();
+    expect(ui.w.document.activeElement).toBe(ui.launcher);
+    ui.launcher.click();
+    expect(ui.notice.hidden).toBe(false);
+  });
+
+  it("starts in the explorer rather than waiting until the complete service sections", () => {
+    const ui = setup();
+    const journey = ui.w.document.querySelector<HTMLElement>("[data-journey]")!;
+    journey.dataset.active = "social";
+    ui.serviceObserver!.callback([{ target: journey, isIntersecting: true }]);
+    ui.advance();
+    expect(ui.notice.hidden).toBe(false);
+    expect(ui.notice.dataset.service).toBe("social");
+  });
+
+  it("limits automatic appearances to two services with at least 45 seconds between them", () => {
+    const ui = setup();
+    ui.enter(); ui.advance(8_000);
+    expect(ui.notice.hidden).toBe(false);
+    ui.advance(16_001);
+    expect(ui.notice.hidden).toBe(true);
+    ui.enter("social"); ui.advance(28_998);
+    expect(ui.notice.hidden).toBe(true);
+    ui.advance(2);
+    expect(ui.notice.hidden).toBe(false);
+    expect(ui.notice.dataset.service).toBe("social");
+    ui.advance(16_001); ui.enter("ai"); ui.advance(60_000);
+    expect(ui.notice.hidden).toBe(true);
+    ui.launcher.click();
+    expect(ui.notice.dataset.service).toBe("ai");
+    expect(ui.notice.hidden).toBe(false);
+  });
+
+  it("uses the visible service rather than the explorer when both cross the viewport boundary", () => {
+    const ui = setup();
+    const journey = ui.w.document.querySelector<HTMLElement>("[data-journey]")!;
+    journey.dataset.active = "ai";
+    ui.serviceObserver!.callback([{ target: journey, isIntersecting: true }, { target: ui.service("web"), isIntersecting: true }]);
+    ui.advance();
+    expect(ui.notice.dataset.service).toBe("web");
   });
 });
