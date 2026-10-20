@@ -4,15 +4,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { HeroDecisionScope } from "@/components/home/hero-decision-scope";
 
 const mocks = vi.hoisted(() => ({
-  mount: vi.fn(), active: vi.fn(), dispose: vi.fn(),
+  mount: vi.fn(), active: vi.fn(), dispose: vi.fn(), locale: "it",
 }));
+vi.mock("@/components/i18n/locale-provider", () => ({ useLocale: () => ({ locale: mocks.locale }) }));
 vi.mock("@/components/home/hero-decision-scene", () => ({ mountHeroScene: mocks.mount }));
 
 let intersect: IntersectionObserverCallback;
 let mediaListener: () => void;
 let reduced = false;
 beforeEach(() => {
-  vi.clearAllMocks(); reduced = false;
+  vi.clearAllMocks(); reduced = false; mocks.locale = "it";
   mocks.mount.mockResolvedValue({ setActive: mocks.active, dispose: mocks.dispose });
   vi.stubGlobal("matchMedia", () => ({ get matches() { return reduced; }, addEventListener: (_: string, fn: () => void) => { mediaListener = fn; }, removeEventListener: vi.fn() }));
   vi.stubGlobal("IntersectionObserver", class {
@@ -26,6 +27,21 @@ async function enter(visible = true) {
 }
 
 describe("Hero decision scene lifecycle", () => {
+  it("offers an ordered journey with real catalog, guide and stack destinations", () => {
+    render(<HeroDecisionScope />);
+    expect(screen.getByRole("list", { name: "I tuoi prossimi passi" })).toBeTruthy();
+    expect(screen.getAllByRole("link").map(link => link.getAttribute("href"))).toEqual(["/archivio", "/posts", "/account?view=stack"]);
+    expect(screen.getByRole("link", { name: "Crea il tuo stack" })).toBeTruthy();
+  });
+  it("localizes the journey without rebuilding the artwork", async () => {
+    const { rerender } = render(<HeroDecisionScope />); await enter();
+    mocks.locale = "en"; rerender(<HeroDecisionScope />);
+    expect(screen.getByRole("list", { name: "Your next steps" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Discover" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Explore deeper" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Build your stack" })).toBeTruthy();
+    expect(mocks.mount).toHaveBeenCalledTimes(1);
+  });
   it("shows the static artwork immediately and loads WebGL only on intersection", async () => {
     const { container } = render(<HeroDecisionScope />);
     expect(container.querySelector('img[src="/hero/decision-instrument.webp"]')).toBeTruthy();
@@ -59,6 +75,7 @@ describe("Hero decision scene lifecycle", () => {
     mocks.mount.mockRejectedValueOnce(new Error("WebGL unavailable"));
     const { container } = render(<HeroDecisionScope />); await enter();
     expect(container.querySelector("img")).toBeTruthy(); expect(container.querySelector("[data-scene-ready]")).toBeNull();
+    expect(container.querySelector("[data-scene-failed]")).toBeTruthy();
   });
   it("returns to the poster if the GPU context is lost", async () => {
     const { container } = render(<HeroDecisionScope />); await enter();

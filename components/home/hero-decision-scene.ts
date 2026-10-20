@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { HERO_ARTWORK, dampHeroScroll, getHeroScrollProgress } from "./hero-decision-motion";
+import { HERO_ARTWORK, dampHeroScroll, getHeroJourneyStep, getHeroScrollProgress } from "./hero-decision-motion";
 
 export type HeroSceneController = {
   setActive: (active: boolean) => void;
@@ -34,6 +34,7 @@ const vertexShader = `
     vec3 point = position;
     point.x += vRibbon * sin(uv.y * 8.0 + phase) * (0.016 * breathe + 0.012 * uScroll);
     point.y += vRibbon * sin(uv.x * 9.0 - phase * 0.72) * (0.012 * breathe + 0.018 * uScroll);
+    point.y += vRibbon * sin(uv.y * 12.0 + phase * 0.43) * 0.003 * breathe;
     // Whole tool faces move together; logo/text interiors do not ripple.
     point.y += middleTool * (sin(phase * 0.8) * 0.009 * breathe + 0.025 * uScroll);
     point.y += leftTool * (sin(phase * 0.7 + 0.6) * 0.007 * breathe + 0.012 * uScroll);
@@ -57,8 +58,12 @@ const fragmentShader = `
     // Illumination follows existing reflective regions, never paints a new shape.
     color.rgb *= 1.0 + sheen * (vRibbon * 0.40 + vDeck * 0.18) * breathe;
     // A soft light travels over the existing ribbon, confined to the artwork alpha.
-    float light = exp(-pow((vUv.x + vUv.y * 0.35 - 0.55 - sin(uTime * 0.55) * 0.4) * 12.0, 2.0));
+    float lightDistance = (vUv.x + vUv.y * 0.35 - 0.55 - sin(uTime * 0.55) * 0.4) * 12.0;
+    float light = exp(-lightDistance * lightDistance);
     color.rgb += vec3(0.10, 0.045, 0.22) * light * vRibbon * color.a * breathe;
+    float glint = pow(0.5 + 0.5 * sin(vUv.x * 19.0 - vUv.y * 9.0 + uTime * 0.6), 24.0);
+    float reflective = smoothstep(0.25, 0.8, max(color.r, max(color.g, color.b)));
+    color.rgb += vec3(0.055, 0.04, 0.018) * glint * vDeck * reflective * breathe;
     gl_FragColor = color;
     #include <colorspace_fragment>
   }
@@ -93,10 +98,13 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
   scene.add(artwork);
   const imageAspect = texture.image.width / texture.image.height;
   const section = host.closest(".def-cockpit") ?? host;
+  const instrument = host.closest<HTMLElement>(".hero-instrument");
   let disposed = false, lost = false, active = false;
   let frame = 0, last = 0, elapsed = 0, progress = 0, target = 0;
   let start = 0, distance = 1, fitWidth = 1, fitHeight = 1;
   let scrollRoot: HTMLElement | null = null;
+  let journeyStep = -1;
+  let journeyProgress = "";
 
   function scrollPosition() {
     return scrollRoot ? scrollRoot.scrollTop : window.scrollY;
@@ -115,6 +123,16 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
   function render() {
     if (disposed || lost) return;
     const pose = progress * progress * (3 - 2 * progress);
+    const nextProgress = progress.toFixed(4);
+    if (nextProgress !== journeyProgress) {
+      journeyProgress = nextProgress;
+      instrument?.style.setProperty("--hero-scroll", nextProgress);
+    }
+    const nextStep = getHeroJourneyStep(progress);
+    if (nextStep !== journeyStep) {
+      journeyStep = nextStep;
+      instrument?.setAttribute("data-journey-step", String(journeyStep));
+    }
     material.uniforms.uTime.value = elapsed;
     material.uniforms.uScroll.value = pose;
     artwork.scale.set(fitWidth * (1 + pose * 0.045), fitHeight * (1 + pose * 0.045), 1);
@@ -178,6 +196,9 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     geometry.dispose(); material.dispose(); texture.dispose();
     scene.clear(); renderer.dispose(); renderer.forceContextLoss();
     renderer.domElement.remove();
+    instrument?.style.removeProperty("--hero-scroll");
+    instrument?.removeAttribute("data-journey-step");
+    instrument?.removeAttribute("data-scene-active");
   }
   try {
     renderer.domElement.addEventListener("webglcontextlost", onContextLost);
@@ -188,7 +209,7 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     observer?.observe(host);
     if (section !== host) observer?.observe(section);
     return {
-      setActive(value) { active = value; sync(); },
+      setActive(value) { active = value; instrument?.setAttribute("data-scene-active", String(value)); sync(); },
       dispose,
     };
   } catch (error) {

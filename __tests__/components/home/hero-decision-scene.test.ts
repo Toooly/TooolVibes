@@ -22,6 +22,7 @@ vi.mock("three", async () => {
 let frames: Map<number, FrameRequestCallback>;
 let frameId: number;
 let host: HTMLDivElement;
+let instrument: HTMLDivElement;
 let scene: Awaited<ReturnType<typeof mountHeroScene>> | undefined;
 beforeEach(() => {
   vi.clearAllMocks(); frames = new Map(); frameId = 0;
@@ -31,9 +32,10 @@ beforeEach(() => {
   vi.stubGlobal("scrollY", 0);
   host = document.createElement("div");
   Object.defineProperties(host, { clientWidth: { value: 600 }, clientHeight: { value: 454 } });
-  document.body.append(host);
+  instrument = document.createElement("div"); instrument.className = "hero-instrument";
+  instrument.append(host); document.body.append(instrument);
 });
-afterEach(() => { scene?.dispose(); scene = undefined; host.remove(); vi.unstubAllGlobals(); });
+afterEach(() => { scene?.dispose(); scene = undefined; instrument.remove(); vi.unstubAllGlobals(); });
 function step(time: number) {
   const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(fn => fn(time));
 }
@@ -60,6 +62,8 @@ describe("Hero continuous rendering", () => {
     expect(moved).toBeGreaterThan(0.1);
     expect(artwork().scale.x).toBeGreaterThan(initialScale);
     expect(artwork().rotation.z).toBeLessThan(0);
+    expect(Number(instrument.getAttribute("data-journey-step"))).toBeGreaterThan(0);
+    expect(Number(instrument.style.getPropertyValue("--hero-scroll"))).toBeGreaterThan(0);
     vi.stubGlobal("scrollY", 0); window.dispatchEvent(new Event("scroll"));
     step(1496);
     expect(artwork().material.uniforms.uScroll.value).toBeLessThan(moved);
@@ -77,7 +81,7 @@ describe("Hero continuous rendering", () => {
     const shell = document.createElement("div");
     shell.style.overflowY = "auto";
     Object.defineProperties(shell, { clientHeight: { value: 844 }, scrollHeight: { value: 2400 } });
-    document.body.append(shell); shell.append(host);
+    document.body.append(shell); shell.append(instrument);
     try {
       scene = await mountHeroScene(host, vi.fn()); scene.setActive(true); step(1000);
       shell.scrollTop = 260;

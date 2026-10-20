@@ -2155,7 +2155,7 @@
    under the sliding thumb. Thumb tint stays violet for all three states. */
 /* Both native image and animated surface render the same artwork and crop. */
 .def-cockpit__scope { display: block; position: relative; min-width: 0; }
-.hero-instrument { position: relative; width: 100%; isolation: isolate; }
+.hero-instrument { position: relative; width: 100%; padding-block: 56px 64px; isolation: isolate; }
 .hero-instrument__art { position: relative; aspect-ratio: 1.32; }
 .hero-instrument__poster,
 .hero-instrument__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -2164,13 +2164,65 @@
 .hero-instrument__canvas canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
 .hero-instrument[data-scene-ready] .hero-instrument__poster { visibility: hidden; }
 .hero-instrument[data-scene-ready] .hero-instrument__canvas { visibility: visible; }
+.hero-instrument__journey { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.hero-instrument__step {
+  --pill-accent: var(--tv-accent-violet-on-dark);
+  --step-start: 0.005;
+  --enter-x: -18px;
+  --reveal: clamp(0, (var(--hero-scroll, 0) - var(--step-start)) * 24, 1);
+  position: absolute; left: 2%; top: 56px; z-index: 2;
+  opacity: var(--reveal); visibility: hidden;
+  transform: translate3d(calc((1 - var(--reveal)) * var(--enter-x)), calc((1 - var(--reveal)) * 18px), 0) scale(calc(0.96 + var(--reveal) * 0.04));
+}
+.hero-instrument__step:nth-child(2) {
+  --pill-accent: var(--tv-accent-cyan-on-dark);
+  --step-start: 0.055;
+  --enter-x: 18px;
+  left: auto; right: 0; top: 116px;
+}
+.hero-instrument__step:nth-child(3) {
+  --pill-accent: var(--tv-accent-gold-on-dark);
+  --step-start: 0.18;
+  left: 6%; top: auto; bottom: 0;
+}
+.hero-instrument[data-journey-step="1"] .hero-instrument__step:first-child,
+.hero-instrument[data-journey-step="2"] .hero-instrument__step:nth-child(-n+2),
+.hero-instrument[data-journey-step="3"] .hero-instrument__step { visibility: visible; }
+.hero-instrument__pill {
+  display: flex; align-items: center; gap: 9px; min-height: 44px; padding: 7px 14px 7px 8px;
+  border: 1px solid color-mix(in srgb, var(--pill-accent) 42%, transparent); border-radius: var(--tv-radius-pill);
+  background: linear-gradient(145deg, rgba(31, 23, 60, 0.95), rgba(13, 12, 30, 0.92));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 24px rgba(5, 3, 18, 0.22);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  color: var(--tv-ink-primary); font-family: var(--tv-font-ui); font-size: 12px; font-weight: 600; line-height: 1.25;
+  text-decoration: none; white-space: nowrap; pointer-events: auto;
+  animation: hero-pill-float 6.8s ease-in-out infinite; animation-play-state: paused;
+  transition: border-color var(--tv-duration-fast), box-shadow var(--tv-duration-fast);
+}
+.hero-instrument__pill-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; color: var(--pill-accent); background: color-mix(in srgb, var(--pill-accent) 13%, transparent); }
+.hero-instrument__pill-number { color: var(--pill-accent); font-family: var(--tv-type-mono); font-size: 10px; opacity: 0.8; }
+.hero-instrument__pill-arrow { color: var(--pill-accent); opacity: 0.75; }
+.hero-instrument__step:nth-child(2) .hero-instrument__pill { animation-delay: -2.3s; }
+.hero-instrument__step:nth-child(3) .hero-instrument__pill { animation-delay: -4.6s; }
+.hero-instrument[data-scene-active="true"] .hero-instrument__pill { animation-play-state: running; }
+.hero-instrument__pill:hover,
+.hero-instrument__pill:focus-visible { animation-play-state: paused; border-color: var(--pill-accent); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 6px 24px color-mix(in srgb, var(--pill-accent) 14%, transparent); }
+.hero-instrument__pill:focus-visible { outline: 2px solid var(--tv-focus-ring); outline-offset: 4px; }
+.hero-instrument[data-scene-failed] .hero-instrument__step { --reveal: 1; visibility: visible; }
+@keyframes hero-pill-float { 0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.4deg); } 50% { transform: translate3d(0, -5px, 0) rotate(0.4deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-instrument__step { --reveal: 1; visibility: visible; }
+  .hero-instrument__pill { animation: none; transition: none; }
+}
 @media (min-width: 768px) and (max-width: 1023px) {
   .def-cockpit__scope { width: min(100%, 520px); margin-inline: auto; }
 }
 @media (max-width: 767px) {
   .def-cockpit__inner { gap: 12px; }
-  .hero-instrument { max-width: 520px; margin-inline: auto; }
+  .hero-instrument { max-width: 520px; margin-inline: auto; padding-top: 64px; }
   .hero-instrument__art { aspect-ratio: 1.32; }
+  .hero-instrument__step:first-child { top: 0; }
+  .hero-instrument__step:nth-child(2) { top: 48px; }
 }
 .def-cockpit__title {
   font-family: var(--tv-type-display);

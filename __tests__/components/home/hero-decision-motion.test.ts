@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { dampHeroScroll, getHeroScrollProgress } from "@/components/home/hero-decision-motion";
+import { dampHeroScroll, getHeroJourneyStep, getHeroScrollProgress } from "@/components/home/hero-decision-motion";
 
 describe("Hero scroll pacing", () => {
+  it("reveals the journey in order and hides it in reverse when scrolling back", () => {
+    expect([0, 0.03, 0.1, 0.2, 0.1, 0.03, 0].map(getHeroJourneyStep)).toEqual([0, 1, 2, 3, 2, 1, 0]);
+  });
   it("is confined to the hero traversal and reverses with native scroll", () => {
     expect(getHeroScrollProgress(0, 40, 600)).toBe(0);
     expect(getHeroScrollProgress(40, 40, 600)).toBe(0);
