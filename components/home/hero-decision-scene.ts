@@ -74,6 +74,8 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
   // Decode the exact same asset as the native image before allocating GPU state.
   const texture = await new THREE.TextureLoader().loadAsync(HERO_ARTWORK);
   texture.colorSpace = THREE.SRGBColorSpace;
+  texture.generateMipmaps = false;
+  texture.minFilter = THREE.LinearFilter;
   let renderer: THREE.WebGLRenderer;
   try {
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "low-power" });
@@ -81,7 +83,8 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     texture.dispose();
     throw error;
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Supersample 1x displays as well: small labels stay crisp without jagged edges.
+  renderer.setPixelRatio(Math.min(Math.max(window.devicePixelRatio, 1.5), 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.setClearColor(0x000000, 0);
   renderer.domElement.setAttribute("aria-hidden", "true");
