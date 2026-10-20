@@ -461,6 +461,7 @@
   background: url("/brand/tooolvibes-logo.png") center / contain no-repeat;
   filter: saturate(1.2);
 }
+.marketing-shell:has(.def-home)::after { content: none; }
 @media (max-width: 47.99rem) {
   .marketing-shell::after {
     top: 3.75rem;

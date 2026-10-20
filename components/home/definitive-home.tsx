@@ -27,10 +27,8 @@ type DefinitiveHomeProps = {
 
 function Cockpit({
   toolCount,
-  tools,
 }: {
   toolCount: number;
-  tools: ToolPublicView[];
 }) {
   return (
     <section className="def-cockpit" aria-labelledby="def-cockpit-title">
@@ -47,8 +45,8 @@ function Cockpit({
           </p>
           {toolCount > 0 ? <IntentEntry /> : null}
         </div>
-        <div className="def-cockpit__scope" aria-hidden="true">
-          <HeroDecisionScope tools={tools} />
+        <div className="def-cockpit__scope">
+          <HeroDecisionScope />
         </div>
       </div>
     </section>
@@ -75,7 +73,7 @@ export function DefinitiveHome({
           </a>
         </p>
       ) : null}
-      <Cockpit toolCount={tools.length} tools={tools} />
+      <Cockpit toolCount={tools.length} />
       <StartHere focusTool={focusTool} tools={tools} stacks={stacks} />
       <TinyAdzInlineSlot placement="home-editorial" />
       <SponsorSection placementKey="home-featured-tool" />

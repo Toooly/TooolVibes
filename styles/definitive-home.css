@@ -2153,29 +2153,39 @@
 }
 /* Per-mode active-tab rings removed: they stacked a second visible pill edge
    under the sliding thumb. Thumb tint stays violet for all three states. */
-.def-cockpit__scope {
-  display: none;
+/* Hero decision instrument owns its layout and WebGL/static crossfade. */
+.def-cockpit__scope { display: block; position: relative; min-width: 0; }
+.hero-instrument { position: relative; width: 100%; isolation: isolate; }
+.hero-instrument__art { position: relative; aspect-ratio: 1.32; }
+.hero-instrument__poster,
+.hero-instrument__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-instrument__poster { object-fit: contain; transition: opacity var(--tv-duration-base) var(--tv-easing-standard); }
+.hero-instrument__canvas { opacity: 0; transition: opacity var(--tv-duration-base) var(--tv-easing-standard); }
+.hero-instrument__canvas canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
+.hero-instrument[data-scene-ready] .hero-instrument__poster { opacity: 0; }
+.hero-instrument[data-scene-ready] .hero-instrument__canvas { opacity: 1; }
+.hero-instrument__motion {
+  position: absolute; right: 12px; bottom: 0;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; min-width: 44px; padding: 0 12px;
+  border: 1px solid var(--tv-border-subtle); border-radius: var(--tv-radius-pill);
+  background: var(--tv-surface-panel); color: var(--tv-ink-secondary);
+  font-family: var(--tv-font-ui); font-size: 12px; cursor: pointer;
+  transition: color var(--tv-duration-fast), border-color var(--tv-duration-fast);
 }
-.def-scope {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
+.hero-instrument__motion:hover { color: var(--tv-ink-primary); border-color: var(--tv-accent-violet-on-dark); }
+.hero-instrument__motion:focus-visible { outline: 2px solid var(--tv-focus-ring); outline-offset: 3px; }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .def-cockpit__scope { width: min(100%, 520px); margin-inline: auto; }
 }
-.def-scope text {
-  font-family: var(--tv-font-ui);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+@media (max-width: 767px) {
+  .def-cockpit__inner { gap: 12px; }
+  .hero-instrument { max-width: 520px; margin-inline: auto; }
+  .hero-instrument__art { aspect-ratio: 1.32; }
+  .hero-instrument__motion { right: 0; bottom: -10px; }
 }
-.def-scope__wave {
-  stroke-dasharray: 460;
-  stroke-dashoffset: 460;
-  animation: def-scope-draw 1.6s ease-out 0.3s forwards;
-}
-.def-scope__pulse {
-  animation: def-scope-pulse 3.2s ease-in-out 2s infinite;
-  transform-origin: 240px 316px;
+@media (prefers-reduced-motion: reduce) {
+  .hero-instrument__poster, .hero-instrument__canvas, .hero-instrument__motion { transition: none; }
 }
 .def-cockpit__title {
   font-family: var(--tv-type-display);
@@ -2527,13 +2537,6 @@
   .tv-editorial-deck__card, .tv-discovery-stage__frame, .tv-signal-search {
     transition: none;
   }
-  .def-scope__wave {
-    stroke-dashoffset: 0;
-    animation: none;
-  }
-  .def-scope__pulse {
-    animation: none;
-  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -2629,7 +2632,7 @@
 @media (min-width: 1024px) {
   .def-cockpit__inner {
     max-width: var(--tv-container-uw);
-    grid-template-columns: minmax(0, 1fr) minmax(380px, 480px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
     column-gap: var(--tv-rhythm-group-lg);
     align-items: center;
   }
@@ -2705,8 +2708,6 @@
 @keyframes def-pod-card-in{from{opacity: 0.01;transform: translateY(12px);}to{opacity: 1;transform: translateY(0);}}
 @keyframes tv-signal-sweep{from{opacity: 0;transform: translateX(-18%);}40%{opacity: 0.55;}to{opacity: 0;transform: translateX(18%);}}
 @keyframes tv-signal-lock{from{transform: scale(1);}40%{transform: scale(0.985);}to{transform: scale(1);}}
-@keyframes def-scope-draw{to{stroke-dashoffset: 0;}}
-@keyframes def-scope-pulse{0%, 100%{r: 5;opacity: 1;}50%{r: 6.5;opacity: 0.8;}}
 
 
 .def-cockpit {
@@ -2750,7 +2751,7 @@
 @media (min-width: 1024px) {
   .def-cockpit__inner {
     max-width: var(--tv-container-uw);
-    grid-template-columns: minmax(0, 1fr) minmax(380px, 480px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
     padding-inline: 0;
   }
 }

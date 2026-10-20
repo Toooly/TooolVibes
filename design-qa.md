@@ -1065,3 +1065,25 @@ Once the secret is set:
 **No code changes are required to switch from "missing-token" to
 "live signals".** The route handler already implements the full
 lifecycle (loading → ready → empty → missing-token → error).
+
+
+## 2026-10-20 — Animated homepage decision instrument
+
+Scope: homepage hero illustration and its responsive frame. Existing search, navigation, catalog data and workspace behavior are preserved.
+
+Source: user-selected combined Banco di scelta / Onda d’autore concept, generated image `exec-593ce27c-c531-4736-aae8-4e7fb64e7025.png`. Comparison evidence: `hero-decision-motion/final-comparison.png` in the chat visualization artifacts; latest full capture: `hero-decision-motion/release-candidate-desktop.jpg`. Source raster was contained at 1440 × 900 without stretching; implementation viewport is 1440 × 900 CSS pixels. The full view and the instrument region were inspected.
+
+Findings resolved: legacy overlapping orbit diagram removed; background logo ghost removed on home only; deck labels separated from tool names; ribbon seam closed; frame adjusted to contain the deck; tablet illustration capped to 520px; static fallback and accessible 44px pause/resume control supplied.
+
+Fidelity surfaces:
+- Typography: production Anton/Inter and existing headline/search copy retained; decorative scene labels and motion control have explicit Italian/English variants.
+- Layout: headline/search remain primary. Scene is adjacent on desktop and below search on mobile. Responsive browser checks at 320, 390, 768, 1280, 1440 and 1920px found no horizontal overflow.
+- Colors: ink/violet/cyan/gold materials, dedicated studio reflections and restrained active-state highlights.
+- Assets: generated transparent WebP fallback (about 115KB), actual catalog logo assets, and independently animated WebGL geometry. Live geometry and official logos intentionally replace the illustrative mock’s fictional logo treatments; lighting changes over the animation rather than matching one baked still.
+- Content: no invented scores, prices, product superiority claims or workspace writes. Search submits to the existing catalog route; navigation away and back restores the scene without application errors.
+
+Motion evidence: running instrument captures differ; settled paused captures have zero changed channels. Ribbon vertices deform, tiles advance/tilt separately, bookmark folds and lights/markers sequence. Rendering is capped at 30fps, stops offscreen/in hidden tabs, and disposes GPU resources on navigation. Reduced motion does not import the WebGL module; initialization/context/render failures retain the poster.
+
+Validation: 36 targeted tests passed, including reduced motion, pause/resume, visibility, GPU fallback and navigation-time disposal; TypeScript, scoped ESLint and style ownership passed. Browser inspection used the Codex in-app browser, including Italian/English controls and catalog navigation. Third-party TinyAdz configuration warning observed locally; no application errors. Physical-device GPU/battery performance is not measured.
+
+final result: passed (scoped implementation and local browser QA; production identity/smoke verified separately during release).
