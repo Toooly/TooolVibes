@@ -1087,3 +1087,20 @@ Motion evidence: running instrument captures differ; settled paused captures hav
 Validation: 36 targeted tests passed, including reduced motion, pause/resume, visibility, GPU fallback and navigation-time disposal; TypeScript, scoped ESLint and style ownership passed. Browser inspection used the Codex in-app browser, including Italian/English controls and catalog navigation. Third-party TinyAdz configuration warning observed locally; no application errors. Physical-device GPU/battery performance is not measured.
 
 final result: passed (scoped implementation and local browser QA; production identity/smoke verified separately during release).
+
+
+## 2026-10-20 — Preserve hero artwork and refine scroll pacing
+
+User direction: retain the original luminous illustration throughout loading and animation; use gentle native-scroll choreography for the larger movements. The previous independently rendered 3D reconstruction is replaced by GPU animation of the original artwork.
+
+Findings resolved: native poster and animated surface now share `HERO_ARTWORK`; the first shader draw is unmodified; the crossfade between different compositions is removed. Artwork files are unchanged. Idle ribbon/reflection movement is separate from scroll-controlled lift, scale and tool movement. Scroll is passive and does not pin, prevent, or replace native page scrolling.
+
+Pacing: frame-time damping with a 0.18s response constant; bounded reversible progress. The single textured mesh follows the display cadence without skipping frames; ribbon motion and independently phased tool faces remain bounded and gentle. Pixel ratio is capped at 2 for Retina definition. Section/viewport resize recalculates the traversal. Pause, hidden-tab/offscreen suspension, reduced motion and GPU failure fallback remain supported. Changing interface language no longer rebuilds the artwork.
+
+Evidence: `hero-artwork-scroll/desktop-final.jpg` (1440 × 900) and `mobile-final.jpg` (390 × 844), plus responsive DOM checks from 320 to 1920px in the chat visualization artifacts. Original illustration inspected directly against the running surface. No composition/material/identity replacement occurs; Anton/Inter copy, spacing and palette are preserved. Logos and text interiors stay protected from ribbon deformation. Browser scrolling was checked forward and backward; navigation to catalog and back and IT/EN controls were exercised.
+
+Verification: 41 targeted tests passed; TypeScript, scoped lint and style ownership passed. Captured idle frames differ; paused artwork captures have zero changed channels. No application errors or horizontal overflow observed. Physical-device touch/GPU performance is not measured. This refinement is local and has not been released.
+
+Final pre-release pass: 41 targeted tests, TypeScript, scoped ESLint and style ownership pass. Desktop 1440 × 900 and mobile 390 × 844 screenshots are saved in `hero-final-release`; native scroll/reverse, pause/resume and no horizontal overflow were checked again. Browser app error log is empty. Physical-device GPU/battery performance remains unmeasured. Production release identity and smoke are checked separately by the protected release workflow.
+
+final result: passed (scoped refinement and pre-release checks).

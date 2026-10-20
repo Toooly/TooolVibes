@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { useLocale } from "@/components/i18n/locale-provider";
 import type { HeroSceneController } from "./hero-decision-scene";
+import { HERO_ARTWORK } from "./hero-decision-motion";
 /** Decorative scene: it illustrates a choice and never changes the workspace. */
 export function HeroDecisionScope() {
   const { locale } = useLocale();
@@ -37,7 +38,7 @@ export function HeroDecisionScope() {
         const { mountHeroScene } = await import("./hero-decision-scene");
         if (disposed)
           return;
-        const scene = await mountHeroScene(element, locale, () => {
+        const scene = await mountHeroScene(element, () => {
           if (!disposed)
             setReady(false);
         });
@@ -66,7 +67,7 @@ export function HeroDecisionScope() {
       controller.current = null;
       setReady(false);
     };
-  }, [locale, reduced]);
+  }, [reduced]);
   useEffect(() => { pausedRef.current = paused; controller.current?.setPaused(paused); }, [paused, ready]);
   const toggleMotion = () => {
     const next = !paused;
@@ -81,7 +82,7 @@ export function HeroDecisionScope() {
     <div className="hero-instrument" data-scene-ready={ready || undefined} data-scene-paused={paused || undefined}>
       <div className="hero-instrument__art" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="hero-instrument__poster" src="/hero/decision-instrument.webp" alt="" width="1000" height="848" decoding="async" />
+        <img className="hero-instrument__poster" src={HERO_ARTWORK} alt="" width="1000" height="833" decoding="async" />
         <div className="hero-instrument__canvas" ref={host} />
       </div>
       {ready && !reduced ? (

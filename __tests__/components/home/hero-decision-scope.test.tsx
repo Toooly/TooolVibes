@@ -62,7 +62,7 @@ describe("Hero decision scene lifecycle", () => {
   });
   it("returns to the poster if the GPU context is lost", async () => {
     const { container } = render(<HeroDecisionScope />); await enter();
-    act(() => mocks.mount.mock.calls[0][2]());
+    act(() => mocks.mount.mock.calls[0][1]());
     expect(container.querySelector("[data-scene-ready]")).toBeNull();
     expect(screen.queryByRole("button")).toBeNull();
   });
@@ -87,5 +87,14 @@ describe("Hero decision scene lifecycle", () => {
   it("localizes the accessible motion control", async () => {
     mocks.locale = "en"; render(<HeroDecisionScope />); await enter();
     expect(screen.getByRole("button", { name: "Pause hero animation" })).toBeTruthy();
+  });
+  it("keeps the same artwork and renderer when interface language changes", async () => {
+    const { rerender, container } = render(<HeroDecisionScope />); await enter();
+    const image = container.querySelector("img");
+    mocks.locale = "en"; rerender(<HeroDecisionScope />);
+    expect(screen.getByRole("button", { name: "Pause hero animation" })).toBeTruthy();
+    expect(container.querySelector("img")).toBe(image);
+    expect(mocks.mount).toHaveBeenCalledTimes(1);
+    expect(mocks.dispose).not.toHaveBeenCalled();
   });
 });

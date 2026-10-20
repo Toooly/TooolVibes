@@ -2153,17 +2153,17 @@
 }
 /* Per-mode active-tab rings removed: they stacked a second visible pill edge
    under the sliding thumb. Thumb tint stays violet for all three states. */
-/* Hero decision instrument owns its layout and WebGL/static crossfade. */
+/* Both native image and animated surface render the same artwork and crop. */
 .def-cockpit__scope { display: block; position: relative; min-width: 0; }
 .hero-instrument { position: relative; width: 100%; isolation: isolate; }
 .hero-instrument__art { position: relative; aspect-ratio: 1.32; }
 .hero-instrument__poster,
 .hero-instrument__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero-instrument__poster { object-fit: contain; transition: opacity var(--tv-duration-base) var(--tv-easing-standard); }
-.hero-instrument__canvas { opacity: 0; transition: opacity var(--tv-duration-base) var(--tv-easing-standard); }
+.hero-instrument__poster { object-fit: contain; }
+.hero-instrument__canvas { visibility: hidden; }
 .hero-instrument__canvas canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
-.hero-instrument[data-scene-ready] .hero-instrument__poster { opacity: 0; }
-.hero-instrument[data-scene-ready] .hero-instrument__canvas { opacity: 1; }
+.hero-instrument[data-scene-ready] .hero-instrument__poster { visibility: hidden; }
+.hero-instrument[data-scene-ready] .hero-instrument__canvas { visibility: visible; }
 .hero-instrument__motion {
   position: absolute; right: 12px; bottom: 0;
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
@@ -2185,7 +2185,7 @@
   .hero-instrument__motion { right: 0; bottom: -10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-instrument__poster, .hero-instrument__canvas, .hero-instrument__motion { transition: none; }
+  .hero-instrument__motion { transition: none; }
 }
 .def-cockpit__title {
   font-family: var(--tv-type-display);
