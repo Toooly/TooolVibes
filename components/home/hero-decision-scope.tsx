@@ -5,7 +5,7 @@ import Link from "@/components/ui/app-link";
 import { useLocale } from "@/components/i18n/locale-provider";
 import { workspaceViewHref } from "@/components/account/workspace/workspace-model";
 import type { HeroSceneController } from "./hero-decision-scene";
-import { HERO_ARTWORK } from "./hero-decision-motion";
+import { HERO_ARTWORK, HERO_ARTWORK_HEIGHT, HERO_ARTWORK_WIDTH } from "./hero-decision-motion";
 /** Decorative scene: it illustrates a choice and never changes the workspace. */
 export function HeroDecisionScope() {
   const { locale } = useLocale();
@@ -75,9 +75,9 @@ export function HeroDecisionScope() {
   }, [reduced]);
   return (
     <div className="hero-instrument" data-scene-ready={ready || undefined} data-scene-failed={failed || undefined}>
-      <div className="hero-instrument__art" aria-hidden="true">
+      <div className="hero-instrument__art" aria-hidden="true" style={{ aspectRatio: HERO_ARTWORK_WIDTH / HERO_ARTWORK_HEIGHT }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="hero-instrument__poster" src={HERO_ARTWORK} alt="" width="1000" height="833" decoding="async" />
+        <img className="hero-instrument__poster" src={HERO_ARTWORK} alt="" width={HERO_ARTWORK_WIDTH} height={HERO_ARTWORK_HEIGHT} decoding="async" />
         <div className="hero-instrument__canvas" ref={host} />
       </div>
       <ol className="hero-instrument__journey" aria-label={locale === "en" ? "Your next steps" : "I tuoi prossimi passi"}>

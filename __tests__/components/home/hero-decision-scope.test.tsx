@@ -2,6 +2,7 @@
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { HeroDecisionScope } from "@/components/home/hero-decision-scope";
+import { HERO_ARTWORK } from "@/components/home/hero-decision-motion";
 
 const mocks = vi.hoisted(() => ({
   mount: vi.fn(), active: vi.fn(), dispose: vi.fn(), locale: "it",
@@ -44,11 +45,15 @@ describe("Hero decision scene lifecycle", () => {
   });
   it("shows the static artwork immediately and loads WebGL only on intersection", async () => {
     const { container } = render(<HeroDecisionScope />);
-    expect(container.querySelector('img[src="/hero/decision-instrument.webp"]')).toBeTruthy();
+    const image = container.querySelector("img")!;
+    expect(image.getAttribute("src")).toBe(HERO_ARTWORK);
+    const aspect = Number(image.getAttribute("width")) / Number(image.getAttribute("height"));
+    expect(Number((image.parentElement as HTMLElement).style.aspectRatio)).toBeCloseTo(aspect);
     expect(mocks.mount).not.toHaveBeenCalled();
     await enter();
     expect(mocks.mount).toHaveBeenCalledTimes(1);
     expect(container.querySelector('[data-scene-ready="true"]')).toBeTruthy();
+    expect(Number((image.parentElement as HTMLElement).style.aspectRatio)).toBeCloseTo(aspect);
     expect(mocks.active).toHaveBeenLastCalledWith(true);
     await enter(false); expect(mocks.active).toHaveBeenLastCalledWith(false);
   });

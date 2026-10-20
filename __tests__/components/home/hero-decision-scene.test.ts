@@ -8,7 +8,7 @@ vi.mock("three", async () => {
   return {
     ...actual,
     TextureLoader: class {
-      async loadAsync() { const texture = new actual.Texture(); texture.image = { width: 1000, height: 833 }; return texture; }
+      async loadAsync() { const texture = new actual.Texture(); texture.image = { width: 1375, height: 1144 }; return texture; }
     },
     WebGLRenderer: class {
       domElement = document.createElement("canvas");
@@ -32,6 +32,7 @@ beforeEach(() => {
   vi.stubGlobal("scrollY", 0);
   host = document.createElement("div");
   Object.defineProperties(host, { clientWidth: { value: 600 }, clientHeight: { value: 454 } });
+  vi.spyOn(host, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 100, 600.25, 454.5));
   instrument = document.createElement("div"); instrument.className = "hero-instrument";
   instrument.append(host); document.body.append(instrument);
 });

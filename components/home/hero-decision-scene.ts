@@ -14,8 +14,8 @@ const vertexShader = `
   uniform float uScroll;
 
   float rectangle(vec2 uv, vec2 lo, vec2 hi) {
-    vec2 inside = smoothstep(lo - 0.018, lo + 0.018, uv)
-      * (1.0 - smoothstep(hi - 0.018, hi + 0.018, uv));
+    vec2 inside = smoothstep(lo - 0.03, lo + 0.03, uv)
+      * (1.0 - smoothstep(hi - 0.03, hi + 0.03, uv));
     return inside.x * inside.y;
   }
 
@@ -30,15 +30,15 @@ const vertexShader = `
 
     // The very first draw is the unmodified artwork, including its alpha edge.
     float breathe = smoothstep(0.0, 0.8, uTime);
-    float phase = uTime * 0.85;
+    float phase = uTime * 1.05;
     vec3 point = position;
-    point.x += vRibbon * sin(uv.y * 8.0 + phase) * (0.016 * breathe + 0.012 * uScroll);
-    point.y += vRibbon * sin(uv.x * 9.0 - phase * 0.72) * (0.012 * breathe + 0.018 * uScroll);
-    point.y += vRibbon * sin(uv.y * 12.0 + phase * 0.43) * 0.003 * breathe;
+    point.x += vRibbon * sin(uv.y * 8.0 + phase) * (0.022 * breathe + 0.012 * uScroll);
+    point.y += vRibbon * sin(uv.x * 9.0 - phase * 0.72) * (0.018 * breathe + 0.018 * uScroll);
+    point.y += vRibbon * sin(uv.y * 12.0 + phase * 0.43) * 0.0045 * breathe;
     // Whole tool faces move together; logo/text interiors do not ripple.
-    point.y += middleTool * (sin(phase * 0.8) * 0.009 * breathe + 0.025 * uScroll);
-    point.y += leftTool * (sin(phase * 0.7 + 0.6) * 0.007 * breathe + 0.012 * uScroll);
-    point.y += rightTool * (sin(phase * 0.65 - 0.8) * 0.008 * breathe - 0.008 * uScroll);
+    point.y += middleTool * (sin(phase * 0.8) * 0.012 * breathe + 0.025 * uScroll);
+    point.y += leftTool * (sin(phase * 0.7 + 0.6) * 0.009 * breathe + 0.012 * uScroll);
+    point.y += rightTool * (sin(phase * 0.65 - 0.8) * 0.01 * breathe - 0.008 * uScroll);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(point, 1.0);
   }
 `;
@@ -54,13 +54,14 @@ const fragmentShader = `
   void main() {
     vec4 color = texture2D(uArtwork, vUv);
     float breathe = smoothstep(0.0, 0.8, uTime);
-    float sheen = pow(0.5 + 0.5 * sin(vUv.x * 12.0 + vUv.y * 5.0 - uTime * 0.85 - uScroll * 3.0), 12.0);
+    float sheen = pow(0.5 + 0.5 * sin(vUv.x * 12.0 + vUv.y * 5.0 - uTime * 1.1 - uScroll * 3.0), 12.0);
     // Illumination follows existing reflective regions, never paints a new shape.
     color.rgb *= 1.0 + sheen * (vRibbon * 0.40 + vDeck * 0.18) * breathe;
     // A soft light travels over the existing ribbon, confined to the artwork alpha.
-    float lightDistance = (vUv.x + vUv.y * 0.35 - 0.55 - sin(uTime * 0.55) * 0.4) * 12.0;
+    float flow = fract(vUv.x * 0.65 + vUv.y * 0.35 - uTime * 0.12 - uScroll * 0.14);
+    float lightDistance = (flow - 0.5) * 18.0;
     float light = exp(-lightDistance * lightDistance);
-    color.rgb += vec3(0.10, 0.045, 0.22) * light * vRibbon * color.a * breathe;
+    color.rgb += vec3(0.13, 0.055, 0.25) * light * vRibbon * color.a * breathe;
     float glint = pow(0.5 + 0.5 * sin(vUv.x * 19.0 - vUv.y * 9.0 + uTime * 0.6), 24.0);
     float reflective = smoothstep(0.25, 0.8, max(color.r, max(color.g, color.b)));
     color.rgb += vec3(0.055, 0.04, 0.018) * glint * vDeck * reflective * breathe;
@@ -160,7 +161,8 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     if (active && !disposed && !lost) frame = requestAnimationFrame(tick);
   }
   function resize() {
-    const width = host.clientWidth, height = host.clientHeight;
+    // Preserve fractional CSS pixels so the canvas fits exactly like the poster.
+    const { width, height } = host.getBoundingClientRect();
     if (!width || !height || disposed) return;
     renderer.setSize(width, height, false);
     const aspect = width / height;

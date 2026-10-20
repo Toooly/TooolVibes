@@ -1,4 +1,6 @@
-export const HERO_ARTWORK = "/hero/decision-instrument.webp";
+export const HERO_ARTWORK = "/hero/decision-instrument-flow.webp";
+export const HERO_ARTWORK_WIDTH = 1375;
+export const HERO_ARTWORK_HEIGHT = 1144;
 
 /** Reveal all three steps while the artwork is still in view, in either direction. */
 export function getHeroJourneyStep(progress: number) {
