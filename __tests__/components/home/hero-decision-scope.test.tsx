@@ -4,17 +4,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { HeroDecisionScope } from "@/components/home/hero-decision-scope";
 
 const mocks = vi.hoisted(() => ({
-  mount: vi.fn(), active: vi.fn(), paused: vi.fn(), dispose: vi.fn(), locale: "it",
+  mount: vi.fn(), active: vi.fn(), dispose: vi.fn(),
 }));
-vi.mock("@/components/i18n/locale-provider", () => ({ useLocale: () => ({ locale: mocks.locale }) }));
 vi.mock("@/components/home/hero-decision-scene", () => ({ mountHeroScene: mocks.mount }));
 
 let intersect: IntersectionObserverCallback;
 let mediaListener: () => void;
 let reduced = false;
 beforeEach(() => {
-  vi.clearAllMocks(); reduced = false; mocks.locale = "it";
-  mocks.mount.mockResolvedValue({ setActive: mocks.active, setPaused: mocks.paused, dispose: mocks.dispose });
+  vi.clearAllMocks(); reduced = false;
+  mocks.mount.mockResolvedValue({ setActive: mocks.active, dispose: mocks.dispose });
   vi.stubGlobal("matchMedia", () => ({ get matches() { return reduced; }, addEventListener: (_: string, fn: () => void) => { mediaListener = fn; }, removeEventListener: vi.fn() }));
   vi.stubGlobal("IntersectionObserver", class {
     constructor(callback: IntersectionObserverCallback) { intersect = callback; }
@@ -37,12 +36,13 @@ describe("Hero decision scene lifecycle", () => {
     expect(mocks.active).toHaveBeenLastCalledWith(true);
     await enter(false); expect(mocks.active).toHaveBeenLastCalledWith(false);
   });
-  it("pauses and resumes explicitly without remounting the renderer", async () => {
-    render(<HeroDecisionScope />); await enter();
-    fireEvent.click(screen.getByRole("button", { name: "Metti in pausa animazione della hero" }));
-    expect(mocks.paused).toHaveBeenLastCalledWith(true);
-    fireEvent.click(screen.getByRole("button", { name: "Riprendi animazione della hero" }));
-    expect(mocks.paused).toHaveBeenLastCalledWith(false); expect(mocks.mount).toHaveBeenCalledTimes(1);
+  it("starts automatically with no pause or resume control", async () => {
+    const { container } = render(<HeroDecisionScope />); await enter();
+    expect(mocks.active).toHaveBeenLastCalledWith(true);
+    expect(container.querySelector("button")).toBeNull();
+    await enter(false); await enter(true);
+    expect(mocks.active).toHaveBeenLastCalledWith(true);
+    expect(mocks.mount).toHaveBeenCalledTimes(1);
   });
   it("keeps reduced motion completely static and disposes when preference changes", async () => {
     const { container } = render(<HeroDecisionScope />); await enter();
@@ -81,18 +81,13 @@ describe("Hero decision scene lifecycle", () => {
     mocks.mount.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
     const { unmount } = render(<HeroDecisionScope />);
     await enter(); await waitFor(() => expect(mocks.mount).toHaveBeenCalled()); unmount();
-    await act(async () => finish({ setActive: mocks.active, setPaused: mocks.paused, dispose: mocks.dispose }));
+    await act(async () => finish({ setActive: mocks.active, dispose: mocks.dispose }));
     expect(mocks.dispose).toHaveBeenCalledTimes(1);
   });
-  it("localizes the accessible motion control", async () => {
-    mocks.locale = "en"; render(<HeroDecisionScope />); await enter();
-    expect(screen.getByRole("button", { name: "Pause hero animation" })).toBeTruthy();
-  });
-  it("keeps the same artwork and renderer when interface language changes", async () => {
+  it("keeps the same artwork and renderer across parent updates", async () => {
     const { rerender, container } = render(<HeroDecisionScope />); await enter();
     const image = container.querySelector("img");
-    mocks.locale = "en"; rerender(<HeroDecisionScope />);
-    expect(screen.getByRole("button", { name: "Pause hero animation" })).toBeTruthy();
+    rerender(<HeroDecisionScope />);
     expect(container.querySelector("img")).toBe(image);
     expect(mocks.mount).toHaveBeenCalledTimes(1);
     expect(mocks.dispose).not.toHaveBeenCalled();

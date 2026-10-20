@@ -3,7 +3,6 @@ import { HERO_ARTWORK, dampHeroScroll, getHeroScrollProgress } from "./hero-deci
 
 export type HeroSceneController = {
   setActive: (active: boolean) => void;
-  setPaused: (paused: boolean) => void;
   dispose: () => void;
 };
 
@@ -30,15 +29,15 @@ const vertexShader = `
     vDeck = smoothstep(0.04, 0.14, uv.y) * (1.0 - smoothstep(0.40, 0.48, uv.y));
 
     // The very first draw is the unmodified artwork, including its alpha edge.
-    float breathe = smoothstep(0.0, 1.8, uTime);
-    float phase = uTime * 0.48;
+    float breathe = smoothstep(0.0, 0.8, uTime);
+    float phase = uTime * 0.85;
     vec3 point = position;
-    point.x += vRibbon * sin(uv.y * 8.0 + phase) * (0.004 * breathe + 0.003 * uScroll);
-    point.y += vRibbon * sin(uv.x * 9.0 - phase * 0.72) * (0.003 * breathe + 0.005 * uScroll);
+    point.x += vRibbon * sin(uv.y * 8.0 + phase) * (0.016 * breathe + 0.012 * uScroll);
+    point.y += vRibbon * sin(uv.x * 9.0 - phase * 0.72) * (0.012 * breathe + 0.018 * uScroll);
     // Whole tool faces move together; logo/text interiors do not ripple.
-    point.y += middleTool * (sin(phase * 0.8) * 0.002 * breathe + 0.005 * uScroll);
-    point.y += leftTool * sin(phase * 0.7 + 0.6) * 0.0016 * breathe;
-    point.y += rightTool * sin(phase * 0.65 - 0.8) * 0.0014 * breathe;
+    point.y += middleTool * (sin(phase * 0.8) * 0.009 * breathe + 0.025 * uScroll);
+    point.y += leftTool * (sin(phase * 0.7 + 0.6) * 0.007 * breathe + 0.012 * uScroll);
+    point.y += rightTool * (sin(phase * 0.65 - 0.8) * 0.008 * breathe - 0.008 * uScroll);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(point, 1.0);
   }
 `;
@@ -53,10 +52,13 @@ const fragmentShader = `
 
   void main() {
     vec4 color = texture2D(uArtwork, vUv);
-    float breathe = smoothstep(0.0, 1.8, uTime);
-    float sheen = pow(0.5 + 0.5 * sin(vUv.x * 8.0 + vUv.y * 3.0 - uTime * 0.28 - uScroll * 1.8), 10.0);
+    float breathe = smoothstep(0.0, 0.8, uTime);
+    float sheen = pow(0.5 + 0.5 * sin(vUv.x * 12.0 + vUv.y * 5.0 - uTime * 0.85 - uScroll * 3.0), 12.0);
     // Illumination follows existing reflective regions, never paints a new shape.
-    color.rgb *= 1.0 + sheen * (vRibbon * 0.055 + vDeck * 0.025) * breathe;
+    color.rgb *= 1.0 + sheen * (vRibbon * 0.40 + vDeck * 0.18) * breathe;
+    // A soft light travels over the existing ribbon, confined to the artwork alpha.
+    float light = exp(-pow((vUv.x + vUv.y * 0.35 - 0.55 - sin(uTime * 0.55) * 0.4) * 12.0, 2.0));
+    color.rgb += vec3(0.10, 0.045, 0.22) * light * vRibbon * color.a * breathe;
     gl_FragColor = color;
     #include <colorspace_fragment>
   }
@@ -91,13 +93,18 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
   scene.add(artwork);
   const imageAspect = texture.image.width / texture.image.height;
   const section = host.closest(".def-cockpit") ?? host;
-  let disposed = false, lost = false, active = false, paused = false;
+  let disposed = false, lost = false, active = false;
   let frame = 0, last = 0, elapsed = 0, progress = 0, target = 0;
   let start = 0, distance = 1, fitWidth = 1, fitHeight = 1;
+  let scrollRoot: HTMLElement | null = null;
+
+  function scrollPosition() {
+    return scrollRoot ? scrollRoot.scrollTop : window.scrollY;
+  }
 
   function readScroll() {
     // Passive scroll handler: one scalar update, no layout or rendering work.
-    target = getHeroScrollProgress(window.scrollY, start, distance);
+    target = getHeroScrollProgress(scrollPosition(), start, distance);
   }
   function fail() {
     if (disposed || lost) return;
@@ -110,16 +117,16 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     const pose = progress * progress * (3 - 2 * progress);
     material.uniforms.uTime.value = elapsed;
     material.uniforms.uScroll.value = pose;
-    artwork.scale.set(fitWidth * (1 + pose * 0.018), fitHeight * (1 + pose * 0.018), 1);
-    artwork.rotation.z = -pose * 0.007;
-    artwork.position.y = pose * 0.012;
+    artwork.scale.set(fitWidth * (1 + pose * 0.045), fitHeight * (1 + pose * 0.045), 1);
+    artwork.rotation.z = -pose * 0.028;
+    artwork.position.y = pose * 0.045;
     renderer.render(scene, camera);
   }
   function tick(now: number) {
-    if (disposed || lost || !active || paused) return;
+    if (disposed || lost || !active) return;
     frame = requestAnimationFrame(tick);
     // Follow the display cadence without frame skipping on 60/90/120Hz screens.
-    // A single textured mesh runs only while visible, unpaused and in the foreground.
+    // A single textured mesh runs continuously while visible and in the foreground.
     const delta = last ? Math.min((now - last) / 1000, 0.08) : 0;
     last = now;
     elapsed += delta;
@@ -129,7 +136,7 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
   function sync() {
     cancelAnimationFrame(frame);
     last = 0;
-    if (active && !paused && !disposed && !lost) frame = requestAnimationFrame(tick);
+    if (active && !disposed && !lost) frame = requestAnimationFrame(tick);
   }
   function resize() {
     const width = host.clientWidth, height = host.clientHeight;
@@ -141,9 +148,19 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     camera.updateProjectionMatrix();
     fitWidth = Math.min(aspect, imageAspect);
     fitHeight = fitWidth / imageAspect;
+    // Mobile scrolls inside the marketing shell; desktop uses the document.
+    // Re-evaluate on resize so crossing a breakpoint does not retain the old root.
+    scrollRoot = null;
+    for (let parent = host.parentElement; parent; parent = parent.parentElement) {
+      if (/(auto|scroll)/.test(getComputedStyle(parent).overflowY) && parent.scrollHeight > parent.clientHeight) {
+        scrollRoot = parent;
+        break;
+      }
+    }
     const bounds = section.getBoundingClientRect();
-    start = Math.max(0, bounds.top + window.scrollY - 100);
-    distance = Math.max(bounds.height, window.innerHeight * 0.65);
+    const rootTop = scrollRoot?.getBoundingClientRect().top ?? 0;
+    start = Math.max(0, bounds.top - rootTop + scrollPosition() - 100);
+    distance = Math.max(bounds.height, (scrollRoot?.clientHeight ?? window.innerHeight) * 0.65);
     readScroll();
     render();
   }
@@ -155,7 +172,7 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     disposed = true;
     cancelAnimationFrame(frame);
     observer?.disconnect();
-    window.removeEventListener("scroll", readScroll);
+    window.removeEventListener("scroll", readScroll, true);
     window.removeEventListener("resize", onResize);
     renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
     geometry.dispose(); material.dispose(); texture.dispose();
@@ -164,7 +181,7 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
   }
   try {
     renderer.domElement.addEventListener("webglcontextlost", onContextLost);
-    window.addEventListener("scroll", readScroll, { passive: true });
+    window.addEventListener("scroll", readScroll, { passive: true, capture: true });
     window.addEventListener("resize", onResize, { passive: true });
     host.appendChild(renderer.domElement);
     resize();
@@ -172,7 +189,6 @@ export async function mountHeroScene(host: HTMLElement, onLost: () => void): Pro
     if (section !== host) observer?.observe(section);
     return {
       setActive(value) { active = value; sync(); },
-      setPaused(value) { paused = value; sync(); },
       dispose,
     };
   } catch (error) {
