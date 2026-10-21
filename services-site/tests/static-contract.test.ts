@@ -72,6 +72,19 @@ describe("TooolVibes Servizi static contract", () => {
     expect(desktop).not.toContain("background-image: url(");
   });
 
+  it("adapts availability notices to desktop without changing the compact mobile layout", () => {
+    const desktop = css.slice(css.indexOf("/* Desktop composition."), css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
+    expect(desktop).toContain(".availability-notice { width: 32rem;");
+    expect(desktop).toContain("grid-template-columns: 2.75rem minmax(0,1fr) max-content 2.75rem");
+    expect(desktop).toContain(".availability-notice__content { grid-column: 2 / 4;");
+    expect(desktop).toContain(".availability-notice__slots { grid-column: 1 / 3; grid-row: 2;");
+    expect(desktop).toContain(".availability-notice .availability-notice__cta { grid-column: 3 / 5; grid-row: 2;");
+    expect(desktop).toContain(".availability-notice:has(.availability-notice__slots[hidden]) .availability-notice__cta");
+    const mobile = css.slice(0, css.indexOf("/* Desktop composition."));
+    expect(mobile).toContain("width: min(23rem, calc(100% - 2rem))");
+    expect(mobile).toContain("grid-template-columns: 2.75rem minmax(0, 1fr) 2rem");
+  });
+
   it("contains the complete accessible lead form", () => {
     for (const name of ["name", "email", "company", "need", "message", "privacyAccepted"]) {
       expect(html).toContain(`name="${name}"`);
@@ -130,14 +143,24 @@ describe("TooolVibes Servizi static contract", () => {
     expect(app).not.toContain('addEventListener("wheel"');
   });
 
-  it("composes the hero on two lines with restrained orbital service indices", () => {
+  it("composes the requested hero statements with responsive wrapping and restrained indices", () => {
     expect(html.match(/class="hero__title-line"/g)).toHaveLength(2);
-    expect(html).toContain("Il digitale, al lavoro</span>");
+    expect(html).toContain("I servizi digitali di cui hai bisogno.</span>");
+    expect(html).toContain('Un team reale <span class="text-gradient">su cui puoi contare.</span>');
+    expect(css).toContain(".hero__title-line { display: block; text-wrap: balance; }");
     expect(html.match(/class="journey__index" aria-hidden="true">[123]<\/span>/g)).toHaveLength(3);
     expect(css).toContain("white-space: nowrap");
     expect(css).toContain("@keyframes index-orbit");
     expect(css).toContain("@keyframes control-sheen");
     expect(css).toContain(".button:disabled::before { display: none; }");
+  });
+
+  it("uses the requested automated content and conversation headlines with matching descriptions", () => {
+    expect(html).toContain('I tuoi contenuti. <span class="text-gradient">Creati e pubblicati in automatico.</span>');
+    expect(html).toContain('Ogni conversazione social. <span class="text-gradient">Gestita in automatico.</span>');
+    expect(html).toContain("creiamo i contenuti con l’AI e ne automatizziamo la pubblicazione su Facebook e Instagram");
+    expect(html).toContain("Le richieste ricorrenti vengono gestite in automatico");
+    expect(html).toContain("A seguirti c’è un team di persone");
   });
 
   it("animates benefit icons without bullets or perpetual motion", () => {
