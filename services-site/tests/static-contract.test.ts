@@ -34,6 +34,17 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html.match(/sizes="\(max-width: 48rem\) calc\(100vw - 1rem\), 28rem"/g)).toHaveLength(3);
   });
 
+  it("places each original service image directly after its number and before its heading", () => {
+    const sections = [...html.matchAll(/<section[^>]*data-service="(web|social|ai)"[^>]*>([\s\S]*?)<\/section>/g)];
+    expect(sections).toHaveLength(3);
+    for (const [, service, section] of sections) {
+      expect(section).toMatch(/<div class="section-copy" data-reveal>\s*<p class="section-number">[\s\S]*?<\/p>\s*<figure class="service-visual [^"]+" data-reveal>[\s\S]*?<\/figure>\s*<h2/);
+      expect(section.match(/<figure class="service-visual /g)).toHaveLength(1);
+      expect(section).toContain(`/assets/service-${service === "ai" ? "chatbot" : service}-v2.webp`);
+    }
+    expect(css).toContain(".section-copy > .service-visual { left: 50%; translate: -50% 0;");
+  });
+
   it("scopes the desktop art direction above 1024px while preserving the mobile foundations", () => {
     const desktop = css.slice(css.indexOf("/* Desktop composition."), css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
     expect(desktop).toContain("@media (min-width: 64.01rem)");
@@ -50,11 +61,13 @@ describe("TooolVibes Servizi static contract", () => {
   it("layers the shared artwork into desktop service backgrounds without covering controls", () => {
     const desktop = css.slice(css.indexOf("/* Desktop composition."), css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
     const artwork = desktop.match(/\.service \.service-visual \{([^}]+)\}/)![1];
-    expect(artwork).toContain("grid-area: 1 / 1");
+    expect(artwork).toContain("position: absolute; top: 0; left: 0");
+    expect(artwork).toContain("translate: none");
     expect(artwork).toContain("z-index: 0");
     expect(artwork).toContain("pointer-events: none");
     expect(artwork).toContain("mask-image:");
     expect(desktop).toContain(".service .section-copy { grid-area: 1 / 1;");
+    expect(desktop).toContain(".service .section-copy > :not(.service-visual) { position: relative; z-index: 1;");
     expect(desktop).toContain("max-width: min(62%,26rem)");
     expect(desktop).not.toContain("background-image: url(");
   });

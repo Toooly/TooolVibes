@@ -450,6 +450,7 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 .service-capacity__slots i:nth-child(2),.service-capacity__orbit circle:nth-child(2) { --slot-step: 4; }
 .service-offer .button { grid-column: 1 / -1; width: 100%; min-height: 3.25rem; margin-top: 0; font-size: .9rem; }
 .service-visual { position: relative; z-index: 1; min-width: 0; margin: 0 auto; display: grid; place-items: center; justify-self: center; isolation: isolate; }
+.section-copy > .service-visual { left: 50%; translate: -50% 0; justify-self: start; margin: 0 0 clamp(1.5rem,4vw,2rem); }
 .service-screen { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .screen-copy { fill: none; stroke: #aab8e8; stroke-width: 9; stroke-linecap: round; }
 .screen-transfer { fill: none; stroke: var(--service-accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 100; }
@@ -852,8 +853,9 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
 
   .service { gap: 0; }
   .service::after { inset: 0 calc(-1 * var(--gutter)); background: radial-gradient(ellipse at 50% 78%,var(--scene-glow,rgba(25,116,240,.13)),transparent 65%); mask-image: linear-gradient(transparent,#000 20%,#000 80%,transparent); }
-  .service .service-visual { grid-area: 1 / 1; align-self: start; justify-self: start; z-index: 0; width: clamp(21rem,32vw,28rem); margin: clamp(10rem,14vw,12rem) 0 0 clamp(17rem,26vw,23rem); mask-image: linear-gradient(90deg,transparent 25%,#000 40%,#000 85%,transparent),linear-gradient(#000 65%,transparent); mask-composite: intersect; pointer-events: none; }
+  .service .service-visual { position: absolute; top: 0; left: 0; translate: none; z-index: 0; width: clamp(21rem,32vw,28rem); margin: clamp(10rem,14vw,12rem) 0 0 clamp(17rem,26vw,23rem); mask-image: linear-gradient(90deg,transparent 25%,#000 40%,#000 85%,transparent),linear-gradient(#000 65%,transparent); mask-composite: intersect; pointer-events: none; }
   .service .section-copy { grid-area: 1 / 1; max-width: none; display: grid; grid-template-columns: minmax(0,1.4fr) minmax(18rem,.9fr); gap: 1.1rem clamp(2rem,5vw,4.5rem); }
+  .service .section-copy > :not(.service-visual) { position: relative; z-index: 1; }
   .service .section-number { grid-column: 1; grid-row: 1; margin-bottom: .25rem; }
   .service .section-copy > h2 { grid-column: 1; grid-row: 2; margin: 0; font-size: clamp(3.1rem,4.5vw,4.5rem); line-height: 1; text-wrap: balance; }
   .service .section-copy > p:not(.section-number) { grid-column: 1; grid-row: 3; margin: 0; max-width: min(62%,26rem); min-height: clamp(11rem,16vw,14rem); font-size: 1.1rem; line-height: 1.65; }
