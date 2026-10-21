@@ -1,6 +1,8 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
+import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
 /**
  * Accessible SVG Radar map (spec §27).
  *
@@ -162,6 +164,7 @@ export function RadarMap({
   visualMode = "global",
   instrumentRenderer = "atlas",
 }: RadarMapProps) {
+  const { t } = useLocale();
   const titleId = useId();
   const fieldId = useId();
   const glowId = useId();
@@ -364,6 +367,7 @@ export function RadarMap({
       data-micro-focus={microAnchor ? "true" : undefined}
       style={{ "--tv-radar-instrument-accent": instrumentAccent } as CSSProperties}
     >
+      {instrumentRenderer === "atlas" ? <InstrumentOrbit className="tv-rx-map__artwork" /> : null}
       <svg
         ref={svgRef}
         className="tv-rx-map__svg"
@@ -631,10 +635,10 @@ export function RadarMap({
         })()}
 
         <g className="tv-rx-map__points">
-          {instrumentRenderer === "atlas" && focusedClusterId && <RadarAtlasEditorialLabels selectedId={selectedId} signals={tapPoints.filter(p => isVisible(p.id) && p.clusterId === focusedClusterId).map(p => {
+          {instrumentRenderer === "atlas" && <RadarAtlasEditorialLabels selectedId={selectedId} signals={tapPoints.filter(p => isVisible(p.id) && (!focusedClusterId || p.clusterId === focusedClusterId)).sort((a, b) => (layoutTools.find(t => t.id === b.id)?.attention ?? 0) - (layoutTools.find(t => t.id === a.id)?.attention ?? 0)).map((p, index) => {
             const tool = layoutTools.find(t => t.id === p.id)!;
             const name = tool.name.length > 16 ? `${tool.name.slice(0, 15)}…` : tool.name;
-            return { id: p.id, x: p.x, y: p.y, radius: radiusOverrides?.get(p.id) ?? p.size, name, attention: tool.attention, tier: atlasTiers.get(p.id) ?? "ambient" };
+            return { id: p.id, x: p.x, y: p.y, radius: radiusOverrides?.get(p.id) ?? p.size, name, attention: tool.attention, tier: focusedClusterId ? atlasTiers.get(p.id) ?? "ambient" : index === 0 ? "primary" : index === 1 ? "secondary" : "ambient" };
           })} />}
           {microAnchor && <g className="tv-atlas__micro-focus-anchor" aria-hidden="true">
             <path d={`M ${microAnchor.x} ${microAnchor.y} L 50 50`} />
@@ -719,7 +723,7 @@ export function RadarMap({
                   data-interactive={isInteractive ? "true" : "false"}
                   aria-disabled={isInteractive ? undefined : true}
                   tabIndex={isInteractive ? 0 : -1}
-                  aria-label={blipAriaLabel(tool, point)}
+                  aria-label={blipAriaLabel(tool, point, t)}
                   onClick={isInteractive ? (event) => {
                     if (event.detail === 0) onSelect(tool.id);
                   } : undefined}
@@ -840,16 +844,16 @@ function rangeHoursFor(range: ProductHuntRange): number {
   return range === "week" ? 168 : range === "month" ? 720 : 24;
 }
 
-function blipAriaLabel(tool: RadarTool, point: RadarPoint): string {
+function blipAriaLabel(tool: RadarTool, point: RadarPoint, t: (text: string) => string): string {
   const emerged =
     point.ageKnown && point.ageHours !== null
-      ? `emerso ${formatAgeHours(point.ageHours)} fa`
-      : "data di lancio sconosciuta";
+      ? t(`emerso ${formatAgeHours(point.ageHours)} fa`)
+      : t("data di lancio sconosciuta");
   const entity =
     tool.catalogStatus === "linked"
       ? "nel catalogo TooolVibes"
       : "segnale esterno di Product Hunt";
-  return `${tool.name}. ${entity}. Area ${tool.topicCluster.label}. ${emerged}. ${tool.votesCount} voti, ${tool.commentsCount} commenti, posizione ${tool.rank}.`;
+  return `${tool.name}. ${t(entity)}. ${t("Area")} ${t(tool.topicCluster.label)}. ${emerged}. ${t(`${tool.votesCount} voti, ${tool.commentsCount} commenti, posizione ${tool.rank}.`)}`;
 }
 
 function formatAgeHours(ageHours: number): string {

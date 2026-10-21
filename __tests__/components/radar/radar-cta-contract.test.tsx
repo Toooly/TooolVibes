@@ -210,6 +210,19 @@ describe("RADAR-CTA source transparency", () => {
     expect(screen.queryByText(/score/i)).toBeNull();
   });
 
+  it("controls a unique details region for each inspector", () => {
+    renderPreview(EXTERNAL);
+    renderPreview(LINKED);
+    const toggles = screen.getAllByRole("button", { name: "Dettagli completi" });
+    const ids = toggles.map(toggle => toggle.getAttribute("aria-controls"));
+    expect(new Set(ids).size).toBe(2);
+    for (const toggle of toggles) {
+      expect(document.getElementById(toggle.getAttribute("aria-controls")!)?.querySelector(".tv-rx-preview__metrics")).toBeTruthy();
+      fireEvent.click(toggle);
+      expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    }
+  });
+
   it("RADAR-CTA-WATCH-01 toggling Watch reports state", () => {
     const onToggleWatch = vi.fn();
     render(

@@ -19,7 +19,7 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
  */
 
 import Link from "@/components/ui/app-link";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { ArrowUpRight, ChevronDown, ChevronUp, Eye, X } from "lucide-react";
 
 import { CompareToggle } from "@/components/tools/compare-toggle";
@@ -48,6 +48,7 @@ export function RadarQuickPreview({
   onToggleWatch,
   inline = false,
 }: RadarQuickPreviewProps) {
+  const detailsId = useId();
   const [expanded, setExpanded] = useState(inline);
   const [thumbnailFailed, setThumbnailFailed] = useState(false);
   const isExternal = tool.catalogStatus === "external";
@@ -70,7 +71,7 @@ export function RadarQuickPreview({
         type="button"
         className="tv-rx-preview__snap"
         aria-expanded={expanded}
-        aria-controls="tv-rx-preview-details"
+        aria-controls={detailsId}
         onClick={() => setExpanded((value) => !value)}
       >
         <span className="tv-rx-preview__handle" aria-hidden="true" />
@@ -112,17 +113,16 @@ export function RadarQuickPreview({
         <LocalizedText>{isExternal ? "Segnale esterno · Product Hunt" : "Nel Catalogo TooolVibes"}</LocalizedText>
       </p>
 
-      {/* §16 — explainable position: why this signal sits where it sits. */}
-      <MetricStrip label="Attenzione nello snapshot" className="tv-rx-preview__metrics" items={[
-        { label: "Voti", value: tool.votesCount },
-        { label: "Commenti", value: tool.commentsCount },
-        { label: "Posizione", value: `#${tool.rank}` },
-      ]} />
-      <p className="tv-rx-preview__age"><LocalizedText>{"Emerso "}</LocalizedText><LocalizedText>{formatAge(tool.ageHours)}</LocalizedText> · #{tool.rank}<LocalizedText>{" nel periodo"}</LocalizedText></p>
-      <p className="tv-rx-sr-only">{tool.votesCount}<LocalizedText>{" voti · "}</LocalizedText>{tool.commentsCount}<LocalizedText>{" commenti"}</LocalizedText></p>
-
-      <div id="tv-rx-preview-details" className="tv-rx-preview__details">
-        <p className="tv-rx-preview__tagline"><LocalizedText>{tool.tagline}</LocalizedText></p>
+      <p className="tv-rx-preview__tagline"><LocalizedText>{tool.tagline}</LocalizedText></p>
+      <p className="tv-rx-preview__age"><LocalizedText>Emerso</LocalizedText>{" "}<LocalizedText>{formatAge(tool.ageHours)}</LocalizedText>{" · #"}{tool.rank}{" "}<LocalizedText>nel periodo</LocalizedText></p>
+      <p className="tv-rx-sr-only"><LocalizedText>{`${tool.votesCount} voti · ${tool.commentsCount} commenti`}</LocalizedText></p>
+      <div id={detailsId} className="tv-rx-preview__details">
+        {/* §16 — explainable position: why this signal sits where it sits. */}
+        <MetricStrip label="Attenzione nello snapshot" className="tv-rx-preview__metrics" items={[
+          { label: "Voti", value: tool.votesCount },
+          { label: "Commenti", value: tool.commentsCount },
+          { label: "Posizione", value: `#${tool.rank}` },
+        ]} />
         <p className="tv-rx-preview__delta" data-history={historyAvailable ? "true" : "false"}>
           <LocalizedText>{historyAvailable
             ? "Variazione disponibile."

@@ -13,8 +13,9 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
  * frozen (Home is a frozen system).
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ChartNoAxesColumn, Eye, Radar, RefreshCw, Search, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, ChartNoAxesColumn, Eye, List, Radar, RefreshCw, Search, Sparkles, X } from "lucide-react";
+import { InstrumentJourney } from "@/components/ui/instrument-journey";
 import { MetricStrip } from "@/components/ui/metric-strip";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { RadarSnapshotPanel } from "@/components/radar/radar-snapshot-panel";
@@ -191,10 +192,14 @@ export function RadarExperience() {
   const [mobileAtlas, setMobileAtlas] = useState(false);
   const [browseMode, setBrowseMode] = useState<"atlas" | "list">("atlas");
   const [selectionOrigin, setSelectionOrigin] = useState<"atlas" | "list">("atlas");
-  const atlasScrollRef = useRef(0);
+  const explorerRef = useRef<HTMLDivElement | null>(null);
+  const [sort, setSort] = useState<"attention" | "recent">("attention");
+  const sortedTools = useMemo(() => [...filteredTools].sort((a, b) =>
+    sort === "recent" ? (a.ageHours ?? Infinity) - (b.ageHours ?? Infinity) || b.attention - a.attention : b.attention - a.attention || a.rank - b.rank,
+  ), [filteredTools, sort]);
   const [microStackId, setMicroStackId] = useState<string | null>(null);
   const [microPage, setMicroPage] = useState(0);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window.matchMedia !== "function") return;
     const media = window.matchMedia("(max-width: 1023px)");
     const sync = () => setMobileAtlas(media.matches);
@@ -206,7 +211,7 @@ export function RadarExperience() {
     setMicroStackId(null);
     setMicroPage(0);
   }, [urlState.category, urlState.range, urlState.query, urlState.tab]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const instrument = atlasInstrumentRef.current;
     if (!instrument) return;
     const sync = () => {
@@ -497,31 +502,18 @@ export function RadarExperience() {
     else handleSelect(toolId, "list");
   }, [urlState.tool, selectionOrigin, handleClosePreview, handleSelect]);
 
-  const handleBrowseList = useCallback(() => {
-    const shell = document.querySelector<HTMLElement>(".marketing-shell");
-    atlasScrollRef.current = shell?.scrollTop ?? 0;
-    setBrowseMode("list");
+  const changeBrowseMode = useCallback((mode: "atlas" | "list") => {
+    setBrowseMode(mode);
     setUrlState({ tool: null });
     setHighlightedId(null);
-    requestAnimationFrame(() => {
-      const heading = document.querySelector<HTMLElement>("#tv-rx-list-title");
-      if (heading && shell) {
-        const inset = parseFloat(getComputedStyle(shell).scrollPaddingTop) || 0;
-        shell.scrollTo({ top: shell.scrollTop + heading.getBoundingClientRect().top - shell.getBoundingClientRect().top - inset, behavior: "instant" });
-        heading.focus({ preventScroll: true });
-      }
-    });
-  }, [setUrlState]);
-
-  const handleReturnAtlas = useCallback(() => {
-    setBrowseMode("atlas");
-    setUrlState({ tool: null });
-    setHighlightedId(null);
+    setAmbiguous([]);
+    setChooserGroup(null);
     inspectionScrollRef.current = null;
     selectionFocusRef.current = null;
+    // Both views share this anchor: no jump to a distant section of the page.
     requestAnimationFrame(() => {
-      document.querySelector<HTMLElement>(".marketing-shell")?.scrollTo({ top: atlasScrollRef.current, behavior: "instant" });
-      atlasInstrumentRef.current?.querySelector<HTMLButtonElement>("[data-browse-list]")?.focus({ preventScroll: true });
+      const anchor = explorerRef.current;
+      if (anchor && anchor.getBoundingClientRect().bottom < 0) anchor.scrollIntoView({ block: "start", behavior: "instant" });
     });
   }, [setUrlState]);
 
@@ -530,6 +522,7 @@ export function RadarExperience() {
     const close = document.querySelector<HTMLButtonElement>(".tv-rx-preview__close");
     close?.focus({ preventScroll: true });
     if (selectionOrigin === "list") return;
+    const scrollBehavior = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
     if (window.matchMedia?.("(max-width: 63.999rem)").matches) {
       const instrument = atlasInstrumentRef.current;
       const shell = document.querySelector<HTMLElement>(".marketing-shell");
@@ -542,9 +535,9 @@ export function RadarExperience() {
         if (preview && previewRect && getComputedStyle(preview).position === "static") {
           const bottomInset = parseFloat(getComputedStyle(shell).scrollPaddingBottom) || 0;
           const visibleBottom = shell.getBoundingClientRect().bottom - bottomInset;
-          if (previewRect.bottom > visibleBottom) shell.scrollTo({ top: shell.scrollTop + previewRect.bottom - visibleBottom, left: 0, behavior: "instant" });
+          if (previewRect.bottom > visibleBottom) shell.scrollTo({ top: shell.scrollTop + previewRect.bottom - visibleBottom, left: 0, behavior: scrollBehavior });
         } else if (top < inset || mapBottom > (previewRect?.top ?? window.innerHeight)) {
-          shell.scrollTo({ top: shell.scrollTop + top - inset, left: 0, behavior: "instant" });
+          shell.scrollTo({ top: shell.scrollTop + top - inset, left: 0, behavior: scrollBehavior });
         }
       }
     }
@@ -600,12 +593,14 @@ export function RadarExperience() {
       className="tv-rx"
       data-state={uiModel.state}
       data-tab={urlState.tab}
-      data-browse={mobileAtlas ? browseMode : "atlas"}
+      data-browse={urlState.tab === "panoramica" ? browseMode : "atlas"}
+      data-inspecting={selectedTool ? "true" : "false"}
       data-focus={focusedClusterId ? "local" : "global"} data-atlas-mobile={mobileAtlas ? "true" : undefined} data-atlas-stage={microStack ? "micro" : focusedClusterId ? "local" : "global"}
       data-qa-radar-auth={account.status}
       data-qa-radar-mode={urlState.tab}
       data-qa-radar-ready={!isLoading && uiModel.items.length > 0 ? "true" : "false"}
     >
+      <div className="tv-rx-intro">
       <header className="tv-rx__header">
         <p className="tv-rx__eyebrow"><Radar size={14} aria-hidden="true" /><LocalizedText>{" Radar / Intelligence"}</LocalizedText></p>
         <h1 className="tv-rx__title"><LocalizedText>{"Cosa sta emergendo adesso"}</LocalizedText></h1>
@@ -645,13 +640,26 @@ export function RadarExperience() {
         </button></LocalizedAttributes>
       </div>
 
+      </div>
+
       {/* Mode tabs (spec §8) */}
+      <div className="tv-rx-commands">
       <SegmentedControl
         tabs id="tv-rx" label="Modalità Radar"
         className="tv-rx__tabs" optionClassName="tv-rx__tab"
         options={RADAR_TABS.map((tab) => ({ value: tab, label: RADAR_TAB_LABEL[tab], icon: tab === "panoramica" ? <Radar size={15} /> : tab === "trend" ? <ChartNoAxesColumn size={15} /> : tab === "per-te" ? <Sparkles size={15} /> : <Eye size={15} /> }))}
         value={urlState.tab} onValueChange={(tab) => setUrlState({ tab })}
       />
+
+      {urlState.tab === "panoramica" && <div className="tv-rx-explorer__head">
+        <SegmentedControl
+          id="tv-rx-view" label="Visualizzazione dei segnali" className="tv-rx-view"
+          options={[{ value: "atlas", label: "Mappa", icon: <Radar size={16} /> }, { value: "list", label: "Elenco", icon: <List size={16} /> }]}
+          value={browseMode} onValueChange={changeBrowseMode}
+        />
+        <span className="tv-rx-explorer__results" role="status">{isLoading ? "—" : filteredTools.length} <LocalizedText>{"segnali"}</LocalizedText></span>
+      </div>}
+      </div>
 
       {urlState.tab === "panoramica" ? (
         <div
@@ -660,9 +668,16 @@ export function RadarExperience() {
           aria-labelledby="tv-rx-tab-panoramica"
           className="tv-rx__panel"
         >
+          <div className="tv-rx-explorer" ref={explorerRef}>
+            <RadarToolbar
+              categories={view.clusters} activeCategory={urlState.category}
+              onCategory={(category) => setUrlState({ category })}
+              query={urlState.query} onQuery={(q) => setUrlState({ query: q })}
+            />
+          </div>
           <div className="tv-rx__stage">
             <div className="tv-rx__main">
-              <LocalizedAttributes><section ref={atlasInstrumentRef} className="tv-rx-instrument" aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>
+              <LocalizedAttributes><section ref={atlasInstrumentRef} className="tv-rx-instrument" data-instrument-stage aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>
                 <header className="tv-rx-instrument__head">
                   <span className="tv-rx-instrument__level"><LocalizedText>{focusedCluster ? "02 / Locale" : "01 / Mercato"}</LocalizedText></span>
                   <strong><LocalizedText>{focusedCluster?.label ?? "Panoramica globale"}</LocalizedText></strong>
@@ -674,7 +689,6 @@ export function RadarExperience() {
                     else setUrlState({ category: null, query: null });
                   }}><ArrowLeft size={16} aria-hidden="true" /><LocalizedText>{microStack ? focusedCluster?.label : "Mercato"}</LocalizedText></button>}
                   <span className="tv-rx-mobile-navigation__context"><LocalizedText>{microStack ? `${microStack.ageLabel} · ${microStack.memberIds.length} segnali` : focusedCluster ? `${focusedCluster.label} · ${filteredTools.length}` : "Scegli un’area"}</LocalizedText></span>
-                  <button type="button" data-browse-list aria-controls={filteredTools.length > 0 ? "tv-rx-list-title" : undefined} disabled={isLoading || filteredTools.length === 0} onClick={handleBrowseList}><LocalizedText>{"Elenco"}</LocalizedText></button>
                 </div>
               {/* §2/§5 — geometry and the map interaction contract are frozen. */}
               {isLoading ? (
@@ -734,9 +748,25 @@ export function RadarExperience() {
                   <span>{microPage + 1} / {Math.ceil(microStack.memberIds.length / ATLAS_MICRO_PAGE_SIZE)}</span>
                   <button type="button" disabled={(microPage + 1) * ATLAS_MICRO_PAGE_SIZE >= microStack.memberIds.length} onClick={() => setMicroPage(p => p + 1)}><LocalizedText>{"Successivi"}</LocalizedText></button>
                 </nav></LocalizedAttributes>}
+                {filteredTools.length > 0 && <p className="tv-rx-instrument__guide"><LocalizedText>{focusedCluster ? "Seleziona un segnale per approfondire. Ogni cerchio è un tool." : "Scegli un’area sulla mappa o usa i filtri per esplorare i segnali."}</LocalizedText></p>}
                 {mobileAtlas ? (
 <details className="tv-rx-instrument__help"><summary><LocalizedText>{"Come leggere"}</LocalizedText></summary><p className="tv-rx-instrument__hint"><span><LocalizedText>{"Al centro i più recenti, verso il bordo i più vecchi."}</LocalizedText></span><span><LocalizedText>{"Colore: area · Dimensione: attenzione."}</LocalizedText></span><span><LocalizedText>{"Micro Focus apre un gruppo: la disposizione dei tool facilita i tap; il periodo del gruppo e l’età di ogni segnale restano indicati."}</LocalizedText></span></p></details>
                 ) : <p className="tv-rx-instrument__hint"><span><LocalizedText>{"Al centro i più recenti, verso il bordo i più vecchi."}</LocalizedText></span><span><LocalizedText>{"Colore: area · Dimensione: attenzione."}</LocalizedText></span></p>}
+                {!isLoading && filteredTools.length > 0 && <InstrumentJourney label="Esplora i segnali del Radar" className="tv-rx-instrument__journey" steps={[
+                  { id: "areas", label: "Esplora le aree", detail: focusedCluster?.label ?? "Panoramica globale", tone: "violet", icon: <Radar size={16} />, onClick: () => {
+                    explorerRef.current?.scrollIntoView({ block: "center", behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+                    const controls = explorerRef.current?.querySelectorAll<HTMLElement>("select, button");
+                    Array.from(controls ?? []).find(control => control.getBoundingClientRect().width > 0)?.focus({ preventScroll: true });
+                  } },
+                  { id: "read", label: "Approfondisci", detail: "Tutti i segnali", tone: "cyan", icon: <Search size={16} />, onClick: () => {
+                    changeBrowseMode("list");
+                    requestAnimationFrame(() => document.getElementById("tv-rx-list-title")?.focus({ preventScroll: true }));
+                  } },
+                  { id: "follow", label: "Segui nel Radar", detail: "Watchlist", tone: "gold", icon: <Eye size={16} />, onClick: () => {
+                    setUrlState({ tab: "watchlist" });
+                    requestAnimationFrame(() => document.getElementById("tv-rx-tab-watchlist")?.focus());
+                  } },
+                ]} />}
               </section></LocalizedAttributes>
               {/* Spec §19 — a compact contextual indicator, integrated with
                   the existing controls rather than another large card. */}
@@ -767,14 +797,6 @@ export function RadarExperience() {
                 </div>
               ) : null}
 
-              {/* §8/§16 — one contextual filter system, below the map. */}
-              <RadarToolbar
-                categories={view.clusters}
-                activeCategory={urlState.category}
-                onCategory={(category) => setUrlState({ category })}
-                query={urlState.query}
-                onQuery={(q) => setUrlState({ query: q })}
-              />
 
               {!isLoading && filteredTools.length > 0 ? <RadarLegend /> : null}
 
@@ -787,7 +809,7 @@ export function RadarExperience() {
 
               <RadarInsightStrip view={view} />
 
-              {filteredTools.length > 0 || (mobileAtlas && browseMode === "list") ? (
+              {browseMode === "list" ? (
                 <section className="tv-rx-section" aria-labelledby="tv-rx-list-title" aria-busy={isLoading}>
                   <header className="tv-rx-section__head">
                     <div className="tv-rx-section__heading">
@@ -798,31 +820,20 @@ export function RadarExperience() {
                           <LocalizedText>{urlState.category ? " nella categoria selezionata" : " nel periodo"}</LocalizedText></>}
                       </p>
                     </div>
-                    {mobileAtlas && <button type="button" className="tv-rx-list-back" onClick={handleReturnAtlas}><ArrowLeft size={16} aria-hidden="true" /><LocalizedText>{" Atlas"}</LocalizedText></button>}
-                    {mobileAtlas && browseMode === "list" && <label className="tv-rx-list-search">
-                      <Search size={16} aria-hidden="true" />
-                      <span className="tv-rx-sr-only"><LocalizedText>{"Cerca nell’elenco dei segnali"}</LocalizedText></span>
-                      <LocalizedAttributes><input type="search" value={query ?? ""} placeholder="Nome, categoria, idea…" onChange={event => setUrlState({ query: event.target.value || null })} /></LocalizedAttributes>
-                    </label>}
-                    {mobileAtlas && browseMode === "list" && <div className="tv-rx-list-controls">
-                      <SegmentedControl
-                        className="tv-rx-range" optionClassName="tv-rx-range__option"
-                        id="tv-rx-list-range" label="Periodo dell’elenco"
-                        options={RADAR_RANGE_OPTIONS.map(option => ({ value: option.key, label: option.label }))}
-                        value={urlState.range} onValueChange={range => setUrlState({ range })}
-                      />
-                      <LocalizedAttributes><select aria-label="Area dell’elenco" value={urlState.category ?? ""} onChange={event => setUrlState({ category: event.target.value || null })}>
-                        <option value=""><LocalizedText>{"Tutte le aree"}</LocalizedText></option>
-                        {view.clusters.map(cluster => <option key={cluster.id} value={cluster.id}><LocalizedText>{cluster.label}</LocalizedText></option>)}
-                      </select></LocalizedAttributes>
-                    </div>}
+                    <label className="tv-rx-sort">
+                      <span className="tv-rx-sr-only"><LocalizedText>{"Ordina i segnali"}</LocalizedText></span>
+                      <select value={sort} onChange={event => setSort(event.target.value as "attention" | "recent")}>
+                        <option value="attention"><LocalizedText>{"Più attenzione"}</LocalizedText></option>
+                        <option value="recent"><LocalizedText>{"Più recenti"}</LocalizedText></option>
+                      </select>
+                    </label>
                   </header>
-                  {mobileAtlas && browseMode === "list" && (isLoading || filteredTools.length === 0) ? (
+                  {isLoading || filteredTools.length === 0 ? (
                     isLoading ? <p className="tv-rx-state" role="status"><LocalizedText>{"Caricamento dei segnali…"}</LocalizedText></p> :
-                      <RadarEmptyState state={uiModel.state} hasQuery={Boolean(query)} onClear={() => setUrlState({ query: null })} />
+                      <RadarEmptyState state={uiModel.state} hasQuery={Boolean(query || focusedClusterId)} onClear={() => setUrlState({ category: null, query: null })} />
                   ) : null}
                   <ol className="tv-rx-list">
-                    {filteredTools.map((tool, index) => (
+                    {sortedTools.map((tool, index) => (
                       <RadarToolRow
                         key={tool.id}
                         tool={tool}
@@ -1003,6 +1014,13 @@ function RadarToolbar({
 
   return (
     <div className="tv-rx-toolbar">
+      <label className="tv-rx-area-select">
+        <span className="tv-rx-sr-only"><LocalizedText>{"Filtra per categoria"}</LocalizedText></span>
+        <select value={activeCategory ?? ""} onChange={event => onCategory(event.target.value || null)}>
+          <option value=""><LocalizedText>{"Tutte le aree"}</LocalizedText></option>
+          {categories.map(category => <option key={category.id} value={category.id}><LocalizedText>{category.label}</LocalizedText> · {category.count}</option>)}
+        </select>
+      </label>
       <div className="tv-rx-chips-wrap">
       <LocalizedAttributes><ul className="tv-rx-chips" ref={chipsRef} aria-label="Filtra per categoria">
         <li>
@@ -1030,23 +1048,25 @@ function RadarToolbar({
                 data-color-index={category.colorIndex ?? 0}
                 aria-hidden="true"
               />
-              <LocalizedText>{category.label}</LocalizedText> {category.count}
+              <LocalizedText>{category.label}</LocalizedText><span className="tv-rx-chip__count">{category.count}</span>
             </button>
           </li>
         ))}
       </ul></LocalizedAttributes>
       </div>
 
-      <label className="tv-rx-search">
-        <span className="tv-rx-sr-only"><LocalizedText>{"Cerca un tool nel Radar"}</LocalizedText></span>
+      <div className="tv-rx-search">
+        <label htmlFor="tv-rx-search-input" className="tv-rx-sr-only"><LocalizedText>{"Cerca un tool nel Radar"}</LocalizedText></label>
         <Search size={13} aria-hidden="true" />
         <LocalizedAttributes><input
+          id="tv-rx-search-input"
           type="search"
           value={query ?? ""}
           onChange={(event) => onQuery(event.target.value || null)}
           placeholder="Cerca nel Radar"
         /></LocalizedAttributes>
-      </label>
+        {query && <LocalizedAttributes><button type="button" className="tv-rx-search__clear" aria-label="Cancella ricerca" onClick={() => onQuery(null)}><X size={16} aria-hidden="true" /></button></LocalizedAttributes>}
+      </div>
     </div>
   );
 }

@@ -226,6 +226,7 @@ describe("RadarExperience", () => {
     window.history.replaceState(null, "", "/radar");
     fetchMock.mockImplementation(() => fetchOk(LIVE));
     const { container } = renderRadar();
+    fireEvent.click(screen.getByRole("button", { name: "Elenco" }));
     const rowButton = await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
     fireEvent.click(rowButton);
     const preview = await screen.findByRole("dialog", { name: /anteprima di alpha tool/i });
@@ -247,21 +248,58 @@ describe("RadarExperience", () => {
     vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
     fetchMock.mockImplementation(() => fetchOk({ ...LIVE, range: "week" }));
     const { container } = renderRadar();
-    await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
     fireEvent.click(screen.getByRole("button", { name: "Elenco" }));
+    await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
     expect(container.querySelector(".tv-rx")?.getAttribute("data-browse")).toBe("list");
-    const search = screen.getByRole("searchbox", { name: "Cerca nell’elenco dei segnali" });
+    const search = screen.getByRole("searchbox", { name: "Cerca un tool nel Radar" });
     fireEvent.change(search, { target: { value: "Gamma Tool" } });
     await waitFor(() => expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(1));
     expect(screen.getByRole("button", { name: "Apri dettagli di Gamma Tool" })).toBeTruthy();
     fireEvent.change(search, { target: { value: "unmatched search" } });
     await waitFor(() => expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(0));
-    expect(screen.getByRole("combobox", { name: "Area dell’elenco" })).toBeTruthy();
+    expect(screen.getByRole("combobox", { name: "Filtra per categoria" })).toBeTruthy();
     fireEvent.change(search, { target: { value: "" } });
     await waitFor(() => expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(3));
-    fireEvent.click(screen.getByRole("button", { name: "Atlas" }));
+    fireEvent.click(screen.getByRole("button", { name: "Mappa" }));
     expect(container.querySelector(".tv-rx")?.getAttribute("data-browse")).toBe("atlas");
     expect(new URLSearchParams(window.location.search).get("r")).toBe("week");
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("sorts the list by real attention or launch age, retaining the active filters between views", async () => {
+    window.history.replaceState(null, "", "/radar");
+    fetchMock.mockImplementation(() => fetchOk({ ...LIVE, items: [
+      { ...LIVE.items[0], launchedAt: "2026-07-28T04:00:00.000Z" },
+      { ...LIVE.items[1], launchedAt: "2026-07-28T07:30:00.000Z" },
+      LIVE.items[2],
+    ] }));
+    const { container } = renderRadar();
+    fireEvent.click(screen.getByRole("button", { name: "Elenco" }));
+    await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
+    const names = () => [...container.querySelectorAll(".tv-rx-row__name")].map(node => node.textContent);
+    expect(names()).toEqual(["Alpha Tool", "Beta Tool", "Gamma Tool"]);
+    fireEvent.change(screen.getByRole("combobox", { name: "Ordina i segnali" }), { target: { value: "recent" } });
+    expect(names()).toEqual(["Beta Tool", "Alpha Tool", "Gamma Tool"]);
+    fireEvent.click(screen.getByRole("button", { name: "Mappa" }));
+    fireEvent.change(screen.getByRole("searchbox", { name: "Cerca un tool nel Radar" }), { target: { value: "Beta" } });
+    fireEvent.click(screen.getByRole("button", { name: "Elenco" }));
+    expect(names()).toEqual(["Beta Tool"]);
+    fireEvent.click(screen.getByRole("button", { name: "Cancella ricerca" }));
+    expect(names()).toEqual(["Beta Tool", "Alpha Tool", "Gamma Tool"]);
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("uses the floating journey to open the reading view and Watchlist without changing the dataset", async () => {
+    window.history.replaceState(null, "", "/radar");
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container } = renderRadar();
+    const journey = await screen.findByRole("navigation", { name: "Esplora i segnali del Radar" });
+    fireEvent.click(journey.querySelectorAll("button")[1]);
+    await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
+    expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(3);
+    fireEvent.click(screen.getByRole("button", { name: "Mappa" }));
+    fireEvent.click(screen.getByRole("navigation", { name: "Esplora i segnali del Radar" }).querySelectorAll("button")[2]);
+    expect(screen.getByRole("tab", { name: "Watchlist" }).getAttribute("aria-selected")).toBe("true");
     window.history.replaceState(null, "", "/radar");
   });
 
@@ -283,7 +321,9 @@ describe("RadarExperience", () => {
     fireEvent.change(screen.getByRole("searchbox", { name: "Cerca un tool nel Radar" }), { target: { value: "Gamma Tool" } });
     await waitFor(() => expect(container.querySelectorAll(".tv-rx-blip__hit")).toHaveLength(1));
     expect(container.querySelector(".tv-rx-blip__hit")?.getAttribute("aria-label")).toContain("Gamma Tool");
+    fireEvent.click(screen.getByRole("button", { name: "Elenco" }));
     expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(1);
+    expect(screen.getByRole("searchbox", { name: "Cerca un tool nel Radar" })).toHaveProperty("value", "Gamma Tool");
     window.history.replaceState(null, "", "/radar");
   });
 

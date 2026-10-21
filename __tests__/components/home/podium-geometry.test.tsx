@@ -1,22 +1,11 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
 import { DefinitiveHome } from "@/components/home/definitive-home";
 import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
-
-/* Test di regressione per il restauro del podio (Stato B).
- *
- * Contratto (pass Visual-Frozen + restauro podio):
- *  - con meno di 3 tool con assessment completo, la Home mostra
- *    "Tre tool da esplorare" (nessuna classifica fabbricata);
- *  - i tre tool sono comunque disposti nella GEOMETRIA da podio
- *    (def-editorial__pod-stage + pod-cell--first/second/third);
- *  - NON compaiono punteggi numerici né posizioni/rank;
- *  - il copy "Dal catalogo" / "Tre tool da esplorare" resta invariato.
- */
 
 vi.mock("@/components/radar/radar-experience", () => ({
   RadarExperience: () => null,
@@ -141,12 +130,39 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
     ).toBe("Blink");
     expect(document.querySelector(".def-podium__crown")).toBeTruthy();
     expect(document.querySelector(".def-podium__laurels")).toBeTruthy();
-    const hrefs = [...document.querySelectorAll(".def-podium__stage .def-podium__card")].map((card) =>
-      card.getAttribute("href"),
-    );
-    expect(hrefs).toEqual(["/toools/vibecode", "/toools/blink", "/toools/weweb"]);
+    const cards = [...document.querySelectorAll(".def-podium__stage .def-podium__card")];
+    expect(cards.map(card => card.tagName)).toEqual(["BUTTON", "BUTTON", "BUTTON"]);
+    expect(cards.map(card => card.getAttribute("aria-pressed"))).toEqual(["false", "true", "false"]);
     expect(document.querySelector(".def-podium__more")).toBeNull();
     expect(document.querySelectorAll(".def-podium__rail-item").length).toBeGreaterThanOrEqual(0);
+  });
+
+  it("keeps the selected tool in the floating reading action when the pointer leaves the cards", () => {
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Mostra dettagli di WeWeb" }));
+    const action = document.querySelector<HTMLAnchorElement>('.def-podium__journey a[href="/toools/weweb"]');
+    expect(action).toBeTruthy();
+    fireEvent.mouseDown(action!);
+    expect(document.querySelector('.def-podium__card.is-selected')?.getAttribute("aria-label")).toBe("Mostra dettagli di WeWeb");
+    expect(action?.getAttribute("href")).toBe("/toools/weweb");
+  });
+
+  it("keeps selection and keyboard focus stable while changing the reading panel", () => {
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
+    const blink = screen.getByRole("button", { name: "Mostra dettagli di Blink" });
+    blink.focus();
+    fireEvent.keyDown(blink, { key: "ArrowRight" });
+    const weweb = screen.getByRole("button", { name: "Mostra dettagli di WeWeb" });
+    expect(document.activeElement).toBe(weweb);
+    expect(weweb.getAttribute("aria-pressed")).toBe("true");
+    expect(document.getElementById(weweb.getAttribute("aria-controls")!)?.textContent).toContain("WeWeb");
+    fireEvent.click(weweb);
+    expect(screen.getByRole("button", { name: "Mostra dettagli di WeWeb" })).toBe(weweb);
+    expect(document.querySelector('.def-podium__journey a[href="/toools/weweb"]')).toBeTruthy();
+    fireEvent.mouseDown(document.body);
+    expect(weweb.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.keyDown(weweb, { key: "Home" });
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Mostra dettagli di VibeCode" }));
   });
 
   it("non mostra piu il podio legacy", () => {

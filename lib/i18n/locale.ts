@@ -1,7 +1,7 @@
 export type Locale = "it" | "en";
 export type LanguagePreference = Locale | "auto";
 export const LANGUAGE_STORAGE_KEY = "tooolvibes.language";
-export const ENGLISH_DICTIONARY_URL = "/locales/en.json?v=82083deee0eb";
+export const ENGLISH_DICTIONARY_URL = "/locales/en.json?v=550a8203e69c";
 
 export function parseLanguagePreference(value: unknown): LanguagePreference {
   return value === "it" || value === "en" ? value : "auto";

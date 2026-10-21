@@ -107,7 +107,7 @@ describe("RADAR-DOCK-CLEARANCE — canonical chrome clearance contract", () => {
     expect(actionsBlock).toContain("position: sticky");
     expect(actionsBlock).toContain("bottom: 0");
     expect(actionsBlock).toContain(
-      "background: var(--tv-color-surface-elevated",
+      "background: var(--tv-color-surface-base",
     );
   });
 

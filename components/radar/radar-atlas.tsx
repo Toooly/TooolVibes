@@ -39,6 +39,7 @@ type AtlasProps = {
 
 export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, colors, tools, range, focusedClusterId, onSelectSector, visiblePoints = [] }: AtlasProps) {
   const surfaceId = `atlas-surface-${useId().replace(/:/g, "")}`;
+  const edgeId = `${surfaceId}-edge`;
   const local = Boolean(focusedClusterId);
   const count = local ? tools.filter(t => t.topicCluster.id === focusedClusterId).length : tools.length;
   const activeAreas = clusters.filter(c => c.count > 0).length;
@@ -49,13 +50,24 @@ export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, c
       <g className="tv-atlas__surface" data-instrument-layer="atlas-surface" aria-hidden="true">
         <defs>
           <radialGradient id={surfaceId} cx="38%" cy="18%" r="85%">
-            <stop offset="0" stopColor="var(--tv-color-ink-100)" stopOpacity="0.075" />
+            <stop offset="0" stopColor="var(--tv-color-ink-100)" stopOpacity="0.065" />
             <stop offset="0.6" stopColor="var(--tv-color-violet-500)" stopOpacity="0.045" />
             <stop offset="1" stopColor="var(--tv-color-surface-base)" stopOpacity="0.4" />
           </radialGradient>
+          <linearGradient id={edgeId} x1="0" y1="0" x2="1" y2="1">
+            <stop stopColor="var(--tv-color-violet-400)" />
+            <stop offset="0.32" stopColor="var(--tv-color-violet-500)" />
+            <stop offset="0.62" stopColor="var(--tv-color-cyan-500)" />
+            <stop offset="0.82" stopColor="var(--tv-color-violet-500)" />
+            <stop offset="1" stopColor="var(--tv-accent-gold-on-dark)" />
+          </linearGradient>
         </defs>
+        <circle cx="50" cy="50" r="44.1" className="tv-atlas__glass-edge" stroke={`url(#${edgeId})`} />
         <circle cx="50" cy="50" r="43.5" fill={`url(#${surfaceId})`} />
         <circle cx="50" cy="50" r="43.5" className="tv-atlas__rim" />
+        <circle cx="50" cy="50" r="42.9" className="tv-atlas__glass-lip" />
+        <path d={arc(44.5, 294, 343)} className="tv-atlas__glass-glint" />
+        <circle cx="50" cy="50" r="44.5" className="tv-atlas__bearing" />
       </g>
       <g className="tv-atlas__territories" key={focusedClusterId ?? "market"}>
         {clusterOrder.map((id, i) => {
@@ -94,6 +106,7 @@ export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, c
             style={{ "--tv-atlas-territory": colors.get(id) } as CSSProperties}>
             {active && <path d={territory(i * 45, (i + 1) * 45, mobileAtlas ? 0 : 30.0001, mobileAtlas ? 42 : 47)} className="tv-atlas__territory-hit" data-territory-hit={id} aria-hidden="true" />}
             <g className="tv-atlas__area-art" data-instrument-layer="atlas-area-art" aria-hidden="true">
+              {!local && clusterCount > 0 && <path d={arc(42, start + 1.5, end - 1.5)} className="tv-atlas__sector-rim" />}
               {local ? <circle cx="50" cy="50" r="42" className="tv-atlas__territory" /> : <path d={territory(start, end)} className="tv-atlas__territory" />}
               {!local && clusterCount > 0 && <>
                 <text x={p.x} y={p.y - 2.5} textAnchor="middle" className="tv-atlas__area-short"><LocalizedText>{shortLabels[i]}</LocalizedText></text>
@@ -113,7 +126,7 @@ export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, c
           return <g key={ring.label}>
             <circle cx="50" cy="50" r={radius} className="tv-atlas__time-arc" data-ring-radius={radius} data-ring-label={ring.label} data-outer={i === rings.length - 1 ? "true" : undefined} />
             <line x1={x} y1={49.3} x2={x} y2={50.7} className="tv-atlas__tick" />
-            <rect x={x - width / 2} y={50.1} width={width} height={4.1} className="tv-atlas__label-plate" />
+            <rect x={x - width / 2} y={50.1} width={width} height={4.1} rx={.8} className="tv-atlas__label-plate" />
             <text x={x} y={53.1} textAnchor="middle" className="tv-rx-map__ring-label tv-atlas__time-label"><LocalizedText>{ring.label}</LocalizedText></text>
           </g>;
         })}
@@ -145,7 +158,13 @@ export function RadarAtlasGlyph({ radius: r, color, selected, highlighted, linke
   const image = thumbnailUrl && /^https?:\/\//.test(thumbnailUrl) && !(imageState?.source === thumbnailUrl && !imageState.loaded) ? thumbnailUrl : null;
   const loaded = imageState?.source === image && imageState.loaded;
   return <g className="tv-atlas__glyph" data-beacon-direction="b" data-beacon-tier={tier} data-instrument-layer="atlas-glyph" data-drawn-radius={r} aria-hidden="true" style={{ "--tv-atlas-signal": color } as CSSProperties}>
-    <circle r={r * .85 * scale} className="tv-atlas__glyph-body" />
+    <defs><radialGradient id={`${clipId}-glass`} cx="28%" cy="12%" r="95%">
+      <stop stopColor={color} stopOpacity=".72" />
+      <stop offset=".42" stopColor={color} stopOpacity=".28" />
+      <stop offset="1" stopColor="var(--tv-color-surface-base)" />
+    </radialGradient></defs>
+    <circle r={r * .85 * scale} className="tv-atlas__glyph-body" style={{ fill: `url(#${clipId}-glass)` }} />
+    <circle r={r * .77 * scale} className="tv-atlas__beacon-lip" />
     <text x={r * .03} y={identitySize * .3} textAnchor="middle" opacity={loaded ? 0 : 1} className="tv-atlas__beacon-mark" style={{ fontSize: identitySize }}><LocalizedText>{(Array.from(name.trim())[0] ?? "·").toLocaleUpperCase("it-IT")}</LocalizedText></text>
     {image && <>
       <defs><clipPath id={clipId}><rect x={-identitySize / 2} y={-identitySize / 2} width={identitySize} height={identitySize} rx={identitySize * .18} /></clipPath></defs>
@@ -169,7 +188,7 @@ export function RadarAtlasEditorialLabels({ signals, selectedId }: { signals: re
     const compute = () => {
       if (disposed) return;
       const measurements = new Map([...group.querySelectorAll<SVGTextElement>('[data-label-measure]')].map(text => { const b = text.getBBox(); return [text.dataset.labelMeasure!, { width: b.width, height: b.height, baseline: b.y }]; }));
-      const reserved = [...svg.querySelectorAll<SVGTextElement>('.tv-atlas__time text,.tv-atlas__metadata text,.tv-atlas__inspection text')].map(text => { const b = text.getBBox(); return { left: b.x, right: b.x + b.width, top: b.y, bottom: b.y + b.height }; });
+      const reserved = [...svg.querySelectorAll<SVGTextElement>('.tv-atlas__time text,.tv-atlas__metadata text,.tv-atlas__inspection text,.tv-atlas__area-art text')].map(text => { const b = text.getBBox(); return { left: b.x, right: b.x + b.width, top: b.y, bottom: b.y + b.height }; });
       const leader = svg.querySelector<SVGPathElement>('.tv-atlas__leader');
       const callout = leader ? Array.from({ length: Math.ceil(leader.getTotalLength() * 2) + 1 }, (_, i) => leader.getPointAtLength(i / 2)) : [];
       const next = planAtlasBeaconLabels(signals, measurements, reserved, selectedId, callout);

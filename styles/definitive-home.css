@@ -642,8 +642,8 @@
   animation-delay: 0.08s;
 }
 @keyframes tv-podium-rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes tv-podium-glow {
   from { text-shadow: 0 0 0 transparent; }
@@ -3321,12 +3321,25 @@
     radial-gradient(60% 34% at 50% 0%, color-mix(in srgb, #8a5cff 26%, transparent), transparent 70%),
     radial-gradient(78% 22% at 50% 100%, color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 12%, transparent), transparent 70%);
 }
+/* The same rendered metal as the hero, set behind the live podium. */
+.def-podium__ribbons { position: absolute; inset: 70px 0 auto; width: 100%; height: clamp(240px, 29vw, 390px); z-index: -1; overflow: clip; pointer-events: none; }
+.def-podium__ribbons .tv-instrument-orbit { position: absolute; width: min(90%, 44rem); aspect-ratio: 1; left: 50%; top: 50%; transform: translate(-50%, -50%) perspective(900px) rotateX(58deg) rotateZ(-12deg); opacity: .78; }
+.def-podium__journey { margin: 1.25rem auto 0; max-width: 48rem; }
+.def-latest .def-podium__journey ol { gap: .5rem 1rem; }
+.def-podium__journey li:nth-child(2) { margin-block-start: .625rem; }
+.def-podium__journey li:nth-child(3) { margin-block-start: 1.25rem; }
+@media (max-width: 47.999rem) {
+  .def-latest .def-podium__journey ol { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; gap: .125rem; }
+  .def-podium__journey li { width: auto; max-width: 92%; }
+  .def-podium__journey li:nth-child(2) { justify-self: end; margin: 0; }
+  .def-podium__journey li:nth-child(3) { margin: 0 0 0 6%; }
+}
 /* Primary stage: 3 columns inside the safe width. 01 elevated.
    Scoped perspective context: 01 FRONT CENTER, 02/03 one plane behind.
-   2.5D depth (translate/scale, NO rotate) keeps Safari text razor-sharp.
-   Selected card expands TOWARD CENTER via grid geometry animation. */
+   The three hit frames keep the same size and position during selection. */
 .def-podium__stage {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.10fr) minmax(0, 0.95fr);
   grid-template-areas: "second first third";
@@ -3336,17 +3349,8 @@
   padding: 30px 0 0;
   list-style: none;
   overflow: visible;
-  transition: grid-template-columns 280ms var(--tv-easing-standard);
 }
-.def-podium__stage.has-focus-second {
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.72fr) minmax(0, 0.72fr);
-}
-.def-podium__stage.has-focus-first {
-  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.55fr) minmax(0, 0.72fr);
-}
-.def-podium__stage.has-focus-third {
-  grid-template-columns: minmax(0, 0.72fr) minmax(0, 0.72fr) minmax(0, 1.55fr);
-}
+.def-podium__stage::before { content: ""; position: absolute; inset: auto 1% -12px; height: 76px; z-index: -1; pointer-events: none; border: 1px solid color-mix(in srgb, var(--tv-color-violet-400) 45%, transparent); border-radius: 18px; background: linear-gradient(150deg, color-mix(in srgb, var(--tv-color-violet-500) 32%, var(--tv-color-surface-base)), var(--tv-color-surface-base) 55%, color-mix(in srgb, var(--tv-color-cyan-500) 16%, var(--tv-color-surface-base))); transform: perspective(600px) rotateX(48deg); transform-origin: center bottom; box-shadow: 0 8px 0 color-mix(in srgb, var(--tv-color-violet-500) 18%, var(--tv-color-surface-base)), inset 0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 20%, transparent); }
 .def-podium__stage .def-podium__cell {
   position: relative;
   min-width: 0;
@@ -3434,8 +3438,13 @@
   text-align: center;
   gap: 5px;
   height: 100%;
+  width: 100%;
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
   padding: 18px 12px 14px;
-  border-radius: 16px;
+  border-radius: 18px;
+  isolation: isolate;
   text-decoration: none;
   color: inherit;
   overflow: visible;
@@ -3508,7 +3517,7 @@
   background:
     radial-gradient(50% 36% at 50% 6%, color-mix(in srgb, #d29a6b 18%, transparent), transparent 70%),
     radial-gradient(80% 50% at 50% 100%, color-mix(in srgb, #c07a4a 12%, transparent), transparent 65%),
-    linear-gradient(165deg, #1c1020 0%, #150c18 50%, #0e0812 100%);
+    linear-gradient(165deg, #19102e 0%, #110c22 50%, #0b0818 100%);
   box-shadow:
     0 12px 26px color-mix(in srgb, black 40%, transparent),
     0 0 20px color-mix(in srgb, #d29a6b 14%, transparent);
@@ -3606,9 +3615,10 @@
   position: absolute;
   left: 50%;
   bottom: 6px;
-  width: 120px;
+  width: min(120px, calc(100% - 8px));
   height: 60px;
-  margin-left: -60px;
+  margin-left: 0;
+  transform: translateX(-50%);
   color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #e4b23c) 55%, transparent);
   opacity: 0.85;
   pointer-events: none;
@@ -3620,7 +3630,9 @@
   display: block;
   transform-origin: 50% 90%;
   animation: tv-laurel-sway var(--tv-spot-cycle, 12s) var(--tv-easing-standard) infinite;
+  animation-play-state: paused;
 }
+.def-latest[data-motion-active="true"] .def-podium__laurels svg { animation-play-state: running; }
 @keyframes tv-laurel-sway {
   0%, 100% { opacity: 0.72; transform: rotate(-2.6deg); }
   50% { opacity: 1; transform: rotate(2.6deg); }
@@ -3755,7 +3767,7 @@
 }
 .def-podium__rail::-webkit-scrollbar { display: none; }
 .def-podium__rail-item {
-  flex: 0 0 clamp(190px, 50vw, 280px);
+  flex: 0 0 clamp(236px, 65vw, 280px);
   scroll-snap-align: start;
   min-width: 0;
   display: flex;
@@ -3831,12 +3843,14 @@
    Below 1024px the rail stays scrollable so names never get squeezed. */
 @media (min-width: 1024px) {
   .def-podium__rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     overflow-x: visible;
-    justify-content: center;
+    max-width: 60rem;
+    margin-inline: auto;
   }
   .def-podium__rail-item {
-    flex: 1 1 0;
-    max-width: 320px;
+    max-width: none;
   }
 }
 /* Extra info pills: micro-elements with icons for selected card. */
@@ -3862,123 +3876,22 @@
 .def-podium__pill svg {
   flex-shrink: 0;
 }
-/* Extra info revealed on selected card (2-line desc + pills). */
-.def-podium__extra {
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 240ms var(--tv-easing-standard) 80ms, transform 240ms var(--tv-easing-standard) 80ms;
-  pointer-events: none;
-  width: 100%;
+/* Selection is a material state; the three card frames never resize. */
+.def-podium__selection-mark { display: grid; place-items: center; height: 8px; width: 28px; margin-top: 2px; }
+.def-podium__selection-mark span { width: 5px; height: 5px; border-radius: 50%; background: var(--tv-ink-secondary); opacity: .4; transition: width 220ms var(--tv-easing-standard), opacity 220ms var(--tv-easing-standard); }
+.def-podium__card.is-selected .def-podium__selection-mark span { width: 24px; border-radius: var(--tv-radius-pill); background: var(--tv-color-cyan-500); opacity: 1; }
+.def-podium__card:focus-visible { outline: 2px solid var(--tv-color-cyan-500); outline-offset: 4px; }
+.def-podium__reading { position: relative; max-width: 46rem; margin: 1.5rem auto 0; padding: clamp(16px, 3vw, 24px); border: 1px solid color-mix(in srgb, var(--tv-color-violet-400) 35%, transparent); border-radius: var(--tv-radius-px-modal); background: linear-gradient(130deg, color-mix(in srgb, var(--tv-color-violet-500) 13%, var(--tv-color-surface-base)), var(--tv-color-surface-base) 68%); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 8%, transparent); }
+.def-podium__reading-content { display: grid; align-content: start; gap: .75rem; min-height: 7.5rem; }
+.def-podium__reading-heading { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: var(--tv-color-cyan-500); }
+.def-podium__reading-heading h4 { margin: 0; font-family: var(--tv-font-family-ui); color: var(--tv-ink-primary); font-size: 1rem; font-weight: 650; }
+.def-podium__reading-heading > span { margin-inline-start: auto; font-size: .6875rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tv-ink-secondary); }
+.def-podium__reading-content > p { margin: 0; max-width: 62ch; color: var(--tv-ink-secondary); font-size: .9375rem; line-height: 1.65; text-wrap: pretty; }
+.def-podium__reading-meta { display: flex; flex-wrap: wrap; gap: .375rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .def-podium__reading-content { animation: tv-podium-reading 240ms ease-out both; }
 }
-.def-podium__card.is-selected .def-podium__extra {
-  opacity: 1;
-  transform: translateY(0);
-}
-.def-podium__extra-desc {
-  font-size: 0.75rem;
-  line-height: 1.35;
-  color: var(--tv-ink-secondary, #c2beb5);
-  margin: 2px 0 4px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.def-podium__extra-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  justify-content: center;
-}
-.def-podium__extra-meta span {
-  display: inline-flex;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  line-height: 1.3;
-  color: var(--tv-ink-muted-aa, #aaa59b);
-  background: color-mix(in srgb, var(--tv-surface-elevated, #1c1440) 80%, transparent);
-}
-/* Consolidated into the single is-compact rule above. */
-/* Tap: press compression + rank-aware edge flare, immediate, ~180ms. */
-/* Bring-to-front: the selected cell comes toward the viewer (2.5D depth:
-   lift + scale + stronger floor light), siblings recede slightly.
-   Geometry-aware: selected 02 shifts INWARD (+x), selected 03 shifts
-   INWARD (-x), so scaled cards never cross the safe stage bounds.
-   180–200ms, clear and brief. */
-.def-podium__stage .def-podium__cell {
-  transition: transform 200ms var(--tv-easing-standard), filter 200ms var(--tv-easing-standard);
-  cursor: pointer;
-}
-.def-podium__stage.has-focus-second .def-podium__cell.pos-second {
-  z-index: 5;
-  transform: translateY(-14px) translateX(5px) scale(1.14);
-}
-.def-podium__stage.has-focus-first .def-podium__cell.pos-first {
-  z-index: 5;
-  transform: translateY(-16px) scale(1.14);
-}
-.def-podium__stage.has-focus-third .def-podium__cell.pos-third {
-  z-index: 5;
-  transform: translateY(-14px) translateX(-5px) scale(1.14);
-}
-.def-podium__stage.has-focus-second .def-podium__cell.pos-first,
-.def-podium__stage.has-focus-second .def-podium__cell.pos-third,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-second,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-third,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-first,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-second {
-  transform: translateY(1px) scale(0.98);
-}
-.def-podium__stage.has-focus-second .def-podium__cell.pos-second .def-podium__card,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-third .def-podium__card,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-first .def-podium__card {
-  filter: brightness(1.06);
-}
-.def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card,
-.def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
-  filter: brightness(0.9);
-}
-/* Fog/haze on siblings: selected card floats above a violet mist.
-   Pseudo-element haze preserves text crispness on iPhone Safari. */
-.def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card,
-.def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
-  filter: brightness(0.82) saturate(0.8);
-  opacity: 0.7;
-}
-/* Violet fog wash: semi-transparent dark-violet layer over background.
-   Content stays crisp underneath — only the surface gets hazed. */
-.def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card::after,
-.def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card::after,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card::after,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card::after,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card::after,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: color-mix(in srgb, #1a0b38 35%, transparent);
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-}
-.def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card,
-.def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card,
-.def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card,
-.def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card {
-  cursor: pointer;
-}
+@keyframes tv-podium-reading { from { opacity: .25; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 /* Selected card flare: brief material glow on the active card. */
 /* Selected card: stronger glow + cinematic background animation in metal. */
 .def-podium__card.is-selected {
@@ -3989,6 +3902,7 @@
 }
 .def-podium__card.is-selected::before {
   animation: tv-card-shimmer 3s var(--tv-easing-standard) infinite;
+  animation-play-state: paused;
 }
 .def-podium__cell.pos-second .def-podium__card.is-selected {
   box-shadow:
@@ -4002,6 +3916,7 @@
     0 0 36px color-mix(in srgb, #d29a6b 38%, transparent),
     inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
 }
+.def-latest[data-motion-active="true"] .def-podium__card.is-selected::before { animation-play-state: running; }
 @keyframes tv-card-shimmer {
   0%, 100% { opacity: 0.7; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.02); }
@@ -4022,9 +3937,7 @@
 }
 /* Entrance: one-shot rise + hero glow, driven by .is-celebrated. */
 .def-latest.is-celebrated .def-podium__stage .def-podium__cell {
-  /* backwards (not both): after the entrance the fill must release so the
-     depth/flip transforms own the cells. */
-  animation: tv-podium-rise 0.6s var(--tv-easing-decelerate);
+  animation: tv-podium-enter 0.6s var(--tv-easing-decelerate);
 }
 .def-latest.is-celebrated .def-podium__stage .def-podium__cell.pos-first {
   animation-delay: 0.02s;
@@ -4032,12 +3945,12 @@
 .def-latest.is-celebrated .def-podium__stage .def-podium__cell.pos-third {
   animation-delay: 0.1s;
 }
-.def-latest.is-celebrated .def-podium__card.is-first .def-podium__rank {
+.def-latest.is-celebrated .def-podium__badge--gold .def-podium__rank {
   animation: tv-podium-glow 1.4s var(--tv-easing-decelerate) 0.25s both;
 }
-@keyframes tv-podium-rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; }
+@keyframes tv-podium-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes tv-podium-glow {
   from { text-shadow: 0 0 0 transparent; }
@@ -4060,6 +3973,9 @@
     justify-content: center;
   }
 }
+@media (max-width: 22.1875rem) {
+  .def-podium__stage .def-podium__card { padding-inline: 6px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .tv-featured-tool__cta:active,
   .tv-featured-tool__external:active {
@@ -4069,36 +3985,20 @@
   .def-podium__stage {
     transition: none;
   }
-  .def-podium__extra {
-    transition: none;
-  }
-  .def-podium__card {
-    transition: none;
-  }
-  .def-podium__stage.has-focus-second .def-podium__cell.pos-first .def-podium__card::after,
-  .def-podium__stage.has-focus-second .def-podium__cell.pos-third .def-podium__card::after,
-  .def-podium__stage.has-focus-first .def-podium__cell.pos-second .def-podium__card::after,
-  .def-podium__stage.has-focus-first .def-podium__cell.pos-third .def-podium__card::after,
-  .def-podium__stage.has-focus-third .def-podium__cell.pos-first .def-podium__card::after,
-  .def-podium__stage.has-focus-third .def-podium__cell.pos-second .def-podium__card::after {
-    transition: none;
-  }
+  .def-podium__selection-mark span { transition: none; }
   .def-podium__laurels,
+  .def-podium__laurels svg,
+  .def-podium__card.is-selected::before,
   .def-podium__medal,
-  .def-latest .def-podium__card.is-first .def-podium__rank,
+  .def-latest .def-podium__badge--gold .def-podium__rank,
   .def-latest.is-celebrated .def-podium__stage .def-podium__cell,
-  .def-latest.is-celebrated .def-podium__card.is-first .def-podium__rank {
+  .def-latest.is-celebrated .def-podium__badge--gold .def-podium__rank {
     animation: none;
   }
   .def-podium__card,
   .def-podium__card:active,
   .def-podium__card.is-first:active {
     transition: none;
-    transform: none;
-  }
-  .def-podium__stage.has-focus-second .def-podium__cell.pos-second,
-  .def-podium__stage.has-focus-first .def-podium__cell.pos-first,
-  .def-podium__stage.has-focus-third .def-podium__cell.pos-third {
     transform: none;
   }
   .def-podium__card.is-selected {

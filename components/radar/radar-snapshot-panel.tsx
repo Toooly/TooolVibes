@@ -46,8 +46,8 @@ export function RadarSnapshotPanel({ view, tools, clusterId, loading, onSelect, 
       </section>
 
       {tools.length > 0 ? (
-        <section className="tv-rx-rail__block" aria-labelledby="tv-rx-age-title">
-          <h3 id="tv-rx-age-title" className="tv-rx-rail__title"><LocalizedText>{"Quando sono emersi"}</LocalizedText></h3>
+        <details className="tv-rx-rail__block tv-rx-rail__disclosure">
+          <summary className="tv-rx-rail__title"><LocalizedText>{"Quando sono emersi"}</LocalizedText></summary>
           <LocalizedAttributes><ul className="tv-rx-distribution" aria-label="Distribuzione temporale dello snapshot">
             {[...buckets, ...(unknown ? [{ label: "Data ignota", count: unknown }] : [])].map((bucket) => (
               <li key={bucket.label}>
@@ -57,7 +57,7 @@ export function RadarSnapshotPanel({ view, tools, clusterId, loading, onSelect, 
               </li>
             ))}
           </ul></LocalizedAttributes>
-        </section>
+        </details>
       ) : null}
 
       <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-signals">
@@ -78,8 +78,8 @@ export function RadarSnapshotPanel({ view, tools, clusterId, loading, onSelect, 
       </section>
 
       {!cluster && view.clusters.length > 0 ? (
-        <section className="tv-rx-rail__block" aria-labelledby="tv-rx-rail-cats">
-          <h3 id="tv-rx-rail-cats" className="tv-rx-rail__title"><LocalizedText>{"Aree attive"}</LocalizedText></h3>
+        <details className="tv-rx-rail__block tv-rx-rail__disclosure">
+          <summary className="tv-rx-rail__title"><LocalizedText>{"Aree attive"}</LocalizedText></summary>
           <ul className="tv-rx-rail__cats">
             {view.clusters.map((entry) => (
               <li key={entry.id}>
@@ -92,7 +92,7 @@ export function RadarSnapshotPanel({ view, tools, clusterId, loading, onSelect, 
               </li>
             ))}
           </ul>
-        </section>
+        </details>
       ) : null}
     </div>
   );

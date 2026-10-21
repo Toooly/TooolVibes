@@ -4,7 +4,10 @@ import { useLocale } from "@/components/i18n/locale-provider";
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "@/components/ui/app-link";
-import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink, Layers3, ScanSearch, Sparkles } from "lucide-react";
+import { InstrumentJourney } from "@/components/ui/instrument-journey";
+import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
+import { workspaceViewHref } from "@/components/account/workspace/workspace-model";
 import { useAccount } from "@/components/account/account-provider";
 
 import { HomeRadarPreview } from "@/components/radar/radar-experience";
@@ -340,159 +343,54 @@ function IvoryEditorial({
   );
 }
 
-function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
-  const { t } = useLocale();
-  const podiumRef = useRef<HTMLElement | null>(null);
-  const celebrated = useRef(false);
-  /* Selection state: which top-3 cell is currently brought to front.
-     First tap selects (brings forward), second tap on same card navigates.
-     No persistent ranking state — pure UI feedback. */
-  const [selectedPos, setSelectedPos] = useState<"second" | "first" | "third" | null>(null);
+type PodiumPosition = "second" | "first" | "third";
 
-  const handleCellClick = (pos: "second" | "first" | "third") => (e: React.MouseEvent) => {
-    if (selectedPos !== pos) {
-      e.preventDefault();
-      setSelectedPos(pos);
-    }
-  };
+function PodiumCard({ tool, rank, position, selected, detailId, onSelect }: {
+  tool: ToolPublicView;
+  rank: string;
+  position?: PodiumPosition;
+  selected?: boolean;
+  detailId?: string;
+  onSelect?: () => void;
+}) {
+  const score = computeEditorialScore(tool);
+  const iconUrl = iconUrlFor(tool);
+  const compact = !position;
+  const tone = position === "first" ? "gold" : position === "second" ? "silver" : "bronze";
+  const className = `def-podium__card ${position === "first" ? "is-first" : compact ? "is-rest is-compact" : "is-top"}${selected ? " is-selected" : ""}`;
+  const content = <>
+    {compact ? <span className="def-podium__rank def-podium__rank--inline" aria-hidden="true">{rank}</span> : null}
+    <span className="def-podium__avatar" aria-hidden="true">
+      {iconUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={iconUrl} alt="" loading="lazy" decoding="async" />
+      ) : <span>{initialFor(tool.name)}</span>}
+    </span>
+    <span className="def-podium__name">{tool.name}</span>
+    {tool.categoryLabel ? <span className="def-podium__cat"><LocalizedText>{tool.categoryLabel}</LocalizedText></span> : null}
+    <span className="def-podium__score">
+      <span className="tv-featured-tool__mono">{score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—"}</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+    </span>
+    {!compact ? <span className="def-podium__selection-mark" aria-hidden="true"><span /></span> : null}
+  </>;
+  return <>
+    {!compact ? <div className={`def-podium__badge${position === "first" ? " def-podium__badge--gold" : ""}`} aria-hidden="true">
+      <RankLaurels tone={tone} compact={position !== "first"} />
+      <span className={position === "first" ? "def-podium__crown" : `def-podium__medal def-podium__medal--${tone}`}>
+        <svg viewBox="0 0 48 28" fill="none"><path d="M4 24 L8 10 L16 18 L24 6 L32 18 L40 10 L44 24 Z" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" /><circle cx="8" cy="8" r="2" fill="currentColor" /><circle cx="24" cy="4" r="2" fill="currentColor" /><circle cx="40" cy="8" r="2" fill="currentColor" /></svg>
+      </span>
+      <span className="def-podium__rank">{rank}</span>
+    </div> : null}
+    <LocalizedAttributes>{compact ? (
+      <Link href={`/toools/${tool.slug}`} className={className} aria-label={`Posizione ${rank}: apri ${tool.name}`}>{content}</Link>
+    ) : (
+      <button type="button" className={className} aria-label={`Mostra dettagli di ${tool.name}`} aria-pressed={selected} aria-controls={detailId} onClick={onSelect}>{content}</button>
+    )}</LocalizedAttributes>
+  </>;
+}
 
-  /* Reset selection when tapping/clicking outside the podium stage. */
-  useEffect(() => {
-    if (!selectedPos) return;
-    const onOutside = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-      if (!target.closest(".def-podium__stage")) {
-        setSelectedPos(null);
-      }
-    };
-    document.addEventListener("mousedown", onOutside);
-    document.addEventListener("touchstart", onOutside, { passive: true });
-    return () => {
-      document.removeEventListener("mousedown", onOutside);
-      document.removeEventListener("touchstart", onOutside);
-    };
-  }, [selectedPos]);
-
-  useEffect(() => {
-    const podium = podiumRef.current;
-    if (!podium || typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting || celebrated.current) continue;
-          celebrated.current = true;
-          podium.classList.add("is-celebrated");
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.25 },
-    );
-    observer.observe(podium);
-    return () => observer.disconnect();
-  }, []);
-  /* Canonical top-5: same ranked dataset (tool order), no algorithm change,
-     no invented entries. Top-3 compose the safe stage; 04/05 continue in
-     the secondary rail. Renders only with >=3 canonical tools. */
-  /* Canonical ranking: top-3 stage + 04/05/06 compact continuation grid.
-     No carousel, no scroll. Renders 04/05(/06) only when canonical tools
-     exist — never invented. */
-  const ranked = tools.slice(0, 9);
-  if (ranked.length < 3) return null;
-  const top3 = [ranked[1], ranked[0], ranked[2]].filter(Boolean) as ToolPublicView[];
-  const rest = ranked.slice(3, 9);
-
-  function StageCard({ tool, rank, rankClass, medal, compact, laurel, isSelected, onSelect }: { tool: ToolPublicView; rank: string; rankClass: string; medal?: "silver" | "bronze"; compact?: boolean; laurel?: "silver" | "bronze"; isSelected?: boolean; onSelect?: (e: React.MouseEvent) => void }) {
-    const score = computeEditorialScore(tool);
-    const iconUrl = iconUrlFor(tool);
-    const initial = initialFor(tool.name);
-    const scoreLabel =
-      score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
-    return (
-      <>
-        {!compact ? (
-          <div className="def-podium__badge" aria-hidden="true">
-            {laurel ? <RankLaurels tone={laurel} compact /> : null}
-            {medal === "silver" ? (
-              <span className="def-podium__medal def-podium__medal--silver">
-                <svg viewBox="0 0 44 28" fill="none">
-                  <path d="M4 24 L7 8 L14 16 L22 5 L30 16 L37 8 L40 24 Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                  <circle cx="22" cy="3" r="1.6" fill="currentColor" />
-                  <line x1="14" y1="16" x2="30" y2="16" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-                </svg>
-              </span>
-            ) : medal === "bronze" ? (
-              <span className="def-podium__medal def-podium__medal--bronze">
-                <svg viewBox="0 0 40 28" fill="none">
-                  <path d="M6 24 L10 10 L20 6 L30 10 L34 24 Z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
-                  <circle cx="20" cy="4" r="1.4" fill="currentColor" />
-                  <path d="M12 20 Q20 16 28 20" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-                </svg>
-              </span>
-            ) : null}
-            <span className="def-podium__rank"><LocalizedText>{rank}</LocalizedText></span>
-          </div>
-        ) : null}
-        <LocalizedAttributes><Link
-          href={`/toools/${tool.slug}`}
-          className={`def-podium__card ${rankClass}${compact ? " is-compact" : ""}${isSelected ? " is-selected" : ""}`}
-          aria-label={`Posizione ${rank}: apri ${tool.name}`}
-          data-selected={isSelected || undefined}
-          onClick={onSelect}
-        >
-        {compact ? <span className="def-podium__rank def-podium__rank--inline" aria-hidden="true"><LocalizedText>{rank}</LocalizedText></span> : null}
-        <span className="def-podium__avatar" aria-hidden="true">
-          {iconUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <LocalizedAttributes><img src={iconUrl} alt="" loading="lazy" decoding="async" /></LocalizedAttributes>
-          ) : (
-            <span><LocalizedText>{initial}</LocalizedText></span>
-          )}
-        </span>
-        <span className="def-podium__name">{tool.name}</span>
-        {tool.categoryLabel ? (
-          <span className="def-podium__cat"><LocalizedText>{tool.categoryLabel}</LocalizedText></span>
-        ) : null}
-        <span className="def-podium__score">
-          <span className="tv-featured-tool__mono"><LocalizedText>{scoreLabel}</LocalizedText></span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </span>
-        {isSelected && !compact ? (
-          <div className="def-podium__extra">
-            {tool.shortDescription ? <p className="def-podium__extra-desc"><LocalizedText>{truncate(t(tool.shortDescription), 120)}</LocalizedText></p> : null}
-            <div className="def-podium__extra-meta">
-              {tool.levelLabel ? (
-                <span className="def-podium__pill">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                  <LocalizedText>{tool.levelLabel}</LocalizedText>
-                </span>
-              ) : null}
-              {tool.readingTime ? (
-                <span className="def-podium__pill">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  <LocalizedText>{formatHomeAnalysisTime(tool.readingTime)}</LocalizedText>
-                </span>
-              ) : null}
-              {tool.tags?.[0] ? (
-                <span className="def-podium__pill def-podium__pill--tag">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                  <LocalizedText>{tool.tags[0]}</LocalizedText>
-                </span>
-              ) : null}
-              {tool.tags?.[1] ? (
-                <span className="def-podium__pill def-podium__pill--tag"><LocalizedText>{tool.tags[1]}</LocalizedText></span>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-        </Link></LocalizedAttributes>
-      </>
-    );
-  }
-
-  /* Rank laurels: restrained stylized branches framing a prestige card.
-     Full span for 01 gold; compact (~65%) for 02 silver / 03 bronze. */
-  function RankLaurels({ tone, compact }: { tone: "gold" | "silver" | "bronze"; compact?: boolean }) {
+function RankLaurels({ tone, compact }: { tone: "gold" | "silver" | "bronze"; compact?: boolean }) {
     return (
       <span className={`def-podium__laurels def-podium__laurels--${tone}${compact ? " is-compact" : ""}`} aria-hidden="true">
         <svg viewBox="0 0 120 96" fill="none">
@@ -509,136 +407,74 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     );
   }
 
-  function WinnerCard({ tool, isSelected, onSelect }: { tool: ToolPublicView; isSelected?: boolean; onSelect?: (e: React.MouseEvent) => void }) {
-    const score = computeEditorialScore(tool);
-    const iconUrl = iconUrlFor(tool);
-    const initial = initialFor(tool.name);
-    const scoreLabel =
-      score.status === "assessed" && score.value !== null ? score.value.toFixed(1) : "—";
-    return (
-      <>
-        <div className="def-podium__badge def-podium__badge--gold" aria-hidden="true">
-          <RankLaurels tone="gold" />
-          <span className="def-podium__crown">
-            <svg viewBox="0 0 48 28" fill="none">
-              <path d="M4 24 L8 10 L16 18 L24 6 L32 18 L40 10 L44 24 Z" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" />
-              <circle cx="8" cy="8" r="2.2" fill="currentColor" />
-              <circle cx="24" cy="4" r="2.2" fill="currentColor" />
-              <circle cx="40" cy="8" r="2.2" fill="currentColor" />
-            </svg>
-          </span>
-          <span className="def-podium__rank">01</span>
-        </div>
-        <LocalizedAttributes><Link
-          href={`/toools/${tool.slug}`}
-          className={`def-podium__card is-first${isSelected ? " is-selected" : ""}`}
-          aria-label={`Posizione 01: apri ${tool.name}`}
-          data-selected={isSelected || undefined}
-          onClick={onSelect}
-        >
-        <span className="def-podium__avatar" aria-hidden="true">
-          {iconUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <LocalizedAttributes><img src={iconUrl} alt="" loading="lazy" decoding="async" /></LocalizedAttributes>
-          ) : (
-            <span><LocalizedText>{initial}</LocalizedText></span>
-          )}
-        </span>
-        <span className="def-podium__name">{tool.name}</span>
-        {tool.categoryLabel ? (
-          <span className="def-podium__cat"><LocalizedText>{tool.categoryLabel}</LocalizedText></span>
-        ) : null}
-        <span className="def-podium__score">
-          <span className="tv-featured-tool__mono"><LocalizedText>{scoreLabel}</LocalizedText></span>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </span>
-        {isSelected ? (
-          <div className="def-podium__extra">
-            {tool.shortDescription ? <p className="def-podium__extra-desc"><LocalizedText>{truncate(t(tool.shortDescription), 120)}</LocalizedText></p> : null}
-            <div className="def-podium__extra-meta">
-              {tool.levelLabel ? (
-                <span className="def-podium__pill">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                  <LocalizedText>{tool.levelLabel}</LocalizedText>
-                </span>
-              ) : null}
-              {tool.readingTime ? (
-                <span className="def-podium__pill">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  <LocalizedText>{formatHomeAnalysisTime(tool.readingTime)}</LocalizedText>
-                </span>
-              ) : null}
-              {tool.tags?.[0] ? (
-                <span className="def-podium__pill def-podium__pill--tag">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                  <LocalizedText>{tool.tags[0]}</LocalizedText>
-                </span>
-              ) : null}
-              {tool.tags?.[1] ? (
-                <span className="def-podium__pill def-podium__pill--tag"><LocalizedText>{tool.tags[1]}</LocalizedText></span>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-        </Link></LocalizedAttributes>
-      </>
-    );
+
+function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
+  const podiumRef = useRef<HTMLElement | null>(null);
+  const detailId = "def-podium-reading";
+  const [selectedPos, setSelectedPos] = useState<PodiumPosition>("first");
+  const ranked = tools.slice(0, 9);
+  const top3 = [ranked[1], ranked[0], ranked[2]];
+  const positions: PodiumPosition[] = ["second", "first", "third"];
+  const inspectedTool = ranked[selectedPos === "second" ? 1 : selectedPos === "third" ? 2 : 0];
+
+  // Keyboard selection never moves or replaces the focused card.
+  function onStageKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+    if (!offset && event.key !== "Home" && event.key !== "End") return;
+    const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
+    const current = buttons.indexOf(event.target as HTMLButtonElement);
+    if (current < 0) return;
+    event.preventDefault();
+    const index = event.key === "Home" ? 0 : event.key === "End" ? 2 : (current + offset + 3) % 3;
+    setSelectedPos(positions[index]);
+    buttons[index]?.focus({ preventScroll: true });
   }
 
+  useEffect(() => {
+    const podium = podiumRef.current;
+    if (!podium || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      podium.classList.add("is-celebrated");
+      observer.disconnect();
+    }, { threshold: 0.25 });
+    observer.observe(podium);
+    return () => observer.disconnect();
+  }, []);
+
+  if (ranked.length < 3 || !inspectedTool) return null;
   return (
-    <section ref={podiumRef} className="def-latest" aria-labelledby="def-latest-title">
+    <section ref={podiumRef} className="def-latest" aria-labelledby="def-latest-title" data-instrument-stage>
       <div className="def-latest__head def-podium__header">
-        <h3 id="def-latest-title" className="def-latest__title def-podium__title"><LocalizedText>{"Ultime dal catalogo "}</LocalizedText></h3>
-        <p className="def-podium__subtitle"><LocalizedText>{"I tool più discussi questa settimana."}</LocalizedText></p>
+        <h3 id="def-latest-title" className="def-latest__title def-podium__title"><LocalizedText>Ultime dal catalogo</LocalizedText></h3>
+        <p className="def-podium__subtitle"><LocalizedText>Seleziona un tool e scopri cosa può fare per te.</LocalizedText></p>
       </div>
       <div className="def-podium__backdrop" aria-hidden="true" />
-      <LocalizedAttributes><div
-        className={"def-podium__stage" + (selectedPos ? " has-focus-" + selectedPos : "")}
-        role="list"
-        aria-label="Podio dei tool"
-      >
-        {top3[0] ? (
-          <div
-            role="listitem"
-            className={"def-podium__cell pos-second"}
-          >
-            <StageCard tool={top3[0]} rank="02" rankClass="is-top" medal="silver" laurel="silver" isSelected={selectedPos === "second"} onSelect={handleCellClick("second")} />
-          </div>
-        ) : null}
-        {top3[1] ? (
-          <div
-            role="listitem"
-            className={"def-podium__cell pos-first"}
-          >
-            <WinnerCard tool={top3[1]} isSelected={selectedPos === "first"} onSelect={handleCellClick("first")} />
-          </div>
-        ) : null}
-        {top3[2] ? (
-          <div
-            role="listitem"
-            className={"def-podium__cell pos-third"}
-          >
-            <StageCard tool={top3[2]} rank="03" rankClass="is-top" medal="bronze" laurel="bronze" isSelected={selectedPos === "third"} onSelect={handleCellClick("third")} />
-          </div>
-        ) : null}
+      <div className="def-podium__ribbons" aria-hidden="true"><InstrumentOrbit /></div>
+      <LocalizedAttributes><div className="def-podium__stage" role="list" aria-label="Podio dei tool" onKeyDown={onStageKeyDown}>
+        {top3.map((tool, index) => tool ? <div key={tool.slug} role="listitem" className={`def-podium__cell pos-${positions[index]}`}>
+          <PodiumCard tool={tool} rank={index === 0 ? "02" : index === 1 ? "01" : "03"} position={positions[index]} selected={selectedPos === positions[index]} detailId={detailId} onSelect={() => setSelectedPos(positions[index])} />
+        </div> : null)}
       </div></LocalizedAttributes>
-      {rest.length > 0 ? (
-        <LocalizedAttributes><div className="def-podium__rail" role="list" aria-label={`Posizioni 04–${String(Math.min(rest.length + 3, 9)).padStart(2, "0")}`}>
-          {rest.map((tool, i) => {
-            const rank = String(i + 4).padStart(2, "0");
-            return (
-              <div key={tool.slug} role="listitem" className="def-podium__rail-item">
-                <StageCard tool={tool} rank={rank} rankClass="is-rest" compact isSelected={false} />
-              </div>
-            );
-          })}
-        </div></LocalizedAttributes>
-      ) : null}
-      <Link href="/archivio" className="def-podium__cta tv-gold-cta">
-        <span className="tv-gold-cta__glow" aria-hidden="true" />
-        <span className="tv-gold-cta__label"><LocalizedText>{"Vedi tutto il catalogo"}</LocalizedText></span>
-        <ArrowRight size={15} aria-hidden="true" />
-      </Link>
+      <div id={detailId} className="def-podium__reading" aria-live="polite" aria-atomic="true">
+        <div key={inspectedTool.slug} className="def-podium__reading-content">
+          <div className="def-podium__reading-heading"><Sparkles size={16} aria-hidden="true" /><h4>{inspectedTool.name}</h4><span><LocalizedText>In lettura</LocalizedText></span></div>
+          {inspectedTool.shortDescription ? <p><LocalizedText>{inspectedTool.shortDescription}</LocalizedText></p> : null}
+          <div className="def-podium__reading-meta">
+            {inspectedTool.levelLabel ? <span className="def-podium__pill"><LocalizedText>{inspectedTool.levelLabel}</LocalizedText></span> : null}
+            {inspectedTool.readingTime ? <span className="def-podium__pill"><LocalizedText>{formatHomeAnalysisTime(inspectedTool.readingTime)}</LocalizedText></span> : null}
+            {inspectedTool.tags?.slice(0, 2).map(tag => <span key={tag} className="def-podium__pill def-podium__pill--tag"><LocalizedText>{tag}</LocalizedText></span>)}
+          </div>
+        </div>
+      </div>
+      <InstrumentJourney label="Esplora i tool del podio" className="def-podium__journey" steps={[
+        { id: "inspect", label: "Approfondisci", detail: inspectedTool.name, href: `/toools/${inspectedTool.slug}`, icon: <Sparkles size={16} />, tone: "violet" },
+        { id: "catalog", label: "Vedi tutto il catalogo", href: "/archivio", icon: <ScanSearch size={16} />, tone: "cyan" },
+        { id: "stack", label: "Crea il tuo stack", href: workspaceViewHref("stack"), icon: <Layers3 size={16} />, tone: "gold" },
+      ]} />
+      {ranked.length > 3 ? <LocalizedAttributes><div className="def-podium__rail" role="list" aria-label={`Posizioni 04–${String(ranked.length).padStart(2, "0")}`}>
+        {ranked.slice(3).map((tool, i) => <div key={tool.slug} role="listitem" className="def-podium__rail-item"><PodiumCard tool={tool} rank={String(i + 4).padStart(2, "0")} /></div>)}
+      </div></LocalizedAttributes> : null}
     </section>
   );
 }
