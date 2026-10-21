@@ -47,7 +47,7 @@ if (sha) {
   console.log(`[next-release-build] TOOOLVIBES_RELEASE_SHA=${sha}`);
 }
 
-const build = spawnSync("npx", ["next", "build"], {
+const build = spawnSync("npx", ["next", "build", "--webpack"], {
   cwd: root,
   env,
   stdio: "inherit",

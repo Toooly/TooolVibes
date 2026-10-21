@@ -165,6 +165,23 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
     expect(document.activeElement).toBe(screen.getByRole("button", { name: "Mostra dettagli di VibeCode" }));
   });
 
+  it("limits the podium to nine canonical tools and preserves exact continuation routes", () => {
+    const catalog = Array.from({ length: 12 }, (_, i) => makeTool(`tool-${i}`, `Tool ${i}`));
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={catalog} /></AdvertisingConsentProvider>);
+    const names = [...document.querySelectorAll(".def-podium__stage .def-podium__name")].map(node => node.textContent);
+    expect(names).toEqual(["Tool 1", "Tool 0", "Tool 2"]);
+    const routes = [...document.querySelectorAll(".def-podium__rail a")].map(node => node.getAttribute("href"));
+    expect(routes).toEqual(catalog.slice(3, 9).map(tool => `/toools/${tool.slug}`));
+    expect(document.querySelector('.def-podium__rail a[href="/toools/tool-9"]')).toBeNull();
+    expect(document.querySelectorAll('.def-podium__badge[aria-hidden="true"]')).toHaveLength(3);
+  });
+
+  it("does not fabricate a podium when fewer than three tools are available", () => {
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={tools.slice(0, 2)} /></AdvertisingConsentProvider>);
+    expect(document.querySelector(".def-podium__stage")).toBeNull();
+    expect(document.querySelector(".def-podium__rail")).toBeNull();
+  });
+
   it("non mostra piu il podio legacy", () => {
     render(
       <AdvertisingConsentProvider>

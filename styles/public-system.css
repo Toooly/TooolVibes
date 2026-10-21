@@ -756,10 +756,10 @@
 .tv-instrument-journey__pill { display: flex; align-items: center; min-height: 60px; width: 100%; padding: 5px 0; border: 0; background: transparent; color: inherit; text-decoration: none; cursor: pointer; border-radius: var(--tv-radius-pill); }
 .tv-instrument-journey__surface { display: flex; align-items: center; gap: .5rem; min-height: 48px; width: 100%; max-width: 100%; padding: .5rem .875rem .5rem .5rem; border: 1px solid color-mix(in srgb, var(--journey-accent) 42%, transparent); border-radius: var(--tv-radius-pill); background: linear-gradient(145deg, color-mix(in srgb, var(--tv-color-violet-500) 10%, var(--tv-instrument-surface)), var(--tv-color-surface-base)); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 14%, transparent), 0 8px 22px color-mix(in srgb, var(--tv-color-surface-base) 30%, transparent); color: var(--tv-ink-primary); font-family: var(--tv-font-family-ui); font-size: .75rem; font-weight: 600; line-height: 1.3; text-align: start; text-decoration: none; cursor: pointer; transition: border-color 180ms ease, background-color 180ms ease; pointer-events: none; }
 .tv-instrument-journey__icon { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 50%; color: var(--journey-accent); background: color-mix(in srgb, var(--journey-accent) 13%, transparent); }
-.tv-instrument-journey__number { color: var(--journey-accent); font-family: var(--tv-font-family-mono); font-size: .625rem; font-variant-numeric: tabular-nums; }
+.tv-instrument-journey__number { color: var(--journey-accent); font-family: var(--tv-font-family-mono); font-size: .75rem; font-variant-numeric: tabular-nums; }
 .tv-instrument-journey__copy { display: grid; min-width: 0; gap: .125rem; }
 .tv-instrument-journey__copy > span { overflow-wrap: anywhere; }
-.tv-instrument-journey__copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 18ch; color: var(--tv-ink-secondary); font-size: .6875rem; font-weight: 400; }
+.tv-instrument-journey__copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 18ch; color: var(--tv-ink-secondary); font-size: .75rem; font-weight: 400; }
 .tv-instrument-journey__arrow { margin-inline-start: auto; flex: none; color: var(--journey-accent); }
 .tv-instrument-journey__pill:is(:hover, :focus-visible) .tv-instrument-journey__surface { border-color: var(--journey-accent); }
 .tv-instrument-journey li:focus-within { opacity: 1; transition: none; pointer-events: auto; }

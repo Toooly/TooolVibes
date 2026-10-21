@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const expected = "15.5.22";
+const expected = require("../../package.json").dependencies.next;
 let actual = "";
 try {
   actual = require("next/package.json").version;

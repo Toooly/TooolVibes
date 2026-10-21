@@ -3885,7 +3885,7 @@
 .def-podium__reading-content { display: grid; align-content: start; gap: .75rem; min-height: 7.5rem; }
 .def-podium__reading-heading { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: var(--tv-color-cyan-500); }
 .def-podium__reading-heading h4 { margin: 0; font-family: var(--tv-font-family-ui); color: var(--tv-ink-primary); font-size: 1rem; font-weight: 650; }
-.def-podium__reading-heading > span { margin-inline-start: auto; font-size: .6875rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tv-ink-secondary); }
+.def-podium__reading-heading > span { margin-inline-start: auto; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tv-ink-secondary); }
 .def-podium__reading-content > p { margin: 0; max-width: 62ch; color: var(--tv-ink-secondary); font-size: .9375rem; line-height: 1.65; text-wrap: pretty; }
 .def-podium__reading-meta { display: flex; flex-wrap: wrap; gap: .375rem; }
 @media (prefers-reduced-motion: no-preference) {
