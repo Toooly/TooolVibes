@@ -345,18 +345,19 @@ function IvoryEditorial({
 
 type PodiumPosition = "second" | "first" | "third";
 
-function PodiumCard({ tool, rank, position, selected, detailId, onSelect }: {
+function PodiumCard({ tool, rank, position, selected, onSelect }: {
   tool: ToolPublicView;
   rank: string;
   position?: PodiumPosition;
   selected?: boolean;
-  detailId?: string;
   onSelect?: () => void;
 }) {
+  const { locale } = useLocale();
   const score = computeEditorialScore(tool);
   const iconUrl = iconUrlFor(tool);
   const compact = !position;
   const tone = position === "first" ? "gold" : position === "second" ? "silver" : "bronze";
+  const detailId = `def-podium-detail-${tool.slug}`;
   const className = `def-podium__card ${position === "first" ? "is-first" : compact ? "is-rest is-compact" : "is-top"}${selected ? " is-selected" : ""}`;
   const content = <>
     {compact ? <span className="def-podium__rank def-podium__rank--inline" aria-hidden="true">{rank}</span> : null}
@@ -373,6 +374,17 @@ function PodiumCard({ tool, rank, position, selected, detailId, onSelect }: {
       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
     </span>
     {!compact ? <span className="def-podium__selection-mark" aria-hidden="true"><span /></span> : null}
+    {!compact ? <span id={detailId} className="def-podium__detail" aria-hidden={!selected}>
+      <span className="def-podium__detail-inner">
+        {tool.shortDescription ? <span className="def-podium__description"><LocalizedText>{tool.shortDescription}</LocalizedText></span> : null}
+        <span className="def-podium__detail-meta">
+          {tool.levelLabel ? <span className="def-podium__pill"><LocalizedText>{tool.levelLabel}</LocalizedText></span> : null}
+          {tool.readingTime ? <span className="def-podium__pill"><LocalizedText>{formatHomeAnalysisTime(tool.readingTime)}</LocalizedText></span> : null}
+          {tool.tags?.slice(0, 2).map(tag => <span key={tag} className="def-podium__pill def-podium__pill--tag"><LocalizedText>{tag}</LocalizedText></span>)}
+        </span>
+        <span className="def-podium__open"><LocalizedText>Apri scheda</LocalizedText><ArrowRight size={15} aria-hidden="true" /></span>
+      </span>
+    </span> : null}
   </>;
   return <>
     {!compact ? <div className={`def-podium__badge${position === "first" ? " def-podium__badge--gold" : ""}`} aria-hidden="true">
@@ -385,7 +397,15 @@ function PodiumCard({ tool, rank, position, selected, detailId, onSelect }: {
     <LocalizedAttributes>{compact ? (
       <Link href={`/toools/${tool.slug}`} className={className} aria-label={`Posizione ${rank}: apri ${tool.name}`}>{content}</Link>
     ) : (
-      <button type="button" className={className} aria-label={`Mostra dettagli di ${tool.name}`} aria-pressed={selected} aria-controls={detailId} onClick={onSelect}>{content}</button>
+      <Link href={`/toools/${tool.slug}`} className={className} aria-expanded={selected} aria-controls={detailId} aria-describedby={selected ? detailId : undefined}
+        aria-label={selected
+          ? (locale === "en" ? `Open ${tool.name} review` : `Apri la scheda di ${tool.name}`)
+          : (locale === "en" ? `Expand ${tool.name}` : `Ingrandisci ${tool.name}`)}
+        onClick={event => {
+          if (selected || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          onSelect?.();
+        }}>{content}</Link>
     )}</LocalizedAttributes>
   </>;
 }
@@ -410,24 +430,28 @@ function RankLaurels({ tone, compact }: { tone: "gold" | "silver" | "bronze"; co
 
 function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
   const podiumRef = useRef<HTMLElement | null>(null);
-  const detailId = "def-podium-reading";
-  const [selectedPos, setSelectedPos] = useState<PodiumPosition>("first");
+  const { locale } = useLocale();
+  const [selectedPos, setSelectedPos] = useState<PodiumPosition | null>(null);
   const ranked = tools.slice(0, 9);
   const top3 = [ranked[1], ranked[0], ranked[2]];
   const positions: PodiumPosition[] = ["second", "first", "third"];
   const inspectedTool = ranked[selectedPos === "second" ? 1 : selectedPos === "third" ? 2 : 0];
 
-  // Keyboard selection never moves or replaces the focused card.
+  // Preview and navigation share the same anchor, preserving focus and native link actions.
   function onStageKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === "Escape") {
+      setSelectedPos(null);
+      return;
+    }
     const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
     if (!offset && event.key !== "Home" && event.key !== "End") return;
-    const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
-    const current = buttons.indexOf(event.target as HTMLButtonElement);
+    const links = Array.from(event.currentTarget.querySelectorAll<HTMLAnchorElement>("a.def-podium__card"));
+    const current = links.indexOf(event.target as HTMLAnchorElement);
     if (current < 0) return;
     event.preventDefault();
     const index = event.key === "Home" ? 0 : event.key === "End" ? 2 : (current + offset + 3) % 3;
     setSelectedPos(positions[index]);
-    buttons[index]?.focus({ preventScroll: true });
+    links[index]?.focus({ preventScroll: true });
   }
 
   useEffect(() => {
@@ -447,26 +471,15 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     <section ref={podiumRef} className="def-latest" aria-labelledby="def-latest-title" data-instrument-stage>
       <div className="def-latest__head def-podium__header">
         <h3 id="def-latest-title" className="def-latest__title def-podium__title"><LocalizedText>Ultime dal catalogo</LocalizedText></h3>
-        <p className="def-podium__subtitle"><LocalizedText>Seleziona un tool e scopri cosa può fare per te.</LocalizedText></p>
+        <p className="def-podium__subtitle">{locale === "en" ? "Tap to expand. Tap again to open the review." : "Tocca per ingrandire. Tocca di nuovo per aprire la scheda."}</p>
       </div>
       <div className="def-podium__backdrop" aria-hidden="true" />
       <div className="def-podium__ribbons" aria-hidden="true"><InstrumentOrbit /></div>
-      <LocalizedAttributes><div className="def-podium__stage" role="list" aria-label="Podio dei tool" onKeyDown={onStageKeyDown}>
-        {top3.map((tool, index) => tool ? <div key={tool.slug} role="listitem" className={`def-podium__cell pos-${positions[index]}`}>
-          <PodiumCard tool={tool} rank={index === 0 ? "02" : index === 1 ? "01" : "03"} position={positions[index]} selected={selectedPos === positions[index]} detailId={detailId} onSelect={() => setSelectedPos(positions[index])} />
+      <LocalizedAttributes><div className="def-podium__stage" role="list" aria-label="Podio dei tool" data-expanded={selectedPos ?? undefined} onKeyDown={onStageKeyDown}>
+        {top3.map((tool, index) => tool ? <div key={tool.slug} role="listitem" className={`def-podium__cell pos-${positions[index]}${selectedPos === positions[index] ? " is-expanded" : ""}`}>
+          <PodiumCard tool={tool} rank={index === 0 ? "02" : index === 1 ? "01" : "03"} position={positions[index]} selected={selectedPos === positions[index]} onSelect={() => setSelectedPos(positions[index])} />
         </div> : null)}
       </div></LocalizedAttributes>
-      <div id={detailId} className="def-podium__reading" aria-live="polite" aria-atomic="true">
-        <div key={inspectedTool.slug} className="def-podium__reading-content">
-          <div className="def-podium__reading-heading"><Sparkles size={16} aria-hidden="true" /><h4>{inspectedTool.name}</h4><span><LocalizedText>In lettura</LocalizedText></span></div>
-          {inspectedTool.shortDescription ? <p><LocalizedText>{inspectedTool.shortDescription}</LocalizedText></p> : null}
-          <div className="def-podium__reading-meta">
-            {inspectedTool.levelLabel ? <span className="def-podium__pill"><LocalizedText>{inspectedTool.levelLabel}</LocalizedText></span> : null}
-            {inspectedTool.readingTime ? <span className="def-podium__pill"><LocalizedText>{formatHomeAnalysisTime(inspectedTool.readingTime)}</LocalizedText></span> : null}
-            {inspectedTool.tags?.slice(0, 2).map(tag => <span key={tag} className="def-podium__pill def-podium__pill--tag"><LocalizedText>{tag}</LocalizedText></span>)}
-          </div>
-        </div>
-      </div>
       <InstrumentJourney label="Esplora i tool del podio" className="def-podium__journey" steps={[
         { id: "inspect", label: "Approfondisci", detail: inspectedTool.name, href: `/toools/${inspectedTool.slug}`, icon: <Sparkles size={16} />, tone: "violet" },
         { id: "catalog", label: "Vedi tutto il catalogo", href: "/archivio", icon: <ScanSearch size={16} />, tone: "cyan" },

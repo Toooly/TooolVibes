@@ -1,11 +1,16 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, createEvent, fireEvent, render, screen } from "@testing-library/react";
+import type { ComponentProps } from "react";
 
 import { DefinitiveHome } from "@/components/home/definitive-home";
 import { AdvertisingConsentProvider } from "@/components/ads/advertising-consent-provider";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
+
+vi.mock("@/components/ui/app-link", () => ({
+  default: (props: ComponentProps<"a">) => <a {...props} />,
+}));
 
 vi.mock("@/components/radar/radar-experience", () => ({
   RadarExperience: () => null,
@@ -131,38 +136,81 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
     expect(document.querySelector(".def-podium__crown")).toBeTruthy();
     expect(document.querySelector(".def-podium__laurels")).toBeTruthy();
     const cards = [...document.querySelectorAll(".def-podium__stage .def-podium__card")];
-    expect(cards.map(card => card.tagName)).toEqual(["BUTTON", "BUTTON", "BUTTON"]);
-    expect(cards.map(card => card.getAttribute("aria-pressed"))).toEqual(["false", "true", "false"]);
+    expect(cards.map(card => card.tagName)).toEqual(["A", "A", "A"]);
+    expect(cards.map(card => card.getAttribute("aria-expanded"))).toEqual(["false", "false", "false"]);
+    expect(document.querySelector(".def-podium__reading")).toBeNull();
     expect(document.querySelector(".def-podium__more")).toBeNull();
     expect(document.querySelectorAll(".def-podium__rail-item").length).toBeGreaterThanOrEqual(0);
   });
 
-  it("keeps the selected tool in the floating reading action when the pointer leaves the cards", () => {
+  it.each(tools)("expands $name on the first activation and follows its exact route on the second", tool => {
     render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
-    fireEvent.click(screen.getByRole("button", { name: "Mostra dettagli di WeWeb" }));
+    const card = screen.getByRole("link", { name: `Ingrandisci ${tool.name}` });
+    const firstClick = createEvent.click(card, { button: 0, cancelable: true });
+    fireEvent(card, firstClick);
+    expect(firstClick.defaultPrevented).toBe(true);
+    expect(card.getAttribute("aria-expanded")).toBe("true");
+    expect(card.getAttribute("href")).toBe(`/toools/${tool.slug}`);
+    const detail = document.getElementById(card.getAttribute("aria-controls")!);
+    expect(detail?.getAttribute("aria-hidden")).toBe("false");
+    expect(detail?.textContent).toContain(tool.shortDescription);
+    expect(detail?.closest("a")).toBe(card);
+    expect(screen.getByRole("link", { name: `Apri la scheda di ${tool.name}` })).toBe(card);
+
+    // Observe whether the component allows native navigation, then stop jsdom from following it.
+    let navigationAllowed = false;
+    document.addEventListener("click", event => {
+      navigationAllowed = !event.defaultPrevented;
+      event.preventDefault();
+    }, { once: true });
+    fireEvent.click(card);
+    expect(navigationAllowed).toBe(true);
+  });
+
+  it("keeps modified clicks as native links without opening a preview", () => {
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
+    const card = screen.getByRole("link", { name: "Ingrandisci Blink" });
+    for (const modifier of ["metaKey", "ctrlKey", "shiftKey", "altKey"]) {
+      let navigationAllowed = false;
+      document.addEventListener("click", event => {
+        navigationAllowed = !event.defaultPrevented;
+        event.preventDefault();
+      }, { once: true });
+      fireEvent.click(card, { [modifier]: true });
+      expect(navigationAllowed).toBe(true);
+      expect(card.getAttribute("aria-expanded")).toBe("false");
+    }
+  });
+
+  it("keeps the selected tool in the floating action when the pointer leaves the cards", () => {
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
+    fireEvent.click(screen.getByRole("link", { name: "Ingrandisci WeWeb" }));
     const action = document.querySelector<HTMLAnchorElement>('.def-podium__journey a[href="/toools/weweb"]');
     expect(action).toBeTruthy();
     fireEvent.mouseDown(action!);
-    expect(document.querySelector('.def-podium__card.is-selected')?.getAttribute("aria-label")).toBe("Mostra dettagli di WeWeb");
+    expect(document.querySelector('.def-podium__card.is-selected')?.getAttribute("aria-label")).toBe("Apri la scheda di WeWeb");
     expect(action?.getAttribute("href")).toBe("/toools/weweb");
   });
 
-  it("keeps selection and keyboard focus stable while changing the reading panel", () => {
+  it("previews from the keyboard, keeps the original link focused and collapses with Escape", () => {
     render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
-    const blink = screen.getByRole("button", { name: "Mostra dettagli di Blink" });
+    const blink = screen.getByRole("link", { name: "Ingrandisci Blink" });
     blink.focus();
     fireEvent.keyDown(blink, { key: "ArrowRight" });
-    const weweb = screen.getByRole("button", { name: "Mostra dettagli di WeWeb" });
+    const weweb = screen.getByRole("link", { name: "Apri la scheda di WeWeb" });
     expect(document.activeElement).toBe(weweb);
-    expect(weweb.getAttribute("aria-pressed")).toBe("true");
-    expect(document.getElementById(weweb.getAttribute("aria-controls")!)?.textContent).toContain("WeWeb");
-    fireEvent.click(weweb);
-    expect(screen.getByRole("button", { name: "Mostra dettagli di WeWeb" })).toBe(weweb);
+    expect(weweb.getAttribute("aria-expanded")).toBe("true");
+    expect(document.getElementById(weweb.getAttribute("aria-controls")!)?.getAttribute("aria-hidden")).toBe("false");
     expect(document.querySelector('.def-podium__journey a[href="/toools/weweb"]')).toBeTruthy();
     fireEvent.mouseDown(document.body);
-    expect(weweb.getAttribute("aria-pressed")).toBe("true");
+    expect(weweb.getAttribute("aria-expanded")).toBe("true");
     fireEvent.keyDown(weweb, { key: "Home" });
-    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Mostra dettagli di VibeCode" }));
+    const vibecode = screen.getByRole("link", { name: "Apri la scheda di VibeCode" });
+    expect(document.activeElement).toBe(vibecode);
+    fireEvent.keyDown(vibecode, { key: "Escape" });
+    expect(document.activeElement).toBe(vibecode);
+    expect(vibecode.getAttribute("aria-expanded")).toBe("false");
+    expect(document.querySelector(".def-podium__stage")?.hasAttribute("data-expanded")).toBe(false);
   });
 
   it("limits the podium to nine canonical tools and preserves exact continuation routes", () => {

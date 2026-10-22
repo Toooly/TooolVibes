@@ -3324,6 +3324,14 @@
 /* The same rendered metal as the hero, set behind the live podium. */
 .def-podium__ribbons { position: absolute; inset: 70px 0 auto; width: 100%; height: clamp(240px, 29vw, 390px); z-index: -1; overflow: clip; pointer-events: none; }
 .def-podium__ribbons .tv-instrument-orbit { position: absolute; width: min(90%, 44rem); aspect-ratio: 1; left: 50%; top: 50%; transform: translate(-50%, -50%) perspective(900px) rotateX(58deg) rotateZ(-12deg); opacity: .78; }
+@media (prefers-reduced-motion: no-preference) {
+  .def-podium__ribbons .tv-instrument-orbit img { animation: tv-podium-orbit-float 12s ease-in-out infinite; }
+  .def-latest[data-motion-active="false"] .def-podium__ribbons img { animation-play-state: paused; }
+}
+@keyframes tv-podium-orbit-float {
+  0%, 100% { transform: translate3d(-8px, 12px, 0) rotate(-5deg) scale(1.01); }
+  50% { transform: translate3d(8px, -16px, 0) rotate(5deg) scale(1.035); }
+}
 .def-podium__journey { margin: 1.25rem auto 0; max-width: 48rem; }
 .def-latest .def-podium__journey ol { gap: .5rem 1rem; }
 .def-podium__journey li:nth-child(2) { margin-block-start: .625rem; }
@@ -3336,12 +3344,15 @@
 }
 /* Primary stage: 3 columns inside the safe width. 01 elevated.
    Scoped perspective context: 01 FRONT CENTER, 02/03 one plane behind.
-   The three hit frames keep the same size and position during selection. */
+   The selected card opens within the stage; every sibling remains reachable. */
 .def-podium__stage {
+  --podium-second: .95fr;
+  --podium-first: 1.1fr;
+  --podium-third: .95fr;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.10fr) minmax(0, 0.95fr);
+  grid-template-columns: minmax(0, var(--podium-second)) minmax(0, var(--podium-first)) minmax(0, var(--podium-third));
   grid-template-areas: "second first third";
   gap: clamp(4px, 1.4vw, 10px);
   align-items: end;
@@ -3349,7 +3360,11 @@
   padding: 30px 0 0;
   list-style: none;
   overflow: visible;
+  transition: grid-template-columns 420ms cubic-bezier(.22, 1, .36, 1);
 }
+.def-podium__stage[data-expanded="second"] { --podium-second: 1.95fr; --podium-first: .525fr; --podium-third: .525fr; }
+.def-podium__stage[data-expanded="first"] { --podium-second: .525fr; --podium-first: 1.95fr; --podium-third: .525fr; }
+.def-podium__stage[data-expanded="third"] { --podium-second: .525fr; --podium-first: .525fr; --podium-third: 1.95fr; }
 .def-podium__stage::before { content: ""; position: absolute; inset: auto 1% -12px; height: 76px; z-index: -1; pointer-events: none; border: 1px solid color-mix(in srgb, var(--tv-color-violet-400) 45%, transparent); border-radius: 18px; background: linear-gradient(150deg, color-mix(in srgb, var(--tv-color-violet-500) 32%, var(--tv-color-surface-base)), var(--tv-color-surface-base) 55%, color-mix(in srgb, var(--tv-color-cyan-500) 16%, var(--tv-color-surface-base))); transform: perspective(600px) rotateX(48deg); transform-origin: center bottom; box-shadow: 0 8px 0 color-mix(in srgb, var(--tv-color-violet-500) 18%, var(--tv-color-surface-base)), inset 0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 20%, transparent); }
 .def-podium__stage .def-podium__cell {
   position: relative;
@@ -3357,6 +3372,7 @@
   padding-bottom: 12px;
   scroll-snap-align: none;
   overflow: visible;
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1);
 }
 .def-podium__cell.pos-second { grid-area: second; }
 .def-podium__cell.pos-first { grid-area: first; }
@@ -3376,6 +3392,7 @@
   z-index: 1;
   transform: translateY(0) scale(0.97);
 }
+.def-podium__stage .def-podium__cell.is-expanded { z-index: 4; transform: translateY(-7px); }
 .def-podium__stage .def-podium__cell.pos-second .def-podium__card,
 .def-podium__stage .def-podium__cell.pos-third .def-podium__card {
   filter: brightness(0.94);
@@ -3876,22 +3893,21 @@
 .def-podium__pill svg {
   flex-shrink: 0;
 }
-/* Selection is a material state; the three card frames never resize. */
+/* The preview stays inside the original link; its next activation opens the tool. */
 .def-podium__selection-mark { display: grid; place-items: center; height: 8px; width: 28px; margin-top: 2px; }
 .def-podium__selection-mark span { width: 5px; height: 5px; border-radius: 50%; background: var(--tv-ink-secondary); opacity: .4; transition: width 220ms var(--tv-easing-standard), opacity 220ms var(--tv-easing-standard); }
 .def-podium__card.is-selected .def-podium__selection-mark span { width: 24px; border-radius: var(--tv-radius-pill); background: var(--tv-color-cyan-500); opacity: 1; }
 .def-podium__card:focus-visible { outline: 2px solid var(--tv-color-cyan-500); outline-offset: 4px; }
-.def-podium__reading { position: relative; max-width: 46rem; margin: 1.5rem auto 0; padding: clamp(16px, 3vw, 24px); border: 1px solid color-mix(in srgb, var(--tv-color-violet-400) 35%, transparent); border-radius: var(--tv-radius-px-modal); background: linear-gradient(130deg, color-mix(in srgb, var(--tv-color-violet-500) 13%, var(--tv-color-surface-base)), var(--tv-color-surface-base) 68%); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 8%, transparent); }
-.def-podium__reading-content { display: grid; align-content: start; gap: .75rem; min-height: 7.5rem; }
-.def-podium__reading-heading { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: var(--tv-color-cyan-500); }
-.def-podium__reading-heading h4 { margin: 0; font-family: var(--tv-font-family-ui); color: var(--tv-ink-primary); font-size: 1rem; font-weight: 650; }
-.def-podium__reading-heading > span { margin-inline-start: auto; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--tv-ink-secondary); }
-.def-podium__reading-content > p { margin: 0; max-width: 62ch; color: var(--tv-ink-secondary); font-size: .9375rem; line-height: 1.65; text-wrap: pretty; }
-.def-podium__reading-meta { display: flex; flex-wrap: wrap; gap: .375rem; }
-@media (prefers-reduced-motion: no-preference) {
-  .def-podium__reading-content { animation: tv-podium-reading 240ms ease-out both; }
-}
-@keyframes tv-podium-reading { from { opacity: .25; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.def-podium__detail { display: grid; grid-template-rows: 0fr; width: 100%; opacity: 0; transition: grid-template-rows 420ms cubic-bezier(.22, 1, .36, 1), opacity 180ms ease; }
+.def-podium__detail-inner { min-height: 0; overflow: hidden; }
+.def-podium__card.is-selected .def-podium__detail { grid-template-rows: 1fr; opacity: 1; transition-delay: 0s, 120ms; }
+.def-podium__description { display: block; margin-top: .75rem; padding-top: .75rem; border-top: 1px solid color-mix(in srgb, var(--tv-ink-primary) 12%, transparent); color: var(--tv-ink-secondary); font-size: .9375rem; line-height: 1.55; text-wrap: pretty; overflow-wrap: anywhere; }
+.def-podium__detail-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: .375rem; margin-top: .75rem; }
+.def-podium__detail-meta .def-podium__pill { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.def-podium__open { display: flex; align-items: center; justify-content: center; gap: .5rem; margin-top: .875rem; padding: .625rem .5rem; border-radius: var(--tv-radius-pill); background: color-mix(in srgb, var(--tv-color-cyan-500) 10%, transparent); color: var(--tv-color-cyan-300); font-size: .8125rem; font-weight: 650; }
+.def-podium__stage .def-podium__card.is-selected .def-podium__name { font-size: clamp(1.125rem, 4.6vw, 1.375rem); }
+.def-podium__stage .def-podium__card.is-selected .def-podium__avatar { width: 64px; height: 64px; border-radius: 16px; }
+.def-podium__card.is-selected .def-podium__cat { display: block; -webkit-line-clamp: unset; overflow: visible; }
 /* Selected card flare: brief material glow on the active card. */
 /* Selected card: stronger glow + cinematic background animation in metal. */
 .def-podium__card.is-selected {
@@ -3963,7 +3979,8 @@
 /* Desktop: true centered stage, generous air; rail becomes calm row. */
 @media (min-width: 48rem) {
   .def-podium__stage {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+    --podium-second: .9fr;
+    --podium-third: .9fr;
     max-width: 46rem;
     margin-inline: auto;
     padding-top: 34px;
@@ -3972,6 +3989,12 @@
     grid-template-columns: repeat(3, minmax(0, 14rem));
     justify-content: center;
   }
+}
+@media (max-width: 47.999rem) {
+  .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) { padding: 18px 4px 14px; gap: .5rem; }
+  .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) .def-podium__avatar { width: 32px; height: 32px; border-radius: 9px; }
+  .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) .def-podium__name { font-size: .75rem; line-height: 1.35; }
+  .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) :is(.def-podium__cat, .def-podium__score, .def-podium__selection-mark) { display: none; }
 }
 @media (max-width: 22.1875rem) {
   .def-podium__stage .def-podium__card { padding-inline: 6px; }
@@ -3985,7 +4008,9 @@
   .def-podium__stage {
     transition: none;
   }
-  .def-podium__selection-mark span { transition: none; }
+  .def-podium__selection-mark span,
+  .def-podium__detail,
+  .def-podium__stage .def-podium__cell { transition: none; }
   .def-podium__laurels,
   .def-podium__laurels svg,
   .def-podium__card.is-selected::before,
