@@ -476,6 +476,168 @@
   let submitPending = false;
   let validationMessage = false;
 
+  // The native details remains the no-JavaScript fallback. Only its reveal is measured.
+  const contactMotion = (() => {
+    const summary = contactPanel.querySelector("summary");
+    const reveal = document.getElementById("contact-reveal");
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const easing = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const contentAnimations = new Set();
+    let expanded = contactPanel.open;
+    let heightAnimation = null;
+    let targetHeight = -1;
+    let leaving = null;
+    const canAnimate = () => !preference.matches && typeof reveal.animate === "function";
+
+    function settleContent() {
+      contentAnimations.forEach((animation) => animation.cancel());
+      contentAnimations.clear();
+      if (leaving) {
+        leaving.hidden = leaving !== formSteps[currentStep];
+        leaving.removeAttribute("inert");
+        leaving.removeAttribute("aria-hidden");
+        for (const property of ["position", "top", "left", "width"]) leaving.style.removeProperty(property);
+        leaving = null;
+      }
+    }
+
+    function animateContent(element, frames, options = {}) {
+      if (!canAnimate()) return null;
+      const animation = element.animate(frames, { duration: 300, easing, ...options });
+      contentAnimations.add(animation);
+      animation.addEventListener("finish", () => { contentAnimations.delete(animation); animation.cancel(); }, { once: true });
+      animation.addEventListener("cancel", () => contentAnimations.delete(animation), { once: true });
+      return animation;
+    }
+
+    function fit(duration = 400) {
+      const end = expanded ? contactForm.getBoundingClientRect().height : 0;
+      if (end === targetHeight && heightAnimation) return;
+      const start = reveal.getBoundingClientRect().height;
+      heightAnimation?.cancel();
+      heightAnimation = null;
+      targetHeight = end;
+      reveal.style.height = expanded && typeof ResizeObserver !== "function" ? "auto" : `${end}px`;
+      const finish = () => { if (!expanded) contactPanel.open = false; };
+      if (!canAnimate() || Math.abs(start - end) < 1) { finish(); return; }
+      const animation = reveal.animate([{ height: `${start}px` }, { height: `${end}px` }], { duration, easing });
+      heightAnimation = animation;
+      animation.onfinish = () => {
+        if (heightAnimation !== animation) return;
+        heightAnimation = null;
+        animation.cancel();
+        finish();
+      };
+    }
+
+    function setOpen(open) {
+      if (expanded === open) return;
+      settleContent();
+      expanded = open;
+      contactPanel.dataset.expanded = String(open);
+      summary.setAttribute("aria-expanded", String(open));
+      if (!open && reveal.contains(document.activeElement)) summary.focus({ preventScroll: true });
+      if (open) contactPanel.open = true;
+      reveal.toggleAttribute("inert", !open);
+      reveal.setAttribute("aria-hidden", String(!open));
+      fit(open ? 400 : 300);
+      if (!open) {
+        animateContent(contactForm, [{ opacity: 1 }, { opacity: 0, transform: "translateY(-4px)" }], { duration: 140, fill: "forwards" });
+        return;
+      }
+      const stage = formSteps[currentStep];
+      const items = [
+        contactForm.querySelector("[data-contact-steps]"),
+        ...stage.querySelectorAll(".contact-stage__welcome,.contact-stage__heading,.need-fieldset legend,.need-options label,.field:not(.field-grid .field),.field-grid,.privacy-check,.contact-form__submit"),
+        contactForm.querySelector("[data-contact-actions]"),
+      ].filter((element) => !element.hidden);
+      items.forEach((element, index) => animateContent(element,
+        [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { delay: Math.min(index * 45, 225), fill: "backwards" }));
+      animateContent(contactPanel, [
+        { borderColor: "var(--line-strong)", boxShadow: "var(--shadow)" },
+        { borderColor: "var(--cyan)", boxShadow: "0 0 24px rgba(39,216,238,.13), var(--shadow)", offset: .24 },
+        { borderColor: "var(--line-strong)", boxShadow: "var(--shadow)" },
+      ], { duration: 650 });
+    }
+
+    function changeStep(index, update, focus) {
+      settleContent();
+      const outgoing = formSteps[currentStep];
+      const incoming = formSteps[index];
+      const direction = index >= currentStep ? 1 : -1;
+      const transition = index !== currentStep && expanded && canAnimate();
+      const geometry = transition ? { top: outgoing.offsetTop, left: outgoing.offsetLeft, width: outgoing.offsetWidth } : null;
+      update();
+      if (transition) {
+        leaving = outgoing;
+        outgoing.hidden = false;
+        outgoing.setAttribute("inert", "");
+        outgoing.setAttribute("aria-hidden", "true");
+        Object.assign(outgoing.style, { position: "absolute", top: `${geometry.top}px`, left: `${geometry.left}px`, width: `${geometry.width}px` });
+        const exit = animateContent(outgoing,
+          [{ opacity: 1, transform: "translateX(0)" }, { opacity: 0, transform: `translateX(${-direction * 16}px)` }],
+          { duration: 140, fill: "forwards" });
+        exit.addEventListener("finish", () => {
+          if (leaving === outgoing) {
+            outgoing.hidden = true;
+            outgoing.removeAttribute("inert");
+            outgoing.removeAttribute("aria-hidden");
+            for (const property of ["position", "top", "left", "width"]) outgoing.style.removeProperty(property);
+            leaving = null;
+          }
+        }, { once: true });
+        animateContent(incoming,
+          [{ opacity: 0, transform: `translateX(${direction * 16}px)` }, { opacity: 1, transform: "translateX(0)" }]);
+      }
+      fit(300);
+      if (focus) {
+        // Focus the question, not an input: Next should not summon a mobile keyboard.
+        const question = incoming.querySelector("h3,legend");
+        question.tabIndex = -1;
+        question.focus({ preventScroll: true });
+        const bounds = question.getBoundingClientRect();
+        const top = (header?.getBoundingClientRect().bottom || 0) + 16;
+        const bottom = window.visualViewport?.height || window.innerHeight;
+        if (bounds.height && (bounds.top < top || bounds.bottom > bottom)) {
+          window.scrollBy({ top: bounds.top - top, behavior: preference.matches ? "instant" : "smooth" });
+        }
+      }
+    }
+
+    summary.setAttribute("aria-controls", reveal.id);
+    summary.setAttribute("aria-expanded", String(expanded));
+    contactPanel.dataset.expanded = String(expanded);
+    reveal.toggleAttribute("inert", !expanded);
+    reveal.setAttribute("aria-hidden", String(!expanded));
+    reveal.style.height = expanded ? `${contactForm.getBoundingClientRect().height}px` : "0px";
+    summary.addEventListener("click", (event) => { event.preventDefault(); setOpen(!expanded); });
+    contactPanel.addEventListener("toggle", () => {
+      // A queued native open event must not reverse a closing animation.
+      if (contactPanel.open !== expanded && !(heightAnimation && !expanded)) setOpen(contactPanel.open);
+    });
+    const observer = typeof ResizeObserver === "function" ? new ResizeObserver(() => { if (expanded) fit(); }) : null;
+    observer?.observe(contactForm);
+    const motionChanged = () => { settleContent(); targetHeight = -1; fit(0); };
+    preference.addEventListener?.("change", motionChanged);
+    window.addEventListener("pagehide", () => {
+      observer?.disconnect();
+      preference.removeEventListener?.("change", motionChanged);
+      settleContent();
+      heightAnimation?.cancel();
+      heightAnimation = null;
+      reveal.style.height = expanded ? `${contactForm.getBoundingClientRect().height}px` : "0px";
+      if (!expanded) contactPanel.open = false;
+    });
+    window.addEventListener("pageshow", (event) => {
+      if (!event.persisted) return;
+      observer?.observe(contactForm);
+      preference.addEventListener?.("change", motionChanged);
+      fit(0);
+    });
+    return { setOpen, changeStep };
+  })();
+
   function clearValidationFeedback() {
     if (validationMessage && [...formSteps[currentStep].querySelectorAll("input,textarea")].every((field) => field.validity.valid)) setStatus("");
   }
@@ -511,19 +673,21 @@
   }
 
   function showStep(index, focus = false) {
-    currentStep = index;
-    contactPanel.dataset.step = String(index);
-    formSteps.forEach((step, i) => { step.hidden = i !== index; });
-    stepButtons.forEach((button, i) => {
-      if (i === index) button.setAttribute("aria-current", "step");
-      else button.removeAttribute("aria-current");
-      button.classList.toggle("is-complete", i < index);
-    });
-    previousStep.hidden = index === 0;
-    nextStep.hidden = index === formSteps.length - 1;
-    nextStep.querySelector("[data-next-label]").textContent = index === 0 ? "Raccontaci l’idea" : "Vai ai contatti";
-    setStatus("");
-    if (focus) formSteps[index].querySelector("input, textarea")?.focus({ preventScroll: true });
+    if (index < 0 || index >= formSteps.length) return;
+    contactMotion.changeStep(index, () => {
+      currentStep = index;
+      contactPanel.dataset.step = String(index);
+      formSteps.forEach((step, i) => { step.hidden = i !== index; });
+      stepButtons.forEach((button, i) => {
+        if (i === index) button.setAttribute("aria-current", "step");
+        else button.removeAttribute("aria-current");
+        button.classList.toggle("is-complete", i < index);
+      });
+      previousStep.hidden = index === 0;
+      nextStep.hidden = index === formSteps.length - 1;
+      nextStep.querySelector("[data-next-label]").textContent = index === 0 ? "Raccontaci l’idea" : "Vai ai contatti";
+      setStatus("");
+    }, focus);
   }
 
   function goToStep(index) {
@@ -573,7 +737,6 @@
   });
 
   function openContact(service) {
-    contactPanel.open = true;
     contactForm.classList.remove("is-success");
     const need = { web: "web", social: "social", ai: "automation" }[service];
     if (need) {
@@ -582,6 +745,7 @@
       showStep(1);
     }
     syncContactContext();
+    contactMotion.setOpen(true);
   }
   document.querySelectorAll('a[href="#contatti"]').forEach((link) => {
     link.addEventListener("click", (event) => {
@@ -796,7 +960,7 @@
       showStep(0);
       setStatus("Il tuo messaggio è arrivato. Ti risponderemo all’email che ci hai lasciato.", "success");
       contactContext.textContent = "Il tuo messaggio è arrivato. Ti risponderemo all’email che ci hai lasciato.";
-      contactPanel.open = false;
+      contactMotion.setOpen(false);
       contactPanel.querySelector("summary").focus({ preventScroll: true });
       if (startedAt) startedAt.value = String(Date.now());
       clearVerification();
