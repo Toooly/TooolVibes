@@ -342,17 +342,58 @@ describe("RadarExperience", () => {
     window.history.replaceState(null, "", "/radar");
   });
 
-  it("uses the floating journey to open the reading view and Watchlist without changing the dataset", async () => {
+  it("opens the reading view from the map and retains Watchlist access through its primary tab", async () => {
     window.history.replaceState(null, "", "/radar");
     fetchMock.mockImplementation(() => fetchOk(LIVE));
     const { container } = renderRadar();
     const journey = await screen.findByRole("navigation", { name: "Esplora i segnali del Radar" });
-    fireEvent.click(journey.querySelectorAll("button")[1]);
+    fireEvent.click(journey.querySelector("button")!);
     await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
     expect(container.querySelectorAll(".tv-rx-row")).toHaveLength(3);
     fireEvent.click(screen.getByRole("button", { name: "Mappa" }));
-    fireEvent.click(screen.getByRole("navigation", { name: "Esplora i segnali del Radar" }).querySelectorAll("button")[2]);
+    fireEvent.click(screen.getByRole("tab", { name: "Watchlist" }));
     expect(screen.getByRole("tab", { name: "Watchlist" }).getAttribute("aria-selected")).toBe("true");
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("opens every signal from the browser and moves through the full selection without dismissing it", async () => {
+    window.history.replaceState(null, "", "/radar");
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container } = renderRadar();
+    const first = await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
+    first.focus();
+    fireEvent.click(first);
+    await screen.findByRole("dialog", { name: /anteprima di alpha tool/i });
+    expect(screen.getByRole("button", { name: "Segnale precedente" })).toHaveProperty("disabled", true);
+    fireEvent.click(screen.getByRole("button", { name: "Segnale successivo" }));
+    await screen.findByRole("dialog", { name: /anteprima di beta tool/i });
+    fireEvent.change(screen.getByRole("combobox", { name: "Scegli un segnale" }), { target: { value: "gamma" } });
+    await screen.findByRole("dialog", { name: /anteprima di gamma tool/i });
+    expect(container.querySelector('[data-selected="true"] .tv-rx-blip__hit')?.getAttribute("aria-label")).toContain("Gamma Tool");
+    expect(screen.getByRole("button", { name: "Segnale successivo" })).toHaveProperty("disabled", true);
+    fireEvent.click(screen.getByRole("button", { name: "Chiudi anteprima" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    await waitFor(() => expect(document.activeElement).toBe(first));
+    expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
+    window.history.replaceState(null, "", "/radar");
+  });
+
+  it("pages through all signals in the compact browser instead of truncating the snapshot", async () => {
+    window.history.replaceState(null, "", "/radar");
+    const extra = Array.from({ length: 6 }, (_, index) => ({ ...LIVE.items[0], id: `extra-${index}`, name: `Extra ${index}`, votesCount: index, commentsCount: 0 }));
+    fetchMock.mockImplementation(() => fetchOk({ ...LIVE, items: [...LIVE.items, ...extra] }));
+    const { container } = renderRadar();
+    await screen.findByRole("button", { name: "Apri dettagli di Alpha Tool" });
+    expect(container.querySelectorAll(".tv-rx-rail__signal")).toHaveLength(4);
+    fireEvent.click(screen.getByRole("button", { name: "Segnali successivi" }));
+    expect(container.querySelectorAll(".tv-rx-rail__signal")).toHaveLength(4);
+    fireEvent.click(screen.getByRole("button", { name: "Segnali successivi" }));
+    expect(container.querySelectorAll(".tv-rx-rail__signal")).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Segnali successivi" })).toHaveProperty("disabled", true);
+    fireEvent.change(screen.getByRole("searchbox", { name: "Cerca un tool nel Radar" }), { target: { value: "Alpha Tool" } });
+    await waitFor(() => expect(screen.getByRole("button", { name: "Apri dettagli di Alpha Tool" })).toBeTruthy());
+    expect(container.querySelectorAll(".tv-rx-rail__signal")).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Segnali precedenti" })).toHaveProperty("disabled", true);
     window.history.replaceState(null, "", "/radar");
   });
 

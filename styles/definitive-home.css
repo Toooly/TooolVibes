@@ -85,431 +85,6 @@
 }
 
 /* ============================================================
-   Scelta della redazione — featured/winner motion language.
-   Scoped strictly to .tv-featured-tool. One shared ambient clock
-   (--tv-spot-cycle: 12s): bar sweep (0-8%) → calm → aura pulse
-   (30-40%) → calm → edge sparks (62-72%) → long calm. The three
-   effects never peak together. All motion is transform/opacity only.
-   The featured CTA row below the card and the podium ranking live
-   in the same .def-editorial flow but outside the card's clock.
-   ============================================================ */
-.tv-featured-tool {
-  --tv-spot-cycle: 12s;
-  isolation: isolate;
-}
-/* The featured card: vivid midnight-violet stage per the approved final
-   mockup. Luminous violet core left, deep midnight edges, warm-gold arc
-   lower-right, micro star field, illuminated violet/gold boundary. The
-   card keeps ALL canonical information (kicker, logo, name, category,
-   description, score/level/reading, CTAs, disclosure) on top (z-index 1);
-   decoration lives on ::before (stage) and the meteor/spark layers. */
-.tv-featured-tool.def-editorial__spotlight {
-  --tv-meteor-cycle: 8.5s;
-  position: relative;
-  border: 1px solid color-mix(in srgb, #8a5cff 52%, transparent);
-  border-radius: 22px;
-  background:
-    radial-gradient(52% 38% at 24% 6%,
-      color-mix(in srgb, #8a5cff 55%, transparent),
-      transparent 70%),
-    radial-gradient(40% 30% at 78% 100%,
-      color-mix(in srgb, #8a5cff 22%, transparent),
-      transparent 70%),
-    linear-gradient(165deg, #2a1550 0%, #1c0d3c 46%, #130927 100%);
-  box-shadow:
-    0 20px 48px color-mix(in srgb, black 45%, transparent),
-    0 0 0 1px color-mix(in srgb, black 35%, transparent),
-    0 0 22px color-mix(in srgb, #8a5cff 22%, transparent),
-    0 0 44px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 8%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 28%, transparent);
-  padding: clamp(18px, 4.5vw, 28px);
-  overflow: hidden;
-  color: #fff;
-  display: block;
-  position: relative;
-}
-/* Stretched link: covers the whole card surface as the primary action.
-   The "Visita sito" link sits above it in z-index. No nested anchors. */
-.tv-featured-tool__stretch {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-}
-.tv-featured-tool__stretch:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent);
-  outline-offset: 2px;
-}
-/* Luminous stage dressing: violet energy wash + gold arc + star field.
-   Static layer (no per-frame cost); the meteor owns the motion. */
-/* Cinematic dressing. Layer order (first = top): dimming veil over the
-   text zone (readability), violet arc, gold arc, 7 sparse glints.
-   Arcs are thin ring-segment gradients crossing empty zones only. */
-.tv-featured-tool.def-editorial__spotlight::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    linear-gradient(180deg,
-      color-mix(in srgb, #0d061f 58%, transparent) 0%,
-      color-mix(in srgb, #0d061f 26%, transparent) 44%,
-      transparent 64%),
-    radial-gradient(112% 78% at 50% 128%,
-      transparent 60%,
-      color-mix(in srgb, #9a6fff 78%, transparent) 67%,
-      transparent 73%),
-    radial-gradient(96% 66% at 82% 128%,
-      transparent 58%,
-      color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 68%, transparent) 65%,
-      transparent 72%),
-    radial-gradient(70% 44% at 8% -6%,
-      transparent 58%,
-      color-mix(in srgb, #8a5cff 45%, transparent) 64%,
-      transparent 70%),
-    radial-gradient(1.5px 1.5px at 14% 20%, white 65%, transparent 100%),
-    radial-gradient(1px 1px at 38% 10%, white 60%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 64% 14%, white 55%, transparent 100%),
-    radial-gradient(1px 1px at 84% 30%, white 60%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 90% 62%,
-      color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 90%, white) 55%, transparent 100%),
-    radial-gradient(1px 1px at 8% 58%, white 55%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 48% 30%, white 50%, transparent 100%);
-  opacity: 1;
-  pointer-events: none;
-  z-index: 0;
-}
-/* Meteor: one luminous point with a fading trail travelling the rounded
-   border. CSS-only perimeter chase: a padded replica box orbits behind a
-   border mask; only a short conic arc is visible, the rest is masked out.
-   @property --tv-meteor-angle animates 0→360deg; trail = conic gradient
-   fading behind the head. One orbit per cycle + calm hold at the end. */
-@property --tv-meteor-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-.tv-featured-tool__meteor {
-  position: absolute;
-  inset: -2px;
-  border-radius: 24px;
-  padding: 3px;
-  background: conic-gradient(from var(--tv-meteor-angle),
-    transparent 0deg,
-    color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 35%, transparent) 285deg,
-    color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 90%, transparent) 330deg,
-    #fff6dd 352deg,
-    white 360deg);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  filter:
-    drop-shadow(0 0 7px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 90%, transparent))
-    drop-shadow(0 0 2px white);
-  pointer-events: none;
-  z-index: 2;
-  animation: tv-meteor-orbit var(--tv-meteor-cycle) linear infinite;
-}
-@keyframes tv-meteor-orbit {
-  0% { --tv-meteor-angle: 0deg; opacity: 0; }
-  4% { opacity: 1; }
-  78% { --tv-meteor-angle: 360deg; opacity: 1; }
-  88%, 100% { --tv-meteor-angle: 360deg; opacity: 0; }
-}
-/* Vivid stage text colors: ivory/white over violet, gold kicker. */
-.tv-featured-tool.def-editorial__spotlight .def-editorial__spot-name {
-  color: #fff;
-}
-.tv-featured-tool.def-editorial__spotlight .def-editorial__spot-cat {
-  color: color-mix(in srgb, white 72%, transparent);
-}
-.tv-featured-tool.def-editorial__spotlight .tv-featured-tool__meta {
-  color: color-mix(in srgb, white 78%, transparent);
-}
-.tv-featured-tool.def-editorial__spotlight .tv-featured-tool__meta-label {
-  color: color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 85%, white);
-}
-.tv-featured-tool.def-editorial__spotlight .tv-featured-tool__mono,
-.tv-featured-tool.def-editorial__spotlight .def-editorial__spot-lede {
-  color: #fff;
-}
-.tv-featured-tool.def-editorial__spotlight .def-editorial__spot-disclosure {
-  color: color-mix(in srgb, white 66%, transparent);
-  opacity: 1;
-}
-/* Kicker: warm editorial yellow, crisp text, restrained halo. */
-.tv-featured-tool .def-editorial__spot-eyebrow {
-  position: relative;
-  color: var(--tv-accent-gold-on-dark, #f5c968);
-  text-shadow:
-    0 0 1px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 65%, transparent),
-    0 0 16px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 32%, transparent);
-}
-/* Left editorial bar: stable geometry, VISIBLE traveling energy sweep. */
-.tv-featured-tool .def-editorial__spot-eyebrow::before {
-  position: relative;
-  overflow: hidden;
-  width: 22px;
-  height: 3px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 30%, transparent);
-  box-shadow: none;
-}
-.tv-featured-tool .def-editorial__spot-eyebrow::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 22px;
-  height: 3px;
-  border-radius: 2px;
-  transform: translateY(-50%) translateX(-24px);
-  opacity: 0;
-  background: linear-gradient(90deg, transparent, #ffe9b8 45%, var(--tv-accent-gold-on-dark, #f5c968));
-  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 90%, transparent));
-  pointer-events: none;
-  animation: tv-spot-bar-sweep var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
-}
-@keyframes tv-spot-bar-sweep {
-  0%, 6.5% { transform: translateY(-50%) translateX(-24px); opacity: 0; }
-  1% { opacity: 1; }
-  5% { transform: translateY(-50%) translateX(0); opacity: 1; }
-  8%, 100% { transform: translateY(-50%) translateX(3px); opacity: 0; }
-}
-/* Featured edge: readable winner light hugging the card sides. */
-/* Replaced by the final vivid stage (see below). */
-/* Celebration sparks: 8 readable edge glints, one shared clock.
-   Single node; two pseudo layers × box-shadow pairs. Static-visible
-   at rest (opacity floor), rising briefly at the celebration peak. */
-.tv-featured-tool__sparks {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 1;
-}
-.tv-featured-tool__sparks::before,
-.tv-featured-tool__sparks::after {
-  content: "";
-  position: absolute;
-  top: 22%;
-  width: 6px;
-  height: 6px;
-  border-radius: 1.5px;
-  transform: rotate(45deg);
-  background: var(--tv-accent-gold-on-dark, #f5c968);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent);
-  animation: tv-spot-spark-rise var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
-}
-.tv-featured-tool__sparks::before {
-  left: 8px;
-  box-shadow:
-    0 0 8px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent),
-    -3px 30px 0 -1px var(--tv-accent-gold-on-dark, #f5c968),
-    -4px 60px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white),
-    -2px 92px 0 -2px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent);
-}
-.tv-featured-tool__sparks::after {
-  right: 8px;
-  background: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 85%, white);
-  box-shadow:
-    0 0 8px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 70%, transparent),
-    3px 30px 0 -1px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white),
-    4px 60px 0 -1.5px var(--tv-accent-gold-on-dark, #f5c968),
-    2px 92px 0 -2px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 80%, transparent);
-}
-@keyframes tv-spot-spark-rise {
-  0%, 60% { opacity: 0.55; transform: rotate(45deg) translateY(3px) scale(0.85); }
-  64% { opacity: 1; }
-  72%, 100% { opacity: 0.55; transform: rotate(45deg) translateY(-7px) scale(1); }
-}
-/* Logo aura: halo breathes behind a geometrically stable logo. */
-.tv-featured-tool .def-editorial__spot-avatar {
-  position: relative;
-  isolation: isolate;
-  overflow: visible;
-  border-color: color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 45%, transparent);
-}
-.tv-featured-tool .def-editorial__spot-avatar::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 18px;
-  border: 1px solid color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 55%, transparent);
-  background: radial-gradient(circle at 50% 45%,
-    color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 30%, transparent),
-    transparent 70%);
-  opacity: 0.5;
-  z-index: -1;
-  pointer-events: none;
-  animation: tv-spot-aura var(--tv-spot-cycle) var(--tv-easing-standard) infinite;
-}
-@keyframes tv-spot-aura {
-  0%, 28% { opacity: 0.35; transform: scale(0.96); }
-  34% { opacity: 0.85; transform: scale(1.05); }
-  42%, 100% { opacity: 0.35; transform: scale(0.96); }
-}
-/* Featured CTA footer: integrated inside the card. Sits above the
-   stretched link so "Visita sito" remains independently clickable. */
-.tv-featured-tool__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid color-mix(in srgb, white 10%, transparent);
-  position: relative;
-  z-index: 3;
-}
-.tv-featured-tool__cta {
-  display: inline-flex;
-  min-height: var(--tv-button-min-height-touch);
-  align-items: center;
-  gap: 5px;
-  padding: 7px 16px;
-  border-radius: var(--tv-radius-pill, 999px);
-  background: var(--tv-button-activation-bg, #e4b23c);
-  color: var(--tv-button-activation-text, #1a1206);
-  font-family: var(--tv-font-family-ui);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: transform 140ms var(--tv-easing-standard), box-shadow 140ms var(--tv-easing-standard);
-}
-.tv-featured-tool__cta:active {
-  transform: scale(0.96);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 40%, transparent);
-}
-.tv-featured-tool__external {
-  display: inline-flex;
-  min-height: var(--tv-button-min-height-touch);
-  align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  border-radius: var(--tv-radius-pill, 999px);
-  border: 1px solid color-mix(in srgb, white 18%, transparent);
-  background: color-mix(in srgb, white 6%, transparent);
-  color: color-mix(in srgb, white 80%, transparent);
-  font-family: var(--tv-font-family-ui);
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 150ms var(--tv-easing-standard), color 150ms var(--tv-easing-standard), transform 140ms var(--tv-easing-standard), box-shadow 140ms var(--tv-easing-standard);
-}
-.tv-featured-tool__external:active {
-  transform: scale(0.96);
-  box-shadow: 0 0 8px color-mix(in srgb, white 25%, transparent);
-}
-.tv-featured-tool__external:hover {
-  background: color-mix(in srgb, white 12%, transparent);
-  color: #fff;
-}
-/* The featured flow stacks vertically at every width: card then podium. */
-.def-editorial__inner > .tv-featured-tool,
-.def-editorial__inner > .def-latest {
-  grid-column: 1 / -1;
-  min-width: 0;
-}
-@media (max-width: 899px) {
-  .def-editorial__inner {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-@media (min-width: 48rem) {
-  .def-editorial__inner > .tv-featured-tool {
-    max-width: 60rem;
-    width: 100%;
-    margin-inline: auto;
-  }
-}
-/* Reading calm: content always above decoration, never shifted. */
-.tv-featured-tool .def-editorial__spot-body {
-  position: relative;
-  z-index: 1;
-  gap: 14px;
-}
-/* Micro editorial reasons: compact gold-outline pills, never a wall of text. */
-.tv-featured-tool__reasons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.tv-featured-tool__reasons li {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 42%, transparent);
-  background: color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 10%, transparent);
-  color: #ffe9b8;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-.tv-featured-tool__reasons li::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--tv-accent-gold-on-dark, #f5c968);
-  box-shadow: 0 0 6px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 80%, transparent);
-  flex-shrink: 0;
-}
-/* Restrained on mobile: 6 smaller sparks, tighter travel. */
-@media (max-width: 47.99rem) {
-  .tv-featured-tool.def-editorial__spotlight::before { opacity: 0.75; }
-  .tv-featured-tool__sparks::before {
-    left: 6px;
-    box-shadow:
-      0 0 7px color-mix(in srgb, var(--tv-accent-gold-on-dark, #f5c968) 70%, transparent),
-      -2px 28px 0 -1.5px var(--tv-accent-gold-on-dark, #f5c968),
-      -3px 56px 0 -2px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white);
-  }
-  .tv-featured-tool__sparks::after {
-    right: 6px;
-    box-shadow:
-      0 0 7px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 70%, transparent),
-      2px 28px 0 -1.5px color-mix(in srgb, var(--tv-accent-brand, #6a3cff) 90%, white),
-      3px 56px 0 -2px var(--tv-accent-gold-on-dark, #f5c968);
-  }
-  @keyframes tv-spot-spark-rise {
-    0%, 60% { opacity: 0.55; transform: rotate(45deg) translateY(2px) scale(0.8); }
-    64% { opacity: 1; }
-    72%, 100% { opacity: 0.55; transform: rotate(45deg) translateY(-5px) scale(0.95); }
-  }
-  .tv-featured-tool .def-editorial__spot-avatar::before { inset: -4px; }
-}
-/* Reduced motion: static featured hierarchy, zero travel. */
-@media (prefers-reduced-motion: reduce) {
-  .tv-featured-tool__meteor,
-  .tv-featured-tool .def-editorial__spot-eyebrow::after,
-  .tv-featured-tool__sparks::before,
-  .tv-featured-tool__sparks::after,
-  .tv-featured-tool .def-editorial__spot-avatar::before {
-    animation: none;
-  }
-  .tv-featured-tool__meteor {
-    opacity: 0;
-  }
-  .tv-featured-tool .def-editorial__spot-eyebrow::after { opacity: 0; }
-  .tv-featured-tool__sparks::before,
-  .tv-featured-tool__sparks::after { opacity: 0.7; transform: rotate(45deg); }
-  .tv-featured-tool .def-editorial__spot-avatar::before { opacity: 0.5; }
-  .tv-featured-tool.def-editorial__spotlight::before { opacity: 0.9; }
-}
-/* ============================================================
    Ultime dal catalogo — true editorial podium.
    Mobile: 01 dominant center; 02/03 compact below.
    Desktop: 01 clearly dominant in a 3-column podium grid.
@@ -4737,3 +4312,76 @@
     transition: none;
   }
 }
+
+/* The hero remains a single scene; search is reachable above it at every width. */
+.def-cockpit__inner { grid-template-columns: minmax(0, 1fr); gap: clamp(1rem, 2vw, 1.75rem); padding-block: 1.25rem 1.5rem; }
+.def-cockpit__hero { width: min(100%, 38rem); margin-inline: auto; }
+.def-cockpit__scope { width: min(100%, 46rem); margin-inline: auto; }
+
+/* Editorial instrument: the same material orbit as the hero and podium,
+   with a quiet reading surface and stable, separate link targets. */
+.def-editorial__inner > .tv-featured-tool,
+.def-editorial__inner > .def-latest { grid-column: 1 / -1; min-width: 0; }
+.tv-featured-tool.def-editorial__spotlight {
+  position: relative; isolation: isolate; overflow: hidden;
+  width: min(100%, 64rem); margin-inline: auto;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid color-mix(in srgb, var(--tv-accent-violet-on-dark) 36%, var(--tv-border-subtle));
+  border-radius: 1.75rem;
+  background: radial-gradient(ellipse at 12% 18%, color-mix(in srgb, var(--tv-accent-brand) 14%, transparent), transparent 58%), var(--tv-instrument-surface, #100c22);
+  box-shadow: inset 0 1px 0 #ffffff14, 0 18px 48px #00000020;
+  color: var(--tv-ink-primary);
+}
+.tv-featured-tool.def-editorial__spotlight::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(125deg, #ffffff05, transparent 35%, #39d2f605);
+  border-radius: inherit;
+}
+.tv-featured-tool__stretch { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+.tv-featured-tool__stretch:focus-visible { outline: 2px solid var(--tv-accent-cyan); outline-offset: -4px; }
+.tv-featured-tool .def-editorial__spot-body { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 1rem 2.25rem; max-width: none; align-items: start; }
+.tv-featured-tool .def-editorial__spot-eyebrow { grid-column: 1 / -1; margin: 0; color: var(--tv-accent-gold-on-dark); font-size: .6875rem; letter-spacing: .13em; text-shadow: none; }
+.tv-featured-tool .def-editorial__spot-eyebrow::before { background: currentColor; box-shadow: none; }
+.tv-featured-tool .def-editorial__spot-eyebrow::after { display: none; }
+.tv-featured-tool .def-editorial__spot-head { position: relative; grid-column: 1; grid-row: 2 / span 5; isolation: isolate; min-height: 19rem; margin: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.25rem; text-align: center; }
+.tv-featured-tool__orbit { position: absolute; width: min(100%, 20rem); aspect-ratio: 1; top: 42%; left: 50%; transform: translate(-50%, -50%) perspective(700px) rotateX(30deg) rotateZ(-16deg); z-index: -1; opacity: .85; }
+.tv-featured-tool .def-editorial__spot-avatar { width: 100px; height: 100px; border-radius: 24px; background: linear-gradient(150deg, #332054, #100d22); border: 1px solid #f5c96866; box-shadow: inset 0 1px 0 #ffffff30, 0 12px 28px #00000055; }
+.tv-featured-tool .def-editorial__spot-avatar img,
+.tv-featured-tool .def-editorial__spot-avatar > span { width: 64px; height: 64px; border-radius: 14px; font-size: 2rem; }
+.tv-featured-tool .def-editorial__spot-identity { width: 100%; padding: .5rem; border-radius: 1rem; background: linear-gradient(90deg, transparent, #100c22ed 18%, #100c22ed 82%, transparent); }
+.tv-featured-tool .def-editorial__spot-name { color: var(--tv-ink-primary); font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; }
+.tv-featured-tool .def-editorial__spot-cat { color: var(--tv-ink-secondary); font-size: .875rem; line-height: 1.5; margin-top: .4rem; }
+.tv-featured-tool .def-editorial__spot-lede { grid-column: 2; margin: 0; color: var(--tv-ink-primary); font-size: clamp(1rem, 1.3vw, 1.125rem); line-height: 1.7; max-width: 42ch; }
+.tv-featured-tool__reasons { grid-column: 2; display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+.tv-featured-tool__reasons li { max-width: 100%; padding: .375rem .75rem; border: 1px solid #c4afff30; border-radius: 999px; background: #b495ff0a; color: var(--tv-ink-secondary); font-size: .75rem; line-height: 1.5; overflow-wrap: anywhere; }
+.tv-featured-tool__meta { grid-column: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: .25rem 0 0; padding: 1rem 0; border-block: 1px solid var(--tv-border-subtle); }
+.tv-featured-tool__meta > span { min-width: 0; gap: .375rem; }
+.tv-featured-tool__meta strong { font-size: 1rem; color: var(--tv-ink-primary); }
+.tv-featured-tool__meta > span:first-child strong { color: var(--tv-accent-gold-on-dark); }
+.tv-featured-tool__meta-label { color: var(--tv-ink-secondary); font-size: .625rem; letter-spacing: .08em; }
+.tv-featured-tool__footer { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; position: relative; z-index: 3; }
+.tv-featured-tool__cta, .tv-featured-tool__external { display: inline-flex; justify-content: center; align-items: center; gap: .5rem; min-height: 44px; padding: .625rem 1rem; border-radius: 999px; text-decoration: none; font-size: .8125rem; font-weight: 650; line-height: 1.4; transition: background 180ms ease, border-color 180ms ease; }
+.tv-featured-tool__cta { border: 1px solid #cab8ff66; background: linear-gradient(140deg, #9360ff55, #6a3cff33); color: var(--tv-ink-primary); box-shadow: inset 0 1px 0 #ffffff1a; }
+.tv-featured-tool__external { border: 1px solid var(--tv-border-subtle); background: #ffffff04; color: var(--tv-ink-secondary); }
+.tv-featured-tool__cta:hover { background: #9360ff66; border-color: #cab8ff; }
+.tv-featured-tool__external:hover { background: #ffffff0d; color: var(--tv-ink-primary); }
+.tv-featured-tool__footer a:focus-visible { outline: 2px solid var(--tv-accent-cyan); outline-offset: 3px; }
+.tv-featured-tool .def-editorial__spot-disclosure { grid-column: 2; margin: 0; font-size: .6875rem; line-height: 1.6; opacity: 1; color: var(--tv-ink-secondary); max-width: none; }
+@media (max-width: 47.999rem) {
+  .tv-featured-tool .def-editorial__spot-body { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .tv-featured-tool .def-editorial__spot-body > * { grid-column: 1; }
+  .tv-featured-tool .def-editorial__spot-head { grid-row: auto; min-height: 15rem; gap: 1rem; }
+  .tv-featured-tool__orbit { width: 18rem; max-width: 100%; top: 39%; }
+  .tv-featured-tool .def-editorial__spot-avatar { width: 84px; height: 84px; border-radius: 21px; }
+  .tv-featured-tool .def-editorial__spot-avatar img,
+  .tv-featured-tool .def-editorial__spot-avatar > span { width: 54px; height: 54px; }
+  .tv-featured-tool .def-editorial__spot-identity { padding: .25rem .5rem; }
+  .tv-featured-tool .def-editorial__spot-cat { font-size: .8125rem; }
+  .tv-featured-tool .def-editorial__spot-lede { line-height: 1.65; }
+  .tv-featured-tool__footer > a { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tv-featured-tool .tv-featured-tool__orbit img { animation: tv-featured-orbit-float 14s ease-in-out infinite; animation-play-state: running; }
+  .tv-featured-tool[data-motion-active="false"] .tv-featured-tool__orbit img { animation-play-state: paused; }
+}
+@keyframes tv-featured-orbit-float { 0%,100% { transform: translateY(4px) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(3deg); } }

@@ -2220,3 +2220,68 @@ svg .tv-atlas__area-short { font-size: 3.7px; }
   .tv-rx-row__main:active { transform: translateY(1px); }
 }
 @keyframes tv-rx-reading-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Reading hierarchy: the map gives context; the adjacent browser gives every
+   signal a full-size target. Additional telemetry stays behind disclosure. */
+.tv-rx[data-browse="atlas"] .tv-rx__rail,
+.tv-rx[data-browse="atlas"][data-focus="local"] .tv-rx__rail:not(:has(.tv-rx-preview)) { display: block; }
+.tv-rx[data-browse="list"] .tv-rx-map-key { display: none; }
+.tv-rx-signal-browser.tv-rx-rail { display: grid; gap: .75rem; padding: 1.25rem; border: 1px solid var(--tv-context-edge); border-radius: var(--tv-radius-feature); background: linear-gradient(145deg, #b495ff09, transparent 55%), var(--tv-context-surface); box-shadow: inset 0 1px 0 #ffffff0d; }
+.tv-rx-signal-browser__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.tv-rx-signal-browser__head .tv-rx__eyebrow { font-size: .625rem; margin-bottom: .375rem; }
+.tv-rx-signal-browser__head .tv-rx-context__title { font-family: var(--tv-font-family-ui); font-weight: 650; margin: 0; font-size: 1.125rem; line-height: 1.4; }
+.tv-rx-signal-browser__total { display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; border: 1px solid #39d2f633; border-radius: 50%; color: var(--tv-color-cyan-500); font-family: var(--tv-font-data); font-size: .875rem; }
+.tv-rx-signal-browser .tv-rx-context__caption { margin: 0; font-size: .8125rem; line-height: 1.6; }
+.tv-rx-signal-browser .tv-rx-rail__list { gap: .25rem; }
+.tv-rx-signal-browser .tv-rx-rail__signal { min-height: 68px; padding: .75rem .5rem; border-radius: .75rem; gap: .75rem; }
+.tv-rx-signal-browser .tv-rx-rail__identity strong { display: block; color: var(--tv-ink-primary); font-size: .875rem; line-height: 1.4; }
+.tv-rx-signal-browser .tv-rx-rail__meta { margin-top: .25rem; font-size: .6875rem; }
+.tv-rx-rail__signal > svg { color: var(--tv-color-cyan-500); flex: none; }
+.tv-rx-signal-pages { display: flex; align-items: center; justify-content: space-between; gap: .5rem; border-block-start: 1px solid var(--tv-context-edge); padding-block-start: .5rem; }
+.tv-rx-signal-pages > span { font-family: var(--tv-font-data); font-size: .75rem; color: var(--tv-ink-secondary); }
+.tv-rx-signal-pages button, .tv-rx-signal-navigation button { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border: 1px solid var(--tv-context-edge); border-radius: 50%; color: var(--tv-color-cyan-500); background: #b495ff08; cursor: pointer; }
+.tv-rx-signal-pages button:disabled, .tv-rx-signal-navigation button:disabled { opacity: .35; cursor: default; }
+.tv-rx-signal-browser__all { display: flex; align-items: center; justify-content: space-between; gap: .75rem; min-height: 44px; padding: .625rem 1rem; border: 1px solid #b495ff40; border-radius: 999px; background: #b495ff0d; color: var(--tv-ink-primary); font-size: .8125rem; font-weight: 600; cursor: pointer; }
+.tv-rx-signal-browser__source { margin: 0; font-size: .6875rem; color: var(--tv-ink-secondary); line-height: 1.6; }
+.tv-rx-signal-navigation { display: flex; align-items: center; gap: .5rem; order: -1; padding-block-end: .75rem; border-block-end: 1px solid var(--tv-context-edge); }
+.tv-rx-signal-navigation label { flex: 1; min-width: 0; }
+.tv-rx-signal-navigation select { width: 100%; min-height: 44px; padding: .5rem .25rem; border: 0; border-radius: .5rem; color: var(--tv-ink-primary); background: var(--tv-instrument-surface); font: inherit; font-size: .8125rem; cursor: pointer; text-overflow: ellipsis; }
+.tv-rx :is(.tv-rx-signal-navigation button, .tv-rx-signal-navigation select, .tv-rx-signal-pages button, .tv-rx-rail__signal, .tv-rx-signal-browser__all):focus-visible { outline: 2px solid var(--tv-color-cyan-500); outline-offset: 3px; }
+.tv-rx-map-key { order: 3; color: var(--tv-ink-secondary); font-size: .75rem; }
+.tv-rx-map-key .tv-rx-legend__summary { min-height: 44px; cursor: pointer; align-content: center; padding-inline: .75rem; }
+.tv-rx-map-key .tv-rx-legend { display: block; padding: .75rem; margin: 0; }
+.tv-rx-instrument__guide { color: var(--tv-ink-secondary); max-width: 54ch; margin-inline: auto; font-size: .75rem; }
+.tv-rx-instrument__journey { margin-top: .625rem; padding-block-start: 0; border: 0; }
+.tv-rx-instrument .tv-rx-instrument__journey ol { display: flex; justify-content: center; }
+.tv-rx-instrument .tv-instrument-journey__number,
+.tv-rx-instrument .tv-instrument-journey__copy small { display: none; }
+.tv-rx-instrument .tv-instrument-journey__surface { gap: .625rem; padding: .375rem .875rem .375rem .5rem; }
+.tv-rx-instrument .tv-instrument-journey__copy { font-size: .8125rem; }
+/* Keep labels and hit targets stationary. The metal rim supplies ambient
+   motion while duplicate counters and construction marks yield to the data. */
+.tv-rx .tv-atlas__metadata { display: none; }
+.tv-rx .tv-atlas__origin-label { display: none; }
+.tv-rx .tv-atlas__territory { fill-opacity: .025; }
+.tv-rx .tv-atlas__area-count { font-size: 3px; }
+.tv-rx .tv-atlas__time-arc { animation: none; stroke-width: .4; opacity: .22; }
+.tv-rx .tv-atlas__time-arc[data-outer="true"] { stroke-width: .6; }
+.tv-rx .tv-atlas__construction { opacity: .18; }
+@media (min-width: 64rem) {
+  .tv-rx__stage { grid-template-columns: minmax(0, 1.45fr) minmax(20rem, .85fr); gap: 1.25rem; }
+  .tv-rx-map { inline-size: min(100%, 60dvh, 38rem); }
+  .tv-rx-instrument { padding: 1rem; }
+  .tv-rx__rail { max-height: calc(100dvh - var(--tv-header-painted, var(--tv-header-height)) - var(--tv-rx-chrome-clearance) - 2rem); overflow-y: auto; scrollbar-width: thin; border-radius: var(--tv-radius-feature); }
+  .tv-rx-preview[data-placement="atlas"] > .tv-rx__eyebrow,
+  .tv-rx-preview[data-placement="atlas"] .tv-rx-preview__source-list > div:nth-child(-n+2) { display: none; }
+  .tv-rx-preview[data-placement="atlas"] .tv-rx-preview__title { font-family: var(--tv-font-family-ui); font-size: 1.5rem; font-weight: 650; }
+  .tv-rx-instrument__level { display: none; }
+}
+@media (max-width: 63.999rem) {
+  .tv-rx[data-browse="atlas"] .tv-rx__rail { order: 2; }
+  .tv-rx__rail > .tv-rx-preview[data-placement="atlas"] { position: static; max-inline-size: none; max-block-size: none; }
+  .tv-rx-signal-navigation select { font-size: 16px; }
+  .tv-rx-signal-browser.tv-rx-rail { padding: 1rem; gap: .625rem; }
+  .tv-rx-instrument__guide { padding-inline: 12px; }
+  .tv-rx[data-atlas-mobile="true"] .tv-rx-instrument .tv-rx-instrument__journey ol { display: flex; }
+  .tv-rx[data-atlas-mobile="true"] .tv-atlas__area-arrow { stroke-width: .65; }
+}

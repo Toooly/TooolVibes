@@ -19,7 +19,7 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
  */
 
 import Link from "@/components/ui/app-link";
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { ArrowUpRight, ChevronDown, ChevronUp, Eye, X } from "lucide-react";
 
 import { CompareToggle } from "@/components/tools/compare-toggle";
@@ -38,6 +38,7 @@ export type RadarQuickPreviewProps = {
   onToggleWatch: () => void;
   /** List inspection stays at the selected row and opens its reading details. */
   inline?: boolean;
+  navigation?: ReactNode;
 };
 
 export function RadarQuickPreview({
@@ -47,6 +48,7 @@ export function RadarQuickPreview({
   watched,
   onToggleWatch,
   inline = false,
+  navigation,
 }: RadarQuickPreviewProps) {
   const detailsId = useId();
   const [expanded, setExpanded] = useState(inline);
@@ -67,6 +69,7 @@ export function RadarQuickPreview({
       data-inspection={expanded ? "expanded" : "compact"}
       data-placement={inline ? "inline" : "atlas"}
     >
+      {navigation}
       <button
         type="button"
         className="tv-rx-preview__snap"

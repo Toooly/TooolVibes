@@ -244,6 +244,17 @@ function IvoryEditorial({
   tools: ToolPublicView[];
 }) {
   const { t } = useLocale();
+  const stageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || typeof IntersectionObserver === "undefined") return;
+    let visible = false;
+    const sync = () => { stage.dataset.motionActive = String(visible && !document.hidden); };
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); });
+    observer.observe(stage);
+    document.addEventListener("visibilitychange", sync);
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", sync); };
+  }, [focusTool?.slug]);
   if (!focusTool) return null;
   const editorialScore = computeEditorialScore(focusTool);
   const isAffiliateLink =
@@ -259,11 +270,11 @@ function IvoryEditorial({
       <div className="def-editorial__inner">
         <div
           className="def-editorial__spotlight tv-featured-tool"
+          ref={stageRef}
+          data-instrument-stage
           data-spotlight={focusTool.slug}
           key={focusTool.slug}
         >
-          <span className="tv-featured-tool__meteor" aria-hidden="true" data-meteor="" />
-          <span className="tv-featured-tool__sparks" aria-hidden="true" data-sparks="" />
           <LocalizedAttributes><Link
             href={`/toools/${focusTool.slug}`}
             className="tv-featured-tool__stretch"
@@ -272,6 +283,7 @@ function IvoryEditorial({
           <div className="def-editorial__spot-body">
             <p className="def-editorial__spot-eyebrow"><LocalizedText>{"Scelta della redazione"}</LocalizedText></p>
             <div className="def-editorial__spot-head">
+              <InstrumentOrbit className="tv-featured-tool__orbit" />
               <span className="def-editorial__spot-avatar" aria-hidden="true">
                 {iconUrlFor(focusTool) ? (
                   // eslint-disable-next-line @next/next/no-img-element

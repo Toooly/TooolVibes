@@ -36,13 +36,9 @@ function Cockpit({
         <div className="def-cockpit__hero">
           <LocalizedAttributes><h1
             id="def-cockpit-title"
-            className="def-cockpit__title"
+            className="sr-only"
             aria-label="Scegli il tool giusto. Ricorda perché."
           ><LocalizedText>{"Scegli il tool giusto. Ricorda perché. "}</LocalizedText></h1></LocalizedAttributes>
-          <p className="def-cockpit__lede">
-            <span className="def-cockpit__lede-desktop"><LocalizedText>{"Recensioni indipendenti, confronti chiari e guide pratiche per il tuo lavoro con l'AI. "}</LocalizedText></span>
-            <span className="def-cockpit__lede-mobile"><LocalizedText>{"Recensioni indipendenti, confronti chiari e guide pratiche per il tuo lavoro con l'AI. "}</LocalizedText></span>
-          </p>
           {toolCount > 0 ? <IntentEntry /> : null}
         </div>
         <div className="def-cockpit__scope">

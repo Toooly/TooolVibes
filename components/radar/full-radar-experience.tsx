@@ -1,6 +1,7 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 /**
  * FULL Radar — logged-only AI discovery & intelligence surface.
  *
@@ -17,9 +18,8 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { ArrowLeft, ChartNoAxesColumn, Eye, List, Radar, RefreshCw, Search, Sparkles, X } from "lucide-react";
 import { InstrumentJourney } from "@/components/ui/instrument-journey";
 import { centerInspection } from "@/lib/motion/center-inspection";
-import { MetricStrip } from "@/components/ui/metric-strip";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { RadarSnapshotPanel } from "@/components/radar/radar-snapshot-panel";
+import { RadarSignalNavigation, RadarSnapshotPanel } from "@/components/radar/radar-snapshot-panel";
 
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { useAccount } from "@/components/account/account-provider";
@@ -43,7 +43,6 @@ import {
   type RadarLodInput,
 } from "@/lib/radar/radar-lod";
 import {
-  RadarInsightStrip,
   RadarPerTePanel,
   RadarTrendPanel,
   RadarWatchPanel,
@@ -73,6 +72,7 @@ import {
 type CatalogHint = { slug: string; name: string; categoryLabel: string };
 
 export function RadarExperience() {
+  const { locale } = useLocale();
   const account = useAccount();
   const { state: urlState, setState: patchUrlState } = useRadarUrlState();
   const setUrlState = useCallback((patch: Partial<RadarUrlState>) => {
@@ -167,17 +167,6 @@ export function RadarExperience() {
     () => filteredTools.find((tool) => tool.id === urlState.tool) ?? null,
     [filteredTools, urlState.tool],
   );
-
-  const summary = useMemo(() => {
-    const newCount = view.tools.filter(
-      (tool) => tool.ageHours !== null && tool.ageHours <= 24,
-    ).length;
-    return {
-      total: view.tools.length,
-      newInWindow: newCount,
-      categories: view.clusters.length,
-    };
-  }, [view]);
 
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   useEffect(() => {
@@ -330,13 +319,18 @@ export function RadarExperience() {
     });
   }, [microStackId]);
   const microPositions = useMemo(() => microStack ? planAtlasMicroFocus(microStack.memberIds, microPage) : null, [microStack, microPage]);
-  const renderIds = useMemo(() => {
+  const overviewRenderIds = useMemo(() => {
     if (!mobileAtlas) return baseRenderIds;
     if (microPositions) return new Set(microPositions.keys());
     if (mobilePlan) return mobilePlan.visibleIds;
     const candidates = layout.points.filter(point => baseRenderIds.has(point.id)).map(point => ({ ...point, attention: view.tools.find(tool => tool.id === point.id)!.attention }));
     return atlasMobileGlobalIds(candidates, atlasMapWidth);
   }, [mobileAtlas, baseRenderIds, microPositions, mobilePlan, layout.points, view.tools, atlasMapWidth]);
+  // Inspection can originate from any page of the signal browser. Keep that
+  // real point visible even when the overview only shows area representatives.
+  const renderIds = useMemo(() => selectedTool
+    ? new Set([...overviewRenderIds, selectedTool.id])
+    : overviewRenderIds, [overviewRenderIds, selectedTool]);
   const interactiveIds = mobileAtlas ? renderIds : baseInteractiveIds;
   const mobileRadii = useMemo(() => {
     if (!mobileAtlas) return null;
@@ -464,7 +458,11 @@ export function RadarExperience() {
   const handleSelect = useCallback(
     (toolId: string, origin: "atlas" | "list" = "atlas") => {
       setSelectionOrigin(origin);
-      selectionFocusRef.current = document.activeElement as HTMLElement | null;
+      if (microPositions && !microPositions.has(toolId)) {
+        setMicroStackId(null);
+        setMicroPage(0);
+      }
+      if (!urlState.tool) selectionFocusRef.current = document.activeElement as HTMLElement | null;
       if (origin === "list") {
         inspectionScrollRef.current = null;
       } else if (!urlState.tool) {
@@ -478,7 +476,7 @@ export function RadarExperience() {
       setUrlState({ tool: toolId, tab: "panoramica" });
       setHighlightedId(toolId);
     },
-    [setUrlState, urlState.tool],
+    [setUrlState, urlState.tool, microPositions],
   );
 
   const dismissPreview = useCallback((restoreContext: boolean) => {
@@ -486,7 +484,11 @@ export function RadarExperience() {
     setHighlightedId(null);
     setAmbiguous([]);
     setChooserGroup(null);
-    if (restoreContext) selectionFocusRef.current?.focus?.({ preventScroll: true });
+    if (restoreContext) {
+      const target = selectionFocusRef.current;
+      if (target?.closest("[hidden]")) requestAnimationFrame(() => target.focus({ preventScroll: true }));
+      else target?.focus?.({ preventScroll: true });
+    }
     selectionFocusRef.current = null;
     const position = inspectionScrollRef.current;
     inspectionScrollRef.current = null;
@@ -767,66 +769,20 @@ export function RadarExperience() {
                   <span>{microPage + 1} / {Math.ceil(microStack.memberIds.length / ATLAS_MICRO_PAGE_SIZE)}</span>
                   <button type="button" disabled={(microPage + 1) * ATLAS_MICRO_PAGE_SIZE >= microStack.memberIds.length} onClick={() => setMicroPage(p => p + 1)}><LocalizedText>{"Successivi"}</LocalizedText></button>
                 </nav></LocalizedAttributes>}
-                {filteredTools.length > 0 && <p className="tv-rx-instrument__guide"><LocalizedText>{focusedCluster ? "Seleziona un segnale per approfondire. Ogni cerchio è un tool." : "Scegli un’area sulla mappa o usa i filtri per esplorare i segnali."}</LocalizedText></p>}
-                {mobileAtlas ? (
-<details className="tv-rx-instrument__help"><summary><LocalizedText>{"Come leggere"}</LocalizedText></summary><p className="tv-rx-instrument__hint"><span><LocalizedText>{"Al centro i più recenti, verso il bordo i più vecchi."}</LocalizedText></span><span><LocalizedText>{"Colore: area · Dimensione: attenzione."}</LocalizedText></span><span><LocalizedText>{"Micro Focus apre un gruppo: la disposizione dei tool facilita i tap; il periodo del gruppo e l’età di ogni segnale restano indicati."}</LocalizedText></span></p></details>
-                ) : <p className="tv-rx-instrument__hint"><span><LocalizedText>{"Al centro i più recenti, verso il bordo i più vecchi."}</LocalizedText></span><span><LocalizedText>{"Colore: area · Dimensione: attenzione."}</LocalizedText></span></p>}
+                {filteredTools.length > 0 && <p className="tv-rx-instrument__guide"><LocalizedText>{focusedCluster ? "Seleziona un segnale per approfondire. Ogni cerchio è un tool." : locale === "en" ? "Choose an area to explore, or open a tool from the signal panel." : "Scegli un’area per esplorarla, oppure apri un tool dal pannello dei segnali."}</LocalizedText></p>}
                 {!isLoading && filteredTools.length > 0 && <InstrumentJourney label="Esplora i segnali del Radar" className="tv-rx-instrument__journey" steps={[
-                  { id: "areas", label: "Esplora le aree", detail: focusedCluster?.label ?? "Panoramica globale", tone: "violet", icon: <Radar size={16} />, onClick: () => {
-                    explorerRef.current?.scrollIntoView({ block: "center", behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
-                    const controls = explorerRef.current?.querySelectorAll<HTMLElement>("select, button");
-                    Array.from(controls ?? []).find(control => control.getBoundingClientRect().width > 0)?.focus({ preventScroll: true });
-                  } },
                   { id: "read", label: "Approfondisci", detail: "Tutti i segnali", tone: "cyan", icon: <Search size={16} />, onClick: () => {
                     changeBrowseMode("list");
                     requestAnimationFrame(() => document.getElementById("tv-rx-list-title")?.focus({ preventScroll: true }));
                   } },
-                  { id: "follow", label: "Segui nel Radar", detail: "Watchlist", tone: "gold", icon: <Eye size={16} />, onClick: () => {
-                    setUrlState({ tab: "watchlist" });
-                    requestAnimationFrame(() => document.getElementById("tv-rx-tab-watchlist")?.focus());
-                  } },
                 ]} />}
               </section></LocalizedAttributes>
-              {/* Spec §19 — a compact contextual indicator, integrated with
-                  the existing controls rather than another large card. */}
-              {focusedClusterId ? (
-                <div className="tv-rx-focusbar">
-                  <p className="tv-rx-focusbar__label">
-                    <span
-                      className="tv-rx-chip__swatch"
-                      data-color-index={
-                        view.clusters.find((c) => c.id === focusedClusterId)
-                          ?.colorIndex ?? 0
-                      }
-                      aria-hidden="true"
-                    />
-                    <span>
-                      {view.clusters.find((c) => c.id === focusedClusterId)
-                        ?.label ?? focusedClusterId}
-                      <LocalizedText>{" · "}</LocalizedText>
-                      {localSignals.length} <LocalizedText>{localSignals.length === 1 ? "segnale" : "segnali"}</LocalizedText>
-                    </span>
-                  </p>
-                  <button
-                    type="button"
-                    className="tv-rx-focusbar__back"
-                    onClick={() => setUrlState({ category: null })}
-                  >
-                    <ArrowLeft size={13} aria-hidden="true" /><LocalizedText>{"Panoramica "}</LocalizedText></button>
-                </div>
-              ) : null}
-
-
-              {!isLoading && filteredTools.length > 0 ? <RadarLegend /> : null}
-
-              {/* §12 — compact metrics rail, never competing with the map. */}
-              <MetricStrip label="Metriche del mercato" className="tv-rx-metrics" items={[
-                { label: "Tool nel Radar", value: isLoading ? "—" : summary.total },
-                { label: "Nuovi nelle 24h", value: isLoading ? "—" : summary.newInWindow },
-                { label: "Aree attive", value: isLoading ? "—" : summary.categories },
-              ]} />
-
-              <RadarInsightStrip view={view} />
+              {!isLoading && filteredTools.length > 0 && <div className="tv-rx-map-key">
+                <RadarLegend />
+                {microStack && <p>{locale === "en"
+                  ? "In group view, tools are arranged for easy tapping. Each detail panel shows the signal’s actual age."
+                  : "Nella vista del gruppo i tool sono disposti per facilitare i tap. Ogni scheda indica l’età reale del segnale."}</p>}
+              </div>}
 
               {browseMode === "list" ? (
                 <section className="tv-rx-section" aria-labelledby="tv-rx-list-title" aria-busy={isLoading}>
@@ -875,9 +831,21 @@ export function RadarExperience() {
 
             {/* Desktop intelligence rail; mobile inspection follows the map
                 in the document so short viewports never lose signal access. */}
-            <LocalizedAttributes><aside className="tv-rx__rail" aria-label="Pannello intelligenza">
-              {selectedTool && selectionOrigin !== "list" && ambiguous.length === 0 ? (
+            {browseMode === "atlas" && (isLoading || filteredTools.length > 0) && <LocalizedAttributes><aside className="tv-rx__rail" aria-label="Pannello intelligenza">
+              <div hidden={Boolean(selectedTool && selectionOrigin !== "list" && ambiguous.length === 0)}>
+                <RadarSnapshotPanel
+                  key={`${urlState.range}:${urlState.category ?? ""}:${query}`}
+                  view={view}
+                  tools={sortedTools}
+                  clusterId={focusedClusterId}
+                  loading={isLoading}
+                  onSelect={handleSelect}
+                  onBrowse={() => changeBrowseMode("list")}
+                />
+              </div>
+              {selectedTool && selectionOrigin !== "list" && ambiguous.length === 0 && (
                 <RadarQuickPreview
+                  navigation={<RadarSignalNavigation tools={sortedTools} selectedId={selectedTool.id} onSelect={handleSelect} />}
                   key={selectedTool.id}
                   tool={selectedTool}
                   historyAvailable={view.snapshot.historyAvailable}
@@ -885,17 +853,8 @@ export function RadarExperience() {
                   onToggleWatch={() => handleToggleWatch(selectedTool)}
                   onClose={handleClosePreview}
                 />
-              ) : (
-                <RadarSnapshotPanel
-                  view={view}
-                  tools={filteredTools}
-                  clusterId={focusedClusterId}
-                  loading={isLoading}
-                  onSelect={handleSelect}
-                  onCluster={(category) => setUrlState({ category })}
-                />
               )}
-            </aside></LocalizedAttributes>
+            </aside></LocalizedAttributes>}
           </div>
         </div>
       ) : null}
