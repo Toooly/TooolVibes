@@ -1,0 +1,32 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "tooolvibes-progetti",
+  "main": "./src/worker.ts",
+  "account_id": "ffacd11bfafdca87d540a6c5fbe89120",
+  "compatibility_date": "2026-10-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "upload_source_maps": true,
+  "routes": [{ "pattern": "progetti.tooolvibes.eu", "custom_domain": true }],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "SITE_URL": "https://progetti.tooolvibes.eu",
+    "SITE_HOST": "progetti.tooolvibes.eu",
+    "PROJECTS_EMAIL_FROM": "Tooolvibes <info@tooolvibes.eu>",
+    "PROJECTS_TURNSTILE_SITE_KEY": ""
+  },
+  "ratelimits": [
+    { "name": "CONTACT_RATE_LIMITER", "namespace_id": "2026102201", "simple": { "limit": 30, "period": 60 } },
+    { "name": "THANK_YOU_RATE_LIMITER", "namespace_id": "2026102202", "simple": { "limit": 1, "period": 60 } }
+  ],
+  "secrets": { "required": ["RESEND_API_KEY", "PROJECTS_NOTIFY_EMAIL", "PROJECTS_TURNSTILE_SECRET_KEY"] },
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "invocation_logs": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.1 }
+  }
+}

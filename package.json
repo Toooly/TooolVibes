@@ -48,7 +48,12 @@
     "services:typecheck": "tsc --noEmit -p services-site/tsconfig.json",
     "services:test": "vitest run services-site/tests",
     "services:dry-run": "wrangler deploy --config services-site/wrangler.jsonc --dry-run",
-    "services:deploy": "wrangler deploy --config services-site/wrangler.jsonc"
+    "services:deploy": "wrangler deploy --config services-site/wrangler.jsonc",
+    "projects:dev": "wrangler dev --config projects-site/wrangler.jsonc --port 8791",
+    "projects:typecheck": "tsc --noEmit -p projects-site/tsconfig.json",
+    "projects:test": "vitest run projects-site/tests",
+    "projects:dry-run": "wrangler deploy --config projects-site/wrangler.jsonc --dry-run",
+    "projects:deploy": "node projects-site/scripts/deploy.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.6.0",
