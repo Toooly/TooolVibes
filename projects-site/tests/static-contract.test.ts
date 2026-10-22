@@ -92,6 +92,8 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(config.name).toBe("tooolvibes-progetti");
     expect(config.routes).toEqual([{ pattern: "progetti.tooolvibes.eu", custom_domain: true }]);
     expect(config.services).toBeUndefined();
+    expect(config.workers_dev).toBe(false);
+    expect(config.preview_urls).toBe(false);
     expect(config.secrets.required).toEqual(["RESEND_API_KEY", "PROJECTS_NOTIFY_EMAIL", "PROJECTS_TURNSTILE_SECRET_KEY"]);
     expect(config.ratelimits.map((r: { namespace_id: string }) => r.namespace_id)).toEqual(["2026102201", "2026102202"]);
     expect(read("scripts/deploy.mjs")).toContain("Test keys are not permitted");
