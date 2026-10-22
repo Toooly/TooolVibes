@@ -826,8 +826,7 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
   .journey__choices button > svg { grid-column: 3; }
 }
 
-/* Mobile availability: one colour scale follows the same five-to-one countdown. */
-@media (max-width: 64rem) {
+/* Availability countdown: one inherited colour clock across every viewport. */
   .service-capacity[data-available="5"] { --capacity-accent: #7cebb4; }
   .service-capacity[data-available="4"] { --capacity-accent: #c6e884; --count-steps: 1; }
   .service-capacity[data-available="3"] { --capacity-accent: #f5cf73; }
@@ -862,8 +861,6 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
   }
   /* Opacity alone switches segments off without freezing their inherited colour. */
   @keyframes capacity-mobile-assigned { from { opacity: 1; } to { opacity: .16; } }
-}
-
 /* Desktop composition. The mobile layout remains the canonical compact variant. */
 @media (min-width: 64.01rem) {
   .site-header__inner, .site-footer__inner, .hero, .journey, .service, .process, .contact { max-width: 80rem; }

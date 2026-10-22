@@ -299,9 +299,9 @@ describe("TooolVibes Servizi static contract", () => {
     expect(app).toContain('querySelectorAll(".service-offer").forEach((element) => sceneObserver.observe(element))');
   });
 
-  it("synchronizes mobile countdown colours from green through yellow and orange to red", () => {
-    const mobile = css.slice(css.indexOf("/* Mobile availability:"), css.indexOf("/* Desktop composition."));
-    expect(mobile).toContain("@media (max-width: 64rem)");
+  it("synchronizes countdown colours from green through yellow and orange to red on every viewport", () => {
+    const mobile = css.slice(css.indexOf("/* Availability countdown:"), css.indexOf("/* Desktop composition."));
+    expect(mobile).not.toContain("max-width");
     expect(mobile).toContain("@media (prefers-reduced-motion: no-preference)");
     for (const [available, colour] of [[5, "#7cebb4"], [4, "#c6e884"], [3, "#f5cf73"], [2, "#ffad70"], [1, "#ff8a86"]]) {
       expect(mobile).toContain(`.service-capacity[data-available="${available}"] { --capacity-accent: ${colour};`);
@@ -318,7 +318,7 @@ describe("TooolVibes Servizi static contract", () => {
   });
 
   it("fades mobile bars and arcs without freezing intermediate countdown colours", () => {
-    const mobile = css.slice(css.indexOf("/* Mobile availability:"), css.indexOf("/* Desktop composition."));
+    const mobile = css.slice(css.indexOf("/* Availability countdown:"), css.indexOf("/* Desktop composition."));
     expect(mobile.match(/animation-name: capacity-mobile-assigned;/g)).toHaveLength(2);
     expect(mobile).toContain("@keyframes capacity-mobile-assigned { from { opacity: 1; } to { opacity: .16; } }");
     expect(mobile).not.toContain("capacity-mobile-ring-status");
@@ -326,7 +326,7 @@ describe("TooolVibes Servizi static contract", () => {
   });
 
   it("uses a single inherited colour clock without replacing countdown or breathing motion", () => {
-    const mobile = css.slice(css.indexOf("/* Mobile availability:"), css.indexOf("/* Desktop composition."));
+    const mobile = css.slice(css.indexOf("/* Availability countdown:"), css.indexOf("/* Desktop composition."));
     expect(mobile).toContain("animation: var(--capacity-spectrum);");
     expect(mobile).toContain("animation: var(--capacity-spectrum),capacity-breathe 6.4s ease-in-out infinite;");
     expect(mobile).toContain(".service-capacity.has-counted .service-capacity__number { animation: none; }");
