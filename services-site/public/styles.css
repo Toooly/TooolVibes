@@ -671,6 +671,8 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 .availability-notice__slots i.is-assigned { background: #45516b; box-shadow: none; opacity: .45; }
 :is(.availability-notice,.availability-launcher)[data-service="social"] { --notice-accent: var(--service-social); }
 :is(.availability-notice,.availability-launcher)[data-service="ai"] { --notice-accent: var(--service-ai); }
+:is(.availability-notice,.availability-launcher)[data-available]:not([data-available="request"]) { --notice-accent: var(--capacity-accent); }
+.availability-notice[data-available]:not([data-available="request"]) .availability-notice__title { color: var(--notice-accent); text-shadow: 0 0 1.1rem color-mix(in srgb,var(--notice-accent) 18%,transparent); }
 .availability-notice__brand { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--notice-accent) 30%, transparent); border-radius: .9rem; background: color-mix(in srgb, var(--notice-accent) 8%, transparent); }
 .availability-notice__content { min-width: 0; }
 .availability-notice__eyebrow { margin: 0 0 .3rem; color: var(--notice-accent); font-size: .72rem; line-height: 1.4; font-weight: 600; }
@@ -683,10 +685,12 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 @media (prefers-reduced-motion: no-preference) {
   .availability-notice:not([hidden]) { animation: notice-arrive .55s var(--ease) both; }
   .availability-notice:not([hidden])::before { animation: notice-bloom 1.6s ease-out both; }
+  .availability-notice[data-available]:not([data-available="request"]):not([hidden])::before { animation: notice-bloom 1.6s ease-out both,notice-breathe 5.6s ease-in-out 1.6s infinite; }
   .availability-launcher:not([hidden])::after { animation: ambient-breathe 6.4s ease-in-out infinite; }
 }
 @keyframes notice-arrive { from { opacity: 0; transform: translate3d(0, 1rem, 0); } to { opacity: 1; transform: none; } }
 @keyframes notice-bloom { 0%,25% { opacity: 1; } 100% { opacity: .55; } }
+@keyframes notice-breathe { 0%,100% { opacity: .55; } 50% { opacity: .95; } }
 @keyframes ambient-breathe { 0%,100% { opacity: .25; } 50% { opacity: .85; } }
 
 .error-page { min-height: 100svh; display: grid; place-items: center; }
@@ -827,11 +831,11 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
 }
 
 /* Availability countdown: one inherited colour clock across every viewport. */
-  .service-capacity[data-available="5"] { --capacity-accent: #7cebb4; }
-  .service-capacity[data-available="4"] { --capacity-accent: #c6e884; --count-steps: 1; }
-  .service-capacity[data-available="3"] { --capacity-accent: #f5cf73; }
-  .service-capacity[data-available="2"] { --capacity-accent: #ffad70; --count-steps: 3; }
-  .service-capacity[data-available="1"] { --capacity-accent: #ff8a86; }
+  :is(.service-capacity,.availability-notice,.availability-launcher)[data-available="5"] { --capacity-accent: #7cebb4; }
+  :is(.service-capacity,.availability-notice,.availability-launcher)[data-available="4"] { --capacity-accent: #c6e884; --count-steps: 1; }
+  :is(.service-capacity,.availability-notice,.availability-launcher)[data-available="3"] { --capacity-accent: #f5cf73; }
+  :is(.service-capacity,.availability-notice,.availability-launcher)[data-available="2"] { --capacity-accent: #ffad70; --count-steps: 3; }
+  :is(.service-capacity,.availability-notice,.availability-launcher)[data-available="1"] { --capacity-accent: #ff8a86; }
   .service-capacity { --capacity-spectrum: none; color: var(--capacity-accent,#f5ce8b); }
   .service-capacity__copy { color: var(--ink); }
   .service-capacity__number,

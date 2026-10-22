@@ -369,6 +369,7 @@
         launcher.dataset.service = service.dataset.service;
         launcher.querySelector("[data-launcher-service]").textContent = service.querySelector(".service-offer__label").textContent;
       }
+      if (service) launcher.dataset.available = service.querySelector(".service-capacity")?.dataset.available || "request";
       launcher.hidden = !ready || blocked() || !notice.hidden;
     };
     const rememberDismissal = () => {
@@ -399,6 +400,7 @@
       const detail = capacity?.querySelector(".service-capacity__limit")?.textContent.trim();
       if (!title || !detail) return;
       notice.dataset.service = service.dataset.service;
+      notice.dataset.available = capacity.dataset.available || "request";
       cta.dataset.contactService = service.dataset.service;
       notice.querySelector("[data-notice-service]").textContent = service.querySelector(".service-offer__label").textContent;
       notice.querySelector("[data-notice-title]").textContent = title;

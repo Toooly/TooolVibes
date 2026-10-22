@@ -304,7 +304,7 @@ describe("TooolVibes Servizi static contract", () => {
     expect(mobile).not.toContain("max-width");
     expect(mobile).toContain("@media (prefers-reduced-motion: no-preference)");
     for (const [available, colour] of [[5, "#7cebb4"], [4, "#c6e884"], [3, "#f5cf73"], [2, "#ffad70"], [1, "#ff8a86"]]) {
-      expect(mobile).toContain(`.service-capacity[data-available="${available}"] { --capacity-accent: ${colour};`);
+      expect(mobile).toContain(`:is(.service-capacity,.availability-notice,.availability-launcher)[data-available="${available}"] { --capacity-accent: ${colour};`);
     }
     expect(mobile).toContain("calc(var(--count-duration) * 4 / var(--count-steps)) linear .35s calc(var(--count-steps) / 4) both");
     expect(mobile).toContain(".service-capacity__number,\n  .service-capacity__slots { color: inherit; }");
@@ -315,6 +315,15 @@ describe("TooolVibes Servizi static contract", () => {
     expect(mobile).toContain("100% { color: #ff8a86; }");
     expect(mobile).toContain(".service-capacity__slots i,\n  .service-capacity__slots i.is-assigned { border-color: color-mix(in srgb,currentColor");
     expect(mobile).toContain(".service-capacity__orbit circle.is-assigned { stroke: currentColor; }");
+  });
+
+  it("shares confirmed scarcity colours with notices and pulses their glow without layout motion", () => {
+    const notice = css.slice(css.indexOf(".availability-notice {"), css.indexOf(".error-page {"));
+    expect(notice).toContain(':is(.availability-notice,.availability-launcher)[data-available]:not([data-available="request"]) { --notice-accent: var(--capacity-accent); }');
+    expect(notice).toContain('.availability-notice[data-available]:not([data-available="request"]) .availability-notice__title { color: var(--notice-accent);');
+    expect(notice).toContain('@media (prefers-reduced-motion: no-preference)');
+    expect(notice).toContain('notice-bloom 1.6s ease-out both,notice-breathe 5.6s ease-in-out 1.6s infinite');
+    expect(notice).toContain('@keyframes notice-breathe { 0%,100% { opacity: .55; } 50% { opacity: .95; } }');
   });
 
   it("fades mobile bars and arcs without freezing intermediate countdown colours", () => {

@@ -71,6 +71,8 @@ describe("Contextual availability notice", () => {
     ui.advance();
     expect(ui.notice.hidden).toBe(false);
     expect(ui.notice.dataset.service).toBe(kind);
+    expect(ui.notice.dataset.available).toBe(kind === "web" ? "1" : kind === "social" ? "3" : "request");
+    expect(ui.launcher.dataset.available).toBe(ui.notice.dataset.available);
     const source = ui.service(kind).querySelector(".service-capacity small b")!;
     expect(ui.notice.querySelector("[data-notice-title]")!.textContent).toBe(source.textContent);
     expect(ui.notice.querySelectorAll("[data-notice-slots] i:not(.is-assigned)")).toHaveLength(kind === "web" ? 1 : kind === "social" ? 3 : 0);
@@ -231,6 +233,7 @@ describe("Contextual availability notice", () => {
       ui.enter(kind); ui.advance();
       expect(ui.launcher.hidden).toBe(false);
       expect(ui.launcher.dataset.service).toBe(kind);
+      expect(ui.launcher.dataset.available).toBe(kind === "web" ? "1" : kind === "social" ? "3" : "request");
       expect(ui.launcher.querySelector("[data-launcher-service]")!.textContent).toBe(ui.service(kind).querySelector(".service-offer__label")!.textContent);
       ui.enter(kind, false);
     }
