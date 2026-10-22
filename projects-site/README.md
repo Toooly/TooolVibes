@@ -75,10 +75,32 @@ The local example uses only the official Cloudflare test pair, with no mail key.
 - Cloudflare target account and active `tooolvibes.eu` zone verified read-only; no
   existing DNS record or widget for `progetti.tooolvibes.eu`. No existing DNS, email
   configuration, Worker or production bundle was changed during preparation.
-- Live deployment, real Turnstile verification and actual email delivery remain
-  pending until dedicated production credentials are configured. The deployment
-  guard rejects an empty/test widget key; `/api/config` correctly reports the form
-  unavailable without its required bindings.
+
+## Production release — 22 October 2026; HTTPS rechecked 23 October
+
+- Live at `https://progetti.tooolvibes.eu`, isolated Worker `tooolvibes-progetti`.
+  Runtime commit `ac234b15`; Cloudflare version `2f1eb0c3-a32e-4b21-ba71-5a283a72c04f`.
+  Custom domain only; workers.dev and preview URLs disabled. DNS/TLS and public
+  metadata/security headers verified; live CSS and JavaScript match committed files.
+- Dedicated hostname-only managed Turnstile widget and domain-scoped Resend sending
+  key configured. All three bindings are encrypted Worker secrets, not repository
+  files. Existing email DNS, services landing and main Worker were not changed.
+- One real browser submission passed Turnstile and displayed success. Resend shows
+  delivery to all three internal recipients and delivery of the branded acknowledgment.
+  Sender and Reply-To were verified in Resend. This proves provider delivery, not
+  inbox placement; no recipient inbox was accessed. Do not repeat the test casually.
+- Missing and invalid Turnstile tokens both returned HTTP 400 `verification_required`.
+- Production Lighthouse mobile: Performance 94, Accessibility 100, Best Practices 81,
+  SEO 100; LCP 1.3 s, CLS 0.012, TBT 290 ms. The Best Practices deduction is from
+  deprecated APIs in Cloudflare's injected challenge-platform script. No security
+  protection was disabled to improve this score. No application console errors or
+  failed requests were reported by the audit.
+- Safari live inspection completed at 390, 430 and 768 px, including explorer,
+  service navigation, method and the real contact flow. Local 1440 px inspection
+  passed; final live 1440 px visual inspection remains pending because the Mac locked.
+- On 23 October, projects, services and the main platform all returned HTTPS 200;
+  `/api/config` reported the new form available. This is a public smoke check, not
+  an authenticated regression test of the main platform.
 
 ## Production prerequisites
 
