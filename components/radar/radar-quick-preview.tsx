@@ -96,7 +96,7 @@ export function RadarQuickPreview({
           </span>
         )}
         <div className="tv-rx-preview__title-block">
-          <h2 className="tv-rx-preview__title">{tool.name}</h2>
+          <h2 className="tv-rx-preview__title" tabIndex={-1}>{tool.name}</h2>
           <p className="tv-rx-preview__category"><LocalizedText>{tool.topicCluster.label}</LocalizedText></p>
         </div>
         <LocalizedAttributes><button

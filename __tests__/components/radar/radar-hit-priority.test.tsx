@@ -116,6 +116,26 @@ it("waits for a completed touch tap instead of selecting at the start of a scrol
   expect(onSelect).toHaveBeenCalledExactlyOnceWith(tiun.id);
 });
 
+it("dismisses inspection only for a completed empty tap, retaining signal priority", () => {
+  const onEmptyTap = vi.fn();
+  const { container, onSelect } = setup({ onEmptyTap, focusedClusterId: topicCluster.id });
+  const svg = container.querySelector("svg")!;
+  const touch = { pointerType: "touch", pointerId: 5, clientX: 2, clientY: 2 };
+  fireEvent.pointerDown(svg, touch);
+  fireEvent.pointerMove(svg, { ...touch, clientY: 40 });
+  fireEvent.pointerUp(svg, { ...touch, clientY: 40 });
+  fireEvent.click(svg);
+  expect(onEmptyTap).not.toHaveBeenCalled();
+  fireEvent.pointerDown(svg, touch);
+  fireEvent.pointerUp(svg, touch);
+  fireEvent.click(svg);
+  expect(onEmptyTap).toHaveBeenCalledOnce();
+  onEmptyTap.mockClear();
+  fireEvent.pointerDown(svg, { clientX: centre.x, clientY: centre.y });
+  expect(onSelect).toHaveBeenCalledExactlyOnceWith(tiun.id);
+  expect(onEmptyTap).not.toHaveBeenCalled();
+});
+
 it.each(["drag", "cancel", "multitouch"])("does not navigate or select during a %s gesture", (gesture) => {
   const { container, onSelect, onSelectSector, onAmbiguous } = setup();
   const svg = container.querySelector("svg")!;

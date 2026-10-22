@@ -219,7 +219,7 @@ describe("RadarExperience", () => {
     fireEvent.click(hits[0]);
 
     expect(await screen.findByRole("dialog", { name: /anteprima di alpha tool/i })).toBeTruthy();
-    expect(container.querySelector(".tv-rx-preview")).toBeTruthy();
+    await waitFor(() => expect(document.activeElement).toBe(container.querySelector(".tv-rx-preview__title")));
   });
 
   it("opens list details at the selected row and restores its keyboard focus on close", async () => {
@@ -241,6 +241,59 @@ describe("RadarExperience", () => {
     expect(rowButton.getAttribute("aria-expanded")).toBe("false");
     expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
     window.history.replaceState(null, "", "/radar");
+  });
+
+  it("dismisses inspection on an outside tap without moving focus away from the tapped input", async () => {
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
+    fireEvent.click((await screen.findAllByRole("button", { name: /alpha tool/i }))[0]);
+    await screen.findByRole("dialog", { name: /anteprima di alpha tool/i });
+    fireEvent.touchMove(document.body);
+    expect(screen.getByRole("dialog")).toBeTruthy();
+    const search = screen.getByRole("searchbox", { name: "Cerca un tool nel Radar" });
+    search.focus();
+    fireEvent.click(search);
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(document.activeElement).toBe(search);
+  });
+
+  it("keeps the mobile inspection title below the header when the panel is taller than the viewport", async () => {
+    window.history.replaceState(null, "", "/radar");
+    vi.stubGlobal("matchMedia", vi.fn((query: string) => ({
+      matches: query.includes("max-width"), media: query, onchange: null,
+      addEventListener: vi.fn(), removeEventListener: vi.fn(),
+      addListener: vi.fn(), removeListener: vi.fn(), dispatchEvent: vi.fn(),
+    })));
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    const { container: shell } = renderRadar();
+    shell.classList.add("marketing-shell");
+    shell.style.scrollPaddingTop = "64px";
+    shell.style.scrollPaddingBottom = "100px";
+    shell.scrollTop = 120;
+    const scrollTo = vi.fn();
+    shell.scrollTo = scrollTo;
+    const originalRect = HTMLElement.prototype.getBoundingClientRect;
+    const rectSpy = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      if (this === shell) return { x: 0, y: 0, left: 0, top: 0, right: 390, bottom: 600, width: 390, height: 600, toJSON: () => ({}) };
+      if (this.matches(".tv-rx-preview")) return { x: 0, y: 430, left: 0, top: 430, right: 390, bottom: 1130, width: 390, height: 700, toJSON: () => ({}) };
+      return originalRect.call(this);
+    });
+    const originalStyle = window.getComputedStyle.bind(window);
+    const styleSpy = vi.spyOn(window, "getComputedStyle").mockImplementation((element, pseudo) => {
+      const style = originalStyle(element, pseudo);
+      if (element.matches(".tv-rx-preview")) Object.defineProperty(style, "position", { value: "static" });
+      return style;
+    });
+    try {
+      fireEvent.click((await screen.findAllByRole("button", { name: /alpha tool/i }))[0]);
+      await screen.findByRole("dialog", { name: /anteprima di alpha tool/i });
+      expect(scrollTo).toHaveBeenCalledWith({ top: 486, left: 0, behavior: "smooth" });
+      await waitFor(() => expect(document.activeElement).toBe(shell.querySelector(".tv-rx-preview__title")));
+    } finally {
+      rectSpy.mockRestore();
+      styleSpy.mockRestore();
+      window.history.replaceState(null, "", "/radar");
+    }
   });
 
   it("keeps mobile list search, empty recovery and area controls usable without returning to Atlas", async () => {

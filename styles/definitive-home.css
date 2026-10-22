@@ -3349,12 +3349,14 @@
   --podium-second: .95fr;
   --podium-first: 1.1fr;
   --podium-third: .95fr;
+  --podium-gap: clamp(4px, 1.4vw, 10px);
+  container-type: inline-size;
   position: relative;
   isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, var(--podium-second)) minmax(0, var(--podium-first)) minmax(0, var(--podium-third));
   grid-template-areas: "second first third";
-  gap: clamp(4px, 1.4vw, 10px);
+  gap: var(--podium-gap);
   align-items: end;
   margin: 0;
   padding: 30px 0 0;
@@ -3393,6 +3395,11 @@
   transform: translateY(0) scale(0.97);
 }
 .def-podium__stage .def-podium__cell.is-expanded { z-index: 4; transform: translateY(-7px); }
+.def-podium__stage[data-expanded] .def-podium__cell.pos-first { margin-inline: 0; }
+.def-podium__stage[data-expanded="second"] .pos-second { transform: translateX(calc((100cqi - 100%) / 2)) translateY(-7px); }
+.def-podium__stage[data-expanded="second"] .pos-first { transform: translateX(calc(-371.428571% - var(--podium-gap))) scale(.97); }
+.def-podium__stage[data-expanded="third"] .pos-third { transform: translateX(calc((100% - 100cqi) / 2)) translateY(-7px); }
+.def-podium__stage[data-expanded="third"] .pos-first { transform: translateX(calc(371.428571% + var(--podium-gap))) scale(.97); }
 .def-podium__stage .def-podium__cell.pos-second .def-podium__card,
 .def-podium__stage .def-podium__cell.pos-third .def-podium__card {
   filter: brightness(0.94);
@@ -3993,7 +4000,7 @@
 @media (max-width: 47.999rem) {
   .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) { padding: 18px 4px 14px; gap: .5rem; }
   .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) .def-podium__avatar { width: 32px; height: 32px; border-radius: 9px; }
-  .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) .def-podium__name { font-size: .75rem; line-height: 1.35; }
+  .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) .def-podium__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .75rem; line-height: 1.35; }
   .def-podium__stage[data-expanded] .def-podium__card:not(.is-selected) :is(.def-podium__cat, .def-podium__score, .def-podium__selection-mark) { display: none; }
 }
 @media (max-width: 22.1875rem) {

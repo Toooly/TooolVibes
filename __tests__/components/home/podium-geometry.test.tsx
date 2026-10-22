@@ -192,6 +192,29 @@ describe("DefinitiveHome — Ultime dal catalogo", () => {
     expect(action?.getAttribute("href")).toBe("/toools/weweb");
   });
 
+  it.each(tools)("closes $name on an outside tap, preserves scrolling and can reopen", tool => {
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
+    const card = screen.getByRole("link", { name: `Ingrandisci ${tool.name}` });
+    fireEvent.click(card);
+    fireEvent.pointerDown(document.body, { pointerType: "touch" });
+    fireEvent.touchMove(document.body);
+    expect(card.getAttribute("aria-expanded")).toBe("true");
+    fireEvent.click(screen.getByText("Ultime dal catalogo"));
+    expect(card.getAttribute("aria-expanded")).toBe("false");
+    expect(document.querySelector(".def-podium__stage")?.hasAttribute("data-expanded")).toBe(false);
+    fireEvent.click(card);
+    expect(card.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("moves keyboard focus to the visible right-hand neighbour of a centered third card", () => {
+    render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
+    const weweb = screen.getByRole("link", { name: "Ingrandisci WeWeb" });
+    fireEvent.click(weweb);
+    fireEvent.keyDown(weweb, { key: "ArrowRight" });
+    expect(document.activeElement).toBe(screen.getByRole("link", { name: "Apri la scheda di Blink" }));
+    expect(weweb.getAttribute("aria-expanded")).toBe("false");
+  });
+
   it("previews from the keyboard, keeps the original link focused and collapses with Escape", () => {
     render(<AdvertisingConsentProvider><DefinitiveHome tools={tools} /></AdvertisingConsentProvider>);
     const blink = screen.getByRole("link", { name: "Ingrandisci Blink" });

@@ -68,6 +68,7 @@ export function RadarAtlasField({ mobileAtlas = false, clusterOrder, clusters, c
         <circle cx="50" cy="50" r="42.9" className="tv-atlas__glass-lip" />
         <path d={arc(44.5, 294, 343)} className="tv-atlas__glass-glint" />
         <circle cx="50" cy="50" r="44.5" className="tv-atlas__bearing" />
+        <circle cx="50" cy="50" r="44.5" className="tv-atlas__bearing tv-atlas__bearing--warm" />
       </g>
       <g className="tv-atlas__territories" key={focusedClusterId ?? "market"}>
         {clusterOrder.map((id, i) => {

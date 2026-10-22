@@ -90,6 +90,8 @@ export type RadarMapProps = {
   selectedId: string | null;
   highlightedId?: string | null;
   onSelect: (toolId: string) => void;
+  /** A completed tap with no signal, area or collision-group action. */
+  onEmptyTap?: () => void;
   /** Fired when a tap is genuinely ambiguous — parent shows the chooser. */
   onAmbiguous?: (candidates: readonly RadarTapCandidate[]) => void;
   /**
@@ -152,6 +154,7 @@ export function RadarMap({
   selectedId,
   highlightedId,
   onSelect,
+  onEmptyTap,
   onAmbiguous,
   camera,
   spider,
@@ -337,6 +340,7 @@ export function RadarMap({
       if (resolution.kind === "ambiguous" && onAmbiguous) {
         onAmbiguous(resolution.candidates);
       }
+      if (resolution.kind === "none") onEmptyTap?.();
     },
     [
       camera,
@@ -350,6 +354,7 @@ export function RadarMap({
       onAmbiguous,
       onCollapseSpider,
       onSelect,
+      onEmptyTap,
       onSelectChooserGroup,
       onSelectSector,
       tapPoints,

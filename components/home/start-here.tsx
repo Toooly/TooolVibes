@@ -7,6 +7,7 @@ import Link from "@/components/ui/app-link";
 import { ArrowRight, ChevronLeft, ChevronRight, ExternalLink, Layers3, ScanSearch, Sparkles } from "lucide-react";
 import { InstrumentJourney } from "@/components/ui/instrument-journey";
 import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
+import { centerInspection } from "@/lib/motion/center-inspection";
 import { workspaceViewHref } from "@/components/account/workspace/workspace-model";
 import { useAccount } from "@/components/account/account-provider";
 
@@ -445,14 +446,44 @@ function LatestFromCatalog({ tools }: { tools: ToolPublicView[] }) {
     }
     const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
     if (!offset && event.key !== "Home" && event.key !== "End") return;
-    const links = Array.from(event.currentTarget.querySelectorAll<HTMLAnchorElement>("a.def-podium__card"));
+    const visualOrder: PodiumPosition[] = selectedPos === "second" ? ["first", "second", "third"] : selectedPos === "third" ? ["second", "third", "first"] : positions;
+    const links = visualOrder.map(position => event.currentTarget.querySelector<HTMLAnchorElement>(`.pos-${position} a.def-podium__card`));
     const current = links.indexOf(event.target as HTMLAnchorElement);
     if (current < 0) return;
     event.preventDefault();
     const index = event.key === "Home" ? 0 : event.key === "End" ? 2 : (current + offset + 3) % 3;
-    setSelectedPos(positions[index]);
+    setSelectedPos(visualOrder[index]);
     links[index]?.focus({ preventScroll: true });
   }
+
+  useEffect(() => {
+    if (!selectedPos) return;
+    const dismiss = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) return;
+      // Preserve the selected tool's continuation link until navigation starts.
+      if (podiumRef.current?.contains(event.target) && event.target.closest("a.def-podium__card, .def-podium__journey a")) return;
+      setSelectedPos(null);
+    };
+    const escape = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedPos(null);
+    };
+    const timer = window.setTimeout(() => {
+      const card = podiumRef.current?.querySelector<HTMLElement>(".def-podium__card.is-selected");
+      if (card) centerInspection(card);
+    }, window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : 450);
+    const cancelCenter = () => window.clearTimeout(timer);
+    document.addEventListener("click", dismiss);
+    document.addEventListener("keydown", escape);
+    document.addEventListener("touchmove", cancelCenter, { passive: true });
+    document.addEventListener("wheel", cancelCenter, { passive: true });
+    return () => {
+      cancelCenter();
+      document.removeEventListener("click", dismiss);
+      document.removeEventListener("keydown", escape);
+      document.removeEventListener("touchmove", cancelCenter);
+      document.removeEventListener("wheel", cancelCenter);
+    };
+  }, [selectedPos]);
 
   useEffect(() => {
     const podium = podiumRef.current;

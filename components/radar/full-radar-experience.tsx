@@ -16,6 +16,7 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ChartNoAxesColumn, Eye, List, Radar, RefreshCw, Search, Sparkles, X } from "lucide-react";
 import { InstrumentJourney } from "@/components/ui/instrument-journey";
+import { centerInspection } from "@/lib/motion/center-inspection";
 import { MetricStrip } from "@/components/ui/metric-strip";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { RadarSnapshotPanel } from "@/components/radar/radar-snapshot-panel";
@@ -480,22 +481,36 @@ export function RadarExperience() {
     [setUrlState, urlState.tool],
   );
 
-  const handleClosePreview = useCallback(() => {
+  const dismissPreview = useCallback((restoreContext: boolean) => {
     setUrlState({ tool: null });
     setHighlightedId(null);
     setAmbiguous([]);
     setChooserGroup(null);
-    selectionFocusRef.current?.focus?.({ preventScroll: true });
+    if (restoreContext) selectionFocusRef.current?.focus?.({ preventScroll: true });
     selectionFocusRef.current = null;
     const position = inspectionScrollRef.current;
     inspectionScrollRef.current = null;
-    if (position && typeof requestAnimationFrame === "function") {
+    if (restoreContext && position && typeof requestAnimationFrame === "function") {
       requestAnimationFrame(() => {
         position.shell?.scrollTo?.({ top: position.top, behavior: "instant" });
         window.scrollTo?.({ top: position.windowY, behavior: "instant" });
       });
     }
   }, [setUrlState]);
+
+  const handleClosePreview = useCallback(() => dismissPreview(true), [dismissPreview]);
+
+  useEffect(() => {
+    if (!selectedTool) return;
+    const dismiss = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) return;
+      // The map owns signal/area/empty taps. Scrolling never emits a click.
+      if (event.target.closest(".tv-rx-preview, .tv-rx-map__svg, .tv-rx-row, .tv-rx-rail__signal")) return;
+      dismissPreview(false);
+    };
+    document.addEventListener("click", dismiss, true);
+    return () => document.removeEventListener("click", dismiss, true);
+  }, [selectedTool, dismissPreview]);
 
   const handleListSelect = useCallback((toolId: string) => {
     if (urlState.tool === toolId && selectionOrigin === "list") handleClosePreview();
@@ -519,9 +534,13 @@ export function RadarExperience() {
 
   useEffect(() => {
     if (!selectedTool) return;
-    const close = document.querySelector<HTMLButtonElement>(".tv-rx-preview__close");
-    close?.focus({ preventScroll: true });
-    if (selectionOrigin === "list") return;
+    // Pointer selection starts on pointerdown. Wait until native mouse focus
+    // settles before announcing the inspection, without triggering a scroll.
+    const frame = requestAnimationFrame(() => {
+      const focusTarget = document.querySelector<HTMLElement>(selectionOrigin === "list" ? ".tv-rx-preview__close" : ".tv-rx-preview__title");
+      focusTarget?.focus({ preventScroll: true });
+    });
+    if (selectionOrigin === "list") return () => cancelAnimationFrame(frame);
     const scrollBehavior = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
     if (window.matchMedia?.("(max-width: 63.999rem)").matches) {
       const instrument = atlasInstrumentRef.current;
@@ -533,14 +552,13 @@ export function RadarExperience() {
         const preview = document.querySelector<HTMLElement>(".tv-rx-preview");
         const previewRect = preview?.getBoundingClientRect();
         if (preview && previewRect && getComputedStyle(preview).position === "static") {
-          const bottomInset = parseFloat(getComputedStyle(shell).scrollPaddingBottom) || 0;
-          const visibleBottom = shell.getBoundingClientRect().bottom - bottomInset;
-          if (previewRect.bottom > visibleBottom) shell.scrollTo({ top: shell.scrollTop + previewRect.bottom - visibleBottom, left: 0, behavior: scrollBehavior });
+          centerInspection(preview);
         } else if (top < inset || mapBottom > (previewRect?.top ?? window.innerHeight)) {
           shell.scrollTo({ top: shell.scrollTop + top - inset, left: 0, behavior: scrollBehavior });
         }
       }
     }
+    return () => cancelAnimationFrame(frame);
   }, [selectedTool, selectionOrigin]);
 
   // Closure §7 — the fallback sheet takes focus while open, Escape closes it,
@@ -702,6 +720,7 @@ export function RadarExperience() {
               ) : (
                 <>
                   <RadarMap
+                    onEmptyTap={selectedTool ? () => dismissPreview(false) : undefined}
                     layoutTools={view.tools}
                     mobileAtlas={mobileAtlas}
                     mapWidth={atlasMapWidth}
