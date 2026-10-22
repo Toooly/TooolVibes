@@ -833,14 +833,24 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
   .service-capacity[data-available="3"] { --capacity-accent: #f5cf73; }
   .service-capacity[data-available="2"] { --capacity-accent: #ffad70; --count-steps: 3; }
   .service-capacity[data-available="1"] { --capacity-accent: #ff8a86; }
-  .service-capacity__slots { color: var(--capacity-accent,#f5ce8b); }
-  .service-capacity__slots i:not(.is-assigned) { border-color: color-mix(in srgb,currentColor 70%,transparent); background-color: color-mix(in srgb,currentColor 55%,transparent); box-shadow: 0 0 .6rem color-mix(in srgb,currentColor 16%,transparent),inset 0 1px 0 rgba(255,241,211,.3); }
+  .service-capacity { --capacity-spectrum: none; color: var(--capacity-accent,#f5ce8b); }
+  .service-capacity__copy { color: var(--ink); }
+  .service-capacity__number,
+  .service-capacity__slots { color: inherit; }
+  /* Every lit segment follows the live spectrum, including those that switch off later. */
+  .service-capacity__slots i,
+  .service-capacity__slots i.is-assigned { border-color: color-mix(in srgb,currentColor 70%,transparent); background-color: color-mix(in srgb,currentColor 55%,transparent); box-shadow: 0 0 .6rem color-mix(in srgb,currentColor 16%,transparent),inset 0 1px 0 rgba(255,241,211,.3); }
+  .service-capacity__orbit circle.is-assigned { stroke: currentColor; }
+  .service-capacity__slots i.is-assigned,
+  .service-capacity__orbit circle.is-assigned { opacity: .16; }
 
   @media (prefers-reduced-motion: no-preference) {
     /* A partial iteration stops at the real availability: 3/5 ends halfway, at yellow. */
-    .service-capacity.has-counted:not([data-available="request"]):not([data-available="5"]) :is(.service-capacity__number,.service-capacity__slots) { animation: capacity-mobile-spectrum calc(var(--count-duration) * 4 / var(--count-steps)) linear .35s calc(var(--count-steps) / 4) both; }
+    .service-capacity.has-counted:not([data-available="request"]):not([data-available="5"]) { --capacity-spectrum: capacity-mobile-spectrum calc(var(--count-duration) * 4 / var(--count-steps)) linear .35s calc(var(--count-steps) / 4) both; animation: var(--capacity-spectrum); }
+    .service-capacity.is-in-view:not(:hover):not(:focus-visible):not(:active) { animation: var(--capacity-spectrum),capacity-breathe 6.4s ease-in-out infinite; }
+    .service-capacity.has-counted .service-capacity__number { animation: none; }
     .service-capacity.has-counted .service-capacity__slots i.is-assigned { animation-name: capacity-mobile-assigned; }
-    .service-capacity.has-counted .service-capacity__orbit circle.is-assigned { animation-name: capacity-mobile-ring-status; }
+    .service-capacity.has-counted .service-capacity__orbit circle.is-assigned { animation-name: capacity-mobile-assigned; }
   }
 
   @keyframes capacity-mobile-spectrum {
@@ -850,8 +860,8 @@ body.motion-ready [data-reveal].is-revealed { opacity: 1; transform: translateY(
     75%,95% { color: #ffad70; }
     100% { color: #ff8a86; }
   }
-  @keyframes capacity-mobile-assigned { from { opacity: 1; border-color: color-mix(in srgb,currentColor 70%,transparent); background-color: color-mix(in srgb,currentColor 55%,transparent); } to { opacity: .35; border-color: rgba(121,145,170,.4); background-color: rgba(121,145,170,.08); } }
-  @keyframes capacity-mobile-ring-status { from { stroke: currentColor; opacity: 1; } to { stroke: #748396; opacity: .35; } }
+  /* Opacity alone switches segments off without freezing their inherited colour. */
+  @keyframes capacity-mobile-assigned { from { opacity: 1; } to { opacity: .16; } }
 }
 
 /* Desktop composition. The mobile layout remains the canonical compact variant. */

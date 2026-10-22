@@ -307,14 +307,31 @@ describe("TooolVibes Servizi static contract", () => {
       expect(mobile).toContain(`.service-capacity[data-available="${available}"] { --capacity-accent: ${colour};`);
     }
     expect(mobile).toContain("calc(var(--count-duration) * 4 / var(--count-steps)) linear .35s calc(var(--count-steps) / 4) both");
-    expect(mobile).toContain(":is(.service-capacity__number,.service-capacity__slots)");
+    expect(mobile).toContain(".service-capacity__number,\n  .service-capacity__slots { color: inherit; }");
     expect(mobile).toContain(':not([data-available="request"]):not([data-available="5"])');
     expect(mobile).toContain("25%,45% { color: #c6e884; }");
     expect(mobile).toContain("50%,70% { color: #f5cf73; }");
     expect(mobile).toContain("75%,95% { color: #ffad70; }");
     expect(mobile).toContain("100% { color: #ff8a86; }");
-    expect(mobile).toContain("capacity-mobile-ring-status { from { stroke: currentColor;");
-    expect(mobile).toContain("capacity-mobile-assigned { from { opacity: 1; border-color: color-mix(in srgb,currentColor");
+    expect(mobile).toContain(".service-capacity__slots i,\n  .service-capacity__slots i.is-assigned { border-color: color-mix(in srgb,currentColor");
+    expect(mobile).toContain(".service-capacity__orbit circle.is-assigned { stroke: currentColor; }");
+  });
+
+  it("fades mobile bars and arcs without freezing intermediate countdown colours", () => {
+    const mobile = css.slice(css.indexOf("/* Mobile availability:"), css.indexOf("/* Desktop composition."));
+    expect(mobile.match(/animation-name: capacity-mobile-assigned;/g)).toHaveLength(2);
+    expect(mobile).toContain("@keyframes capacity-mobile-assigned { from { opacity: 1; } to { opacity: .16; } }");
+    expect(mobile).not.toContain("capacity-mobile-ring-status");
+    expect(mobile).not.toContain("i:not(.is-assigned)");
+  });
+
+  it("uses a single inherited colour clock without replacing countdown or breathing motion", () => {
+    const mobile = css.slice(css.indexOf("/* Mobile availability:"), css.indexOf("/* Desktop composition."));
+    expect(mobile).toContain("animation: var(--capacity-spectrum);");
+    expect(mobile).toContain("animation: var(--capacity-spectrum),capacity-breathe 6.4s ease-in-out infinite;");
+    expect(mobile).toContain(".service-capacity.has-counted .service-capacity__number { animation: none; }");
+    expect(mobile).toContain(".service-capacity__copy { color: var(--ink); }");
+    expect(mobile.match(/--capacity-spectrum: capacity-mobile-spectrum/g)).toHaveLength(1);
   });
 
   it("uses five native scarcity arcs and bounded neon surfaces without changing offer copy", () => {
