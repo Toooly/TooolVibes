@@ -229,7 +229,8 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 .journey--guided .journey__frame { position: sticky; top: var(--journey-sticky-top); }
 .journey--guided .journey__choices button { position: relative; overflow: hidden; }
 .journey--guided .journey__choices button::after { position: absolute; inset: auto .65rem .25rem; height: 2px; background: var(--choice-accent); border-radius: 999px; transform: scaleX(var(--choice-progress,0)); transform-origin: left; opacity: .8; content: ""; }
-.journey::before { position: absolute; z-index: -1; inset: -18% -8% -6% 20%; background: radial-gradient(ellipse at 65% 50%,rgba(39,94,226,.15),transparent 66%); content: ""; pointer-events: none; }
+/* Stable ambient bounds: activating the guided track must not resize a painted field. */
+.journey::before { position: absolute; z-index: -1; inset: -4rem -8% auto 20%; height: min(60rem,110svh); background: radial-gradient(ellipse at 65% 50%,rgba(39,94,226,.15),transparent 66%); content: ""; pointer-events: none; }
 .journey[data-active="app"] { --journey-accent: var(--service-app); }
 .journey[data-active="software"] { --journey-accent: var(--service-software); }
 .journey [data-journey-select="ecommerce"] { --choice-accent: var(--service-ecommerce); }
