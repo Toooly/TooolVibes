@@ -205,9 +205,21 @@ describe("TooolVibes Servizi static contract", () => {
     expect(html).not.toContain("IVA");
   });
 
+  it("makes comparison prices prominent and gives every promotion the same explicit deadline", () => {
+    expect(html.match(/class="service-offer__deadline"/g)).toHaveLength(3);
+    expect(html.match(/Promo fino al <time datetime="2026-11-30">30 novembre<\/time>/g)).toHaveLength(3);
+    const comparison = css.match(/\.service-offer__comparison s \{([^}]+)\}/)![1];
+    expect(css).toContain("--price-comparison: #ff8e99");
+    expect(comparison).toContain("color: var(--price-comparison)");
+    expect(comparison).toContain("font-size: 1.18em");
+    expect(comparison).toContain("font-weight: 750");
+    expect(comparison).toContain("text-decoration-thickness: 2px");
+    expect(css).toContain(".service-offer__deadline time { font-weight: 650; }");
+  });
+
   it("highlights compact final prices and explicit comparison amounts", () => {
     expect(css).toContain("--price-accent: #7cebb4");
-    expect(css).toContain("--price-comparison: #eea0aa");
+    expect(css).toContain("--price-comparison: #ff8e99");
     expect(css).toContain("price-border-flow 4.8s");
     expect(html).not.toContain("Riferimento indicativo");
     expect(html.match(/<s>/g)).toHaveLength(3);
@@ -285,6 +297,24 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain('.service-offer__price::before');
     const app = readFileSync(resolve(root, "app.js"), "utf8");
     expect(app).toContain('querySelectorAll(".service-offer").forEach((element) => sceneObserver.observe(element))');
+  });
+
+  it("synchronizes mobile countdown colours from green through yellow and orange to red", () => {
+    const mobile = css.slice(css.indexOf("/* Mobile availability:"), css.indexOf("/* Desktop composition."));
+    expect(mobile).toContain("@media (max-width: 64rem)");
+    expect(mobile).toContain("@media (prefers-reduced-motion: no-preference)");
+    for (const [available, colour] of [[5, "#7cebb4"], [4, "#c6e884"], [3, "#f5cf73"], [2, "#ffad70"], [1, "#ff8a86"]]) {
+      expect(mobile).toContain(`.service-capacity[data-available="${available}"] { --capacity-accent: ${colour};`);
+    }
+    expect(mobile).toContain("calc(var(--count-duration) * 4 / var(--count-steps)) linear .35s calc(var(--count-steps) / 4) both");
+    expect(mobile).toContain(":is(.service-capacity__number,.service-capacity__slots)");
+    expect(mobile).toContain(':not([data-available="request"]):not([data-available="5"])');
+    expect(mobile).toContain("25%,45% { color: #c6e884; }");
+    expect(mobile).toContain("50%,70% { color: #f5cf73; }");
+    expect(mobile).toContain("75%,95% { color: #ffad70; }");
+    expect(mobile).toContain("100% { color: #ff8a86; }");
+    expect(mobile).toContain("capacity-mobile-ring-status { from { stroke: currentColor;");
+    expect(mobile).toContain("capacity-mobile-assigned { from { opacity: 1; border-color: color-mix(in srgb,currentColor");
   });
 
   it("uses five native scarcity arcs and bounded neon surfaces without changing offer copy", () => {
