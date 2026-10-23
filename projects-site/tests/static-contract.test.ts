@@ -23,6 +23,18 @@ describe("Isolated TooolVibes projects landing", () => {
   });
 
 
+  it("keeps the mobile logo cue shallow and full-width without changing its desktop geometry", () => {
+    const mobile = css.slice(css.indexOf(".hero { padding-top: 6.5rem;"), css.indexOf("/* Desktop composition."));
+    expect(mobile).toContain(".hero-signal { width: calc(100% + 2 * var(--gutter)); height: 3.5rem;");
+    expect(mobile).toContain("margin-inline: calc(-1 * var(--gutter))");
+    expect(mobile).toContain(".hero-signal__field img { width: 2.75rem; height: 2.75rem; }");
+    expect(mobile).toContain(".hero-signal__rotor { animation: none; }");
+    expect(mobile).toContain(".hero-signal__trail { display: none; }");
+    expect(mobile).toContain("@media (prefers-reduced-motion: no-preference)");
+    expect(mobile).toContain("hero-signal-horizontal 5s");
+    expect(css).toContain(".hero-signal { width: 9rem; height: 7rem;");
+    expect(css).toContain(".hero-signal__rotor { animation: hero-signal-orbit 12s linear infinite; }");
+  });
   it("keeps a symbol-only accessible header and a decorative CSS logo cue above the hero title", () => {
     const header = html.match(/<header[\s\S]*?<\/header>/)![0];
     expect(header).not.toContain("<span>TooolVibes</span>");
