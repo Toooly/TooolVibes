@@ -3,7 +3,6 @@
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const body = document.body;
-  const header = document.querySelector("[data-header]");
   const menuToggle = document.querySelector("[data-menu-toggle]");
   const mobileNav = document.querySelector("[data-mobile-nav]");
   const contactForm = document.querySelector("[data-contact-form]");
@@ -57,16 +56,6 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") setMenu(false);
   });
-
-  let headerScrolled = null;
-  const syncHeader = () => {
-    const scrolled = window.scrollY > 18;
-    if (scrolled === headerScrolled) return;
-    headerScrolled = scrolled;
-    header?.classList.toggle("is-scrolled", scrolled);
-  };
-  syncHeader();
-  window.addEventListener("scroll", syncHeader, { passive: true });
 
   const serviceScreens = {
     "ecommerce": "<svg class=\"service-screen\" viewBox=\"0 0 1280 853\" aria-hidden=\"true\"><path class=\"screen-action\" fill=\"#70e4af\" fill-opacity=\".35\" d=\"m875 660 161 27-7 27-160-28Z\"/><path class=\"screen-cursor\" fill=\"#f4f0e8\" stroke=\"#071020\" stroke-width=\"3\" d=\"m1007 688 6 25 6-9 11-3Z\"/><path class=\"screen-confirm\" d=\"m967 689 6 7 12-10\"/></svg>",
@@ -237,7 +226,7 @@
       }
       const compact = viewportWidth <= 768 && availableHeight < 640;
       journey.classList.toggle("journey--compact", compact);
-      stickyTop = (header?.querySelector(".site-header__inner")?.offsetHeight || 76) + 12;
+      stickyTop = 12;
       const cueSpace = compact ? 52 : 64;
       guided = !preference.matches && (viewportWidth <= 768 || viewportWidth > 1024) && frame.offsetHeight + stickyTop + cueSpace < availableHeight && "IntersectionObserver" in window;
       journey.style.setProperty("--journey-sticky-top", `${stickyTop}px`);
@@ -594,7 +583,7 @@
         question.tabIndex = -1;
         question.focus({ preventScroll: true });
         const bounds = question.getBoundingClientRect();
-        const top = (header?.getBoundingClientRect().bottom || 0) + 16;
+        const top = 16;
         const bottom = window.visualViewport?.height || window.innerHeight;
         if (bounds.height && (bounds.top < top || bounds.bottom > bottom)) {
           window.scrollBy({ top: bounds.top - top, behavior: preference.matches ? "instant" : "smooth" });

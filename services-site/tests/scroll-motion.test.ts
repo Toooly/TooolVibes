@@ -163,12 +163,21 @@ describe("Scroll-paced services motion", () => {
   });
 
   it("retains manual choices on tablets and desktop windows too short for a sticky stage", () => {
-    for (const ui of [setup(900, 450, 1024), setup(600, 500, 1440)]) {
+    for (const ui of [setup(900, 450, 1024), setup(560, 500, 1440)]) {
       expect(ui.journey.classList.contains("journey--guided")).toBe(false);
       (ui.journey.querySelector('[data-journey-select="ai"]') as HTMLButtonElement).click();
       expect(ui.journey.dataset.active).toBe("ai");
       expect(ui.w.scrollTo).not.toHaveBeenCalled();
     }
+  });
+
+  it("uses the space freed by the non-fixed header without changing the native scroll phases", () => {
+    const ui = setup(600, 500, 1440);
+    expect(ui.journey.style.getPropertyValue("--journey-sticky-top")).toBe("12px");
+    expect(ui.journey.classList.contains("journey--guided")).toBe(true);
+    ui.enter(ui.track);
+    ui.progress(.5);
+    expect(ui.journey.dataset.active).toBe("social");
   });
 
   it("rechecks desktop height without changing mobile browser-chrome behavior", () => {

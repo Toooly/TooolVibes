@@ -3,7 +3,6 @@
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const body = document.body;
-  const header = document.querySelector("[data-header]");
   const menuToggle = document.querySelector("[data-menu-toggle]");
   const mobileNav = document.querySelector("[data-mobile-nav]");
   const contactForm = document.querySelector("[data-contact-form]");
@@ -57,16 +56,6 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") setMenu(false);
   });
-
-  let headerScrolled = null;
-  const syncHeader = () => {
-    const scrolled = window.scrollY > 18;
-    if (scrolled === headerScrolled) return;
-    headerScrolled = scrolled;
-    header?.classList.toggle("is-scrolled", scrolled);
-  };
-  syncHeader();
-  window.addEventListener("scroll", syncHeader, { passive: true });
 
   const serviceScreens = {
     web: `<svg class="service-screen" viewBox="0 0 1280 721" aria-hidden="true"><path fill="#0c1434" d="m391 319 122 15-18 95-121-15Z"/><g class="screen-bars" fill="#45d8f0"><path d="m394 386 10 1-5 23-10-1Z"/><path d="m414 375 10 1-7 26-10-1Z"/><path d="m436 363 10 1-8 41-10-1Z"/><path d="m458 350 10 1-10 53-10-1Z"/><path d="m479 341 10 1-12 67-10-1Z"/></g><path class="screen-action" fill="#82f2cf" d="m893 484 133 17-2 13-134-18Z"/><path class="screen-cursor" fill="#f4f0e8" stroke="#071020" stroke-width="3" d="m995 496 5 29 7-9 13-2Z"/><path class="screen-confirm" d="m957 495 7 8 14-12"/></svg>`,
@@ -240,7 +229,7 @@
       }
       const compact = viewportWidth <= 768 && availableHeight < 640;
       journey.classList.toggle("journey--compact", compact);
-      stickyTop = (header?.querySelector(".site-header__inner")?.offsetHeight || 76) + 12;
+      stickyTop = 12;
       const cueSpace = compact ? 52 : 64;
       guided = !preference.matches && (viewportWidth <= 768 || viewportWidth > 1024) && frame.offsetHeight + stickyTop + cueSpace < availableHeight && "IntersectionObserver" in window;
       journey.style.setProperty("--journey-sticky-top", `${stickyTop}px`);
@@ -597,7 +586,7 @@
         question.tabIndex = -1;
         question.focus({ preventScroll: true });
         const bounds = question.getBoundingClientRect();
-        const top = (header?.getBoundingClientRect().bottom || 0) + 16;
+        const top = 16;
         const bottom = window.visualViewport?.height || window.innerHeight;
         if (bounds.height && (bounds.top < top || bounds.bottom > bottom)) {
           window.scrollBy({ top: bounds.top - top, behavior: preference.matches ? "instant" : "smooth" });

@@ -5,8 +5,19 @@ import { describe, expect, it } from "vitest";
 const root = resolve(process.cwd(), "services-site/public");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const css = readFileSync(resolve(root, "styles.css"), "utf8");
+const app = readFileSync(resolve(root, "app.js"), "utf8");
 
 describe("TooolVibes Servizi static contract", () => {
+
+  it("lets the header leave with native scrolling without reserving its old fixed space", () => {
+    expect(css.match(/\.site-header \{([^}]+)\}/)![1]).toContain("position: absolute");
+    expect(css).not.toContain(".site-header.is-scrolled");
+    expect(css).toContain("scroll-padding-top: 1rem");
+    expect(css).toContain("justify-self: start; margin-left: 0;");
+    expect(app).not.toContain("syncHeader");
+    expect(app).toContain("stickyTop = 12;");
+    expect(app).toContain("const top = 16;");
+  });
 
   it("keeps the animated header mark compact and removes the old hero spacer", () => {
     expect(css).toContain(".brand-signal { width: min(100%,14rem); min-width: 0; height: 3rem;");

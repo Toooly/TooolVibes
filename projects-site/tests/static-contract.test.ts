@@ -10,6 +10,16 @@ const css = read("public/styles.css");
 const app = read("public/app.js");
 
 describe("Isolated TooolVibes projects landing", () => {
+  it("lets the header leave with native scrolling without reserving its old fixed space", () => {
+    expect(css.match(/\.site-header \{([^}]+)\}/)![1]).toContain("position: absolute");
+    expect(css).not.toContain(".site-header.is-scrolled");
+    expect(css).toContain("scroll-padding-top: 1rem");
+    expect(css).toContain("justify-self: start; margin-left: 0;");
+    expect(app).not.toContain("syncHeader");
+    expect(app).toContain("stickyTop = 12;");
+    expect(app).toContain("const top = 16;");
+  });
+
   it("shares a distinct champagne, rose and platinum palette between the project explorer and contact form", () => {
     const explorer = css.match(/\.journey, \.contact-panel \{([^}]+)\}/)![1];
     for (const [service, color] of [["ecommerce", "#e8c582"], ["app", "#e7a0b3"], ["software", "#d3dce4"]]) {
