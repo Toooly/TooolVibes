@@ -142,4 +142,23 @@ describe.each(["services-site", "projects-site"])("%s visual interaction polish"
     expect(values.height).toBe("min(60rem,110svh)");
     expect(values["pointer-events"]).toBe("none");
   });
+
+  it("carries the header cyan and violet through the swish instead of a pale white core", () => {
+    const dom = new JSDOM(html);
+    const colors = [...dom.window.document.querySelectorAll("#intro-trail-color stop")].map(stop => stop.getAttribute("stop-color"));
+    expect(colors).toEqual(["#27d8ee", "#875cff", "#4a87ff", "#27d8ee"]);
+    for (const [selector, color] of [
+      [".intro-trail .intro-trail__filament--violet", "var(--violet)"],
+      [".intro-trail .intro-trail__filament--cyan", "var(--cyan)"],
+      [".intro-trail .intro-trail__head", "var(--cyan)"],
+      [".intro-trail .intro-trail__halo", "var(--violet)"],
+      [".intro-trail .intro-trail__glow", "var(--cyan)"],
+      [".intro-trail__dust path", "var(--violet)"],
+      [".intro-trail__dust path:nth-child(even)", "var(--cyan)"],
+    ]) {
+      const rule = stylesheet.nodes.find(node => node.type === "rule" && node.selector === selector) as Rule;
+      expect(rule.nodes.some(node => node.type === "decl" && node.prop === "stroke" && node.value === color)).toBe(true);
+    }
+    dom.window.close();
+  });
 });

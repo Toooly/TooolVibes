@@ -37,7 +37,7 @@ describe("TooolVibes Servizi static contract", () => {
 
   it("hands a multi-filament beam from the hero CTAs into the explorer without adding vertical space", () => {
     expect(html.match(/intro-trail__filament--(?:cyan|violet)/g)).toHaveLength(4);
-    expect(css).toContain("--trail-length: 140px; stroke: #9ae5f5; stroke-width: .65px;");
+    expect(css).toContain("--trail-length: 140px; stroke: var(--cyan); stroke-width: .75px;");
     expect(css).toContain("@keyframes intro-trail-wake");
     expect(css).toContain("animation-range: var(--intro-primary-from) var(--intro-primary-to)");
     expect(css).toContain("animation-range: var(--intro-secondary-from) var(--intro-secondary-to)");

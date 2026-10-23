@@ -9,39 +9,113 @@
   const formStatus = document.querySelector("[data-form-status]");
   const trackedSections = new Set();
 
+  function initInitialAnchor() {
+    const hash = window.location.hash;
+    if (!hash || performance.getEntriesByType?.("navigation")?.[0]?.type === "back_forward") return;
+    let target;
+    try { target = document.getElementById(decodeURIComponent(hash.slice(1))); } catch { return; }
+    if (!target?.matches("section[id],main[id],details[data-contact-panel][id]")) return;
+    const fontReady = document.fonts?.ready;
+    let fontsReady = !fontReady;
+    let loaded = document.readyState === "complete";
+    let cancelled = false;
+    let frame = 0;
+    const interrupts = ["wheel", "touchstart", "pointerdown", "keydown", "focusin", "hashchange", "pagehide"];
+    function cancel() {
+      cancelled = true;
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      window.removeEventListener("load", onLoad);
+      interrupts.forEach(event => window.removeEventListener(event, cancel, true));
+    }
+    function align() {
+      frame = 0;
+      const focused = document.activeElement;
+      if (cancelled || window.location.hash !== hash || !target.isConnected || (focused && focused !== document.body && focused !== document.documentElement)) { cancel(); return; }
+      const padding = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      const needsAlignment = Math.abs(target.getBoundingClientRect().top - padding - margin) > 2;
+      cancel();
+      if (needsAlignment) target.scrollIntoView({ block: "start", behavior: "instant" });
+    }
+    function schedule() {
+      if (cancelled || !loaded || !fontsReady || frame) return;
+      frame = requestAnimationFrame(() => { frame = requestAnimationFrame(align); });
+    }
+    function onLoad() { loaded = true; schedule(); }
+    interrupts.forEach(event => window.addEventListener(event, cancel, { capture: true, passive: true }));
+    if (!loaded) window.addEventListener("load", onLoad, { once: true });
+    fontReady?.then(() => { fontsReady = true; schedule(); });
+    schedule();
+  }
+  initInitialAnchor();
+
+
   function buildTrailBundle(svg, points, directions, width, height) {
+    // Shared centripetal knots preserve tangent and curvature through every bend, including the offset filaments.
     const margin = 4;
-    const handles = points.map((point, index) => {
-      const previous = points[Math.max(0, index - 1)];
-      const next = points[Math.min(points.length - 1, index + 1)];
-      const horizontal = directions[index] === "horizontal";
-      const axis = horizontal ? 0 : 1;
-      const sign = horizontal && index === points.length - 1 && point[0] < previous[0] ? -1 : 1;
-      const gaps = [];
-      if (index) gaps.push(horizontal ? Math.hypot(point[0] - previous[0], point[1] - previous[1]) : Math.abs(point[axis] - previous[axis]));
-      if (index < points.length - 1) gaps.push(horizontal ? Math.hypot(next[0] - point[0], next[1] - point[1]) : Math.abs(next[axis] - point[axis]));
-      const desired = Math.max(4, Math.min(...gaps.filter(gap => gap > 0)) * (horizontal ? .36 : .46));
-      const limit = horizontal ? width : height;
-      const room = [];
-      if (index) room.push(sign > 0 ? point[axis] - margin : limit - margin - point[axis]);
-      if (index < points.length - 1) room.push(sign > 0 ? limit - margin - point[axis] : point[axis] - margin);
-      const length = Math.max(1, Math.min(desired, (horizontal ? width : height) * .2, ...room));
-      return horizontal ? [sign * length, 0] : [0, length];
+    const last = points.length - 1;
+    const intervals = points.slice(1).map((point, index) => Math.max(1, Math.sqrt(Math.hypot(point[0] - points[index][0], point[1] - points[index][1]))));
+    const endpointTangent = index => {
+      const previous = index ? points[index - 1] : points[index];
+      const next = index ? points[index] : points[index + 1];
+      const axis = directions[index] === "horizontal" ? 0 : 1;
+      return [0, 1].map(component => component === axis ? (next[axis] - previous[axis]) / intervals[index ? last - 1 : 0] : 0);
+    };
+    const startTangent = endpointTangent(0);
+    const endTangent = endpointTangent(last);
+    function spline(knots) {
+      const derivatives = [0, 1].map(axis => {
+        const lower = knots.map(() => 0);
+        const diagonal = knots.map(() => 0);
+        const upper = knots.map(() => 0);
+        const values = knots.map(() => 0);
+        diagonal[0] = 2 * intervals[0];
+        upper[0] = intervals[0];
+        values[0] = 6 * ((knots[1][axis] - knots[0][axis]) / intervals[0] - startTangent[axis]);
+        for (let index = 1; index < last; index++) {
+          const before = intervals[index - 1];
+          const after = intervals[index];
+          lower[index] = before;
+          diagonal[index] = 2 * (before + after);
+          upper[index] = after;
+          values[index] = 6 * ((knots[index + 1][axis] - knots[index][axis]) / after - (knots[index][axis] - knots[index - 1][axis]) / before);
+        }
+        lower[last] = intervals[last - 1];
+        diagonal[last] = 2 * intervals[last - 1];
+        values[last] = 6 * (endTangent[axis] - (knots[last][axis] - knots[last - 1][axis]) / intervals[last - 1]);
+        for (let index = 1; index <= last; index++) {
+          const weight = lower[index] / diagonal[index - 1];
+          diagonal[index] -= weight * upper[index - 1];
+          values[index] -= weight * values[index - 1];
+        }
+        values[last] /= diagonal[last];
+        for (let index = last - 1; index >= 0; index--) values[index] = (values[index] - upper[index] * values[index + 1]) / diagonal[index];
+        return values;
+      });
+      return knots.slice(1).map((point, index) => [
+        ...[0, 1].map(axis => knots[index][axis] + (point[axis] - knots[index][axis]) / 3 - intervals[index] ** 2 * (2 * derivatives[axis][index] + derivatives[axis][index + 1]) / 18),
+        ...[0, 1].map(axis => point[axis] - (point[axis] - knots[index][axis]) / 3 - intervals[index] ** 2 * (derivatives[axis][index] + 2 * derivatives[axis][index + 1]) / 18),
+        ...point,
+      ]);
+    }
+    const centerCurves = spline(points);
+    const normals = points.map((point, index) => {
+      const tangent = index < last
+        ? [centerCurves[index][0] - point[0], centerCurves[index][1] - point[1]]
+        : [point[0] - centerCurves[index - 1][2], point[1] - centerCurves[index - 1][3]];
+      const magnitude = Math.hypot(...tangent) || 1;
+      return [-tangent[1] / magnitude, tangent[0] / magnitude];
     });
     const rounded = value => Number(value.toFixed(2));
     function geometry(coefficient) {
       const shifted = points.map((point, index) => {
-        const progress = index / (points.length - 1);
-        const spread = coefficient * Math.sin(Math.PI * progress) * (12 + 10 * progress);
-        const handle = handles[index];
-        const magnitude = Math.hypot(...handle);
-        return [point[0] - handle[1] / magnitude * spread, point[1] + handle[0] / magnitude * spread];
+        const progress = index / last;
+        const room = Math.min(...[width, height].map((limit, axis) => Math.abs(normals[index][axis]) > .001 ? Math.max(0, Math.min(point[axis] - margin, limit - margin - point[axis])) / Math.abs(normals[index][axis]) : Infinity));
+        const spread = index && index < last ? coefficient * Math.min(Math.sin(Math.PI * progress) * (12 + 10 * progress), room / 1.8) : 0;
+        return point.map((value, axis) => value + normals[index][axis] * spread);
       });
-      const curves = shifted.slice(1).map((point, index) => [
-        shifted[index][0] + handles[index][0], shifted[index][1] + handles[index][1],
-        point[0] - handles[index + 1][0], point[1] - handles[index + 1][1],
-        ...point,
-      ]);
+      const curves = coefficient ? spline(shifted) : centerCurves;
       const d = ["M", ...shifted[0], ...curves.flatMap(curve => ["C", ...curve])]
         .map(value => typeof value === "number" ? rounded(value) : value).join(" ");
       return { d, curves };
@@ -51,8 +125,8 @@
     let total = 0;
     const stops = center.curves.map(curve => {
       let previous = pen;
-      for (let step = 1; step <= 24; step++) {
-        const t = step / 24;
+      for (let step = 1; step <= 48; step++) {
+        const t = step / 48;
         const u = 1 - t;
         const point = [0, 1].map(axis => u ** 3 * pen[axis] + 3 * u ** 2 * t * curve[axis] + 3 * u * t ** 2 * curve[axis + 2] + t ** 3 * curve[axis + 4]);
         total += Math.hypot(point[0] - previous[0], point[1] - previous[1]);
@@ -64,7 +138,7 @@
     svg.querySelectorAll("[data-trail-strand]").forEach(strand => {
       strand.setAttribute("d", geometry(Number(strand.dataset.trailStrand) || 0).d);
     });
-    return { ...center, stops, total };
+    return { ...center, stops, total, intervals };
   }
 
   function initIntroTrail() {
@@ -305,7 +379,10 @@
     link.addEventListener("click", () => setMenu(false));
   });
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") setMenu(false);
+    if (event.key === "Escape" && menuToggle?.getAttribute("aria-expanded") === "true") {
+      setMenu(false);
+      menuToggle.focus({ preventScroll: true });
+    }
   });
 
   const serviceScreens = {
@@ -582,12 +659,11 @@
     const storageKey = "services-availability-dismissed-until";
     const cta = notice.querySelector("[data-notice-cta]");
     const panel = document.querySelector("[data-contact-panel]");
-    const services = [...document.querySelectorAll(".service[data-service]")];
+    const services = [...document.querySelectorAll("section.service[data-service]")];
     const contexts = new Set();
     const blockers = new Set();
     const shownServices = new Set();
     const enteredAt = performance.now();
-    let candidate = services[0];
     let ready = false;
     let lastShownAt = -Infinity;
     let dismissedUntil = 0;
@@ -599,10 +675,7 @@
     const blocked = () => document.hidden || blockers.size > 0 || menuToggle?.getAttribute("aria-expanded") === "true" || document.activeElement?.matches("input,textarea,select,[contenteditable=true]");
     const currentService = () => {
       // At a section boundary, prefer the next visible service even after a resize re-enters the previous one.
-      const visibleService = services.findLast((service) => contexts.has(service));
-      if (visibleService) return visibleService;
-      if (contexts.has(journey)) return services.find((service) => service.dataset.service === journey.dataset.active) || candidate;
-      return candidate;
+      return services.findLast((service) => contexts.has(service)) || null;
     };
     const syncLauncher = () => {
       const service = currentService();
@@ -611,7 +684,7 @@
         launcher.querySelector("[data-launcher-service]").textContent = service.querySelector(".service-offer__label").textContent;
       }
       if (service) launcher.dataset.available = service.querySelector(".service-capacity")?.dataset.available || "request";
-      launcher.hidden = !ready || blocked() || !notice.hidden;
+      launcher.hidden = !ready || !service || blocked() || !notice.hidden;
     };
     const rememberDismissal = () => {
       dismissedUntil = Date.now() + 15 * 60_000;
@@ -659,9 +732,10 @@
     };
     const schedule = () => {
       clearPending();
-      if (blocked()) { dismiss(); return; }
-      syncLauncher();
       const service = currentService();
+      if (blocked() || !service) { dismiss(); return; }
+      if (!notice.hidden && notice.dataset.service !== service.dataset.service) dismiss();
+      syncLauncher();
       if (!ready || !contexts.size || !notice.hidden || !service || shownServices.has(service.dataset.service) || shownServices.size >= 2 || Date.now() < dismissedUntil) return;
       pending = window.setTimeout(() => show(), Math.max(1_500, 8_000 - (performance.now() - enteredAt), 45_000 - (performance.now() - lastShownAt)));
     };
@@ -669,19 +743,18 @@
     if ("IntersectionObserver" in window) {
       const serviceObserver = new IntersectionObserver((entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            contexts.add(entry.target);
-            if (entry.target !== journey) candidate = entry.target;
-          } else contexts.delete(entry.target);
+          if (!services.includes(entry.target)) continue;
+          if (entry.isIntersecting) contexts.add(entry.target);
+          else contexts.delete(entry.target);
         }
         schedule();
       }, { rootMargin: "-15% 0px -15% 0px" });
-      [...services, journey].filter(Boolean).forEach((service) => serviceObserver.observe(service));
+      services.forEach((service) => serviceObserver.observe(service));
       const blockerObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => entry.isIntersecting ? blockers.add(entry.target) : blockers.delete(entry.target));
         schedule();
-      });
-      document.querySelectorAll(".contact,.method-frame,.site-footer").forEach((element) => blockerObserver.observe(element));
+      }, { rootMargin: "-12% 0px -12% 0px" });
+      document.querySelectorAll(".hero,[data-journey],.process,.contact,.method-frame,.site-footer").forEach((element) => blockerObserver.observe(element));
     }
     window.setTimeout(() => { ready = true; schedule(); }, 4_000);
     launcher.addEventListener("click", () => show(true));
@@ -694,7 +767,6 @@
     document.addEventListener("focusin", schedule);
     document.addEventListener("focusout", () => queueMicrotask(schedule));
     menuToggle?.addEventListener("click", schedule);
-    journey?.addEventListener("servicechange", schedule);
     panel?.addEventListener("toggle", schedule);
     document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !notice.hidden) dismiss(true); });
     document.querySelectorAll('a[href="#contatti"]').forEach((link) => link.addEventListener("click", () => {

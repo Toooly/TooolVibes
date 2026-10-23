@@ -215,17 +215,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .intro-trail__svg { width: 100%; height: 100%; overflow: visible; }
 .intro-trail :is(use,.intro-trail__filament) { fill: none; stroke: url(#intro-trail-color); stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: var(--trail-length) 1600; stroke-dashoffset: var(--trail-length); opacity: 0; }
 .intro-trail .intro-trail__wake { --trail-length: 920px; stroke-width: .55px; stroke-opacity: .18; }
-.intro-trail__halo { --trail-length: 520px; stroke-width: 12px; stroke-opacity: .18; filter: blur(3px); }
-.intro-trail__glow { --trail-length: 410px; stroke-width: 2.8px; stroke-opacity: .22; }
-.intro-trail__core { stroke-width: .7px; stroke-opacity: .72; }
+.intro-trail .intro-trail__halo { --trail-length: 520px; stroke: var(--violet); stroke-width: 12px; stroke-opacity: .24; filter: blur(3px); }
+.intro-trail .intro-trail__glow { --trail-length: 410px; stroke: var(--cyan); stroke-width: 2.2px; stroke-opacity: .32; }
+.intro-trail__core { stroke-width: .85px; stroke-opacity: .82; }
 .intro-trail__filament { --trail-length: 440px; stroke-width: .65px; stroke-opacity: .7; }
-.intro-trail .intro-trail__filament--violet { --trail-length: 860px; stroke: #b69aff; stroke-opacity: .5; }
-.intro-trail .intro-trail__filament--cyan { --trail-length: 370px; stroke: #8cf3ff; stroke-opacity: .85; }
-.intro-trail__filament[data-trail-strand="-0.6"] { --trail-length: 540px; }
-.intro-trail__filament[data-trail-strand="0.25"] { --trail-length: 470px; }
-.intro-trail__filament[data-trail-strand="0.6"] { --trail-length: 580px; stroke-opacity: .5; }
-.intro-trail__filament[data-trail-strand="1"] { --trail-length: 900px; stroke-opacity: .4; }
-.intro-trail .intro-trail__head { --trail-length: 140px; stroke: #9ae5f5; stroke-width: .65px; stroke-opacity: .7; }
+.intro-trail .intro-trail__filament--violet { --trail-length: 860px; stroke: var(--violet); stroke-width: 1.05px; stroke-opacity: .85; }
+.intro-trail .intro-trail__filament--cyan { --trail-length: 370px; stroke: var(--cyan); stroke-opacity: .9; }
+.intro-trail__filament[data-trail-strand="-0.6"] { --trail-length: 540px; stroke: #4a87ff; stroke-opacity: .85; }
+.intro-trail__filament[data-trail-strand="0.25"] { --trail-length: 470px; stroke: var(--violet); stroke-opacity: .9; }
+.intro-trail__filament[data-trail-strand="0.6"] { --trail-length: 580px; stroke: var(--cyan); stroke-opacity: .75; }
+.intro-trail__filament[data-trail-strand="1"] { --trail-length: 900px; stroke: var(--violet); stroke-opacity: .6; }
+.intro-trail .intro-trail__head { --trail-length: 140px; stroke: var(--cyan); stroke-width: .75px; stroke-opacity: .85; }
 /* Nested stroke lengths feather the wake along its curve, rather than across the viewport. */
 .intro-trail .intro-trail__feather { --trail-length: 960px; stroke: #fff; stroke-width: 84px; stroke-opacity: .08; }
 .intro-trail .intro-trail__feather--2 { --trail-length: 780px; stroke-opacity: .12; }
@@ -234,8 +234,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .intro-trail .intro-trail__feather--5 { --trail-length: 240px; stroke-opacity: .36; }
 .intro-trail .intro-trail__feather--6 { --trail-length: 80px; stroke-opacity: .7; }
 .intro-trail__dust { opacity: 0; }
-.intro-trail__dust path { fill: none; stroke: #afa0fa; stroke-width: .55px; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 3 10 22 13 5 18 11 24; }
-.intro-trail__dust path:nth-child(even) { stroke: #8de4f2; stroke-dasharray: 14 18 3 13 24 23; stroke-dashoffset: -17px; }
+.intro-trail__dust path { fill: none; stroke: var(--violet); stroke-width: .55px; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 3 10 22 13 5 18 11 24; }
+.intro-trail__dust path:nth-child(even) { stroke: var(--cyan); stroke-dasharray: 14 18 3 13 24 23; stroke-dashoffset: -17px; }
 .intro-trail__dust path:nth-child(n+3) { stroke-opacity: .65; stroke-dashoffset: -39px; }
 .intro-trail__spot { position: absolute; top: 0; left: 0; width: 15rem; height: 15rem; offset-anchor: center; offset-rotate: 0deg; opacity: 0; background: radial-gradient(circle,rgba(39,216,238,.16),rgba(135,92,255,.09) 30%,transparent 68%); }
 #journey-title { position: relative; }

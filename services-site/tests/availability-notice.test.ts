@@ -53,7 +53,7 @@ describe("Contextual availability notice", () => {
     const ui = setup();
     ui.advance();
     expect(ui.notice.hidden).toBe(true);
-    expect(ui.launcher.hidden).toBe(false);
+    expect(ui.launcher.hidden).toBe(true);
     ui.enter();
     ui.advance(1_499);
     expect(ui.notice.hidden).toBe(true);
@@ -88,10 +88,11 @@ describe("Contextual availability notice", () => {
   it("does not cover the contact section, guided method or footer", () => {
     const ui = setup();
     ui.enter();
-    for (const selector of [".contact", ".method-frame", ".site-footer"]) {
+    for (const selector of [".contact", ".process", ".method-frame", ".site-footer"]) {
       ui.block(selector, true);
       ui.advance();
       expect(ui.notice.hidden).toBe(true);
+      expect(ui.launcher.hidden).toBe(true);
       ui.block(selector, false);
     }
     ui.advance(1_501);
@@ -160,7 +161,7 @@ describe("Contextual availability notice", () => {
     expect(ui.notice.hidden).toBe(false);
   });
 
-  it("keeps manual access working without storage or IntersectionObserver and adds no network requests", () => {
+  it("keeps manual access working without storage and stays hidden without viewport observation", () => {
     const ui = setup("blocked");
     ui.enter(); ui.advance();
     expect(ui.notice.hidden).toBe(false);
@@ -171,9 +172,9 @@ describe("Contextual availability notice", () => {
     const unsupported = setup("new", false);
     unsupported.advance();
     expect(unsupported.notice.hidden).toBe(true);
-    expect(unsupported.launcher.hidden).toBe(false);
+    expect(unsupported.launcher.hidden).toBe(true);
     unsupported.launcher.click();
-    expect(unsupported.notice.hidden).toBe(false);
+    expect(unsupported.notice.hidden).toBe(true);
   });
 
   it("can be reopened after dismissal, including a preference remembered from an earlier visit", () => {
@@ -190,12 +191,15 @@ describe("Contextual availability notice", () => {
     expect(ui.notice.hidden).toBe(false);
   });
 
-  it("starts in the explorer rather than waiting until the complete service sections", () => {
+  it("waits for a real service instead of starting in the explorer", () => {
     const ui = setup();
     const journey = ui.w.document.querySelector<HTMLElement>("[data-journey]")!;
     journey.dataset.active = "social";
     ui.serviceObserver!.callback([{ target: journey, isIntersecting: true }]);
     ui.advance();
+    expect(ui.notice.hidden).toBe(true);
+    expect(ui.launcher.hidden).toBe(true);
+    ui.enter("social"); ui.advance(1_501);
     expect(ui.notice.hidden).toBe(false);
     expect(ui.notice.dataset.service).toBe("social");
   });
@@ -227,7 +231,7 @@ describe("Contextual availability notice", () => {
     expect(ui.notice.dataset.service).toBe("web");
   });
 
-  it("updates the launcher name and accent for each service and explorer phase", () => {
+  it("updates the launcher name and accent only for the visible service", () => {
     const ui = setup("dismissed");
     for (const kind of ["web", "social", "ai"]) {
       ui.enter(kind); ui.advance();
@@ -241,7 +245,8 @@ describe("Contextual availability notice", () => {
     ui.serviceObserver!.callback([{ target: journey, isIntersecting: true }]);
     for (const kind of ["social", "ai", "web"]) {
       journey.querySelector<HTMLButtonElement>(`[data-journey-select="${kind}"]`)!.click();
-      expect(ui.launcher.dataset.service).toBe(kind);
+      expect(ui.launcher.hidden).toBe(true);
+      expect(ui.notice.hidden).toBe(true);
     }
     expect(ui.w.fetch).not.toHaveBeenCalled();
   });
