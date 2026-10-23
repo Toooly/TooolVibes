@@ -10,8 +10,8 @@ const css = read("public/styles.css");
 const app = read("public/app.js");
 
 describe("Isolated TooolVibes projects landing", () => {
-  it("uses a distinct champagne, rose and platinum palette scoped to the project explorer", () => {
-    const explorer = css.match(/\.journey \{([^}]+)\}/)![1];
+  it("shares a distinct champagne, rose and platinum palette between the project explorer and contact form", () => {
+    const explorer = css.match(/\.journey, \.contact-panel \{([^}]+)\}/)![1];
     for (const [service, color] of [["ecommerce", "#e8c582"], ["app", "#e7a0b3"], ["software", "#d3dce4"]]) {
       expect(explorer).toContain(`--service-${service}: ${color}`);
       expect(css).toContain(`[data-journey-select="${service}"] { --choice-accent: var(--service-${service}); }`);
@@ -20,6 +20,19 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(base).toContain("--service-ecommerce: #6fa9ff");
     expect(base).toContain("--service-app: #c195ff");
     expect(base).toContain("--service-software: #70e4af");
+  });
+
+  it("illuminates each contact option and its selection indicator with its own service accent", () => {
+    for (const service of ["ecommerce", "app", "software"]) {
+      expect(css).toContain(`.need-options input[value="${service}"] + span { --need-accent: var(--service-${service}); }`);
+    }
+    for (const selector of [".need-options input:checked + span", ".need-options input:checked + span::after", ".need-options label:hover input:not(:checked) + span"]) {
+      const rule = css.slice(css.indexOf(`${selector} {`)).split("}")[0];
+      expect(rule).toContain("border-color: var(--need-accent,var(--cyan))");
+      expect(rule).toContain("background:");
+      expect(rule).not.toContain("background: var(--cyan)");
+    }
+    expect(css).toContain(".need-options input:focus-visible + span { outline: 3px solid var(--amber)");
   });
 
 
