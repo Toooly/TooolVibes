@@ -56,7 +56,7 @@
     const target = document.getElementById("esplora");
     if (!links.length || !target) return;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const interrupts = ["wheel", "touchstart", "pointerdown", "keydown", "hashchange", "popstate", "resize"];
+    const interrupts = ["wheel", "touchstart", "pointerdown", "keydown", "hashchange", "popstate"];
     let frame = 0;
     let active = null;
     function cancel() {
@@ -64,10 +64,14 @@
       frame = 0;
       active = null;
       interrupts.forEach(event => window.removeEventListener(event, cancel, true));
+      window.removeEventListener("resize", resized);
       document.removeEventListener("visibilitychange", visibilityChanged);
       preference.removeEventListener?.("change", cancel);
     }
     function visibilityChanged() { if (document.hidden) cancel(); }
+    function resized() {
+      if (active && (window.innerWidth !== active.width || (active.width > 1024 && window.innerHeight !== active.height))) cancel();
+    }
     function finish() {
       cancel();
       if (!target.isConnected) return;
@@ -95,9 +99,10 @@
         finish();
         return;
       }
-      const motion = { start, left, end, distance, duration: Math.max(1700, Math.min(2100, 1300 + Math.abs(distance) * .8)), startedAt: null };
+      const motion = { start, left, end, distance, width: window.innerWidth, height: window.innerHeight, duration: Math.max(1700, Math.min(2100, 1300 + Math.abs(distance) * .8)), startedAt: null };
       active = motion;
       interrupts.forEach(name => window.addEventListener(name, cancel, { capture: true, passive: true }));
+      window.addEventListener("resize", resized, { passive: true });
       document.addEventListener("visibilitychange", visibilityChanged);
       preference.addEventListener?.("change", cancel);
       function step(time) {

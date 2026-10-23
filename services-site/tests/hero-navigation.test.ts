@@ -15,6 +15,8 @@ function setup(site: string, reduced = false, supported = true) {
   let y = 0;
   let targetTop = 800;
   let height = 2000;
+  let viewportWidth = 390;
+  let viewportHeight = 844;
   let hidden = false;
   const listeners = new Set<() => void>();
   const preference = { matches: reduced, addEventListener: (_: string, handler: () => void) => listeners.add(handler), removeEventListener: (_: string, handler: () => void) => listeners.delete(handler) };
@@ -25,7 +27,8 @@ function setup(site: string, reduced = false, supported = true) {
   }
   Object.defineProperty(w, "scrollY", { get: () => y });
   Object.defineProperty(w, "scrollX", { value: 0 });
-  Object.defineProperty(w, "innerHeight", { value: 844 });
+  Object.defineProperty(w, "innerWidth", { get: () => viewportWidth });
+  Object.defineProperty(w, "innerHeight", { get: () => viewportHeight });
   Object.defineProperty(w.document.documentElement, "scrollHeight", { get: () => height });
   Object.defineProperty(w.document.body, "scrollHeight", { get: () => height });
   Object.defineProperty(w.document, "hidden", { get: () => hidden });
@@ -56,7 +59,12 @@ function setup(site: string, reduced = false, supported = true) {
     Object.defineProperty(event, "persisted", { value: persisted });
     w.dispatchEvent(event);
   };
-  return { w, frames, preference, listeners, target, rect, history, click, advance, pagehide, position: () => y, setHeight: (value: number) => { height = value; }, setTarget: (value: number) => { targetTop = value; }, setHidden: () => { hidden = true; w.document.dispatchEvent(new w.Event("visibilitychange")); } };
+  const resize = (width: number, height: number) => {
+    viewportWidth = width;
+    viewportHeight = height;
+    w.dispatchEvent(new w.Event("resize"));
+  };
+  return { w, frames, preference, listeners, target, rect, history, click, advance, pagehide, resize, position: () => y, setHeight: (value: number) => { height = value; }, setTarget: (value: number) => { targetTop = value; }, setHidden: () => { hidden = true; w.document.dispatchEvent(new w.Event("visibilitychange")); } };
 }
 
 describe.each(["services-site", "projects-site"])("%s deliberate hero navigation", site => {
@@ -122,7 +130,7 @@ describe.each(["services-site", "projects-site"])("%s deliberate hero navigation
     expect(ui.w.scrollTo).not.toHaveBeenCalled();
   });
 
-  it.each(["wheel", "touchstart", "pointerdown", "keydown", "hashchange", "popstate", "resize"])("cancels immediately on %s without changing hash or focus", name => {
+  it.each(["wheel", "touchstart", "pointerdown", "keydown", "hashchange", "popstate"])("cancels immediately on %s without changing hash or focus", name => {
     const ui = setup(site);
     ui.click(); ui.advance(0); ui.advance(700);
     const before = ui.position();
@@ -133,6 +141,40 @@ describe.each(["services-site", "projects-site"])("%s deliberate hero navigation
     expect(ui.listeners.size).toBe(0);
     expect(ui.history).not.toHaveBeenCalled();
     expect(ui.w.document.activeElement).toBe(ui.w.document.body);
+  });
+
+  it("cancels when mobile orientation changes the viewport width", () => {
+    const ui = setup(site);
+    ui.click(); ui.advance(0); ui.advance(700);
+    const before = ui.position();
+    ui.resize(844, 390); ui.advance(2200);
+    expect(ui.position()).toBe(before);
+    expect(ui.frames.size).toBe(0);
+    expect(ui.listeners.size).toBe(0);
+    expect(ui.history).not.toHaveBeenCalled();
+  });
+
+  it("continues through mobile browser-chrome height changes", () => {
+    const ui = setup(site);
+    ui.click(); ui.advance(0); ui.advance(700);
+    ui.resize(390, 932);
+    expect(ui.frames.size).toBe(1);
+    ui.advance(2200);
+    expect(ui.position()).toBe(776);
+    expect(ui.history).toHaveBeenCalledTimes(1);
+    expect(ui.rect).toHaveBeenCalledTimes(1);
+  });
+
+  it("cancels when a desktop window changes height", () => {
+    const ui = setup(site);
+    ui.resize(1440, 1000);
+    ui.click(); ui.advance(0); ui.advance(700);
+    const before = ui.position();
+    ui.resize(1440, 900); ui.advance(2200);
+    expect(ui.position()).toBe(before);
+    expect(ui.frames.size).toBe(0);
+    expect(ui.listeners.size).toBe(0);
+    expect(ui.history).not.toHaveBeenCalled();
   });
 
   it("cancels when hidden or when reduced motion changes mid-flight", () => {
