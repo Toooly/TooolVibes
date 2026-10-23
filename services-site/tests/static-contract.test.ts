@@ -7,6 +7,20 @@ const html = readFileSync(resolve(root, "index.html"), "utf8");
 const css = readFileSync(resolve(root, "styles.css"), "utf8");
 
 describe("TooolVibes Servizi static contract", () => {
+
+  it("keeps a symbol-only accessible header and a decorative CSS logo cue above the hero title", () => {
+    const header = html.match(/<header[\s\S]*?<\/header>/)![0];
+    expect(header).not.toContain("<span>TooolVibes</span>");
+    expect(header).toContain('alt="TooolVibes"');
+    expect(header.match(/<div class="brand">[\s\S]*?<\/div>/)![0]).not.toContain("<a");
+    const signal = html.slice(html.indexOf('<div class="hero-signal"'), html.indexOf('<h1 id="hero-title"'));
+    expect(signal).toContain('aria-hidden="true"');
+    expect(signal).toContain('src="/assets/tooolvibes-logo.png"');
+    expect(signal.match(/hero-signal__orbit(?: |")/g)).toHaveLength(2);
+    expect(signal).not.toMatch(/<(?:a|button|p|h[1-6])\b/);
+    expect(css).toContain("@media (prefers-reduced-motion: no-preference)");
+    expect(css).toContain("hero-signal-flow 3.6s");
+  });
   it("has independent canonical and social metadata", () => {
     expect(html).toContain('href="https://servizi.tooolvibes.eu/"');
     expect(html).toContain('property="og:image"');

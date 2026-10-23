@@ -10,6 +10,32 @@ const css = read("public/styles.css");
 const app = read("public/app.js");
 
 describe("Isolated TooolVibes projects landing", () => {
+  it("uses a distinct champagne, rose and platinum palette scoped to the project explorer", () => {
+    const explorer = css.match(/\.journey \{([^}]+)\}/)![1];
+    for (const [service, color] of [["ecommerce", "#e8c582"], ["app", "#e7a0b3"], ["software", "#d3dce4"]]) {
+      expect(explorer).toContain(`--service-${service}: ${color}`);
+      expect(css).toContain(`[data-journey-select="${service}"] { --choice-accent: var(--service-${service}); }`);
+    }
+    const base = css.match(/:root \{([^}]+)\}/)![1];
+    expect(base).toContain("--service-ecommerce: #6fa9ff");
+    expect(base).toContain("--service-app: #c195ff");
+    expect(base).toContain("--service-software: #70e4af");
+  });
+
+
+  it("keeps a symbol-only accessible header and a decorative CSS logo cue above the hero title", () => {
+    const header = html.match(/<header[\s\S]*?<\/header>/)![0];
+    expect(header).not.toContain("<span>TooolVibes</span>");
+    expect(header).toContain('alt="TooolVibes"');
+    expect(header.match(/<div class="brand">[\s\S]*?<\/div>/)![0]).not.toContain("<a");
+    const signal = html.slice(html.indexOf('<div class="hero-signal"'), html.indexOf('<h1 id="hero-title"'));
+    expect(signal).toContain('aria-hidden="true"');
+    expect(signal).toContain('src="/assets/tooolvibes-logo.png"');
+    expect(signal.match(/hero-signal__orbit(?: |")/g)).toHaveLength(2);
+    expect(signal).not.toMatch(/<(?:a|button|p|h[1-6])\b/);
+    expect(css).toContain("@media (prefers-reduced-motion: no-preference)");
+    expect(css).toContain("hero-signal-flow 3.6s");
+  });
   it("owns its canonical, metadata, sitemap, privacy and email origin", () => {
     for (const file of ["public/index.html", "public/robots.txt", "public/sitemap.xml", "public/privacy/index.html", "src/worker.ts", "src/thank-you-email.ts"]) {
       expect(read(file)).toContain("progetti.tooolvibes.eu");
