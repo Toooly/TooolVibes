@@ -196,7 +196,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
   content: "";
 }
 
-.hero::after { position: absolute; top: 2.5rem; left: 0; z-index: 1; width: min(100%,66rem); height: clamp(12rem,32vw,24rem); background: radial-gradient(ellipse at 24% 45%,rgba(39,216,238,.25),rgba(135,92,255,.1) 38%,transparent 68%),conic-gradient(from 152deg at calc(var(--gutter) + 1.25rem) 0,transparent 0deg,rgba(39,216,238,.42) 10deg,rgba(135,92,255,.24) 32deg,transparent 44deg); mask-image: linear-gradient(#000 12%,rgba(0,0,0,.65) 50%,transparent 100%); transform-origin: calc(var(--gutter) + 1.25rem) 0; opacity: 0; pointer-events: none; content: ""; }
+.intro-trail { --trail-length: 150px; position: absolute; inset: 0; z-index: 1; display: none; pointer-events: none; }
+.intro-trail__svg { width: 100%; height: 100%; overflow: visible; }
+.intro-trail use { fill: none; stroke: url(#intro-trail-color); stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: var(--trail-length) 1200; stroke-dashoffset: var(--trail-length); opacity: 0; }
+.intro-trail__halo { --trail-length: 190px; stroke-width: 28px; stroke-opacity: .2; filter: blur(6px); }
+.intro-trail__glow { stroke-width: 6px; stroke-opacity: .38; }
+.intro-trail__core { --trail-length: 120px; stroke-width: 2.5px; }
+.intro-trail .intro-trail__head { --trail-length: 5px; stroke: #e5ffff; stroke-width: 5px; }
+.intro-trail__spot { position: absolute; top: 0; left: 0; width: 10rem; height: 10rem; offset-anchor: center; offset-rotate: 0deg; opacity: 0; background: radial-gradient(circle,rgba(39,216,238,.28),rgba(135,92,255,.12) 30%,transparent 68%); }
 .hero__copy { position: relative; z-index: 2; max-width: 64rem; container-type: inline-size; }
 /* One accessible brand mark; horizontal motion stays inside its header slot. */
 .brand-signal { width: min(100%,14rem); min-width: 0; height: 3rem; pointer-events: none; }
@@ -204,7 +211,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .brand-signal__field::before { position: absolute; inset: 0; z-index: -1; border-radius: 50%; background: radial-gradient(ellipse at 25% 50%,rgba(103,72,235,.2),rgba(39,216,238,.06) 48%,transparent 75%); content: ""; }
 .brand-signal__field img { position: relative; z-index: 1; justify-self: start; margin-left: 0; width: 2.625rem; height: 2.625rem; object-fit: contain; }
 .brand-signal__orbit { position: absolute; width: 100%; height: 1.6rem; transform: rotate(-3deg); mask-image: linear-gradient(90deg,transparent,#000 5%,#000 92%,transparent); }
-.brand-signal__orbit--reverse { width: 94%; transform: rotate(3deg); opacity: .6; }
+.brand-signal__orbit--reverse { --orbit-opacity: .6; width: 94%; transform: rotate(3deg); opacity: .6; }
 .brand-signal__rotor { position: absolute; inset: 0; border: 1px solid rgba(111,169,255,.2); border-top-color: rgba(39,216,238,.65); border-bottom-color: rgba(135,92,255,.4); border-radius: 50%; }
 .brand-signal__rotor::after { position: absolute; top: 50%; left: -20%; width: 20%; height: 1px; border-radius: 999px; background: linear-gradient(90deg,transparent,var(--cyan),transparent); transform: translateX(300%); opacity: .65; content: ""; }
 .brand-signal__orbit--reverse .brand-signal__rotor::after { background: linear-gradient(90deg,transparent,var(--violet),transparent); }
@@ -219,20 +226,30 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: scroll()) {
-    .brand-signal__field { animation: brand-light-release linear both; animation-timeline: scroll(root block); animation-range: 0px 180px; }
-    .hero::after { animation: intro-light-focus linear both; animation-timeline: scroll(root block); animation-range: 0px 180px; }
+    [data-intro-trail].is-ready { display: block; }
+    [data-intro-trail].is-ready use { animation: intro-trail-pass linear both; animation-timeline: scroll(root block); animation-range: 0px var(--intro-travel,420px); }
+    [data-intro-trail].is-ready .intro-trail__spot { animation: intro-trail-spot linear both; animation-timeline: scroll(root block); animation-range: 0px var(--intro-travel,420px); }
+    .brand-signal__orbit { animation: intro-source-release linear both; animation-timeline: scroll(root block); animation-range: 0px 96px; }
   }
+  .contact-trail.is-ready { display: block; }
+  .contact-trail.is-playing use { animation: intro-trail-pass 1.45s linear both; }
+  .contact-trail.is-playing .intro-trail__spot { animation: intro-trail-spot 1.45s linear both; }
 }
-@keyframes brand-light-release {
-  0% { transform: translate3d(0,0,0) scale(1); opacity: 1; }
-  36% { transform: translate3d(0,18px,0) scale(1.015); opacity: .72; }
-  100% { transform: translate3d(0,42px,0) scale(1.04); opacity: 0; }
+@keyframes intro-source-release {
+  0% { translate: 0 0; scale: 1; opacity: var(--orbit-opacity,1); }
+  100% { translate: 14px 8px; scale: 1.1 1; opacity: 0; }
 }
-@keyframes intro-light-focus {
-  0% { transform: translate3d(0,0,0) scaleY(.55); opacity: 0; }
-  20% { opacity: .5; }
-  50% { opacity: .95; }
-  100% { transform: translate3d(0,140px,0) scaleY(1.3); opacity: 0; }
+@keyframes intro-trail-pass {
+  0% { stroke-dashoffset: var(--trail-length); opacity: 0; }
+  5%,84% { opacity: 1; }
+  100% { stroke-dashoffset: calc(var(--trail-length) - 1190px); opacity: 0; }
+}
+@keyframes intro-trail-spot {
+  0% { offset-distance: 0%; opacity: 0; }
+  5% { opacity: .8; }
+  76% { opacity: .8; }
+  84% { offset-distance: 100%; opacity: .5; }
+  92%,100% { offset-distance: 100%; opacity: 0; }
 }
 h1, h2, h3, p { margin-top: 0; }
 h1, h2 {
@@ -592,7 +609,10 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 }
 
 
-.contact { position: relative; padding-top: var(--section-space); padding-bottom: var(--section-space); display: grid; grid-template-columns: .78fr 1.22fr; gap: clamp(3rem,8vw,8rem); align-items: start; }
+.contact { position: relative; isolation: isolate; padding-top: var(--section-space); padding-bottom: var(--section-space); display: grid; grid-template-columns: .78fr 1.22fr; gap: clamp(3rem,8vw,8rem); align-items: start; }
+.contact-trail { bottom: auto; }
+.contact__copy { z-index: 2; }
+.contact-summary, .contact-reveal { position: relative; z-index: 2; }
 .contact::before { position: absolute; inset: 0 var(--gutter) auto; border-top: 1px solid var(--line); content: ""; }
 .contact__copy { position: sticky; top: 9rem; }
 .contact__copy h2 { font-size: clamp(3.1rem,5.2vw,5.8rem); }

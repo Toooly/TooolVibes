@@ -21,17 +21,28 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(focused).toContain("pointer-events: auto");
   });
 
-  it("hands the header light to the hero only during the first native scroll segment", () => {
+  it("sends a short native neon trail through two responsive hairpins instead of opening a spotlight", () => {
     expect(css).toMatch(/@media \(prefers-reduced-motion: no-preference\) \{\s*@supports \(animation-timeline: scroll\(\)\)/);
-    expect(css).toContain(".brand-signal__field { animation: brand-light-release linear both;");
-    expect(css).toContain(".hero::after { animation: intro-light-focus linear both;");
-    expect(css.match(/animation-range: 0px 180px/g)).toHaveLength(2);
-    const light = css.match(/\.hero::after \{([^}]+)\}/)![1];
-    expect(light).toContain("position: absolute");
-    expect(light).toContain("opacity: 0");
-    expect(light).toContain("pointer-events: none");
-    expect(css).toContain("translate3d(0,140px,0) scaleY(1.3); opacity: 0");
-    expect(app).not.toContain("brand-light-release");
+    expect(css).not.toContain(".hero::after");
+    expect(css).not.toContain("intro-light-focus");
+    expect(css).toContain("animation-range: 0px var(--intro-travel,420px)");
+    expect(css).toContain("stroke-dasharray: var(--trail-length) 1200");
+    expect(css).toContain("stroke-dashoffset: calc(var(--trail-length) - 1190px)");
+    expect(css).toContain("92%,100% { offset-distance: 100%; opacity: 0; }");
+    expect(html).toContain('data-intro-trail aria-hidden="true"');
+    expect(html).toContain('data-intro-route pathLength="1000"');
+    expect(html.match(/<use class="intro-trail__/g)).toHaveLength(8);
+    expect(app).toContain("function initIntroTrail()");
+    expect(app).toContain('spot.style.offsetPath =');
+  });
+
+  it("reuses the neon trail once on contact arrival without distracting while typing", () => {
+    expect(html).toContain('data-contact-trail aria-hidden="true"');
+    expect(html).toContain('data-contact-route pathLength="1000"');
+    expect(css).toContain(".contact-trail.is-playing use { animation: intro-trail-pass 1.45s linear both; }");
+    expect(app).toContain("function initContactTrail()");
+    expect(app).toContain('section.addEventListener("focusin", onFocus)');
+    expect(app).toContain('if (event.target.classList.contains("intro-trail__head")) stop();');
   });
 
   it("lets the header leave with native scrolling without reserving its old fixed space", () => {

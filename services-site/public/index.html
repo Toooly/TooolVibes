@@ -89,6 +89,23 @@
 
     <main id="contenuto">
       <section class="hero section-shell" aria-labelledby="hero-title">
+        <div class="intro-trail" data-intro-trail aria-hidden="true">
+          <svg class="intro-trail__svg" viewBox="0 0 1000 600" preserveAspectRatio="none" focusable="false">
+            <defs>
+              <linearGradient id="intro-trail-color" x1="0" y1="0" x2=".85" y2="1">
+                <stop offset="0" stop-color="#27d8ee" />
+                <stop offset=".48" stop-color="#a18aff" />
+                <stop offset="1" stop-color="#47dcff" />
+              </linearGradient>
+              <path id="intro-trail-route" data-intro-route pathLength="1000" />
+            </defs>
+            <use class="intro-trail__halo" href="#intro-trail-route" />
+            <use class="intro-trail__glow" href="#intro-trail-route" />
+            <use class="intro-trail__core" href="#intro-trail-route" />
+            <use class="intro-trail__head" href="#intro-trail-route" />
+          </svg>
+          <span class="intro-trail__spot" data-intro-spot></span>
+        </div>
         <div class="hero__copy" data-reveal>
           <h1 id="hero-title">
             <span class="hero__title-line">I servizi digitali di cui hai bisogno.</span>
@@ -354,6 +371,16 @@
 
 
       <section class="contact section-shell" aria-labelledby="contact-title">
+        <div class="intro-trail contact-trail" data-contact-trail aria-hidden="true">
+          <svg class="intro-trail__svg" viewBox="0 0 1000 600" preserveAspectRatio="none" focusable="false">
+            <defs><path id="contact-trail-route" data-contact-route pathLength="1000" /></defs>
+            <use class="intro-trail__halo" href="#contact-trail-route" />
+            <use class="intro-trail__glow" href="#contact-trail-route" />
+            <use class="intro-trail__core" href="#contact-trail-route" />
+            <use class="intro-trail__head" href="#contact-trail-route" />
+          </svg>
+          <span class="intro-trail__spot" data-intro-spot></span>
+        </div>
         <div class="contact__copy" data-reveal>
           <p class="section-kicker">Iniziamo da qui</p>
           <h2 id="contact-title">Il tuo progetto può <span class="text-gradient">iniziare qui.</span></h2>

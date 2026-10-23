@@ -9,6 +9,168 @@
   const formStatus = document.querySelector("[data-form-status]");
   const trackedSections = new Set();
 
+  function initIntroTrail() {
+    if (!window.CSS?.supports?.("animation-timeline: scroll()") || !window.CSS.supports("offset-path", 'path("M0 0 L1 1")')) return;
+    const hero = document.querySelector(".hero");
+    const trail = hero?.querySelector("[data-intro-trail]");
+    const svg = trail?.querySelector("svg");
+    const route = trail?.querySelector("[data-intro-route]");
+    const spot = trail?.querySelector("[data-intro-spot]");
+    const mark = document.querySelector(".brand-signal img");
+    const copy = hero?.querySelector(".hero__copy");
+    const title = copy?.querySelector("h1");
+    const lead = copy?.querySelector(":scope > p");
+    const actions = copy?.querySelector(".hero__actions");
+    if (!hero || !trail || !svg || !route || !spot || !mark || !copy || !title || !lead || !actions) return;
+
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let scheduled = 0;
+    let disposed = false;
+    const rounded = (value) => Number(value.toFixed(2));
+    function measure() {
+      scheduled = 0;
+      if (disposed || preference.matches || !hero.clientWidth || !hero.clientHeight) return;
+      const bounds = hero.getBoundingClientRect();
+      const source = mark.getBoundingClientRect();
+      const width = hero.clientWidth;
+      const height = hero.clientHeight;
+      const gutter = parseFloat(getComputedStyle(hero).paddingLeft) || 20;
+      const edge = Math.max(28, Math.min(gutter * .7, width * .12));
+      const left = edge;
+      const right = width - edge;
+      const sx = Math.max(edge, Math.min(right, source.left - bounds.left + source.width / 2));
+      const sy = Math.max(16, source.top - bounds.top + source.height / 2);
+      const y1 = Math.max(sy + 64, copy.offsetTop + title.offsetTop + title.offsetHeight * .65);
+      const y2 = Math.max(y1 + 72, copy.offsetTop + lead.offsetTop + lead.offsetHeight * .44);
+      const end = Math.min(height - 28, Math.max(y2 + 72, copy.offsetTop + actions.offsetTop + Math.min(actions.offsetHeight / 2, 32)));
+      const firstTurn = (y2 - y1) * .5;
+      const secondTurn = (end - y2) * .5;
+      const d = [
+        "M", sx, sy,
+        "C", width * .58, sy - 12, right, sy + 24, right, y1,
+        "C", right, y1 + firstTurn, left, y2 - firstTurn, left, y2,
+        "C", left, y2 + secondTurn, right, end - secondTurn, right, end,
+      ].map(value => typeof value === "number" ? rounded(value) : value).join(" ");
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      route.setAttribute("d", d);
+      spot.style.offsetPath = `path("${d}")`;
+      trail.style.setProperty("--intro-travel", `${Math.round(Math.max(340, Math.min(520, end - sy)))}px`);
+      trail.classList.add("is-ready");
+    }
+    function schedule() {
+      if (!disposed && !preference.matches && !scheduled) scheduled = requestAnimationFrame(measure);
+    }
+    const observer = "ResizeObserver" in window ? new ResizeObserver(schedule) : null;
+    function syncPreference() {
+      if (scheduled) cancelAnimationFrame(scheduled);
+      scheduled = 0;
+      observer?.disconnect();
+      window.removeEventListener("resize", schedule);
+      if (preference.matches) {
+        trail.classList.remove("is-ready");
+      } else {
+        if (observer) observer.observe(hero);
+        else window.addEventListener("resize", schedule, { passive: true });
+        schedule();
+      }
+    }
+    function dispose(event) {
+      if (scheduled) cancelAnimationFrame(scheduled);
+      scheduled = 0;
+      if (event.persisted) return;
+      disposed = true;
+      observer?.disconnect();
+      window.removeEventListener("resize", schedule);
+      preference.removeEventListener("change", syncPreference);
+      window.removeEventListener("pagehide", dispose);
+    }
+    preference.addEventListener("change", syncPreference);
+    window.addEventListener("pagehide", dispose);
+    document.fonts?.ready.then(schedule);
+    syncPreference();
+  }
+  initIntroTrail();
+
+  function initContactTrail() {
+    if (!window.CSS?.supports?.("offset-path", 'path("M0 0 L1 1")') || !("IntersectionObserver" in window)) return;
+    const section = document.querySelector(".contact");
+    const trail = section?.querySelector("[data-contact-trail]");
+    const svg = trail?.querySelector("svg");
+    const route = trail?.querySelector("[data-contact-route]");
+    const spot = trail?.querySelector("[data-intro-spot]");
+    const panel = section?.querySelector("[data-contact-panel]");
+    const summary = panel?.querySelector("summary");
+    const title = section?.querySelector("h2");
+    if (!section || !trail || !svg || !route || !spot || !panel || !summary || !title) return;
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let played = false;
+    let disposed = false;
+    let scheduled = 0;
+    const editing = () => section.contains(document.activeElement) && document.activeElement.matches("input,textarea,select");
+    function stop() {
+      if (scheduled) cancelAnimationFrame(scheduled);
+      scheduled = 0;
+      trail.classList.remove("is-ready", "is-playing");
+    }
+    function play() {
+      scheduled = 0;
+      if (disposed || preference.matches || editing()) return;
+      const bounds = section.getBoundingClientRect();
+      const heading = title.getBoundingClientRect();
+      const card = summary.getBoundingClientRect();
+      const target = (panel.dataset.expanded === "true" && panel.querySelector('[aria-current="step"] > span')) || summary.querySelector("svg");
+      if (!target || !section.clientWidth) return;
+      const destination = target.getBoundingClientRect();
+      const headingVisible = heading.top >= 16 && heading.bottom < window.innerHeight * .8;
+      const sx = headingVisible ? heading.left - bounds.left + Math.min(heading.width * .25, 70) : card.left - bounds.left + 20;
+      const sy = headingVisible ? heading.top - bounds.top + Math.min(heading.height * .35, 48) : card.top - bounds.top + 8;
+      const tx = destination.left - bounds.left + destination.width / 2;
+      const ty = destination.top - bounds.top + destination.height / 2;
+      const left = Math.max(28, card.left - bounds.left + 16);
+      const right = Math.min(section.clientWidth - 28, card.right - bounds.left - 16);
+      const span = ty - sy;
+      const d = headingVisible && span > 140
+        ? `M ${sx} ${sy} C ${right} ${sy} ${right} ${sy + span * .25} ${right} ${sy + span * .4} C ${right} ${sy + span * .65} 28 ${ty - span * .35} 28 ${ty - span * .2} C 28 ${ty} ${tx} ${ty - span * .08} ${tx} ${ty}`
+        : `M ${sx} ${sy} C ${right} ${sy + 30} ${Math.max(left, tx - 70)} ${ty - 35} ${tx} ${ty}`;
+      const height = Math.ceil(Math.max(sy, ty) + 80);
+      svg.setAttribute("viewBox", `0 0 ${section.clientWidth} ${height}`);
+      route.setAttribute("d", d);
+      spot.style.offsetPath = `path("${d}")`;
+      trail.style.height = `${height}px`;
+      trail.classList.add("is-ready", "is-playing");
+    }
+    const observer = new IntersectionObserver(entries => {
+      if (played || preference.matches || !entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= .6)) return;
+      played = true;
+      observer.disconnect();
+      if (!editing()) scheduled = requestAnimationFrame(play);
+    }, { threshold: .6, rootMargin: "0px 0px -8% 0px" });
+    function syncPreference() {
+      observer.disconnect();
+      if (preference.matches) stop();
+      else if (!played && !disposed) observer.observe(summary);
+    }
+    function onFocus() { if (editing()) stop(); }
+    function onEnd(event) { if (event.target.classList.contains("intro-trail__head")) stop(); }
+    function dispose(event) {
+      if (event.persisted) return;
+      disposed = true;
+      stop();
+      observer.disconnect();
+      preference.removeEventListener("change", syncPreference);
+      section.removeEventListener("focusin", onFocus);
+      trail.removeEventListener("animationend", onEnd);
+      window.removeEventListener("pagehide", dispose);
+    }
+    section.addEventListener("focusin", onFocus);
+    trail.addEventListener("animationend", onEnd);
+    preference.addEventListener("change", syncPreference);
+    window.addEventListener("pagehide", dispose);
+    syncPreference();
+  }
+  initContactTrail();
+
+
   function track(eventName) {
     const allowed = new Set([
       "cta_header",
