@@ -50,6 +50,79 @@
   }
   initInitialAnchor();
 
+  function initHeroNavigation() {
+    if (typeof requestAnimationFrame !== "function" || typeof cancelAnimationFrame !== "function") return;
+    const links = [...document.querySelectorAll('.hero a[href="#esplora"]')];
+    const target = document.getElementById("esplora");
+    if (!links.length || !target) return;
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const interrupts = ["wheel", "touchstart", "pointerdown", "keydown", "hashchange", "popstate", "resize"];
+    let frame = 0;
+    let active = null;
+    function cancel() {
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
+      active = null;
+      interrupts.forEach(event => window.removeEventListener(event, cancel, true));
+      document.removeEventListener("visibilitychange", visibilityChanged);
+      preference.removeEventListener?.("change", cancel);
+    }
+    function visibilityChanged() { if (document.hidden) cancel(); }
+    function finish() {
+      cancel();
+      if (!target.isConnected) return;
+      if (window.location.hash !== "#esplora") window.history.pushState(window.history.state, "", "#esplora");
+      const heading = target.querySelector("h2") || target;
+      const tabIndex = heading.getAttribute("tabindex");
+      if (tabIndex === null) heading.setAttribute("tabindex", "-1");
+      heading.focus({ preventScroll: true });
+    }
+    function navigate(event) {
+      const link = event.currentTarget;
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hasAttribute("download") || (link.target && link.target.toLowerCase() !== "_self")) return;
+      cancel();
+      if (preference.matches) return;
+      event.preventDefault();
+      const start = window.scrollY;
+      const left = window.scrollX;
+      const padding = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      const bottom = Math.max(0, Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight);
+      const end = Math.max(0, Math.min(bottom, start + target.getBoundingClientRect().top - padding - margin));
+      const distance = end - start;
+      if (Math.abs(distance) < 12) {
+        window.scrollTo({ top: end, left, behavior: "instant" });
+        finish();
+        return;
+      }
+      const motion = { start, left, end, distance, duration: Math.max(1700, Math.min(2100, 1300 + Math.abs(distance) * .8)), startedAt: null };
+      active = motion;
+      interrupts.forEach(name => window.addEventListener(name, cancel, { capture: true, passive: true }));
+      document.addEventListener("visibilitychange", visibilityChanged);
+      preference.addEventListener?.("change", cancel);
+      function step(time) {
+        frame = 0;
+        if (active !== motion) return;
+        if (motion.startedAt === null) motion.startedAt = time;
+        const progress = Math.min(1, Math.max(0, (time - motion.startedAt) / motion.duration));
+        const eased = progress ** 3 * (progress * (6 * progress - 15) + 10);
+        window.scrollTo({ top: motion.start + motion.distance * eased, left: motion.left, behavior: "instant" });
+        if (progress === 1) finish();
+        else frame = requestAnimationFrame(step);
+      }
+      frame = requestAnimationFrame(step);
+    }
+    function pageHidden(event) {
+      cancel();
+      if (event.persisted) return;
+      links.forEach(link => link.removeEventListener("click", navigate));
+      window.removeEventListener("pagehide", pageHidden);
+    }
+    links.forEach(link => link.addEventListener("click", navigate));
+    window.addEventListener("pagehide", pageHidden);
+  }
+  initHeroNavigation();
+
 
   function buildTrailBundle(svg, points, directions, width, height) {
     // Shared centripetal knots preserve tangent and curvature through every bend, including the offset filaments.

@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { JSDOM } from "jsdom";
+import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 
 const root = resolve(process.cwd(), "projects-site");
@@ -110,7 +111,7 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(header).not.toContain("<span>TooolVibes</span>");
     expect(header).not.toContain('class="brand"');
     expect(header.match(/class="brand-signal"/g)).toHaveLength(1);
-    expect(header.match(/tooolvibes-logo\.png/g)).toHaveLength(1);
+    expect(header.match(/tooolvibes-logo\.webp/g)).toHaveLength(1);
     const signal = header.slice(header.indexOf('<div class="brand-signal"'), header.indexOf("<nav"));
     expect(signal).toContain('role="img" aria-label="TooolVibes"');
     expect(signal).toContain('class="brand-signal__field" aria-hidden="true"');
@@ -118,7 +119,50 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(signal).not.toMatch(/<(?:a|button)\b/);
     expect(signal).not.toContain("__trail");
     expect(signal).not.toContain("__direction");
-    expect(html).toMatch(/<div class="hero__copy" data-reveal>\s*<h1 id="hero-title">/);
+    expect(html).toMatch(/<div class="hero__copy">\s*<h1 id="hero-title">/);
+  });
+
+  it("renders the hero immediately while preserving the later section reveals", () => {
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+    expect(doc.querySelector(".hero__copy[data-reveal]")).toBeNull();
+    expect(doc.querySelector(".hero__copy h1#hero-title")).not.toBeNull();
+    expect(doc.querySelectorAll(".hero__copy .hero__actions a")).toHaveLength(2);
+    expect(doc.querySelectorAll(".service [data-reveal]").length).toBeGreaterThan(0);
+    dom.window.close();
+  });
+
+  it("places the explorer heading before its track before scripts run", () => {
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+    const journey = doc.querySelector(".journey")!;
+    const title = journey.querySelector(":scope > #journey-title")!;
+    const track = journey.querySelector(":scope > .journey__track")!;
+    expect(doc.querySelectorAll("#journey-title")).toHaveLength(1);
+    expect(title).not.toBeNull();
+    expect(title.nextElementSibling).toBe(track);
+    expect(track.querySelector("#journey-title")).toBeNull();
+    expect(journey.getAttribute("aria-labelledby")).toBe(title.id);
+    expect(title.querySelector(".journey__arrival")).not.toBeNull();
+    dom.window.close();
+  });
+
+  it("uses a smaller lossless logo without changing any decoded pixels or the PNG favicon", async () => {
+    const dom = new JSDOM(html);
+    const doc = dom.window.document;
+    const logos = [...doc.querySelectorAll('img[src*="tooolvibes-logo"]')];
+    expect(logos).toHaveLength(4);
+    for (const logo of logos) expect(logo.getAttribute("src")).toBe("/assets/tooolvibes-logo.webp");
+    expect(doc.querySelector('link[rel="icon"]')!.getAttribute("href")).toBe("/assets/tooolvibes-logo.png");
+    dom.window.close();
+    const png = readFileSync(resolve(root, "public/assets/tooolvibes-logo.png"));
+    const webp = readFileSync(resolve(root, "public/assets/tooolvibes-logo.webp"));
+    expect(webp.byteLength).toBeLessThan(png.byteLength * .65);
+    const original = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const optimized = await sharp(webp).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    expect(optimized.info).toMatchObject({ width: 192, height: 192, channels: 4 });
+    expect(optimized.info).toEqual(original.info);
+    expect(optimized.data.equals(original.data)).toBe(true);
   });
   it("owns its canonical, metadata, sitemap, privacy and email origin", () => {
     for (const file of ["public/index.html", "public/robots.txt", "public/sitemap.xml", "public/privacy/index.html", "src/worker.ts", "src/thank-you-email.ts"]) {
