@@ -10,6 +10,30 @@ const css = read("public/styles.css");
 const app = read("public/app.js");
 
 describe("Isolated TooolVibes projects landing", () => {
+  it("does not paint the light skip-link offscreen until it receives keyboard focus", () => {
+    const hidden = css.match(/\.skip-link \{([^}]+)\}/)![1];
+    const focused = css.match(/\.skip-link:focus \{([^}]+)\}/)![1];
+    expect(hidden).toContain("opacity: 0");
+    expect(hidden).toContain("clip-path: inset(50%)");
+    expect(hidden).toContain("pointer-events: none");
+    expect(focused).toContain("opacity: 1");
+    expect(focused).toContain("clip-path: none");
+    expect(focused).toContain("pointer-events: auto");
+  });
+
+  it("hands the header light to the hero only during the first native scroll segment", () => {
+    expect(css).toMatch(/@media \(prefers-reduced-motion: no-preference\) \{\s*@supports \(animation-timeline: scroll\(\)\)/);
+    expect(css).toContain(".brand-signal__field { animation: brand-light-release linear both;");
+    expect(css).toContain(".hero::after { animation: intro-light-focus linear both;");
+    expect(css.match(/animation-range: 0px 180px/g)).toHaveLength(2);
+    const light = css.match(/\.hero::after \{([^}]+)\}/)![1];
+    expect(light).toContain("position: absolute");
+    expect(light).toContain("opacity: 0");
+    expect(light).toContain("pointer-events: none");
+    expect(css).toContain("translate3d(0,140px,0) scaleY(1.3); opacity: 0");
+    expect(app).not.toContain("brand-light-release");
+  });
+
   it("lets the header leave with native scrolling without reserving its old fixed space", () => {
     expect(css.match(/\.site-header \{([^}]+)\}/)![1]).toContain("position: absolute");
     expect(css).not.toContain(".site-header.is-scrolled");
