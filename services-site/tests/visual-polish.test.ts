@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import postcss, { type Rule } from "postcss";
+import { JSDOM } from "jsdom";
 import { describe, expect, it } from "vitest";
 
 function mediaQueries(rule: Rule) {
@@ -92,5 +93,53 @@ describe.each(["services-site", "projects-site"])("%s visual interaction polish"
       accents++;
     });
     expect(accents).toBe(2);
+  });
+
+  it("keeps one fanned filament bundle and a masked dust wake at each light cue", () => {
+    expect(html.match(/data-trail-strand=/g)).toHaveLength(20);
+    expect(html.match(/class="intro-trail__bundle" mask=/g)).toHaveLength(2);
+    for (const cue of ["intro", "contact"]) {
+      expect(html).toContain(`id="${cue}-trail-feather-mask" maskUnits="userSpaceOnUse"`);
+      expect(html).toContain(`mask="url(#${cue}-trail-feather-mask)"`);
+    }
+    expect(css).toContain("stroke-dasharray: 3 10 22 13 5 18 11 24");
+    stylesheet.walkRules((rule) => {
+      if (!rule.selector.includes("intro-trail__filament")) return;
+      expect(rule.nodes.some((node) => node.type === "decl" && node.prop === "transform")).toBe(false);
+    });
+    expect(css).toContain(".intro-trail__filament { --trail-length: 440px; stroke-width: .65px;");
+    expect(css).toContain("stroke-dashoffset: calc(var(--trail-length) - 1000px)");
+    expect(css).toContain("92% { offset-distance: 100%; opacity: .25; }");
+  });
+
+  it("feathers the entire beam into a long, low-opacity wake without a hard tail cut", () => {
+    const dom = new JSDOM(html);
+    for (const cue of ["intro", "contact"]) {
+      const mask = dom.window.document.getElementById(`${cue}-trail-feather-mask`)!;
+      expect(mask.querySelectorAll("use")).toHaveLength(6);
+      mask.querySelectorAll("use").forEach(layer => expect(layer.getAttribute("href")).toBe(`#${cue}-trail-route`));
+      const bundle = dom.window.document.querySelector(`[mask="url(#${cue}-trail-feather-mask)"]`)!;
+      expect(bundle.querySelectorAll("[data-trail-strand]")).toHaveLength(10);
+      expect(bundle.querySelector(".intro-trail__core")).not.toBeNull();
+      expect(bundle.querySelector(".intro-trail__head")).not.toBeNull();
+    }
+    const lengths = [960, 780, 600, 420, 240, 80];
+    const opacity = [.08, .12, .18, .24, .36, .7];
+    lengths.forEach((length, index) => {
+      const selector = `.intro-trail .intro-trail__feather${index ? `--${index + 1}` : ""}`;
+      const rule = stylesheet.nodes.find(node => node.type === "rule" && node.selector === selector) as Rule;
+      const values = Object.fromEntries(rule.nodes.filter(node => node.type === "decl").map(node => [node.prop, node.value]));
+      expect(values["--trail-length"]).toBe(`${length}px`);
+      expect(Number(values["stroke-opacity"])).toBe(opacity[index]);
+    });
+    dom.window.close();
+  });
+
+  it("anchors the ambient field independently of the guided scroll track height", () => {
+    const rule = stylesheet.nodes.find(node => node.type === "rule" && node.selector === ".journey::before") as Rule;
+    const values = Object.fromEntries(rule.nodes.filter(node => node.type === "decl").map(node => [node.prop, node.value]));
+    expect(values.inset).toBe("-4rem -8% auto 20%");
+    expect(values.height).toBe("min(60rem,110svh)");
+    expect(values["pointer-events"]).toBe("none");
   });
 });

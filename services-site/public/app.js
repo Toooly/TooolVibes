@@ -9,6 +9,64 @@
   const formStatus = document.querySelector("[data-form-status]");
   const trackedSections = new Set();
 
+  function buildTrailBundle(svg, points, directions, width, height) {
+    const margin = 4;
+    const handles = points.map((point, index) => {
+      const previous = points[Math.max(0, index - 1)];
+      const next = points[Math.min(points.length - 1, index + 1)];
+      const horizontal = directions[index] === "horizontal";
+      const axis = horizontal ? 0 : 1;
+      const sign = horizontal && index === points.length - 1 && point[0] < previous[0] ? -1 : 1;
+      const gaps = [];
+      if (index) gaps.push(horizontal ? Math.hypot(point[0] - previous[0], point[1] - previous[1]) : Math.abs(point[axis] - previous[axis]));
+      if (index < points.length - 1) gaps.push(horizontal ? Math.hypot(next[0] - point[0], next[1] - point[1]) : Math.abs(next[axis] - point[axis]));
+      const desired = Math.max(4, Math.min(...gaps.filter(gap => gap > 0)) * (horizontal ? .36 : .46));
+      const limit = horizontal ? width : height;
+      const room = [];
+      if (index) room.push(sign > 0 ? point[axis] - margin : limit - margin - point[axis]);
+      if (index < points.length - 1) room.push(sign > 0 ? limit - margin - point[axis] : point[axis] - margin);
+      const length = Math.max(1, Math.min(desired, (horizontal ? width : height) * .2, ...room));
+      return horizontal ? [sign * length, 0] : [0, length];
+    });
+    const rounded = value => Number(value.toFixed(2));
+    function geometry(coefficient) {
+      const shifted = points.map((point, index) => {
+        const progress = index / (points.length - 1);
+        const spread = coefficient * Math.sin(Math.PI * progress) * (12 + 10 * progress);
+        const handle = handles[index];
+        const magnitude = Math.hypot(...handle);
+        return [point[0] - handle[1] / magnitude * spread, point[1] + handle[0] / magnitude * spread];
+      });
+      const curves = shifted.slice(1).map((point, index) => [
+        shifted[index][0] + handles[index][0], shifted[index][1] + handles[index][1],
+        point[0] - handles[index + 1][0], point[1] - handles[index + 1][1],
+        ...point,
+      ]);
+      const d = ["M", ...shifted[0], ...curves.flatMap(curve => ["C", ...curve])]
+        .map(value => typeof value === "number" ? rounded(value) : value).join(" ");
+      return { d, curves };
+    }
+    const center = geometry(0);
+    let pen = points[0];
+    let total = 0;
+    const stops = center.curves.map(curve => {
+      let previous = pen;
+      for (let step = 1; step <= 24; step++) {
+        const t = step / 24;
+        const u = 1 - t;
+        const point = [0, 1].map(axis => u ** 3 * pen[axis] + 3 * u ** 2 * t * curve[axis] + 3 * u * t ** 2 * curve[axis + 2] + t ** 3 * curve[axis + 4]);
+        total += Math.hypot(point[0] - previous[0], point[1] - previous[1]);
+        previous = point;
+      }
+      pen = curve.slice(4);
+      return total;
+    });
+    svg.querySelectorAll("[data-trail-strand]").forEach(strand => {
+      strand.setAttribute("d", geometry(Number(strand.dataset.trailStrand) || 0).d);
+    });
+    return { ...center, stops, total };
+  }
+
   function initIntroTrail() {
     if (!window.CSS?.supports?.("animation-timeline: scroll()") || !window.CSS.supports("offset-path", 'path("M0 0 L1 1")')) return;
     const hero = document.querySelector(".hero");
@@ -30,19 +88,6 @@
     const root = document.documentElement;
     let scheduled = 0;
     let disposed = false;
-    const rounded = (value) => Number(value.toFixed(2));
-    function curveLength(start, curve) {
-      let length = 0;
-      let previous = start;
-      for (let step = 1; step <= 24; step++) {
-        const t = step / 24;
-        const u = 1 - t;
-        const point = [0, 1].map(axis => u ** 3 * start[axis] + 3 * u ** 2 * t * curve[axis] + 3 * u * t ** 2 * curve[axis + 2] + t ** 3 * curve[axis + 4]);
-        length += Math.hypot(point[0] - previous[0], point[1] - previous[1]);
-        previous = point;
-      }
-      return length;
-    }
     function measure() {
       scheduled = 0;
       if (disposed || preference.matches || !hero.clientWidth || !hero.clientHeight) return;
@@ -50,10 +95,10 @@
       const source = mark.getBoundingClientRect();
       const width = hero.clientWidth;
       const gutter = parseFloat(getComputedStyle(hero).paddingLeft) || 20;
-      const edge = Math.max(28, Math.min(gutter * .7, width * .12));
+      const edge = Math.max(40, Math.min(gutter * .7, width * .12));
       const left = edge;
       const right = width - edge;
-      const sx = Math.max(edge, Math.min(right, source.left - bounds.left + source.width / 2));
+      const sx = Math.max(16, Math.min(width - 16, source.left - bounds.left + source.width / 2));
       const sy = Math.max(16, source.top - bounds.top + source.height / 2);
       const y1 = Math.max(sy + 64, copy.offsetTop + title.offsetTop + title.offsetHeight * .65);
       const y2 = Math.max(y1 + 72, copy.offsetTop + lead.offsetTop + lead.offsetHeight * .44);
@@ -68,29 +113,17 @@
       const dx = heading.left - bounds.left + heading.width / 2;
       const end = heading.bottom - bounds.top + 11;
       const height = Math.ceil(Math.max(hero.clientHeight, end + 32));
-      const handle = Math.min(100, width * .2);
-      const bridge = Math.max(8, Math.abs(qx - px) * .35);
-      const firstTurn = (y2 - y1) * .5;
-      const curves = [
-        [width * .58, sy - 12, right, sy + 24, right, y1],
-        [right, y1 + firstTurn, left, y2 - firstTurn, left, y2],
-        stacked ? [left, py - 64, right, py - 64, px, py] : [left, py, px - handle, py, px, py],
-        stacked ? [right, py + (qy - py) * .5, left, qy - (qy - py) * .5, qx, qy] : [px + bridge, py, qx - bridge, qy, qx, qy],
-        stacked ? [left, qy + (end - qy) * .65, dx - handle, end, dx, end] : [qx + handle, qy, dx - handle, end, dx, end],
-      ];
-      const d = [
-        "M", sx, sy,
-        ...curves.flatMap(curve => ["C", ...curve]),
-      ].map(value => typeof value === "number" ? rounded(value) : value).join(" ");
-      let pen = [sx, sy];
-      let total = 0;
-      const stops = curves.map(curve => {
-        total += curveLength(pen, curve);
-        pen = curve.slice(4);
-        return total;
-      });
-      const travel = Math.round(Math.max(420, Math.min(720, end - sy - 100)));
-      const arrival = index => stops[index] / total * travel / 1.19;
+      const { d, stops, total } = buildTrailBundle(svg,
+        [[sx, sy], [right, y1], [left, y2], [px, py], [qx, qy], [dx, end]],
+        ["horizontal", "vertical", "vertical", stacked ? "vertical" : "horizontal", stacked ? "vertical" : "horizontal", "horizontal"],
+        width, height);
+      const desiredTravel = Math.max(560, Math.min(860, end - sy - 40));
+      const heroTop = window.scrollY + bounds.top;
+      const visibilityCap = Math.min(
+        (heroTop + py - firstButton.height / 2 - 24.5) / (stops[2] / total * .92),
+        (heroTop + qy - secondButton.height / 2 - 24.5) / (stops[3] / total * .92));
+      const travel = Math.max(1, Math.floor(Math.min(desiredTravel, visibilityCap)));
+      const arrival = index => stops[index] / total * travel * .92;
       const timing = (name, value) => root.style.setProperty(name, `${Math.max(0, Math.round(value))}px`);
       timing("--intro-travel", travel);
       timing("--intro-primary-from", arrival(2) - 32);
@@ -98,7 +131,7 @@
       timing("--intro-secondary-from", arrival(3) - 32);
       timing("--intro-secondary-to", arrival(4) + 20);
       timing("--intro-dock-from", arrival(4) - 32);
-      timing("--intro-dock-to", arrival(4) + 36);
+      timing("--intro-dock-to", Math.min(travel - 1, arrival(4) + 36));
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
       route.setAttribute("d", d);
       spot.style.offsetPath = `path("${d}")`;
@@ -176,13 +209,19 @@
       const sy = headingVisible ? heading.top - bounds.top + Math.min(heading.height * .35, 48) : card.top - bounds.top + 8;
       const tx = destination.left - bounds.left + destination.width / 2;
       const ty = destination.top - bounds.top + destination.height / 2;
-      const left = Math.max(28, card.left - bounds.left + 16);
-      const right = Math.min(section.clientWidth - 28, card.right - bounds.left - 16);
+      const left = Math.max(40, card.left - bounds.left + 16);
+      const right = Math.min(section.clientWidth - 40, card.right - bounds.left - 16);
       const span = ty - sy;
-      const d = headingVisible && span > 140
-        ? `M ${sx} ${sy} C ${right} ${sy} ${right} ${sy + span * .25} ${right} ${sy + span * .4} C ${right} ${sy + span * .65} 28 ${ty - span * .35} 28 ${ty - span * .2} C 28 ${ty} ${tx} ${ty - span * .08} ${tx} ${ty}`
-        : `M ${sx} ${sy} C ${right} ${sy + 30} ${Math.max(left, tx - 70)} ${ty - 35} ${tx} ${ty}`;
       const height = Math.ceil(Math.max(sy, ty) + 80);
+      const verticalApproach = Math.abs(span) > Math.abs(tx - sx) * .5;
+      const midpoint = verticalApproach
+        ? Math.min(section.clientWidth - 40, Math.max(sx, tx) + Math.min(72, Math.max(24, Math.abs(span) * .4)))
+        : (sx + tx) / 2;
+      const points = headingVisible && span > 140
+        ? [[sx, sy], [right, sy + span * .4], [left, sy + span * .8], [tx, ty]]
+        : [[sx, sy], [midpoint, sy + span * .5], [tx, ty]];
+      const directions = points.map((_, index) => index === 0 || index === points.length - 1 || (points.length === 3 && !verticalApproach) ? "horizontal" : "vertical");
+      const { d } = buildTrailBundle(svg, points, directions, section.clientWidth, height);
       svg.setAttribute("viewBox", `0 0 ${section.clientWidth} ${height}`);
       route.setAttribute("d", d);
       spot.style.offsetPath = `path("${d}")`;

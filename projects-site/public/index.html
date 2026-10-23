@@ -98,14 +98,34 @@
                 <stop offset="1" stop-color="#47dcff" />
               </linearGradient>
               <path id="intro-trail-route" data-intro-route pathLength="1000" />
+              <mask id="intro-trail-feather-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+                <use class="intro-trail__feather" href="#intro-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--2" href="#intro-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--3" href="#intro-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--4" href="#intro-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--5" href="#intro-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--6" href="#intro-trail-route" />
+              </mask>
             </defs>
+            <g class="intro-trail__bundle" mask="url(#intro-trail-feather-mask)">
             <use class="intro-trail__wake" href="#intro-trail-route" />
             <use class="intro-trail__halo" href="#intro-trail-route" />
             <use class="intro-trail__glow" href="#intro-trail-route" />
             <use class="intro-trail__core" href="#intro-trail-route" />
-            <use class="intro-trail__filament intro-trail__filament--violet" href="#intro-trail-route" />
-            <use class="intro-trail__filament intro-trail__filament--cyan" href="#intro-trail-route" />
+            <path class="intro-trail__filament intro-trail__filament--violet" data-trail-strand="-1" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="-0.6" pathLength="1000" />
+            <path class="intro-trail__filament intro-trail__filament--cyan" data-trail-strand="-0.25" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="0.25" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="0.6" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="1" pathLength="1000" />
+            <g class="intro-trail__dust">
+              <path data-trail-strand="-1.8" pathLength="1000" />
+              <path data-trail-strand="-1.35" pathLength="1000" />
+              <path data-trail-strand="1.35" pathLength="1000" />
+              <path data-trail-strand="1.8" pathLength="1000" />
+            </g>
             <use class="intro-trail__head" href="#intro-trail-route" />
+            </g>
           </svg>
           <span class="intro-trail__spot" data-intro-spot></span>
         </div>
@@ -304,14 +324,36 @@
       <section class="contact section-shell" aria-labelledby="contact-title">
         <div class="intro-trail contact-trail" data-contact-trail aria-hidden="true">
           <svg class="intro-trail__svg" viewBox="0 0 1000 600" preserveAspectRatio="none" focusable="false">
-            <defs><path id="contact-trail-route" data-contact-route pathLength="1000" /></defs>
+            <defs>
+              <path id="contact-trail-route" data-contact-route pathLength="1000" />
+              <mask id="contact-trail-feather-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+                <use class="intro-trail__feather" href="#contact-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--2" href="#contact-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--3" href="#contact-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--4" href="#contact-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--5" href="#contact-trail-route" />
+                <use class="intro-trail__feather intro-trail__feather--6" href="#contact-trail-route" />
+              </mask>
+            </defs>
+            <g class="intro-trail__bundle" mask="url(#contact-trail-feather-mask)">
             <use class="intro-trail__wake" href="#contact-trail-route" />
             <use class="intro-trail__halo" href="#contact-trail-route" />
             <use class="intro-trail__glow" href="#contact-trail-route" />
             <use class="intro-trail__core" href="#contact-trail-route" />
-            <use class="intro-trail__filament intro-trail__filament--violet" href="#contact-trail-route" />
-            <use class="intro-trail__filament intro-trail__filament--cyan" href="#contact-trail-route" />
+            <path class="intro-trail__filament intro-trail__filament--violet" data-trail-strand="-1" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="-0.6" pathLength="1000" />
+            <path class="intro-trail__filament intro-trail__filament--cyan" data-trail-strand="-0.25" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="0.25" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="0.6" pathLength="1000" />
+            <path class="intro-trail__filament" data-trail-strand="1" pathLength="1000" />
+            <g class="intro-trail__dust">
+              <path data-trail-strand="-1.8" pathLength="1000" />
+              <path data-trail-strand="-1.35" pathLength="1000" />
+              <path data-trail-strand="1.35" pathLength="1000" />
+              <path data-trail-strand="1.8" pathLength="1000" />
+            </g>
             <use class="intro-trail__head" href="#contact-trail-route" />
+            </g>
           </svg>
           <span class="intro-trail__spot" data-intro-spot></span>
         </div>

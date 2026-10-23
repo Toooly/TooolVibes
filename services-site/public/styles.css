@@ -211,18 +211,33 @@ button, a { -webkit-tap-highlight-color: transparent; }
   content: "";
 }
 
-.intro-trail { --trail-length: 330px; position: absolute; inset: 0; z-index: 1; display: none; pointer-events: none; }
+.intro-trail { --trail-length: 280px; position: absolute; inset: 0; z-index: 1; display: none; pointer-events: none; }
 .intro-trail__svg { width: 100%; height: 100%; overflow: visible; }
-.intro-trail use { fill: none; stroke: url(#intro-trail-color); stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: var(--trail-length) 1600; stroke-dashoffset: var(--trail-length); opacity: 0; }
-.intro-trail .intro-trail__wake { stroke-width: 1px; stroke-dasharray: 1000 1200; stroke-dashoffset: 1000px; }
-.intro-trail__halo { --trail-length: 390px; stroke-width: 18px; stroke-opacity: .25; filter: blur(4px); }
-.intro-trail__glow { --trail-length: 360px; stroke-width: 5px; stroke-opacity: .3; }
-.intro-trail__core { stroke-width: 1.6px; }
-.intro-trail__filament { --trail-length: 290px; stroke-width: 1.1px; stroke-opacity: .8; }
-.intro-trail .intro-trail__filament--violet { stroke: #b69aff; transform: translateY(-4px); }
-.intro-trail .intro-trail__filament--cyan { --trail-length: 350px; stroke: #65ecff; transform: translateY(4px); }
-.intro-trail .intro-trail__head { --trail-length: 52px; stroke: #e5ffff; stroke-width: 1.4px; }
-.intro-trail__spot { position: absolute; top: 0; left: 0; width: 13rem; height: 13rem; offset-anchor: center; offset-rotate: 0deg; opacity: 0; background: radial-gradient(circle,rgba(39,216,238,.24),rgba(135,92,255,.14) 30%,transparent 68%); }
+.intro-trail :is(use,.intro-trail__filament) { fill: none; stroke: url(#intro-trail-color); stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: var(--trail-length) 1600; stroke-dashoffset: var(--trail-length); opacity: 0; }
+.intro-trail .intro-trail__wake { --trail-length: 920px; stroke-width: .55px; stroke-opacity: .18; }
+.intro-trail__halo { --trail-length: 520px; stroke-width: 12px; stroke-opacity: .18; filter: blur(3px); }
+.intro-trail__glow { --trail-length: 410px; stroke-width: 2.8px; stroke-opacity: .22; }
+.intro-trail__core { stroke-width: .7px; stroke-opacity: .72; }
+.intro-trail__filament { --trail-length: 440px; stroke-width: .65px; stroke-opacity: .7; }
+.intro-trail .intro-trail__filament--violet { --trail-length: 860px; stroke: #b69aff; stroke-opacity: .5; }
+.intro-trail .intro-trail__filament--cyan { --trail-length: 370px; stroke: #8cf3ff; stroke-opacity: .85; }
+.intro-trail__filament[data-trail-strand="-0.6"] { --trail-length: 540px; }
+.intro-trail__filament[data-trail-strand="0.25"] { --trail-length: 470px; }
+.intro-trail__filament[data-trail-strand="0.6"] { --trail-length: 580px; stroke-opacity: .5; }
+.intro-trail__filament[data-trail-strand="1"] { --trail-length: 900px; stroke-opacity: .4; }
+.intro-trail .intro-trail__head { --trail-length: 140px; stroke: #9ae5f5; stroke-width: .65px; stroke-opacity: .7; }
+/* Nested stroke lengths feather the wake along its curve, rather than across the viewport. */
+.intro-trail .intro-trail__feather { --trail-length: 960px; stroke: #fff; stroke-width: 84px; stroke-opacity: .08; }
+.intro-trail .intro-trail__feather--2 { --trail-length: 780px; stroke-opacity: .12; }
+.intro-trail .intro-trail__feather--3 { --trail-length: 600px; stroke-opacity: .18; }
+.intro-trail .intro-trail__feather--4 { --trail-length: 420px; stroke-opacity: .24; }
+.intro-trail .intro-trail__feather--5 { --trail-length: 240px; stroke-opacity: .36; }
+.intro-trail .intro-trail__feather--6 { --trail-length: 80px; stroke-opacity: .7; }
+.intro-trail__dust { opacity: 0; }
+.intro-trail__dust path { fill: none; stroke: #afa0fa; stroke-width: .55px; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 3 10 22 13 5 18 11 24; }
+.intro-trail__dust path:nth-child(even) { stroke: #8de4f2; stroke-dasharray: 14 18 3 13 24 23; stroke-dashoffset: -17px; }
+.intro-trail__dust path:nth-child(n+3) { stroke-opacity: .65; stroke-dashoffset: -39px; }
+.intro-trail__spot { position: absolute; top: 0; left: 0; width: 15rem; height: 15rem; offset-anchor: center; offset-rotate: 0deg; opacity: 0; background: radial-gradient(circle,rgba(39,216,238,.16),rgba(135,92,255,.09) 30%,transparent 68%); }
 #journey-title { position: relative; }
 .journey__arrival { position: absolute; top: calc(100% + 5px); left: 50%; translate: -50% 0; width: min(100%,24rem); height: .75rem; opacity: 0; pointer-events: none; }
 .journey__arrival::before { position: absolute; inset: -1rem -4%; border-radius: 50%; background: radial-gradient(ellipse,rgba(39,216,238,.16),rgba(135,92,255,.07) 36%,transparent 70%); content: ""; }
@@ -253,9 +268,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: scroll()) {
     [data-intro-trail].is-ready { display: block; }
-    [data-intro-trail].is-ready use { animation: intro-trail-pass linear both; animation-timeline: scroll(root block); animation-range: 0px var(--intro-travel,420px); }
+    [data-intro-trail].is-ready :is(use,.intro-trail__filament) { animation: intro-trail-pass linear both; animation-timeline: scroll(root block); animation-range: 0px var(--intro-travel,560px); }
     [data-intro-trail].is-ready .intro-trail__wake { animation-name: intro-trail-wake; }
-    [data-intro-trail].is-ready .intro-trail__spot { animation: intro-trail-spot linear both; animation-timeline: scroll(root block); animation-range: 0px var(--intro-travel,420px); }
+    [data-intro-trail].is-ready .intro-trail__spot { animation: intro-trail-spot linear both; animation-timeline: scroll(root block); animation-range: 0px var(--intro-travel,560px); }
+    [data-intro-trail].is-ready .intro-trail__dust { animation: intro-trail-dust linear both; animation-timeline: scroll(root block); animation-range: 0px var(--intro-travel,560px); }
     .intro-guided .hero__actions .button--primary { animation: intro-primary-cue linear; animation-timeline: scroll(root block); animation-range: var(--intro-primary-from) var(--intro-primary-to); }
     .intro-guided .hero__actions .button--secondary { animation: intro-secondary-cue linear; animation-timeline: scroll(root block); animation-range: var(--intro-secondary-from) var(--intro-secondary-to); }
     .intro-guided .hero__actions .button--secondary > svg { animation: intro-direction-cue linear; animation-timeline: scroll(root block); animation-range: var(--intro-secondary-from) var(--intro-secondary-to); }
@@ -264,9 +280,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
     .brand-signal__orbit { animation: intro-source-release linear both; animation-timeline: scroll(root block); animation-range: 0px 96px; }
   }
   .contact-trail.is-ready { display: block; }
-  .contact-trail.is-playing use { animation: intro-trail-pass 1.45s linear both; }
+  .contact-trail.is-playing :is(use,.intro-trail__filament) { animation: intro-trail-pass 1.85s cubic-bezier(.32,.04,.24,1) both; }
   .contact-trail.is-playing .intro-trail__wake { animation-name: intro-trail-wake; }
-  .contact-trail.is-playing .intro-trail__spot { animation: intro-trail-spot 1.45s linear both; }
+  .contact-trail.is-playing .intro-trail__spot { animation: intro-trail-spot 1.85s cubic-bezier(.32,.04,.24,1) both; }
+  .contact-trail.is-playing .intro-trail__dust { animation: intro-trail-dust 1.85s cubic-bezier(.32,.04,.24,1) both; }
 }
 @keyframes intro-source-release {
   0% { translate: 0 0; scale: 1; opacity: var(--orbit-opacity,1); }
@@ -274,16 +291,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 @keyframes intro-trail-pass {
   0% { stroke-dashoffset: var(--trail-length); opacity: 0; }
-  5%,84% { opacity: 1; }
-  100% { stroke-dashoffset: calc(var(--trail-length) - 1190px); opacity: 0; }
+  4%,82% { opacity: 1; }
+  92% { stroke-dashoffset: calc(var(--trail-length) - 1000px); opacity: .75; }
+  100% { stroke-dashoffset: calc(var(--trail-length) - 1000px); opacity: 0; }
 }
 @keyframes intro-trail-wake {
-  0% { stroke-dashoffset: 1000px; opacity: 0; }
-  8% { opacity: .14; }
-  76% { opacity: .2; }
-  84% { stroke-dashoffset: 0px; opacity: .14; }
-  100% { stroke-dashoffset: 0px; opacity: 0; }
+  0% { stroke-dashoffset: var(--trail-length); opacity: 0; }
+  8% { opacity: .55; }
+  72% { opacity: 1; }
+  92% { stroke-dashoffset: calc(var(--trail-length) - 1000px); opacity: .55; }
+  100% { stroke-dashoffset: calc(var(--trail-length) - 1000px); opacity: 0; }
 }
+@keyframes intro-trail-dust { 0% { opacity: 0; } 12% { opacity: .4; } 60% { opacity: .8; } 92% { opacity: .4; } 100% { opacity: 0; } }
 @keyframes intro-primary-cue {
   0%,100% { box-shadow: 0 14px 36px rgba(39,216,238,.14); }
   40%,60% { box-shadow: 0 0 0 2px rgba(158,246,255,.55),0 0 24px rgba(39,216,238,.4),0 12px 38px rgba(135,92,255,.25); }
@@ -297,10 +316,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @keyframes intro-dock-glint { from { stroke-dashoffset: 80px; } to { stroke-dashoffset: -580px; } }
 @keyframes intro-trail-spot {
   0% { offset-distance: 0%; opacity: 0; }
-  5% { opacity: .8; }
-  76% { opacity: .8; }
-  84% { offset-distance: 100%; opacity: .5; }
-  92%,100% { offset-distance: 100%; opacity: 0; }
+  4% { opacity: .7; }
+  82% { opacity: .7; }
+  92% { offset-distance: 100%; opacity: .25; }
+  100% { offset-distance: 100%; opacity: 0; }
 }
 h1, h2, h3, p { margin-top: 0; }
 h1, h2 {
@@ -331,7 +350,7 @@ h2 { margin-bottom: 1.35rem; font-size: clamp(3rem, 5.3vw, 6rem); }
 .journey--guided .journey__frame { position: sticky; top: var(--journey-sticky-top); }
 .journey--guided .journey__choices button { position: relative; overflow: hidden; }
 .journey--guided .journey__choices button::after { position: absolute; inset: auto .65rem .25rem; height: 2px; background: var(--choice-accent); border-radius: 999px; transform: scaleX(var(--choice-progress,0)); transform-origin: left; opacity: .8; content: ""; }
-.journey::before { position: absolute; z-index: -1; inset: -18% -8% -6% 20%; background: radial-gradient(ellipse at 65% 50%,rgba(39,94,226,.15),transparent 66%); content: ""; pointer-events: none; }
+.journey::before { position: absolute; z-index: -1; inset: -4rem -8% auto 20%; height: min(60rem,110svh); background: radial-gradient(ellipse at 65% 50%,rgba(39,94,226,.15),transparent 66%); content: ""; pointer-events: none; }
 .journey[data-active="social"] { --journey-accent: var(--service-social); }
 .journey[data-active="ai"] { --journey-accent: var(--service-ai); }
 .journey [data-journey-select="web"] { --choice-accent: var(--service-web); }

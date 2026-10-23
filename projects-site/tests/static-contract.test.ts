@@ -25,20 +25,21 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(css).toMatch(/@media \(prefers-reduced-motion: no-preference\) \{\s*@supports \(animation-timeline: scroll\(\)\)/);
     expect(css).not.toContain(".hero::after");
     expect(css).not.toContain("intro-light-focus");
-    expect(css).toContain("animation-range: 0px var(--intro-travel,420px)");
+    expect(css).toContain("animation-range: 0px var(--intro-travel,560px)");
     expect(css).toContain("stroke-dasharray: var(--trail-length) 1600");
-    expect(css).toContain("stroke-dashoffset: calc(var(--trail-length) - 1190px)");
-    expect(css).toContain("92%,100% { offset-distance: 100%; opacity: 0; }");
+    expect(css).toContain("stroke-dashoffset: calc(var(--trail-length) - 1000px)");
+    expect(css).not.toContain("1190px");
+    expect(css).toContain("100% { offset-distance: 100%; opacity: 0; }");
     expect(html).toContain('data-intro-trail aria-hidden="true"');
     expect(html).toContain('data-intro-route pathLength="1000"');
-    expect(html.match(/<use class="intro-trail__/g)).toHaveLength(14);
+    expect(html.match(/<use class="intro-trail__/g)).toHaveLength(22);
     expect(app).toContain("function initIntroTrail()");
     expect(app).toContain('spot.style.offsetPath =');
   });
 
   it("hands a multi-filament beam from the hero CTAs into the explorer without adding vertical space", () => {
     expect(html.match(/intro-trail__filament--(?:cyan|violet)/g)).toHaveLength(4);
-    expect(css).toContain("--trail-length: 52px; stroke: #e5ffff; stroke-width: 1.4px;");
+    expect(css).toContain("--trail-length: 140px; stroke: #9ae5f5; stroke-width: .65px;");
     expect(css).toContain("@keyframes intro-trail-wake");
     expect(css).toContain("animation-range: var(--intro-primary-from) var(--intro-primary-to)");
     expect(css).toContain("animation-range: var(--intro-secondary-from) var(--intro-secondary-to)");
@@ -46,7 +47,7 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(css).toContain("animation: intro-secondary-cue linear;");
     expect(html).toContain('class="journey__arrival" aria-hidden="true"');
     expect(css).toContain(".journey__arrival { position: absolute;");
-    expect(app).toContain("function curveLength(start, curve)");
+    expect(app).toContain("function buildTrailBundle(");
     expect(app).toContain('root.classList.add("intro-guided")');
     expect(app).toContain('root.classList.remove("intro-guided")');
   });
@@ -54,7 +55,7 @@ describe("Isolated TooolVibes projects landing", () => {
   it("reuses the neon trail once on contact arrival without distracting while typing", () => {
     expect(html).toContain('data-contact-trail aria-hidden="true"');
     expect(html).toContain('data-contact-route pathLength="1000"');
-    expect(css).toContain(".contact-trail.is-playing use { animation: intro-trail-pass 1.45s linear both; }");
+    expect(css).toContain(".contact-trail.is-playing :is(use,.intro-trail__filament) { animation: intro-trail-pass 1.85s cubic-bezier(.32,.04,.24,1) both; }");
     expect(app).toContain("function initContactTrail()");
     expect(app).toContain('section.addEventListener("focusin", onFocus)');
     expect(app).toContain('if (event.target.classList.contains("intro-trail__head")) stop();');
