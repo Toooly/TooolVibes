@@ -154,8 +154,8 @@
 .partner-placement,
 .v-auth-page .v-auth-card,
 .tv-lib-row {
-  border-radius: var(--tv-radius-system);
-  border-color: var(--tv-border-system);
+  border-radius: var(--tv-material-radius);
+  border-color: var(--tv-material-edge);
 }
 
 .tv-workflow-card,
@@ -368,8 +368,8 @@ button:active,
 
 @media (hover: hover) and (pointer: fine) {
   .ar4-card:hover {
-    border-color: color-mix(in srgb, var(--tv-accent-brand) 35%, var(--tv-border-system));
-    box-shadow: var(--tv-glow-violet);
+    border-color: var(--tv-material-edge-active);
+    box-shadow: var(--tv-material-shadow);
   }
   .tv-workflow-card:hover {
     border-color: color-mix(in srgb, var(--tv-accent-gold) 35%, var(--tv-border-system));

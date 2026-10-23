@@ -3,7 +3,7 @@
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { readRewardPreferences } from "@/lib/rewards/preferences";
 
@@ -40,6 +40,22 @@ function WorkspaceInteriorNav({
   surface: AccountWorkspaceSurface;
   view: WorkspaceView;
 }) {
+  const navRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const nav = navRef.current;
+    const current = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !current) return;
+    const viewport = nav.getBoundingClientRect();
+    const item = current.getBoundingClientRect();
+    if (viewport.width === 0) return;
+    const delta = item.left < viewport.left + 8
+      ? item.left - viewport.left - 8
+      : item.right > viewport.right - 8
+        ? item.right - viewport.right + 8
+        : 0;
+    nav.scrollLeft += delta;
+  }, [surface, view]);
+
   const items = [
     { href: personalDashboardHref(), label: "Il tuo spazio", current: surface === "workspace" && view === "riprendi" },
     { href: workspaceViewHref("salvati"), label: "Salvati", current: surface === "workspace" && view === "salvati" },
@@ -48,7 +64,7 @@ function WorkspaceInteriorNav({
     { href: "/account/settings", label: "Impostazioni", current: surface === "settings" },
   ];
   return (
-    <LocalizedAttributes><nav className="tv-space-switch" aria-label="Il tuo spazio">
+    <LocalizedAttributes><nav ref={navRef} className="tv-space-switch" aria-label="Il tuo spazio">
       {items.map((item) => (
         <Link
           key={item.href}

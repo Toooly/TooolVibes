@@ -1,4 +1,7 @@
+"use client";
+
 import { LocalizedText } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 import type { EditorialPostRecord } from "@/lib/types/article";
 
 import { GuideCard } from "@/components/guides/guide-card";
@@ -18,6 +21,7 @@ export function GuideFeaturedSection({
   toolHref,
   readingMinutes,
 }: GuideFeaturedSectionProps) {
+  const { locale } = useLocale();
   return (
     <section
       id="guides-featured"
@@ -31,7 +35,7 @@ export function GuideFeaturedSection({
             <h2
               id="guides-featured-title"
               className="guides-section__title"
-            ><LocalizedText>{"La "}</LocalizedText><em><LocalizedText>{"lettura"}</LocalizedText></em><LocalizedText>{" da cui partire. "}</LocalizedText></h2>
+            >{locale === "en" ? <>Start with <em>this guide</em>.</> : <>La <em>lettura</em> da cui partire.</>}</h2>
           </div>
           <p className="guides-section__dek"><LocalizedText>{"La guida più utile di questo momento secondo la redazione — scelta per profondità, attualità e completezza, non per traffico. "}</LocalizedText></p>
         </div>

@@ -2,6 +2,7 @@
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useEffect, useState, useMemo, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { levelBTransition } from "@/lib/motion/transitions";
@@ -23,6 +24,7 @@ import {
 import Link from "@/components/ui/app-link";
 
 import { DecisionSheet } from "@/components/account/workspace/decision-sheet";
+import { OverlayProvider } from "@/components/ui/overlay-provider";
 import {
   formatRevisitLine,
   OUTCOME_STATE_LABELS,
@@ -632,13 +634,18 @@ function MobileNoteSheet({
   const noteIsDirty = noteDraft.trim() !== (memory.note ?? "");
   const noteId = `shortlist-sheet-note-${slug}`;
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div className="shortlist-final-surface shortlist-note-portal">
+    <OverlayProvider>
     <LocalizedAttributes><motion.div
       initial={preferReducedMotion ? false : { y: 16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={preferReducedMotion ? undefined : { y: 12, opacity: 0 }}
       transition={levelBTransition({ preferReducedMotion })}
       className="mobile-shortlist-board__sheet"
+      hidden={decideOpen}
       role="dialog"
       aria-modal="true"
       aria-label={`Memoria decisionale di ${toolName}`}
@@ -864,6 +871,9 @@ function MobileNoteSheet({
         defaultOutcome={decisionOutcome ?? "selected"}
       />
     </motion.div></LocalizedAttributes>
+    </OverlayProvider>
+    </div>,
+    document.body,
   );
 }
 

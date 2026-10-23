@@ -195,6 +195,34 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     ).toBeTruthy();
   });
 
+  it("portals note editing outside the page stacking context and keeps its scope", () => {
+    const { container } = render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
+    const dialog = openSheetFor("Alpha");
+
+    expect(container.contains(dialog)).toBe(false);
+    expect(dialog.closest(".shortlist-final-surface.shortlist-note-portal")?.parentElement).toBe(document.body);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Chiudi memoria decisionale" }));
+    expect(screen.queryByRole("dialog", { name: "Memoria decisionale di Alpha" })).toBeNull();
+  });
+
+  it("puts Decidi above note editing and restores the unfinished note after closing", () => {
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
+    const note = openSheetFor("Alpha");
+    fireEvent.change(within(note).getByRole("textbox", { name: "Nota personale" }), { target: { value: "Keep this draft" } });
+    fireEvent.click(within(note).getByRole("button", { name: "Decidi" }));
+
+    expect(note.hidden).toBe(true);
+    const decision = document.querySelector<HTMLElement>("[data-decision-sheet]");
+    expect(decision).not.toBeNull();
+    expect(note.contains(decision)).toBe(false);
+    fireEvent.click(within(decision!).getAllByRole("button", { name: "Chiudi" })[0]);
+
+    expect(note.hidden).toBe(false);
+    expect((within(note).getByRole("textbox", { name: "Nota personale" }) as HTMLTextAreaElement).value).toBe("Keep this draft");
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Memoria decisionale di Alpha" })).toBeNull();
+  });
+
   it("opens the comparison workspace directly for compare-ready tools", () => {
     let state = savedState("alpha", "beta");
     state = reduceWorkspaceState(state, {

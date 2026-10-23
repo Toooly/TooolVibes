@@ -1,11 +1,13 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 import { useState, type FormEvent } from "react";
 import { isAuthFailureMessage } from "@/lib/auth/auth-messages";
 import { useAccount } from "./account-provider";
 import { OAuthButtons } from "./oauth-buttons";
 import { BrandLogo } from "@/components/layout/brand-logo";
+import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
 import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
 import { Mail, User, RotateCcw, Sparkles } from "lucide-react";
 import { AccountStateBanner } from "./panel/account-state-banner";
@@ -27,6 +29,7 @@ type PendingMagicLink = {
 
 export function AuthPage() {
   const account = useAccount();
+  const { locale } = useLocale();
   const [activeTab, setActiveTab] = useState<AuthTab>("login");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -83,6 +86,7 @@ export function AuthPage() {
     <div id="member-access" className="v-auth-page tv-kbd-page scroll-mt-24">
       <div className="v-auth-container v-auth-container--split">
         <aside className="v-auth-context" aria-labelledby="account-context-title">
+          <InstrumentOrbit className="v-auth-context__orbit" />
           <p className="v-auth-context__eyebrow"><LocalizedText>{"Il tuo spazio"}</LocalizedText></p>
           <p id="account-context-title" className="v-auth-context__title"><LocalizedText>{"Tutto ciò che decidi resta qui. "}</LocalizedText></p>
           <p><LocalizedText>{"Salvati, confronti, stack e note in un solo posto — anche quando cambi dispositivo. "}</LocalizedText></p>
@@ -304,7 +308,9 @@ export function AuthPage() {
                 className="v-auth-link"
                 onClick={() => setActiveTab(activeTab === "register" ? "login" : "register")}
               >
-                <LocalizedText>{activeTab === "register" ? "Accedi" : "Crea un account"}</LocalizedText>
+                <LocalizedText>{locale === "en"
+                  ? activeTab === "register" ? "Sign in" : "Create an account"
+                  : activeTab === "register" ? "Accedi" : "Crea un account"}</LocalizedText>
               </button>
             </p>
           </div>

@@ -90,18 +90,32 @@
 
 .tv-member-gate__card {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   z-index: 2;
   display: grid;
   gap: var(--tv-space-component-md);
   width: min(100%, var(--tv-activation-max-width));
   margin: 0 auto var(--tv-space-component-lg);
   padding: var(--tv-space-component-lg);
-  border: 1px solid var(--tv-activation-accent-border);
-  border-radius: var(--tv-radius-modal);
-  background: var(--tv-activation-surface);
-  box-shadow: var(--tv-elevation-rest);
+  border: 1px solid var(--tv-material-edge);
+  border-radius: var(--tv-material-radius);
+  background: var(--tv-material-panel);
+  box-shadow: var(--tv-material-shadow);
   color: var(--tv-activation-ink);
   text-align: left;
+}
+
+.tv-member-gate__card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -3.25rem -3.5rem auto auto;
+  width: 12rem;
+  height: 12rem;
+  background: url("/graphics/instrument-orbit.webp") center / contain no-repeat;
+  opacity: 0.18;
+  pointer-events: none;
 }
 @media (prefers-reduced-motion: no-preference) {
   .tv-member-gate__card {
@@ -124,6 +138,8 @@
   line-height: var(--tv-leading-heading);
   font-weight: var(--tv-weight-semibold);
   color: var(--tv-activation-ink);
+  max-width: 24ch;
+  text-wrap: balance;
 }
 
 .tv-member-gate__body {
@@ -131,6 +147,7 @@
   font-size: var(--tv-text-body);
   line-height: var(--tv-leading-body);
   color: var(--tv-activation-ink-secondary);
+  max-width: 54ch;
 }
 
 .tv-member-gate__cta {
@@ -145,6 +162,8 @@
   font-size: var(--tv-text-button);
   font-weight: var(--tv-button-font-weight);
   text-decoration: none;
+  box-shadow: var(--tv-material-inset);
+  transition: background var(--tv-motion-fast) var(--tv-ease-standard), box-shadow var(--tv-motion-fast) var(--tv-ease-standard);
 }
 
 @media (hover: hover) and (pointer: fine) {

@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { CollectionAntiRecommendationV4 } from "@/components/collections/collection-anti-recommendation-v4";
 import { CollectionDecisionNotesV4 } from "@/components/collections/collection-decision-notes-v4";
 import { CollectionScenarioV4 } from "@/components/collections/collection-scenario-v4";
+import { CollectionStackFlowV4 } from "@/components/collections/collection-stack-flow-v4";
 import { CollectionVariantPathsV4 } from "@/components/collections/collection-variant-paths-v4";
 
 import { makeCollection, makeSecondaryCollection } from "./fixture";
@@ -46,6 +47,30 @@ function richCollection() {
 }
 
 describe("collection detail depth", () => {
+  it("keeps mobile stage explanations outside the desktop-only exposition", () => {
+    const collection = makeCollection();
+    collection.included_tools[0].why_chosen = "Unisce le fonti in un unico progetto.";
+    collection.included_tools[0].input = "Le fonti da verificare";
+    collection.included_tools[0].output = "Una ricerca pronta da usare";
+    const { container } = render(<CollectionStackFlowV4 collection={collection} />);
+    const stage = container.querySelector(".cx-stack-flow-v4__stage");
+    const disclosure = stage?.querySelector("details");
+
+    expect(disclosure?.parentElement).toBe(stage);
+    expect(disclosure?.closest(".cx-stack-flow-v4__row")).toBeNull();
+    expect(disclosure?.querySelector(".cx-stack-flow-v4__mobile-context")?.textContent).toContain("Una ricerca pronta da usare");
+    expect(disclosure?.hasAttribute("open")).toBe(false);
+  });
+
+  it("keeps the desktop tool destination reachable by keyboard and assistive technology", () => {
+    const { container } = render(<CollectionStackFlowV4 collection={makeCollection()} />);
+    const desktopLink = container.querySelector<HTMLAnchorElement>(".cx-stack-flow-v4__tool--full");
+
+    expect(desktopLink?.getAttribute("href")).toBe("/toools/jenni-ai");
+    expect(desktopLink?.hasAttribute("aria-hidden")).toBe(false);
+    expect(desktopLink?.tabIndex).toBe(0);
+  });
+
   it("keeps decision notes, scenario and variants collapsed by default", () => {
     const collection = richCollection();
     const { container: d } = render(<CollectionDecisionNotesV4 collection={collection} />);

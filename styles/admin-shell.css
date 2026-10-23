@@ -115,9 +115,10 @@
   display: grid;
   gap: 0.85rem;
   padding: 0.95rem 1rem;
-  border-radius: var(--tv-radius-feature);
-  border: 1px solid var(--tv-border-default);
-  background: var(--tv-surface-raised);
+  border-radius: var(--tv-material-radius-sm);
+  border: 1px solid var(--tv-material-edge);
+  background: var(--tv-material-panel-soft);
+  box-shadow: var(--tv-material-inset);
   color: var(--tv-ink-primary);
 }
 
@@ -217,8 +218,8 @@
   display: grid;
   min-width: 12.5rem;
   padding: 0.4rem;
-  border-radius: var(--tv-radius-card);
-  border: 1px solid var(--tv-border-default);
+  border-radius: var(--tv-material-radius-sm);
+  border: 1px solid var(--tv-material-edge);
   background: var(--tv-surface-floating);
   box-shadow: var(--tv-elevation-floating);
 }
@@ -274,12 +275,35 @@
 
 .admin-overview,
 .admin-activity {
-  border: 1px solid var(--tv-border-default);
-  border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-raised);
+  border: 1px solid var(--tv-material-edge);
+  border-radius: var(--tv-material-radius);
+  background: var(--tv-material-panel);
+  box-shadow: var(--tv-material-inset);
   color: var(--tv-ink-primary);
   padding: 1.1rem 1rem;
   margin-bottom: 1rem;
+}
+
+[data-admin-shell] :is(.tv-cc-btn, .tv-cc-filter, .tv-cc-menu__trigger) {
+  transition: background var(--tv-motion-fast) var(--tv-ease-standard), border-color var(--tv-motion-fast) var(--tv-ease-standard);
+}
+
+[data-admin-shell] :is(a, button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--tv-focus-ring);
+  outline-offset: 3px;
+}
+
+[data-admin-shell] :is(button:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-admin-shell] :is(.tv-cc-btn--secondary, .tv-cc-btn--ghost, .tv-cc-filter, .tv-cc-menu__trigger):hover {
+    border-color: var(--tv-material-edge-active);
+    background: var(--tv-surface-interactive);
+    color: var(--tv-ink-primary);
+  }
 }
 
 .admin-kicker {
@@ -442,9 +466,10 @@
 
 .tv-cc-panel {
   padding: 1rem 1.05rem;
-  border-radius: var(--tv-radius-feature);
-  border: 1px solid var(--tv-border-default);
-  background: var(--tv-surface-raised);
+  border-radius: var(--tv-material-radius);
+  border: 1px solid var(--tv-material-edge);
+  background: var(--tv-material-panel-soft);
+  box-shadow: var(--tv-material-inset);
   color: var(--tv-ink-primary);
 }
 
@@ -522,21 +547,23 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.7rem 0.9rem;
-  border-radius: var(--tv-radius-card);
-  border: 1px solid var(--tv-border-default);
+  border-radius: var(--tv-material-radius-sm);
+  border: 1px solid var(--tv-material-edge);
   background: color-mix(in srgb, var(--tv-surface-floating) 94%, transparent);
   color: var(--tv-ink-primary);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--tv-material-shadow);
 }
 
 .tv-cc-dialog {
   width: min(28rem, 100%);
   padding: 1.1rem;
-  border-radius: var(--tv-radius-feature);
-  border: 1px solid var(--tv-border-default);
+  border-radius: var(--tv-material-radius);
+  border: 1px solid var(--tv-material-edge);
   background: var(--tv-surface-floating);
   color: var(--tv-ink-primary);
-  box-shadow: var(--tv-elevation-floating);
+  box-shadow: var(--tv-material-shadow);
 }
 
 .tv-cc-table {

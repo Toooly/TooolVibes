@@ -37,6 +37,16 @@
   --tv-instrument-edge: color-mix(in srgb, var(--tv-color-cyan-500) 20%, var(--tv-border-subtle));
   --tv-context-surface: color-mix(in srgb, var(--tv-surface-elevated) 40%, var(--tv-surface-raised));
   --tv-context-edge: color-mix(in srgb, var(--tv-color-ink-200) 14%, var(--tv-border-subtle));
+  /* Hero-family material roles: stable glass surfaces, colored light at edges. */
+  --tv-material-panel-image: radial-gradient(ellipse at 8% 0%, color-mix(in srgb, var(--tv-accent-brand) 13%, transparent), transparent 58%), linear-gradient(145deg, color-mix(in srgb, var(--tv-ink-primary) 3%, transparent), transparent 52%);
+  --tv-material-panel: var(--tv-material-panel-image), var(--tv-instrument-surface);
+  --tv-material-panel-soft: linear-gradient(145deg, color-mix(in srgb, var(--tv-color-violet-300) 5%, transparent), transparent 62%), var(--tv-context-surface);
+  --tv-material-edge: color-mix(in srgb, var(--tv-color-violet-300) 24%, var(--tv-border-subtle));
+  --tv-material-edge-active: color-mix(in srgb, var(--tv-color-cyan-500) 65%, var(--tv-color-violet-300));
+  --tv-material-inset: inset 0 1px 0 color-mix(in srgb, var(--tv-ink-primary) 9%, transparent);
+  --tv-material-shadow: var(--tv-material-inset), 0 12px 32px color-mix(in srgb, var(--tv-bg-base) 32%, transparent);
+  --tv-material-radius: 1.5rem;
+  --tv-material-radius-sm: 1rem;
   /* ============================================================== */
   /* === SECTION 1: FOUNDATION TOKENS ============================= */
   /* Raw values, no semantic meaning. Token authors only.           */

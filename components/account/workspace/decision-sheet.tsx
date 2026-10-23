@@ -275,7 +275,7 @@ export function DecisionSheet({
             <div className="tv-decision-sheet__field">
               <p className="tv-decision-sheet__field-label"><LocalizedText>{"Conferma se lo usi tra 1 mese "}</LocalizedText></p>
               <RevisitWhenChips
-                tone="light"
+                tone="dark"
                 onSelect={(next) => setRevisitAt(next)}
               />
             </div>

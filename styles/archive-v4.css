@@ -26,7 +26,7 @@
   min-height: 32px;
   background: var(--tv-surface-elevated);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 0.5rem;
+  border-radius: var(--tv-radius-pill);
   color: var(--tv-ink-primary);
   font-family: var(--tv-font-family-ui);
   font-size: 13px;
@@ -57,14 +57,11 @@
 
 .ar4-chip.is-active {
   background: linear-gradient(135deg,
-    color-mix(in srgb, var(--tv-accent-violet) 88%, transparent),
-    color-mix(in srgb, var(--tv-accent-primary) 72%, transparent));
+    color-mix(in srgb, var(--tv-accent-violet) 26%, var(--tv-surface-elevated)),
+    color-mix(in srgb, var(--tv-accent-primary) 14%, var(--tv-bg-base)));
   border-color: color-mix(in srgb, var(--tv-accent-violet) 60%, transparent);
-  color: var(--tv-ink-on-brand);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--tv-accent-violet) 30%, transparent),
-    0 2px 8px -2px color-mix(in srgb, var(--tv-accent-violet) 40%, transparent);
+  color: var(--tv-ink-primary);
+  box-shadow: var(--tv-material-inset);
 }
 .ar4-chip.is-active em {
   background: color-mix(in srgb, #000 18%, transparent);
@@ -733,10 +730,11 @@
   flex-direction: column;
   gap: var(--tv-tool-card-gap);
   padding: var(--tv-space-component-md);
-  background: var(--tv-grammar-resource-surface);
+  background: var(--tv-material-panel);
   color: var(--tv-ink-primary);
-  border: 1px solid var(--tv-grammar-resource-edge);
-  border-radius: var(--tv-tool-card-radius);
+  border: 1px solid var(--tv-material-edge);
+  border-radius: var(--tv-material-radius);
+  box-shadow: var(--tv-material-shadow);
   transition:
     border-color var(--tv-duration-fast) var(--tv-easing-standard),
     background var(--tv-duration-fast) var(--tv-easing-standard),
@@ -747,8 +745,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .ar4-card:hover {
-    border-color: var(--tv-border-interactive);
-    background: var(--tv-surface-elevated);
+    border-color: var(--tv-material-edge-active);
   }
 }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
@@ -798,9 +795,10 @@
 .ar4-card__avatar {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--tv-accent-primary) 12%, var(--tv-bg-base));
+  border-radius: var(--tv-material-radius-sm);
+  background: var(--tv-material-panel-soft);
   border: 1px solid color-mix(in srgb, var(--tv-accent-primary) 25%, transparent);
+  box-shadow: var(--tv-material-inset);
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -2309,16 +2307,13 @@ a.archive-v4-card:focus-visible {
   color: var(--tv-ink-primary);
   background: var(--tv-surface-elevated);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 0.5rem;
+  border-radius: var(--tv-radius-pill);
   padding: 5px 28px 5px 12px;
-  min-height: 32px;
+  min-height: 44px;
   cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23120d2f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 12px;
+  appearance: auto;
+  -webkit-appearance: menulist;
+  color-scheme: dark;
   flex-shrink: 0;
 }
 .ar4-filters__sort:focus-visible {
@@ -2336,16 +2331,13 @@ a.archive-v4-card:focus-visible {
   color: var(--tv-ink-primary);
   background: var(--tv-surface-elevated);
   border: 1px solid var(--tv-border-subtle);
-  border-radius: 0.5rem;
+  border-radius: var(--tv-radius-pill);
   padding: 8px 28px 8px 12px;
-  min-height: 38px;
+  min-height: 44px;
   cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23120d2f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 12px;
+  appearance: auto;
+  -webkit-appearance: menulist;
+  color-scheme: dark;
 }
 .ar4-mobile-bar__sort-select:focus-visible {
   outline: 0;
@@ -5424,27 +5416,15 @@ a.archive-v4-card:focus-visible {
   transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* ── A. DEFAULT MATERIAL: deep midnight with violet depth ── */
+/* ── A. DEFAULT MATERIAL: shared instrument glass ── */
 .ar4-card {
-  --ar4-card-surface:
-    radial-gradient(ellipse at 50% -5%, rgba(133, 103, 223, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 30% 60%, rgba(180, 120, 80, 0.04) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 15%, rgba(106, 60, 255, 0.05) 0%, transparent 45%),
-    radial-gradient(ellipse at 10% 85%, rgba(80, 50, 160, 0.04) 0%, transparent 40%),
-    linear-gradient(175deg, #100d2e 0%, #0c0a28 35%, #090822 70%, #07061e 100%);
-  background:
-    var(--ar4-card-surface) !important;
-  border: 1px solid rgba(133, 103, 223, 0.18) !important;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.35),
-    0 6px 20px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(133, 103, 223, 0.04),
-    0 0 30px -8px rgba(106, 60, 255, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
-    inset 1px 0 0 rgba(133, 103, 223, 0.03) !important;
-  transition: border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1),
-    background 280ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  --ar4-card-surface: var(--tv-material-panel);
+  background: var(--ar4-card-surface) !important;
+  border: 1px solid var(--tv-material-edge) !important;
+  box-shadow: var(--tv-material-shadow) !important;
+  transition: border-color var(--tv-duration-base) var(--tv-easing-standard),
+    box-shadow var(--tv-duration-base) var(--tv-easing-standard),
+    background var(--tv-duration-base) var(--tv-easing-standard) !important;
 }
 
 /* ── B. SAVE: gold material state — OWNS the outer card ── */

@@ -51,6 +51,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
           const toolHref = `/toools/${slot.tool.slug}`;
           const isManual = slot.manual_handoff === true;
           const hasHandoff = Boolean(slot.next_handoff);
+          const hasAdditionalDetails = Boolean(slot.limitations || slot.when_to_skip || slot.replacement_trigger || slot.relevant_guide_slug);
 
           return (
             <li
@@ -101,8 +102,6 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                     href={toolHref}
                     className="cx-stack-flow-v4__tool cx-stack-flow-v4__tool--full"
                     aria-label={`Vai alla scheda di ${slot.tool.name}`}
-                    tabIndex={-1}
-                    aria-hidden="true"
                   >
                     {slot.tool.name}
                   </Link></LocalizedAttributes>
@@ -171,54 +170,65 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                         </span>
                       </p>
                     )}
-
-                    {(slot.limitations ||
-                      slot.when_to_skip ||
-                      slot.replacement_trigger ||
-                      slot.relevant_guide_slug) && (
-                      <details className="cx-stack-flow-v4__details">
-                        <summary className="cx-stack-flow-v4__details-summary">
-                          <span><LocalizedText>{"Più dettagli su "}</LocalizedText>{slot.tool.name}</span>
-                          <ArrowRight
-                            className="size-3 cx-stack-flow-v4__details-arrow"
-                            aria-hidden="true"
-                          />
-                        </summary>
-                        <div className="cx-stack-flow-v4__details-body">
-                          {slot.limitations && (
-                            <div>
-                              <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Limiti "}</LocalizedText></span>
-                              <p><LocalizedText>{slot.limitations}</LocalizedText></p>
-                            </div>
-                          )}
-                          {slot.when_to_skip && (
-                            <div>
-                              <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando saltarlo "}</LocalizedText></span>
-                              <p><LocalizedText>{slot.when_to_skip}</LocalizedText></p>
-                            </div>
-                          )}
-                          {slot.replacement_trigger && (
-                            <div>
-                              <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando cambiarlo "}</LocalizedText></span>
-                              <p><LocalizedText>{slot.replacement_trigger}</LocalizedText></p>
-                            </div>
-                          )}
-                          {slot.relevant_guide_slug && (
-                            <Link
-                              href={`/posts/${slot.relevant_guide_slug}`}
-                              className="cx-stack-flow-v4__guide-link"
-                            ><LocalizedText>{"Approfondisci "}</LocalizedText>{slot.tool.name}
-                              <ArrowRight
-                                className="size-3"
-                                aria-hidden="true"
-                              />
-                            </Link>
-                          )}
-                        </div>
-                      </details>
-                    )}
                   </div>
                 </div>
+                {(slot.role ||
+                  slot.why_chosen ||
+                  slot.input ||
+                  slot.output ||
+                  slot.next_handoff ||
+                  slot.limitations ||
+                  slot.when_to_skip ||
+                  slot.replacement_trigger ||
+                  slot.relevant_guide_slug) && (
+                  <details className="cx-stack-flow-v4__details" data-mobile-only={!hasAdditionalDetails || undefined}>
+                    <summary className="cx-stack-flow-v4__details-summary">
+                      <span><LocalizedText>{"Più dettagli su "}</LocalizedText>{slot.tool.name}</span>
+                      <ArrowRight
+                        className="size-3 cx-stack-flow-v4__details-arrow"
+                        aria-hidden="true"
+                      />
+                    </summary>
+                    <div className="cx-stack-flow-v4__details-body">
+                      <div className="cx-stack-flow-v4__mobile-context">
+                        {slot.role && <h3><LocalizedText>{slot.role}</LocalizedText></h3>}
+                        {slot.why_chosen && <p><LocalizedText>{slot.why_chosen}</LocalizedText></p>}
+                        {slot.input && <p><strong><LocalizedText>{"↓ Entra "}</LocalizedText></strong><LocalizedText>{slot.input}</LocalizedText></p>}
+                        {slot.output && <p><strong><LocalizedText>{"↑ Esce "}</LocalizedText></strong><LocalizedText>{slot.output}</LocalizedText></p>}
+                        {slot.next_handoff && <p><strong><LocalizedText>{isManual ? "Passaggio manuale" : "Passaggio"}</LocalizedText>: </strong><LocalizedText>{slot.next_handoff}</LocalizedText></p>}
+                      </div>
+                      {slot.limitations && (
+                        <div>
+                          <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Limiti "}</LocalizedText></span>
+                          <p><LocalizedText>{slot.limitations}</LocalizedText></p>
+                        </div>
+                      )}
+                      {slot.when_to_skip && (
+                        <div>
+                          <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando saltarlo "}</LocalizedText></span>
+                          <p><LocalizedText>{slot.when_to_skip}</LocalizedText></p>
+                        </div>
+                      )}
+                      {slot.replacement_trigger && (
+                        <div>
+                          <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando cambiarlo "}</LocalizedText></span>
+                          <p><LocalizedText>{slot.replacement_trigger}</LocalizedText></p>
+                        </div>
+                      )}
+                      {slot.relevant_guide_slug && (
+                        <Link
+                          href={`/posts/${slot.relevant_guide_slug}`}
+                          className="cx-stack-flow-v4__guide-link"
+                        ><LocalizedText>{"Approfondisci "}</LocalizedText>{slot.tool.name}
+                          <ArrowRight
+                            className="size-3"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      )}
+                    </div>
+                  </details>
+                )}
               </article>
             </li>
           );

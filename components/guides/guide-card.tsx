@@ -1,6 +1,8 @@
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import Link from "@/components/ui/app-link";
 import { MarkdownHighlight } from "@/components/editorial/markdown-content";
+import { BookOpenText } from "lucide-react";
+import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
 
 import { GuideThumbnail } from "./guide-thumbnail";
 
@@ -43,21 +45,21 @@ function defaultTopic(post: EditorialPostRecord): string {
 function topicPalette(topic: string): { background: string; color: string } {
   const t = topic.toLowerCase();
   if (t.includes("scrittura") || t.includes("writing") || t.includes("seo")) {
-    return { background: "rgba(43, 208, 255, 0.16)", color: "#0a6b80" };
+    return { background: "rgba(43, 208, 255, 0.16)", color: "var(--tv-color-cyan-300)" };
   }
   if (t.includes("agenti") || t.includes("agent") || t.includes("automazione")) {
-    return { background: "rgba(106, 60, 255, 0.16)", color: "#4d2dd6" };
+    return { background: "rgba(106, 60, 255, 0.16)", color: "var(--tv-color-violet-300)" };
   }
   if (t.includes("imagine") || t.includes("foto") || t.includes("media")) {
-    return { background: "rgba(255, 192, 122, 0.22)", color: "#7c4a13" };
+    return { background: "rgba(255, 192, 122, 0.22)", color: "var(--tv-color-gold-300)" };
   }
   if (t.includes("affiliate") || t.includes("saas") || t.includes("business")) {
-    return { background: "rgba(72, 200, 130, 0.18)", color: "#15643a" };
+    return { background: "rgba(72, 200, 130, 0.18)", color: "var(--tv-color-cyan-300)" };
   }
   if (t.includes("schedul") || t.includes("calendario") || t.includes("produttivit")) {
-    return { background: "rgba(220, 132, 247, 0.18)", color: "#5b1378" };
+    return { background: "rgba(220, 132, 247, 0.18)", color: "var(--tv-color-violet-300)" };
   }
-  return { background: "rgba(106, 60, 255, 0.12)", color: "#4d2dd6" };
+  return { background: "rgba(106, 60, 255, 0.12)", color: "var(--tv-color-violet-300)" };
 }
 
 export function GuideCard({
@@ -173,12 +175,14 @@ export function GuideCard({
           className="guides-feature__cover"
           aria-hidden
           style={{
-            background: `linear-gradient(135deg, #1a1230 0%, ${palette.color} 100%)`,
+            background: `radial-gradient(ellipse at 80% 0%, ${palette.background}, transparent 70%), var(--tv-material-panel)`,
           }}
         >
+          <InstrumentOrbit className="guides-feature__orbit" />
           <div className="guides-feature__cover-content">
             <div className="guides-feature__glyph" aria-hidden>
-              <LocalizedText>{resolvedTopic.charAt(0).toUpperCase()}</LocalizedText>
+              <BookOpenText size={28} strokeWidth={1.5} />
+              <span><LocalizedText>{toolName || resolvedTopic}</LocalizedText></span>
             </div>
             <div className="guides-feature__cover-foot">
               <span

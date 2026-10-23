@@ -5,7 +5,7 @@
  *  - Decorative scan line removed (calibration rule: one continuous loop per section)
  *  - Brand aura pulse removed (calibration rule: no permanent decorative pulse)
  *  - Route dot kept static (calibration rule: motion must communicate state, not decorate)
- *  - Background switched to solid dark (calibration rule: solid baseline, no glassmorphism)
+ *  - Opaque dark scroll scrim keeps page copy from bleeding into controls.
  */
 
 .mobile-top-bar {
@@ -239,8 +239,8 @@
   padding: 0.4rem;
   display: grid;
   gap: 0.15rem;
-  border-radius: 14px;
-  background: #1b1438;
+  border-radius: var(--tv-material-radius-sm);
+  background: var(--tv-material-panel);
   border: 1px solid color-mix(in srgb, #fff 14%, transparent);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.48);
 }

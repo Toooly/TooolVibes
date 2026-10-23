@@ -1424,3 +1424,22 @@
     padding-inline: var(--tv-gutter-desktop);
   }
 }
+
+/* Partner acquisition belongs to the same instrument family as the product. */
+.sponsorizza-page :is(.sponsorizza-hero, .sponsorizza-final-cta) {
+  background: var(--tv-material-panel);
+  border-color: var(--tv-material-edge);
+  border-radius: var(--tv-material-radius);
+  box-shadow: var(--tv-material-shadow);
+}
+.sponsorizza-page :is(.sponsorizza-format-card, .sponsorizza-process__step) {
+  background: var(--tv-material-panel-soft);
+  border-color: var(--tv-material-edge);
+  border-radius: var(--tv-material-radius-sm);
+  box-shadow: var(--tv-material-inset);
+}
+.sponsorizza-page .sponsorizza-format-card:hover,
+.sponsorizza-page .sponsorizza-format-card:focus-within { border-color: var(--tv-material-edge-active); }
+.sponsorizza-page .sponsorizza-hero__title { max-width: 24ch; line-height: 1.12; }
+.sponsorizza-page :is(.sponsorizza-format-card__title, .sponsorizza-process__title) { line-height: 1.3; }
+.sponsorizza-page :is(.sponsorizza-format-card__copy, .sponsorizza-process__copy) { line-height: 1.65; }

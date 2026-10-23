@@ -142,9 +142,10 @@
   gap: 4px;
   justify-content: center;
   padding: 6px;
-  background: color-mix(in srgb, var(--tv-surface-elevated) 70%, transparent);
-  border: 1px solid var(--tv-border-subtle);
-  border-radius: var(--tv-radius-special);
+  background: var(--tv-material-panel-soft);
+  border: 1px solid var(--tv-material-edge);
+  border-radius: var(--tv-radius-pill);
+  box-shadow: var(--tv-material-inset);
   position: relative;
 }
 
@@ -155,13 +156,13 @@
   align-items: center;
   gap: 8px;
   padding: 12px 18px;
-  border-radius: var(--tv-radius-card);
+  border-radius: var(--tv-radius-pill);
   text-decoration: none;
   color: var(--tv-ink-secondary);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-transform: none;
   transition: color var(--tv-duration-base) var(--tv-easing-standard);
   isolation: isolate;
   min-height: 48px;
@@ -194,10 +195,10 @@
 .command-bar__nav-marker {
   position: absolute;
   inset: 0;
-  border-radius: var(--tv-radius-card);
-  background: var(--tv-accent-primary);
+  border-radius: var(--tv-radius-pill);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--tv-color-violet-300) 55%, var(--tv-accent-brand)), var(--tv-accent-brand));
   z-index: -1;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tv-accent-primary) 60%, transparent);
+  box-shadow: var(--tv-material-inset);
 }
 
 /* ============================================================
@@ -416,10 +417,10 @@
   padding: 8px;
   display: grid;
   gap: 2px;
-  background: var(--tv-bg-base);
-  border: 1px solid var(--tv-border-subtle, rgba(255, 255, 255, 0.08));
-  border-radius: var(--tv-overlay-radius-popover);
-  box-shadow: var(--tv-elevation-modal);
+  background: var(--tv-material-panel);
+  border: 1px solid var(--tv-material-edge);
+  border-radius: var(--tv-material-radius-sm);
+  box-shadow: var(--tv-material-shadow);
 }
 
 .command-bar__account-panel a,
@@ -427,7 +428,8 @@
   display: block;
   width: 100%;
   text-align: left;
-  padding: 8px 10px;
+  min-height: 44px;
+  padding: 10px 12px;
   font: inherit;
   color: inherit;
   background: transparent;

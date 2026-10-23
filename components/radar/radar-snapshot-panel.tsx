@@ -9,6 +9,16 @@ import { formatAge } from "@/lib/radar/radar-trend";
 
 const PAGE_SIZE = 4;
 
+function SignalIdentity({ tool }: { tool: RadarTool }) {
+  const [failed, setFailed] = useState(false);
+  return <span className="tv-rx-signal-identity" aria-hidden="true">
+    {tool.thumbnailUrl && !failed
+      // eslint-disable-next-line @next/next/no-img-element -- factual source artwork, cached by the browser
+      ? <img src={tool.thumbnailUrl} alt="" width={36} height={36} loading="lazy" decoding="async" onError={() => setFailed(true)} />
+      : <span>{Array.from(tool.name)[0]}</span>}
+  </span>;
+}
+
 /** Every real signal remains reachable without resolving a small map target. */
 export function RadarSnapshotPanel({ view, tools, clusterId, loading, onSelect, onBrowse }: {
   view: RadarView;
@@ -41,6 +51,7 @@ export function RadarSnapshotPanel({ view, tools, clusterId, loading, onSelect, 
         {tools.slice(start, start + PAGE_SIZE).map((tool, index) => <li key={tool.id}>
           <button type="button" className="tv-rx-rail__signal" onClick={() => onSelect(tool.id)} aria-label={`${en ? "Open details for" : "Apri dettagli di"} ${tool.name}`}>
             <span className="tv-rx-rail__rank" aria-hidden="true">{String(start + index + 1).padStart(2, "0")}</span>
+            <SignalIdentity tool={tool} />
             <span className="tv-rx-rail__identity"><strong>{tool.name}</strong><span className="tv-rx-rail__meta"><LocalizedText>{tool.topicCluster.label}</LocalizedText> · <LocalizedText>{formatAge(tool.ageHours)}</LocalizedText></span></span>
             <ArrowRight size={16} aria-hidden="true" />
           </button>

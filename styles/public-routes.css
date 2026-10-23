@@ -53,11 +53,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* .brand-panel and friends declare a dark `--tv-ink-inverted-secondary`
-   foreground for *all* descendants to read on the ivory surface. But
-   the route-marker index pill is a self-contained dark tile, so the
-   dark-on-dark inheritance makes the number invisible. Force the
-   pill's own foreground to win. */
+/* Index tiles retain the dark instrument foreground inside route panels. */
 .brand-panel .route-marker__index,
 .premium-card .route-marker__index,
 .light-surface .route-marker__index {
@@ -106,42 +102,38 @@
 }
 
 .marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) {
-  --foreground: var(--tv-ink-inverted);
-  --muted: var(--tv-ink-inverted-secondary);
-  --muted-strong: var(--tv-ink-inverted-secondary);
-  --accent-strong: var(--tv-accent-brand);
-  border-color: var(--tv-border-inverted) !important;
-  background: var(--tv-surface-inverted) !important;
-  color: var(--tv-ink-inverted) !important;
-  box-shadow: none;
+  --foreground: var(--tv-ink-primary);
+  --muted: var(--tv-ink-secondary);
+  --muted-strong: var(--tv-ink-secondary);
+  --accent-strong: var(--tv-accent-violet-on-dark);
+  border-color: var(--tv-material-edge) !important;
+  background: var(--tv-material-panel) !important;
+  color: var(--tv-ink-primary) !important;
+  box-shadow: var(--tv-material-shadow);
 }
 
-.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(h1, h2, h3, h4, strong) {
-  color: var(--tv-ink-inverted) !important;
+.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(h1, h2, h3, h4, strong):not(.premium-button *) {
+  color: var(--tv-ink-primary) !important;
 }
 
-/* Override #main-content .dark-panel h* when the h* sits inside a
-   nested light surface (brand-panel, premium-card, etc.). The dark
-   panel ancestor forces light foreground on every h*, but the inner
-   brand-panel needs dark text on its ivory surface. Specificity
-   must exceed the #main-content .dark-panel :where(h*) rule. */
-#main-content .dark-panel .brand-panel :where(h1, h2, h3, h4, strong),
-#main-content .dark-panel .premium-card :where(h1, h2, h3, h4, strong),
-#main-content .dark-panel .light-surface :where(h1, h2, h3, h4, strong),
-#main-content .dark-panel .metadata-block :where(h1, h2, h3, h4, strong),
-#main-content .dark-panel .stat-block :where(h1, h2, h3, h4, strong) {
-  color: var(--tv-ink-inverted) !important;
+/* Nested panels share the same material and foreground contract. */
+#main-content .dark-panel .brand-panel :where(h1, h2, h3, h4, strong):not(.premium-button *),
+#main-content .dark-panel .premium-card :where(h1, h2, h3, h4, strong):not(.premium-button *),
+#main-content .dark-panel .light-surface :where(h1, h2, h3, h4, strong):not(.premium-button *),
+#main-content .dark-panel .metadata-block :where(h1, h2, h3, h4, strong):not(.premium-button *),
+#main-content .dark-panel .stat-block :where(h1, h2, h3, h4, strong):not(.premium-button *) {
+  color: var(--tv-ink-primary) !important;
 }
-#main-content .dark-panel .brand-panel :where(p, li, small, span),
-#main-content .dark-panel .premium-card :where(p, li, small, span),
-#main-content .dark-panel .light-surface :where(p, li, small, span),
-#main-content .dark-panel .metadata-block :where(p, li, small, span),
-#main-content .dark-panel .stat-block :where(p, li, small, span) {
-  color: var(--tv-ink-inverted-secondary) !important;
+#main-content .dark-panel .brand-panel :where(p, li, small, span):not(.premium-button *),
+#main-content .dark-panel .premium-card :where(p, li, small, span):not(.premium-button *),
+#main-content .dark-panel .light-surface :where(p, li, small, span):not(.premium-button *),
+#main-content .dark-panel .metadata-block :where(p, li, small, span):not(.premium-button *),
+#main-content .dark-panel .stat-block :where(p, li, small, span):not(.premium-button *) {
+  color: var(--tv-ink-secondary) !important;
 }
 
-.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small, span) {
-  color: var(--tv-ink-inverted-secondary) !important;
+.marketing-shell main :where(.light-surface, .premium-card, .brand-panel, .metadata-block, .stat-block) :where(p, li, small, span):not(.premium-button *) {
+  color: var(--tv-ink-secondary) !important;
 }
 
 .marketing-shell main :where(input, select, textarea) {
@@ -168,9 +160,9 @@
   overflow: hidden;
   border: 1px solid var(--tv-border-subtle) !important;
   border-radius: var(--tv-radius-modal);
-  background: var(--tv-bg-base) !important;
+  background: var(--tv-material-panel) !important;
   color: var(--tv-ink-primary) !important;
-  box-shadow: none;
+  box-shadow: var(--tv-material-shadow);
 }
 
 .marketing-shell main .hero-shell :where(h1, h2, h3, strong),
@@ -356,8 +348,8 @@
   .brand-panel,
   .metadata-block,
   .stat-block
-) :where(a, button) {
-  color: var(--tv-ink-inverted);
+) :where(a, button):not(.premium-button) {
+  color: var(--tv-ink-primary);
 }
 
 .marketing-shell main :where(
@@ -367,9 +359,9 @@
   .metadata-block,
   .stat-block
 ) :where(input, textarea, select) {
-  border-color: var(--tv-border-inverted);
-  background: var(--tv-color-white-pure);
-  color: var(--tv-ink-inverted);
+  border-color: var(--tv-material-edge);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-ink-primary);
 }
 
 .marketing-shell main :where(
@@ -379,9 +371,9 @@
   .metadata-block,
   .stat-block
 ) .selection-chip {
-  border-color: var(--tv-border-inverted);
+  border-color: var(--tv-material-edge);
   background: transparent;
-  color: var(--tv-ink-inverted-secondary);
+  color: var(--tv-ink-secondary);
   box-shadow: none;
 }
 
@@ -702,4 +694,30 @@
   .tags-route > section {
     padding-inline: var(--tv-gutter-desktop);
   }
+}
+
+/* Company surfaces use the same product material without altering their content. */
+.v-about-page :is(.v-about-hero, .v-about-feature-card, .v-about-cta-section) {
+  background: var(--tv-material-panel);
+  border-color: var(--tv-material-edge);
+  border-radius: var(--tv-material-radius);
+  box-shadow: var(--tv-material-shadow);
+  color: var(--tv-ink-primary);
+}
+.v-about-page .v-about-service-card {
+  padding: 1.25rem;
+  background: var(--tv-material-panel-soft);
+  border-color: var(--tv-material-edge);
+  border-radius: var(--tv-material-radius-sm);
+  box-shadow: var(--tv-material-inset);
+}
+.v-about-page :is(.v-about-hero, .v-about-feature-card, .v-about-cta-section) :is(h1, h2, h3, h4, strong, .font-semibold) { color: var(--tv-ink-primary); }
+.v-about-page :is(.v-about-hero, .v-about-feature-card, .v-about-cta-section) :is(p, li) { color: var(--tv-ink-secondary); }
+.v-about-page .v-about-service-card:focus-within,
+.v-about-page .v-about-service-card:hover { border-color: var(--tv-material-edge-active); }
+.v-about-page :is(.v-about-service-icon, .v-about-feature-icon) { color: var(--tv-accent-violet-on-dark); }
+.v-about-page .v-about-cta-section .premium-badge-accent {
+  color: var(--tv-accent-violet-on-dark);
+  background: color-mix(in srgb, var(--tv-accent-brand) 16%, transparent);
+  border-color: var(--tv-material-edge);
 }

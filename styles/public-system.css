@@ -46,7 +46,8 @@
   padding: var(--tv-space-1);
   border: 1px solid var(--tv-context-edge);
   border-radius: var(--tv-radius-pill);
-  background: var(--tv-instrument-surface);
+  background: var(--tv-material-panel-soft);
+  box-shadow: var(--tv-material-inset);
 }
 .tv-sys-segmented__option {
   position: relative;
@@ -220,10 +221,10 @@
   display: grid;
   gap: var(--tv-space-component-sm);
   padding: var(--tv-card-padding-md);
-  border: 1px solid var(--tv-card-border);
-  border-radius: var(--tv-radius-feature);
-  background: var(--tv-surface-card);
-  box-shadow: var(--tv-elevation-rest);
+  border: 1px solid var(--tv-material-edge);
+  border-radius: var(--tv-material-radius);
+  background: var(--tv-material-panel);
+  box-shadow: var(--tv-material-shadow);
   color: var(--tv-ink-primary);
 }
 

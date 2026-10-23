@@ -1546,3 +1546,111 @@
 
 /* Final micro-polish: display wrapping */
 .secondary-hero__title { text-wrap: balance; }
+
+/* Product-family convergence: restrained glass, readable sections, clear actions. */
+.secondary-page :is(.secondary-hero, .secondary-closing, .secondary-section--ivory),
+.legal-page__body {
+  background: var(--tv-material-panel);
+  border-color: var(--tv-material-edge);
+  border-radius: var(--tv-material-radius);
+  color: var(--tv-ink-primary);
+  box-shadow: var(--tv-material-shadow);
+}
+.secondary-page :is(.secondary-card, .secondary-principle, .affiliates-intro),
+.resource-page .secondary-principle.secondary-card--ivory {
+  background: var(--tv-material-panel-soft);
+  border-color: var(--tv-material-edge);
+  border-radius: var(--tv-material-radius-sm);
+  color: var(--tv-ink-primary);
+  box-shadow: var(--tv-material-inset);
+}
+.secondary-page :is(.secondary-hero__title, .secondary-section__title, .secondary-card__title, .secondary-principle__title),
+.secondary-page .affiliates-intro .secondary-section__title { color: var(--tv-ink-primary); }
+.secondary-page :is(.secondary-hero__lede, .secondary-closing__body, .secondary-section__lede, .secondary-card__body, .secondary-principle__copy),
+.secondary-page .affiliates-intro .secondary-section__lede { color: var(--tv-ink-secondary); }
+.secondary-page :is(.secondary-card__icon, .secondary-hero__signature, .secondary-section__eyebrow) {
+  background: var(--tv-surface-elevated);
+  border-color: var(--tv-material-edge);
+  color: var(--tv-accent-violet-on-dark);
+  box-shadow: var(--tv-material-inset);
+}
+.secondary-page .secondary-hero__title strong { color: var(--tv-accent-violet-on-dark); font-weight: inherit; }
+.secondary-page .secondary-hero__signature { color: var(--tv-ink-primary); }
+.secondary-hero__copy,
+.secondary-hero__signature,
+.secondary-card { min-width: 0; }
+.secondary-hero__title { max-width: 23ch; }
+.secondary-card { align-content: start; }
+.secondary-card__icon { border-radius: 0.95rem; }
+.secondary-card:focus-within,
+.secondary-card:hover { border-color: var(--tv-material-edge-active); }
+.secondary-hero--dark::after {
+  background: linear-gradient(110deg, transparent 65%, color-mix(in srgb, var(--tv-color-cyan-300) 5%, transparent));
+}
+.secondary-hero--dark::before {
+  content: "";
+  position: absolute;
+  width: clamp(15rem, 35vw, 32rem);
+  aspect-ratio: 1;
+  inset: -55% -12% auto auto;
+  background: url("/graphics/instrument-orbit.webp") center / contain no-repeat;
+  opacity: 0.2;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent, black 60%);
+}
+.secondary-page .affiliates-intro__item {
+  background: var(--tv-surface-raised);
+  border-color: var(--tv-material-edge);
+}
+.secondary-page .affiliates-intro__item :is(dt, dd) { color: var(--tv-ink-secondary); }
+.secondary-page .affiliates-intro .secondary-section__eyebrow {
+  background: var(--tv-surface-elevated);
+  color: var(--tv-accent-violet-on-dark);
+  border-color: var(--tv-material-edge);
+}
+.legal-page__body { line-height: 1.8; }
+.legal-page__intro { top: calc(var(--tv-header-painted, 5.25rem) + 1.5rem); }
+.legal-page__intro h1 { color: var(--tv-ink-primary); }
+.legal-page__body :is(h2, h3) { margin-top: 0.85rem; padding-top: 1rem; border-top: 1px solid var(--tv-material-edge); line-height: 1.4; }
+.legal-page__body :is(code, a) { overflow-wrap: anywhere; }
+.legal-page__nav { gap: 0.5rem; border: 0; }
+.legal-page__nav a {
+  min-height: 3rem;
+  border: 1px solid var(--tv-material-edge);
+  border-radius: var(--tv-material-radius-sm);
+  background: var(--tv-material-panel-soft);
+}
+.legal-page__nav a + a { border: 1px solid var(--tv-material-edge); }
+.legal-page__nav a[aria-current="page"] {
+  color: var(--tv-accent-violet-on-dark);
+  border-color: var(--tv-material-edge-active);
+  background: var(--tv-material-panel);
+  box-shadow: var(--tv-material-inset);
+}
+@media (max-width: 47.99rem) {
+  .secondary-page :is(.secondary-hero__actions, .secondary-closing__actions) { align-items: stretch; }
+  .secondary-page :is(.secondary-hero__actions, .secondary-closing__actions) > * { flex: 1 1 12rem; justify-content: center; }
+  .legal-page__nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .legal-page__nav a { padding-inline: 0.45rem; font-size: 0.8rem; }
+  .legal-page__layout { padding-block: 1rem; }
+}
+.secondary-page :is(.secondary-card__copy, .secondary-card__example, .secondary-principle__list li, .secondary-hero__signature-eyebrow) { color: var(--tv-ink-secondary); }
+.secondary-page .secondary-card__example,
+.secondary-page .secondary-card__index {
+  background: var(--tv-surface-elevated);
+  border-color: var(--tv-material-edge);
+  color: var(--tv-ink-secondary);
+}
+.secondary-page .secondary-card--ivory .secondary-card__cta--ghost,
+.secondary-page .affiliates-intro__contact .secondary-card__cta--ghost {
+  background: var(--tv-surface-elevated);
+  border-color: var(--tv-material-edge);
+  color: var(--tv-ink-primary);
+}
+.secondary-page .secondary-card--ivory .secondary-card__cta--ghost:hover,
+.secondary-page .affiliates-intro__contact .secondary-card__cta--ghost:hover {
+  background: color-mix(in srgb, var(--tv-accent-brand) 18%, var(--tv-surface-elevated));
+  border-color: var(--tv-material-edge-active);
+  color: var(--tv-ink-primary);
+}
+.secondary-page .secondary-principle.secondary-card--ivory :is(.secondary-principle__copy, .secondary-principle__list li) { color: var(--tv-ink-secondary); }

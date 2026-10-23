@@ -62,7 +62,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-[var(--tv-z-modal)] grid w-full max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] overflow-y-auto overscroll-contain scroll-py-4 -translate-x-1/2 -translate-y-1/2 gap-4 rounded-[var(--tv-overlay-radius)] bg-[var(--tv-surface-raised)] p-4 text-sm text-[var(--tv-ink-primary)] ring-1 ring-foreground/10 outline-none sm:max-w-sm transition-[opacity,scale] duration-[var(--tv-duration-slow)] ease-[var(--tv-easing-decelerate)] data-starting-style:opacity-0 data-starting-style:scale-[0.98] data-ending-style:opacity-0 data-ending-style:scale-[0.98] motion-reduce:transition-none",
+          "fixed top-1/2 left-1/2 z-[var(--tv-z-modal)] grid w-full max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] overflow-y-auto overscroll-contain scroll-py-4 -translate-x-1/2 -translate-y-1/2 gap-4 rounded-[var(--tv-material-radius)] bg-[image:var(--tv-material-panel-image)] bg-[var(--tv-instrument-surface)] shadow-[var(--tv-material-shadow)] p-4 text-sm text-[var(--tv-ink-primary)] ring-1 ring-foreground/10 outline-none sm:max-w-sm transition-[opacity,scale] duration-[var(--tv-duration-slow)] ease-[var(--tv-easing-decelerate)] data-starting-style:opacity-0 data-starting-style:scale-[0.98] data-ending-style:opacity-0 data-ending-style:scale-[0.98] motion-reduce:transition-none",
           className
         )}
         {...props}

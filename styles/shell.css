@@ -893,9 +893,9 @@
    ============================================================ */
 
 .site-footer-v2.tv-utility {
-  background: transparent !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent-brand) 4%, transparent), transparent 55%) !important;
   color: var(--tv-ink-primary) !important;
-  border-top: 1px solid var(--tv-border-subtle) !important;
+  border-top: 1px solid var(--tv-material-edge) !important;
   position: relative;
 }
 
@@ -1002,8 +1002,10 @@
   gap: 0.45rem;
   min-height: 44px;
   padding-inline: var(--tv-rhythm-related-lg);
-  border: 1px solid var(--tv-border-interactive);
+  border: 1px solid var(--tv-material-edge);
   border-radius: var(--tv-radius-pill);
+  background: var(--tv-material-panel-soft);
+  box-shadow: var(--tv-material-inset);
   font-family: var(--tv-font-ui);
   font-size: var(--tv-type-button);
   font-weight: var(--tv-weight-semibold);

@@ -397,6 +397,20 @@ describe("RadarExperience", () => {
     window.history.replaceState(null, "", "/radar");
   });
 
+  it("opens any filtered signal directly without requiring a precise map tap", async () => {
+    window.history.replaceState(null, "", "/radar");
+    fetchMock.mockImplementation(() => fetchOk(LIVE));
+    renderRadar();
+    const choose = await screen.findByRole("combobox", { name: "Apri un segnale" });
+    fireEvent.change(choose, { target: { value: "gamma" } });
+    await screen.findByRole("dialog", { name: /anteprima di gamma tool/i });
+    expect(screen.getByRole("combobox", { name: "Scegli un segnale" })).toHaveProperty("value", "gamma");
+    fireEvent.click(screen.getByRole("button", { name: "Chiudi anteprima" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(choose).toHaveProperty("value", "");
+    window.history.replaceState(null, "", "/radar");
+  });
+
   it("RADAR-FILTER-01 il filtro categoria aggiorna lista e conteggi", async () => {
     fetchMock.mockImplementation(() => fetchOk(LIVE));
     renderRadar();

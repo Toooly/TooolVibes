@@ -1,6 +1,7 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
 import type { ReactNode } from "react";
 
 import type { PublicToolCatalogItem } from "@/lib/data/public-tool-catalog-types";
@@ -66,8 +67,7 @@ export function WorkspaceEmptyMotif({
 }) {
   return (
     <div className="tv-empty-motif" data-variant={variant} aria-hidden="true">
-      <span className="tv-empty-motif__ring" />
-      <span className="tv-empty-motif__ring tv-empty-motif__ring--2" />
+      <InstrumentOrbit className="tv-empty-motif__orbit" />
       <span className="tv-empty-motif__marks">
         <span />
         <span />

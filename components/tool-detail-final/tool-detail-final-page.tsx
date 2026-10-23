@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { JsonLd } from "@/components/seo/json-ld";
+import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
 import { siteConfig } from "@/lib/config/site";
 import { getPublicToolViews, getRelatedToolViewsBySlug, getToolViewBySlug } from "@/lib/data/public-tools";
 import { isCommunityReadEnabled } from "@/lib/community/read-flag";
@@ -191,6 +192,7 @@ export async function ToolDetailFinalPage({ params }: ToolPageProps) {
             primaryLabel={tool.ctaLabel ?? "Visita"}
             isAffiliateLink={isAffiliateLink}
           />
+            <InstrumentOrbit className="td-final-hero__orbit" />
           </div>
         </section>
 

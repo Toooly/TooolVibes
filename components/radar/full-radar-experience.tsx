@@ -507,7 +507,7 @@ export function RadarExperience() {
     const dismiss = (event: MouseEvent) => {
       if (!(event.target instanceof Element)) return;
       // The map owns signal/area/empty taps. Scrolling never emits a click.
-      if (event.target.closest(".tv-rx-preview, .tv-rx-map__svg, .tv-rx-row, .tv-rx-rail__signal")) return;
+      if (event.target.closest(".tv-rx-preview, .tv-rx-map__svg, .tv-rx-row, .tv-rx-rail__signal, .tv-rx-tool-select")) return;
       dismissPreview(false);
     };
     document.addEventListener("click", dismiss, true);
@@ -695,6 +695,13 @@ export function RadarExperience() {
               query={urlState.query} onQuery={(q) => setUrlState({ query: q })}
             />
           </div>
+          {browseMode === "atlas" && !isLoading && sortedTools.length > 0 && <label className="tv-rx-tool-select">
+            <span><Search size={15} aria-hidden="true" />{locale === "en" ? "Open a signal" : "Apri un segnale"}</span>
+            <select value={selectedTool?.id ?? ""} onChange={event => { if (event.target.value) handleSelect(event.target.value); }}>
+              <option value="" disabled>{locale === "en" ? "Choose from all signals" : "Scegli tra tutti i segnali"}</option>
+              {sortedTools.map(tool => <option key={tool.id} value={tool.id}>{tool.name}</option>)}
+            </select>
+          </label>}
           <div className="tv-rx__stage">
             <div className="tv-rx__main">
               <LocalizedAttributes><section ref={atlasInstrumentRef} className="tv-rx-instrument" data-instrument-stage aria-label={focusedCluster ? `Radar locale: ${focusedCluster.label}` : "Radar globale"}>

@@ -1,6 +1,12 @@
 /* Wave 8 — DecisionSheet only. Do not reuse these classes globally. */
 
-.tv-decision-sheet {
+[data-slot="sheet-content"].tv-decision-sheet {
+  --mp-ink: var(--tv-ink-primary);
+  --mp-cream: var(--tv-instrument-surface);
+  background: var(--tv-material-panel);
+  color: var(--tv-ink-primary);
+  border: 1px solid var(--tv-material-edge);
+  box-shadow: var(--tv-material-shadow);
   gap: 0;
   max-height: min(88dvh, 100%);
 }
@@ -85,7 +91,7 @@
   cursor: pointer;
 }
 
-.tv-decision-sheet__outcome[data-active="true"] {
+[data-slot="sheet-content"].tv-decision-sheet .tv-decision-sheet__outcome[data-active="true"] {
   border-color: color-mix(in srgb, var(--tv-accent-brand) 46%, var(--tv-border-subtle));
   background: color-mix(in srgb, var(--tv-accent-brand) 18%, transparent);
   box-shadow: inset 2px 0 0 var(--tv-grammar-selected);
@@ -170,7 +176,7 @@
   cursor: pointer;
 }
 
-.tv-decision-sheet__chip[data-active="true"] {
+[data-slot="sheet-content"].tv-decision-sheet .tv-decision-sheet__chip[data-active="true"] {
   border-color: color-mix(in srgb, var(--tv-accent-brand) 46%, var(--tv-border-subtle));
   background: color-mix(in srgb, var(--tv-accent-brand) 16%, transparent);
 }
@@ -250,56 +256,55 @@
   background: transparent;
 }
 
-/* GM-10 (canonical): compact cream modal — dark page visible around it.
-   Cream card, controlled height, content-driven. Title row + 3 outcome pills +
-   reason chips + note + revisit + two-column actions. */
+/* Compact instrument panel. Outcomes and reasons stay distinct from the
+   yellow confirmation action; the body scrolls above the sticky actions. */
 .tv-decision-sheet[data-side="bottom"] {
-  background: var(--tv-color-ink-100, #f4f0e7);
-  color: #1c1626;
-  border: 0;
+  background: var(--tv-material-panel);
+  color: var(--tv-ink-primary);
+  border: 1px solid var(--tv-material-edge);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__title {
-  color: #1c1626;
+  color: var(--tv-ink-primary);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__field-label {
-  color: #5c554b;
+  color: var(--tv-ink-secondary);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__chip {
-  border-color: rgba(28, 22, 38, 0.18);
-  background: rgba(255, 255, 255, 0.55);
-  color: #1c1626;
+  border-color: var(--tv-material-edge);
+  background: var(--tv-material-panel-soft);
+  color: var(--tv-ink-primary);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__chip[data-active="true"] {
-  border-color: #1c1626;
-  background: #fff;
+  border-color: var(--tv-ink-primary);
+  background: color-mix(in srgb, var(--tv-accent-brand) 24%, var(--tv-instrument-surface));
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__outcome {
-  border-color: rgba(28, 22, 38, 0.22);
-  color: #1c1626;
+  border-color: var(--tv-material-edge);
+  color: var(--tv-ink-primary);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__outcome[data-active="true"] {
-  border-color: #1c1626;
-  background: #fff;
+  border-color: var(--tv-ink-primary);
+  background: color-mix(in srgb, var(--tv-accent-brand) 24%, var(--tv-instrument-surface));
   box-shadow: none;
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__input {
-  border-color: rgba(28, 22, 38, 0.22);
-  background: #fff;
-  color: #1c1626;
+  border-color: var(--tv-material-edge);
+  background: color-mix(in srgb, var(--tv-accent-brand) 24%, var(--tv-instrument-surface));
+  color: var(--tv-ink-primary);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__input::placeholder {
-  color: #8a8478;
+  color: var(--tv-ink-muted-aa);
 }
 .tv-decision-sheet[data-side="bottom"] .selection-chip {
-  border-color: rgba(28, 22, 38, 0.18);
-  background: rgba(255, 255, 255, 0.55);
-  color: #1c1626;
+  border-color: var(--tv-material-edge);
+  background: var(--tv-material-panel-soft);
+  color: var(--tv-ink-primary);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__cancel {
-  border: 1px solid rgba(28, 22, 38, 0.22);
+  border: 1px solid var(--tv-material-edge);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
-  color: #1c1626;
+  background: var(--tv-material-panel-soft);
+  color: var(--tv-ink-primary);
 }
 .tv-decision-sheet[data-side="bottom"] .tv-decision-sheet__close {
   margin-left: auto;
@@ -309,8 +314,8 @@
   height: 2.25rem;
   border: 0;
   border-radius: 999px;
-  background: rgba(28, 22, 38, 0.08);
-  color: #1c1626;
+  background: var(--tv-material-panel-soft);
+  color: var(--tv-ink-primary);
   font-size: 1.25rem;
   line-height: 1;
   cursor: pointer;

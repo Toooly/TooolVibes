@@ -1,7 +1,5 @@
-/* SHORTLIST — Personal family (Visual Grammar V3, Phase 5).
-   Route-owned presentation layer over the legacy `.mobile-library-*` base.
-   Family law: graphite base, muted lilac hierarchy, purple = selected/remembered,
-   yellow = next action. No editorial gold, no radar cyan, no glass. */
+/* SHORTLIST — Personal workspace over the legacy `.mobile-library-*` base.
+   Shared instrument materials; purple remains selection, yellow the next action. */
 
 .shortlist-final-surface,
 .shortlist-final-surface .mobile-library-board {
@@ -18,7 +16,7 @@
   padding: clamp(1.75rem, 3.5vw, 3rem) clamp(1rem, 4vw, 3rem) 3rem !important;
 }
 
-/* — Quiet graphite panels — */
+/* — Quiet instrument panels — */
 .shortlist-final-surface :where(
   .mobile-library-hero,
   .mobile-library-hero__stat,
@@ -27,21 +25,24 @@
   .mobile-library-wishlist,
   .mobile-library-wishlist__signal-card
 ) {
-  border: 1px solid var(--tv-grammar-personal-border) !important;
-  border-radius: var(--tv-radius-feature) !important;
-  background: var(--tv-grammar-personal-surface) !important;
-  box-shadow: none !important;
-  background-image: none !important;
+  border: 1px solid var(--tv-material-edge) !important;
+  border-radius: var(--tv-material-radius) !important;
+  background: var(--tv-material-panel-soft) !important;
+  box-shadow: var(--tv-material-inset) !important;
+}
+
+.shortlist-final-surface .mobile-library-hero {
+  background: var(--tv-material-panel) !important;
+  box-shadow: var(--tv-material-shadow) !important;
 }
 
 .shortlist-final-surface :where(
   .mobile-library-shelf__empty,
   .mobile-library-empty__recommendation-card
 ) {
-  border-color: var(--tv-grammar-personal-border) !important;
-  background: var(--tv-grammar-personal-surface) !important;
-  box-shadow: none !important;
-  background-image: none !important;
+  border-color: var(--tv-material-edge) !important;
+  background: var(--tv-material-panel-soft) !important;
+  box-shadow: var(--tv-material-inset) !important;
 }
 
 /* — Focus contract — */
@@ -535,12 +536,21 @@
 }
 
 /* — Memory sheet: dark graphite, no light-theme split — */
+.shortlist-final-surface.shortlist-note-portal {
+  display: contents;
+}
+
+.shortlist-note-portal [data-tv-overlay-portal-host] {
+  position: relative;
+  z-index: calc(var(--tv-z-floating) + 2);
+}
+
 .shortlist-final-surface .mobile-shortlist-board__sheet {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 70;
+  z-index: calc(var(--tv-z-floating) + 1);
   margin: 0 auto;
   max-width: 520px;
   max-height: 82vh;
@@ -920,9 +930,10 @@
     width: auto;
     gap: 12px;
     padding: 16px;
-    border: 1px solid var(--tv-border-subtle);
-    border-radius: var(--tv-radius-md);
-    background: var(--tv-surface-panel);
+    border: 1px solid var(--tv-material-edge);
+    border-radius: var(--tv-material-radius-sm);
+    background: var(--tv-material-panel-soft);
+    box-shadow: var(--tv-material-inset);
   }
   .shortlist-final-surface .mobile-library-book__cover {
     width: 44px; height: 44px;
