@@ -8,30 +8,31 @@ const css = readFileSync(resolve(root, "styles.css"), "utf8");
 
 describe("TooolVibes Servizi static contract", () => {
 
-  it("keeps the mobile logo cue shallow and full-width without changing its desktop geometry", () => {
-    const mobile = css.slice(css.indexOf(".hero { padding-top: 6.5rem;"), css.indexOf("/* Desktop composition."));
-    expect(mobile).toContain(".hero-signal { width: calc(100% + 2 * var(--gutter)); height: 3.5rem;");
-    expect(mobile).toContain("margin-inline: calc(-1 * var(--gutter))");
-    expect(mobile).toContain(".hero-signal__field img { width: 2.75rem; height: 2.75rem; }");
-    expect(mobile).toContain(".hero-signal__rotor { animation: none; }");
-    expect(mobile).toContain(".hero-signal__trail { display: none; }");
-    expect(mobile).toContain("@media (prefers-reduced-motion: no-preference)");
-    expect(mobile).toContain("hero-signal-horizontal 5s");
-    expect(css).toContain(".hero-signal { width: 9rem; height: 7rem;");
-    expect(css).toContain(".hero-signal__rotor { animation: hero-signal-orbit 12s linear infinite; }");
+  it("keeps the animated header mark compact and removes the old hero spacer", () => {
+    expect(css).toContain(".brand-signal { width: min(100%,14rem); min-width: 0; height: 3rem;");
+    expect(css).toContain(".brand-signal { width: 100%; }");
+    expect(css).toContain(".brand-signal__field img { width: 2.5rem; height: 2.5rem; }");
+    expect(css).toContain(".hero { padding-top: 5.7rem;");
+    expect(css).toContain("align-content: start; padding-top: clamp(7rem,12vh,9rem)");
+    expect(css).toMatch(/@media \(prefers-reduced-motion: no-preference\) \{\s*\.brand-signal__rotor::after \{ animation: brand-signal-horizontal/);
+    expect(css).not.toContain("hero-signal");
+    expect(html).not.toContain("hero-signal");
   });
-  it("keeps a symbol-only accessible header and a decorative CSS logo cue above the hero title", () => {
+
+  it("uses one accessible animated brand mark in the header, not above the headline", () => {
     const header = html.match(/<header[\s\S]*?<\/header>/)![0];
     expect(header).not.toContain("<span>TooolVibes</span>");
-    expect(header).toContain('alt="TooolVibes"');
-    expect(header.match(/<div class="brand">[\s\S]*?<\/div>/)![0]).not.toContain("<a");
-    const signal = html.slice(html.indexOf('<div class="hero-signal"'), html.indexOf('<h1 id="hero-title"'));
-    expect(signal).toContain('aria-hidden="true"');
-    expect(signal).toContain('src="/assets/tooolvibes-logo.png"');
-    expect(signal.match(/hero-signal__orbit(?: |")/g)).toHaveLength(2);
-    expect(signal).not.toMatch(/<(?:a|button|p|h[1-6])\b/);
-    expect(css).toContain("@media (prefers-reduced-motion: no-preference)");
-    expect(css).toContain("hero-signal-flow 3.6s");
+    expect(header).not.toContain('class="brand"');
+    expect(header.match(/class="brand-signal"/g)).toHaveLength(1);
+    expect(header.match(/tooolvibes-logo\.png/g)).toHaveLength(1);
+    const signal = header.slice(header.indexOf('<div class="brand-signal"'), header.indexOf("<nav"));
+    expect(signal).toContain('role="img" aria-label="TooolVibes"');
+    expect(signal).toContain('class="brand-signal__field" aria-hidden="true"');
+    expect(signal.match(/brand-signal__orbit(?: |")/g)).toHaveLength(2);
+    expect(signal).not.toMatch(/<(?:a|button)\b/);
+    expect(signal).not.toContain("__trail");
+    expect(signal).not.toContain("__direction");
+    expect(html).toMatch(/<div class="hero__copy" data-reveal>\s*<h1 id="hero-title">/);
   });
   it("has independent canonical and social metadata", () => {
     expect(html).toContain('href="https://servizi.tooolvibes.eu/"');
