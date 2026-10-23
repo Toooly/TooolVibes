@@ -26,14 +26,29 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(css).not.toContain(".hero::after");
     expect(css).not.toContain("intro-light-focus");
     expect(css).toContain("animation-range: 0px var(--intro-travel,420px)");
-    expect(css).toContain("stroke-dasharray: var(--trail-length) 1200");
+    expect(css).toContain("stroke-dasharray: var(--trail-length) 1600");
     expect(css).toContain("stroke-dashoffset: calc(var(--trail-length) - 1190px)");
     expect(css).toContain("92%,100% { offset-distance: 100%; opacity: 0; }");
     expect(html).toContain('data-intro-trail aria-hidden="true"');
     expect(html).toContain('data-intro-route pathLength="1000"');
-    expect(html.match(/<use class="intro-trail__/g)).toHaveLength(8);
+    expect(html.match(/<use class="intro-trail__/g)).toHaveLength(14);
     expect(app).toContain("function initIntroTrail()");
     expect(app).toContain('spot.style.offsetPath =');
+  });
+
+  it("hands a multi-filament beam from the hero CTAs into the explorer without adding vertical space", () => {
+    expect(html.match(/intro-trail__filament--(?:cyan|violet)/g)).toHaveLength(4);
+    expect(css).toContain("--trail-length: 52px; stroke: #e5ffff; stroke-width: 1.4px;");
+    expect(css).toContain("@keyframes intro-trail-wake");
+    expect(css).toContain("animation-range: var(--intro-primary-from) var(--intro-primary-to)");
+    expect(css).toContain("animation-range: var(--intro-secondary-from) var(--intro-secondary-to)");
+    expect(css).toContain("animation: intro-primary-cue linear;");
+    expect(css).toContain("animation: intro-secondary-cue linear;");
+    expect(html).toContain('class="journey__arrival" aria-hidden="true"');
+    expect(css).toContain(".journey__arrival { position: absolute;");
+    expect(app).toContain("function curveLength(start, curve)");
+    expect(app).toContain('root.classList.add("intro-guided")');
+    expect(app).toContain('root.classList.remove("intro-guided")');
   });
 
   it("reuses the neon trail once on contact arrival without distracting while typing", () => {
@@ -55,16 +70,13 @@ describe("Isolated TooolVibes projects landing", () => {
     expect(app).toContain("const top = 16;");
   });
 
-  it("shares a distinct champagne, rose and platinum palette between the project explorer and contact form", () => {
-    const explorer = css.match(/\.journey, \.contact-panel \{([^}]+)\}/)![1];
+  it("shares a distinct champagne, rose and platinum palette across the entire project experience", () => {
+    const base = css.match(/:root \{([^}]+)\}/)![1];
     for (const [service, color] of [["ecommerce", "#e8c582"], ["app", "#e7a0b3"], ["software", "#d3dce4"]]) {
-      expect(explorer).toContain(`--service-${service}: ${color}`);
+      expect(base).toContain(`--service-${service}: ${color}`);
       expect(css).toContain(`[data-journey-select="${service}"] { --choice-accent: var(--service-${service}); }`);
     }
-    const base = css.match(/:root \{([^}]+)\}/)![1];
-    expect(base).toContain("--service-ecommerce: #6fa9ff");
-    expect(base).toContain("--service-app: #c195ff");
-    expect(base).toContain("--service-software: #70e4af");
+    expect(css).not.toContain(".journey, .contact-panel { --service-ecommerce:");
   });
 
   it("illuminates each contact option and its selection indicator with its own service accent", () => {

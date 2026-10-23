@@ -21,19 +21,34 @@
     const title = copy?.querySelector("h1");
     const lead = copy?.querySelector(":scope > p");
     const actions = copy?.querySelector(".hero__actions");
-    if (!hero || !trail || !svg || !route || !spot || !mark || !copy || !title || !lead || !actions) return;
+    const primary = actions?.querySelector(".button--primary");
+    const secondary = actions?.querySelector(".button--secondary");
+    const destination = document.getElementById("journey-title");
+    if (!hero || !trail || !svg || !route || !spot || !mark || !copy || !title || !lead || !primary || !secondary || !destination) return;
 
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const root = document.documentElement;
     let scheduled = 0;
     let disposed = false;
     const rounded = (value) => Number(value.toFixed(2));
+    function curveLength(start, curve) {
+      let length = 0;
+      let previous = start;
+      for (let step = 1; step <= 24; step++) {
+        const t = step / 24;
+        const u = 1 - t;
+        const point = [0, 1].map(axis => u ** 3 * start[axis] + 3 * u ** 2 * t * curve[axis] + 3 * u * t ** 2 * curve[axis + 2] + t ** 3 * curve[axis + 4]);
+        length += Math.hypot(point[0] - previous[0], point[1] - previous[1]);
+        previous = point;
+      }
+      return length;
+    }
     function measure() {
       scheduled = 0;
       if (disposed || preference.matches || !hero.clientWidth || !hero.clientHeight) return;
       const bounds = hero.getBoundingClientRect();
       const source = mark.getBoundingClientRect();
       const width = hero.clientWidth;
-      const height = hero.clientHeight;
       const gutter = parseFloat(getComputedStyle(hero).paddingLeft) || 20;
       const edge = Math.max(28, Math.min(gutter * .7, width * .12));
       const left = edge;
@@ -42,20 +57,54 @@
       const sy = Math.max(16, source.top - bounds.top + source.height / 2);
       const y1 = Math.max(sy + 64, copy.offsetTop + title.offsetTop + title.offsetHeight * .65);
       const y2 = Math.max(y1 + 72, copy.offsetTop + lead.offsetTop + lead.offsetHeight * .44);
-      const end = Math.min(height - 28, Math.max(y2 + 72, copy.offsetTop + actions.offsetTop + Math.min(actions.offsetHeight / 2, 32)));
+      const firstButton = primary.getBoundingClientRect();
+      const secondButton = secondary.getBoundingClientRect();
+      const heading = destination.getBoundingClientRect();
+      const stacked = secondButton.top - firstButton.top > 20;
+      const px = stacked ? right : firstButton.right - bounds.left - 26;
+      const py = firstButton.top - bounds.top + firstButton.height / 2;
+      const qx = stacked ? left : secondButton.left - bounds.left + 26;
+      const qy = secondButton.top - bounds.top + secondButton.height / 2;
+      const dx = heading.left - bounds.left + heading.width / 2;
+      const end = heading.bottom - bounds.top + 11;
+      const height = Math.ceil(Math.max(hero.clientHeight, end + 32));
+      const handle = Math.min(100, width * .2);
+      const bridge = Math.max(8, Math.abs(qx - px) * .35);
       const firstTurn = (y2 - y1) * .5;
-      const secondTurn = (end - y2) * .5;
+      const curves = [
+        [width * .58, sy - 12, right, sy + 24, right, y1],
+        [right, y1 + firstTurn, left, y2 - firstTurn, left, y2],
+        stacked ? [left, py - 64, right, py - 64, px, py] : [left, py, px - handle, py, px, py],
+        stacked ? [right, py + (qy - py) * .5, left, qy - (qy - py) * .5, qx, qy] : [px + bridge, py, qx - bridge, qy, qx, qy],
+        stacked ? [left, qy + (end - qy) * .65, dx - handle, end, dx, end] : [qx + handle, qy, dx - handle, end, dx, end],
+      ];
       const d = [
         "M", sx, sy,
-        "C", width * .58, sy - 12, right, sy + 24, right, y1,
-        "C", right, y1 + firstTurn, left, y2 - firstTurn, left, y2,
-        "C", left, y2 + secondTurn, right, end - secondTurn, right, end,
+        ...curves.flatMap(curve => ["C", ...curve]),
       ].map(value => typeof value === "number" ? rounded(value) : value).join(" ");
+      let pen = [sx, sy];
+      let total = 0;
+      const stops = curves.map(curve => {
+        total += curveLength(pen, curve);
+        pen = curve.slice(4);
+        return total;
+      });
+      const travel = Math.round(Math.max(420, Math.min(720, end - sy - 100)));
+      const arrival = index => stops[index] / total * travel / 1.19;
+      const timing = (name, value) => root.style.setProperty(name, `${Math.max(0, Math.round(value))}px`);
+      timing("--intro-travel", travel);
+      timing("--intro-primary-from", arrival(2) - 32);
+      timing("--intro-primary-to", arrival(2) + 42);
+      timing("--intro-secondary-from", arrival(3) - 32);
+      timing("--intro-secondary-to", arrival(4) + 20);
+      timing("--intro-dock-from", arrival(4) - 32);
+      timing("--intro-dock-to", arrival(4) + 36);
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
       route.setAttribute("d", d);
       spot.style.offsetPath = `path("${d}")`;
-      trail.style.setProperty("--intro-travel", `${Math.round(Math.max(340, Math.min(520, end - sy)))}px`);
+      trail.style.height = `${height}px`;
       trail.classList.add("is-ready");
+      root.classList.add("intro-guided");
     }
     function schedule() {
       if (!disposed && !preference.matches && !scheduled) scheduled = requestAnimationFrame(measure);
@@ -68,8 +117,9 @@
       window.removeEventListener("resize", schedule);
       if (preference.matches) {
         trail.classList.remove("is-ready");
+        root.classList.remove("intro-guided");
       } else {
-        if (observer) observer.observe(hero);
+        if (observer) { observer.observe(hero); observer.observe(destination); }
         else window.addEventListener("resize", schedule, { passive: true });
         schedule();
       }
@@ -302,6 +352,7 @@
     );
     document.querySelectorAll(".service[data-service], .service-visual").forEach((element) => sceneObserver.observe(element));
     document.querySelectorAll(".service-offer").forEach((element) => sceneObserver.observe(element));
+    document.querySelectorAll(".service-benefits").forEach((element) => sceneObserver.observe(element));
     document.querySelectorAll(".service-capacity").forEach((element) => sceneObserver.observe(element));
   } else {
     document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-revealed"));

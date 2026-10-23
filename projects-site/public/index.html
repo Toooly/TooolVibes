@@ -99,9 +99,12 @@
               </linearGradient>
               <path id="intro-trail-route" data-intro-route pathLength="1000" />
             </defs>
+            <use class="intro-trail__wake" href="#intro-trail-route" />
             <use class="intro-trail__halo" href="#intro-trail-route" />
             <use class="intro-trail__glow" href="#intro-trail-route" />
             <use class="intro-trail__core" href="#intro-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--violet" href="#intro-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--cyan" href="#intro-trail-route" />
             <use class="intro-trail__head" href="#intro-trail-route" />
           </svg>
           <span class="intro-trail__spot" data-intro-spot></span>
@@ -135,7 +138,7 @@
         <div class="journey__track">
         <div class="journey__frame">
         <div class="journey__controls">
-          <h2 id="journey-title">Da cosa vuoi<br /> iniziare?</h2>
+          <h2 id="journey-title">Da cosa vuoi<br /> iniziare?<span class="journey__arrival" aria-hidden="true"><svg viewBox="0 0 600 48" preserveAspectRatio="none" focusable="false"><path d="M8 24C124 2 476 2 592 24C476 46 124 46 8 24Z"/><path d="M20 21C160 45 444 43 580 21C432 1 166 1 20 21Z"/><path class="journey__arrival-signal" pathLength="600" d="M8 24C124 2 476 2 592 24C476 46 124 46 8 24Z"/></svg></span></h2>
           <div class="journey__choices" role="group" aria-label="Scegli cosa vuoi realizzare" data-journey-controls hidden>
             <button type="button" aria-pressed="true" aria-controls="journey-preview" data-journey-select="ecommerce"><span class="journey__index" aria-hidden="true">1</span><strong>E-commerce</strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
             <button type="button" aria-pressed="false" aria-controls="journey-preview" data-journey-select="app"><span class="journey__index" aria-hidden="true">2</span><strong>Creazione app</strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
@@ -177,7 +180,7 @@
       <section id="servizi" class="service service--ecommerce section-shell" aria-labelledby="service-ecommerce-title" data-service="ecommerce">
         <div class="section-copy" data-reveal>
           <p class="section-number"><span class="section-number__label">E-commerce</span>01</p>
-          <figure class="service-visual service-visual--ecommerce" data-reveal><img src="/assets/project-ecommerce.webp" srcset="/assets/project-ecommerce-640.webp 640w, /assets/project-ecommerce.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="853" loading="lazy" decoding="async" alt="Concept di negozio online con catalogo prodotti, carrello e acquisto da smartphone"/></figure>
+          <figure class="service-visual service-visual--ecommerce"><img src="/assets/project-ecommerce.webp" srcset="/assets/project-ecommerce-640.webp 640w, /assets/project-ecommerce.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="853" loading="lazy" decoding="async" alt="Concept di negozio online con catalogo prodotti, carrello e acquisto da smartphone"/></figure>
           <h2 id="service-ecommerce-title">Il tuo negozio online. <span class="text-gradient">Pensato per vendere.</span></h2><p>Aiuta chi ti sceglie a trovare il prodotto giusto e acquistarlo senza ostacoli. Progettiamo un e-commerce chiaro, curato e semplice da gestire, dal catalogo al pagamento.</p>
           <ul class="service-benefits" aria-label="Il tuo progetto e-commerce"><li><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg><span>Design coerente con il tuo brand</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M10 18h4M9 6h6"/></svg><span>Catalogo e schede prodotto</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5-7 7 7 7m6-14 7 7-7 7m-2-16-2 20"/></svg><span>Carrello e pagamenti</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM9 2v6m6-6v6M2 9h6m8 0h6M2 15h6m8 0h6M9 16v6m6-6v6"/></svg><span>Spedizioni e gestione ordini</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18m-14-5 10 10M7 17 17 7"/></svg><span>Acquisti semplici da mobile</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/><circle cx="12" cy="12" r="10"/></svg><span>Formazione per gestirlo</span></li></ul>
           <div class="service-offer" data-service-price="ecommerce" aria-label="Progetto e-commerce">
@@ -193,7 +196,7 @@
       <section id="app" class="service service--app section-shell" aria-labelledby="service-app-title" data-service="app">
         <div class="section-copy" data-reveal>
           <p class="section-number"><span class="section-number__label">Creazione app</span>02</p>
-          <figure class="service-visual service-visual--app" data-reveal><img src="/assets/project-app.webp" srcset="/assets/project-app-640.webp 640w, /assets/project-app.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="853" loading="lazy" decoding="async" alt="Concept di creazione app con schermate di profilo, calendario, prenotazione e conferma"/></figure>
+          <figure class="service-visual service-visual--app"><img src="/assets/project-app.webp" srcset="/assets/project-app-640.webp 640w, /assets/project-app.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="853" loading="lazy" decoding="async" alt="Concept di creazione app con schermate di profilo, calendario, prenotazione e conferma"/></figure>
           <h2 id="service-app-title">La tua idea. <span class="text-gradient">Un’app da usare davvero.</span></h2><p>Partiamo da ciò che le persone devono poter fare, poi diamo forma a schermate e interazioni. Costruiamo un primo rilascio funzionante, con un perimetro chiaro e spazio per evolvere.</p>
           <ul class="service-benefits" aria-label="Il tuo progetto creazione app"><li><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg><span>Analisi del flusso principale</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M10 18h4M9 6h6"/></svg><span>UX e interfaccia su misura</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5-7 7 7 7m6-14 7 7-7 7m-2-16-2 20"/></svg><span>Prototipo prima dello sviluppo</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM9 2v6m6-6v6M2 9h6m8 0h6M2 15h6m8 0h6M9 16v6m6-6v6"/></svg><span>Primo rilascio funzionante</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18m-14-5 10 10M7 17 17 7"/></svg><span>Test del percorso utente</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/><circle cx="12" cy="12" r="10"/></svg><span>Evoluzione per fasi</span></li></ul>
           <div class="service-offer" data-service-price="app" aria-label="Progetto creazione app">
@@ -209,7 +212,7 @@
       <section id="software" class="service service--software section-shell" aria-labelledby="service-software-title" data-service="software">
         <div class="section-copy" data-reveal>
           <p class="section-number"><span class="section-number__label">Software personalizzato</span>03</p>
-          <figure class="service-visual service-visual--software" data-reveal><img src="/assets/project-software.webp" srcset="/assets/project-software-640.webp 640w, /assets/project-software.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="853" loading="lazy" decoding="async" alt="Concept di software personalizzato con dashboard, attività, ruoli e sistemi collegati"/></figure>
+          <figure class="service-visual service-visual--software"><img src="/assets/project-software.webp" srcset="/assets/project-software-640.webp 640w, /assets/project-software.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="853" loading="lazy" decoding="async" alt="Concept di software personalizzato con dashboard, attività, ruoli e sistemi collegati"/></figure>
           <h2 id="service-software-title">Il tuo modo di lavorare. <span class="text-gradient">Finalmente, nel tuo software.</span></h2><p>Quando fogli, messaggi e strumenti separati non bastano più, mettiamo ordine. Costruiamo un software attorno ai tuoi processi, partendo dall’attività che vuoi rendere più semplice.</p>
           <ul class="service-benefits" aria-label="Il tuo progetto software personalizzato"><li><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg><span>Analisi del processo aziendale</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M10 18h4M9 6h6"/></svg><span>Dashboard e percorsi su misura</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 5-7 7 7 7m6-14 7 7-7 7m-2-16-2 20"/></svg><span>Ruoli e accessi definiti</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM9 2v6m6-6v6M2 9h6m8 0h6M2 15h6m8 0h6M9 16v6m6-6v6"/></svg><span>Dati e attività collegati</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18m-14-5 10 10M7 17 17 7"/></svg><span>Integrazioni concordate</span></li><li><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/><circle cx="12" cy="12" r="10"/></svg><span>Rilasci e verifiche progressive</span></li></ul>
           <div class="service-offer" data-service-price="software" aria-label="Progetto software personalizzato">
@@ -302,9 +305,12 @@
         <div class="intro-trail contact-trail" data-contact-trail aria-hidden="true">
           <svg class="intro-trail__svg" viewBox="0 0 1000 600" preserveAspectRatio="none" focusable="false">
             <defs><path id="contact-trail-route" data-contact-route pathLength="1000" /></defs>
+            <use class="intro-trail__wake" href="#contact-trail-route" />
             <use class="intro-trail__halo" href="#contact-trail-route" />
             <use class="intro-trail__glow" href="#contact-trail-route" />
             <use class="intro-trail__core" href="#contact-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--violet" href="#contact-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--cyan" href="#contact-trail-route" />
             <use class="intro-trail__head" href="#contact-trail-route" />
           </svg>
           <span class="intro-trail__spot" data-intro-spot></span>

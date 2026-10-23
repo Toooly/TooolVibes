@@ -99,9 +99,12 @@
               </linearGradient>
               <path id="intro-trail-route" data-intro-route pathLength="1000" />
             </defs>
+            <use class="intro-trail__wake" href="#intro-trail-route" />
             <use class="intro-trail__halo" href="#intro-trail-route" />
             <use class="intro-trail__glow" href="#intro-trail-route" />
             <use class="intro-trail__core" href="#intro-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--violet" href="#intro-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--cyan" href="#intro-trail-route" />
             <use class="intro-trail__head" href="#intro-trail-route" />
           </svg>
           <span class="intro-trail__spot" data-intro-spot></span>
@@ -135,7 +138,7 @@
         <div class="journey__track">
         <div class="journey__frame">
         <div class="journey__controls">
-          <h2 id="journey-title">Da cosa vuoi<br /> iniziare?</h2>
+          <h2 id="journey-title">Da cosa vuoi<br /> iniziare?<span class="journey__arrival" aria-hidden="true"><svg viewBox="0 0 600 48" preserveAspectRatio="none" focusable="false"><path d="M8 24C124 2 476 2 592 24C476 46 124 46 8 24Z"/><path d="M20 21C160 45 444 43 580 21C432 1 166 1 20 21Z"/><path class="journey__arrival-signal" pathLength="600" d="M8 24C124 2 476 2 592 24C476 46 124 46 8 24Z"/></svg></span></h2>
           <div class="journey__choices" role="group" aria-label="Scegli cosa vuoi realizzare" data-journey-controls hidden>
             <button type="button" aria-pressed="true" aria-controls="journey-preview" data-journey-select="web"><span class="journey__index" aria-hidden="true">1</span><strong>Siti web</strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
             <button type="button" aria-pressed="false" aria-controls="journey-preview" data-journey-select="social"><span class="journey__index" aria-hidden="true">2</span><strong>Automazione contenuti</strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
@@ -189,7 +192,7 @@
       <section id="servizi" class="service service--web section-shell" aria-labelledby="service-web-title" data-service="web">
         <div class="section-copy" data-reveal>
           <p class="section-number"><span class="section-number__label">Sito web</span>01</p>
-          <figure class="service-visual service-visual--web" data-reveal>
+          <figure class="service-visual service-visual--web">
             <img src="/assets/service-web-v2.webp" srcset="/assets/service-web-v2-640.webp 640w, /assets/service-web-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="721" loading="lazy" decoding="async" alt="Esempio di sito web visualizzato su computer e smartphone" />
           </figure>
           <h2 id="service-web-title">Un sito che rende <span class="text-gradient">facile sceglierti.</span></h2>
@@ -226,7 +229,7 @@
       <section id="contenuti" class="service service--social section-shell" aria-labelledby="service-social-title" data-service="social">
         <div class="section-copy" data-reveal>
           <p class="section-number"><span class="section-number__label">Automazione contenuti</span>02</p>
-          <figure class="service-visual service-visual--social" data-reveal>
+          <figure class="service-visual service-visual--social">
             <img src="/assets/service-social-v2.webp" srcset="/assets/service-social-v2-640.webp 640w, /assets/service-social-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="640" loading="lazy" decoding="async" alt="Esempio di identità visiva, post per i social e calendario dei contenuti" />
           </figure>
           <h2 id="service-social-title">I tuoi contenuti. <span class="text-gradient">Creati e pubblicati in automatico.</span></h2>
@@ -261,7 +264,7 @@
       <section id="chatbot" class="service service--ai section-shell" aria-labelledby="service-ai-title" data-service="ai">
         <div class="section-copy" data-reveal>
           <p class="section-number"><span class="section-number__label">Attivazione chatbot AI</span>03</p>
-          <figure class="service-visual service-visual--chatbot" data-reveal>
+          <figure class="service-visual service-visual--chatbot">
             <img src="/assets/service-chatbot-v2.webp" srcset="/assets/service-chatbot-v2-640.webp 640w, /assets/service-chatbot-v2.webp 1280w" sizes="(max-width: 48rem) calc(100vw - 1rem), 28rem" width="1280" height="854" loading="lazy" decoding="async" alt="Esempio di chatbot su computer e smartphone, con richieste e risposte" />
           </figure>
           <h2 id="service-ai-title">Ogni conversazione social. <span class="text-gradient">Gestita in automatico.</span></h2>
@@ -374,9 +377,12 @@
         <div class="intro-trail contact-trail" data-contact-trail aria-hidden="true">
           <svg class="intro-trail__svg" viewBox="0 0 1000 600" preserveAspectRatio="none" focusable="false">
             <defs><path id="contact-trail-route" data-contact-route pathLength="1000" /></defs>
+            <use class="intro-trail__wake" href="#contact-trail-route" />
             <use class="intro-trail__halo" href="#contact-trail-route" />
             <use class="intro-trail__glow" href="#contact-trail-route" />
             <use class="intro-trail__core" href="#contact-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--violet" href="#contact-trail-route" />
+            <use class="intro-trail__filament intro-trail__filament--cyan" href="#contact-trail-route" />
             <use class="intro-trail__head" href="#contact-trail-route" />
           </svg>
           <span class="intro-trail__spot" data-intro-spot></span>

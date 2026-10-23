@@ -39,6 +39,10 @@ function setup(site: string, reduced = false, supported = true) {
     Object.defineProperty(element, "offsetTop", { value: top });
     Object.defineProperty(element, "offsetHeight", { value: height });
   }
+  const buttonRect = (top: number) => ({ left: 20, right: width - 20, top, bottom: top + 56, width: width - 40, height: 56 }) as DOMRect;
+  copy.querySelector<HTMLElement>(".button--primary")!.getBoundingClientRect = () => buttonRect(431);
+  copy.querySelector<HTMLElement>(".button--secondary")!.getBoundingClientRect = () => buttonRect(507);
+  w.document.getElementById("journey-title")!.getBoundingClientRect = () => ({ left: 20, right: width - 20, top: 700, bottom: 748, width: width - 40, height: 48 }) as DOMRect;
   const source = readFileSync(resolve(root, "app.js"), "utf8");
   const start = source.indexOf("  function initIntroTrail()");
   const end = source.indexOf("  initIntroTrail();", start) + "  initIntroTrail();".length;
@@ -50,18 +54,29 @@ function setup(site: string, reduced = false, supported = true) {
 }
 
 describe.each(["services-site", "projects-site"])("%s responsive intro trail", site => {
-  it("starts at the real logo and makes exactly two turns: right, left, right", () => {
+  it("starts at the real logo, sweeps through both CTAs and docks under the explorer heading", () => {
     const ui = setup(site); ui.flush();
     const route = ui.trail.querySelector("[data-intro-route]")!;
     expect(route.getAttribute("d")).toMatch(/^M 40 38 C/);
     const ends = [...route.getAttribute("d")!.matchAll(/C [\d.-]+ [\d.-]+ [\d.-]+ [\d.-]+ ([\d.-]+) ([\d.-]+)/g)].map(match => [Number(match[1]), Number(match[2])]);
-    expect(ends.map(point => point[0])).toEqual([362, 28, 362]);
+    expect(ends.map(point => point[0])).toEqual([362, 28, 362, 28, 195]);
     expect(ends[0][1]).toBeLessThan(ends[1][1]);
     expect(ends[1][1]).toBeLessThan(ends[2][1]);
-    expect(ui.trail.querySelector("svg")!.getAttribute("viewBox")).toBe("0 0 390 660");
+    expect(ends[4][1]).toBe(759);
+    expect(ui.trail.querySelector("svg")!.getAttribute("viewBox")).toBe("0 0 390 791");
     expect((ui.trail.querySelector("[data-intro-spot]") as HTMLElement).style.offsetPath).toContain(route.getAttribute("d"));
     expect(ui.trail.classList.contains("is-ready")).toBe(true);
     expect(ui.trail.getAttribute("aria-hidden")).toBe("true");
+    expect(ui.w.document.documentElement.classList.contains("intro-guided")).toBe(true);
+    // Adjacent cubic tangents must continue in the same direction, without a cusp.
+    const points = [...route.getAttribute("d")!.matchAll(/C ([\d.-]+) ([\d.-]+) ([\d.-]+) ([\d.-]+) ([\d.-]+) ([\d.-]+)/g)].map(match => match.slice(1).map(Number));
+    for (let index = 1; index < points.length; index++) {
+      const previous = points[index - 1];
+      const incoming = [previous[4] - previous[2], previous[5] - previous[3]];
+      const outgoing = [points[index][0] - previous[4], points[index][1] - previous[5]];
+      expect(incoming[0] * outgoing[1] - incoming[1] * outgoing[0]).toBeCloseTo(0, 1);
+      expect(incoming[0] * outgoing[0] + incoming[1] * outgoing[1]).toBeGreaterThan(0);
+    }
   });
 
   it("remeasures only on layout changes and coalesces resize callbacks into one frame", () => {
@@ -71,14 +86,41 @@ describe.each(["services-site", "projects-site"])("%s responsive intro trail", s
     expect(ui.frames.size).toBe(1);
     expect(ui.trail.querySelector("[data-intro-route]")!.getAttribute("d")).toBe(before);
     ui.flush();
-    expect(ui.trail.querySelector("svg")!.getAttribute("viewBox")).toBe("0 0 430 660");
+    expect(ui.trail.querySelector("svg")!.getAttribute("viewBox")).toBe("0 0 430 791");
     expect(ui.trail.querySelector("[data-intro-route]")!.getAttribute("d")).toContain("402");
     expect(ui.listeners.mock.calls.some(([event]) => event === "scroll")).toBe(false);
+  });
+
+  it("synchronizes button emphasis and the final orbit with measured curve lengths", () => {
+    const ui = setup(site); ui.flush();
+    const value = (name: string) => parseFloat(ui.w.document.documentElement.style.getPropertyValue(name));
+    expect(value("--intro-primary-from")).toBeGreaterThan(0);
+    expect(value("--intro-primary-to")).toBeGreaterThan(value("--intro-primary-from"));
+    expect(value("--intro-secondary-from")).toBeGreaterThan(value("--intro-primary-from"));
+    expect(value("--intro-secondary-to")).toBeGreaterThan(value("--intro-secondary-from"));
+    expect(value("--intro-dock-to")).toBeGreaterThan(value("--intro-dock-from"));
+    expect(value("--intro-dock-to")).toBeLessThan(value("--intro-travel"));
+  });
+
+  it("keeps a forward horizontal handoff when desktop CTAs sit side by side", () => {
+    const ui = setup(site);
+    const copy = ui.hero.querySelector(".hero__copy")!;
+    copy.querySelector<HTMLElement>(".button--primary")!.getBoundingClientRect = () => ({ left: 400, right: 710, top: 431, height: 56 }) as DOMRect;
+    copy.querySelector<HTMLElement>(".button--secondary")!.getBoundingClientRect = () => ({ left: 730, right: 1040, top: 431, height: 56 }) as DOMRect;
+    ui.resize(1440); ui.flush();
+    const curves = [...ui.trail.querySelector("[data-intro-route]")!.getAttribute("d")!.matchAll(/C ([\d.-]+) ([\d.-]+) ([\d.-]+) ([\d.-]+) ([\d.-]+) ([\d.-]+)/g)].map(match => match.slice(1).map(Number));
+    expect(curves[2].slice(4)).toEqual([684, 459]);
+    expect(curves[3].slice(4)).toEqual([756, 459]);
+    expect(curves[3][0]).toBeGreaterThan(684);
+    expect(curves[3][2]).toBeLessThan(756);
+    expect(curves[3][1]).toBe(459);
+    expect(curves[3][3]).toBe(459);
   });
 
   it("disables the trail and geometry observer when reduced motion is requested", () => {
     const ui = setup(site, true); ui.flush();
     expect(ui.trail.classList.contains("is-ready")).toBe(false);
+    expect(ui.w.document.documentElement.classList.contains("intro-guided")).toBe(false);
     expect(ui.observers[0].observe).not.toHaveBeenCalled();
     ui.preference.matches = false; ui.mediaListeners.forEach(fn => fn()); ui.flush();
     expect(ui.trail.classList.contains("is-ready")).toBe(true);
@@ -107,7 +149,7 @@ describe.each(["services-site", "projects-site"])("%s responsive intro trail", s
 
   it("preserves the component across a back-forward cache suspension", () => {
     const ui = setup(site); ui.flush(); ui.pagehide(true); ui.resize(430); ui.flush();
-    expect(ui.trail.querySelector("svg")!.getAttribute("viewBox")).toBe("0 0 430 660");
+    expect(ui.trail.querySelector("svg")!.getAttribute("viewBox")).toBe("0 0 430 791");
     expect(ui.mediaListeners.size).toBe(1);
   });
 });

@@ -24,14 +24,29 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).not.toContain(".hero::after");
     expect(css).not.toContain("intro-light-focus");
     expect(css).toContain("animation-range: 0px var(--intro-travel,420px)");
-    expect(css).toContain("stroke-dasharray: var(--trail-length) 1200");
+    expect(css).toContain("stroke-dasharray: var(--trail-length) 1600");
     expect(css).toContain("stroke-dashoffset: calc(var(--trail-length) - 1190px)");
     expect(css).toContain("92%,100% { offset-distance: 100%; opacity: 0; }");
     expect(html).toContain('data-intro-trail aria-hidden="true"');
     expect(html).toContain('data-intro-route pathLength="1000"');
-    expect(html.match(/<use class="intro-trail__/g)).toHaveLength(8);
+    expect(html.match(/<use class="intro-trail__/g)).toHaveLength(14);
     expect(app).toContain("function initIntroTrail()");
     expect(app).toContain('spot.style.offsetPath =');
+  });
+
+  it("hands a multi-filament beam from the hero CTAs into the explorer without adding vertical space", () => {
+    expect(html.match(/intro-trail__filament--(?:cyan|violet)/g)).toHaveLength(4);
+    expect(css).toContain("--trail-length: 52px; stroke: #e5ffff; stroke-width: 1.4px;");
+    expect(css).toContain("@keyframes intro-trail-wake");
+    expect(css).toContain("animation-range: var(--intro-primary-from) var(--intro-primary-to)");
+    expect(css).toContain("animation-range: var(--intro-secondary-from) var(--intro-secondary-to)");
+    expect(css).toContain("animation: intro-primary-cue linear;");
+    expect(css).toContain("animation: intro-secondary-cue linear;");
+    expect(html).toContain('class="journey__arrival" aria-hidden="true"');
+    expect(css).toContain(".journey__arrival { position: absolute;");
+    expect(app).toContain("function curveLength(start, curve)");
+    expect(app).toContain('root.classList.add("intro-guided")');
+    expect(app).toContain('root.classList.remove("intro-guided")');
   });
 
   it("reuses the neon trail once on contact arrival without distracting while typing", () => {
@@ -111,7 +126,7 @@ describe("TooolVibes Servizi static contract", () => {
     const sections = [...html.matchAll(/<section[^>]*data-service="(web|social|ai)"[^>]*>([\s\S]*?)<\/section>/g)];
     expect(sections).toHaveLength(3);
     for (const [, service, section] of sections) {
-      expect(section).toMatch(/<div class="section-copy" data-reveal>\s*<p class="section-number">[\s\S]*?<\/p>\s*<figure class="service-visual [^"]+" data-reveal>[\s\S]*?<\/figure>\s*<h2/);
+      expect(section).toMatch(/<div class="section-copy" data-reveal>\s*<p class="section-number">[\s\S]*?<\/p>\s*<figure class="service-visual [^"]+">[\s\S]*?<\/figure>\s*<h2/);
       expect(section.match(/<figure class="service-visual /g)).toHaveLength(1);
       expect(section).toContain(`/assets/service-${service === "ai" ? "chatbot" : service}-v2.webp`);
     }
@@ -240,7 +255,8 @@ describe("TooolVibes Servizi static contract", () => {
     expect(css).toContain("@media (prefers-reduced-motion: no-preference)");
     expect(css).toContain("detail-arrive .6s");
     expect(css).toContain("detail-arrive .6s var(--ease) var(--detail-delay) both");
-    expect(css).toContain(".service.is-in-view .service-benefits svg");
+    expect(css).toContain(".service-benefits.is-in-view li");
+    expect(css).not.toContain(".service.is-in-view .service-benefits svg");
     expect(css).not.toContain(".plain-list");
     expect(css).not.toContain(".flow-legend");
   });
@@ -354,7 +370,7 @@ describe("TooolVibes Servizi static contract", () => {
   });
 
   it("shares one CTA interaction and animates the border and confirmed capacity without moving prices", () => {
-    expect(css).toContain('.button:is(:hover,:focus-visible,:active):not(:disabled)::before { animation: control-sheen .75s');
+    expect(css).toContain('.button:is(:focus-visible,:active):not(:disabled)::before { animation: control-sheen .75s');
     expect(css).not.toContain('animation: control-response');
     expect(css).not.toContain('.button--secondary:is(:hover,:focus-visible) svg');
     expect(css).toContain('.service-offer.is-in-view::after { animation: price-border-flow 4.8s ease-in-out infinite alternate');
