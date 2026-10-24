@@ -59,7 +59,7 @@ describe("WorkspacePersonalStatusBadge", () => {
     render(<WorkspacePersonalStatusBadge slug="cursor" />);
 
     expect(screen.getByText("In uso")).toBeTruthy();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.queryByText("Salvato", { selector: ":not(.tool-action__label)" })).toBeNull();
     expect(screen.queryByText("Scelto")).toBeNull();
   });
 
@@ -92,7 +92,7 @@ describe("WorkspacePersonalStatusBadge", () => {
       render(<WorkspacePersonalStatusBadge slug="missing-tool" />);
     }).not.toThrow();
 
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.queryByText("Salvato", { selector: ":not(.tool-action__label)" })).toBeNull();
     expect(screen.queryByText("In uso")).toBeNull();
   });
 
@@ -104,7 +104,7 @@ describe("WorkspacePersonalStatusBadge", () => {
     );
 
     expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.queryByText("Salvato", { selector: ":not(.tool-action__label)" })).toBeNull();
   });
 });
 
@@ -116,7 +116,7 @@ describe("ArchiveV4ToolCard personal status", () => {
 
     expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
     expect(container.querySelector(".ar4-card__saved-flag")).toBeNull();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.queryByText("Salvato", { selector: ":not(.tool-action__label)" })).toBeNull();
   });
 
   it("W11-T9 saved fills the heart without a Salvato badge", () => {
@@ -132,7 +132,7 @@ describe("ArchiveV4ToolCard personal status", () => {
       ),
     ).toBe("true");
     expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.queryByText("Salvato", { selector: ":not(.tool-action__label)" })).toBeNull();
   });
 
   it("shows In uso instead of a Salvato flag", () => {
@@ -148,7 +148,7 @@ describe("ArchiveV4ToolCard personal status", () => {
 
     expect(screen.getByText("In uso")).toBeTruthy();
     expect(container.querySelector(".ar4-card__saved-flag")).toBeNull();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.queryByText("Salvato", { selector: ":not(.tool-action__label)" })).toBeNull();
   });
 
   it("W11-T11 Scelto may show when the tool is not just Salvato", () => {
@@ -162,7 +162,7 @@ describe("ArchiveV4ToolCard personal status", () => {
     );
 
     expect(screen.getByText("Scelto")).toBeTruthy();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.queryByText("Salvato", { selector: ":not(.tool-action__label)" })).toBeNull();
   });
 });
 

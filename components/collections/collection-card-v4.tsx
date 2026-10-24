@@ -1,4 +1,7 @@
+"use client";
+
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 import Link from "@/components/ui/app-link";
 import { ArrowRight } from "lucide-react";
 
@@ -15,11 +18,13 @@ import {
 } from "@/lib/collections/visual-identity";
 
 import { CollectionToolGlyph } from "./collection-tool-glyph";
+import { getCollectionPreviewCopy } from "./collection-preview-copy";
 
 type CollectionCardV4Props = {
   collection: CuratedCollection;
   /** Featured / lead variant — structurally richer. */
   featured?: boolean;
+  headingLevel?: 2 | 3;
 };
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -72,7 +77,11 @@ function buildCompositeSignal(
 export function CollectionCardV4({
   collection,
   featured = false,
+  headingLevel = 3,
 }: CollectionCardV4Props) {
+  const { locale, t } = useLocale();
+  const preview = getCollectionPreviewCopy(collection);
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const identity = getCollectionVisualIdentity(collection.slug);
   const accent = identity?.accent ?? "indigo";
   const group = identity?.group ?? null;
@@ -119,54 +128,62 @@ export function CollectionCardV4({
         )}
       </header>
 
-      <h3 className="cx-card-v4__title">
+      <Heading className="cx-card-v4__title">
         <Link
           href={`/collections/${collection.slug}`}
           className="cx-card-v4__title-link"
         >
-          <LocalizedText>{collection.title}</LocalizedText>
+          <LocalizedText>{preview.title}</LocalizedText>
         </Link>
-      </h3>
+      </Heading>
 
       <p className="cx-card-v4__promise">
-        <LocalizedText>{collection.stack_meta?.concise_promise ?? collection.description}</LocalizedText>
+        <LocalizedText>{preview.description}</LocalizedText>
       </p>
 
       {/* LAYER 2 — STACK (real brand gradient glyph strip) */}
       {visibleCores.length > 0 && (
         <LocalizedAttributes><div className="cx-card-v4__stack" aria-label="Tool nello stack">
+          <p className="cx-card-v4__stack-label">{locale === "en" ? "The workflow" : "Il flusso di lavoro"}</p>
           <ol className="cx-card-v4__stack-list">
             {visibleCores.map((slot, index) => (
               <li
                 key={slot.tool.slug}
                 className="cx-card-v4__stack-item"
               >
-                <span className="cx-card-v4__stack-no" aria-hidden="true">
-                  <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
-                </span>
-                <CollectionToolGlyph
-                  slug={slot.tool.slug}
-                  name={slot.tool.name}
-                  size={glyphSize}
-                  accentFrom={slot.tool.accentFrom}
-                  accentTo={slot.tool.accentTo}
-                  domain={slot.tool.domain}
-                  externalUrl={slot.tool.externalUrl}
-                />
-                <div className="cx-card-v4__stack-meta">
-                  <span className="cx-card-v4__stack-name">
-                    {slot.tool.name}
+                <Link
+                  href={`/toools/${slot.tool.slug}`}
+                  className="cx-card-v4__step-link"
+                  aria-label={`${locale === "en" ? "Open tool" : "Apri scheda"}: ${slot.tool.name}`}
+                >
+                  <span className="cx-card-v4__stack-no" aria-hidden="true">
+                    <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
                   </span>
-                  {featured && slot.stage && (
-                    <span className="cx-card-v4__stack-stage">
-                      <LocalizedText>{slot.stage}</LocalizedText>
+                  <CollectionToolGlyph
+                    slug={slot.tool.slug}
+                    name={slot.tool.name}
+                    size={glyphSize}
+                    accentFrom={slot.tool.accentFrom}
+                    accentTo={slot.tool.accentTo}
+                    domain={slot.tool.domain}
+                    externalUrl={slot.tool.externalUrl}
+                  />
+                  <div className="cx-card-v4__stack-meta">
+                    <span className="cx-card-v4__stack-name">
+                      {slot.tool.name}
                     </span>
-                  )}
-                </div>
+                    {slot.stage && (
+                      <span className="cx-card-v4__stack-stage">
+                        <LocalizedText>{slot.stage}</LocalizedText>
+                      </span>
+                    )}
+                  </div>
+                  <ArrowRight size={14} className="cx-card-v4__step-arrow" aria-hidden="true" />
+                </Link>
               </li>
             ))}
           </ol>
-          {featured && hiddenCoresCount > 0 && (
+          {hiddenCoresCount > 0 && (
             <p className="cx-card-v4__stack-more">
               +{hiddenCoresCount} <LocalizedText>{hiddenCoresCount === 1 ? "altro strumento" : "altri strumenti"}</LocalizedText>
             </p>
@@ -181,9 +198,9 @@ export function CollectionCardV4({
         <LocalizedAttributes><Link
           href={`/collections/${collection.slug}`}
           className="cx-card-v4__cta"
-          aria-label={`Usa questa raccolta ${collection.title}`}
+          aria-label={`${locale === "en" ? "Explore the stack" : "Esplora lo stack"}: ${t(preview.title)}`}
         >
-          <span><LocalizedText>{"Usa questa raccolta"}</LocalizedText></span>
+          <span>{locale === "en" ? "Explore the stack" : "Esplora lo stack"}</span>
           <ArrowRight
             className="cx-card-v4__cta-arrow size-3.5"
             aria-hidden="true"

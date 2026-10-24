@@ -15,6 +15,7 @@ import {
   getRelatedCollectionsForSlug,
 } from "@/lib/data/public-collections";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
+import { getGuidePosts } from "@/lib/data/public-articles";
 import "../collections.css";
 
 type CollectionPageProps = {
@@ -47,10 +48,11 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
 
 export default async function CollectionDetailPage({ params }: CollectionPageProps) {
   const { slug } = await params;
-  const [collection, relatedCollections, allCollections] = await Promise.all([
+  const [collection, relatedCollections, allCollections, guides] = await Promise.all([
     getCollectionBySlug(slug),
     getRelatedCollectionsForSlug(slug),
     getCuratedCollections(),
+    getGuidePosts(),
   ]);
 
   if (!collection) {
@@ -75,6 +77,7 @@ export default async function CollectionDetailPage({ params }: CollectionPagePro
         collection={collection}
         relatedCollections={relatedCollections}
         allCollections={allCollections}
+        guideTitles={Object.fromEntries(guides.map((guide) => [guide.slug, guide.title]))}
       />
 
       {/* Collection Partner — ending Partner Experience: appears only after the

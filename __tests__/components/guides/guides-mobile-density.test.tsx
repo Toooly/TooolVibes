@@ -1,18 +1,21 @@
 /**
  * @vitest-environment jsdom
  */
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import * as localeModule from "@/components/i18n/locale-provider";
 
 import { GuideTakeawaysDisclosure } from "@/components/guides/guide-callout";
 import { GuideArticleHero } from "@/components/guides/guide-article-hero";
 import { GuideCard } from "@/components/guides/guide-card";
 import { GuideFeaturedSection } from "@/components/guides/guide-featured-section";
 import { GuideMasthead } from "@/components/guides/guide-masthead";
+import { GuideGridSection } from "@/components/guides/guide-grid-section";
 import type { EditorialPostRecord } from "@/lib/types/article";
 
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
 });
 
 function makePost(overrides: Partial<EditorialPostRecord> = {}): EditorialPostRecord {
@@ -69,7 +72,7 @@ describe("guides mobile density — index", () => {
     expect(container.querySelector(".guides-feature__cover")).toBeTruthy();
   });
 
-  it("hides the featured lecture head in markup that CSS can collapse", () => {
+  it("labels the featured region from the real guide title without a duplicate heading panel", () => {
     const { container } = render(
       <GuideFeaturedSection
         post={makePost()}
@@ -80,20 +83,15 @@ describe("guides mobile density — index", () => {
       />,
     );
 
-    const head = container.querySelector("#guides-featured")?.querySelector(".guides-section__head");
-    expect(head).toBeTruthy();
-    expect(head?.textContent).toMatch(/lettura/i);
-    expect(head?.textContent).toMatch(/da cui partire/i);
+    const section = container.querySelector("#guides-featured");
+    expect(section?.querySelector(".guides-section__head")).toBeNull();
+    expect(section?.getAttribute("aria-labelledby")).toBe("guide-feature-frase-ai-title");
+    expect(section?.querySelectorAll(".guides-kicker")).toHaveLength(1);
   });
 
   it("keeps the masthead title in the document for desktop", () => {
     render(
-      <GuideMasthead
-        totalGuides={12}
-        totalReadingMinutes={120}
-        totalTools={40}
-        totalCollections={8}
-      />,
+      <GuideMasthead />,
     );
 
     expect(screen.getByRole("heading", { level: 1 })).toBeTruthy();
@@ -111,6 +109,61 @@ describe("guides mobile density — index", () => {
     expect(container.querySelectorAll("a")).toHaveLength(1);
     expect(container.querySelector(".guides-card__cta")?.textContent).toBe("Leggi la guida");
     expect(container.querySelector(".guides-card__dek")).toBeTruthy();
+  });
+
+  it("filters the guide list and removes the unrelated featured card from filtered results", () => {
+    render(<GuideGridSection initialVisible={1} featured={<p>Scelta editoriale</p>} topics={[{ label: "SEO", count: 2 }]} items={[
+      { post: makePost(), topic: "SEO", readingMinutes: 8 },
+      { post: makePost({ slug: "seconda-guida", title: "Seconda guida" }), topic: "SEO", readingMinutes: 6 },
+      { post: makePost({ slug: "terza-guida", title: "Terza guida" }), topic: "Scrittura", readingMinutes: 5 },
+    ]} />);
+
+    expect(screen.getByRole("heading", { name: "Esplora le guide" }).id).toBe("guides-all-title");
+    expect(screen.getByRole("status").textContent).toBe("1 di 3 guide");
+    fireEvent.click(screen.getByRole("button", { name: "SEO 2" }));
+    expect(screen.queryByText("Scelta editoriale")).toBeNull();
+    expect(screen.getByRole("status").textContent).toBe("1 di 2 guide");
+  });
+
+  it("returns focus to the results heading after collapsing a long list", async () => {
+    render(<GuideGridSection initialVisible={1} topics={[]} items={[
+      { post: makePost(), topic: "SEO", readingMinutes: 8 },
+      { post: makePost({ slug: "seconda-guida", title: "Seconda guida" }), topic: "SEO", readingMinutes: 6 },
+    ]} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Mostra tutte le 2 guide" }));
+    expect(screen.getByRole("status").textContent).toBe("2 di 2 guide");
+    fireEvent.click(screen.getByRole("button", { name: "Mostra meno guide" }));
+    await waitFor(() => expect(document.activeElement?.id).toBe("guides-all-title"));
+    expect(screen.queryByRole("link", { name: "Leggi la guida: Seconda guida" })).toBeNull();
+  });
+
+  it("keeps the featured guide reachable in its own topic without duplicating the all-guides teaser", () => {
+    const { container } = render(<GuideGridSection initialVisible={6} featured={<GuideCard post={makePost()} topic="SEO" readMinutes={8} />}
+      featuredItem={{ post: makePost(), topic: "SEO", readingMinutes: 8 }}
+      topics={[{ label: "SEO", count: 2 }]} items={[
+        { post: makePost({ slug: "seconda-guida", title: "Seconda guida" }), topic: "SEO", readingMinutes: 6 },
+      ]} />);
+
+    expect(container.querySelector(".guides-grid__featured-result a")?.getAttribute("href")).toBe("/posts/frase-ai");
+    expect(container.querySelector('#guides-grid-list a[href="/posts/frase-ai"]')).toBeNull();
+    expect(screen.getByRole("status").textContent).toBe("2 di 2 guide");
+    fireEvent.click(screen.getByRole("button", { name: "SEO 2" }));
+    expect(screen.getByRole("link", { name: "Leggi la guida: Frase AI, senza il rumore da SERP" }).getAttribute("href")).toBe("/posts/frase-ai");
+    expect(container.querySelector(".guides-grid__featured-result")).toBeNull();
+    expect(screen.getByRole("status").textContent).toBe("2 di 2 guide");
+    fireEvent.click(screen.getByRole("button", { name: "Tutte 2" }));
+    expect(container.querySelector(".guides-grid__featured-result a")?.getAttribute("href")).toBe("/posts/frase-ai");
+    expect(screen.getAllByRole("link", { name: "Leggi la guida: Frase AI, senza il rumore da SERP" })).toHaveLength(1);
+  });
+
+  it.each(["it", "en"] as const)("uses singular result copy in %s", (locale) => {
+    vi.spyOn(localeModule, "useLocale").mockReturnValue({
+      locale, preference: locale, pending: false, error: false,
+      setPreference: () => {}, t: (value) => value, markdown: (value) => value,
+    });
+    render(<GuideGridSection topics={[]} items={[{ post: makePost(), topic: "SEO", readingMinutes: 8 }]} />);
+    expect(screen.getByRole("status").textContent).toBe(locale === "en" ? "1 of 1 guide" : "1 di 1 guida");
   });
 });
 
@@ -146,7 +199,7 @@ describe("guides mobile density — takeaways", () => {
     expect(details).toBeTruthy();
     expect(details?.hasAttribute("open")).toBe(false);
     expect(details?.querySelector("summary")?.textContent).toBe(
-      "Quando ti serve questa guida",
+      "Cosa trovi nella guida",
     );
     expect(screen.getByLabelText("Cosa otterrai da questa guida")).toBeTruthy();
     expect(screen.getByText("Capisci il no")).toBeTruthy();

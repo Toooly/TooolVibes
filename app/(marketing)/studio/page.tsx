@@ -31,7 +31,7 @@ const SERVICES = [
     icon: <Compass className="size-4" aria-hidden="true" />,
     bullets: [
       "Mappatura per categoria e per caso d'uso.",
-      "Una sintesi che regge una decisione, non un elenco.",
+      "Una sintesi con alternative, criteri e raccomandazioni motivate.",
     ],
   },
   {
@@ -48,7 +48,7 @@ const SERVICES = [
     copy: "Guide, pagine e narrative che rendono comprensibili prodotti complessi senza perdere precisione.",
     icon: <FileText className="size-4" aria-hidden="true" />,
     bullets: [
-      "Linguaggio adatto al prodotto, non al marketing.",
+      "Parole precise, adatte al prodotto e a chi lo userà.",
       "Verifica editoriale delle fonti e delle affermazioni.",
     ],
   },
@@ -78,9 +78,9 @@ export default function StudioPage() {
         routeIndex="08"
         routeLabel="Studio by TooolVibes"
         routeStatus="Servizi"
-        emphasis="decisioni più chiare"
-        title="Diamo forma a decisioni più chiare."
-        lede="Studio by TooolVibes collabora con prodotti e team che hanno bisogno di ricerca, struttura e parole precise per orientare persone reali."
+        emphasis="decisioni migliori"
+        title="Ricerca e contenuti per decisioni migliori."
+        lede="Aiutiamo team e aziende a scegliere strumenti, definire criteri e spiegare prodotti complessi."
         actions={
           <>
             <LocalizedAttributes><a
@@ -104,7 +104,7 @@ export default function StudioPage() {
         signature={
           <>
             <span className="secondary-hero__signature-eyebrow">
-              <span><LocalizedText>{"Prima lettura gratuita"}</LocalizedText></span>
+              <span><LocalizedText>{"Prima valutazione gratuita"}</LocalizedText></span>
             </span>
             <p
               style={{
@@ -115,7 +115,7 @@ export default function StudioPage() {
                 lineHeight: 1.4,
                 fontWeight: 600,
               }}
-            ><LocalizedText>{"Raccontaci il contesto, non il budget. "}</LocalizedText></p>
+            ><LocalizedText>{"Raccontaci il progetto. "}</LocalizedText></p>
             <p
               style={{
                 margin: 0,
@@ -124,15 +124,15 @@ export default function StudioPage() {
                 fontSize: "0.9rem",
                 lineHeight: 1.55,
               }}
-            ><LocalizedText>{"Ti rispondiamo con una prima lettura editoriale del problema, anche quando la risposta è onesta \"non è il nostro perimetro\". "}</LocalizedText></p>
+            ><LocalizedText>{"Inviaci obiettivo, contesto e vincoli. Ti diciamo come possiamo aiutarti. "}</LocalizedText></p>
           </>
         }
       /></LocalizedAttributes>
 
       <LocalizedAttributes><SecondarySection
         eyebrow="Servizi"
-        title="Tre servizi, una sola coerenza"
-        lede="Interventi essenziali, costruiti intorno a una domanda decisionale concreta. Ogni servizio può essere breve o continuativo."
+        title="Il supporto che ti serve"
+        lede="Scegli un intervento mirato o un percorso continuativo, in base al progetto."
       >
         <SecondaryCardGrid columns={3}>
           {SERVICES.map((service) => (
@@ -151,7 +151,7 @@ export default function StudioPage() {
         tone="ivory"
         eyebrow="Processo"
         title="Come lavoriamo"
-        lede="Un percorso breve, dichiarato e verificabile. Tre passaggi, senza sorprese in fattura."
+        lede="Concordiamo obiettivi, tempi e modalità di consegna prima di iniziare."
       >
         <SecondaryCardGrid columns={3}>
           {PROCESS.map((step) => (

@@ -6,12 +6,10 @@ import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-
 import { Target } from "lucide-react";
 import Link from "@/components/ui/app-link";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
-import { Bookmark, Star } from "lucide-react";
+import { Bookmark, Check, Star } from "lucide-react";
 
 import {
   WorkspacePersonalStatusBadge,
-  isHeartRedundantPersonalStatus,
-  usePersonalToolStatus,
 } from "@/components/account/workspace/workspace-personal-status";
 import { useToolWorkspaceStore } from "@/lib/stores/tool-workspace-store";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
@@ -50,12 +48,6 @@ function ArchiveV4ToolCard({
   const toggleSaved = useToolWorkspaceStore((s) => s.toggleSaved);
   const isSelected = compareSlugs.includes(tool.slug);
   const isSaved = savedSlugs.includes(tool.slug);
-  const personalStatus = usePersonalToolStatus(tool.slug);
-  const personalWord =
-    personalStatus && !isHeartRedundantPersonalStatus(personalStatus.key)
-      ? personalStatus
-      : null;
-  const showRank = isSelected && typeof rank === "number" && !personalWord;
   const revealRef = useCardReveal<HTMLElement>(rank && rank <= 6 ? (rank - 1) * 28 : 0);
   const [logoFailed, setLogoFailed] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState(false);
@@ -92,15 +84,14 @@ function ArchiveV4ToolCard({
   const handleSave = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    const wasSaved = isSaved;
-    toggleSaved(tool.slug);
+    const saved = toggleSaved(tool.slug);
     if (saveTimerRef.current !== null) window.clearTimeout(saveTimerRef.current);
-    setSaveFeedback(!wasSaved);
-    if (!wasSaved) {
+    setSaveFeedback(saved);
+    if (saved) {
       saveTimerRef.current = window.setTimeout(() => {
         setSaveFeedback(false);
         saveTimerRef.current = null;
-      }, MOTION_DURATION_MS.standard);
+      }, MOTION_DURATION_MS.reward);
     }
   };
 
@@ -191,6 +182,27 @@ function ArchiveV4ToolCard({
           </h3>
           <p className="ar4-card__category"><LocalizedText>{tool.categoryLabel}</LocalizedText></p>
         </div>
+
+      </div>
+
+      {/* 2. DESCRIPTION: 2-line editorial block */}
+      <p className="ar4-card__desc">
+        <LocalizedText>{tool.tldr || tool.shortDescription || "Scheda in preparazione."}</LocalizedText>
+      </p>
+      {!reduced && bestFor ? (
+        <p className="ar4-card__best">
+          <span className="ar4-card__best-heading">
+            <span className="ar4-card__best-icon" aria-hidden="true"><Target /></span>
+            <span className="ar4-card__best-label"><LocalizedText>Ideale per</LocalizedText></span>
+          </span>
+          <span className="ar4-card__best-text"><LocalizedText>{bestFor}</LocalizedText></span>
+        </p>
+      ) : null}
+      {/* Compare watermark: filled dual-panel, decorative */}
+      <div className="ar4-card__watermark" aria-hidden="true" />
+
+      {/* Context follows the summary, keeping every card identity aligned. */}
+      {(showEditorialBadge || showTierBadge || showSponsoredBadge || density === "enriched") ? <div className="ar4-card__meta">
         <div className="ar4-card__badges">
         {showEditorialBadge ? (
           <LocalizedAttributes><span
@@ -217,27 +229,6 @@ function ArchiveV4ToolCard({
           ><LocalizedText>{"Contenuto sponsorizzato "}</LocalizedText></span></LocalizedAttributes>
         ) : null}
         </div>
-      </div>
-
-      {/* 2. DESCRIPTION: 2-line editorial block */}
-      <p className="ar4-card__desc">
-        <LocalizedText>{tool.tldr || tool.shortDescription || "Scheda in preparazione."}</LocalizedText>
-      </p>
-      {!reduced && bestFor ? (
-        <p className="ar4-card__best">
-          <span className="ar4-card__best-icon" aria-hidden="true">
-            <Target />
-          </span>
-          <span>
-            <span className="ar4-card__best-label"><LocalizedText>{"Ideale per"}</LocalizedText></span><LocalizedText>{" "}</LocalizedText>
-            <span className="ar4-card__best-text"><LocalizedText>{bestFor}</LocalizedText></span>
-          </span>
-        </p>
-      ) : null}
-      {/* Compare watermark: filled dual-panel, decorative */}
-      <div className="ar4-card__watermark" aria-hidden="true" />
-
-      {/* 4. ENRICHED DECISION META: level · reading time · tags (compact rail) */}
       {density === "enriched" && (tool.levelLabel || tool.readingTime || tool.tags.length > 0) && (
         <div className="ar4-card__enriched">
           <div className="ar4-card__enriched-rail">
@@ -257,53 +248,51 @@ function ArchiveV4ToolCard({
         </div>
       )}
 
+      </div> : null}
+
+      {/* DISCLOSURE */}
+      {showSponsoredBadge ? (
+        <p className="ar4-card__disclosure"><LocalizedText>{"Link affiliato: potremmo ricevere una commissione, senza costi aggiuntivi per te. "}</LocalizedText></p>
+      ) : null}
+
       {/* 5. FINAL ROW: score left + Save + Compare right */}
       <div className="ar4-card__actions">
-        <div className="ar4-card__control-rail" data-has-rank={showRank ? "true" : undefined}>
-          {showRank ? (
-            <div className="ar4-card__state-flags" aria-live="polite">
-              <LocalizedAttributes><span className="ar4-card__rank" aria-label={`Selezionato, posizione ${rank}`}>
-                #<LocalizedText>{String(rank).padStart(2, "0")}</LocalizedText>
-              </span></LocalizedAttributes>
-            </div>
-          ) : (
-            <WorkspacePersonalStatusBadge
-              slug={tool.slug}
-              className="ar4-card__saved-label"
-            />
-          )}
+        <div className="ar4-card__control-rail">
+          <WorkspacePersonalStatusBadge
+            slug={tool.slug}
+            className="ar4-card__saved-label"
+          />
           {!reduced && scoreLine ? (
-            <span className="ar4-card__score"><LocalizedText>{scoreLine}</LocalizedText></span>
+            <span className="ar4-card__score"><LocalizedText>{scoreLine}</LocalizedText><small>/10</small></span>
           ) : null}
           <div className="ar4-card__toggles">
             <LocalizedAttributes><button
               type="button"
               className="ar4-card__bookmark"
               data-saved={isSaved || undefined}
+              data-sonic-action="save"
+              data-action-label
               data-save-feedback={isSaved && saveFeedback ? "added" : undefined}
               aria-pressed={isSaved}
               aria-label={isSaved ? `Rimuovi ${tool.name} dai salvati` : `Salva ${tool.name}`}
               onClick={handleSave}
             >
-              <Bookmark
-                className="ar4-card__bookmark-icon tool-action__icon"
-                aria-hidden="true"
-                fill={isSaved ? "currentColor" : "none"}
-              />
+              <span className="tool-action__icon" aria-hidden="true">
+                <Bookmark className="ar4-card__bookmark-icon tool-action__symbol" fill={isSaved ? "currentColor" : "none"} />
+                {isSaved ? <Check className="tool-action__check" /> : null}
+              </span>
+              <span className="tool-action__label"><LocalizedText>{isSaved ? "Salvato" : "Salva"}</LocalizedText></span>
             </button></LocalizedAttributes>
             <CompareToggle
               slug={tool.slug}
               mode="icon"
+              showLabel
               toolName={tool.name}
             />
           </div>
         </div>
       </div>
 
-      {/* DISCLOSURE */}
-      {showSponsoredBadge ? (
-        <p className="ar4-card__disclosure"><LocalizedText>{"Link affiliato: potremmo ricevere una commissione, senza costi aggiuntivi per te. "}</LocalizedText></p>
-      ) : null}
       {saveFeedback && isSaved ? (
         <span className="sr-only" role="status"><LocalizedText>Salvato</LocalizedText></span>
       ) : null}

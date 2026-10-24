@@ -26,7 +26,7 @@ export default function MobileComparison({
     <div className="cv-mobile" data-compare-renderer="mobile">
       <section className="cv-roster" aria-label={t("Tool a confronto")}>
         <p className="cv-roster__hint">
-          <T>Tutti i tool, un criterio alla volta.</T>
+          <T>Leggi un criterio alla volta, per tutti i tool.</T>
         </p>
         <ul>
           {model.tools.map((tool) => (
@@ -65,6 +65,7 @@ export default function MobileComparison({
           />
         ))}
       </section>
+      <p className="cv-footnote"><T>Le informazioni mancanti non indicano una funzionalità assente.</T></p>
       <ComparisonDecision tools={model.tools} onDecide={onDecide} />
     </div>
   );

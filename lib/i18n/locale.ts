@@ -1,7 +1,7 @@
 export type Locale = "it" | "en";
 export type LanguagePreference = Locale | "auto";
 export const LANGUAGE_STORAGE_KEY = "tooolvibes.language";
-export const ENGLISH_DICTIONARY_URL = "/locales/en.json?v=550a8203e69c";
+export const ENGLISH_DICTIONARY_URL = "/locales/en.json?v=7fa2f5a146ac";
 
 export function parseLanguagePreference(value: unknown): LanguagePreference {
   return value === "it" || value === "en" ? value : "auto";
@@ -38,9 +38,11 @@ export function createTranslator(dictionary: TranslationDictionary) {
     }
   }
   const lowercaseEntries = new Map([...entries].map(([key, value]) => [key.toLowerCase(), value]));
-  const templates = [...entries].filter(([key]) => /\{\d+\}/.test(key) && key.replace(/\{\d+\}/g, "").trim().length > 0 && key.length < 500).map(([key, value]) => {
+  const templates = [...entries].filter(([key]) => /\{\d+\}/.test(key) && key.replace(/\{\d+\}/g, "").trim().length > 0 && key.length < 500)
+    .sort(([left], [right]) => right.replace(/\{\d+\}/g, "").length - left.replace(/\{\d+\}/g, "").length)
+    .map(([key, value]) => {
     const slots: string[] = [];
-    const numericOnly = key.replace(/\{\d+\}/g, "").trim().length < 4;
+    const numericOnly = /^\{\d+\} tool$/.test(key) || key.replace(/\{\d+\}/g, "").trim().length < 4;
     const escaped = key.split(/(\{\d+\})/).map((part) => {
       if (/^\{\d+\}$/.test(part)) { slots.push(part); return numericOnly ? "(\\d+(?:[.,]\\d+)?)" : "(.+?)"; }
       return part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

@@ -8,12 +8,9 @@ import {
   GuideGridSection,
   type GuideGridItem,
 } from "@/components/guides/guide-grid-section";
-import {
-  estimateReadingMinutes,
-} from "@/components/guides/guide-card";
+import { estimateReadingMinutes } from "@/lib/editorial/reading-time";
 import { getGuideTopic, getGuideTopicOrder } from "@/lib/data/guide-topics";
 import { getPublishedTools } from "@/lib/data/public-tools";
-import { getCuratedCollections } from "@/lib/data/public-collections";
 import {
   getGuidePosts,
 } from "@/lib/data/public-articles";
@@ -42,10 +39,9 @@ const FEATURED_SLUGS = [
 ] as const;
 
 export default async function PostsPage() {
-  const [guides, tools, collections] = await Promise.all([
+  const [guides, tools] = await Promise.all([
     getGuidePosts(),
     getPublishedTools(),
-    getCuratedCollections(),
   ]);
 
   // Build a tool slug → tool map for fast lookup.
@@ -115,7 +111,7 @@ export default async function PostsPage() {
 
   // Topic counts.
   const topicCounts = new Map<string, number>();
-  for (const item of itemsSorted) {
+  for (const item of items) {
     topicCounts.set(item.topic, (topicCounts.get(item.topic) ?? 0) + 1);
   }
   const topics = Array.from(topicCounts.entries())
@@ -125,13 +121,6 @@ export default async function PostsPage() {
         getGuideTopicOrder(a.label) - getGuideTopicOrder(b.label) ||
         b.count - a.count,
     );
-
-  const totalReadingMinutes = items.reduce(
-    (acc, i) => acc + i.readingMinutes,
-    0,
-  );
-
-  const readingTime = Math.max(1, Math.round(totalReadingMinutes / Math.max(1, items.length)));
 
   const featuredRowItem: GuideGridItem | null = featureCandidate
     ? {
@@ -150,6 +139,7 @@ export default async function PostsPage() {
       topicLabel={featureTopic}
       toolName={featureTool?.name ?? null}
       toolHref={featureToolHref}
+      toolDomain={hostFromTool(featureTool)}
       readingMinutes={featureMinutes}
     />
   ) : null;
@@ -163,24 +153,19 @@ export default async function PostsPage() {
 
   return (
     <div className="guides-page">
-      <GuideMasthead
-        totalGuides={items.length}
-        totalReadingMinutes={totalReadingMinutes}
-        totalTools={tools.length}
-        totalCollections={collections.length}
-      />
+      <GuideMasthead />
 
       {featuredSection ? (
-        <div data-desktop-featured>{featuredSection}</div>
+        <div className="guides-page__featured">{featuredSection}</div>
       ) : null}
 
       <GuideGridSection
         items={itemsSorted}
+        featuredItem={featuredRowItem}
         topics={orderedTopics}
         initialVisible={9}
         featured={
           featuredRowItem ? (
-            <div data-mobile-featured>
               <GuideCard
                 post={featuredRowItem.post}
                 topic={featuredRowItem.topic}
@@ -189,7 +174,6 @@ export default async function PostsPage() {
                 readMinutes={featuredRowItem.readingMinutes}
                 thumbDomain={featuredRowItem.toolDomain ?? null}
               />
-            </div>
           ) : null
         }
       />
@@ -206,11 +190,6 @@ export default async function PostsPage() {
           <span aria-hidden>·</span>
           <Link href="/radar"><LocalizedText>{"Radar"}</LocalizedText></Link>
         </nav></LocalizedAttributes>
-        <p className="guides-section__meta guides-section__meta--ink"><LocalizedText>{"Lettura media: "}</LocalizedText><strong>{readingTime}<LocalizedText>{" min"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"per guida · ultimo aggiornamento editoriale:"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
-          <strong>
-            <LocalizedText>{new Date().toLocaleDateString("it-IT", { month: "long", year: "numeric" })}</LocalizedText>
-          </strong>
-        </p>
       </section>
     </div>
   );

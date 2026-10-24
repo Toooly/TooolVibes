@@ -1362,145 +1362,10 @@
 }
 
 
-/* V3 — Resource objects (Shop) */
-.resource-page .secondary-principle:not(.secondary-card--ivory) {
-  border: 1px solid var(--tv-grammar-resource-border);
-  background: var(--tv-grammar-resource-surface);
-  box-shadow: none;
-}
-
-.resource-page .secondary-principle.secondary-card--ivory {
-  background: var(--tv-grammar-institutional-ivory);
-  border-color: var(--tv-border-inverted-subtle);
-  color: var(--tv-ink-inverted-primary);
-  box-shadow: none;
-}
-
-.resource-inventory {
-  display: grid;
-  gap: 0.75rem;
-  align-content: start;
-}
-
-.resource-inventory__status {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.75rem 0.85rem;
-  border: 1px solid var(--tv-grammar-resource-border);
-  border-radius: var(--tv-radius-card);
-  background: var(--tv-grammar-resource-surface);
-}
-
-.resource-inventory__kicker {
-  margin: 0;
-  color: var(--tv-grammar-resource-label);
-  font-family: var(--tv-font-ui);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: var(--tv-kicker-tracking);
-  text-transform: uppercase;
-}
-
-.resource-inventory__title {
-  margin: 0.2rem 0 0;
-  color: var(--tv-ink-primary);
-  font-family: var(--tv-font-ui);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.resource-inventory__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: var(--tv-radius-pill);
-  background: var(--tv-grammar-selected-wash);
-  color: var(--tv-grammar-resource-premium);
-  font-family: var(--tv-font-ui);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: var(--tv-kicker-tracking);
-  text-transform: uppercase;
-}
-
-.resource-inventory__stamp {
-  display: grid;
-  gap: 0.45rem;
-  padding: 0.9rem 0.95rem;
-  border: 1px solid var(--tv-grammar-resource-edge);
-  border-radius: var(--tv-radius-card);
-  background: var(--tv-grammar-resource-surface);
-}
-
 .secondary-hero--dark,
 .resource-page,
 .secondary-hero__signature {
   --tv-grammar-resource-premium: var(--tv-color-violet-300);
-}
-
-.resource-inventory__stamp-mark {
-  color: var(--tv-grammar-resource-premium);
-  font-family: var(--tv-font-data);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: var(--tv-kicker-tracking);
-  text-transform: uppercase;
-}
-
-.resource-inventory__stamp-copy {
-  margin: 0;
-  color: var(--tv-ink-secondary);
-  font-family: var(--tv-font-ui);
-  font-size: 0.85rem;
-  line-height: 1.45;
-}
-
-.resource-inventory__row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.7rem 0.85rem;
-  border: 1px solid var(--tv-grammar-resource-border);
-  border-radius: var(--tv-radius-card);
-  background: var(--tv-grammar-resource-surface);
-}
-
-.resource-inventory__row[data-highlight="true"] {
-  border-color: var(--tv-grammar-selected);
-}
-
-.resource-inventory__index {
-  display: grid;
-  place-items: center;
-  width: 1.65rem;
-  height: 1.65rem;
-  border-radius: var(--tv-radius-control);
-  background: var(--tv-surface-elevated);
-  color: var(--tv-ink-secondary);
-  font-family: var(--tv-font-data);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.resource-inventory__row[data-highlight="true"] .resource-inventory__index {
-  background: var(--tv-grammar-selected);
-  color: var(--tv-ink-on-brand);
-}
-
-.resource-inventory__value {
-  color: var(--tv-ink-muted-aa);
-  font-family: var(--tv-font-data);
-  font-size: 1.15rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.resource-inventory__row[data-highlight="true"] .resource-inventory__value {
-  color: var(--tv-ink-primary);
 }
 
 .secondary-page--tight {
@@ -1586,17 +1451,6 @@
 .secondary-card:hover { border-color: var(--tv-material-edge-active); }
 .secondary-hero--dark::after {
   background: linear-gradient(110deg, transparent 65%, color-mix(in srgb, var(--tv-color-cyan-300) 5%, transparent));
-}
-.secondary-hero--dark::before {
-  content: "";
-  position: absolute;
-  width: clamp(15rem, 35vw, 32rem);
-  aspect-ratio: 1;
-  inset: -55% -12% auto auto;
-  background: url("/graphics/instrument-orbit.webp") center / contain no-repeat;
-  opacity: 0.2;
-  pointer-events: none;
-  mask-image: linear-gradient(90deg, transparent, black 60%);
 }
 .secondary-page .affiliates-intro__item {
   background: var(--tv-surface-raised);

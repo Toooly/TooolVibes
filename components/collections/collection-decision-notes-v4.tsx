@@ -11,7 +11,7 @@ type CollectionDecisionNotesV4Props = {
  * Decision Notes V4 — editorial grouping, not 6 KPI cards.
  *
  * Groups the 6 V2 fields into 3 editorial notes:
- *   1. "Cosa regge"     — strongest point
+ *   1. "Punti di forza"     — strongest point
  *   2. "Cosa ci tiene d’occhio" — weakest + fragility
  *   3. "Scelte a lungo termine"  — vendor_lock_in + data_privacy + scalability
  *
@@ -41,9 +41,8 @@ export function CollectionDecisionNotesV4({
     >
       <summary className="cx-detail-depth__summary"><LocalizedText>{"Note di decisione"}</LocalizedText></summary>
       <header className="cx-decision-notes-v4__head">
-        <span className="cx-decision-notes-v4__eyebrow"><LocalizedText>{"Decision notes "}</LocalizedText></span>
-        <h2 id="cx-decision-notes-title" className="cx-decision-notes-v4__title"><LocalizedText>{"Cosa ci tiene d’occhio su questo stack "}</LocalizedText></h2>
-        <p className="cx-decision-notes-v4__lede"><LocalizedText>{"Note editoriali, non KPI. Le cose che vale la pena sapere prima di partire. "}</LocalizedText></p>
+        <h2 id="cx-decision-notes-title" className="cx-decision-notes-v4__title"><LocalizedText>{"Cosa valutare prima di partire"}</LocalizedText></h2>
+        <p className="cx-decision-notes-v4__lede"><LocalizedText>{"Punti di forza, vincoli e aspetti da verificare nel tempo."}</LocalizedText></p>
       </header>
 
       <div className="cx-decision-notes-v4__groups">
@@ -56,7 +55,7 @@ export function CollectionDecisionNotesV4({
               >
                 <TrendingUp className="size-4" />
               </span>
-              <h3 className="cx-decision-notes-v4__group-title"><LocalizedText>{"Cosa regge"}</LocalizedText></h3>
+              <h3 className="cx-decision-notes-v4__group-title"><LocalizedText>{"Punti di forza"}</LocalizedText></h3>
             </div>
             <p className="cx-decision-notes-v4__group-body"><LocalizedText>{di.strongest}</LocalizedText></p>
           </article>
@@ -71,16 +70,16 @@ export function CollectionDecisionNotesV4({
               >
                 <AlertTriangle className="size-4" />
               </span>
-              <h3 className="cx-decision-notes-v4__group-title"><LocalizedText>{"Cosa ci tiene d’occhio "}</LocalizedText></h3>
+              <h3 className="cx-decision-notes-v4__group-title"><LocalizedText>{"Limiti e fragilità"}</LocalizedText></h3>
             </div>
             {di.weakest && (
               <p className="cx-decision-notes-v4__group-body">
-                <strong><LocalizedText>{"Punto debole."}</LocalizedText></strong> <LocalizedText>{di.weakest}</LocalizedText>
+                <strong><LocalizedText>{"Limite principale."}</LocalizedText></strong> <LocalizedText>{di.weakest}</LocalizedText>
               </p>
             )}
             {di.fragility && (
               <p className="cx-decision-notes-v4__group-body">
-                <strong><LocalizedText>{"Dove si rompe."}</LocalizedText></strong> <LocalizedText>{di.fragility}</LocalizedText>
+                <strong><LocalizedText>{"Punti di fragilità."}</LocalizedText></strong> <LocalizedText>{di.fragility}</LocalizedText>
               </p>
             )}
           </article>
@@ -99,17 +98,17 @@ export function CollectionDecisionNotesV4({
             </div>
             {di.vendor_lock_in && (
               <p className="cx-decision-notes-v4__group-body">
-                <strong><LocalizedText>{"Vendor lock-in."}</LocalizedText></strong> <LocalizedText>{di.vendor_lock_in}</LocalizedText>
+                <strong><LocalizedText>{"Dipendenza dal fornitore."}</LocalizedText></strong> <LocalizedText>{di.vendor_lock_in}</LocalizedText>
               </p>
             )}
             {di.data_privacy && (
               <p className="cx-decision-notes-v4__group-body">
-                <strong><LocalizedText>{"Privacy / dati."}</LocalizedText></strong> <LocalizedText>{di.data_privacy}</LocalizedText>
+                <strong><LocalizedText>{"Dati e privacy."}</LocalizedText></strong> <LocalizedText>{di.data_privacy}</LocalizedText>
               </p>
             )}
             {di.scalability && (
               <p className="cx-decision-notes-v4__group-body">
-                <strong><LocalizedText>{"Quando smette di scalare."}</LocalizedText></strong> <LocalizedText>{di.scalability}</LocalizedText>
+                <strong><LocalizedText>{"Crescita e scalabilità."}</LocalizedText></strong> <LocalizedText>{di.scalability}</LocalizedText>
               </p>
             )}
           </article>

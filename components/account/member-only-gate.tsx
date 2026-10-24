@@ -25,7 +25,7 @@ export function MemberOnlyGate({
   children,
   kicker = "Contenuto riservato",
   title = "Accedi per continuare",
-  body = "Questo spazio è disponibile solo agli account autenticati.",
+  body = "Accedi al tuo account per usare questa funzione.",
 }: {
   children: React.ReactNode;
   kicker?: string;
@@ -50,7 +50,7 @@ export function MemberOnlyGate({
           <LocalizedText>{title}</LocalizedText>
         </h1>
         <p className="tv-member-gate__body"><LocalizedText>{body}</LocalizedText></p>
-        <Link className="tv-member-gate__cta" href="/account"><LocalizedText>{"Entra per continuare "}</LocalizedText></Link>
+        <Link className="tv-member-gate__cta" href="/account"><LocalizedText>{"Accedi"}</LocalizedText></Link>
       </div>
     </section>
   );

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccount } from "@/components/account/account-provider";
 import { salvatiHref } from "@/components/account/workspace/workspace-model";
 import Link from "@/components/ui/app-link";
+import { Plus } from "lucide-react";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import { useCompareObjective } from "@/lib/hooks/use-compare-objective";
 import {
@@ -19,7 +20,8 @@ import {
   MIN_COMPARE_TOOLS,
   useToolWorkspaceStore,
 } from "@/lib/stores/tool-workspace-store";
-import type { ComparisonFocusTarget } from "./compare-v2/comparison-parts";
+import { ComparisonMark, type ComparisonFocusTarget } from "./compare-v2/comparison-parts";
+import ComparisonManager from "./compare-v2/comparison-manager";
 import { CompareText as T, useCompareCopy } from "./compare-v2/compare-copy";
 import {
   captureCompareDecisionTarget,
@@ -44,9 +46,6 @@ const MobileComparison = dynamic(
 const DesktopComparison = dynamic(
   () => import("./compare-v2/desktop-comparison"),
   { loading: Preparing },
-);
-const ComparisonManager = dynamic(
-  () => import("./compare-v2/comparison-manager"),
 );
 const CompareDecideSheet = dynamic(() =>
   import("./compare-decision-panel").then(
@@ -126,7 +125,9 @@ export function ToolBattleView({
     }
     consumeCompareDecision();
     setNotice("");
-    setManager(null);
+    if (replacing || useToolWorkspaceStore.getState().compareSlugs.length >= MIN_COMPARE_TOOLS) {
+      setManager(null);
+    }
   }
   function removeTool(slug: string) {
     toggleCompare(slug);
@@ -160,8 +161,8 @@ export function ToolBattleView({
           <p className="cv-muted">
             <T>
               {desktop
-                ? "Due–quattro tool, con i dati che servono per decidere."
-                : "Tutti i tool, un criterio alla volta."}
+                ? "Prezzi, funzioni e limiti dei tool selezionati."
+                : "Leggi un criterio alla volta, per tutti i tool."}
             </T>
           </p>
         </header>
@@ -219,14 +220,13 @@ export function ToolBattleView({
       {desktop && objectiveEnabled && activeObjective ? (
         <p className="cv-footnote">
           <T>
-            La scelta resta tua: l’obiettivo ordina i criteri, senza assegnare
-            un vincitore automatico.
+            L’obiettivo mette in primo piano i criteri più utili.
           </T>
         </p>
       ) : null}
       {desktop && slugs.length > 4 ? (
         <p className="cv-footnote">
-          <T>Confronta 2–4 candidati per una lettura più diretta.</T>
+          <T>Per una tabella più breve, attiva “Mostra solo differenze”.</T>
         </p>
       ) : null}
       {notice ? <p role="status">{t(notice)}</p> : null}
@@ -257,21 +257,32 @@ export function ToolBattleView({
             </T>
           </h2>
           <p className="cv-muted">
-            <T>Aggiungili qui oppure riparti dal catalogo o dai salvati.</T>
+            <T>Scegli dal catalogo o dai tool salvati.</T>
           </p>
-          {model.tools.map((tool) => (
-            <p key={tool.slug}>
-              {tool.name}{" "}
-              <button
-                type="button"
-                className="cv-link"
-                onClick={() => removeTool(tool.slug)}
-                aria-label={`${t("Rimuovi")} ${tool.name}`}
-              >
-                <T>Rimuovi</T>
-              </button>
-            </p>
-          ))}
+          <ol className="cv-empty__slots" aria-label={t("Tool da confrontare")}>
+            {[0, 1].map((index) => {
+              const tool = model.tools[index];
+              return (
+                <li key={index}>
+                  {tool ? (
+                    <div className="cv-empty__candidate">
+                      <ComparisonMark tool={tool} />
+                      <strong>{tool.name}</strong>
+                      <button type="button" className="cv-link" onClick={() => removeTool(tool.slug)} aria-label={`${t("Rimuovi")} ${tool.name}`}>
+                        <T>Rimuovi</T>
+                      </button>
+                    </div>
+                  ) : (
+                    <button type="button" className="cv-empty__pick" onClick={(event) => openManager(null, event.currentTarget)}>
+                      <span className="cv-empty__number" aria-hidden="true">0{index + 1}</span>
+                      <span><T>{index === 0 ? "Scegli il primo tool" : "Scegli il secondo tool"}</T></span>
+                      <Plus size={18} aria-hidden="true" />
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
           <div className="cv-toolbar__actions">
             <Link href="/archivio" className="cv-button">
               <T>Apri il catalogo</T>
@@ -280,7 +291,7 @@ export function ToolBattleView({
               href={salvatiHref(account?.status === "authenticated")}
               className="cv-link"
             >
-              <T>Apri Salvati</T>
+              <T>Vai ai salvati</T>
             </Link>
           </div>
         </div>

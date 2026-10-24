@@ -20,19 +20,6 @@ type ToolDetailAlternativesProps = {
   related: ToolPublicView[];
 };
 
-function alternativeLede(count: number) {
-  if (count === 1) {
-    return "Un profilo affine, con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.";
-  }
-  if (count === 2) {
-    return "Due profili affini, ciascuno con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.";
-  }
-  if (count === 3) {
-    return "Tre profili affini, ciascuno con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.";
-  }
-  return `${count} profili affini, ciascuno con un taglio diverso. Un confronto rapido per scegliere senza aprire ogni scheda.`;
-}
-
 export function ToolDetailAlternatives({ current, related }: ToolDetailAlternativesProps) {
   if (related.length === 0) return null;
 
@@ -48,15 +35,15 @@ export function ToolDetailAlternatives({ current, related }: ToolDetailAlternati
           <h2
             id="td-final-alternatives-title"
             className="td-final-alternatives__title"
-          ><LocalizedText>{"Se ti interessa "}</LocalizedText>{current.name}<LocalizedText>{", confronta questi. "}</LocalizedText></h2>
+          ><LocalizedText>{`Alternative a ${current.name}`}</LocalizedText></h2>
           <p className="td-final-alternatives__lede">
-            <LocalizedText>{alternativeLede(related.length)}</LocalizedText>
+            <LocalizedText>{"Confronta approcci, punti di forza e limiti."}</LocalizedText>
           </p>
         </div>
         <Link
           href={`/compare?from=${current.slug}`}
           className="td-final-alternatives__compare-link"
-        ><LocalizedText>{"Apri confronto affiancato "}</LocalizedText><ArrowRight size={13} aria-hidden="true" />
+        ><LocalizedText>{"Apri il confronto"}</LocalizedText><ArrowRight size={13} aria-hidden="true" />
         </Link>
       </div>
 

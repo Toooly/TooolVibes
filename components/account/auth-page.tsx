@@ -2,12 +2,11 @@
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useLocale } from "@/components/i18n/locale-provider";
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { isAuthFailureMessage } from "@/lib/auth/auth-messages";
 import { useAccount } from "./account-provider";
 import { OAuthButtons } from "./oauth-buttons";
 import { BrandLogo } from "@/components/layout/brand-logo";
-import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
 import { useKeyboardAwareScroll } from "@/lib/hooks/use-keyboard-aware-scroll";
 import { Mail, User, RotateCcw, Sparkles } from "lucide-react";
 import { AccountStateBanner } from "./panel/account-state-banner";
@@ -30,6 +29,7 @@ type PendingMagicLink = {
 export function AuthPage() {
   const account = useAccount();
   const { locale } = useLocale();
+  const memoryMaterial = useId();
   const [activeTab, setActiveTab] = useState<AuthTab>("login");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -49,11 +49,11 @@ export function AuthPage() {
     event.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
     if (!normalizedEmail) {
-      setEmailError("Inserisci l'email del tuo spazio.");
+      setEmailError("Inserisci la tua email.");
       return;
     }
     if (!normalizedEmail.includes("@") || !normalizedEmail.includes(".")) {
-      setEmailError("Questa email non sembra valida.");
+      setEmailError("Controlla l'indirizzo email.");
       return;
     }
     setEmailError(null);
@@ -86,17 +86,39 @@ export function AuthPage() {
     <div id="member-access" className="v-auth-page tv-kbd-page scroll-mt-24">
       <div className="v-auth-container v-auth-container--split">
         <aside className="v-auth-context" aria-labelledby="account-context-title">
-          <InstrumentOrbit className="v-auth-context__orbit" />
+          <div className="v-auth-memory" aria-hidden="true">
+            <svg viewBox="0 0 360 170" focusable="false">
+              <defs>
+                <linearGradient id={memoryMaterial} x2="1" y2="1">
+                  <stop stopColor="var(--tv-color-violet-300)" stopOpacity="0.2" />
+                  <stop offset="1" stopColor="var(--tv-surface-raised)" />
+                </linearGradient>
+              </defs>
+              <path className="v-auth-memory__connection" d="M91 105h46q18 0 18-18V67q0-18 18-18h69" />
+              <g className="v-auth-memory__record" fill={`url(#${memoryMaterial})`} stroke="var(--tv-material-edge)">
+                <rect x="37" y="41" width="83" height="100" rx="17" />
+                <path className="v-auth-memory__bookmark" d="M67 42v39l12-8 12 8V42" />
+                <path className="v-auth-memory__trace" d="M55 107h47m-47 12h29" />
+              </g>
+              <g className="v-auth-memory__record v-auth-memory__record--choice" fill={`url(#${memoryMaterial})`} stroke="var(--tv-material-edge)">
+                <rect x="191" y="27" width="125" height="98" rx="17" />
+                <path className="v-auth-memory__trace" d="M210 54h52m-52 12h84m-84 37h67" />
+                <path className="v-auth-memory__check" d="m211 84 7 7 15-16" />
+              </g>
+            </svg>
+          </div>
           <p className="v-auth-context__eyebrow"><LocalizedText>{"Il tuo spazio"}</LocalizedText></p>
-          <p id="account-context-title" className="v-auth-context__title"><LocalizedText>{"Tutto ciò che decidi resta qui. "}</LocalizedText></p>
-          <p><LocalizedText>{"Salvati, confronti, stack e note in un solo posto — anche quando cambi dispositivo. "}</LocalizedText></p>
+          <p id="account-context-title" className="v-auth-context__title"><LocalizedText>{"Le tue scelte, con il loro perché."}</LocalizedText></p>
+          <p><LocalizedText>{"Salva i tool, confronta le alternative e ritrova il motivo di ogni scelta."}</LocalizedText></p>
           {savedCount > 0 || compareCount > 0 ? (
-            <p className="v-auth-context__live"><LocalizedText>{"Hai già "}</LocalizedText>{savedCount}<LocalizedText>{" tool salvati e "}</LocalizedText>{compareCount}<LocalizedText>{" nel confronto. Entrando li porti nel tuo spazio. "}</LocalizedText></p>
+            <p className="v-auth-context__live">{locale === "en"
+              ? `You have ${savedCount} saved ${savedCount === 1 ? "tool" : "tools"} and ${compareCount} in comparison. Sign in to bring them into your space.`
+              : `Hai già ${savedCount} ${savedCount === 1 ? "tool salvato" : "tool salvati"} e ${compareCount} nel confronto. Entrando li porti nel tuo spazio.`}</p>
           ) : (
             <ul>
-              <li><LocalizedText>{"Salva i candidati che stai valutando."}</LocalizedText></li>
-              <li><LocalizedText>{"Confronta, poi registra perché hai scelto."}</LocalizedText></li>
-              <li><LocalizedText>{"Ritrova stack e decisioni quando torni."}</LocalizedText></li>
+              <li><LocalizedText>{"Raccogli i tool da provare."}</LocalizedText></li>
+              <li><LocalizedText>{"Confronta le alternative."}</LocalizedText></li>
+              <li><LocalizedText>{"Ritrova note, stack e decisioni."}</LocalizedText></li>
             </ul>
           )}
         </aside>
@@ -111,13 +133,13 @@ export function AuthPage() {
             </div>
             <h1 className="v-auth-title">
               <LocalizedText>{activeTab === "register"
-                ? "Crea il tuo spazio"
+                ? "Crea il tuo account"
                 : "Entra in TooolVibes"}</LocalizedText>
             </h1>
             <p className="v-auth-subtitle">
               <LocalizedText>{activeTab === "register"
-                ? "Due minuti. Poi salvati, confronti e motivazioni restano con te."
-                : "Il tuo spazio per salvare, confrontare e ricordare le tue decisioni."}</LocalizedText>
+                ? "Uno spazio per i tuoi tool, le note e le decisioni."
+                : "Riprendi i tool e le scelte che stai valutando."}</LocalizedText>
             </p>
           </div>
 
@@ -178,7 +200,7 @@ export function AuthPage() {
                       type="email"
                       inputMode="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => { setEmail(e.target.value); setEmailError(null); }}
                       placeholder="Inserisci la tua email"
                       autoComplete="email"
                       autoCapitalize="none"
@@ -186,6 +208,7 @@ export function AuthPage() {
                       required
                       className="v-auth-input tv-kbd-input"
                       aria-invalid={Boolean(emailError)}
+                      aria-describedby={emailError ? "auth-email-error" : undefined}
                     /></LocalizedAttributes>
                     {activeTab === "login" ? (
                       <button
@@ -204,7 +227,7 @@ export function AuthPage() {
                     ) : null}
                   </div>
                   {emailError ? (
-                    <p className="v-auth-message v-auth-message--error" role="alert"><LocalizedText>{emailError}</LocalizedText></p>
+                    <p id="auth-email-error" className="v-auth-message v-auth-message--error" role="alert"><LocalizedText>{emailError}</LocalizedText></p>
                   ) : null}
                 </div>
 
@@ -235,7 +258,7 @@ export function AuthPage() {
                       <Sparkles size={16} className="v-auth-spin" /><LocalizedText>{"Invio in corso... "}</LocalizedText></>
                   ) : activeTab === "register" ? (
                     <>
-                      <User size={16} /><LocalizedText>{"Crea lo spazio "}</LocalizedText></>
+                      <User size={16} /><LocalizedText>{"Crea account"}</LocalizedText></>
                   ) : (
                     <>
                       <Mail size={16} /><LocalizedText>{"Invia link "}</LocalizedText></>
@@ -247,8 +270,8 @@ export function AuthPage() {
               {/* Info */}
               <p className="v-auth-info">
                 <LocalizedText>{activeTab === "login"
-                  ? "Ti invieremo un link sicuro per accedere."
-                  : "Ti arriva una mail di conferma. I salvati di questo browser restano con te."}</LocalizedText>
+                  ? "Apri il link nell'email per accedere, senza password."
+                  : "Conferma l'email per portare i salvati di questo browser nel tuo account."}</LocalizedText>
               </p>
             </div>
 
@@ -301,8 +324,8 @@ export function AuthPage() {
           <div className="v-auth-footer">
             <p>
               <LocalizedText>{activeTab === "register"
-                ? "Hai già uno spazio? "
-                : "Non hai ancora uno spazio? "}</LocalizedText>
+                ? "Hai già un account? "
+                : "Non hai un account? "}</LocalizedText>
               <button
                 type="button"
                 className="v-auth-link"

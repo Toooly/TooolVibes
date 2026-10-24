@@ -100,7 +100,7 @@ describe("WorkspaceStacks", () => {
     fireEvent.change(screen.getByPlaceholderText("Es. AI Coding"), {
       target: { value: "Client work" },
     });
-    fireEvent.change(screen.getByPlaceholderText("A cosa serve questo gruppo"), {
+    fireEvent.change(screen.getByPlaceholderText("A cosa ti serve questo stack"), {
       target: { value: "Per le consegne di maggio" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Crea" }));

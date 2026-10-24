@@ -1,6 +1,7 @@
 import { LocalizedText } from "@/components/i18n/localized-text";
 import { formatItalianDate } from "@/lib/utils";
 import type { EditorialPostRecord } from "@/lib/types/article";
+import { getGuidePreviewCopy } from "./guide-preview-copy";
 
 type GuideArticleHeroProps = {
   post: EditorialPostRecord;
@@ -22,6 +23,7 @@ export function GuideArticleHero({
   readingMinutes,
   topicLabel,
 }: GuideArticleHeroProps) {
+  const preview = getGuidePreviewCopy(post);
   const published = safeFormat(post.published_at);
   const updated = safeFormat(post.updated_at);
   const showUpdated = updated && updated !== published;
@@ -66,10 +68,10 @@ export function GuideArticleHero({
         </div>
 
         <h1 id="guide-article-title" className="guides-article__hero-h1">
-          <LocalizedText>{post.title}</LocalizedText>
+          <LocalizedText>{preview.title}</LocalizedText>
         </h1>
 
-        {post.dek ? <p className="guides-article__hero-dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
+        {preview.dek ? <p className="guides-article__hero-dek"><LocalizedText>{preview.dek}</LocalizedText></p> : null}
       </div>
     </section>
   );

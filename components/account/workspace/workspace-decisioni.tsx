@@ -15,6 +15,7 @@ import type { WorkspaceStateV1 } from "@/lib/discovery/types";
 import { DecisionSheet } from "./decision-sheet";
 import { formatWorkspaceDate, workspaceViewHref } from "./workspace-model";
 import { WorkspaceToolMark } from "./workspace-tool-mark";
+import { WorkspaceEmptyMotif } from "./workspace-visual";
 
 function nameOf(names: Map<string, string>, slug: string) {
   return names.get(slug) ?? slug;
@@ -97,8 +98,9 @@ export function WorkspaceDecisioni({
         data-workspace-view="decisioni"
         aria-labelledby="tv-decisioni-empty"
       >
+        <WorkspaceEmptyMotif variant="journal" />
         <h2 id="tv-decisioni-empty" className="tv-home-title"><LocalizedText>{"Quando scegli un tool, salva anche il perché. "}</LocalizedText></h2>
-        <p className="tv-home-copy"><LocalizedText>{"Lo ritroverai qui, con le alternative che avevi scartato."}</LocalizedText></p>
+        <p className="tv-home-copy"><LocalizedText>{"Ritrova il motivo della scelta e le alternative valutate."}</LocalizedText></p>
         <div className="tv-home-actions">
           <Link className="tv-home-cta tv-home-cta--primary" href="/compare"><LocalizedText>{"Crea la prima decisione "}</LocalizedText></Link>
           <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}><LocalizedText>{"Parti dai Salvati "}</LocalizedText></Link>

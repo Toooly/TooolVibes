@@ -12,14 +12,12 @@ import {
   SecondarySection,
 } from "@/components/secondary";
 import { DecisionTrack } from "@/components/method/decision-track";
-import { RouteMarker } from "@/components/ui/route-marker";
-import { formatDecisionLifecycle } from "@/lib/product/decision-lifecycle";
 import { createPublicPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPublicPageMetadata({
   title: "Metodo di valutazione dei tool",
   description:
-    "Come TooolVibes pensa una scelta: Scopri, Valuta, Confronta, Decidi, Ricorda. Un percorso editoriale con criteri verificabili.",
+    "Cinque passi per scegliere un tool: scopri, valuta, confronta, decidi e ricorda il motivo della scelta.",
   path: "/metodo",
   openGraphDescription:
     "Scopri, valuta, confronta, decidi, ricorda — il metodo editoriale di TooolVibes per scegliere tool senza perdersi.",
@@ -30,23 +28,23 @@ const TRACK_STEPS = [
     index: "01",
     label: "Scopri",
     title: "Parti da quello che devi fare",
-    copy: "Obiettivi, catalogo e stack. Nessuna vetrina infinita: restringi i candidati prima di approfondire.",
+    copy: "Definisci il lavoro da fare e usa categorie e filtri per trovare i primi candidati.",
     href: "/archivio",
     cta: "Apri catalogo",
   },
   {
     index: "02",
     label: "Valuta",
-    title: "Leggi se è per te",
-    copy: "Ogni scheda deve dire per chi è, per chi no, il trade-off e cosa è stato valutato. Salvare un candidato non è ancora decidere.",
+    title: "Capisci se fa per te",
+    copy: "Leggi casi d’uso, punti di forza e limiti. Salva i tool che vuoi approfondire.",
     href: "/archivio",
     cta: "Apri catalogo",
   },
   {
     index: "03",
     label: "Confronta",
-    title: "Confronta solo i candidati forti",
-    copy: "Porta avanti pochi tool alla volta e guarda differenze e limiti reali. La matrice serve a isolare gli scarti.",
+    title: "Metti a fuoco le differenze",
+    copy: "Affianca pochi candidati e confronta ciò che conta per il tuo obiettivo.",
     href: "/compare",
     cta: "Vai al confronto",
   },
@@ -54,7 +52,7 @@ const TRACK_STEPS = [
     index: "04",
     label: "Decidi",
     title: "Scegli con un motivo",
-    copy: "Una decisione è: questo tool, invece di quelli, perché. I Salvati restano il tavolo di lavoro, non il verdetto.",
+    copy: "Registra il tool scelto e il motivo. Puoi anche rimandare la decisione o scartare un candidato.",
     href: "/compare",
     cta: "Apri il confronto",
   },
@@ -62,7 +60,7 @@ const TRACK_STEPS = [
     index: "05",
     label: "Ricorda",
     title: "Conserva il perché",
-    copy: "I Salvati tengono candidati, note e scelte. Così la ricerca non ricomincia da zero la volta dopo.",
+    copy: "Ritrova candidati, note e decisioni nei Salvati, senza ricominciare la ricerca.",
     href: "/shortlist",
     cta: "Apri salvati",
   },
@@ -70,7 +68,7 @@ const TRACK_STEPS = [
 
 const PRINCIPLES = [
   {
-    title: "Decisione, non elenco",
+    title: "Partiamo dal tuo obiettivo",
     copy: "Riduciamo la scelta a ciò che è utile adesso: categorie leggibili, filtri che fanno davvero selezione, niente vetrine infinite.",
     icon: <Compass className="size-4" aria-hidden="true" />,
     bullets: [
@@ -79,7 +77,7 @@ const PRINCIPLES = [
     ],
   },
   {
-    title: "Verifica, non sintesi",
+    title: "Mostriamo fonti e limiti",
     copy: "Ogni scheda deve dire cosa è stato verificato, quando e come. Le informazioni che non reggono un confronto non entrano in TooolVibes.",
     icon: <ShieldCheck className="size-4" aria-hidden="true" />,
     bullets: [
@@ -88,8 +86,8 @@ const PRINCIPLES = [
     ],
   },
   {
-    title: "Criteri, non metriche",
-    copy: "Il nostro verdetto nasce da criteri editoriali, non da punteggi sintetici: il numero non sostituisce il motivo.",
+    title: "Spieghiamo il giudizio",
+    copy: "Il punteggio riassume la valutazione. Le motivazioni aiutano a capire se il tool è adatto al tuo lavoro.",
     icon: <Gauge className="size-4" aria-hidden="true" />,
     bullets: [
       "Giudizi editoriali indipendenti.",
@@ -103,13 +101,11 @@ export default function MetodoPage() {
     <SecondaryPageShell>
       <LocalizedAttributes><SecondaryHero
         tone="dark"
-        layout="split"
+        layout="stack"
         routeIndex="04"
         routeLabel="Metodo editoriale"
-        routeStatus="Come TooolVibes pensa"
-        emphasis="cinque tappe"
-        title="Una scelta è un percorso, non una lista."
-        lede="TooolVibes non è un elenco: è un metodo. Scopri, valuta, confronta, decidi, ricorda. Salvare un candidato non è decidere."
+        title="Cinque passi per scegliere meglio."
+        lede="Parti dal bisogno, valuta le alternative e conserva il motivo della scelta."
         actions={
           <LocalizedAttributes><Link
             href="/archivio"
@@ -120,38 +116,10 @@ export default function MetodoPage() {
             <ArrowRight aria-hidden="true" className="size-4" />
           </Link></LocalizedAttributes>
         }
-        signature={
-          <>
-            <span className="secondary-hero__signature-eyebrow">
-              <RouteMarker
-                index="·"
-                label="Sistema a cinque tappe"
-                status="Editoriale"
-                density="minimal"
-              />
-            </span>
-            <p
-              className="secondary-hero__signature-verbs"
-              style={{
-                margin: 0,
-                color: "var(--tv-ink-secondary)",
-                fontSize: "0.95rem",
-                lineHeight: 1.55,
-              }}
-            >
-              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Scopri "}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"restringe,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
-              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Valuta"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"legge i limiti,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
-              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Confronta"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"isola,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
-              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Decidi"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"sceglie,"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
-              <strong style={{ color: "var(--tv-ink-primary)" }}><LocalizedText>{"Ricorda"}</LocalizedText></strong><LocalizedText>{" "}</LocalizedText><LocalizedText>{"tiene il motivo. "}</LocalizedText></p>
-          </>
-        }
       /></LocalizedAttributes>
 
       <LocalizedAttributes><SecondarySection
-        eyebrow="Percorso"
-        title={formatDecisionLifecycle()}
-        lede="Ogni tappa ha una destinazione reale su TooolVibes: non una descrizione, uno strumento."
+        title="Dalla ricerca alla scelta."
       >
         <DecisionTrack steps={TRACK_STEPS} />
       </SecondarySection></LocalizedAttributes>
@@ -160,7 +128,7 @@ export default function MetodoPage() {
         tone="ivory"
         eyebrow="Principi"
         title="Come pensiamo le valutazioni"
-        lede="TooolVibes ragiona come un editor, non come un aggregatore. Tre principi reggono ogni scheda."
+        lede="Tre principi guidano il modo in cui presentiamo e valutiamo i tool."
       >
         <SecondaryCardGrid columns={3}>
           {PRINCIPLES.map((principle) => (
@@ -178,8 +146,8 @@ export default function MetodoPage() {
 
       <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
-        title="La cosa migliore da fare, adesso."
-        body="Parti dal catalogo per restringere i candidati. I Salvati tengono quelli che stai considerando, con il motivo."
+        title="Metti il metodo alla prova."
+        body="Apri il catalogo e salva i tool che vuoi valutare."
         actions={
           <>
             <Link href="/archivio" className="secondary-card__cta secondary-card__cta--ghost method-closing-catalog">

@@ -19,7 +19,7 @@ export function GuideRelatedRail({
   return (
     <LocalizedAttributes><aside className="guides-rail" aria-label="Risorse collegate">
       <div className="guides-rail__card">
-        <span className="guides-rail__label"><LocalizedText>{"Tool in primo piano"}</LocalizedText></span>
+        <span className="guides-rail__label"><LocalizedText>{"Il tool della guida"}</LocalizedText></span>
         <h3 className="guides-rail__title">{tool.name}</h3>
         {tool.content.bestFor ? (
           <p className="guides-rail__hint"><LocalizedText>{tool.content.bestFor}</LocalizedText></p>

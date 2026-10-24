@@ -28142,27 +28142,21 @@ img {
 }
 
 
-/* Save / compare: fixed controls, one acknowledgement on the real icon. */
-.tool-action__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transform-origin: center;
-}
-.selection-chip:active { transform: none; }
-.selection-chip:active .tool-action__icon,
-.ar4-card__bookmark:active .tool-action__icon { transform: scale(0.92); }
-
-@keyframes tool-action-confirm {
-  0% { opacity: 0.5; transform: scale(0.75); }
-  65% { opacity: 1; transform: scale(1.08); }
-  100% { opacity: 1; transform: scale(1); }
-}
+/* Save / compare: stable hit targets, semantic icons, a single drawn confirmation. */
+.tool-action__icon { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none; transform-origin: center; }
+[data-sonic-action="save"] { --tool-action-accent: var(--tv-accent-gold); }
+[data-sonic-action="compare"] { --tool-action-accent: var(--tv-accent-cyan); }
+button.selection-chip[data-sonic-action]::after { content: none; }
+button.selection-chip[data-sonic-action]:is(:hover, :focus-visible, :active),
+button.ar4-card__bookmark:is(:hover, :focus-visible, :active) { transform: none; filter: none; }
+.tool-action__check { position: absolute; inline-size: 12px; block-size: 12px; inset: auto -6px -3px auto; padding: 1px; border-radius: 50%; background: var(--tv-bg-base); color: var(--tool-action-accent); stroke-width: 3; }
+@keyframes tool-action-confirm { from { opacity: .6; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+@keyframes tool-action-check { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: no-preference) {
   [data-save-feedback="added"] .tool-action__icon,
-  [data-compare-feedback="added"] .tool-action__icon {
-    animation: tool-action-confirm var(--tv-duration-base) var(--tv-easing-decelerate) both;
-  }
+  [data-compare-feedback="added"] .tool-action__icon { animation: tool-action-confirm var(--tv-duration-cinematic) var(--tv-easing-decelerate) both; }
+  [data-save-feedback="added"] .tool-action__check :is(path, polyline),
+  [data-compare-feedback="added"] .tool-action__check :is(path, polyline) { stroke-dasharray: 24; animation: tool-action-check var(--tv-duration-cinematic) var(--tv-easing-decelerate) both; }
 }
 @media (prefers-reduced-motion: reduce) {
   .selection-chip { transition: none !important; }

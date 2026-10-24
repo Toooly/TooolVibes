@@ -1,4 +1,7 @@
+"use client";
+
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 import Link from "@/components/ui/app-link";
 
 import type { EditorialPostRecord } from "@/lib/types/article";
@@ -14,6 +17,7 @@ export function GuideArticleEnd({
   currentSlug,
   relatedPosts,
 }: GuideArticleEndProps) {
+  const { locale } = useLocale();
   const safeRelated = relatedPosts.filter((p) => p.slug !== currentSlug).slice(0, 3);
 
   if (safeRelated.length === 0) {
@@ -29,8 +33,8 @@ export function GuideArticleEnd({
     <section className="guides-article__end" aria-labelledby="guide-article-end-title">
       <div>
         <p className="guides-eyebrow is-on-dark"><LocalizedText>{"Continua a leggere "}</LocalizedText></p>
-        <h2 id="guide-article-end-title" className="guides-article__end-title"><LocalizedText>{"Tre "}</LocalizedText><em><LocalizedText>{"guide"}</LocalizedText></em><LocalizedText>{" per andare avanti. "}</LocalizedText></h2>
-        <p className="guides-article__end-dek"><LocalizedText>{"Hai letto questa guida. Ecco le tre che leggiamo in continuazione come complemento naturale — non per riempire la pagina, ma per darti un prossimo passo utile. "}</LocalizedText></p>
+        <h2 id="guide-article-end-title" className="guides-article__end-title">{locale === "en" ? "Keep exploring." : "Continua a esplorare."}</h2>
+        <p className="guides-article__end-dek">{locale === "en" ? "More guides to complete your workflow and consider the alternatives." : "Altre guide per completare il tuo flusso e valutare le alternative."}</p>
       </div>
 
       <div className="guides-article__end-grid">

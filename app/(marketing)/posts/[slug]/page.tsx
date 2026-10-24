@@ -15,9 +15,7 @@ import {
   GuideTakeawaysDisclosure,
   GuideByline,
 } from "@/components/guides/guide-callout";
-import {
-  estimateReadingMinutes,
-} from "@/components/guides/guide-card";
+import { estimateReadingMinutes } from "@/lib/editorial/reading-time";
 import { ReadingProgressBar } from "@/components/posts/reading-progress-bar";
 import { TinyAdzInlineSlot } from "@/components/ads/tinyadz-inline-slot";
 import { JsonLd } from "@/components/seo/json-ld";

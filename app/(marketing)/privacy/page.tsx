@@ -20,7 +20,7 @@ export default function PrivacyPage() {
       <p><LocalizedText>{"TooolVibes raccoglie solo i dati necessari per far funzionare account, preferenze salvate, richieste inviate e comunicazioni richieste dagli utenti. "}</LocalizedText></p>
       <p><LocalizedText>{"I dati tecnici e di navigazione vengono usati per sicurezza, manutenzione e miglioramento del servizio. Le richieste inviate tramite form vengono conservate per gestire la risposta editoriale o operativa. "}</LocalizedText></p>
 
-      <h3><LocalizedText>{"Finalità pubblicitaria e fornitore terzo"}</LocalizedText></h3>
+      <h2><LocalizedText>{"Finalità pubblicitaria e fornitore terzo"}</LocalizedText></h2>
       <p><LocalizedText>{"TooolVibes può mostrare pubblicità tramite il fornitore terzo"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
         <strong><LocalizedText>{"TinyAdz"}</LocalizedText></strong><LocalizedText>{" (dominio "}</LocalizedText><code>cdn.apitiny.net</code><LocalizedText>{"). Questa finalità è "}</LocalizedText><strong><LocalizedText>{"disattivata per impostazione predefinita"}</LocalizedText></strong><LocalizedText>{" ed è attivata esclusivamente sulla base del tuo consenso specifico. "}</LocalizedText></p>
       <p><LocalizedText>{"Le categorie di dati tecnici osservati in questa finalità includono: "}</LocalizedText></p>

@@ -47,7 +47,7 @@ describe("MemberPreviewGate", () => {
       </AccountPreviewProvider>,
     );
     expect(screen.getByRole("heading", { name: "Continua nel tuo spazio" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Entra per continuare" }).getAttribute("href")).toBe(
+    expect(screen.getByRole("link", { name: "Accedi" }).getAttribute("href")).toBe(
       "/account",
     );
     expect(screen.getByText("Stack operativo completo").closest(".tv-member-gate__locked")).toBeTruthy();

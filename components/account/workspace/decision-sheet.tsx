@@ -1,7 +1,7 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type RefObject } from "react";
 
 import {
   composeDecisionReason,
@@ -48,6 +48,7 @@ export type DecisionSheetProps = {
   compareObjective?: CompareObjective | null;
   defaultOutcome?: WorkspaceDecisionOutcome;
   onCommitted?: (payload: { slug: string; outcome: WorkspaceDecisionOutcome }) => void;
+  returnFocusRef?: RefObject<HTMLElement | null>;
 };
 
 function subscribeDesktopSheet(onChange: () => void) {
@@ -78,6 +79,7 @@ export function DecisionSheet({
   compareObjective = null,
   defaultOutcome = "selected",
   onCommitted,
+  returnFocusRef,
 }: DecisionSheetProps) {
   const state = useCanonicalWorkspace();
   const titleId = useId();
@@ -181,6 +183,7 @@ export function DecisionSheet({
           data-decision-sheet=""
           data-decision-source={source}
           className="tv-decision-sheet"
+          finalFocus={returnFocusRef}
           aria-labelledby={titleId}
         >
           <header className="tv-decision-sheet__header">
@@ -194,7 +197,7 @@ export function DecisionSheet({
             <div className="tv-decision-sheet__identity">
               <SheetTitle id={titleId} className="tv-decision-sheet__title"><LocalizedText>{"Valuta "}</LocalizedText><LocalizedText>{toolName}</LocalizedText>
               </SheetTitle>
-              <SheetDescription className="sr-only"><LocalizedText>{"Scegli un esito e conferma. Il contesto extra è facoltativo. "}</LocalizedText></SheetDescription>
+              <SheetDescription className="sr-only"><LocalizedText>{"Scegli un esito. Motivo e nota sono facoltativi."}</LocalizedText></SheetDescription>
             </div>
             <LocalizedAttributes><button
               type="button"
@@ -273,7 +276,7 @@ export function DecisionSheet({
             </div></LocalizedAttributes>
 
             <div className="tv-decision-sheet__field">
-              <p className="tv-decision-sheet__field-label"><LocalizedText>{"Conferma se lo usi tra 1 mese "}</LocalizedText></p>
+              <p className="tv-decision-sheet__field-label"><LocalizedText>{"Quando vuoi rivedere la scelta?"}</LocalizedText></p>
               <RevisitWhenChips
                 tone="dark"
                 onSelect={(next) => setRevisitAt(next)}
@@ -287,7 +290,7 @@ export function DecisionSheet({
                 className="tv-decision-sheet__input"
                 value={reason}
                 maxLength={200}
-                placeholder="Es. È il più utile per me"
+                placeholder="Il motivo, in una frase"
                 onChange={(event) => setReason(event.target.value)}
               /></LocalizedAttributes>
             </label>

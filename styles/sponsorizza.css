@@ -193,34 +193,9 @@
   background: var(--tv-surface-elevated);
 }
 
-.sponsorizza-hero__visual-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.65rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--tv-border-subtle);
-  color: var(--tv-ink-muted-aa);
-  font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-eyebrow);
-  font-weight: var(--tv-weight-semibold);
-  letter-spacing: var(--tv-tracking-eyebrow);
-  text-transform: uppercase;
-}
-
-@media (max-width: 23.5rem) {
-  .sponsorizza-hero__visual-title {
-    flex-wrap: wrap;
-  }
-}
-
-.sponsorizza-hero__visual-title strong {
-  color: var(--tv-ink-primary);
-}
-
 .sponsorizza-hero__visual-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 0.85rem;
   align-items: center;
   padding: 0.65rem 0.8rem;
@@ -244,43 +219,6 @@
   font-family: var(--tv-font-family-ui);
   font-size: var(--tv-text-caption);
   line-height: 1.4;
-}
-
-.sponsorizza-hero__visual-row em {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  border-radius: var(--tv-radius-pill);
-  padding: 0.2rem 0.55rem;
-  color: var(--tv-status-success);
-  background: color-mix(in srgb, var(--tv-status-success) 12%, transparent);
-  font-style: normal;
-  font-family: var(--tv-font-family-ui);
-  font-size: var(--tv-text-eyebrow);
-  font-weight: var(--tv-weight-semibold);
-  letter-spacing: var(--tv-tracking-label);
-  text-transform: uppercase;
-  min-height: 1.85rem;
-  white-space: nowrap;
-}
-
-@media (max-width: 23.5rem) {
-  .sponsorizza-hero__visual-row {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-  .sponsorizza-hero__visual-row em {
-    grid-column: 1 / -1;
-    justify-self: start;
-    margin-top: 0.4rem;
-  }
-}
-
-.sponsorizza-hero__visual-row em::before {
-  content: "";
-  width: 0.3rem;
-  height: 0.3rem;
-  border-radius: var(--tv-radius-pill);
-  background: currentColor;
 }
 
 .sponsorizza-hero__visual-marker {
@@ -1396,12 +1334,12 @@
    V3.2 P7 — rail alignment (sponsorizza)
    Desktop: page padding collapses to 0 so the hero card sits on the 1344
    container edge (frame pattern); interior pad 32 -> text on the canonical
-   80 rail @1440 / 320 @1920. Mobile: hero text rides the 20 gutter like
-   the secondary heroes (padding-inline 0).
+   80 rail @1440 / 320 @1920. Mobile retains an inner gutter so copy and
+   controls do not touch the material panel edge.
    =========================================================================== */
 @media (max-width: 47.99rem) {
   .sponsorizza-hero {
-    padding-inline: 0;
+    padding-inline: var(--tv-gutter-mobile);
   }
 }
 

@@ -20,6 +20,7 @@ type CollectionDetailBodyV4Props = {
   collection: CuratedCollection;
   relatedCollections: CuratedCollection[];
   allCollections: CuratedCollection[];
+  guideTitles?: Record<string, string>;
 };
 
 /**
@@ -36,6 +37,7 @@ export function CollectionDetailBodyV4({
   collection,
   relatedCollections,
   allCollections,
+  guideTitles,
 }: CollectionDetailBodyV4Props) {
   const canonicalUrl = `${siteConfig.url}/collections/${collection.slug}`;
 
@@ -114,7 +116,7 @@ export function CollectionDetailBodyV4({
           collection={collection}
           allCollections={allCollections}
         />
-        <CollectionGuideBridgeV4 collection={collection} />
+        <CollectionGuideBridgeV4 collection={collection} guideTitles={guideTitles} />
         <CollectionNextStepV4
           relatedCollections={relatedCollections}
         />

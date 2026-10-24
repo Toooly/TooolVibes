@@ -20,7 +20,7 @@ export default function CookiePage() {
       <p><LocalizedText>{"TooolVibes usa cookie tecnici e salvataggio locale per mantenere sessioni, preferenze, shortlist, confronti e stato dell'interfaccia. "}</LocalizedText></p>
       <p><LocalizedText>{"Alcune funzioni, come account e salvataggi sincronizzati, possono richiedere cookie di autenticazione strettamente necessari. "}</LocalizedText></p>
 
-      <h3><LocalizedText>{"Pubblicità e misurazione (TinyAdz)"}</LocalizedText></h3>
+      <h2><LocalizedText>{"Pubblicità e misurazione (TinyAdz)"}</LocalizedText></h2>
       <p><LocalizedText>{"TinyAdz è un fornitore terzo di servizi pubblicitari. È"}</LocalizedText><LocalizedText>{" "}</LocalizedText>
         <strong><LocalizedText>{"disattivato per impostazione predefinita"}</LocalizedText></strong><LocalizedText>{" e viene caricato solo se concedi il consenso pubblicitario. Senza consenso (stato “non fornito” o “rifiutato”) TinyAdz non viene eseguito. "}</LocalizedText></p>
       <p><LocalizedText>{"Le finalità osservate in TooolVibes includono:"}</LocalizedText></p>

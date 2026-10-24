@@ -38,6 +38,7 @@ import { DecisionSheet } from "./decision-sheet";
 import { RevisitWhenChips } from "./revisit-when-chips";
 import { formatWorkspaceDate, workspaceViewHref } from "./workspace-model";
 import { WorkspaceCatalogMark, WorkspaceMarkStrip } from "./workspace-tool-mark";
+import { WorkspaceEmptyMotif } from "./workspace-visual";
 
 const UNFINISHED_COPY: Record<
   HomeUnfinishedKind,
@@ -160,8 +161,9 @@ export function WorkspaceRiprendi({
       <span className="tv-home-hero__light" data-tv-decor aria-hidden="true" />
       {blank ? (
         <section className="tv-mod tv-mod--resume tv-home__resume" aria-labelledby="tv-home-empty-title">
+          <WorkspaceEmptyMotif variant="home" />
           <h2 id="tv-home-empty-title" className="tv-home-title"><LocalizedText>{"Il tuo spazio è pronto "}</LocalizedText></h2>
-          <p className="tv-home-copy"><LocalizedText>{"Qui restano stack, decisioni e note. Il catalogo è pubblico: questo è il laboratorio. "}</LocalizedText></p>
+          <p className="tv-home-copy"><LocalizedText>{"Salva un tool o parti da un confronto. Qui ritrovi note, stack e scelte."}</LocalizedText></p>
           <div className="tv-home-actions">
             <Link className="tv-home-cta tv-home-cta--primary" href="/archivio"><LocalizedText>{"Trova il primo tool "}</LocalizedText></Link>
             <Link className="tv-home-textbtn" href={workspaceViewHref("salvati")}><LocalizedText>{"Apri i Salvati "}</LocalizedText></Link>

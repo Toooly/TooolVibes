@@ -311,6 +311,10 @@ describe("B30 MobileBottomNav — conteggi workspace canonici (IA-502)", () => {
         .querySelector(".mobile-bottom-item__badge")?.textContent,
     ).toBe("1");
 
+    expect(
+      within(getBottomNav()).getByRole("link", { name: "Salvati, 1 tool salvato" }),
+    ).not.toBeNull();
+
     // Il persistence provider riallinea lo store su DISCOVERY_SYNC_EVENT
     // (cross-tab): qui simuliamo lo stato già riallineato e verifichiamo che
     // i selector dei badge reagiscano senza ricaricare la route.

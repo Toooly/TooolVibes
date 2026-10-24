@@ -11,7 +11,7 @@ export function MemberPreviewGate({
   children,
   kicker = "Spazio personale",
   title = "Continua nel tuo spazio",
-  body = "Raccolte complete, guide profonde e le tue decisioni restano nel tuo spazio.",
+  body = "Accedi per leggere il contenuto completo.",
 }: {
   children: React.ReactNode;
   kicker?: string;
@@ -36,7 +36,7 @@ export function MemberPreviewGate({
           <LocalizedText>{title}</LocalizedText>
         </h2>
         <p className="tv-member-gate__body"><LocalizedText>{body}</LocalizedText></p>
-        <Link className="tv-member-gate__cta" href="/account"><LocalizedText>{"Entra per continuare "}</LocalizedText></Link>
+        <Link className="tv-member-gate__cta" href="/account"><LocalizedText>{"Accedi"}</LocalizedText></Link>
       </div>
       <div className="tv-member-gate__locked" inert aria-hidden="true">
         {children}

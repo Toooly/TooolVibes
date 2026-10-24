@@ -138,8 +138,22 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
       expect(field.className).toContain("tv-kbd-input");
     }
 
-    const submit = screen.getByRole("button", { name: "Crea lo spazio" });
+    const submit = screen.getByRole("button", { name: "Crea account" });
     expect(submit.className).toContain("tv-kbd-sheet__footer");
+  });
+
+  it("associates email feedback with the input and clears it during correction", () => {
+    render(<AuthPage />);
+    const email = screen.getByLabelText("Email") as HTMLInputElement;
+    fireEvent.change(email, { target: { value: "invalid" } });
+    fireEvent.submit(email.closest("form")!);
+
+    expect(email.getAttribute("aria-invalid")).toBe("true");
+    expect(email.getAttribute("aria-describedby")).toBe(screen.getByRole("alert").id);
+    fireEvent.change(email, { target: { value: "person@example.com" } });
+    expect(email.getAttribute("aria-invalid")).toBe("false");
+    expect(email.getAttribute("aria-describedby")).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 
   it("input e submit restano presenti e operabili a 320-430px e in landscape", () => {
@@ -203,7 +217,7 @@ describe("B39 AuthPage — keyboard/viewport policy (MOB-703)", () => {
     expect(screen.queryByText(/Google, Apple, GitHub/)).toBeNull();
     expect(
       screen.getByText(
-        "Il tuo spazio per salvare, confrontare e ricordare le tue decisioni.",
+        "Riprendi i tool e le scelte che stai valutando.",
       ),
     ).toBeTruthy();
   });

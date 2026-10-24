@@ -23,7 +23,7 @@ describe("CollectionDetailHeroV4", () => {
     expect(screen.getByText("€0–30/mese")).toBeTruthy();
     expect(screen.getByText("< 1 ora")).toBeTruthy();
 
-    const primary = screen.getByRole("link", { name: /Avvia questa raccolta/ });
+    const primary = screen.getByRole("link", { name: /Esplora il flusso/ });
     expect(primary.getAttribute("href")).toBe("#cx-detail-stack");
     expect(primary.className).toContain("cx-detail-hero-v4__cta--primary");
 

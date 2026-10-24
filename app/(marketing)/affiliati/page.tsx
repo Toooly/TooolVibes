@@ -53,7 +53,7 @@ const afterApprovalSteps = [
     copy: "Ricevi un link tracciato e un QR code da usare nei tuoi canali, pronti senza interventi tecnici.",
   },
   {
-    label: "03 · Cooldown",
+    label: "03 · Nuova candidatura",
     title: "Se la candidatura non va a buon fine",
     copy: "Puoi riprovare dopo 30 giorni. Nessuna black list: il motivo è sempre dichiarato in risposta.",
   },
@@ -70,7 +70,7 @@ export default function AffiliatiPage() {
         routeStatus="Candidature aperte"
         emphasis="community"
         title="Porta TooolVibes alla tua community."
-        lede="Cerchiamo creator, newsletter, community e professionisti che parlano con persone interessate a tool AI, automazioni e scelte software più lucide. Il programma è su richiesta: ogni candidatura viene letta."
+        lede="Hai una community interessata a software e AI? Raccontaci i tuoi canali e come vorresti presentare TooolVibes. Valutiamo ogni candidatura."
         actions={
           <LocalizedAttributes><a
             href="#affiliate-application"
@@ -176,7 +176,7 @@ export default function AffiliatiPage() {
       <LocalizedAttributes><SecondarySection
         eyebrow="Programma in 3 passi"
         title="Cosa succede quando ti candidi"
-        lede="Un percorso lineare e trasparente. Nessuna procedura opaca, nessuna risposta automatica."
+        lede="Leggiamo la proposta e ti rispondiamo via email con l’esito e i passaggi successivi."
       >
         <SecondaryCardGrid columns={3}>
           {programSteps.map((step) => (
@@ -194,7 +194,7 @@ export default function AffiliatiPage() {
         tone="ivory"
         eyebrow="Dopo l'approvazione"
         title="Come funziona"
-        lede="Una volta confermata la candidatura, il setup è meccanico: noi prepariamo tutto, tu ricevi i materiali."
+        lede="Dopo l’approvazione, prepariamo il codice e i materiali per i tuoi canali."
       >
         <LocalizedAttributes><ol className="affiliates-after" aria-label="Cosa succede dopo l'approvazione">
           {afterApprovalSteps.map((step) => (
@@ -210,7 +210,7 @@ export default function AffiliatiPage() {
       <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
         title="Hai una community che ascolta i tuoi consigli sui tool?"
-        body="Candidati ora. La valutazione è personale: ti rispondiamo anche quando la risposta è onesta &quot;non è il nostro perimetro&quot;."
+        body="Presentaci il tuo pubblico e il tuo progetto. Ti rispondiamo dopo averli valutati."
         actions={
           <>
             <LocalizedAttributes><a

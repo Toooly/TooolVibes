@@ -61,18 +61,18 @@ const serviceCards: ReadonlyArray<AboutService> = [
 
 const aboutFeatures = [
   [Sparkles, "Pensiero chiaro", "Partiamo dal problema e rendiamo esplicite le decisioni prima di costruire."],
-  [Workflow, "Metodo operativo", "Discovery, design e sviluppo avanzano nello stesso flusso, senza passaggi opachi."],
-  [Handshake, "Partner veri", "Condividiamo priorita, vincoli e progressi con un confronto diretto e continuo."],
+  [Workflow, "Metodo operativo", "Ricerca, design e sviluppo condividono contesto e obiettivi."],
+  [Handshake, "Partner veri", "Condividiamo priorità, vincoli e progressi durante il progetto."],
 ] as const;
 
 const heroCopy =
-  "Siamo un team operativo che unisce strategia, design e tecnologia per trasformare idee complesse in prodotti semplici da capire e usare.";
+  "Progettiamo siti, applicazioni e automazioni partendo dal lavoro che devono semplificare.";
 const servicesIntroCopy =
-  "Dalla prima decisione al rilascio, costruiamo sistemi digitali coerenti: meno passaggi dispersi, più controllo e un risultato che resta solido nel tempo.";
+  "Strategia, interfacce e sviluppo seguono gli stessi obiettivi, dal primo brief al rilascio.";
 const teamCaptionCopy =
-  "Discovery, design e build restano nello stesso flusso. Ogni fase condivide il contesto: il progetto resta veloce senza perdere qualità o intenzione.";
+  "Ricerca, design e sviluppo lavorano insieme: le scelte di progetto arrivano fino al prodotto.";
 const communityCopy =
-  "Condividi ciò che stai costruendo, confrontati con persone operative e trova strumenti, metodo e feedback per fare il prossimo passo.";
+  "Condividi un progetto, un tool o una domanda. Il confronto parte da ciò su cui stai lavorando.";
 
 export function AboutPage() {
   return (
@@ -85,7 +85,7 @@ export function AboutPage() {
           status="Team operativo"
           density="hero"
         />
-        <h1 className="v-about-identity__title mt-5 max-w-[16ch] text-balance"><LocalizedText>{"Persone vere, prodotti digitali vivi. "}</LocalizedText></h1>
+        <h1 className="v-about-identity__title mt-5 max-w-[16ch] text-balance"><LocalizedText>{"Dall’idea al prodotto, nello stesso team. "}</LocalizedText></h1>
       </header>
 
       {/* ─── Hero composition (client island — motion) ─── */}
@@ -97,8 +97,8 @@ export function AboutPage() {
       <section className="v-about-services-section relative mt-8 py-7 sm:mt-10 sm:py-9">
         <div className="relative grid gap-7 lg:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)] lg:items-start">
           <div className="lg:sticky lg:top-28">
-            <PremiumBadge tone="dark" className="after:!hidden"><LocalizedText>{"I servizi che offriamo "}</LocalizedText></PremiumBadge>
-            <h2 className="mt-4 max-w-[14ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]"><LocalizedText>{"Dal caos al sistema. "}</LocalizedText></h2>
+            <PremiumBadge tone="dark" className="after:!hidden"><LocalizedText>{"Servizi "}</LocalizedText></PremiumBadge>
+            <h2 className="mt-4 max-w-[14ch] font-[family-name:var(--tv-font-ui)] text-[length:var(--tv-text-h2)] font-bold leading-[var(--tv-leading-display)] text-[var(--tv-grammar-institutional-ink)]"><LocalizedText>{"Cosa possiamo costruire insieme. "}</LocalizedText></h2>
             <p className="mt-5 max-w-[34rem] text-[length:var(--tv-text-body)] leading-[var(--tv-leading-body)] text-[var(--tv-grammar-institutional-ink-secondary)]">
               <LocalizedText>{servicesIntroCopy}</LocalizedText>
             </p>
@@ -107,7 +107,7 @@ export function AboutPage() {
               <a
                 href="#servizi"
                 className="v-about-secondary-cta"
-              ><LocalizedText>{"Vedi servizi "}</LocalizedText><span aria-hidden="true" className="v-about-secondary-cta__arrow">→</span>
+              ><LocalizedText>{"Esplora i servizi "}</LocalizedText><span aria-hidden="true" className="v-about-secondary-cta__arrow">→</span>
               </a>
             </div>
           </div>

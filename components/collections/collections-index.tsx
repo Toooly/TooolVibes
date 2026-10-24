@@ -1,4 +1,7 @@
+"use client";
+
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 import type { CuratedCollection } from "@/lib/types/collection";
 import { pickFeaturedCollection } from "@/lib/collections/visual-identity";
 
@@ -10,6 +13,7 @@ type CollectionsIndexProps = {
 };
 
 export function CollectionsIndex({ collections }: CollectionsIndexProps) {
+  const { locale } = useLocale();
   if (collections.length === 0) {
     return (
       <div className="cx-index">
@@ -42,16 +46,16 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
       <div className="cx-index__inner">
         <header className="cx-index__masthead motion-reveal">
           <div>
-            <h1 className="cx-index__title"><LocalizedText>{"Raccolte"}</LocalizedText></h1>
+            <h1 className="cx-index__title">{locale === "en" ? "Stacks" : "Raccolte"}</h1>
           </div>
           <div>
-            <p className="cx-index__lede"><LocalizedText>{"Stack completi per risultati concreti."}</LocalizedText></p>
+            <p className="cx-index__lede">{locale === "en" ? "Tools that work together, with clear roles, costs and handoffs." : "Tool che lavorano insieme, con ruoli, costi e passaggi chiari."}</p>
           </div>
         </header>
 
         {lead ? (
           <div className="cx-index__grid cx-index__grid--lead motion-reveal">
-            <CollectionCardV4 collection={lead} featured />
+            <CollectionCardV4 collection={lead} featured headingLevel={2} />
           </div>
         ) : null}
 
@@ -61,7 +65,7 @@ export function CollectionsIndex({ collections }: CollectionsIndexProps) {
         >
           <div className="cx-index__grid cx-index__grid--group motion-stagger">
             {rest.map((collection) => (
-              <CollectionCardV4 key={collection.slug} collection={collection} />
+              <CollectionCardV4 key={collection.slug} collection={collection} headingLevel={2} />
             ))}
           </div>
         </MemberPreviewGate></LocalizedAttributes>

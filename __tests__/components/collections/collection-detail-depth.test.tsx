@@ -83,7 +83,7 @@ describe("collection detail depth", () => {
     const scenario = s.querySelector("#cx-detail-scenario");
     expect(scenario?.tagName.toLowerCase()).toBe("details");
     expect(scenario?.hasAttribute("open")).toBe(false);
-    expect(scenario?.querySelector("summary")?.textContent).toBe("Esempio reale");
+    expect(scenario?.querySelector("summary")?.textContent).toBe("Esempio d’uso");
 
     const { container: v } = render(<CollectionVariantPathsV4 collection={collection} />);
     const variants = v.querySelector("#cx-detail-variants");

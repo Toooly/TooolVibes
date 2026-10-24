@@ -1,13 +1,17 @@
+"use client";
+
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 import Link from "@/components/ui/app-link";
 import { MarkdownHighlight } from "@/components/editorial/markdown-content";
-import { BookOpenText } from "lucide-react";
-import { InstrumentOrbit } from "@/components/ui/instrument-orbit";
+import { GuideReadingVisual } from "./guide-reading-visual";
+import { getGuidePreviewCopy } from "./guide-preview-copy";
 
 import { GuideThumbnail } from "./guide-thumbnail";
 
 import { formatItalianDate } from "@/lib/utils";
 import type { EditorialPostRecord } from "@/lib/types/article";
+import { estimateReadingMinutes } from "@/lib/editorial/reading-time";
 
 export type GuideCardVariant = "feature" | "default" | "compact" | "mobile-row";
 
@@ -22,15 +26,6 @@ type GuideCardProps = {
   readMinutes?: number | null;
   className?: string;
 };
-
-const WORDS_PER_MINUTE = 220;
-
-export function estimateReadingMinutes(content: string | undefined | null): number {
-  if (!content) return 0;
-  const text = content.replace(/```[\s\S]*?```/g, " ").replace(/[#>*_`~\-]/g, " ");
-  const words = text.split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
-}
 
 function defaultTopic(post: EditorialPostRecord): string {
   if (post.tags && post.tags.length > 0) {
@@ -72,11 +67,13 @@ export function GuideCard({
   readMinutes,
   className,
 }: GuideCardProps) {
+  const { locale, t } = useLocale();
   const isFeature = variant === "feature";
   const isCompact = variant === "compact";
   const isMobileRow = variant === "mobile-row";
 
   const resolvedTopic = topic ?? defaultTopic(post);
+  const preview = getGuidePreviewCopy(post);
   const palette = topicPalette(resolvedTopic);
   const minutes =
     typeof readMinutes === "number" && readMinutes > 0
@@ -97,13 +94,10 @@ export function GuideCard({
       >
         <div className="guides-feature__body">
           <div className="guides-feature__topline guides-feature__topline--feature">
-            <span className="guides-kicker guides-feature__kicker"><LocalizedText>{"Guida in evidenza"}</LocalizedText></span>
+            <span className="guides-kicker guides-feature__kicker">{locale === "en" ? "Featured guide" : "Guida in evidenza"}</span>
             <p className="guides-feature__signal">
               <span><LocalizedText>{resolvedTopic}</LocalizedText></span>
-              <span className="guides-feature__signal-dot" aria-hidden>
-                ·
-              </span>
-              <span>{minutes}<LocalizedText>{" min"}</LocalizedText></span>
+              {minutes > 0 && <><span className="guides-feature__signal-dot" aria-hidden>·</span><span>{minutes}{" min"}</span></>}
             </p>
           </div>
 
@@ -115,15 +109,15 @@ export function GuideCard({
               href={`/posts/${post.slug}`}
               style={{ color: "inherit", textDecoration: "none" }}
             >
-              <LocalizedText>{post.title}</LocalizedText>
+              <LocalizedText>{preview.title}</LocalizedText>
             </Link>
           </h2>
 
-          {post.dek ? <p className="guides-feature__dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
+          {preview.dek ? <p className="guides-feature__dek"><LocalizedText>{preview.dek}</LocalizedText></p> : null}
 
-          {post.highlights.length > 0 ? (
+          {preview.highlights.length > 0 ? (
             <LocalizedAttributes><ul className="guides-feature__points" aria-label="Punti chiave">
-              {post.highlights.slice(0, 4).map((point) => (
+              {preview.highlights.slice(0, 2).map((point) => (
                 <li key={point}>
                   <span>
                     <MarkdownHighlight content={point} />
@@ -133,31 +127,6 @@ export function GuideCard({
             </ul></LocalizedAttributes>
           ) : null}
 
-          <LocalizedAttributes><div className="guides-feature__meta" role="group" aria-label="Metadati">
-            <span>
-              <strong><LocalizedText>{"Pubblicata"}</LocalizedText></strong> <LocalizedText>{publishedLabel}</LocalizedText>
-            </span>
-            {updatedLabel && updatedLabel !== publishedLabel ? (
-              <>
-                <span className="guides-feature__meta-divider" aria-hidden />
-                <span>
-                  <strong><LocalizedText>{"Aggiornata"}</LocalizedText></strong> <LocalizedText>{updatedLabel}</LocalizedText>
-                </span>
-              </>
-            ) : null}
-            <span className="guides-feature__meta-divider" aria-hidden />
-            <span>
-              <strong><LocalizedText>{"Lettura"}</LocalizedText></strong> {minutes}<LocalizedText>{" min "}</LocalizedText></span>
-            {toolName ? (
-              <>
-                <span className="guides-feature__meta-divider" aria-hidden />
-                <span>
-                  <strong><LocalizedText>{"Tool"}</LocalizedText></strong> <LocalizedText>{toolName}</LocalizedText>
-                </span>
-              </>
-            ) : null}
-          </div></LocalizedAttributes>
-
           <div className="guides-feature__cta">
             <Link
               href={`/posts/${post.slug}`}
@@ -165,7 +134,7 @@ export function GuideCard({
             ><LocalizedText>{"Leggi la guida "}</LocalizedText><span aria-hidden>→</span>
             </Link>
             {toolHref ? (
-              <Link href={toolHref} data-variant="ghost"><LocalizedText>{"Apri la scheda tool "}</LocalizedText><span aria-hidden>↗</span>
+              <Link href={toolHref} data-variant="ghost">{locale === "en" ? "Open tool" : "Apri la scheda tool"}<span aria-hidden>↗</span>
               </Link>
             ) : null}
           </div>
@@ -178,22 +147,7 @@ export function GuideCard({
             background: `radial-gradient(ellipse at 80% 0%, ${palette.background}, transparent 70%), var(--tv-material-panel)`,
           }}
         >
-          <InstrumentOrbit className="guides-feature__orbit" />
-          <div className="guides-feature__cover-content">
-            <div className="guides-feature__glyph" aria-hidden>
-              <BookOpenText size={28} strokeWidth={1.5} />
-              <span><LocalizedText>{toolName || resolvedTopic}</LocalizedText></span>
-            </div>
-            <div className="guides-feature__cover-foot">
-              <span
-                className="guides-feature__topic-pill"
-                style={{ background: palette.background, color: palette.color }}
-              >
-                <LocalizedText>{resolvedTopic}</LocalizedText>
-              </span>
-              <span className="guides-feature__read">{minutes}<LocalizedText>{" min di lettura"}</LocalizedText></span>
-            </div>
-          </div>
+          <GuideReadingVisual subject={toolName || resolvedTopic} domain={thumbDomain} />
         </div>
       </article>
     );
@@ -206,7 +160,7 @@ export function GuideCard({
         className={["guides-card", "guides-card--mobile-row", className]
           .filter(Boolean)
           .join(" ")}
-        aria-label={`Leggi la guida: ${post.title}`}
+        aria-label={`${locale === "en" ? "Read the guide" : "Leggi la guida"}: ${t(preview.title)}`}
       >
         <GuideThumbnail domain={thumbDomain} label={toolName || resolvedTopic} />
         <div className="guides-card__topline">
@@ -216,10 +170,10 @@ export function GuideCard({
           >
             <LocalizedText>{resolvedTopic}</LocalizedText>
           </span>
-          <span className="guides-card__read">{minutes}<LocalizedText>{" min"}</LocalizedText></span>
+          {minutes > 0 && <span className="guides-card__read">{minutes}{" min"}</span>}
         </div>
-        <h3 className="guides-card__title"><LocalizedText>{post.title}</LocalizedText></h3>
-        {post.dek ? <p className="guides-card__dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
+        <h3 className="guides-card__title"><LocalizedText>{preview.title}</LocalizedText></h3>
+        {preview.dek ? <p className="guides-card__dek"><LocalizedText>{preview.dek}</LocalizedText></p> : null}
         <div className="guides-card__foot">
           <span><LocalizedText>{"Pubblicata "}</LocalizedText><LocalizedText>{publishedLabel}</LocalizedText></span>
           <span className="guides-card__cta"><LocalizedText>{"Leggi la guida"}</LocalizedText></span>
@@ -234,26 +188,22 @@ export function GuideCard({
       className={["guides-card", isCompact && "guides-card--compact", className]
         .filter(Boolean)
         .join(" ")}
-      aria-label={`Leggi la guida: ${post.title}`}
+      aria-label={`${locale === "en" ? "Read the guide" : "Leggi la guida"}: ${t(preview.title)}`}
     >
       <GuideThumbnail domain={thumbDomain} label={toolName || resolvedTopic} />
       <div className="guides-card__topline">
+        {toolName && <span className="guides-card__subject">{toolName}</span>}
         <span
           className="guides-card__topic"
           style={{ background: palette.background, color: palette.color }}
         >
           <LocalizedText>{resolvedTopic}</LocalizedText>
         </span>
-        <span className="guides-card__read">{minutes}<LocalizedText>{" min"}</LocalizedText></span>
+        {minutes > 0 && <span className="guides-card__read">{minutes}{" min"}</span>}
       </div>
-      <h3 className="guides-card__title"><LocalizedText>{post.title}</LocalizedText></h3>
-      {post.dek ? <p className="guides-card__dek"><LocalizedText>{post.dek}</LocalizedText></p> : null}
+      <h3 className="guides-card__title"><LocalizedText>{preview.title}</LocalizedText></h3>
+      {preview.dek ? <p className="guides-card__dek"><LocalizedText>{preview.dek}</LocalizedText></p> : null}
       <div className="guides-card__chips">
-        {toolName ? (
-          <span className="guides-card__chip guides-card__chip--tool">
-            <LocalizedText>{toolName}</LocalizedText>
-          </span>
-        ) : null}
         {updatedLabel && updatedLabel !== publishedLabel ? (
           <span className="guides-card__chip"><LocalizedText>{"Aggiornata "}</LocalizedText><LocalizedText>{updatedLabel}</LocalizedText></span>
         ) : (
@@ -261,7 +211,6 @@ export function GuideCard({
         )}
       </div>
       <div className="guides-card__foot">
-        <span><LocalizedText>{resolvedTopic}</LocalizedText></span>
         <span className="guides-card__cta"><LocalizedText>{"Leggi la guida"}</LocalizedText></span>
       </div>
     </Link></LocalizedAttributes>

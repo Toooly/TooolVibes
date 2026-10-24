@@ -2,6 +2,7 @@
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
 import { useState } from "react";
+import { BookOpenText } from "lucide-react";
 
 export function GuideThumbnail({ domain, label }: { domain: string | null; label: string }) {
   const [loadedSource, setLoadedSource] = useState<string | null>(null);
@@ -11,7 +12,7 @@ export function GuideThumbnail({ domain, label }: { domain: string | null; label
 
   return (
     <span className="guides-card__thumb" aria-hidden="true">
-      <span><LocalizedText>{label.slice(0, 2).toUpperCase()}</LocalizedText></span>
+      <span>{domain ? <LocalizedText>{label.slice(0, 2).toUpperCase()}</LocalizedText> : <BookOpenText size={26} strokeWidth={1.5} />}</span>
       {source ? (
         // eslint-disable-next-line @next/next/no-img-element
         <LocalizedAttributes><img

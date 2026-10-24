@@ -87,8 +87,8 @@ export default function ContributiPage() {
         routeLabel="Contributi"
         routeStatus="Canale editoriale"
         emphasis="contesto"
-        title="Le scelte migliori meritano contesto."
-        lede="Puoi proporre un tool, raccontare un flusso o correggere una scheda. Ogni invio viene letto dalla redazione: non promettiamo pubblicazioni automatiche."
+        title="Un buon consiglio può partire da te."
+        lede="Proponi un tool, condividi un flusso di lavoro o segnala una correzione. La redazione legge ogni contributo e decide cosa pubblicare."
         actions={
           <>
             <LocalizedAttributes><a
@@ -149,8 +149,8 @@ export default function ContributiPage() {
 
       <LocalizedAttributes><SecondarySection
         eyebrow="Cosa puoi inviare"
-        title="Tre tipi di contributo, una sola redazione"
-        lede="I contributi migliori partono da un bisogno concreto e aiutano altre persone a scegliere. Sono tre i tagli che vale la pena proporre."
+        title="Cosa vuoi condividere?"
+        lede="Parti da un’esperienza concreta e spiegaci perché potrebbe essere utile."
       >
         <SecondaryCardGrid columns={3}>
           {CONTRIBUTION_TYPES.map((type) => (
@@ -168,8 +168,8 @@ export default function ContributiPage() {
       <LocalizedAttributes><SecondarySection
         tone="ivory"
         eyebrow="Come lavoriamo"
-        title="Tre promesse editoriali"
-        lede="TooolVibes è una redazione, non un portale. Ecco cosa significa in pratica per chi contribuisce."
+        title="Come valutiamo i contributi"
+        lede="Controlliamo utilità, chiarezza e fonti prima di pubblicare."
       >
         <SecondaryCardGrid columns={3}>
           {TRUST_PROMISES.map((promise) => (
@@ -186,7 +186,7 @@ export default function ContributiPage() {
       <LocalizedAttributes><SecondaryClosingCTA
         tone="dark"
         title="Hai qualcosa da proporre?"
-        body="Una mail, un tag, un caso d'uso. La redazione risponde con una prima lettura editoriale, anche quando la proposta è fuori perimetro."
+        body="Scrivici cosa proponi, a chi serve e dove possiamo approfondire."
         actions={
           <>
             <LocalizedAttributes><a

@@ -46,7 +46,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
         <h2 id="cx-stack-flow-title" className="sr-only"><LocalizedText>{"Lo stack, in ordine "}</LocalizedText></h2>
       </header>
 
-      <LocalizedAttributes><ol className="cx-stack-flow-v4__list" aria-label="Stack CORE in ordine">
+      <LocalizedAttributes><ol className="cx-stack-flow-v4__list" aria-label="Strumenti essenziali, in ordine">
         {cores.map((slot, index) => {
           const toolHref = `/toools/${slot.tool.slug}`;
           const isManual = slot.manual_handoff === true;
@@ -129,7 +129,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                       <div className="cx-stack-flow-v4__flow">
                         {slot.input && (
                           <div className="cx-stack-flow-v4__flow-cell">
-                            <span className="cx-stack-flow-v4__flow-key"><LocalizedText>{"↓ Entra "}</LocalizedText></span>
+                            <span className="cx-stack-flow-v4__flow-key"><LocalizedText>{"Materiale iniziale"}</LocalizedText></span>
                             <span className="cx-stack-flow-v4__flow-val">
                               {slot.input}
                             </span>
@@ -137,7 +137,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                         )}
                         {slot.output && (
                           <div className="cx-stack-flow-v4__flow-cell">
-                            <span className="cx-stack-flow-v4__flow-key"><LocalizedText>{"↑ Esce "}</LocalizedText></span>
+                            <span className="cx-stack-flow-v4__flow-key"><LocalizedText>{"Risultato"}</LocalizedText></span>
                             <span className="cx-stack-flow-v4__flow-val">
                               <LocalizedText>{slot.output}</LocalizedText>
                             </span>
@@ -183,7 +183,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                   slot.relevant_guide_slug) && (
                   <details className="cx-stack-flow-v4__details" data-mobile-only={!hasAdditionalDetails || undefined}>
                     <summary className="cx-stack-flow-v4__details-summary">
-                      <span><LocalizedText>{"Più dettagli su "}</LocalizedText>{slot.tool.name}</span>
+                      <span><LocalizedText>{"Dettagli: "}</LocalizedText>{slot.tool.name}</span>
                       <ArrowRight
                         className="size-3 cx-stack-flow-v4__details-arrow"
                         aria-hidden="true"
@@ -193,8 +193,8 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                       <div className="cx-stack-flow-v4__mobile-context">
                         {slot.role && <h3><LocalizedText>{slot.role}</LocalizedText></h3>}
                         {slot.why_chosen && <p><LocalizedText>{slot.why_chosen}</LocalizedText></p>}
-                        {slot.input && <p><strong><LocalizedText>{"↓ Entra "}</LocalizedText></strong><LocalizedText>{slot.input}</LocalizedText></p>}
-                        {slot.output && <p><strong><LocalizedText>{"↑ Esce "}</LocalizedText></strong><LocalizedText>{slot.output}</LocalizedText></p>}
+                        {slot.input && <p><strong><LocalizedText>{"Materiale iniziale"}</LocalizedText></strong><LocalizedText>{slot.input}</LocalizedText></p>}
+                        {slot.output && <p><strong><LocalizedText>{"Risultato"}</LocalizedText></strong><LocalizedText>{slot.output}</LocalizedText></p>}
                         {slot.next_handoff && <p><strong><LocalizedText>{isManual ? "Passaggio manuale" : "Passaggio"}</LocalizedText>: </strong><LocalizedText>{slot.next_handoff}</LocalizedText></p>}
                       </div>
                       {slot.limitations && (
@@ -205,7 +205,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                       )}
                       {slot.when_to_skip && (
                         <div>
-                          <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando saltarlo "}</LocalizedText></span>
+                          <span className="cx-stack-flow-v4__details-label"><LocalizedText>{"Quando non usarlo "}</LocalizedText></span>
                           <p><LocalizedText>{slot.when_to_skip}</LocalizedText></p>
                         </div>
                       )}
@@ -279,7 +279,7 @@ export function CollectionStackFlowV4({ collection }: CollectionStackFlowV4Props
                 )}
                 {slot.when_to_skip && (
                   <p className="cx-stack-flow-v4__optional-skip">
-                    <strong><LocalizedText>{"Quando saltarlo:"}</LocalizedText></strong> <LocalizedText>{slot.when_to_skip}</LocalizedText>
+                    <strong><LocalizedText>{"Quando non usarlo:"}</LocalizedText></strong> <LocalizedText>{slot.when_to_skip}</LocalizedText>
                   </p>
                 )}
               </li>

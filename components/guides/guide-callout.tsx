@@ -20,7 +20,7 @@ const KIND_GLYPH: Record<GuideCalloutKind, string> = {
 const KIND_TITLE: Record<GuideCalloutKind, string> = {
   tip: "Consiglio pratico",
   warning: "Attenzione",
-  pro: "Pro tip",
+  pro: "Approfondimento",
   decision: "Decisione rapida",
 };
 
@@ -81,7 +81,7 @@ export function GuideTakeawaysDisclosure({
   if (!items || items.length === 0) return null;
   return (
     <details className="guides-takeaways-disclosure">
-      <summary><LocalizedText>{"Quando ti serve questa guida"}</LocalizedText></summary>
+      <summary><LocalizedText>{"Cosa trovi nella guida"}</LocalizedText></summary>
       <LocalizedAttributes><GuideKeyTakeaways title={title} items={items} /></LocalizedAttributes>
     </details>
   );
@@ -120,7 +120,7 @@ export function GuideByline({
   return (
     <div className={cn("guides-byline", className)}>
       <span>
-        <strong><LocalizedText>{author ?? "Team editoriale TooolVibes"}</LocalizedText></strong><LocalizedText>{" ha scritto questa guida. "}</LocalizedText></span>
+        <LocalizedText>{"A cura di "}</LocalizedText><strong><LocalizedText>{author ?? "Team editoriale TooolVibes"}</LocalizedText></strong></span>
       {pub ? (
         <>
           <span className="guides-byline__dot" aria-hidden />

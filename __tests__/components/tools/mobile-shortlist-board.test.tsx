@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { createElement, Fragment, type ReactNode } from "react";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { MobileShortlistBoard } from "@/components/tools/mobile-shortlist-board";
@@ -168,7 +168,7 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     expect(screen.getByRole("link", { name: /Esplora catalogo/i })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Parti da uno stack/i })).toBeTruthy();
     expect(
-      screen.getByText("3 tool in 4 categorie da restringere."),
+      screen.getByText("3 tool in 4 categorie."),
     ).toBeTruthy();
   });
 
@@ -205,20 +205,44 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     expect(screen.queryByRole("dialog", { name: "Memoria decisionale di Alpha" })).toBeNull();
   });
 
-  it("puts Decidi above note editing and restores the unfinished note after closing", () => {
+  it("manages focus on opening and restores the opening control on dismissal", async () => {
     render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
+    const trigger = screen.getAllByRole("button", { name: "Apri nota e decisione di Alpha" })[0];
+    trigger.focus();
+    const dialog = openSheetFor("Alpha");
+
+    await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
+    expect(document.querySelector('[data-slot="sheet-overlay"]')).not.toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Chiudi memoria decisionale" }));
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+  });
+
+  it("dismisses note editing when pressing its backdrop", async () => {
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
+    openSheetFor("Alpha");
+    const backdrop = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')!;
+    fireEvent.mouseDown(backdrop, { button: 0 });
+    fireEvent.click(backdrop, { button: 0 });
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Memoria decisionale di Alpha" })).toBeNull());
+  });
+
+  it("puts Decidi above note editing and restores the unfinished note and its focus after closing", async () => {
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
+    screen.getAllByRole("button", { name: "Apri nota e decisione di Alpha" })[0].focus();
     const note = openSheetFor("Alpha");
     fireEvent.change(within(note).getByRole("textbox", { name: "Nota personale" }), { target: { value: "Keep this draft" } });
-    fireEvent.click(within(note).getByRole("button", { name: "Decidi" }));
+    const decideButton = within(note).getByRole("button", { name: "Decidi" });
+    fireEvent.click(decideButton);
 
     expect(note.hidden).toBe(true);
     const decision = document.querySelector<HTMLElement>("[data-decision-sheet]");
     expect(decision).not.toBeNull();
     expect(note.contains(decision)).toBe(false);
-    fireEvent.click(within(decision!).getAllByRole("button", { name: "Chiudi" })[0]);
+    fireEvent.click(within(decision!).getByRole("button", { name: "Annulla" }));
 
     expect(note.hidden).toBe(false);
     expect((within(note).getByRole("textbox", { name: "Nota personale" }) as HTMLTextAreaElement).value).toBe("Keep this draft");
+    await waitFor(() => expect(document.activeElement).toBe(decideButton));
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("dialog", { name: "Memoria decisionale di Alpha" })).toBeNull();
   });
@@ -246,9 +270,26 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     ).toBe("/compare");
   });
 
+  it("counts the complete comparison even when a candidate is not saved", () => {
+    let state = savedState("alpha");
+    for (const slug of ["alpha", "beta"]) {
+      state = reduceWorkspaceState(state, { type: "compare/toggle", slug, at: T0 });
+    }
+    seedWorkspace(state);
+    render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
+
+    const hero = screen.getByRole("region", { name: "I tuoi Salvati" });
+    expect([...hero.querySelectorAll(".mobile-library-hero__stat strong")].map((node) => node.textContent)).toEqual(["1", "2"]);
+    expect(screen.getByRole("link", { name: "Apri il confronto con 2 tool" }).getAttribute("href")).toBe("/compare");
+    expect(screen.getByRole("link", { name: "Beta" }).getAttribute("href")).toBe("/toools/beta");
+  });
+
   it("edits and saves a note, persists it and re-opens it after a reload", () => {
     render(<MobileShortlistBoard tools={TOOLS} categoryCount={4} />);
     openSheetFor("Alpha");
+
+    expect(screen.queryByRole("button", { name: "Nota salvata" })).toBeNull();
+    expect((screen.getByRole("button", { name: "Salva nota" }) as HTMLButtonElement).disabled).toBe(true);
 
     const textarea = screen.getByRole("textbox", {
       name: "Nota personale",
@@ -364,11 +405,11 @@ describe("MobileShortlistBoard — B32 editable decision memory", () => {
     );
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Metti in primo piano" }),
+      screen.getByRole("button", { name: "Fissa in alto" }),
     );
     expect(readPersistedWorkspace().toolStates.alpha.pinned).toBe(true);
     expect(
-      screen.getByRole("button", { name: "In primo piano" }),
+      screen.getByRole("button", { name: "Fissato in alto" }),
     ).toBeTruthy();
   });
 

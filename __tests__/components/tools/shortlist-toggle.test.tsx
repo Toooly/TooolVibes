@@ -80,6 +80,17 @@ describe("ShortlistToggle primitive", () => {
     expect(button.hasAttribute("data-save-feedback")).toBe(false);
   });
 
+  it("does not replay addition feedback after two toggles in one render batch", () => {
+    vi.useFakeTimers();
+    render(<ShortlistToggle slug="cursor" mode="icon" toolName="Cursor" />);
+    const button = screen.getByRole("button", { name: "Salva Cursor" });
+    act(() => { button.click(); button.click(); });
+    expect(getCanonicalToolWorkspaceState().saved.slugs).toEqual([]);
+    act(() => seedWorkspace([{ type: "saved/set", slug: "cursor", saved: true, at: "2026-10-24T08:00:00Z" }]));
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    expect(button.hasAttribute("data-save-feedback")).toBe(false);
+  });
+
   it("exposes aria-pressed and a tool-specific aria-label", () => {
     render(<ShortlistToggle slug="cursor" mode="icon" toolName="Cursor" />);
     const button = screen.getByRole("button", { name: "Salva Cursor" });

@@ -43,7 +43,7 @@ export function SiteFooterV2() {
             <BrandLogo size={36} fallback="png" />
             <span className="tv-utility__wordmark"><LocalizedText>{"TooolVibes"}</LocalizedText></span>
           </Link>
-          <p className="tv-utility__summary"><LocalizedText>{"Il sistema decisionale per scegliere software con criterio, non l'ennesima directory di tool. "}</LocalizedText></p>
+          <p className="tv-utility__summary"><LocalizedText>{"Esplora i tool, confrontali e costruisci il tuo stack."}</LocalizedText></p>
         </div>
 
         <LocalizedAttributes><nav aria-label="Navigazione del sito" className="tv-utility__nav">
@@ -104,7 +104,7 @@ export function SiteFooterV2() {
 
         <details className="tv-utility__disclosure">
           <summary><LocalizedText>{"Trasparenza e affiliazioni"}</LocalizedText></summary>
-          <p className="tv-utility__disclosure-body"><LocalizedText>{"Alcuni link su TooolVibes sono link affiliati. Se acquisti tramite questi collegamenti, potremmo ricevere una commissione, senza costi aggiuntivi per te. Le partnership commerciali non determinano le valutazioni editoriali. "}</LocalizedText></p>
+          <p className="tv-utility__disclosure-body"><LocalizedText>{"Alcuni link sono affiliati. Se acquisti da questi link, potremmo ricevere una commissione senza costi aggiuntivi per te. Le partnership commerciali non determinano le valutazioni editoriali."}</LocalizedText></p>
         </details>
         <p className="tv-utility__mark"><LocalizedText>{"TOOOLVIBES · "}</LocalizedText>{year}</p>
       </div>

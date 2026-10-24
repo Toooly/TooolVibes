@@ -142,8 +142,8 @@ function AdditiveVariants({ collection }: { collection: CuratedCollection }) {
       <header className="cx-variant-paths-v4__head">
         <span className="cx-variant-paths-v4__eyebrow">
           <GitBranch className="size-3.5" aria-hidden="true" /><LocalizedText>{"Varianti "}</LocalizedText></span>
-        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title"><LocalizedText>{"Quanta potenza ti serve davvero? "}</LocalizedText></h2>
-        <p className="cx-variant-paths-v4__lede"><LocalizedText>{"La variante minima funziona per partire. Quelle successive aggiungono strumenti, complessità e costo. "}</LocalizedText></p>
+        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title"><LocalizedText>{"Scegli la composizione adatta al tuo lavoro "}</LocalizedText></h2>
+        <p className="cx-variant-paths-v4__lede"><LocalizedText>{"Confronta strumenti inclusi e compromessi prima di aggiungere complessità. "}</LocalizedText></p>
       </header>
 
       <LocalizedAttributes><div
@@ -251,8 +251,8 @@ function PathBasedVariants({ collection }: { collection: CuratedCollection }) {
       <header className="cx-variant-paths-v4__head">
         <span className="cx-variant-paths-v4__eyebrow">
           <GitBranch className="size-3.5" aria-hidden="true" /><LocalizedText>{"Architettura "}</LocalizedText></span>
-        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title"><LocalizedText>{"Due percorsi, una decisione "}</LocalizedText></h2>
-        <p className="cx-variant-paths-v4__lede"><LocalizedText>{"I CORE tools cambiano in base al percorso. Scegli quello adatto al tuo contesto. "}</LocalizedText></p>
+        <h2 id="cx-variants-title" className="cx-variant-paths-v4__title"><LocalizedText>{"Scegli come costruire il tuo sistema "}</LocalizedText></h2>
+        <p className="cx-variant-paths-v4__lede"><LocalizedText>{"Ogni percorso usa strumenti diversi: confronta controllo, gestione e passaggi richiesti. "}</LocalizedText></p>
       </header>
 
       <div className="cx-variant-paths-v4__paths">
@@ -374,7 +374,7 @@ function VariantPanel({
 
       {variant.trade_offs && variant.trade_offs.length > 0 && (
         <p className="cx-variant-paths-v4__variant-tradeoffs">
-          <strong><LocalizedText>{"Cosa cambi."}</LocalizedText></strong> <LocalizedText separator=" ">{variant.trade_offs}</LocalizedText>
+          <strong><LocalizedText>{"Cosa cambia."}</LocalizedText></strong> <LocalizedText separator=" ">{variant.trade_offs}</LocalizedText>
         </p>
       )}
     </div>

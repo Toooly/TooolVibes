@@ -50,7 +50,9 @@ describe("CollectionsIndex", () => {
     );
 
     expect(screen.getByRole("heading", { level: 1 }).textContent).toBe("Raccolte");
-    expect(screen.getByText("Stack completi per risultati concreti.")).toBeTruthy();
+    expect(screen.getAllByRole("heading", { level: 2 }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("heading", { level: 3 })).toBeNull();
+    expect(screen.getByText("Tool che lavorano insieme, con ruoli, costi e passaggi chiari.")).toBeTruthy();
     expect(screen.queryByText("Come funzionano le Raccolte?")).toBeNull();
     expect(screen.queryByLabelText("A colpo d'occhio")).toBeNull();
   });
@@ -72,9 +74,9 @@ describe("CollectionsIndex", () => {
 
     expect(
       container.querySelector(".cx-card-v4--featured .cx-card-v4__cta")?.textContent,
-    ).toContain("Usa questa raccolta");
+    ).toContain("Esplora lo stack");
 
-    expect(screen.getByText("Essenziali per design sprint").closest(".tv-member-gate__locked")).toBeTruthy();
+    expect(screen.getByText("Il kit per un design sprint").closest(".tv-member-gate__locked")).toBeTruthy();
     expect(screen.getByText("Le altre raccolte restano nel tuo spazio.")).toBeTruthy();
   });
 
@@ -98,14 +100,14 @@ describe("CollectionsIndex", () => {
         <CollectionsIndex collections={collections} />
       </AccountPreviewProvider>,
     );
-    expect(screen.getByText("Essenziali per design sprint").closest(".tv-member-gate__locked")).toBeTruthy();
+    expect(screen.getByText("Il kit per un design sprint").closest(".tv-member-gate__locked")).toBeTruthy();
 
     rerender(
       <AccountPreviewProvider value={authValue()}>
         <CollectionsIndex collections={collections} />
       </AccountPreviewProvider>,
     );
-    expect(screen.queryByText("Essenziali per design sprint")?.closest(".tv-member-gate__locked")).toBeNull();
-    expect(screen.getAllByText("Usa questa raccolta").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Il kit per un design sprint")?.closest(".tv-member-gate__locked")).toBeNull();
+    expect(screen.getAllByText("Esplora lo stack").length).toBeGreaterThan(0);
   });
 });

@@ -80,6 +80,26 @@ function richCollection() {
 }
 
 describe("CollectionDetailBodyV4", () => {
+  it("labels linked guides from canonical titles with a readable fallback", () => {
+    const collection = makeCollection({
+      stack_meta: { related_guide_slugs: ["jenny-ai", "custom-ai-guide"] },
+    });
+    render(
+      <AccountPreviewProvider value={authValue()}>
+        <CollectionDetailBodyV4
+          collection={collection}
+          relatedCollections={[makeSecondaryCollection()]}
+          allCollections={[collection]}
+          guideTitles={{ "jenny-ai": "Jenni AI: ricerca e scrittura" }}
+        />
+      </AccountPreviewProvider>,
+    );
+
+    expect(screen.getByRole("link", { name: /Jenni AI: ricerca e scrittura/ }).getAttribute("href")).toBe("/posts/jenny-ai");
+    expect(screen.getByRole("link", { name: /Custom AI Guide/ }).getAttribute("href")).toBe("/posts/custom-ai-guide");
+    expect(screen.getByText("Esplora lo stack")).toBeTruthy();
+  });
+
   it("keeps JSON-LD, stack target and a tight guest gate", () => {
     const collection = richCollection();
     render(
@@ -93,7 +113,7 @@ describe("CollectionDetailBodyV4", () => {
     );
 
     expect(document.querySelector('script[type="application/ld+json"]')).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Avvia questa raccolta/ }).getAttribute("href")).toBe(
+    expect(screen.getByRole("link", { name: /Esplora il flusso/ }).getAttribute("href")).toBe(
       "#cx-detail-stack",
     );
     expect(screen.getByText("Lo stack completo resta nel tuo spazio.")).toBeTruthy();

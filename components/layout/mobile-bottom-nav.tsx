@@ -1,6 +1,7 @@
 "use client";
 
-import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { LocalizedText } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 /**
  * TooolVibes — Mobile Bottom Nav
  * Dynamic chrome: expanded labels → compact icons-only on scroll-down,
@@ -44,6 +45,7 @@ const TOP_FORCE_EXPAND_PX = 24;
 // Haptic feedback via shared utility (canonical feedback service)
 
 export function MobileBottomNav() {
+  const { locale, t } = useLocale();
   const preferReducedMotion = useReducedMotion();
   const viewport = useChromeViewport();
   const pathname = usePathname();
@@ -239,11 +241,11 @@ export function MobileBottomNav() {
       )}
       data-state={chromeState}
     >
-      <LocalizedAttributes><nav
+      <nav
         ref={(node) => {
           innerRef.current = node;
         }}
-        aria-label="Navigazione mobile principale"
+        aria-label={locale === "en" ? "Primary mobile navigation" : "Navigazione mobile principale"}
         className={cn(
           "mobile-bottom-shell__inner mobile-bottom-motion",
           suppressed && "is-suppressed pointer-events-none opacity-0",
@@ -267,19 +269,19 @@ export function MobileBottomNav() {
                   : 0;
             const badgeAria =
               item.id === "compare"
-                ? `${compareCount} tool in confronto`
+                ? (locale === "en" ? `${compareCount} ${compareCount === 1 ? "tool" : "tools"} in comparison` : `${compareCount} tool in confronto`)
                 : item.id === "shortlist"
-                  ? `${savedCount} tool salvati`
+                  ? (locale === "en" ? `${savedCount} saved ${savedCount === 1 ? "tool" : "tools"}` : `${savedCount} tool ${savedCount === 1 ? "salvato" : "salvati"}`)
                   : undefined;
             return (
-              <LocalizedAttributes key={item.id}><Link
+              <Link
                 key={item.id}
                 href={item.href}
                 prefetch={false}
                 aria-current={isActive ? "page" : undefined}
                 aria-label={
                   badgeCount > 0 && badgeAria
-                    ? `${item.label}, ${badgeAria}`
+                    ? `${t(item.label)}, ${badgeAria}`
                     : undefined
                 }
                 className={cn("mobile-bottom-item", isActive && "is-active")}
@@ -302,7 +304,7 @@ export function MobileBottomNav() {
                     />
                   ) : null}
                   {badgeCount > 0 ? (
-                    <LocalizedAttributes key={badgeCount}><motion.span
+                    <motion.span
                       key={badgeCount}
                       initial={preferReducedMotion ? false : { scale: 0.4, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
@@ -311,18 +313,18 @@ export function MobileBottomNav() {
                       aria-label={badgeAria}
                     >
                       {badgeCount}
-                    </motion.span></LocalizedAttributes>
+                    </motion.span>
                   ) : null}
                   {item.id === "radar" ? (
                     <span aria-hidden="true" className="mobile-bottom-item__node" />
                   ) : null}
                 </span>
                 <span className="mobile-bottom-item__label"><LocalizedText>{item.label}</LocalizedText></span>
-              </Link></LocalizedAttributes>
+              </Link>
             );
           })}
         </div>
-      </nav></LocalizedAttributes>
+      </nav>
     </div>
   );
 

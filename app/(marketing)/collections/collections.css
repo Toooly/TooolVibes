@@ -5312,17 +5312,6 @@
   box-shadow: var(--tv-material-shadow);
 }
 .cx-card-v4 > * { position: relative; z-index: 1; }
-.cx-card-v4--featured::before {
-  content: "";
-  position: absolute;
-  width: clamp(15rem, 33vw, 29rem);
-  aspect-ratio: 1;
-  inset: -50% -6% auto auto;
-  background: url("/graphics/instrument-orbit.webp") center / contain no-repeat;
-  opacity: 0.28;
-  pointer-events: none;
-  mask-image: linear-gradient(90deg, transparent, black 60%);
-}
 .cx-card-v4:hover,
 .cx-card-v4:focus-within { border-color: var(--tv-material-edge-active); }
 .cx-card-v4__title { line-height: 1.24; }
@@ -5365,7 +5354,6 @@
 @media (max-width: 47.99rem) {
   .cx-index .cx-card-v4 { padding: 1.15rem; border-radius: var(--tv-material-radius-sm); }
   .cx-index .cx-card-v4__promise { font-size: 0.92rem; line-height: 1.6; }
-  .cx-card-v4--featured::before { opacity: 0.17; inset-block-start: -30%; }
   .cx-stack-flow-v4__list { margin-left: 0; border-left: 0; gap: 0.9rem; }
   .cx-stack-flow-v4__item {
     grid-template-columns: 2rem minmax(0, 1fr);
@@ -5391,3 +5379,94 @@
 @media (min-width: 48rem) {
   .cx-stack-flow-v4__details[data-mobile-only="true"] { display: none; }
 }
+
+/* The card previews a real sequence, with a destination for every tool. */
+.cx-index .cx-card-v4 .cx-card-v4__stack { display: block; margin-block: 0.5rem; min-width: 0; }
+.cx-card-v4__stack-label { margin: 0 0 0.85rem; font-size: 0.75rem; font-weight: 700; color: var(--tv-ink-muted-aa); letter-spacing: 0.08em; text-transform: uppercase; }
+.cx-card-v4__stack-list { gap: 0.5rem; }
+.cx-card-v4__stack-list::before,
+.cx-card-v4__stack-item::before { content: none; }
+.cx-card-v4__stack-item { display: block; background: none; box-shadow: none; min-width: 0; }
+.cx-card-v4__step-link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.4rem auto minmax(0, 1fr) 0.9rem;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 3rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--tv-material-edge);
+  border-radius: 0.95rem;
+  background: var(--tv-material-panel-soft);
+  color: var(--tv-ink-primary);
+  text-decoration: none;
+  box-shadow: var(--tv-material-inset);
+  transition: border-color var(--tv-duration-fast) ease, background-color var(--tv-duration-fast) ease;
+}
+.cx-card-v4__step-link:hover,
+.cx-card-v4__step-link:focus-visible { border-color: var(--tv-material-edge-active); background-color: var(--tv-surface-elevated); }
+.cx-card-v4__step-link .cx-card-v4__stack-no { font-size: 0.75rem; color: var(--tv-accent-violet-on-dark); }
+.cx-card-v4__step-link .cx-card-v4__stack-meta { display: grid; align-items: start; gap: 0.2rem; }
+.cx-card-v4__step-link .cx-card-v4__stack-name { font-size: 0.9rem; font-weight: 700; }
+.cx-card-v4__step-link .cx-card-v4__stack-stage { margin-left: 0; font-size: 0.76rem; letter-spacing: 0; white-space: normal; line-height: 1.4; }
+.cx-card-v4__step-arrow { color: var(--tv-color-cyan-300); }
+.cx-card-v4__stack-more { padding-left: 0; margin-top: 0.65rem; font-style: normal; }
+.cx-card-v4__foot { gap: 0.85rem; }
+.cx-card-v4__cta { min-height: 2.75rem; font-size: 0.88rem; }
+@media (min-width: 64rem) {
+  .cx-index .cx-card-v4--featured {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.9fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "identity flow" "title flow" "promise flow" "decision flow";
+    align-items: start;
+    gap: 1rem 2.5rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .cx-card-v4--featured .cx-card-v4__head { grid-area: identity; }
+  .cx-card-v4--featured .cx-card-v4__title { grid-area: title; font-size: clamp(1.75rem, 2.8vw, 2.4rem); line-height: 1.25; max-width: 24ch; }
+  .cx-card-v4--featured .cx-card-v4__promise { grid-area: promise; max-width: 48ch; font-size: 1rem; display: block; }
+  .cx-card-v4--featured .cx-card-v4__foot { grid-area: decision; flex-direction: column; align-items: flex-start; width: 100%; }
+  .cx-index .cx-card-v4--featured .cx-card-v4__stack { grid-area: flow; align-self: stretch; margin: 0; padding-left: 1.5rem; border-left: 1px solid var(--tv-material-edge); }
+  .cx-card-v4--featured .cx-card-v4__stack-list { gap: 0.65rem; }
+}
+@media (max-width: 47.99rem) {
+  .cx-index .cx-card-v4 .cx-card-v4__stack { margin-block: 0.35rem; }
+  .cx-card-v4__stack-label { margin-bottom: 0.65rem; }
+  .cx-card-v4 .cx-card-v4__stack-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.65rem;
+    overflow-x: auto;
+    padding: 0.15rem 0.15rem 0.55rem;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 0.15rem;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+  .cx-card-v4 .cx-card-v4__stack-item { flex: 0 0 10.5rem; scroll-snap-align: start; }
+  .cx-card-v4 .cx-card-v4__step-link { grid-template-columns: 1fr auto; gap: 0.65rem; min-height: 8.25rem; padding: 0.85rem; }
+  .cx-card-v4__step-link .cx-card-v4__stack-no { grid-column: 2; grid-row: 1; justify-self: end; }
+  .cx-card-v4__step-link > .collection-tool-glyph { grid-column: 1; grid-row: 1; }
+  .cx-card-v4__step-link .cx-card-v4__stack-meta { grid-column: 1 / -1; }
+  .cx-card-v4__step-link .cx-card-v4__stack-name { font-size: 0.88rem; }
+  .cx-card-v4__step-link .cx-card-v4__stack-stage { font-size: 0.75rem; }
+  .cx-card-v4__step-link .cx-card-v4__step-arrow { position: absolute; right: 0.65rem; top: 50%; opacity: 0.6; }
+  .cx-card-v4__foot { align-items: stretch; flex-direction: column; }
+  .cx-card-v4__cta { justify-content: center; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-card-v4__step-link { transition: none; }
+}
+
+.cx-card-v4 .cx-card-v4__title { line-height: 1.25; }
+.cx-index__grid--group .cx-card-v4__promise { font-size: 0.94rem; line-height: 1.65; }
+@media (min-width: 48rem) {
+  .cx-index__grid--group .cx-card-v4__stack-list { flex-direction: column; flex-wrap: nowrap; gap: 0.5rem; }
+}
+/* Labels explain the handoff; color never substitutes for the actual meaning. */
+.cx-stack-flow-v4__flow-key { letter-spacing: 0.04em; line-height: 1.4; }
+.cx-decision-notes-v4__title,
+.cx-guide-bridge-v4__title,
+.cx-next-step-v4__title { max-width: 30ch; line-height: 1.25; }

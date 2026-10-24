@@ -1,11 +1,9 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import { useEffect, useState, useMemo, type CSSProperties } from "react";
+import { useEffect, useState, useMemo, useRef, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
-import { levelBTransition } from "@/lib/motion/transitions";
 import {
   X,
   GitCompare,
@@ -25,6 +23,8 @@ import Link from "@/components/ui/app-link";
 
 import { DecisionSheet } from "@/components/account/workspace/decision-sheet";
 import { OverlayProvider } from "@/components/ui/overlay-provider";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useLocale } from "@/components/i18n/locale-provider";
 import {
   formatRevisitLine,
   OUTCOME_STATE_LABELS,
@@ -133,6 +133,7 @@ export function MobileShortlistBoard({
   categoryCount,
   decisionMemoryEnabled = true,
 }: MobileShortlistBoardProps) {
+  const { locale } = useLocale();
   const discovery = useDiscoverySnapshot();
   const savedSlugs = useToolWorkspaceStore((state) => state.savedSlugs);
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
@@ -190,7 +191,7 @@ export function MobileShortlistBoard({
     (t) => t.stage === "saved" || t.stage === "review",
   );
   const recentTools = [...baseTools].reverse().slice(0, 8);
-  const readyToCompare = baseTools.filter((t) => t.isInCompare);
+  const readyToCompare = tools.filter((tool) => compareSlugs.includes(tool.slug));
   const noteTool = noteSlug
     ? baseTools.find((t) => t.slug === noteSlug)
     : undefined;
@@ -283,7 +284,9 @@ export function MobileShortlistBoard({
             <LocalizedAttributes><Link
               href="/compare"
               className="mobile-library-board__compare-chip mobile-library-board__compare-chip--open"
-              aria-label={`Apri il confronto con ${readyToCompare.length} tool`}
+              aria-label={locale === "en"
+                ? `Open comparison with ${readyToCompare.length} ${readyToCompare.length === 1 ? "tool" : "tools"}`
+                : `Apri il confronto con ${readyToCompare.length} tool`}
               data-sonic-action="navigate"
             >
               <span><LocalizedText>{"Apri il confronto"}</LocalizedText></span>
@@ -386,11 +389,7 @@ function MobileLibraryHero({
         <div>
           <span className="mobile-library-hero__eyebrow"><LocalizedText>{"Salvati"}</LocalizedText></span>
           <h1 id="mobile-library-title"><LocalizedText>{"I tuoi Salvati"}</LocalizedText></h1>
-          <p>
-            <LocalizedText>{totalCount > 0
-              ? `${totalCount} candidati. Salvare non è decidere.`
-              : "I Salvati sono il tavolo di lavoro. La decisione è il motivo della scelta."}</LocalizedText>
-          </p>
+
         </div>
       </div>
 
@@ -607,29 +606,17 @@ function MobileNoteSheet({
   editable: boolean;
   onClose: () => void;
 }) {
-  const preferReducedMotion = useReducedMotion();
+  const { locale } = useLocale();
   const compareSlugs = useToolWorkspaceStore((state) => state.compareSlugs);
   const [noteDraft, setNoteDraft] = useState(memory.note ?? "");
   const [pendingReplace, setPendingReplace] = useState(false);
   const [decideOpen, setDecideOpen] = useState(false);
+  const decideButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setNoteDraft(memory.note ?? "");
     setPendingReplace(false);
   }, [memory.note, slug]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        if (decideOpen) return;
-        event.preventDefault();
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [decideOpen, onClose]);
 
   const noteIsDirty = noteDraft.trim() !== (memory.note ?? "");
   const noteId = `shortlist-sheet-note-${slug}`;
@@ -639,15 +626,12 @@ function MobileNoteSheet({
   return createPortal(
     <div className="shortlist-final-surface shortlist-note-portal">
     <OverlayProvider>
-    <LocalizedAttributes><motion.div
-      initial={preferReducedMotion ? false : { y: 16, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={preferReducedMotion ? undefined : { y: 12, opacity: 0 }}
-      transition={levelBTransition({ preferReducedMotion })}
+    <Sheet open onOpenChange={(open) => { if (!open && !decideOpen) onClose(); }}>
+    <LocalizedAttributes><SheetContent
+      side="bottom"
+      showCloseButton={false}
       className="mobile-shortlist-board__sheet"
       hidden={decideOpen}
-      role="dialog"
-      aria-modal="true"
       aria-label={`Memoria decisionale di ${toolName}`}
     >
       <div className="mobile-shortlist-board__sheet-header">
@@ -674,7 +658,7 @@ function MobileNoteSheet({
           <>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="editorial-label"><LocalizedText>{"Memoria decisionale"}</LocalizedText></p>
+                <p className="editorial-label"><LocalizedText>{"Note e decisione"}</LocalizedText></p>
                 <h3 className="mt-1 text-base font-semibold"><LocalizedText>{toolName}</LocalizedText></h3>
               </div>
               <button
@@ -685,7 +669,7 @@ function MobileNoteSheet({
                 className="shortlist-sheet-chip"
               >
                 <Pin size={12} />
-                <LocalizedText>{memory.is_pinned ? "In primo piano" : "Metti in primo piano"}</LocalizedText>
+                <LocalizedText>{memory.is_pinned ? "Fissato in alto" : "Fissa in alto"}</LocalizedText>
               </button>
             </div>
 
@@ -702,6 +686,7 @@ function MobileNoteSheet({
                 <button
                   type="button"
                   onClick={() => setDecideOpen(true)}
+                  ref={decideButtonRef}
                   data-sonic-action="tab"
                   className="shortlist-sheet-chip shortlist-sheet-chip--decide"
                 ><LocalizedText>{"Decidi "}</LocalizedText></button>
@@ -835,7 +820,9 @@ function MobileNoteSheet({
                 onChange={(event) => setNoteDraft(event.target.value)}
                 rows={3}
                 maxLength={2000}
-                placeholder={`Segnati cosa ti interessa davvero di ${toolName}...`}
+                placeholder={locale === "en"
+                  ? `What would you use ${toolName} for?`
+                  : `Per quale lavoro useresti ${toolName}?`}
                 data-sonic-action="update"
                 className="shortlist-note-field mt-3 w-full px-4 py-3"
               />
@@ -854,7 +841,7 @@ function MobileNoteSheet({
                   data-dirty={noteIsDirty ? "true" : "false"}
                   className="shortlist-sheet-chip shortlist-sheet-chip--save"
                 >
-                  <LocalizedText>{noteIsDirty ? "Salva nota" : "Nota salvata"}</LocalizedText>
+                  <LocalizedText>{!noteIsDirty && memory.note ? "Nota salvata" : "Salva nota"}</LocalizedText>
                 </button>
               </div>
             </div>
@@ -869,8 +856,10 @@ function MobileNoteSheet({
         alternatives={compareSlugs.filter((item) => item !== slug)}
         source="shortlist"
         defaultOutcome={decisionOutcome ?? "selected"}
+        returnFocusRef={decideButtonRef}
       />
-    </motion.div></LocalizedAttributes>
+    </SheetContent></LocalizedAttributes>
+    </Sheet>
     </OverlayProvider>
     </div>,
     document.body,
@@ -888,7 +877,11 @@ function MobileLibraryEmpty({
   tools: ToolPublic[];
   categoryCount: number;
 }) {
+  const { locale } = useLocale();
   const starterTools = tools.slice(0, 3);
+  const catalogSummary = locale === "en"
+    ? `${tools.length} ${tools.length === 1 ? "tool" : "tools"} across ${categoryCount} ${categoryCount === 1 ? "category" : "categories"}.`
+    : `${tools.length} tool in ${categoryCount} ${categoryCount === 1 ? "categoria" : "categorie"}.`;
 
   return (
     <section
@@ -898,14 +891,14 @@ function MobileLibraryEmpty({
       <div className="mobile-library-empty__content">
         <span className="mobile-library-empty__kicker"><LocalizedText>{"Salvati"}</LocalizedText></span>
         <h1 id="mobile-library-empty-title"><LocalizedText>{"Niente di salvato, ancora. "}</LocalizedText></h1>
-        <p><LocalizedText>{"Salva i candidati. La decisione arriva dopo, con un motivo."}</LocalizedText></p>
+        <p><LocalizedText>{"Salva i tool che ti interessano per confrontarli e annotare cosa ne pensi."}</LocalizedText></p>
       </div>
       {starterTools.length > 0 ? (
         <LocalizedAttributes><div
           className="mobile-library-empty__starter"
           aria-label="Tool da cui partire"
         >
-          <span><LocalizedText>{"Da valutare per iniziare"}</LocalizedText></span>
+          <span><LocalizedText>{"Da cui partire"}</LocalizedText></span>
           <div>
             {starterTools.map((tool) => (
               <Link key={tool.slug} href={`/toools/${tool.slug}`}>
@@ -924,15 +917,14 @@ function MobileLibraryEmpty({
             className="mobile-library-empty__recommendation-card"
           >
             <strong><LocalizedText>{"Esplora catalogo"}</LocalizedText></strong>
-            <span>
-              {tools.length}<LocalizedText>{" tool in "}</LocalizedText>{categoryCount}<LocalizedText>{" categorie da restringere. "}</LocalizedText></span>
+            <span>{catalogSummary}</span>
           </Link>
           <Link
             href="/collections"
             className="mobile-library-empty__recommendation-card"
           >
             <strong><LocalizedText>{"Parti da uno stack"}</LocalizedText></strong>
-            <span><LocalizedText>{"Raccolte con ruoli, limiti e ordine di lavoro."}</LocalizedText></span>
+            <span><LocalizedText>{"Tool già abbinati, con ruoli e passaggi chiari."}</LocalizedText></span>
           </Link>
         </div>
       </div>

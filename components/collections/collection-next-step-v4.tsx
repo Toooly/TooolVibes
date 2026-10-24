@@ -1,4 +1,7 @@
+"use client";
+
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { useLocale } from "@/components/i18n/locale-provider";
 import Link from "@/components/ui/app-link";
 import { ArrowRight } from "lucide-react";
 
@@ -14,6 +17,7 @@ import {
 } from "@/lib/collections/visual-identity";
 
 import { CollectionToolGlyph } from "./collection-tool-glyph";
+import { getCollectionPreviewCopy } from "./collection-preview-copy";
 
 
 type CollectionNextStepV4Props = {
@@ -28,6 +32,7 @@ type CollectionNextStepV4Props = {
 export function CollectionNextStepV4({
   relatedCollections,
 }: CollectionNextStepV4Props) {
+  const { locale } = useLocale();
   if (relatedCollections.length === 0) return null;
 
   return (
@@ -36,13 +41,13 @@ export function CollectionNextStepV4({
       aria-labelledby="cx-next-step-title"
     >
       <header className="cx-next-step-v4__head">
-        <span className="cx-next-step-v4__eyebrow"><LocalizedText>{"Prossimo passo "}</LocalizedText></span>
-        <h2 id="cx-next-step-title" className="cx-next-step-v4__title"><LocalizedText>{"Dove andare dopo "}</LocalizedText></h2>
-        <p className="cx-next-step-v4__lede"><LocalizedText>{"Le raccolte che vengono dopo, in ordine di progressione. "}</LocalizedText></p>
+        <h2 id="cx-next-step-title" className="cx-next-step-v4__title"><LocalizedText>{"Altri stack da esplorare"}</LocalizedText></h2>
+        <p className="cx-next-step-v4__lede"><LocalizedText>{"Confronta approcci e strumenti per il tuo prossimo obiettivo."}</LocalizedText></p>
       </header>
 
       <div className="cx-next-step-v4__grid motion-stagger">
         {relatedCollections.map((next) => {
+          const preview = getCollectionPreviewCopy(next);
           const identity = getCollectionVisualIdentity(next.slug);
           const accent = identity?.accent ?? "indigo";
           const group = identity?.group ?? null;
@@ -62,17 +67,17 @@ export function CollectionNextStepV4({
               <div className="cx-next-step-v4__card-eyebrow">
                 <LocalizedText>{groupLabel?.toUpperCase()}</LocalizedText>
               </div>
-              <h3 className="cx-next-step-v4__card-title"><LocalizedText>{next.title}</LocalizedText></h3>
+              <h3 className="cx-next-step-v4__card-title"><LocalizedText>{preview.title}</LocalizedText></h3>
               {next.stack_meta?.concise_promise && (
                 <p className="cx-next-step-v4__card-promise">
-                  <LocalizedText>{next.stack_meta.concise_promise}</LocalizedText>
+                  <LocalizedText>{preview.description}</LocalizedText>
                 </p>
               )}
 
               {previewCores.length > 0 && (
                 <LocalizedAttributes><div
                   className="cx-next-step-v4__card-stack"
-                  aria-label="CORE preview"
+                  aria-label="Strumenti nello stack"
                 >
                   {previewCores.map((slot, i) => (
                     <span
@@ -101,7 +106,7 @@ export function CollectionNextStepV4({
               )}
 
               <span className="cx-next-step-v4__card-cta">
-                <span><LocalizedText>{"Usa questa raccolta"}</LocalizedText></span>
+                <span>{locale === "en" ? "Explore this stack" : "Esplora lo stack"}</span>
                 <ArrowRight
                   className="size-3.5"
                   aria-hidden="true"

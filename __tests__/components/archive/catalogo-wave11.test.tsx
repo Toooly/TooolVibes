@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { completeToolPublicFixture } from "@/__tests__/fixtures/tool-public";
 import { ArchiveV4ToolCard } from "@/components/archive/archive-v4-tool-card";
-import { DefinitiveArchive } from "@/components/archive/definitive-archive";
+import { DefinitiveArchive, formatCatalogResultCount } from "@/components/archive/definitive-archive";
 import { CATALOG_FILTER_GROUPS, makeCatalogTool } from "../directory/catalog-test-fixtures";
 import { dispatchWorkspaceChange } from "@/lib/discovery/workspace-events";
 import {
@@ -47,6 +47,16 @@ afterEach(() => {
 });
 
 describe("Wave 11 — Catalogo / Radar characterizations", () => {
+  it.each([
+    [0, "it", "0 risultati su 30"],
+    [1, "it", "1 risultato su 30"],
+    [2, "it", "2 risultati su 30"],
+    [0, "en", "0 results of 30"],
+    [1, "en", "1 result of 30"],
+    [2, "en", "2 results of 30"],
+  ] as const)("pluralizes %s catalog results in %s", (count, locale, expected) => {
+    expect(formatCatalogResultCount(count, 30, locale)).toBe(expected);
+  });
   it("restores a catalog deep-link query before synchronizing the static page URL", async () => {
     const previousUrl = window.location.href;
     window.history.replaceState(null, "", "/archivio?q=Cursor");
@@ -138,7 +148,7 @@ describe("Wave 11 — Catalogo / Radar characterizations", () => {
 });
 
 describe("Wave 11 — quiet personal signals on Catalogo cards", () => {
-  it("W11-T9 saved fills the heart and does not add a Salvato badge", () => {
+  it("W11-T9 saved state stays on its labelled action without a duplicate badge", () => {
     seedWorkspace([{ type: "saved/set", slug: "cursor", saved: true, at: T0 }]);
 
     const { container } = render(
@@ -148,10 +158,10 @@ describe("Wave 11 — quiet personal signals on Catalogo cards", () => {
     const heart = screen.getByRole("button", { name: "Rimuovi Cursor dai salvati" });
     expect(heart.getAttribute("aria-pressed")).toBe("true");
     expect(container.querySelector("[data-slot='personal-status']")).toBeNull();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.getByText("Salvato").closest("button")).toBe(heart);
   });
 
-  it("W11-T11 a decision word may show when it is not just Salvato", () => {
+  it("W11-T11 a decision word stays separate from the labelled save action", () => {
     seedWorkspace([
       { type: "saved/set", slug: "cursor", saved: true, at: T0 },
       { type: "tool/decision", slug: "cursor", outcome: "selected", at: T0 },
@@ -162,7 +172,7 @@ describe("Wave 11 — quiet personal signals on Catalogo cards", () => {
     );
 
     expect(screen.getByText("Scelto")).toBeTruthy();
-    expect(screen.queryByText("Salvato")).toBeNull();
+    expect(screen.getByText("Salvato").closest("button")).toBeTruthy();
   });
 
   it("hides compare rank when a personal word is showing", () => {

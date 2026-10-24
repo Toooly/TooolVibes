@@ -16,6 +16,7 @@ import {
 } from "@/lib/collections/visual-identity";
 
 import { CollectionToolGlyph } from "./collection-tool-glyph";
+import { getCollectionPreviewCopy } from "./collection-preview-copy";
 
 type CollectionDetailHeroV4Props = {
   collection: CuratedCollection;
@@ -46,6 +47,7 @@ function cx(...classes: Array<string | false | null | undefined>) {
 export function CollectionDetailHeroV4({
   collection,
 }: CollectionDetailHeroV4Props) {
+  const preview = getCollectionPreviewCopy(collection);
   const identity = getCollectionVisualIdentity(collection.slug);
   const accent = identity?.accent ?? "indigo";
   const group = identity?.group ?? null;
@@ -86,11 +88,11 @@ export function CollectionDetailHeroV4({
             )}
           </div>
 
-          <h1 className="cx-detail-hero-v4__title"><LocalizedText>{collection.title}</LocalizedText></h1>
+          <h1 className="cx-detail-hero-v4__title"><LocalizedText>{preview.title}</LocalizedText></h1>
 
           {collection.stack_meta?.concise_promise && (
             <p className="cx-detail-hero-v4__promise">
-              <LocalizedText>{collection.stack_meta.concise_promise}</LocalizedText>
+              <LocalizedText>{preview.description}</LocalizedText>
             </p>
           )}
 
@@ -171,7 +173,7 @@ export function CollectionDetailHeroV4({
           )}
           {setup && (
             <div className="cx-detail-hero-v4__decision-item">
-              <span className="cx-detail-hero-v4__decision-label"><LocalizedText>{"Setup"}</LocalizedText></span>
+              <span className="cx-detail-hero-v4__decision-label"><LocalizedText>{"Configurazione"}</LocalizedText></span>
               <span className="cx-detail-hero-v4__decision-value"><LocalizedText>{setup}</LocalizedText></span>
             </div>
           )}
@@ -192,7 +194,7 @@ export function CollectionDetailHeroV4({
               "cx-detail-hero-v4__cta--primary",
             )}
           >
-            <span><LocalizedText>{"Avvia questa raccolta"}</LocalizedText></span>
+            <span><LocalizedText>{"Esplora il flusso"}</LocalizedText></span>
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
           <Link href="/archivio" className="cx-detail-hero-v4__catalog"><LocalizedText>{"Catalogo "}</LocalizedText></Link>

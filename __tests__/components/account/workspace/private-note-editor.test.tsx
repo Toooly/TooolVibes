@@ -182,7 +182,7 @@ describe("PrivateNoteEditor", () => {
     expect(getCanonicalToolWorkspaceState().toolStates.blink?.note).toBe(
       "Da provare sul client",
     );
-    expect(screen.getByRole("status").textContent).toBe("Salvata");
+    expect(screen.getByRole("status").textContent?.trim()).toBe("Salvata");
   });
 
   it("NOTE-TOOL-05 delete", () => {

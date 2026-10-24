@@ -2,7 +2,6 @@
 
 import { useLocale } from "@/components/i18n/locale-provider";
 import { LocalizedText } from "@/components/i18n/localized-text";
-import { Sparkles } from "lucide-react";
 
 import type { CuratedCollection } from "@/lib/types/collection";
 
@@ -42,10 +41,8 @@ export function CollectionScenarioV4({ collection }: CollectionScenarioV4Props) 
       className="cx-scenario-v4 cx-detail-depth motion-reveal"
       aria-labelledby="cx-scenario-title"
     >
-      <summary className="cx-detail-depth__summary"><LocalizedText>{"Esempio reale"}</LocalizedText></summary>
+      <summary className="cx-detail-depth__summary"><LocalizedText>{"Esempio d’uso"}</LocalizedText></summary>
       <header className="cx-scenario-v4__head">
-        <span className="cx-scenario-v4__eyebrow">
-          <Sparkles className="size-3.5" aria-hidden="true" /><LocalizedText>{"Esempio reale "}</LocalizedText></span>
         <h2 id="cx-scenario-title" className="cx-scenario-v4__title">
           <LocalizedText>{scenario.title || "Come si svolge, in pratica"}</LocalizedText>
         </h2>
@@ -66,7 +63,7 @@ export function CollectionScenarioV4({ collection }: CollectionScenarioV4Props) 
         </ol>
       )}
 
-      <p className="cx-scenario-v4__disclaimer"><LocalizedText>{"Scenario ipotetico ma credibile. Non si basa su un cliente reale. "}</LocalizedText></p>
+      <p className="cx-scenario-v4__disclaimer"><LocalizedText>{"Scenario illustrativo, non riferito a un cliente reale. "}</LocalizedText></p>
     </details>
   );
 }

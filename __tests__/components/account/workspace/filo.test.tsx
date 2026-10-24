@@ -298,7 +298,7 @@ describe("Home review verbs", () => {
     // GM-08: revisit chips live in the DecisionSheet revisit control.
     render(createElement(WorkspaceDecisioni, { state: reviewState() }));
     fireEvent.click(screen.getAllByRole("button", { name: /Rivedi la decisione/ })[0]!);
-    expect(screen.getByText("Conferma se lo usi tra 1 mese")).toBeTruthy();
+    expect(screen.getByText("Quando vuoi rivedere la scelta?")).toBeTruthy();
     expect(actions.markWorkspaceRevisited).not.toHaveBeenCalled();
   });
 });

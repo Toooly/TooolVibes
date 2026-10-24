@@ -418,41 +418,6 @@
   pointer-events: none;
 }
 
-.guides-feature__cover-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  padding: 1.5rem 1.5rem;
-  color: var(--guides-text-on-dark);
-  min-height: 14rem;
-}
-
-.guides-feature__glyph {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.20);
-  color: var(--guides-text-on-dark);
-  font-family: var(--tv-font-display);
-  font-size: 1.2rem;
-  font-weight: 500;
-  backdrop-filter: blur(8px);
-}
-
-.guides-feature__cover-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
-}
-
 .guides-feature__topic-pill {
   display: inline-flex;
   align-items: center;
@@ -2259,8 +2224,7 @@
     overflow: hidden;
   }
 
-  .guides-feature__cover,
-  .guides-feature__cover-content {
+  .guides-feature__cover {
     display: none;
     min-height: 0;
   }
@@ -2547,19 +2511,6 @@
 .guides-masthead::before,
 .guides-article__hero::before { background: none; }
 
-.guides-masthead::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  width: clamp(13rem, 30vw, 27rem);
-  aspect-ratio: 1;
-  inset: -45% -6% auto auto;
-  background: url("/graphics/instrument-orbit.webp") center / contain no-repeat;
-  opacity: 0.48;
-  pointer-events: none;
-  mask-image: linear-gradient(90deg, transparent, black 45%);
-}
-
 .guides-masthead__lede { max-width: 52rem; }
 .guides-masthead__title { max-width: 22ch; }
 .guides-card {
@@ -2633,7 +2584,6 @@
   .guides-card { padding: 1.5rem; }
 }
 @media (max-width: 47.99rem) {
-  .guides-masthead::after { opacity: 0.22; inset-block-start: -35%; }
   .guides-page .guides-card {
     grid-template-columns: 3.5rem minmax(0, 1fr);
     column-gap: 0.85rem;
@@ -2662,38 +2612,220 @@
 }
 .guides-feature__cover::before,
 .guides-feature__cover::after { background: none; }
-.guides-feature__orbit {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.8;
-  pointer-events: none;
-}
-.guides-feature__cover-content { justify-content: center; align-items: center; gap: 1.75rem; padding: 2.5rem 1.25rem; }
-.guides-feature__glyph {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  width: min(100%, 10rem);
-  height: auto;
-  min-height: 8.5rem;
-  padding: 1rem;
-  background: color-mix(in srgb, var(--tv-instrument-surface) 90%, transparent);
-  border-color: var(--tv-material-edge-active);
-  border-radius: var(--tv-material-radius);
-  box-shadow: var(--tv-material-shadow);
-  font-family: var(--tv-font-ui);
-  font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1.3;
-  text-align: center;
-}
-.guides-feature__glyph svg { color: var(--tv-color-cyan-300); flex-shrink: 0; }
-.guides-feature__cover-foot { justify-content: center; }
 @media (min-width: 64rem) {
   .guides-feature { grid-template-columns: minmax(0, 1.7fr) minmax(15rem, 0.7fr); }
 }
 
 .guides-article .guides-callout--tip .guides-callout__glyph { color: var(--tv-color-cyan-300); }
 .guides-article .guides-callout--warning .guides-callout__glyph { color: var(--tv-color-gold-300); }
+
+/* A guide is a readable object: subject, promise, reading time and next action. */
+.guides-grid__head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 0.65rem 1rem; }
+.guides-grid__head h2 { margin: 0; color: var(--tv-ink-primary); font: 700 clamp(1.3rem, 2vw, 1.7rem) / 1.25 var(--tv-font-ui); scroll-margin-top: calc(var(--tv-header-painted, 5.25rem) + 1.5rem); }
+.guides-grid__status { margin: 0; color: var(--tv-ink-muted-aa); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.guides-grid__more { display: flex; justify-content: center; padding-top: 0.75rem; }
+.guides-grid__more button { cursor: pointer; font: inherit; min-height: 2.75rem; }
+.guides-page .guides-card,
+.guides-article .guides-card {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  grid-template-rows: auto auto auto 1fr auto;
+  grid-template-areas: "thumb topline" "title title" "dek dek" "chips chips" "foot foot";
+  align-items: start;
+  gap: 0.9rem 0.85rem;
+  padding: 1.35rem;
+}
+.guides-card .guides-card__thumb {
+  grid-area: thumb;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  overflow: hidden;
+  border: 1px solid var(--tv-material-edge);
+  border-radius: 0.95rem;
+  background: var(--tv-surface-elevated);
+  color: var(--tv-accent-violet-on-dark);
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: var(--tv-material-inset);
+}
+.guides-card__thumb > span,
+.guides-card__thumb img { grid-area: 1 / 1; }
+.guides-card .guides-card__thumb img { width: 2rem; height: 2rem; object-fit: contain; border-radius: 0.55rem; }
+.guides-card__topline { grid-area: topline; gap: 0.35rem 0.55rem; align-content: center; min-height: 3rem; }
+.guides-card__subject { width: 100%; min-width: 0; color: var(--tv-ink-primary); font-size: 0.88rem; font-weight: 700; line-height: 1.25; }
+.guides-card__topic { letter-spacing: 0.04em; font-size: 0.7rem; padding: 0.25rem 0.45rem; }
+.guides-card__read { letter-spacing: 0; font-size: 0.78rem; font-weight: 500; }
+.guides-card__title { grid-area: title; font-size: clamp(1.12rem, 1.45vw, 1.35rem); line-height: 1.35; }
+.guides-card__dek { grid-area: dek; margin: 0; font-size: 0.94rem; line-height: 1.65; }
+.guides-card__chips { grid-area: chips; align-self: end; }
+.guides-card__chip { text-transform: none; letter-spacing: 0; font-size: 0.75rem; background: transparent; padding: 0; color: var(--tv-ink-muted-aa); }
+.guides-card__foot { grid-area: foot; width: 100%; align-self: end; }
+.guides-card__cta { margin-left: 0; font-size: 0.86rem; letter-spacing: 0; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .guides-card:hover .guides-card__thumb { border-color: var(--tv-material-edge-active); }
+}
+@media (max-width: 47.99rem) {
+  .guides-page .guides-card,
+  .guides-article .guides-card { padding: 1.1rem; gap: 0.75rem; }
+  .guides-card__title { font-size: 1.12rem; line-height: 1.4; -webkit-line-clamp: 3; }
+  .guides-card__dek { font-size: 0.9rem; line-height: 1.6; -webkit-line-clamp: 2; }
+  .guides-card__chips,
+  .guides-card__foot { display: flex; }
+  .guides-card__foot { padding-top: 0.7rem; }
+}
+/* One featured surface, followed directly by the browsable library. */
+.guides-featured-stage { min-width: 0; }
+.guides-feature__body { gap: 1rem; padding: clamp(1.25rem, 2.3vw, 1.85rem); }
+.guides-feature__signal { display: flex; gap: 0.45rem; letter-spacing: 0.03em; text-transform: none; font-weight: 500; }
+.guides-feature__topline--feature { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem 1rem; }
+.guides-feature__signal { margin: 0; }
+.guides-feature__title { font-family: var(--tv-font-ui); font-size: clamp(1.4rem, 2.3vw, 2rem); font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; }
+.guides-feature__points { gap: 0.5rem; }
+.guides-feature__points li { font-size: 0.9rem; line-height: 1.55; }
+.guides-feature__meta { display: none; }
+.guides-feature__cta { margin-top: 0.25rem; }
+@media (min-width: 64rem) {
+  .guides-masthead { padding-block: 1.5rem; }
+  .guides-masthead__title { max-width: none; font-size: clamp(2rem, 3.2vw, 3rem); }
+  .guides-masthead__lede { gap: 0.85rem; }
+  .guides-masthead__dek { max-width: 76ch; }
+}
+
+/* Featured placement belongs to this route, independent of retired mockups. */
+.guides-grid__featured-result { display: none; }
+@media (max-width: 899px) {
+  .guides-page__featured { display: none; }
+  .guides-grid__featured-result { display: block; min-width: 0; }
+}
+
+/* An editorial desk: layered pages, a source identity and a marked passage. */
+.guide-reading-visual {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 24rem);
+  min-height: 21rem;
+  height: 100%;
+  margin: auto;
+  overflow: hidden;
+  perspective: 65rem;
+  pointer-events: none;
+}
+.guide-reading-visual__shadow {
+  position: absolute;
+  inset: auto 11% 6%;
+  height: 9%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tv-accent-brand) 35%, transparent);
+  filter: blur(16px);
+  transform: rotate(-8deg);
+}
+.guide-reading-visual__sheet {
+  position: absolute;
+  inset: 12% 18% 15%;
+  border-radius: 0.75rem 1.25rem 1.25rem 0.75rem;
+  border: 1px solid var(--tv-material-edge);
+  box-shadow: var(--tv-material-inset), 0 16px 34px color-mix(in srgb, var(--tv-bg-base) 55%, transparent);
+}
+.guide-reading-visual__sheet--back {
+  transform: translate(8%, -2%) rotate(12deg);
+  border-color: color-mix(in srgb, var(--tv-color-cyan-300) 40%, transparent);
+  background: linear-gradient(140deg, color-mix(in srgb, var(--tv-color-cyan-300) 16%, transparent), transparent 65%), var(--tv-instrument-surface);
+}
+.guide-reading-visual__sheet--middle {
+  padding: 2rem 1.25rem;
+  transform: translate(2%, 3%) rotate(3deg);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--tv-color-violet-300) 17%, transparent), transparent 70%), var(--tv-surface-raised);
+}
+.guide-reading-visual__sheet--middle i,
+.guide-reading-visual__typesetting i {
+  display: block;
+  height: 0.25rem;
+  margin-bottom: 0.65rem;
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--tv-ink-primary) 15%, transparent);
+}
+.guide-reading-visual__sheet--front {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 1rem;
+  padding: 1.4rem 1.2rem;
+  transform: translateY(0) rotate(-7deg);
+  border-color: color-mix(in srgb, var(--tv-color-violet-300) 65%, var(--tv-material-edge));
+  background: radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--tv-color-violet-300) 16%, transparent), transparent 65%), linear-gradient(140deg, color-mix(in srgb, var(--tv-ink-primary) 5%, transparent), transparent 52%), var(--tv-instrument-surface);
+}
+.guide-reading-visual__sheet--front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, transparent 15%, color-mix(in srgb, var(--tv-color-cyan-300) 9%, transparent), transparent 75%);
+  opacity: 0.5;
+}
+.guide-reading-visual__bookmark {
+  position: absolute;
+  inset: -1px 13% auto auto;
+  width: 1.05rem;
+  height: 2.8rem;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tv-color-gold-300) 70%, var(--tv-bg-base)), var(--tv-color-gold-300), color-mix(in srgb, var(--tv-color-gold-300) 50%, var(--tv-bg-base)));
+}
+.guide-reading-visual__subject { display: grid; align-content: center; justify-items: start; gap: 0.8rem; min-width: 0; padding-top: 1.25rem; }
+.guide-reading-visual__subject > span:last-child { color: var(--tv-ink-primary); font: 700 clamp(1rem, 1.6vw, 1.25rem) / 1.35 var(--tv-font-ui); overflow-wrap: anywhere; }
+.guide-reading-visual .guides-card__thumb {
+  display: grid;
+  width: 3.3rem;
+  height: 3.3rem;
+  border-radius: 0.95rem;
+  border: 1px solid var(--tv-material-edge);
+  background: var(--tv-surface-elevated);
+  color: var(--tv-color-cyan-300);
+  box-shadow: var(--tv-material-inset);
+  place-items: center;
+  overflow: hidden;
+}
+.guide-reading-visual .guides-card__thumb > span,
+.guide-reading-visual .guides-card__thumb img { grid-area: 1 / 1; }
+.guide-reading-visual .guides-card__thumb img { width: 2.1rem; height: 2.1rem; object-fit: contain; border-radius: 0.5rem; }
+.guide-reading-visual__typesetting { padding-bottom: 3.2rem; }
+.guide-reading-visual__typesetting i:nth-child(1) { width: 88%; background: color-mix(in srgb, var(--tv-color-cyan-300) 35%, transparent); }
+.guide-reading-visual__typesetting i:nth-child(2) { width: 96%; }
+.guide-reading-visual__typesetting i:nth-child(3) { width: 73%; }
+.guide-reading-visual__typesetting i:nth-child(4) { width: 84%; }
+.guide-reading-visual__annotation {
+  position: absolute;
+  inset: auto 3% 6% 16%;
+  height: 4.4rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--tv-color-gold-300) 40%, transparent);
+  border-radius: 0.65rem;
+  background: linear-gradient(130deg, color-mix(in srgb, var(--tv-color-gold-300) 9%, transparent), transparent), var(--tv-instrument-surface);
+  transform: rotate(5deg);
+  box-shadow: var(--tv-material-shadow);
+}
+.guide-reading-visual__annotation svg { width: 100%; height: 1.5rem; overflow: visible; }
+.guide-reading-visual__annotation path { stroke: var(--tv-color-gold-300); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.guide-reading-visual__annotation span { display: block; width: 71%; height: 0.2rem; margin-block: 0.3rem; background: color-mix(in srgb, var(--tv-color-gold-300) 25%, transparent); border-radius: 1rem; }
+.guide-reading-visual__annotation span:last-child { width: 48%; }
+.guide-reading-visual__margin-mark { position: absolute; width: 0.2rem; height: 2.5rem; left: 0.5rem; bottom: 25%; border-radius: 1rem; background: linear-gradient(var(--tv-accent-violet-on-dark), var(--tv-color-cyan-300)); opacity: 0.65; }
+.guide-reading-visual__pencil {
+  position: absolute;
+  width: 0.55rem;
+  height: 53%;
+  top: 29%;
+  right: 17%;
+  transform: rotate(26deg);
+  border-radius: 0.3rem 0.3rem 0.15rem 0.15rem;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tv-color-violet-300) 40%, var(--tv-bg-base)), var(--tv-color-violet-300) 48%, var(--tv-color-cyan-300) 70%, var(--tv-instrument-surface));
+  box-shadow: 3px 4px 8px color-mix(in srgb, var(--tv-bg-base) 65%, transparent);
+}
+.guide-reading-visual__pencil span { position: absolute; inset: auto 0 -1.2rem; height: 1.3rem; clip-path: polygon(0 0, 100% 0, 50% 100%); background: linear-gradient(var(--tv-color-gold-300) 70%, var(--tv-ink-primary) 72%); }
+@media (prefers-reduced-motion: no-preference) {
+  .guide-reading-visual__sheet--front { animation: guide-reading-page 11s ease-in-out infinite; }
+  .guide-reading-visual__sheet--front::after { animation: guide-reading-light 7s ease-in-out infinite; }
+  .guide-reading-visual__pencil { animation: guide-reading-pencil 13s ease-in-out infinite; }
+}
+@keyframes guide-reading-page { 0%, 100% { transform: translateY(0) rotate(-7deg); } 50% { transform: translateY(-0.3rem) rotate(-6deg); } }
+@keyframes guide-reading-light { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+@keyframes guide-reading-pencil { 0%, 100% { transform: translateY(0) rotate(26deg); } 50% { transform: translateY(-0.25rem) rotate(27deg); } }

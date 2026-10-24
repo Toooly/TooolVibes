@@ -68,9 +68,6 @@
   box-shadow: var(--tv-material-shadow);
 }
 
-.td-final-hero__orbit {
-  display: none;
-}
 
 .td-final-hero__inner::before {
   content: "";
@@ -551,23 +548,13 @@
     column-gap: var(--tv-space-8);
     row-gap: var(--tv-space-5);
   }
-  .td-final-hero__identity,
+  .td-final-hero__identity { grid-column: 1; }
   .td-final-hero__inner > .td-final-actions {
-    grid-column: 1;
-  }
-  .td-final-hero__orbit {
-    display: block;
     grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-row: 1;
     align-self: center;
-    justify-self: center;
-    width: min(100%, 22rem);
-    aspect-ratio: 1;
-    opacity: 0.72;
   }
-  .td-final-hero .td-final-hero__orbit img {
-    animation-play-state: running;
-  }
+
 }
 
 @media (max-width: 430px) {

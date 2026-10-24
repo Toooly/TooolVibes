@@ -163,7 +163,7 @@ export function WorkspaceStacks({
             <span>
               <p className="tv-compose-stack__name"><LocalizedText>{name.trim() || "Nuovo stack"}</LocalizedText></p>
               <p className="tv-compose-stack__desc">
-                <LocalizedText>{description.trim() || "Un banco di lavoro per i tool che usi insieme."}</LocalizedText>
+                <LocalizedText>{description.trim() || "I tool che usi insieme, in un posto solo."}</LocalizedText>
               </p>
             </span>
           </div>
@@ -179,13 +179,13 @@ export function WorkspaceStacks({
           </label>
           <label>
             <span className="sr-only"><LocalizedText>{"Descrizione (opzionale)"}</LocalizedText></span>
-            <textarea
+            <LocalizedAttributes><textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="A cosa serve questo gruppo"
+              placeholder="A cosa ti serve questo stack"
               maxLength={MAX_STACK_DESCRIPTION_LENGTH}
               rows={2}
-            />
+            /></LocalizedAttributes>
           </label>
           <div className="tv-home-actions">
             <button type="submit" className="account-btn-primary"><LocalizedText>{"Crea "}</LocalizedText></button>
@@ -232,7 +232,7 @@ export function WorkspaceStacks({
           <h2 className="tv-stacks-empty__title">
             <LocalizedText>{archived.length > 0 ? "Nessuno stack attivo" : "Nessuno stack ancora"}</LocalizedText>
           </h2>
-          <p className="tv-stacks-empty__copy"><LocalizedText>{"Uno stack raggruppa i tool salvati per un lavoro reale. Non è una raccolta da mostrare: è un banco di lavoro. "}</LocalizedText></p>
+          <p className="tv-stacks-empty__copy"><LocalizedText>{"Riunisci i tool che usi per uno stesso lavoro e spiega a cosa ti servono."}</LocalizedText></p>
         </section>
       ) : null}
       </div>
@@ -467,7 +467,7 @@ function StackDetail({
               /></LocalizedAttributes>
             </label>
             {available.length === 0 ? (
-              <p className="tv-stacks-detail__copy"><LocalizedText>{"Nessun salvato corrisponde."}</LocalizedText></p>
+              <p className="tv-stacks-detail__copy"><LocalizedText>{"Nessun tool corrisponde alla ricerca."}</LocalizedText></p>
             ) : (
               <ul className="tv-stacks-picker-list">
                 {available.map((slug) => (

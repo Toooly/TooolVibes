@@ -159,6 +159,7 @@ export default function DesktopComparison({
           />
         ))}
       </section>
+      <p className="cv-footnote"><T>Le informazioni mancanti non indicano una funzionalità assente.</T></p>
       <ComparisonDecision tools={model.tools} onDecide={onDecide} />
     </div>
   );

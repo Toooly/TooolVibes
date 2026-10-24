@@ -1,4 +1,5 @@
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
+import { EmphasizedText } from "@/components/i18n/emphasized-text";
 import type { ReactNode } from "react";
 
 import { RouteMarker } from "@/components/ui/route-marker";
@@ -75,13 +76,6 @@ export function SecondaryHero({
         )
       : null;
 
-  // If emphasis is provided, render title as a string with <strong> emphasis.
-  // Otherwise treat title as a pre-formatted ReactNode.
-  const renderedTitle =
-    emphasis && typeof title === "string"
-      ? renderTitleWithEmphasis(title, emphasis)
-      : title;
-
   return (
     <section
       id={id}
@@ -98,7 +92,7 @@ export function SecondaryHero({
           {resolvedEyebrow ? (
             <div className="secondary-hero__eyebrow"><LocalizedText>{resolvedEyebrow}</LocalizedText></div>
           ) : null}
-          <h1 className="secondary-hero__title"><LocalizedText>{renderedTitle}</LocalizedText></h1>
+          <h1 className="secondary-hero__title">{typeof title === "string" ? <EmphasizedText text={title} emphasis={emphasis} /> : <LocalizedText>{title}</LocalizedText>}</h1>
           <p className="secondary-hero__lede"><LocalizedText>{lede}</LocalizedText></p>
           {actions ? <div className="secondary-hero__actions"><LocalizedText>{actions}</LocalizedText></div> : null}
         </div>
@@ -113,34 +107,6 @@ export function SecondaryHero({
         ) : null}
       </div>
     </section>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────────────
-   Internal helpers
-   ────────────────────────────────────────────────────────────────── */
-
-/**
- * Splits the title into up-to-three segments and wraps the first
- * occurrence of `emphasis` in <strong>. The match is case-insensitive.
- * Punctuation is preserved around the matched substring.
- */
-function renderTitleWithEmphasis(title: string, emphasis: string) {
-  const lower = title.toLowerCase();
-  const needle = emphasis.toLowerCase();
-  const at = lower.indexOf(needle);
-  if (at < 0) {
-    return title;
-  }
-  const before = title.slice(0, at);
-  const match = title.slice(at, at + emphasis.length);
-  const after = title.slice(at + emphasis.length);
-  return (
-    <>
-      <LocalizedText>{before}</LocalizedText>
-      <strong><LocalizedText>{match}</LocalizedText></strong>
-      <LocalizedText>{after}</LocalizedText>
-    </>
   );
 }
 

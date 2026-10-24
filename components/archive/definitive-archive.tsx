@@ -129,6 +129,12 @@ function applyDiscoveryIntent(
   }
 }
 
+export function formatCatalogResultCount(count: number, total: number, locale: "it" | "en") {
+  return locale === "en"
+    ? `${count} ${count === 1 ? "result" : "results"} of ${total}`
+    : `${count} ${count === 1 ? "risultato" : "risultati"} su ${total}`;
+}
+
 export function DefinitiveArchive({
   tools,
   filterGroups,
@@ -230,7 +236,7 @@ export function DefinitiveArchive({
   );
 
   // Filter (no sort, no slice — used to drive counts in the H2)
-  const { t: translate } = useLocale();
+  const { t: translate, locale } = useLocale();
   const filtered = useMemo(() => {
     return tools.filter((t) => {
       if (activeGroup !== "all") {
@@ -289,7 +295,7 @@ export function DefinitiveArchive({
         : `${sortedFiltered.length} tool trovati`;
 
   const gridSupporting = hasActiveFilter
-    ? `${sortedFiltered.length} risultati su ${totalTools}`
+    ? formatCatalogResultCount(sortedFiltered.length, totalTools, locale)
     : null;
 
   function resetAll() {
@@ -328,7 +334,7 @@ export function DefinitiveArchive({
                   type="button"
                   className="ar4-intro__search-clear"
                   onClick={() => setQuery("")}
-                  aria-label="Cancella il termine di ricerca"
+                  aria-label="Cancella ricerca"
                 >
                   <X size={14} aria-hidden="true" />
                 </button></LocalizedAttributes>
@@ -507,7 +513,7 @@ export function DefinitiveArchive({
               </h2>
               {gridSupporting ? (
                 <p className="ar4-grid__supporting" aria-live="polite" aria-atomic="true">
-                  <LocalizedText>{gridSupporting}</LocalizedText>
+                  {gridSupporting}
                 </p>
               ) : null}
             </div>
@@ -518,12 +524,12 @@ export function DefinitiveArchive({
               {query.trim().length > 0 ? (
                 <>
                   <p className="ar4-grid__empty-title"><LocalizedText>{"Nessun risultato per “"}</LocalizedText>{query.trim()}<LocalizedText>{"” "}</LocalizedText></p>
-                  <p className="ar4-grid__empty-body"><LocalizedText>{"Prova con un termine più ampio oppure rimuovi uno dei filtri attivi. "}</LocalizedText></p>
+                  <p className="ar4-grid__empty-body"><LocalizedText>{"Prova una ricerca più ampia o rimuovi un filtro."}</LocalizedText></p>
                 </>
               ) : (
                 <>
                   <p className="ar4-grid__empty-title"><LocalizedText>{"Nessun tool corrisponde ai filtri selezionati. "}</LocalizedText></p>
-                  <p className="ar4-grid__empty-body"><LocalizedText>{"Prova a rimuovere un filtro o a esplorare tutte le categorie. "}</LocalizedText></p>
+                  <p className="ar4-grid__empty-body"><LocalizedText>{"Rimuovi un filtro o torna a tutte le categorie."}</LocalizedText></p>
                 </>
               )}
               <div className="ar4-grid__empty-actions">
@@ -766,7 +772,7 @@ function FilterSheet({
       >
         <div className="ar4-sheet__head">
           <h3 id="ar4-sheet-title" className="ar4-sheet__title"><LocalizedText>{"Filtra il catalogo "}</LocalizedText></h3>
-          <p id="ar4-sheet-desc" className="ar4-sheet__desc"><LocalizedText>{"Restringi i risultati senza perdere la selezione corrente. "}</LocalizedText></p>
+          <p id="ar4-sheet-desc" className="ar4-sheet__desc"><LocalizedText>{"Scegli una categoria, un obiettivo o un livello."}</LocalizedText></p>
           <LocalizedAttributes><button
             type="button"
             className="ar4-sheet__close"

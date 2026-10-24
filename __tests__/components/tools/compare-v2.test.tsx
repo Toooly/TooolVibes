@@ -95,6 +95,13 @@ async function ready() {
   return screen.findByRole("region", { name: "Tool a confronto" });
 }
 describe("Compare V2 shared state and distinct presentations", () => {
+  it("explains missing data once even with several criteria groups open", async () => {
+    render(<ToolBattleView tools={tools} />);
+    await ready();
+    fireEvent.click(screen.getByRole("button", { name: /^In sintesi/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Prezzi e condizioni/ }));
+    expect(screen.getAllByText("Le informazioni mancanti non indicano una funzionalità assente.")).toHaveLength(1);
+  });
   it("shows the entire selection and retains the filter on resize with one renderer", async () => {
     const { container } = render(<ToolBattleView tools={tools} />);
     await ready();
@@ -181,12 +188,15 @@ describe("Compare V2 shared state and distinct presentations", () => {
     expect(screen.getByText("Scegli almeno due tool.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Aggiungi tool/ }));
     let dialog = await screen.findByRole("dialog");
+    fireEvent.change(within(dialog).getByRole("searchbox"), { target: { value: "alpha" } });
     fireEvent.click(within(dialog).getByRole("button", { name: /alpha/ }));
     expect(useToolWorkspaceStore.getState().compareSlugs).toEqual(["alpha"]);
-    fireEvent.click(screen.getByRole("button", { name: /Gestisci tool/ }));
-    dialog = await screen.findByRole("dialog");
+    expect(screen.getByRole("dialog")).toBe(dialog);
+    expect((within(dialog).getByRole("searchbox") as HTMLInputElement).value).toBe("");
+    expect(document.activeElement).toBe(within(dialog).getByRole("heading", { name: "Aggiungi tool" }));
     fireEvent.click(within(dialog).getByRole("button", { name: /beta/ }));
     await ready();
+    expect(screen.queryByRole("dialog")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: /Gestisci tool/ }));
     dialog = await screen.findByRole("dialog");
     fireEvent.click(

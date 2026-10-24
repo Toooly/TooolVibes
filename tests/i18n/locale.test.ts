@@ -29,6 +29,8 @@ describe("authored text", () => {
     expect(t("4 su 5")).toBe("4 of 5");
     expect(t("Confronta (max. 5)")).toBe("Compare (max. 5)");
     expect(t("Confronta x max. 5")).toBe("Confronta x max. 5");
+    expect(t("Open comparison with 1 tool")).toBe("Open comparison with 1 tool");
+    expect(t("3 tool")).toBe("3 tools");
   });
   it("localizes plain excerpts without leaving Markdown formatting in brief text", () => {
     const translate = createTranslator({ "**Il compromesso principale:** Configurazione **complessa**.": "**The main trade-off:** **Complex** setup." });
@@ -54,4 +56,14 @@ describe("authored text", () => {
 it('keeps a tool name in its natural position in an English pricing heading', () => {
   const t = createTranslator({ 'Quanto costa {0}?': 'How much does {0} cost?' });
   expect(t('Quanto costa Blink?')).toBe('How much does Blink cost?');
+});
+
+
+it("translates a complete save action before a generic saved-count phrase", () => {
+  const t = createTranslator({
+    "{0} salvati": "{0} saved",
+    "Rimuovi {0} dai salvati": "Remove {0} from saved tools",
+  });
+  expect(t("Rimuovi Blink dai salvati")).toBe("Remove Blink from saved tools");
+  expect(t("3 salvati")).toBe("3 saved");
 });

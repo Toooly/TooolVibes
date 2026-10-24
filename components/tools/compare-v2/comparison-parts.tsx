@@ -20,7 +20,7 @@ export type ComparisonPresentationProps = {
   onRemove: (slug: string) => void;
   onDecide?: (slug: string) => void;
 };
-export function ComparisonMark({ tool }: { tool: ComparisonCandidate }) {
+export function ComparisonMark({ tool }: { tool: Pick<ComparisonCandidate, "name" | "logoUrl"> }) {
   const [failed, setFailed] = useState(false);
   return (
     <span className="cv-mark" aria-hidden="true">
@@ -77,7 +77,7 @@ export function ComparisonCell({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <T>Fonte prezzi</T> ↗
+          <T>Fonte dei prezzi</T> ↗
         </a>
       ) : null}
     </span>
@@ -235,16 +235,11 @@ export function ComparisonDisclosure({
             <p className="cv-muted">
               <T>
                 {available.length
-                  ? "Stessi valori per i tool selezionati."
+                  ? "I dati disponibili coincidono per tutti i tool."
                   : "Nessun dato documentato per questa sezione."}
               </T>
             </p>
           )}
-          <p className="cv-footnote">
-            <T>
-              Le informazioni mancanti non indicano una funzionalità assente.
-            </T>
-          </p>
         </div>
       ) : null}
     </section>
@@ -272,7 +267,7 @@ export function ComparisonDecision({
         <T>Quale vuoi provare?</T>
       </h2>
       <p className="cv-muted">
-        <T>Registra una scelta, senza un vincitore automatico.</T>
+        <T>Scegli un tool e annota perché lo preferisci.</T>
       </p>
       <div className="cv-decision__choices">
         {tools.map((tool) => (

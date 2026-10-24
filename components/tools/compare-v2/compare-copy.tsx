@@ -3,12 +3,19 @@ import { useLocale } from "@/components/i18n/locale-provider";
 import type { ReactNode } from "react";
 
 const english: Record<string, string> = {
+  "Tool da confrontare": "Tools to compare",
+  "Scegli il primo tool": "Choose your first tool",
+  "Scegli il secondo tool": "Choose your second tool",
+  "Tool selezionati": "Selected tools",
+  "Scegli due tool per iniziare. Puoi aggiungerne fino a cinque.": "Choose two tools to start. You can add up to five.",
+  "Gli altri tool restano nel confronto.": "Your other tools stay in this comparison.",
+  "Aggiungi o rimuovi i tool da confrontare.": "Add or remove tools from this comparison.",
   "Rimuovi un tool per aggiungerne un altro.":
     "Remove a tool to add another one.",
   selezionati: "selected",
   "Preparazione del confronto…": "Preparing comparison…",
-  "La scelta resta tua: l’obiettivo ordina i criteri, senza assegnare un vincitore automatico.":
-    "Your choice: the goal prioritises criteria without picking an automatic winner.",
+  "L’obiettivo mette in primo piano i criteri più utili.":
+    "Your goal brings the most relevant criteria to the top.",
   "Hai raggiunto il limite di tool.": "You have reached the tool limit.",
   "Confronto chiuso.": "Comparison complete.",
   "Confronta e scegli": "Compare and choose",
@@ -17,12 +24,12 @@ const english: Record<string, string> = {
     "Fewer distractions. A clearer choice.",
   "Scegli una coppia, leggi le differenze e decidi cosa provare.":
     "Pick a pair, read the differences and decide what to try.",
-  "Due–quattro tool, con i dati che servono per decidere.":
-    "Two to four tools, with the facts you need to decide.",
+  "Prezzi, funzioni e limiti dei tool selezionati.":
+    "Pricing, features and limitations of your selected tools.",
   Tool: "Tools",
   Gestisci: "Manage",
   "Tool a confronto": "Tools in this comparison",
-  "Tutti i tool, un criterio alla volta.": "All your tools, one criterion at a time.",
+  "Leggi un criterio alla volta, per tutti i tool.": "Compare every tool, one criterion at a time.",
   "Altro tool…": "Another tool…",
   "Differenze chiave": "Key differences",
   "Gestisci tool": "Manage tools",
@@ -53,17 +60,17 @@ const english: Record<string, string> = {
   "Differenze da cui partire": "Start with these differences",
   "Nessuna differenza documentata tra questi tool.":
     "No documented differences between these tools.",
-  "Stessi valori per i tool selezionati.":
-    "The selected tools have the same values.",
+  "I dati disponibili coincidono per tutti i tool.":
+    "The available details are the same for every tool.",
   "Nessun dato documentato per questa sezione.":
     "No documented data for this section.",
   "La tua scelta": "Your decision",
   "Quale vuoi provare?": "Which one will you try?",
-  "Registra una scelta, senza un vincitore automatico.":
-    "Record your choice, without an automatic winner.",
+  "Scegli un tool e annota perché lo preferisci.":
+    "Choose a tool and note why it works for you.",
   Scegli: "Choose",
   "Apri scheda": "View details",
-  "Fonte prezzi": "Pricing source",
+  "Fonte dei prezzi": "Pricing source",
   Sostituisci: "Replace",
   Rimuovi: "Remove",
   Chiudi: "Close",
@@ -74,10 +81,10 @@ const english: Record<string, string> = {
   "Secondo tool": "Second tool",
   "Cambia coppia": "Change pair",
   "Scegli almeno due tool.": "Select at least two tools.",
-  "Aggiungili qui oppure riparti dal catalogo o dai salvati.":
-    "Add them here, or start from the catalog or your saved tools.",
+  "Scegli dal catalogo o dai tool salvati.":
+    "Choose from the catalog or your saved tools.",
   "Apri il catalogo": "Browse the catalog",
-  "Apri Salvati": "Open Saved",
+  "Vai ai salvati": "View saved tools",
   Criteri: "Criteria",
   Obiettivo: "Goal",
   "Lettura generale": "General comparison",
@@ -96,8 +103,8 @@ const english: Record<string, string> = {
     "Read the full context in each tool card before choosing.",
   "Valutazione non disponibile": "Rating unavailable",
   "Tool non disponibili nel catalogo": "Tools unavailable in the catalog",
-  "Confronta 2–4 candidati per una lettura più diretta.":
-    "Compare 2–4 candidates for a more focused view.",
+  "Per una tabella più breve, attiva “Mostra solo differenze”.":
+    "Turn on “Show only differences” for a shorter table.",
   "al mese": "per month",
   "per utente al mese": "per user per month",
   "al mese, con fatturazione annuale": "per month, billed annually",

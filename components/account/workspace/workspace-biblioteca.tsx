@@ -158,7 +158,7 @@ export function WorkspaceBiblioteca({
         <WorkspaceEmptyMotif variant="library" />
         <p className="tv-lib-kicker"><LocalizedText>{"Salvati"}</LocalizedText></p>
         <h2 className="tv-lib-title"><LocalizedText>{"Nessun tool salvato ancora"}</LocalizedText></h2>
-        <p className="tv-lib-copy"><LocalizedText>{"Qui vive la tua libreria software: un solo inventario, con relazione e prossimo passo. "}</LocalizedText></p>
+        <p className="tv-lib-copy"><LocalizedText>{"Salva un tool dal catalogo per ritrovarlo qui, con note e decisioni."}</LocalizedText></p>
         <Link className="tv-lib-cta" href="/archivio"><LocalizedText>{"Inizia dal catalogo "}</LocalizedText></Link>
       </section>
     );

@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { MAX_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
+import { MAX_COMPARE_TOOLS, MIN_COMPARE_TOOLS } from "@/lib/discovery/workspace-constants";
 import type { ToolPublicView } from "@/lib/data/tool-public-view";
 import type { ComparisonFocusTarget } from "./comparison-parts";
 import { CompareText as T, useCompareCopy } from "./compare-copy";
+import { ComparisonMark } from "./comparison-parts";
 
 type Props = {
   tools: readonly ToolPublicView[];
@@ -28,6 +29,7 @@ export default function ComparisonManager({
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDialogElement>(null);
   const backdropPress = useRef(false);
+  const previousCount = useRef(selected.length);
   const t = useCompareCopy();
   useEffect(() => {
     const dialog = ref.current;
@@ -44,6 +46,12 @@ export default function ComparisonManager({
       returnTo?.focus({ preventScroll: true });
     };
   }, [returnFocusTo]);
+  useEffect(() => {
+    if (!replacing && selected.length > previousCount.current && selected.length < MIN_COMPARE_TOOLS) {
+      ref.current?.querySelector<HTMLElement>("#cv-manager-title")?.focus({ preventScroll: true });
+    }
+    previousCount.current = selected.length;
+  }, [selected.length, replacing]);
   const normalized = query.trim().toLocaleLowerCase();
   const filtered = tools.filter((tool) =>
     `${tool.name} ${tool.categoryLabel}`
@@ -70,7 +78,7 @@ export default function ComparisonManager({
     >
       <div className="cv-manager__surface">
         <header>
-          <h2 id="cv-manager-title">
+          <h2 id="cv-manager-title" tabIndex={-1}>
             <T>{replacing ? "Sostituisci" : "Aggiungi tool"}</T>
           </h2>
           <button
@@ -82,6 +90,12 @@ export default function ComparisonManager({
             <span aria-hidden="true">×</span>
           </button>
         </header>
+        <div className="cv-manager__intro">
+          <p className="cv-muted">
+            <T>{replacing ? "Gli altri tool restano nel confronto." : selected.length < MIN_COMPARE_TOOLS ? "Scegli due tool per iniziare. Puoi aggiungerne fino a cinque." : "Aggiungi o rimuovi i tool da confrontare."}</T>
+          </p>
+          <span className="cv-count" aria-label={t("Tool selezionati")}>{selected.length}/{MAX_COMPARE_TOOLS}</span>
+        </div>
         {!replacing && selected.length > 0 ? (
           <div className="cv-manager__selection">
             <div className="cv-manager__selected">
@@ -132,9 +146,13 @@ export default function ComparisonManager({
                     included ||
                     (!replacing && selected.length >= MAX_COMPARE_TOOLS)
                   }
-                  onClick={() => onSelect(tool.slug)}
+                  onClick={() => {
+                    setQuery("");
+                    onSelect(tool.slug);
+                  }}
                 >
-                  <span>
+                  <ComparisonMark tool={{ name: tool.name, logoUrl: tool.domain ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(tool.domain)}&sz=64` : "" }} />
+                  <span className="cv-manager__identity">
                     <strong>{tool.name}</strong>
                     <small>
                       <T>{tool.categoryLabel}</T>

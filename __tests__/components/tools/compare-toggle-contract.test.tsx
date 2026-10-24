@@ -82,7 +82,7 @@ describe("CompareToggle Contract", () => {
     const untouched = screen.getByRole("button", { name: "Aggiungi Blink al confronto" });
     expect(untouched.hasAttribute("data-compare-feedback")).toBe(false);
     expect(untouched.classList.contains("is-fresh")).toBe(false);
-    act(() => vi.advanceTimersByTime(300));
+    act(() => vi.advanceTimersByTime(500));
     expect(clicked.hasAttribute("data-compare-feedback")).toBe(false);
     expect(clicked.getAttribute("aria-pressed")).toBe("true");
   });
@@ -96,6 +96,18 @@ describe("CompareToggle Contract", () => {
     expect(button.hasAttribute("data-compare-feedback")).toBe(false);
     expect(button.classList.contains("is-fresh")).toBe(false);
     expect(button.classList.contains("is-ready")).toBe(false);
+  });
+
+  it("keeps the comparison symbol and visible label understandable in both states", () => {
+    const { rerender } = render(<CompareToggle slug="agentx" mode="icon" showLabel toolName="AgentX" />);
+    const button = screen.getByRole("button", { name: "Aggiungi AgentX al confronto" });
+    expect(button.textContent).toBe("Confronta");
+    expect(button.querySelector(".lucide-columns-2")).toBeTruthy();
+    mockCompareSlugs = ["agentx"];
+    rerender(<CompareToggle slug="agentx" mode="icon" showLabel toolName="AgentX" />);
+    expect(button.textContent).toBe("In confronto");
+    expect(button.querySelector(".lucide-columns-2")).toBeTruthy();
+    expect(button.querySelector(".tool-action__check")).toBeTruthy();
   });
 
   it("cancels addition feedback on immediate removal", () => {

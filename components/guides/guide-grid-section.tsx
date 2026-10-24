@@ -1,7 +1,8 @@
 "use client";
 
 import { LocalizedText, LocalizedAttributes } from "@/components/i18n/localized-text";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useLocale } from "@/components/i18n/locale-provider";
 
 import type { EditorialPostRecord } from "@/lib/types/article";
 
@@ -21,6 +22,7 @@ type GuideGridSectionProps = {
   topics: Array<{ label: string; count: number }>;
   initialVisible?: number;
   featured?: ReactNode;
+  featuredItem?: GuideGridItem | null;
 };
 
 const DEFAULT_INITIAL = 6;
@@ -30,20 +32,34 @@ export function GuideGridSection({
   topics,
   initialVisible = DEFAULT_INITIAL,
   featured = null,
+  featuredItem = null,
 }: GuideGridSectionProps) {
+  const { locale } = useLocale();
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const [active, setActive] = useState<string>("Tutte");
   const [expanded, setExpanded] = useState(false);
 
-  const visible = useMemo(() => {
-    const filtered = active === "Tutte" ? items : items.filter((i) => i.topic === active);
-    return expanded ? filtered : filtered.slice(0, initialVisible);
-  }, [active, expanded, items, initialVisible]);
-
-  const totalForActive = useMemo(() => {
-    return active === "Tutte" ? items.length : items.filter((i) => i.topic === active).length;
-  }, [active, items]);
-
+  const filtered = useMemo(() => {
+    if (active === "Tutte") return items;
+    const searchable = featuredItem
+      ? [featuredItem, ...items.filter((item) => item.post.slug !== featuredItem.post.slug)]
+      : items;
+    return searchable.filter((item) => item.topic === active);
+  }, [active, items, featuredItem]);
+  const visible = expanded ? filtered : filtered.slice(0, initialVisible);
+  const totalForActive = filtered.length;
+  const featuredCount = active === "Tutte" && featuredItem ? 1 : 0;
+  const allCount = items.length + (featuredItem ? 1 : 0);
+  const resultCount = totalForActive + featuredCount;
   const showExpand = totalForActive > initialVisible;
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+    if (expanded) requestAnimationFrame(() => {
+      const heading = headingRef.current;
+      heading?.focus({ preventScroll: true });
+      heading?.scrollIntoView?.({ block: "start", behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    });
+  };
 
   return (
     <section
@@ -51,6 +67,14 @@ export function GuideGridSection({
       className="guides-section"
       aria-labelledby="guides-all-title"
     >
+      <header className="guides-grid__head">
+        <h2 id="guides-all-title" ref={headingRef} tabIndex={-1}>
+          {locale === "en" ? "Explore the guides" : "Esplora le guide"}
+        </h2>
+        <p className="guides-grid__status" role="status" aria-live="polite" aria-atomic="true">
+          {locale === "en" ? `${visible.length + featuredCount} of ${resultCount} ${resultCount === 1 ? "guide" : "guides"}` : `${visible.length + featuredCount} di ${resultCount} ${resultCount === 1 ? "guida" : "guide"}`}
+        </p>
+      </header>
       <LocalizedAttributes><div className="guides-filter" role="group" aria-label="Filtra per area">
         <button
           type="button"
@@ -62,7 +86,7 @@ export function GuideGridSection({
           className="guides-filter__chip"
           aria-controls="guides-grid-list"
         ><LocalizedText>{"Tutte "}</LocalizedText><span className="guides-filter__chip__count">
-            {items.length}
+            {allCount}
           </span>
         </button>
         {topics.map((t) => (
@@ -83,13 +107,13 @@ export function GuideGridSection({
         ))}
       </div></LocalizedAttributes>
 
-      {featured ? (
-        <div className="guides-grid__featured" data-mobile-featured>
-          <LocalizedText>{featured}</LocalizedText>
+      {featured && active === "Tutte" ? (
+        <div className="guides-grid__featured-result">
+          {featured}
         </div>
       ) : null}
 
-      <div className="guides-grid" id="guides-grid-list" aria-live="polite">
+      <div className="guides-grid" id="guides-grid-list">
         {visible.length === 0 ? (
           <p
             style={{
@@ -116,30 +140,18 @@ export function GuideGridSection({
       </div>
 
       {showExpand ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            paddingTop: "0.4rem",
-          }}
-        >
+        <div className="guides-grid__more">
           <button
             type="button"
-            onClick={() => setExpanded((v) => !v)}
+            onClick={toggleExpanded}
             aria-controls="guides-grid-list"
             aria-expanded={expanded}
             className="guides-section__foot-link"
-            style={{
-              background: "rgba(18, 13, 47, 0.04)",
-              border: "1px solid var(--guides-rule-strong)",
-              cursor: "pointer",
-              fontFamily: "inherit",
-            }}
           >
-            <LocalizedText>{expanded
-              ? `Mostra meno (${visible.length} visibili)`
-              : `Mostra tutte (${totalForActive - initialVisible} altre)`}</LocalizedText>
-            <span aria-hidden><LocalizedText>{expanded ? "↑" : "↓"}</LocalizedText></span>
+            {locale === "en"
+              ? expanded ? "Show fewer guides" : `Show all ${totalForActive + featuredCount} guides`
+              : expanded ? "Mostra meno guide" : `Mostra tutte le ${totalForActive + featuredCount} guide`}
+            <span aria-hidden>{expanded ? "↑" : "↓"}</span>
           </button>
         </div>
       ) : null}

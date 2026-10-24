@@ -6,10 +6,6 @@ const shopPage = readFileSync(
   resolve(process.cwd(), "app/(marketing)/shop/page.tsx"),
   "utf8",
 );
-const secondaryCss = readFileSync(
-  resolve(process.cwd(), "styles/secondary-pages.css"),
-  "utf8",
-);
 const archiveSrc = readFileSync(
   resolve(process.cwd(), "components/archive/definitive-archive.tsx"),
   "utf8",
@@ -65,18 +61,11 @@ describe("V3.1 system states — shop", () => {
     expect(shopPage).not.toContain("Prodotti pubblicati");
     expect(shopPage).not.toContain("resource-inventory__row");
     expect(shopPage).not.toContain("resource-inventory__value");
-    expect(shopPage).toContain("resource-inventory__stamp");
-    expect(shopPage).toContain("In preparazione");
-    expect(shopPage).toContain("Nessun prodotto, prezzo o checkout");
-  });
-
-  it("shop stamp is resource cloth with data mark", () => {
-    const stamp = extractBlock(secondaryCss, ".resource-inventory__stamp {");
-    const mark = extractBlock(secondaryCss, ".resource-inventory__stamp-mark {");
-    expect(stamp).toContain("var(--tv-grammar-resource-surface)");
-    expect(stamp).toContain("var(--tv-grammar-resource-edge)");
-    expect(mark).toContain("var(--tv-font-data)");
-    expect(mark).toContain("var(--tv-grammar-resource-premium)");
+    expect(shopPage).toContain("Lo Shop è in preparazione.");
+    expect(shopPage).toContain("Non ci sono ancora prodotti in vendita.");
+    expect(shopPage).toContain('href="/archivio"');
+    expect(shopPage).toContain('href="/collections"');
+    expect(shopPage).not.toContain("resource-inventory");
   });
 });
 

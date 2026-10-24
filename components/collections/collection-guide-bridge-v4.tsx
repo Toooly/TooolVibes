@@ -3,10 +3,20 @@ import Link from "@/components/ui/app-link";
 import { BookOpenText, ArrowRight } from "lucide-react";
 
 import type { CuratedCollection } from "@/lib/types/collection";
+import { getGuidePreviewTitle } from "@/components/guides/guide-preview-copy";
 
 type CollectionGuideBridgeV4Props = {
   collection: CuratedCollection;
+  guideTitles?: Record<string, string>;
 };
+
+function guideLabel(slug: string, titles: Record<string, string>) {
+  const title = titles[slug]?.trim();
+  if (title) return getGuidePreviewTitle(slug, title);
+  return slug.split(/[-_]+/).filter(Boolean).map((word) =>
+    word.toLowerCase() === "ai" ? "AI" : word.charAt(0).toUpperCase() + word.slice(1),
+  ).join(" ");
+}
 
 /**
  * Guide Bridge V4 — final "deeper knowledge" section listing the
@@ -18,6 +28,7 @@ type CollectionGuideBridgeV4Props = {
  */
 export function CollectionGuideBridgeV4({
   collection,
+  guideTitles = {},
 }: CollectionGuideBridgeV4Props) {
   const explicitSlugs = collection.stack_meta?.related_guide_slugs ?? [];
   const slotSlugs = collection.included_tools
@@ -37,8 +48,8 @@ export function CollectionGuideBridgeV4({
       <header className="cx-guide-bridge-v4__head">
         <span className="cx-guide-bridge-v4__eyebrow">
           <BookOpenText className="size-3.5" aria-hidden="true" /><LocalizedText>{"Guide collegate "}</LocalizedText></span>
-        <h2 id="cx-guide-bridge-title" className="cx-guide-bridge-v4__title"><LocalizedText>{"Approfondisci i tool di questo stack "}</LocalizedText></h2>
-        <p className="cx-guide-bridge-v4__lede"><LocalizedText>{"Le Guide TooolVibes che coprono i tool presenti in questa raccolta. Approfondisci uno per uno, o parti da quello che ti incuriosisce di più. "}</LocalizedText></p>
+        <h2 id="cx-guide-bridge-title" className="cx-guide-bridge-v4__title"><LocalizedText>{"Capire meglio i singoli strumenti"}</LocalizedText></h2>
+        <p className="cx-guide-bridge-v4__lede"><LocalizedText>{"Passaggi pratici e limiti dei tool, uno alla volta."}</LocalizedText></p>
       </header>
 
       <ul className="cx-guide-bridge-v4__list motion-stagger">
@@ -48,7 +59,7 @@ export function CollectionGuideBridgeV4({
               href={`/posts/${slug}`}
               className="cx-guide-bridge-v4__link"
             >
-              <span className="cx-guide-bridge-v4__slug"><LocalizedText>{slug}</LocalizedText></span>
+              <span className="cx-guide-bridge-v4__slug"><LocalizedText>{guideLabel(slug, guideTitles)}</LocalizedText></span>
               <span className="cx-guide-bridge-v4__cta"><LocalizedText>{"Apri la guida "}</LocalizedText><ArrowRight
                   className="size-3.5"
                   aria-hidden="true"

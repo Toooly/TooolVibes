@@ -259,7 +259,7 @@ describe("DecisionSheet — Wave 8", () => {
     // Golden Master 10 shows Nota privata + revisit inline, no Aggiungi dettagli gate.
     expect(screen.queryByRole("button", { name: "Aggiungi dettagli" })).toBeNull();
     expect(screen.getByLabelText("Nota privata")).toBeTruthy();
-    expect(screen.getByText("Conferma se lo usi tra 1 mese")).toBeTruthy();
+    expect(screen.getByText("Quando vuoi rivedere la scelta?")).toBeTruthy();
     expect(screen.getByRole("radio", { name: "Scelto" }).getAttribute("aria-checked")).toBe(
       "true",
     );
